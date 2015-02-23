@@ -108,7 +108,7 @@ private:
     unsigned log_type_length = 0;
 };
 
-void log (const std::string& type, char direction, const std::string& message, int verbosity = 2)
+inline void log (const std::string& type, char direction, const std::string& message, int verbosity = 2)
 {
     Logger::singleton().log(type, direction, message, verbosity);
 }

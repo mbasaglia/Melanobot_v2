@@ -24,13 +24,21 @@
 #ifndef ASYNC_SERVICE_HPP
 #define ASYNC_SERVICE_HPP
 
-#include <atomic>
 #include <functional>
-#include <list>
-#include <mutex>
-#include <thread>
+#include <string>
+#include <map>
 
 namespace network {
+
+/**
+ * \brief A network request
+ */
+struct Request
+{
+    std::string location;
+    std::string command;
+    std::string parameters;
+};
 
 /**
  * \brief Result of a request
@@ -48,8 +56,19 @@ typedef std::function<void(const Response&)> AsyncCallback;
  */
 class AsyncService
 {
-protected:
+public:
+    virtual ~AsyncService() {}
 
+    /**
+     * \brief Asynchronous query
+     */
+    virtual void async_query (const Request& request, const AsyncCallback& callback) = 0;
+    /**
+     * \brief Synchronous query
+     */
+    virtual Response query (const Request& request) = 0;
+
+protected:
     Response ok(const std::string& contents)
     {
         Response r;
@@ -63,23 +82,47 @@ protected:
         return r;
     }
 };
+/**
+ * \brief HTTP networking utilities
+ * \todo move to its own file
+ */
+namespace http {
 
-class HttpRequest : public AsyncService
+typedef std::map<std::string,std::string> Parameters;
+
+/**
+ * \brief Encode a string to make it fit to be used in a url
+ * \see http://www.faqs.org/rfcs/rfc3986.html
+ */
+std::string urlencode ( const std::string& text );
+
+/**
+ * \todo (?)
+ */
+std::string urldecode ( const std::string& url );
+
+/**
+ * \brief Build a query string from the given parameters
+ */
+std::string build_query ( const Parameters& params );
+
+/**
+ * \brief Creates a GET request
+ */
+Request get(const std::string& url, const Parameters& params = Parameters());
+/**
+ * \brief Creates a POST request
+ */
+Request post(const std::string& url, const Parameters& params = Parameters());
+
+class Client : public AsyncService
 {
 public:
-
-    /**
-     * \brief Synchronous Get request
-     * \todo parameters
-     */
-    Response get(const std::string& url);
-
-    /**
-     * \brief Asynchronous Get request
-     * \todo parameters
-     */
-    void async_get(const std::string& url, const AsyncCallback& callback);
+    void async_query (const Request& request, const AsyncCallback& callback) override;
+    Response query (const Request& request) override;
 };
+
+} // namespace network::http
 
 } // namespace network
 #endif // ASYNC_SERVICE_HPP

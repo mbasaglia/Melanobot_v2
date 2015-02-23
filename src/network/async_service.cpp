@@ -22,29 +22,110 @@
  *
  */
 #include "async_service.hpp"
+
+#include <cctype>
+#include <iomanip>
+#include <sstream>
+
+#define BOOST_NETWORK_ENABLE_HTTPS
 #include <boost/network/protocol/http/client.hpp>
-//#include <boost/network/include/http/client.hpp>
+
+#include "../logger.hpp"
+
 
 namespace network {
 
-void HttpRequest::async_get(const std::string& url, const AsyncCallback& callback)
+namespace http {
+
+std::string urlencode ( const std::string& text )
 {
-    /// \todo async
-    callback(get(url));
+    std::ostringstream ss;
+    ss << std::hex << std::uppercase;
+    for ( char c : text )
+    {
+        if ( std::isalnum(c) || c == '-' || c == '.' || c == '_' || c == '~' )
+            ss << c;
+        else
+            ss << '%' << std::setw(2) << std::setfill('0') << int(c);
+    }
+    return ss.str();
 }
 
-Response HttpRequest::get(const std::string& url)
+std::string build_query ( const Parameters& params )
 {
-    namespace http = boost::network::http;
+    std::ostringstream ss;
+    auto last = params.end(); --last;
+    for ( auto it = params.begin(); it != params.end(); ++it )
+    {
+        ss << urlencode(it->first) << '=' << urlencode(it->second);
+        if ( it != last )
+            ss << '&';
+    }
+    return ss.str();
+}
+
+Request get(const std::string& url, const Parameters& params)
+{
+    Request r;
+
+    r.location = url;
+    r.command = "GET";
+
+    if ( !params.empty() )
+    {
+        if ( url.find('?') == std::string::npos )
+            r.location += '?';
+        r.location += build_query(params);
+    }
+
+    return r;
+}
+
+Request post(const std::string& url, const Parameters& params)
+{
+    Request r;
+
+    r.location = url;
+    r.command = "POST";
+    r.parameters = build_query(params);
+
+    return r;
+}
+
+void Client::async_query (const Request& request, const AsyncCallback& callback)
+{
+    /// \todo async
+    callback(query(request));
+}
+
+Response Client::query (const Request& request)
+{
+    typedef boost::network::http::client client_type;
+
+    client_type client{client_type::options().follow_redirects(true)};
     try {
-        http::client client;
-        http::client::request request(url);
-        http::client::response response = client.get(request);
-        return ok(body(response));
+        client_type::request netrequest(request.location);
+        client_type::response response;
+
+         /// \todo POST/PUT with custom content type
+        if ( request.command == "GET" )
+            response = client.get(netrequest);
+        else if ( request.command == "POST" )
+            response = client.post(netrequest,request.parameters);
+        else if ( request.command == "PUT" )
+            response = client.put(netrequest,request.parameters);
+        else if ( request.command == "HEAD" )
+            response = client.head(netrequest);
+        else if ( request.command == "DELETE" )
+            response = client.delete_(netrequest);
+
+        log("web",'>',request.command+' '+request.location);
+        return ok(body(response)); /// \todo preserve headers
     } catch (std::exception & e) {
+        log("web",'!',"Error processing "+request.location);
         return error(e.what());
     }
 }
 
-
+} // namespace network::http
 } // namespace network
