@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv)
 {
-    melanobot::Melanobot bot;
+    Melanobot bot;
 
     Logger::singleton().register_direction('<',color::dark_green);
     Logger::singleton().register_direction('>',color::dark_yellow);

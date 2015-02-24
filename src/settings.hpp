@@ -16,25 +16,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_HPP
-#define MELANOBOT_HPP
+#ifndef SETTINGS_HPP
+#define SETTINGS_HPP
 
-#include <string>
+#include <boost/property_tree/ptree.hpp>
 
-/**
- * \brief Main bot class
- */
-class Melanobot
-{
-public:
-    void load_config(const std::string& name);
+typedef boost::property_tree::ptree Settings;
 
-    /**
-     * \brief Runs the bot
-     * \return Exit status
-     */
-    int run() { return 0; }
-};
-
-
-#endif // MELANOBOT_HPP
+#endif // SETTINGS_HPP
