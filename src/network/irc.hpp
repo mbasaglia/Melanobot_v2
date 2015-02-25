@@ -24,8 +24,11 @@
 #include <mutex>
 #include <queue>
 #include <regex>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
+
+#include <boost/asio.hpp>
 
 #include "connection.hpp"
 #include "../melanobot.hpp"
@@ -79,21 +82,28 @@ public:
     explicit Network ( const ServerList& servers )
         : servers(servers)
     {
-        /// \todo maybe throw if servers is empty
-        current_server = this->servers.begin();
+        if ( servers.empty() )
+            throw std::logic_error("Empty network");
     }
+
+    Network ( const Network& other ) : Network(other.servers) {}
+
+    /**
+     * \note Deleted because it would require a lock
+     */
+    Network& operator= ( const Network& other ) = delete;
 
     const Server& current() const
     {
-        return *current_server;
+        return servers[current_server];
     }
 
     const Server& next()
     {
         ++current_server;
-        if ( current_server == servers.end() )
-            current_server = servers.end();
-        return *current_server;
+        if ( current_server == servers.size() )
+            current_server = 0;
+        return current();
     }
 
     int size() const
@@ -103,7 +113,7 @@ public:
 
 private:
     ServerList servers;
-    ServerList::iterator current_server;
+    std::atomic<unsigned> current_server { 0 };
 };
 
 class IrcConnection;
@@ -114,13 +124,20 @@ public:
     explicit Buffer(IrcConnection& irc, const Settings& settings = {});
 
     /**
+     * \brief Run the async process
+     */
+    void run();
+
+    /**
      * \brief Inserts a command to the buffer
      */
     void insert(const Command& cmd);
+
     /**
      * \brief Check if the buffer is empty
      */
     bool empty() const;
+
     /**
      * \brief Process the top command (if any)
      */
@@ -135,13 +152,24 @@ public:
      */
     void write(const Command& cmd);
 
-    int max_message_length() const { return flood_max_length; }
+    /**
+     * \brief Connect to the given server
+     */
+    void connect(const Server& server);
+
+    /**
+     * \brief Disconnect from the server
+     */
+    void disconnect();
+
+    bool connected() const;
 
 private:
     mutable std::mutex mutex; /// locks access to the buffer
 
     IrcConnection& irc;
 
+// Flood:
     /**
      * \brief Store messages when it isn't possible to send them
      */
@@ -150,7 +178,7 @@ private:
      * \brief Maximum nuber of bytes in a message (longer messages will be truncated)
      * \see http://tools.ietf.org/html/rfc2812#section-2.3
      */
-    int         flood_max_length = 510;
+    unsigned    flood_max_length = 510;
     /**
      * \brief Message timer
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
@@ -166,6 +194,30 @@ private:
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
      */
     Duration    flood_timer_penalty;
+
+// Network:
+    boost::asio::streambuf              buffer_read;
+    boost::asio::streambuf              buffer_write;
+    boost::asio::io_service             io_service;
+    boost::asio::ip::tcp::resolver      resolver{io_service};
+    boost::asio::ip::tcp::socket        socket{io_service};
+
+    /**
+     * \brief Schedules an asynchronous line read
+     */
+    void schedule_read();
+
+    /**
+     * \brief Writes a line to the socket
+     */
+    void write_line ( std::string line );
+
+    /**
+     * \brief Async hook on network input
+     */
+    void on_read_line(const boost::system::error_code &error);
+
+
 };
 
 class IrcConnection : public Connection
@@ -178,6 +230,9 @@ public:
 
     IrcConnection(Melanobot* bot, const Network& network, const Settings& settings = {});
     IrcConnection(Melanobot* bot, const Server& server, const Settings& settings = {});
+    ~IrcConnection() override;
+
+    void run() override;
 
     const Server& server() const override;
 
@@ -199,28 +254,27 @@ public:
     std::string protocol() const override;
 
     std::string connection_name() const override;
-    /**
-     * Thread: main, Sync: data+buffer
-     */
+
     void connect() override;
-    /**
-     * Thread: main, Sync: data+buffer
-     */
+
     void disconnect() override;
+
+    /**
+     * \brief Quit and connect
+     */
+    void reconnect();
 
     std::string nick() const;
     std::string normalized_nick() const;
 
 private:
 
+    friend class Buffer;
+
     /**
-     * \brief Create a message from a IRC line
+     * \brief Handle a IRC message
      */
-    Message parse_message(const std::string& line) const;
-    /**
-     * \brief Handle a IRC line
-     */
-    void handle_line(const std::string& line);
+    void handle_message(const Message& line);
 
     /**
      * \brief Extablish connection to the IRC server
@@ -250,6 +304,7 @@ private:
      * \brief Command buffer
      */
     Buffer buffer;
+
     /**
      * \brief Network/Bouncer password
      */
@@ -273,6 +328,10 @@ private:
      * \brief Nick that should be used
      */
     std::string preferred_nick;
+    /**
+     * \brief Nick used by the latest NICK command
+     */
+    std::string attempted_nick;
     /**
      * \brief Nick used to AUTH
      */

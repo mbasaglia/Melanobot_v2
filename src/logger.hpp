@@ -61,6 +61,7 @@ public:
 
     void log (const std::string& type, char direction, const std::string& message, int verbosity)
     {
+        /// \todo lock mutex for log_destination
         auto type_it = log_types.find(type);
         if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
             return;
@@ -85,6 +86,8 @@ public:
         log_destination << message << std::endl;
     }
 
+    int flags() const { return log_flags; }
+
 private:
     struct LogType
     {
@@ -108,9 +111,55 @@ private:
     unsigned log_type_length = 0;
 };
 
-inline void log (const std::string& type, char direction, const std::string& message, int verbosity = 2)
+/**
+ * \brief Simple log stream-like interface
+ */
+class Log
 {
-    Logger::singleton().log(type, direction, message, verbosity);
-}
+public:
+    Log(const std::string& type, char direction, int verbosity = 2)
+        : type(type), direction(direction), verbosity(direction)
+    {}
+
+    Log(const std::string& type, char direction, const std::string& message, int verbosity = 2)
+        : Log(type,direction,verbosity)
+    {
+        stream << message;
+    }
+
+    Log(const Log&) = delete;
+    Log& operator= (const Log&) = delete;
+
+    ~Log()
+    {
+        if ( color )
+            stream << color::nocolor.to_ansi();
+        Logger::singleton().log(type, direction, stream.str(), verbosity);
+    }
+
+    template<class T>
+        const Log& operator<< ( const T& t ) const
+        {
+            stream << t;
+            return *this;
+        }
+
+    const Log& operator<< ( const color::Color12& t ) const
+    {
+        if ( Logger::singleton().flags() & Logger::colors )
+        {
+            color = true;
+            stream << t.to_ansi();
+        }
+        return *this;
+    }
+
+public:
+    std::string type;
+    char direction;
+    int verbosity;
+    mutable std::ostringstream stream;
+    mutable bool color = false;
+};
 
 #endif // LOGGER_HPP

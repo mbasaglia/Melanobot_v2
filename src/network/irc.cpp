@@ -34,10 +34,21 @@ Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     flood_max_length = settings.get("flood.timer_max",510);
 }
 
+void Buffer::run()
+{
+    /// \todo wait if the io_service isn't running from the start and handle reconnects
+    schedule_read();
+    /// \todo execute process() in parallel to io_service.run()
+    io_service.run();
+}
+
 void Buffer::insert(const Command& cmd)
 {
     LOCK(mutex);
     buffer.push(cmd);
+
+    /// \todo remove from here (needs to be async with flood conditions
+    write(cmd);
 }
 
 bool Buffer::empty() const
@@ -68,15 +79,114 @@ void Buffer::clear()
 
 void Buffer::write(const Command& cmd)
 {
-    log("irc",'<',cmd.command,0);
-    /// \todo write to network (and add \r\n )
+    std::string line = cmd.command;
+    for ( auto it = cmd.parameters.begin(); it != cmd.parameters.end(); ++it )
+    {
+        if ( it == cmd.parameters.end()-1 && it->find(' ') != std::string::npos )
+            line += " :";
+        else
+            line += ' ';
+        line += *it;
+    }
+    write_line(line);
+}
+
+void Buffer::connect(const Server& server)
+{
+    if ( connected() )
+        disconnect();
+    boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    boost::asio::connect(socket, endpoint_iterator);
+    /// \todo async with error checking + cycle (ie: notify irc that connection failed and needs a reconnect)
+}
+
+void Buffer::disconnect()
+{
+    /// \todo try catch
+    socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+    socket.close();
+}
+
+bool Buffer::connected() const
+{
+    return socket.is_open();
+}
+
+void Buffer::schedule_read()
+{
+    boost::asio::async_read_until(socket, buffer_read, "\r\n",
+        std::bind(&Buffer::on_read_line, this, std::placeholders::_1));
+}
+
+void Buffer::write_line ( std::string line )
+{
+    /// \note this is synchronous, if it becomes async, keep QUIT as a sync message before disconnect()
+    /// \todo maybe try to trip \r and \n from line
+    std::ostream request_stream(&buffer_write);
+    if ( line.size() > flood_max_length )
+    {
+        Log("irc",'!',4) << "Truncating " << line;
+        line.erase(flood_max_length-1);
+    }
+    request_stream << line << "\r\n";
+    Log("irc",'<',line); /// \todo handle colors
+    boost::asio::write(socket, buffer_write);
+}
+
+
+void Buffer::on_read_line(const boost::system::error_code &error)
+{
+    if (error)
+    {
+        if ( error != boost::asio::error::eof )
+            Log("irc",'!') << color::red << "Network Error" << color::nocolor
+                << ':' << error.message();
+        return;
+    }
+
+    std::istream buffer_stream(&buffer_read);
+    Message msg;
+    std::getline(buffer_stream,msg.raw,'\r');
+    Log("irc",'>',msg.raw,0);
+    buffer_stream.ignore(2,'\n');
+    std::istringstream socket_stream(msg.raw);
+
+    if ( socket_stream.peek() == ':' )
+    {
+        socket_stream.ignore();
+        socket_stream >> msg.from;
+    }
+    socket_stream >> msg.command;
+
+    char c;
+    std::string param;
+    while ( socket_stream >> c )
+    {
+        if ( c == ':' )
+        {
+            std::getline (socket_stream, param);
+            msg.params.push_back(param);
+            break;
+        }
+        else
+        {
+            socket_stream.putback(c);
+            socket_stream >> param;
+            msg.params.push_back(param);
+        }
+    }
+
+    irc.handle_message(msg);
+
+    schedule_read();
 }
 
 IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Settings& settings )
     : bot(bot), network(network), buffer(*this, settings.get_child("buffer",{}))
 {
     network_password = settings.get("network.password",std::string());
-    preferred_nick = settings.get("nick","BotWithLazyOwner");
+    preferred_nick = settings.get("nick","PleaseNameMe");
     auth_nick  = settings.get("auth.nick",preferred_nick);
     auth_password = settings.get("auth.password",std::string());
     modes = settings.get("modes",std::string());
@@ -85,9 +195,20 @@ IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Setti
     : IrcConnection(bot,Network{server},settings)
 {}
 
+IrcConnection::~IrcConnection()
+{
+    buffer.disconnect();
+}
+
+void IrcConnection::run()
+{
+    connect();
+    buffer.run();
+}
+
 void IrcConnection::error ( const std::string& message )
 {
-    /// \todo log("irc",'!',ColorString()+color::red+"Error"+color::nocolor+": "+message);
+    Log("irc",'!',0) << color::red << "Error" << color::nocolor << ": " <<message;
 }
 
 const std::regex IrcConnection::re_message { "(?:(:[^ ]+) )?([a-zA-Z]+|[0-9]{3}) ?(.*)",
@@ -136,8 +257,10 @@ void IrcConnection::command ( const Command& c )
         /// \todo validate nick
         {
             LOCK(mutex);
-            if ( strtolower(cmd.parameters[0]) == current_nick_lowecase )
+            attempted_nick = strtolower(cmd.parameters[0]);
+            if ( attempted_nick == current_nick_lowecase )
             {
+                attempted_nick = "";
                 current_nick = cmd.parameters[0];
                 return;
             }
@@ -220,21 +343,6 @@ void IrcConnection::command ( const Command& c )
      * USERHOST
      * ISON     *
      */
-    for ( auto it = cmd.parameters.begin(); it != cmd.parameters.end(); ++it )
-    {
-        if ( it == cmd.parameters.end()-1 && it->find(' ') != std::string::npos )
-            cmd.command += " :";
-        else
-            cmd.command += ' ';
-        cmd.command += *it;
-    }
-
-    if ( int(cmd.command.size()) > buffer.max_message_length() )
-    {
-        log("irc",'!',"Truncating "+cmd.command,4);
-        cmd.command = cmd.command.substr(0,buffer.max_message_length());
-    }
-    cmd.parameters.clear();
 
     buffer.insert(cmd);
 }
@@ -276,55 +384,189 @@ std::string IrcConnection::connection_name() const
 
 void IrcConnection::connect()
 {
-    /// \todo
+    if ( !buffer.connected() )
+    {
+        buffer.connect(network.current());
+        /// \todo cycle servers until finds a connection, or has cycled through too many servers
+        /// then trigger a graceful quit
+        login();
+    }
 }
 
 void IrcConnection::disconnect()
 {
     if ( status() > CONNECTING )
-        command({"QUIT",{},1024});
-    /// \todo wait the QUIT to get through (maybe send directly) and close the connection
+        buffer.write({"QUIT",{},1024});
+    buffer.disconnect();
 }
 
 
-Message IrcConnection::parse_message(const std::string& line) const
+void IrcConnection::reconnect()
 {
-    Message message;
-    message.raw = line;
-    if ( message.raw.size() > 0 && message.raw.back() == '\n' )
-        message.raw.pop_back();
-    if ( message.raw.size() > 0 && message.raw.back() == '\r' )
-        message.raw.pop_back();
-
-    std::smatch match;
-    std::regex_search(message.raw, match, re_message);
-    message.from = match[1].str();
-    message.command = match[2].str();
-
-    std::string params = match[3].str();
-    auto it = params.begin();
-    for ( int i = 0; i < 14 && it != params.end() && *it != ':'; i++ )
-    {
-        auto next = std::find(it,params.end(),' ');
-        message.params.push_back(std::string(it,next));
-        it = next;
-        if ( it != params.end() )
-                ++it;
-    }
-    if ( it != params.end() )
-    {
-        if ( *it == ':' )
-            ++it;
-        message.message = std::string(it,params.end());
-        message.params.push_back(message.message);
-    }
-    return message;
+    disconnect();
+    network.next();
 }
 
-void IrcConnection::handle_line(const std::string& line)
+void IrcConnection::handle_message(const Message& msg)
 {
-    Message message = parse_message(line);
     /// \todo append Message to Melanobot
+
+    // see http://tools.ietf.org/html/rfc2812#section-5.1
+
+    if ( msg.command == "001" && msg.params.size() >= 1 )
+    {
+        // RPL_WELCOME
+        mutex.lock();
+        current_nick = msg.params[0];
+        current_nick_lowecase = strtolower(current_nick);
+        mutex.unlock();
+        auth();
+    }
+    else if ( msg.command == "433" && msg.params.size() >= 1 )
+    {
+        // ERR_NICKNAMEINUSE
+        mutex.lock();
+        if ( strtolower(attempted_nick) == strtolower(msg.params[0]) )
+        {
+            Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
+            /// \todo check nick max length
+            /// \todo system to try to get the best nick possible
+            Command cmd {{"NICK"},{attempted_nick+'_'},1024};
+            mutex.unlock();
+            command(cmd);
+        }
+        else
+            mutex.unlock();
+    }
+    else if ( msg.command == "464" || msg.command == "465" || msg.command == "466" )
+    {
+        // banned from server
+        reconnect();
+    }
+    else if ( msg.command == "PING" )
+    {
+        /// \todo read timeout in settings
+        /// \todo set timer to the latest server message and call PING when too old
+        command({"PONG",msg.params,1024,std::chrono::minutes(3)});
+    }
+
+    /// \todo handle non-numeric commands
+    /// \todo print a message for all ERR_ responses (verbosity > 2)
+    /* Skipped:
+     * 0xx server-client
+     * 002
+     * 003
+     * 004      *
+     * 005      *
+     * 2xx-3xx Replies to commands
+     * 302
+     * 303
+     * 301
+     * 305
+     * 306
+     * 311      *
+     * 312
+     * 313
+     * 317
+     * 318
+     * 319      *
+     * 314      ?
+     * 369
+     * 321
+     * 322      ?
+     * 323
+     * 325
+     * 324      ?
+     * 331      ?
+     * 332      ?
+     * 341
+     * 342
+     * 346
+     * 347
+     * 348
+     * 349
+     * 351      ?
+     * 352
+     * 315
+     * 353      *
+     * 366      ?
+     * 364
+     * 365
+     * 367      *
+     * 368      ?
+     * 371
+     * 374
+     * 372
+     * 376
+     * 381
+     * 382
+     * 383
+     * 391      ?
+     * 393
+     * 394
+     * 305
+     * 200-210
+     * 262
+     * 211
+     * 212
+     * 219
+     * 242
+     * 243
+     * 221      ?
+     * 234      ?
+     * 235      ?
+     * 251-255
+     * 256-259
+     * 263      ?
+     * 4xx errors
+     * 401
+     * 402
+     * 403
+     * 404      ?
+     * 405      *
+     * 406
+     * 407      ?
+     * 408
+     * 409
+     * 411
+     * 412-415  ?
+     * 421
+     * 422
+     * 423
+     * 424
+     * 431
+     * 432
+     * 436      ?
+     * 437
+     * 441
+     * 442
+     * 443
+     * 444
+     * 445
+     * 446      ?
+     * 451      *
+     * 461
+     * 462
+     * 463
+     * 464      *
+     * 465
+     * 467
+     * 472
+     * 473      *
+     * 474      *
+     * 475
+     * 476
+     * 477
+     * 478      *
+     * 481
+     * 482
+     * 483
+     * 484
+     * 485
+     * 491
+     * 501
+     * 502
+     */
 }
 
 void IrcConnection::login()

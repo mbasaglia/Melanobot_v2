@@ -59,12 +59,27 @@ struct Command
     Time                        timein;         ///< Time of creation
     Time                        timeout;        ///< Time it becomes obsolete
 
-    Command ( const std::string& command,
+    Command ( const std::string&        command,
         const std::vector<std::string>& parameters = {},
-        int priority = 0,
-        const Time& timeout = Time::max() )
-    : command(command), priority(priority),
-        timein(Clock::now()), timeout(timeout) {}
+        int                             priority = 0,
+        const Time&                     timeout = Time::max() )
+    :   command(command),
+        parameters(parameters),
+        priority(priority),
+        timein(Clock::now()),
+        timeout(timeout)
+    {}
+
+    Command ( const std::string&        command,
+        const std::vector<std::string>& parameters,
+        int                             priority,
+        const Duration&                 duration )
+    :   command(command),
+        parameters(parameters),
+        priority(priority),
+        timein(Clock::now()),
+        timeout(Clock::now()+duration)
+    {}
 
     bool operator< ( const Command& other ) const
     {
@@ -90,6 +105,11 @@ public:
     typedef std::atomic<Status> AtomicStatus;
 
     virtual ~Connection() {}
+
+    /**
+     * \brief Keeps the connection going (synchronous)
+     */
+    virtual void run() = 0;
 
     /**
      * \brief Returns the server object to which this connection is connected to

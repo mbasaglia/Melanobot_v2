@@ -119,10 +119,10 @@ Response Client::query (const Request& request)
         else if ( request.command == "DELETE" )
             response = client.delete_(netrequest);
 
-        log("web",'>',request.command+' '+request.location);
+        Log("web",'>') << request.command << ' ' << request.location;
         return ok(body(response)); /// \todo preserve headers
     } catch (std::exception & e) {
-        log("web",'!',"Error processing "+request.location);
+        Log("web",'!') << "Error processing " << request.location;
         return error(e.what());
     }
 }
