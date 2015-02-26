@@ -21,32 +21,49 @@
 
 #include <iomanip>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 
-//#include <boost/chrono.hpp>
 #include <boost/chrono/io/time_point_io.hpp>
-//#include <boost/chrono/io/timezone.hpp>
 
 #include "color.hpp"
-
+/**
+ * \brief Singleton class handling logs
+ * \see Log for a nicer interface
+ * \todo read settings
+ */
 class Logger
 {
 public:
-    static const int colors    = 0x1;
-    static const int timestamp = 0x2;
 
-    static Logger& singleton()
+    /**
+     * \brief Singleton instance
+     */
+    static Logger& instance()
     {
-        static Logger instance;
-        return instance;
+        static Logger singleton;
+        return singleton;
     }
 
+    /**
+     * \brief Register a log "direction"
+     *
+     * A direction is a simple identifier showing what kind of message
+     * has been logged
+     */
     void register_direction(char name, color::Color12 color)
     {
         log_directions[name] = color;
     }
 
+    /**
+     * \brief Register a log type
+     *
+     * A log type is the name of the component which generates the log.
+     * Better to keep it short, 3 letters should do.
+     * The default verbosity is 2
+     */
     void register_log_type(const std::string& name, color::Color12 color)
     {
         if ( log_type_length < name.size() )
@@ -54,11 +71,19 @@ public:
         log_types[name] = {color,2};
     }
 
+    /**
+     * \brief Change verbosity level for a given log type
+     *
+     * Messages of that type with higher verbisity will be discarded
+     */
     void set_log_verbosity(const std::string& name, int level)
     {
         log_types[name].verbosity = level;
     }
 
+    /**
+     * \brief Log a message
+     */
     void log (const std::string& type, char direction, const std::string& message, int verbosity)
     {
         /// \todo lock mutex for log_destination
@@ -66,11 +91,11 @@ public:
         if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
             return;
 
-        if ( log_flags & timestamp )
+        if ( !timestamp.empty() )
         {
             put_color(color::yellow);
             log_destination << '['
-                << boost::chrono::time_fmt(boost::chrono::timezone::local, "%Y-%m-%d %T")
+                << boost::chrono::time_fmt(boost::chrono::timezone::local, timestamp)
                 << boost::chrono::system_clock::now()
                 << ']';
             put_color(color::nocolor);
@@ -86,9 +111,13 @@ public:
         log_destination << message << std::endl;
     }
 
-    int flags() const { return log_flags; }
+    bool colors = true;                         ///< Whether colors are enabled
+    std::string timestamp = "%Y-%m-%d %T";      ///< Timestamp format
 
 private:
+    /**
+     * \brief Data associated with a log type
+     */
     struct LogType
     {
         color::Color12 color;
@@ -98,13 +127,15 @@ private:
     Logger() {}
     Logger(const Logger&) = delete;
 
+    /**
+     * \brief Put a color code only if colors are enabled
+     */
     void put_color( const color::Color12& color )
     {
-        if ( log_flags & colors )
+        if ( colors )
             log_destination << color.to_ansi();
     }
 
-    int log_flags = colors|timestamp;
     std::ostream log_destination {std::cout.rdbuf()};
     std::unordered_map<std::string, LogType> log_types;
     std::unordered_map<char, color::Color12> log_directions;
@@ -134,7 +165,7 @@ public:
     {
         if ( color )
             stream << color::nocolor.to_ansi();
-        Logger::singleton().log(type, direction, stream.str(), verbosity);
+        Logger::instance().log(type, direction, stream.str(), verbosity);
     }
 
     template<class T>
@@ -146,7 +177,7 @@ public:
 
     const Log& operator<< ( const color::Color12& t ) const
     {
-        if ( Logger::singleton().flags() & Logger::colors )
+        if ( Logger::instance().flags() & Logger::colors )
         {
             color = true;
             stream << t.to_ansi();
@@ -161,5 +192,19 @@ public:
     mutable std::ostringstream stream;
     mutable bool color = false;
 };
+
+/**
+ * \brief Throws an exception with a standardized format
+ */
+void error [[noreturn]] (const std::string& file, int line,
+                         const std::string& function, const std::string& msg )
+{
+    throw std::logic_error(function+"@"+file+":"+std::to_string(line)+": error: "+msg);
+}
+/**
+ * \brief Throws an exception pointing to the call line
+ */
+#define CRITICAL_ERROR(msg) \
+        error(__FILE__,__LINE__,__func__,msg)
 
 #endif // LOGGER_HPP

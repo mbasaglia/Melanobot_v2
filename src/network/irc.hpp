@@ -33,6 +33,7 @@
 #include "connection.hpp"
 #include "../melanobot.hpp"
 #include "../settings.hpp"
+#include "../logger.hpp"
 
 namespace network {
 namespace irc {
@@ -72,6 +73,9 @@ inline std::string strtoupper ( std::string string )
     return string;
 }
 
+/**
+ * \brief A collection of servers
+ */
 class Network
 {
 public:
@@ -83,7 +87,7 @@ public:
         : servers(servers)
     {
         if ( servers.empty() )
-            throw std::logic_error("Empty network");
+            CRITICAL_ERROR("Empty network");
     }
 
     Network ( const Network& other ) : Network(other.servers) {}
@@ -93,11 +97,18 @@ public:
      */
     Network& operator= ( const Network& other ) = delete;
 
+    /**
+     * \brief Current server
+     */
     const Server& current() const
     {
         return servers[current_server];
     }
 
+    /**
+     * \brief Advances to the next server in the list and returns it
+     * \note Acts as a circular buffer, will always return a valid server
+     */
     const Server& next()
     {
         ++current_server;
@@ -106,6 +117,10 @@ public:
         return current();
     }
 
+    /**
+     * \brief Number of servers
+     * \note Always >= 0
+     */
     int size() const
     {
         return servers.size();
@@ -113,11 +128,19 @@ public:
 
 private:
     ServerList servers;
+    /**
+     * \todo needs atomic?
+     */
     std::atomic<unsigned> current_server { 0 };
 };
 
 class IrcConnection;
 
+/**
+ * \brief IRC buffer
+ *
+ * Contains the network connection and performs flood checking
+ */
 class Buffer
 {
 public:
@@ -125,43 +148,56 @@ public:
 
     /**
      * \brief Run the async process
+     * \thread irc \lock none
      */
     void run();
 
     /**
      * \brief Inserts a command to the buffer
+     * \thread external \lock buffer
      */
     void insert(const Command& cmd);
 
     /**
      * \brief Check if the buffer is empty
+     * \thread ? \lock buffer
      */
     bool empty() const;
 
     /**
      * \brief Process the top command (if any)
+     * \thread queue \lock buffer
      */
     void process();
+
     /**
      * \brief Clear all commands
+     * \thread ? \lock buffer
      */
     void clear();
 
     /**
      * \brief Outputs directly a line from the command
+     * \thread irc queue \lock none
      */
     void write(const Command& cmd);
 
     /**
      * \brief Connect to the given server
+     * \thread irc, queue \lock none
      */
     void connect(const Server& server);
 
     /**
      * \brief Disconnect from the server
+     * \thread irc, queue \lock none
      */
     void disconnect();
 
+    /**
+     * \brief Checks if the connection is active
+     * \thread irc, queue \lock none
+     */
     bool connected() const;
 
 private:
@@ -204,22 +240,28 @@ private:
 
     /**
      * \brief Schedules an asynchronous line read
+     * \thread irc, async_read \lock none (async)
      */
     void schedule_read();
 
     /**
      * \brief Writes a line to the socket
+     * \thread irc, queue \lock none TODO?
      */
     void write_line ( std::string line );
 
     /**
      * \brief Async hook on network input
+     * \thread async_read \lock none
      */
     void on_read_line(const boost::system::error_code &error);
 
 
 };
 
+/**
+ * \brief IRC connection
+ */
 class IrcConnection : public Connection
 {
 public:
@@ -228,44 +270,87 @@ public:
      */
     static void error(const std::string& message);
 
+    /**
+     * \thread main \lock none
+     */
     IrcConnection(Melanobot* bot, const Network& network, const Settings& settings = {});
+    /**
+     * \thread main \lock none
+     */
     IrcConnection(Melanobot* bot, const Server& server, const Settings& settings = {});
+    /**
+     * \thread main \lock none
+     */
     ~IrcConnection() override;
 
+    /**
+     * \thread irc \lock none
+     */
     void run() override;
 
+    /**
+     * \thread ? \lock buffer
+     */
     const Server& server() const override;
 
+    /**
+     * \thread irc, external, async_read \lock data(sometimes) buffer(call)
+     */
     void command ( const Command& cmd ) override;
 
+    /**
+     * \thread external \lock data(sometimes) buffer(call)
+     */
     void say ( const std::string& channel,
         const std::string& message,
         int priority = 0,
         const Time& timeout = Time::max() ) override;
 
+    /**
+     * \thread external \lock data(sometimes) buffer(call)
+     */
     void say_as ( const std::string& channel,
         const std::string& name,
         const std::string& message,
         int priority = 0,
         const Time& timeout = Time::max()  ) override;
 
+    /**
+     * \thread ? \lock none
+     */
     Status status() const override;
 
+    /**
+     * \thread ? \lock none
+     */
     std::string protocol() const override;
 
+    /**
+     * \thread ? \lock none
+     */
     std::string connection_name() const override;
 
+    /**
+     * \thread main, external \lock buffer(indirect) data(indirect)
+     */
     void connect() override;
 
+    /**
+     * \thread main, external, irc, async_read \lock buffer(indirect)
+     */
     void disconnect() override;
 
     /**
      * \brief Quit and connect
+     * \thread async_read \lock buffer(indirect) data(indirect)
      */
     void reconnect();
 
+    /**
+     * \brief Bot's current nick
+     * \thread ? \lock data
+     */
     std::string nick() const;
-    std::string normalized_nick() const;
 
 private:
 
@@ -273,16 +358,19 @@ private:
 
     /**
      * \brief Handle a IRC message
+     * \thread async_read \lock data(sometimes) buffer(indirect, sometimes)
      */
     void handle_message(const Message& line);
 
     /**
      * \brief Extablish connection to the IRC server
+     * \thread async_read \lock data buffer(indirect)
      */
     void login();
 
     /**
      * \brief AUTH to the server
+     * \thread async_read \lock data buffer(indirect)
      */
     void auth();
 

@@ -23,7 +23,9 @@
 #include <cstdint>
 #include <cstdlib>
 #include <string>
-
+/**
+ * \brief Namespace for color operations
+ */
 namespace color {
 /**
  * \brief 12 bit color
@@ -66,11 +68,12 @@ public:
             b = component_from_hex(s[2]);
         }
     }
+    
     /**
      * \brief Creates a color from a DP color string ^. or ^x...
      */
-
     static Color12 from_dp(const std::string& color);
+
     /**
      * \brief Creates a color from an IRC color string \3..
      */

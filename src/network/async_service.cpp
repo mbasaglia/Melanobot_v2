@@ -32,7 +32,6 @@
 
 #include "../logger.hpp"
 
-
 namespace network {
 
 namespace http {

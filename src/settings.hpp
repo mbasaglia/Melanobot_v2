@@ -21,6 +21,9 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+/**
+ * \brief Class containing hierarchical settings
+ */
 typedef boost::property_tree::ptree Settings;
 
 #endif // SETTINGS_HPP
