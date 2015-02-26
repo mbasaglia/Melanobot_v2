@@ -211,11 +211,6 @@ void IrcConnection::error ( const std::string& message )
     Log("irc",'!',0) << color::red << "Error" << color::nocolor << ": " <<message;
 }
 
-const std::regex IrcConnection::re_message { "(?:(:[^ ]+) )?([a-zA-Z]+|[0-9]{3}) ?(.*)",
-    std::regex_constants::syntax_option_type::optimize |
-    std::regex_constants::syntax_option_type::ECMAScript
-};
-
 const Server& IrcConnection::server() const
 {
     LOCK(mutex);

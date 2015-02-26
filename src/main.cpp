@@ -2,7 +2,7 @@
 #include "logger.hpp"
 #include "network/async_service.hpp"
 #include "network/irc.hpp"
-
+#include "string.hpp"
 int main(int argc, char **argv)
 {
     Melanobot bot;

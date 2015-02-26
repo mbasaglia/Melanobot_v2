@@ -19,6 +19,8 @@
 #include "color.hpp"
 
 #include <algorithm>
+#include <regex>
+
 namespace color {
 
 Color12 nocolor;
@@ -41,12 +43,18 @@ Color12 dark_cyan       = Color12(0x0, 0x8, 0x8);
 
 Color12 Color12::from_dp(const std::string& color)
 {
-    if ( color.size() < 2 || color[0] != '^' )
+    static std::regex regex = std::regex( "\\^?([[:digit:]]|x([[:xdigit:]]{3}))",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::extended
+    );
+    std::smatch match;
+    if ( !std::regex_match(color,match,regex) )
         return Color12();
-    if ( color[1] == 'x' && color.size() == 5 )
-        return Color12(color.substr(2));
 
-    switch (color[1])
+    if ( !match[2].str().empty() )
+        return Color12(match[2]);
+
+    switch (match[1].str()[0])
     {
         case '0': return black;
         case '1': return red;
@@ -65,11 +73,16 @@ Color12 Color12::from_dp(const std::string& color)
 
 Color12 Color12::from_irc(const std::string& color)
 {
-    if ( color.size() < 2 || color[0] != '\3' || !std::isdigit(color[1]) )
+    static std::regex regex = std::regex( "\3?([0-9]{2})",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::ECMAScript
+    );
+
+    std::smatch match;
+    if ( !std::regex_match(color,match,regex) )
         return Color12();
 
-    int n = std::strtol(color.c_str()+1,nullptr,10);
-    switch ( n )
+    switch ( std::stoi(match[1].str()) )
     {
         case  0: return white;
         case  1: return black;

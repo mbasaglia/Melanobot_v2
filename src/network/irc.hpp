@@ -23,7 +23,6 @@
 #include <algorithm>
 #include <mutex>
 #include <queue>
-#include <regex>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -373,11 +372,6 @@ private:
      * \thread async_read \lock data buffer(indirect)
      */
     void auth();
-
-    /**
-     * \brief Regular expression for IRC messages
-     */
-    static const std::regex re_message;
 
     mutable std::mutex mutex;
 

@@ -27,21 +27,21 @@ Dependencies
 * [C++14 Compiler](http://en.cppreference.com/w/cpp/compiler_support)
 * [CMake](http://www.cmake.org/)
 * [Boost](http://www.boost.org/)
-	* asio
-	* chrono
-	* property_tree
+    * asio
+    * chrono
+    * property_tree
 * [Cpp-Netlib](http://cpp-netlib.org/)
 
 Building
 --------
 
-	mkdir build && cd build && cmake .. && make
-	
+    mkdir build && cd build && cmake .. && make
+
 Running
 -------
 
-	src/melanobot
-	
+    src/melanobot
+
 Configuration
 -------------
 

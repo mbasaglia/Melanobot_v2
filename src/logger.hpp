@@ -177,7 +177,7 @@ public:
 
     const Log& operator<< ( const color::Color12& t ) const
     {
-        if ( Logger::instance().flags() & Logger::colors )
+        if ( Logger::instance().colors )
         {
             color = true;
             stream << t.to_ansi();
@@ -196,7 +196,7 @@ public:
 /**
  * \brief Throws an exception with a standardized format
  */
-void error [[noreturn]] (const std::string& file, int line,
+inline void error [[noreturn]] (const std::string& file, int line,
                          const std::string& function, const std::string& msg )
 {
     throw std::logic_error(function+"@"+file+":"+std::to_string(line)+": error: "+msg);
