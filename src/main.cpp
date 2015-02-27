@@ -5,7 +5,6 @@
 #include "string.hpp"
 int main(int argc, char **argv)
 {
-    Melanobot bot;
 
     Logger::instance().register_direction('<',color::dark_green);
     Logger::instance().register_direction('>',color::dark_yellow);
@@ -19,6 +18,8 @@ int main(int argc, char **argv)
     Logger::instance().register_log_type("sys",color::red);
 
     Logger::instance().load_settings({});
+
+    Melanobot bot;
 
     Logger::instance().set_log_verbosity("irc",100);
     network::irc::IrcConnection irc(&bot,network::Server{"irc.quakenet.org",6667});

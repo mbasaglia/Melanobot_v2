@@ -126,11 +126,11 @@ void Buffer::write_line ( std::string line )
     std::ostream request_stream(&buffer_write);
     if ( line.size() > flood_max_length )
     {
-        Log("irc",'!',4) << "Truncating " << line;
+        Log("irc",'!',4) << "Truncating " << irc.formatter()->decode(line);
         line.erase(flood_max_length-1);
     }
     request_stream << line << "\r\n";
-    Log("irc",'<',line); /// \todo handle colors
+    Log("irc",'<',1) << irc.formatter()->decode(line);
     boost::asio::write(socket, buffer_write);
 }
 
@@ -140,7 +140,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     if (error)
     {
         if ( error != boost::asio::error::eof )
-            Log("irc",'!') << color::red << "Network Error" << color::nocolor
+            Log("irc",'!',0) << color::red << "Network Error" << color::nocolor
                 << ':' << error.message();
         return;
     }
@@ -148,7 +148,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     std::istream buffer_stream(&buffer_read);
     Message msg;
     std::getline(buffer_stream,msg.raw,'\r');
-    Log("irc",'>',msg.raw,0);
+    Log("irc",'>',1) << irc.formatter()->decode(msg.raw);
     buffer_stream.ignore(2,'\n');
     std::istringstream socket_stream(msg.raw);
 
@@ -186,10 +186,11 @@ IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Set
     : bot(bot), network(network), buffer(*this, settings.get_child("buffer",{}))
 {
     network_password = settings.get("network.password",std::string());
-    preferred_nick = settings.get("nick","PleaseNameMe");
-    auth_nick  = settings.get("auth.nick",preferred_nick);
-    auth_password = settings.get("auth.password",std::string());
-    modes = settings.get("modes",std::string());
+    preferred_nick   = settings.get("nick","PleaseNameMe");
+    auth_nick        = settings.get("auth.nick",preferred_nick);
+    auth_password    = settings.get("auth.password",std::string());
+    modes            = settings.get("modes",std::string());
+    formatter_ = string::Formatter::formatter(settings.get("string.format",std::string("irc")));
 }
 IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
     : IrcConnection(bot,Network{server},settings)
@@ -208,7 +209,7 @@ void IrcConnection::run()
 
 void IrcConnection::error ( const std::string& message )
 {
-    Log("irc",'!',0) << color::red << "Error" << color::nocolor << ": " <<message;
+    Log("irc",'!',0) << color::red << "Error" << color::nocolor << ": " << message;
 }
 
 const Server& IrcConnection::server() const
@@ -395,6 +396,10 @@ void IrcConnection::disconnect()
     buffer.disconnect();
 }
 
+string::Formatter* IrcConnection::formatter()
+{
+    return formatter_;
+}
 
 void IrcConnection::reconnect()
 {
@@ -576,7 +581,8 @@ void IrcConnection::auth()
 {
     if ( !auth_password.empty() )
         command({"AUTH",{auth_nick, auth_password},1024});
-    command({"MODE",{current_nick, modes},1024});
+    if ( !modes.empty() )
+        command({"MODE",{current_nick, modes},1024});
 
 }
 

@@ -486,25 +486,10 @@ public:
     typedef container::difference_type difference_type;
     typedef container::size_type       size_type;
 
-    /**
-     * \brief Append an element (takes ownership)
-     */
-    void append ( Element* element )
-    {
-        elements.push_back(container::value_type{element});
-    }
-
-    void append ( const FormattedString& string )
-    {
-        elements.insert(elements.end(),string.begin(),string.end());
-    }
-
-    std::string encode(const std::string& format) const
-    {
-        return encode(Formatter::formatter(format));
-    }
-
-    std::string encode(Formatter* formatter) const;
+    template<class Iterator>
+        FormattedString( const Iterator& i, const Iterator& j )
+            : elements(i,j) {}
+    FormattedString() = default;
 
     iterator        begin()       { return elements.begin();}
     iterator        end()         { return elements.end();  }
@@ -518,6 +503,11 @@ public:
 
     size_type size()  const { return elements.size(); }
     bool      empty() const { return elements.empty(); }
+
+    void push_back( const_reference r )
+    {
+        elements.push_back(r);
+    }
 
     iterator insert(const const_iterator& p, const value_type& t)
     {
@@ -560,6 +550,28 @@ public:
         elements.assign(il);
     }
 
+// Non-C++ container methods
+
+    /**
+     * \brief Append an element (takes ownership)
+     */
+    void append ( Element* element )
+    {
+        elements.push_back(container::value_type{element});
+    }
+
+    void append ( const FormattedString& string )
+    {
+        elements.insert(elements.end(),string.begin(),string.end());
+    }
+
+    std::string encode(const std::string& format) const
+    {
+        return encode(Formatter::formatter(format));
+    }
+
+    std::string encode(Formatter* formatter) const;
+
 private:
     container elements;
 };
@@ -575,7 +587,7 @@ public:
     FormattedStream()
         : formatter(nullptr) {}
 
-    explicit operator FormattedString() const { return buffer; }
+    explicit operator FormattedString() const { return str(); }
     FormattedString str() const { return buffer; }
 
     const FormattedStream& operator<< ( const std::string& text ) const
@@ -613,6 +625,11 @@ public:
     const FormattedStream& operator<< ( char c ) const
     {
         buffer.append(new Character(c));
+        return *this;
+    }
+    const FormattedStream& operator<< ( const FormattedString& string ) const
+    {
+        buffer.append(string);
         return *this;
     }
     template <class T>

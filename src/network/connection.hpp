@@ -24,6 +24,8 @@
 #include <cstdint>
 #include <sstream>
 
+#include "string.hpp"
+
 namespace network {
 
 typedef std::chrono::steady_clock Clock;
@@ -162,6 +164,11 @@ public:
      * \brief Close the connection
      */
     virtual void disconnect() = 0;
+
+    /**
+     * \brief Get the string formatter
+     */
+    virtual string::Formatter* formatter() = 0;
 
 };
 

@@ -96,22 +96,20 @@ public:
 
         if ( !timestamp.empty() )
         {
-            put_color(color::yellow);
-            log_destination << '['
+            log_destination <<  formatter->color(color::yellow) << '['
                 << boost::chrono::time_fmt(boost::chrono::timezone::local, timestamp)
                 << boost::chrono::system_clock::now()
-                << ']';
-            put_color(color::nocolor);
+                << ']' << formatter->clear();
         }
 
         if ( type_it != log_types.end() )
-            put_color(type_it->second.color);
+            log_destination <<  formatter->color(type_it->second.color);
         log_destination << std::setw(log_type_length) << std::left << type;
 
-        put_color(log_directions[direction]);
-        log_destination << direction;
-        put_color(color::nocolor);
-        log_destination << message.encode(formatter) << std::endl;
+        log_destination << formatter->color(log_directions[direction]) << direction;
+
+        log_destination << formatter->clear() << message.encode(formatter)
+            << formatter->clear() << std::endl;
     }
 
     void load_settings(const Settings& settings)
@@ -134,15 +132,6 @@ private:
 
     Logger() {}
     Logger(const Logger&) = delete;
-
-    /**
-     * \brief Put a color code only if colors are enabled
-     */
-    void put_color( const color::Color12& color )
-    {
-        if ( formatter )
-            log_destination << formatter->color(color);
-    }
 
     std::ostream log_destination {std::cout.rdbuf()};
     std::unordered_map<std::string, LogType> log_types;

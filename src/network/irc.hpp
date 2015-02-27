@@ -340,6 +340,11 @@ public:
     void disconnect() override;
 
     /**
+     * \thread external \lock none
+     */
+    string::Formatter* formatter() override;
+
+    /**
      * \brief Quit and connect
      * \thread async_read \lock buffer(indirect) data(indirect)
      */
@@ -426,6 +431,10 @@ private:
      * \brief Modes to set after AUTH
      */
     std::string modes;
+    /**
+     * \brief Input formatter
+     */
+    string::Formatter* formatter_ = nullptr;
 };
 
 } // namespace network::irc
