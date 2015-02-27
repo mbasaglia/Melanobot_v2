@@ -16,27 +16,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_HPP
-#define MELANOBOT_HPP
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
 
-#include "settings.hpp"
-#include "network/connection.hpp"
+#define PROJECT_SHORTNAME "@EXECUTABLE_NAME@"
 
-/**
- * \brief Main bot class
- */
-class Melanobot
-{
-public:
-    explicit Melanobot(const settings::Settings& settings);
-    ~Melanobot();
-
-    /**
-     * \brief Runs the bot
-     * \return Exit status
-     */
-    int run();
-};
-
-
-#endif // MELANOBOT_HPP
+#endif // CONFIG_HPP

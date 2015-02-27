@@ -16,6 +16,13 @@
 file(GLOB_RECURSE SOURCES *.cpp)
 file(GLOB_RECURSE HEADERS *.hpp)
 
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/config.hpp.in"
+  "${PROJECT_BINARY_DIR}/src/config.hpp"
+)
+set(HEADERS ${HEADERS} "${PROJECT_BINARY_DIR}/src/config.hpp")
+include_directories("${PROJECT_BINARY_DIR}/src")
+
 set(ALL_SOURCES ${ALL_SOURCES} ${SOURCES} ${HEADERS} PARENT_SCOPE)
 
 
@@ -49,7 +56,7 @@ add_executable(${EXECUTABLE_NAME} ${SOURCES})
 install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 
 # Boost
-find_package (Boost COMPONENTS system chrono thread REQUIRED)
+find_package (Boost COMPONENTS system chrono thread filesystem REQUIRED)
 target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 

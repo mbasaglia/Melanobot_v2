@@ -21,9 +21,39 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+namespace settings {
+
 /**
  * \brief Class containing hierarchical settings
  */
 typedef boost::property_tree::ptree Settings;
 
+/**
+ * \brief File format used to open/save settings
+ */
+enum class FileFormat
+{
+    AUTO, ///< Deduce automatically
+    JSON,
+    INI,
+    XML,
+    INFO,
+};
+
+/**
+ * \brief Basically get the executable directory
+ */
+void initialize ( int argc, char** argv );
+
+/**
+ * \brief Load settings from file
+ */
+Settings load ( const std::string& file_name, FileFormat format = FileFormat::AUTO );
+
+/**
+ * \brief Tries to find a file from which settings can be loaded
+ */
+std::string find_config( FileFormat format = FileFormat::AUTO );
+
+} // namespace settings
 #endif // SETTINGS_HPP

@@ -3,8 +3,10 @@
 #include "network/async_service.hpp"
 #include "network/irc.hpp"
 #include "string/string.hpp"
+
 int main(int argc, char **argv)
 {
+    settings::initialize(argc,argv);
 
     Logger::instance().register_direction('<',color::dark_green);
     Logger::instance().register_direction('>',color::dark_yellow);
@@ -17,9 +19,21 @@ int main(int argc, char **argv)
     Logger::instance().register_log_type("web",color::dark_blue);
     Logger::instance().register_log_type("sys",color::red);
 
-    Logger::instance().load_settings({});
+    std::string settings_file;
 
-    Melanobot bot;
+    /// \todo Read arguments
+
+    settings_file = settings::find_config();
+
+    if ( settings_file.empty() )
+        CRITICAL_ERROR("Cannot start without a config file");
+    settings::Settings settings = settings::load(settings_file);
+
+    Logger::instance().load_settings(settings.get_child("log",{}));
+    
+    Log("sys",'!',0) << "Executing from " << settings_file;
+
+    Melanobot bot(settings);
 
     Logger::instance().set_log_verbosity("irc",100);
     network::irc::IrcConnection irc(&bot,network::Server{"irc.quakenet.org",6667});
