@@ -270,6 +270,11 @@ public:
     static void error(const std::string& message);
 
     /**
+     * \brief Create from settings
+     */
+    static IrcConnection* create(Melanobot* bot, const settings::Settings& settings);
+
+    /**
      * \thread main \lock none
      */
     IrcConnection(Melanobot* bot, const Network& network, const settings::Settings& settings = {});
@@ -277,6 +282,7 @@ public:
      * \thread main \lock none
      */
     IrcConnection(Melanobot* bot, const Server& server, const settings::Settings& settings = {});
+    
     /**
      * \thread main \lock none
      */

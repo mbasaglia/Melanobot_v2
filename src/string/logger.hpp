@@ -148,7 +148,7 @@ class Log
 {
 public:
     Log(const std::string& type, char direction, int verbosity = 2)
-        : type(type), direction(direction), verbosity(direction)
+        : type(type), direction(direction), verbosity(verbosity)
     {}
 
     Log(const std::string& type, char direction, const std::string& message, int verbosity = 2)

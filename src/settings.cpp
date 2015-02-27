@@ -33,10 +33,10 @@
 namespace settings {
 
 static std::unordered_map<std::string,FileFormat> format_extension = {
-    {"json",FileFormat::JSON},
-    {"info",FileFormat::INFO},
-    {"xml",FileFormat::XML},
-    {"ini",FileFormat::INI},
+    {".json",FileFormat::JSON},
+    {".info",FileFormat::INFO},
+    {".xml",FileFormat::XML},
+    {".ini",FileFormat::INI},
 };
 
 static boost::filesystem::path exe_dir;
@@ -70,7 +70,7 @@ Settings load ( const std::string& file_name, FileFormat format )
 
     boost::system::error_code err;
     auto status = boost::filesystem::status(file_name,err);
-    if ( status.type() == boost::filesystem::regular_file || err )
+    if ( status.type() != boost::filesystem::regular_file || err )
         CRITICAL_ERROR("Cannot load config file: "+file_name);
 
     Settings settings;
@@ -107,7 +107,7 @@ static boost::filesystem::path find_config ( const boost::filesystem::path& dir,
     {
         if ( format == FileFormat::AUTO || format == p.second )
         {
-            boost::filesystem::path fp = dir.string() + ("/config."+p.first);
+            boost::filesystem::path fp = dir.string() + ("/config"+p.first);
             if ( boost::filesystem::exists(fp) )
             {
                 boost::system::error_code err;

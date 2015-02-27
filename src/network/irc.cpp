@@ -31,7 +31,7 @@ Buffer::Buffer(IrcConnection& irc, const settings::Settings& settings)
     flood_timer = Clock::now();
     flood_timer_max = std::chrono::seconds(settings.get("flood.timer_max",10));
     flood_timer_penalty = std::chrono::seconds(settings.get("flood.timer_penalty",2));
-    flood_max_length = settings.get("flood.timer_max",510);
+    flood_max_length = settings.get("flood.max_length",510);
 }
 
 void Buffer::run()
@@ -182,10 +182,41 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     schedule_read();
 }
 
+REGISTER_CONNECTION(irc,&IrcConnection::create);
+
+IrcConnection* IrcConnection::create(Melanobot* bot, const settings::Settings& settings)
+{
+    if ( settings.get("protocol",std::string()) != "irc" )
+    {
+        error("Wrong protocol for IRC connection");
+        return nullptr;
+    }
+
+    Network::ServerList network;
+
+    Server server ( settings.get("server",std::string()) );
+    if ( !server.port )
+        server.port = 6667;
+    server.host = settings.get("server.host",server.host);
+    server.port = settings.get("server.port",server.port);
+    if ( !server.host.empty() && server.port )
+        network.push_back(server);
+
+    /// \todo handle named networks (insert at the end of \c network)
+
+    if ( network.empty() )
+    {
+        error("IRC connection with no server");
+        return nullptr;
+    }
+
+    return new IrcConnection(bot, Network(network), settings);
+}
+
 IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const settings::Settings& settings )
     : bot(bot), network(network), buffer(*this, settings.get_child("buffer",{}))
 {
-    network_password = settings.get("network.password",std::string());
+    network_password = settings.get("server.password",std::string());
     preferred_nick   = settings.get("nick","PleaseNameMe");
     auth_nick        = settings.get("auth.nick",preferred_nick);
     auth_password    = settings.get("auth.password",std::string());

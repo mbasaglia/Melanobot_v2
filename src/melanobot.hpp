@@ -36,6 +36,8 @@ public:
      * \return Exit status
      */
     int run();
+private:
+    std::vector<network::Connection*> connections;
 };
 
 

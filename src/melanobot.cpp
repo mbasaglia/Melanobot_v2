@@ -19,16 +19,29 @@
 #include "melanobot.hpp"
 
 
-Melanobot::Melanobot(const settings::Settings& )
+Melanobot::Melanobot(const settings::Settings& settings )
 {
-    /// \todo
+    settings::Settings connsettings = settings.get_child("connections",{});
+    for(const auto& pt : connsettings)
+    {
+        network::Connection* conn = network::ConnectionFactory::instance().create(this,pt.second);
+        if ( conn )
+            connections.push_back(conn);
+    }
+    if ( connections.empty() )
+        Log("sys",'!',0) << color::red << "Error" << color::nocolor
+            << ": Creating a bot with no connections";
 }
 Melanobot::~Melanobot()
 {
-    /// \todo
+    for ( auto conn : connections )
+        delete conn;
 }
 int Melanobot::run()
 {
-    /// \todo
+    /// \todo to each its own thread
+    for ( auto conn : connections )
+        conn->run();
+    /// \todo detect error codes to be returned
     return 0;
 }

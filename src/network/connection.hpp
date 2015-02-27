@@ -25,6 +25,9 @@
 #include <sstream>
 
 #include "../string/string.hpp"
+#include "../string/logger.hpp"
+
+class Melanobot;
 
 namespace network {
 
@@ -41,6 +44,18 @@ struct Server
     uint16_t    port;
 
     Server( const std::string& host, uint16_t port ) : host(host), port(port) {}
+
+    /**
+     * \brief Creates object from host:port string
+     */
+    explicit Server( const std::string& server )
+        : port(0)
+    {
+        auto p = server.find(':');
+        host = server.substr(0,p);
+        if ( p != std::string::npos && p < server.size()-1 && std::isdigit(server[p+1]) )
+            port = std::stoul(server.substr(p+1));
+    }
 
     std::string name() const
     {
@@ -184,6 +199,68 @@ struct Message
     std::string              message; ///< (optional) Message contents
     std::vector<std::string> channels;///< (optional) Channels originating from
     std::string              from;    ///< (optional) Name of the user who created this command
+};
+
+#define REGISTER_CONNECTION(name,function) \
+    static ConnectionFactory::RegisterConnection register_##name(#name,function)
+/**
+ * \brief Creates connections from settings
+ */
+class ConnectionFactory
+{
+public:
+    typedef std::function<Connection*(Melanobot* bot, const settings::Settings&)> Contructor;
+    /**
+     * \brief Auto-registration helper
+     */
+    class RegisterConnection
+    {
+    public:
+        RegisterConnection(const std::string& protocol_name, const Contructor& function)
+        {
+            ConnectionFactory::instance().register_connection(protocol_name, function);
+        }
+    };
+
+    /**
+     * \brief Singleton instance
+     */
+    static ConnectionFactory& instance()
+    {
+        static ConnectionFactory singleton;
+        return singleton;
+    };
+
+    /**
+     * \brief Registers a connection type
+     */
+    void register_connection ( const std::string& protocol_name, const Contructor& function )
+    {
+        if ( factory.count(protocol_name) )
+            CRITICAL_ERROR("Re-registering connection protocol "+protocol_name);
+        factory[protocol_name] = function;
+    }
+
+    /**
+     * \brief Creates a connection from its settings
+     */
+    Connection* create(Melanobot* bot, const settings::Settings& settings)
+    {
+        std::string protocol = settings.get("protocol",std::string());
+        auto it = factory.find(protocol);
+        if ( it != factory.end() )
+            return it->second(bot, settings);
+
+        Log("sys",'!',0) << color::red << "Error" << color::nocolor
+            << ": Uknown connection protocol "+protocol;
+        return nullptr;
+    }
+
+private:
+    ConnectionFactory(){}
+    ConnectionFactory(const ConnectionFactory&) = delete;
+
+    std::unordered_map<std::string,Contructor> factory;
 };
 
 

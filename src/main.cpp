@@ -28,16 +28,12 @@ int main(int argc, char **argv)
     if ( settings_file.empty() )
         CRITICAL_ERROR("Cannot start without a config file");
     settings::Settings settings = settings::load(settings_file);
-
-    Logger::instance().load_settings(settings.get_child("log",{}));
     
+    Logger::instance().load_settings(settings.get_child("log",{}));
+
     Log("sys",'!',0) << "Executing from " << settings_file;
 
     Melanobot bot(settings);
-
-    Logger::instance().set_log_verbosity("irc",100);
-    network::irc::IrcConnection irc(&bot,network::Server{"irc.quakenet.org",6667});
-    irc.run();
 
     return bot.run();
 }
