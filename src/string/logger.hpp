@@ -112,7 +112,7 @@ public:
             << formatter->clear() << std::endl;
     }
 
-    void load_settings(const Settings& settings)
+    void load_settings(const settings::Settings& settings)
     {
         std::string format = settings.get("format",std::string("ansi-utf8"));
         formatter = string::Formatter::formatter(format);

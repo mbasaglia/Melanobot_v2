@@ -18,14 +18,14 @@
  */
 
 #include "irc.hpp"
-#include "../logger.hpp"
+#include "../string/logger.hpp"
 
 #define LOCK(mutexname) std::lock_guard<std::mutex> lock_(mutexname)
 
 namespace network {
 namespace irc {
 
-Buffer::Buffer(IrcConnection& irc, const Settings& settings)
+Buffer::Buffer(IrcConnection& irc, const settings::Settings& settings)
     : irc(irc)
 {
     flood_timer = Clock::now();
@@ -182,7 +182,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     schedule_read();
 }
 
-IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Settings& settings )
+IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const settings::Settings& settings )
     : bot(bot), network(network), buffer(*this, settings.get_child("buffer",{}))
 {
     network_password = settings.get("network.password",std::string());
@@ -192,7 +192,7 @@ IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Set
     modes            = settings.get("modes",std::string());
     formatter_ = string::Formatter::formatter(settings.get("string.format",std::string("irc")));
 }
-IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
+IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const settings::Settings& settings )
     : IrcConnection(bot,Network{server},settings)
 {}
 

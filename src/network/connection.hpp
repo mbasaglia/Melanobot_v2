@@ -24,7 +24,7 @@
 #include <cstdint>
 #include <sstream>
 
-#include "string.hpp"
+#include "../string/string.hpp"
 
 namespace network {
 

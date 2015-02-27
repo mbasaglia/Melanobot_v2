@@ -32,7 +32,7 @@
 #include "connection.hpp"
 #include "../melanobot.hpp"
 #include "../settings.hpp"
-#include "../logger.hpp"
+#include "../string/logger.hpp"
 
 namespace network {
 namespace irc {
@@ -143,7 +143,7 @@ class IrcConnection;
 class Buffer
 {
 public:
-    explicit Buffer(IrcConnection& irc, const Settings& settings = {});
+    explicit Buffer(IrcConnection& irc, const settings::Settings& settings = {});
 
     /**
      * \brief Run the async process
@@ -272,11 +272,11 @@ public:
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const Network& network, const Settings& settings = {});
+    IrcConnection(Melanobot* bot, const Network& network, const settings::Settings& settings = {});
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const Server& server, const Settings& settings = {});
+    IrcConnection(Melanobot* bot, const Server& server, const settings::Settings& settings = {});
     /**
      * \thread main \lock none
      */

@@ -1,8 +1,8 @@
 #include "melanobot.hpp"
-#include "logger.hpp"
+#include "string/logger.hpp"
 #include "network/async_service.hpp"
 #include "network/irc.hpp"
-#include "string.hpp"
+#include "string/string.hpp"
 int main(int argc, char **argv)
 {
 
