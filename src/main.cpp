@@ -18,11 +18,11 @@ int main(int argc, char **argv)
     Logger::instance().register_log_type("web",color::dark_blue);
     Logger::instance().register_log_type("sys",color::red);
 
+    Logger::instance().load_settings({});
+
     Logger::instance().set_log_verbosity("irc",100);
     network::irc::IrcConnection irc(&bot,network::Server{"irc.quakenet.org",6667});
     irc.run();
 
     return bot.run();
 }
-
-

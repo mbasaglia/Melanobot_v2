@@ -68,16 +68,6 @@ public:
             b = component_from_hex(s[2]);
         }
     }
-    
-    /**
-     * \brief Creates a color from a DP color string ^. or ^x...
-     */
-    static Color12 from_dp(const std::string& color);
-
-    /**
-     * \brief Creates a color from an IRC color string \3..
-     */
-    static Color12 from_irc(const std::string& color);
 
     bool is_valid() const { return valid; }
 
@@ -90,16 +80,6 @@ public:
     }
 
     /**
-     * \brief Covert to a dp color string
-     */
-    std::string to_dp() const;
-
-    /**
-     * \brief Covert to an irc color string
-     */
-    std::string to_irc() const;
-
-    /**
      * \brief Compress to 4 bits
      *
      * least to most significant: red green blue bright
@@ -107,14 +87,24 @@ public:
     Component to_4bit() const;
 
     /**
-     * \brief Convert to an ansi color string
+     * \brief Map a 4 bit color
+     *
+     * least to most significant: red green blue bright
      */
-    std::string to_ansi() const;
+    static Color12 from_4bit(Component color);
 
     /**
      * \brief Convert to a html color string
      */
     std::string to_html() const;
+
+
+    Component red()      const { return r; };
+    Component green()    const { return g; };
+    Component blue()     const { return b; };
+    char      hex_red()  const { return component_to_hex(r); };
+    char      hex_green()const { return component_to_hex(g); };
+    char      hex_blue() const { return component_to_hex(b); };
 
 private:
     static Component validate(Component c) { return c > 0xf ? 0xf : c; }

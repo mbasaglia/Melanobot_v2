@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <functional>
 #include <iterator>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <sstream>
@@ -29,7 +30,6 @@
 #include <vector>
 
 #include "color.hpp"
-#include "logger.hpp"
 
 /**
  * \brief Namespace for string formatting
@@ -94,6 +94,11 @@ public:
      */
     static std::string encode(uint32_t value);
 
+    /**
+     * \brief Whether a byte is a valid ascii character
+     */
+    static bool is_ascii(Byte b) { return b < 128; }
+
 
 private:
     std::string           utf8;         ///< Multibyte string
@@ -140,6 +145,10 @@ public:
     {
         return flags&o.flags;
     }
+    constexpr FormatFlags operator& ( int o ) const
+    {
+        return flags&o;
+    }
 
     constexpr FormatFlags operator^ ( const FormatFlags& o ) const
     {
@@ -168,6 +177,12 @@ public:
         return *this;
     }
 
+    FormatFlags& operator&= ( int o )
+    {
+        flags &= o;
+        return *this;
+    }
+
     FormatFlags& operator^= ( const FormatFlags& o )
     {
         flags ^= o.flags;
@@ -179,6 +194,7 @@ private:
 
     int flags = 0;
 };
+
 
 class Unicode;
 class QFont;
@@ -218,32 +234,12 @@ private:
         /**
          * \brief Get a registered formatter
          */
-        Formatter* formatter(const std::string& name)
-        {
-            auto it = formatters.find(name);
-            if ( it == formatters.end() )
-            {
-                Log("sys",'!',0) << ::color::red << "Error" << ::color::nocolor
-                    << ": Invalid formatter: " << name;
-                if ( default_formatter )
-                    return default_formatter;
-                CRITICAL_ERROR("Trying to access an invalid formatter");
-            }
-            return it->second;
-        }
+        Formatter* formatter(const std::string& name);
 
         /**
          * \brief Register a formatter
          */
-        void add_formatter(Formatter* instance)
-        {
-            if ( formatters.count(instance->name()) )
-                Log("sys",'!',0) << ::color::red << "Error" << ::color::nocolor
-                    << ": Overwriting formatter: " << instance->name();
-            formatters[instance->name()] = instance;
-            if ( ! default_formatter )
-                default_formatter = instance;
-        }
+        void add_formatter(Formatter* instance);
 
         std::unordered_map<std::string,Formatter*> formatters;
         Formatter* default_formatter = nullptr;
@@ -278,7 +274,12 @@ public:
      */
     virtual std::string ascii(char c) const = 0;
     /**
+     * \brief Encode a simple ASCII string
+     */
+    virtual std::string ascii(const std::string& s) const = 0;
+    /**
      * \brief Encode a color code
+     * \todo Background colors?
      */
     virtual std::string color(const color::Color12& color) const = 0;
     /**
@@ -293,6 +294,12 @@ public:
      * \brief Encode a Darkpaces weird character
      */
     virtual std::string qfont(const QFont& c) const = 0;
+
+    /**
+     * \brief Clear all formatting
+     */
+    virtual std::string clear() const = 0;
+
     /**
      * \brief Decode a string
      */
@@ -325,7 +332,18 @@ public:
      */
     virtual std::string to_string(const Formatter& formatter) const = 0;
     std::string to_string(Formatter* formatter) const { return to_string(*formatter); }
-    virtual bool operator== (char c) const { return false; }
+};
+
+/**
+ * \brief Simple class representing some code which will clear colors and formats
+ */
+class ClearFormatting : public Element
+{
+public:
+    std::string to_string(const Formatter& formatter) const override
+    {
+        return formatter.clear();
+    }
 };
 
 /**
@@ -340,11 +358,28 @@ public:
     {
         return formatter.ascii(c);
     }
-    bool operator== (char ch) const override { return c == ch; }
 
 private:
     char c;
 };
+
+/**
+ * \brief Simple ASCII string
+ */
+class AsciiSubstring : public Element
+{
+public:
+    AsciiSubstring(const std::string& s) : s(s) {}
+
+    std::string to_string(const Formatter& formatter) const override
+    {
+        return formatter.ascii(s);
+    }
+
+private:
+    std::string s;
+};
+
 /**
  * \brief Color code
  */
@@ -466,12 +501,10 @@ public:
 
     std::string encode(const std::string& format) const
     {
-        Formatter* formatter = Formatter::formatter(format);
-        std::string s;
-        for ( const auto& e : elements )
-            s += e->to_string(*formatter);
-        return s;
+        return encode(Formatter::formatter(format));
     }
+
+    std::string encode(Formatter* formatter) const;
 
     iterator        begin()       { return elements.begin();}
     iterator        end()         { return elements.end();  }
@@ -537,15 +570,25 @@ private:
 class FormattedStream
 {
 public:
-    FormattedStream(const std::string& input_formatter)
+    explicit FormattedStream(const std::string& input_formatter)
         : formatter(Formatter::formatter(input_formatter)) {}
+    FormattedStream()
+        : formatter(nullptr) {}
 
     explicit operator FormattedString() const { return buffer; }
+    FormattedString str() const { return buffer; }
 
     const FormattedStream& operator<< ( const std::string& text ) const
     {
-        buffer.append(formatter->decode(text));
+        if ( formatter )
+            buffer.append(formatter->decode(text));
+        else
+            buffer.append(new AsciiSubstring(text));
         return *this;
+    }
+    const FormattedStream& operator<< ( const char* text ) const
+    {
+        return *this << std::string(text);
     }
     const FormattedStream& operator<< ( const color::Color12& color ) const
     {
@@ -555,6 +598,16 @@ public:
     const FormattedStream& operator<< ( const FormatFlags& format_flags ) const
     {
         buffer.append(new Format(format_flags));
+        return *this;
+    }
+    const FormattedStream& operator<< ( FormatFlags::FormatFlagsEnum format_flags ) const
+    {
+        buffer.append(new Format(format_flags));
+        return *this;
+    }
+    const FormattedStream& operator<< ( ClearFormatting ) const
+    {
+        buffer.append(new ClearFormatting);
         return *this;
     }
     const FormattedStream& operator<< ( char c ) const
@@ -582,36 +635,50 @@ private:
 };
 
 /**
- * \brief UTF-8 (Plain, or with ANSI color)
+ * \brief Plain UTF-8
  */
 class FormatterUtf8 : public Formatter
 {
 public:
-    explicit FormatterUtf8 ( bool colors ) : colors ( colors ) {}
-
     std::string ascii(char c) const override;
+    std::string ascii(const std::string& s) const override;
     std::string color(const color::Color12& color) const override;
     std::string format_flags(FormatFlags flags) const override;
+    std::string clear() const override;
     std::string unicode(const Unicode& c) const override;
     std::string qfont(const QFont& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
-
-protected:
-    bool colors;
 };
 
 /**
- * \brief ASCII (Plain, or with ANSI color)
+ * \brief Plain ASCII
  */
 class FormatterAscii : public FormatterUtf8
 {
 public:
-    using FormatterUtf8::FormatterUtf8;
-
     std::string unicode(const Unicode& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
+};
+
+/**
+ * \brief ANSI-formatted UTF-8 or ASCII
+ */
+class FormatterAnsi : public FormatterUtf8
+{
+public:
+    explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
+
+    std::string color(const color::Color12& color) const override;
+    std::string format_flags(FormatFlags flags) const override;
+    std::string clear() const override;
+    std::string unicode(const Unicode& c) const override;
+    FormattedString decode(const std::string& source) const override;
+    std::string name() const override;
+
+private:
+    bool utf8;
 };
 
 /**
@@ -620,12 +687,15 @@ public:
 class FormatterIrc : public FormatterUtf8
 {
 public:
-    FormatterIrc() : FormatterUtf8(false) {}
-
     std::string color(const color::Color12& color) const override;
     std::string format_flags(FormatFlags flags) const override;
+    std::string clear() const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
+    /**
+     * \brief Creates a color from an IRC color string \3..
+     */
+    static color::Color12 color_from_string(const std::string& color);
 };
 
 /**
@@ -635,12 +705,18 @@ class FormatterDarkplaces : public Formatter
 {
 public:
     std::string ascii(char c) const override;
+    std::string ascii(const std::string& s) const override;
     std::string color(const color::Color12& color) const override;
     std::string format_flags(FormatFlags flags) const override;
+    std::string clear() const override;
     std::string unicode(const Unicode& c) const override;
     std::string qfont(const QFont& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
+    /**
+     * \brief Creates a color from a DP color string ^. or ^x...
+     */
+    static color::Color12 color_from_string(const std::string& color);
 };
 
 } // namespace string

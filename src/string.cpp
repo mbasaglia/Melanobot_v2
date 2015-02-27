@@ -20,8 +20,11 @@
 #include "string.hpp"
 
 #include <list>
+#include <regex>
 
 #include <boost/iterator/iterator_concepts.hpp>
+
+#include "logger.hpp"
 
 namespace string {
 
@@ -138,29 +141,64 @@ std::vector<std::string> QFont::qfont_table = {
 };
 
 
+std::string FormattedString::encode(Formatter* formatter) const
+{
+    if ( !formatter )
+        CRITICAL_ERROR("Trying to encode a string without formatter");
+    std::string s;
+    for ( const auto& e : elements )
+        s += e->to_string(*formatter);
+    return s;
+}
+
+Formatter* Formatter::FormatterFactory::formatter(const std::string& name)
+{
+    auto it = formatters.find(name);
+    if ( it == formatters.end() )
+    {
+        Log("sys",'!',0) << ::color::red << "Error" << ::color::nocolor
+            << ": Invalid formatter: " << name;
+        if ( default_formatter )
+            return default_formatter;
+        CRITICAL_ERROR("Trying to access an invalid formatter");
+    }
+    return it->second;
+}
+
+void Formatter::FormatterFactory::add_formatter(Formatter* instance)
+{
+    if ( formatters.count(instance->name()) )
+        Log("sys",'!',0) << ::color::red << "Error" << ::color::nocolor
+            << ": Overwriting formatter: " << instance->name();
+    formatters[instance->name()] = instance;
+    if ( ! default_formatter )
+        default_formatter = instance;
+}
+
 #define REGISTER_FORMATTER(classname,name) \
     static Formatter::RegisterFormatter register_##name = new classname
 
-static Formatter::RegisterDefaultFormatter register_default(new FormatterUtf8(false));
-REGISTER_FORMATTER(FormatterUtf8,ansi_utf8)(true);
+static Formatter::RegisterDefaultFormatter register_default(new FormatterUtf8);
 
 std::string FormatterUtf8::ascii(char c) const
 {
     return std::string(1,c);
 }
+std::string FormatterUtf8::ascii(const std::string& s) const
+{
+    return s;
+}
 std::string FormatterUtf8::color(const color::Color12& color) const
 {
-    return colors ? color.to_ansi() : "";
+    return "";
 }
 std::string FormatterUtf8::format_flags(FormatFlags flags) const
 {
-    if ( !colors )
-        return "";
-
-    std::vector<int> codes;
-    codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
-    codes.push_back( flags & FormatFlags::UNDERLINE ? 4 : 24 );
-    return  "\x1b["+implode(";",codes)+"m";
+    return "";
+}
+std::string FormatterUtf8::clear() const
+{
+    return "";
 }
 std::string FormatterUtf8::unicode(const Unicode& c) const
 {
@@ -176,15 +214,27 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
 
     Utf8Parser parser;
 
-    /// \todo ansi colors
-    parser.callback_ascii = [&str](uint8_t byte)
+    std::string ascii;
+
+    auto push_ascii = [&ascii,&str]()
     {
-        str.append(new Character(byte));
+        if ( !ascii.empty() )
+        {
+            str.append(new AsciiSubstring(ascii));
+            ascii.clear();
+        }
     };
-    parser.callback_utf8 = [&str](uint32_t unicode,const std::string& utf8)
+
+    parser.callback_ascii = [&str,&ascii](uint8_t byte)
     {
+        ascii += byte;
+    };
+    parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    {
+        push_ascii();
         str.append(new Unicode(utf8,unicode));
     };
+    parser.callback_end = push_ascii;
 
     parser.parse(source);
 
@@ -192,12 +242,11 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
 }
 std::string FormatterUtf8::name() const
 {
-    return colors ? "ansi-utf8" : "utf8";
+    return "utf8";
 }
 
 
-REGISTER_FORMATTER(FormatterAscii,ascii)(false);
-REGISTER_FORMATTER(FormatterAscii,ansi_ascii)(true);
+REGISTER_FORMATTER(FormatterAscii,ascii);
 
 std::string FormatterAscii::unicode(const Unicode& c) const
 {
@@ -206,24 +255,193 @@ std::string FormatterAscii::unicode(const Unicode& c) const
 }
 FormattedString FormatterAscii::decode(const std::string& source) const
 {
-    /// \todo ansi colors
     FormattedString str;
-    for ( char c : source )
-        if ( c < 0b1000'0000 ) // '
-            str.append(new Character(c));
+    str.append(new AsciiSubstring(source));
     return str;
 }
 
 std::string FormatterAscii::name() const
 {
-    return colors ? "ansi-ascii" : "ascii";
+    return "ascii";
+}
+
+
+REGISTER_FORMATTER(FormatterAnsi,ansi_utf8)(true);
+REGISTER_FORMATTER(FormatterAnsi,ansi_ascii)(false);
+
+std::string FormatterAnsi::color(const color::Color12& color) const
+{
+    if ( !color.is_valid() )
+        return "\x1b[0m";
+
+    auto c4b = color.to_4bit();
+    bool bright = c4b & 8;
+    int number = c4b & ~8;
+
+    return "\x1b[3"+std::to_string(number)+";"+(bright ? "1" : "22")+"m";
+}
+std::string FormatterAnsi::format_flags(FormatFlags flags) const
+{
+    std::vector<int> codes;
+    codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
+    codes.push_back( flags & FormatFlags::UNDERLINE ? 4 : 24 );
+    return  "\x1b["+implode(";",codes)+"m";
+}
+std::string FormatterAnsi::clear() const
+{
+    return "\x1b[0m";
+}
+std::string FormatterAnsi::unicode(const Unicode& c) const
+{
+    if ( utf8 )
+        return c.utf8();
+    /// \todo Transliterate
+    return "?";
+}
+FormattedString FormatterAnsi::decode(const std::string& source) const
+{
+    /// \todo decode ansi codes
+    FormattedString str;
+
+    Utf8Parser parser;
+
+    std::string ascii;
+
+    auto push_ascii = [&ascii,&str]()
+    {
+        if ( !ascii.empty() )
+        {
+            str.append(new AsciiSubstring(ascii));
+            ascii.clear();
+        }
+    };
+
+    parser.callback_ascii = [&parser,&str,&ascii](uint8_t byte)
+    {
+        if ( byte == '\x1b' && parser.input.peek() == '[' )
+        {
+            parser.input.ignore();
+            std::vector<int> codes;
+            while (parser.input)
+            {
+                int i = 0;
+                if ( parser.input >> i )
+                {
+                    codes.push_back(i);
+                    char next = parser.input.get();
+                    if ( next != ';' )
+                    {
+                        if ( next != 'm' )
+                            parser.input.unget();
+                        break;
+                    }
+                }
+            }
+            FormatFlags flags;
+            bool use_flags = false;
+            for ( int i : codes )
+            {
+                if ( i == 0)
+                {
+                    str.append(new ClearFormatting);
+                }
+                else if ( i == 1 )
+                {
+                    flags |= FormatFlags::BOLD;
+                    use_flags = true;
+                }
+                else if ( i == 22 )
+                {
+                    flags &= ~FormatFlags::BOLD;
+                    use_flags = true;
+                }
+                else if ( i == 4 )
+                {
+                    flags |= FormatFlags::UNDERLINE;
+                    use_flags = true;
+                }
+                else if ( i == 24 )
+                {
+                    flags &= ~FormatFlags::UNDERLINE;
+                    use_flags = true;
+                }
+                else if ( i == 39 )
+                {
+                    str.append(new Color(color::nocolor));
+                }
+                else if ( i >= 30 && i <= 37 )
+                {
+                    i -= 30;
+                    if ( flags == FormatFlags::BOLD )
+                    {
+                        i &= 0xf;
+                        flags = FormatFlags::NO_FORMAT;
+                        use_flags = false;
+                    }
+                    str.append(new Color(color::Color12::from_4bit(i)));
+                }
+                else if ( i >= 90 && i <= 97 )
+                {
+                    i -= 90;
+                    i &= 0xf;
+                    str.append(new Color(color::Color12::from_4bit(i)));
+                }
+            }
+            if ( use_flags )
+                str.append(new Format(flags));
+        }
+        else
+        {
+            ascii += byte;
+        }
+    };
+    parser.callback_utf8 = [this,&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    {
+        push_ascii();
+        if ( this->utf8 )
+            str.append(new Unicode(utf8,unicode));
+    };
+    parser.callback_end = push_ascii;
+
+    parser.parse(source);
+
+    return str;
+}
+std::string FormatterAnsi::name() const
+{
+    return utf8 ? "ansi-utf8" : "ansi-ascii";
 }
 
 REGISTER_FORMATTER(FormatterIrc,irc);
 
 std::string FormatterIrc::color(const color::Color12& color) const
 {
-    return color.to_irc();
+    int ircn = 1;
+
+    if ( !color.is_valid() )
+        return "\xf"; // no color
+
+
+    switch ( color.to_4bit() )
+    {
+        case 0b0000: ircn =  1; break; // black
+        case 0b0001: ircn =  5; break; // dark red
+        case 0b0010: ircn =  3; break; // dark green
+        case 0b0011: ircn =  7; break; // dark yellow
+        case 0b0100: ircn =  2; break; // dark blue
+        case 0b0101: ircn =  6; break; // dark magenta
+        case 0b0110: ircn = 10; break; // dark cyan
+        case 0b0111: ircn = 15; break; // silver
+        case 0b1000: ircn = 14; break; // grey
+        case 0b1001: ircn =  4; break; // red
+        case 0b1010: ircn =  9; break; // green
+        case 0b1011: ircn =  8; break; // yellow
+        case 0b1100: ircn = 12; break; // blue
+        case 0b1101: ircn = 13; break; // magenta
+        case 0b1110: ircn = 11; break; // cyan
+        case 0b1111: ircn =  0; break; // white
+    }
+    return '\3'+std::to_string(ircn);
 }
 std::string FormatterIrc::format_flags(FormatFlags flags) const
 {
@@ -235,6 +453,10 @@ std::string FormatterIrc::format_flags(FormatFlags flags) const
     if ( flags & FormatFlags::UNDERLINE )
         format += "\x1f";
     return format;
+}
+std::string FormatterIrc::clear() const
+{
+    return "\xf";
 }
 FormattedString FormatterIrc::decode(const std::string& source) const
 {
@@ -264,8 +486,7 @@ FormattedString FormatterIrc::decode(const std::string& source) const
                 break;
             case '\xf':
                 flags = FormatFlags::NO_FORMAT;
-                str.append(new Format(flags));
-                str.append(new Color(color::nocolor));
+                str.append(new ClearFormatting);
                 break;
             case '\3':
             {
@@ -283,7 +504,7 @@ FormattedString FormatterIrc::decode(const std::string& source) const
                         if ( std::isdigit(parser.input.peek()) ) parser.input.ignore();
                     }
                 }
-                str.append(new Color(color::Color12::from_irc(fg)));
+                str.append(new Color(FormatterIrc::color_from_string(fg)));
                 break;
             }
             case '\x1d': case '\x16':
@@ -308,18 +529,73 @@ std::string FormatterIrc::name() const
     return "irc";
 }
 
+color::Color12 FormatterIrc::color_from_string(const std::string& color)
+{
+    using namespace color;
+
+    static std::regex regex = std::regex( "\3?([0-9]{2})",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::ECMAScript
+    );
+
+    std::smatch match;
+    if ( !std::regex_match(color,match,regex) )
+        return Color12();
+
+    switch ( std::stoi(match[1].str()) )
+    {
+        case  0: return white;
+        case  1: return black;
+        case  2: return dark_blue;
+        case  3: return dark_green;
+        case  4: return red;
+        case  5: return dark_red;
+        case  6: return dark_magenta;
+        case  7: return dark_yellow;
+        case  8: return yellow;
+        case  9: return green;
+        case 10: return dark_cyan;
+        case 11: return cyan;
+        case 12: return blue;
+        case 13: return magenta;
+        case 14: return gray;
+        case 15: return silver;
+        default: return Color12();
+    }
+}
 REGISTER_FORMATTER(FormatterDarkplaces,dp);
 std::string FormatterDarkplaces::ascii(char c) const
 {
     return std::string(1,c);
 }
+std::string FormatterDarkplaces::ascii(const std::string& s) const
+{
+    return s;
+}
 std::string FormatterDarkplaces::color(const color::Color12& color) const
 {
-    return color.to_dp();
+    switch ( color.to_bit_mask() )
+    {
+        case 0x000: return "^0";
+        case 0xf00: return "^1";
+        case 0x0f0: return "^2";
+        case 0xff0: return "^3";
+        case 0x00f: return "^4";
+        case 0xf0f: return "^6";
+        case 0x0ff: return "^5";
+        case 0xfff: return "^7";
+        case 0x888: return "^8";
+        case 0xccc: return "^9";
+    }
+    return std::string("^x")+color.hex_red()+color.hex_green()+color.hex_blue();
 }
 std::string FormatterDarkplaces::format_flags(FormatFlags) const
 {
     return "";
+}
+std::string FormatterDarkplaces::clear() const
+{
+    return "^7";
 }
 std::string FormatterDarkplaces::unicode(const Unicode& c) const
 {
@@ -349,7 +625,7 @@ FormattedString FormatterDarkplaces::decode(const std::string& source) const
             }
             else if ( std::isdigit(next) )
             {
-                str.append(new Color(color::Color12::from_dp(std::string(1,next))));
+                str.append(new Color(FormatterDarkplaces::color_from_string(std::string(1,next))));
                 return;
             }
             else if ( next == 'x' )
@@ -362,7 +638,7 @@ FormattedString FormatterDarkplaces::decode(const std::string& source) const
                 }
                 if ( col.size() == 5 )
                 {
-                    str.append(new Color(color::Color12::from_dp(col)));
+                    str.append(new Color(FormatterDarkplaces::color_from_string(col)));
                     return;
                 }
             }
@@ -388,5 +664,35 @@ std::string FormatterDarkplaces::name() const
     return "dp";
 }
 
+color::Color12 FormatterDarkplaces::color_from_string(const std::string& color)
+{
+    using namespace color;
+
+    static std::regex regex = std::regex( "\\^?([[:digit:]]|x([[:xdigit:]]{3}))",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::extended
+    );
+    std::smatch match;
+    if ( !std::regex_match(color,match,regex) )
+        return Color12();
+
+    if ( !match[2].str().empty() )
+        return Color12(match[2]);
+
+    switch (match[1].str()[0])
+    {
+        case '0': return black;
+        case '1': return red;
+        case '2': return green;
+        case '3': return yellow;
+        case '4': return blue;
+        case '5': return cyan;
+        case '6': return magenta;
+        case '7': return white;
+        case '8': return gray;
+        case '9': return silver;
+    }
+    return Color12();
+}
 
 } // namespace string

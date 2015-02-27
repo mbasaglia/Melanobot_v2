@@ -27,7 +27,9 @@
 
 #include <boost/chrono/io/time_point_io.hpp>
 
-#include "color.hpp"
+#include "string.hpp"
+#include "settings.hpp"
+
 /**
  * \brief Singleton class handling logs
  * \see Log for a nicer interface
@@ -84,7 +86,8 @@ public:
     /**
      * \brief Log a message
      */
-    void log (const std::string& type, char direction, const std::string& message, int verbosity)
+    void log (const std::string& type, char direction,
+        const string::FormattedString& message, int verbosity)
     {
         /// \todo lock mutex for log_destination
         auto type_it = log_types.find(type);
@@ -108,11 +111,16 @@ public:
         put_color(log_directions[direction]);
         log_destination << direction;
         put_color(color::nocolor);
-        log_destination << message << std::endl;
+        log_destination << message.encode(formatter) << std::endl;
     }
 
-    bool colors = true;                         ///< Whether colors are enabled
-    std::string timestamp = "%Y-%m-%d %T";      ///< Timestamp format
+    void load_settings(const Settings& settings)
+    {
+        std::string format = settings.get("format",std::string("ansi-utf8"));
+        formatter = string::Formatter::formatter(format);
+        timestamp = settings.get("timestamp",std::string("%Y-%m-%d %T"));
+        /// \todo read verbosity levels
+    }
 
 private:
     /**
@@ -132,14 +140,16 @@ private:
      */
     void put_color( const color::Color12& color )
     {
-        if ( colors )
-            log_destination << color.to_ansi();
+        if ( formatter )
+            log_destination << formatter->color(color);
     }
 
     std::ostream log_destination {std::cout.rdbuf()};
     std::unordered_map<std::string, LogType> log_types;
     std::unordered_map<char, color::Color12> log_directions;
     unsigned log_type_length = 0;
+    string::Formatter* formatter = nullptr;
+    std::string timestamp;
 };
 
 /**
@@ -164,7 +174,7 @@ public:
     ~Log()
     {
         if ( color )
-            stream << color::nocolor.to_ansi();
+            stream << color::nocolor;
         Logger::instance().log(type, direction, stream.str(), verbosity);
     }
 
@@ -177,11 +187,8 @@ public:
 
     const Log& operator<< ( const color::Color12& t ) const
     {
-        if ( Logger::instance().colors )
-        {
-            color = true;
-            stream << t.to_ansi();
-        }
+        color = true;
+        stream << t;
         return *this;
     }
 
@@ -189,7 +196,7 @@ public:
     std::string type;
     char direction;
     int verbosity;
-    mutable std::ostringstream stream;
+    string::FormattedStream stream;
     mutable bool color = false;
 };
 
