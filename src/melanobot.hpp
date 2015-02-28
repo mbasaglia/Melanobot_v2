@@ -41,7 +41,6 @@ public:
     /**
      * \brief Runs the bot
      * \thread main \lock messages(not continuous)
-     * \todo start the threads in here, not in the constructor
      */
     void run();
 
@@ -65,8 +64,13 @@ private:
     {
     public:
         explicit Connection(network::Connection* connection)
-            : connection(connection), thread([this]{this->connection->run();})
+            : connection(connection)
         {}
+
+        void start()
+        {
+            thread = std::move(std::thread([this]{connection->run();}));
+        }
 
         void stop()
         {

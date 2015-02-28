@@ -45,6 +45,9 @@ void Melanobot::stop()
 }
 void Melanobot::run()
 {
+    for ( auto &conn : connections )
+        conn.start();
+    
     while ( keep_running )
     {
         network::Message msg;
