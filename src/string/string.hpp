@@ -637,8 +637,7 @@ public:
         {
             std::ostringstream ss;
             ss << obj;
-            buffer.append(formatter->decode(ss.str()));
-            return *this;
+            return *this << ss.str();
         }
 
     std::string encode(const std::string& output_formatter) const

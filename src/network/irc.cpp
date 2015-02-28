@@ -25,13 +25,13 @@
 namespace network {
 namespace irc {
 
-Buffer::Buffer(IrcConnection& irc, const settings::Settings& settings)
+Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     : irc(irc)
 {
     flood_timer = Clock::now();
-    flood_timer_max = std::chrono::seconds(settings.get("flood.timer_max",10));
-    flood_timer_penalty = std::chrono::seconds(settings.get("flood.timer_penalty",2));
-    flood_max_length = settings.get("flood.max_length",510);
+    flood_timer_max = std::chrono::seconds(settings.get("timer_max",10));
+    flood_timer_penalty = std::chrono::seconds(settings.get("timer_penalty",2));
+    flood_max_length = settings.get("max_length",510);
 }
 
 void Buffer::run()
@@ -140,8 +140,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     if (error)
     {
         if ( error != boost::asio::error::eof )
-            Log("irc",'!',0) << color::red << "Network Error" << color::nocolor
-                << ':' << error.message();
+             ErrorLog("irc","Network Error") << error.message();
         return;
     }
 
@@ -184,11 +183,11 @@ void Buffer::on_read_line(const boost::system::error_code &error)
 
 REGISTER_CONNECTION(irc,&IrcConnection::create);
 
-IrcConnection* IrcConnection::create(Melanobot* bot, const settings::Settings& settings)
+IrcConnection* IrcConnection::create(Melanobot* bot, const Settings& settings)
 {
     if ( settings.get("protocol",std::string()) != "irc" )
     {
-        error("Wrong protocol for IRC connection");
+        ErrorLog("irc") << "Wrong protocol for IRC connection";
         return nullptr;
     }
 
@@ -206,24 +205,24 @@ IrcConnection* IrcConnection::create(Melanobot* bot, const settings::Settings& s
 
     if ( network.empty() )
     {
-        error("IRC connection with no server");
+        ErrorLog("irc") << "IRC connection with no server";
         return nullptr;
     }
 
     return new IrcConnection(bot, Network(network), settings);
 }
 
-IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const settings::Settings& settings )
-    : bot(bot), network(network), buffer(*this, settings.get_child("buffer",{}))
+IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Settings& settings )
+    : bot(bot), network(network), buffer(*this, settings.get_child("buffer"))
 {
     network_password = settings.get("server.password",std::string());
     preferred_nick   = settings.get("nick","PleaseNameMe");
     auth_nick        = settings.get("auth.nick",preferred_nick);
     auth_password    = settings.get("auth.password",std::string());
     modes            = settings.get("modes",std::string());
-    formatter_ = string::Formatter::formatter(settings.get("string.format",std::string("irc")));
+    formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
 }
-IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const settings::Settings& settings )
+IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
     : IrcConnection(bot,Network{server},settings)
 {}
 
@@ -236,11 +235,6 @@ void IrcConnection::run()
 {
     connect();
     buffer.run();
-}
-
-void IrcConnection::error ( const std::string& message )
-{
-    Log("irc",'!',0) << color::red << "Error" << color::nocolor << ": " << message;
 }
 
 const Server& IrcConnection::server() const
@@ -258,29 +252,47 @@ void IrcConnection::command ( const Command& c )
     if ( command == "PRIVMSG" || command == "NOTICE" )
     {
         if ( cmd.parameters.size() != 2 )
-            return error("Wrong parameters for PRIVMSG");
+        {
+            ErrorLog("irc") << "Wrong parameters for PRIVMSG";
+            return;
+        }
         std::string to = strtolower(cmd.parameters[0]);
         {
             LOCK(mutex);
             if ( to == current_nick_lowecase )
-                return error("Cannot send PRIVMSG to self");
+            {
+                ErrorLog("irc") << "Cannot send PRIVMSG to self";
+                return;
+            }
         }
         if ( cmd.parameters[1].empty() )
-            return error("Empty PRIVMSG");
+        {
+            ErrorLog("irc") << "Empty PRIVMSG";
+            return;
+        }
 
         cmd.parameters[0] = to;
     }
     else if ( command == "PASS" )
     {
         if ( status() != Connection::WAITING )
-            return error("PASS called at a wrong time");
+        {
+            ErrorLog("irc") << "PASS called at a wrong time";
+            return;
+        }
         if ( cmd.parameters.size() != 1 )
-            return error("Ill-formed PASS");
+        {
+            ErrorLog("irc") << "Ill-formed PASS";
+            return;
+        }
     }
     else if ( command == "NICK" )
     {
         if ( cmd.parameters.size() != 1 )
-            return error("Ill-formed NICK");
+        {
+            ErrorLog("irc") << "Ill-formed NICK";
+            return;
+        }
         /// \todo validate nick
         {
             LOCK(mutex);
@@ -296,7 +308,10 @@ void IrcConnection::command ( const Command& c )
     else if ( command == "USER" )
     {
         if ( cmd.parameters.size() != 4 )
-            return error("Ill-formed USER");
+        {
+            ErrorLog("irc") << "Ill-formed USER";
+            return;
+        }
     }
     else if ( command == "MODE" )
     {
@@ -307,14 +322,22 @@ void IrcConnection::command ( const Command& c )
             cmd.parameters[1] = cmd.parameters[0];
             cmd.parameters[0] = current_nick;
         }
-        else if ( cmd.parameters.size() != 2 || strtolower(cmd.parameters[0]) == current_nick_lowecase )
-            return error("Ill-formed MODE");
+        else if ( cmd.parameters.size() != 2 ||
+            strtolower(cmd.parameters[0]) == current_nick_lowecase )
+        {
+            ErrorLog("irc") << "Ill-formed MODE";
+            return;
+        }
         /// \todo sanitaze the mode string
+        /// \todo allow channel mode
     }
     else if ( command == "JOIN" )
     {
         if ( cmd.parameters.size() < 1 )
-            return error("Ill-formed JOIN");
+        {
+            ErrorLog("irc") << "Ill-formed JOIN";
+            return;
+        }
         /// \todo Discard already joined channels,
         /// keep track of too many channels,
         /// check that channel names are ok
@@ -323,7 +346,10 @@ void IrcConnection::command ( const Command& c )
     else if ( command == "PART" )
     {
         if ( cmd.parameters.size() < 1 )
-            return error("Ill-formed PART");
+        {
+            ErrorLog("irc") << "Ill-formed PART";
+            return;
+        }
         /// \todo Discard unexisting channels
         /// http://tools.ietf.org/html/rfc2812#section-3.2.2
     }

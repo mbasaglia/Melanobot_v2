@@ -56,7 +56,7 @@ add_executable(${EXECUTABLE_NAME} ${SOURCES})
 install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 
 # Boost
-find_package (Boost COMPONENTS system chrono thread filesystem REQUIRED)
+find_package (Boost COMPONENTS system chrono thread filesystem program_options REQUIRED)
 target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 

@@ -6,8 +6,6 @@
 
 int main(int argc, char **argv)
 {
-    settings::initialize(argc,argv);
-
     Logger::instance().register_direction('<',color::dark_green);
     Logger::instance().register_direction('>',color::dark_yellow);
     Logger::instance().register_direction('!',color::dark_blue);
@@ -17,23 +15,32 @@ int main(int argc, char **argv)
     Logger::instance().register_log_type("dp",color::dark_cyan);
     Logger::instance().register_log_type("std",color::white);
     Logger::instance().register_log_type("web",color::dark_blue);
-    Logger::instance().register_log_type("sys",color::red);
+    Logger::instance().register_log_type("sys",color::dark_red);
 
-    std::string settings_file;
+    try {
+        Settings settings = Settings::initialize(argc,argv);
 
-    /// \todo Read arguments
+        Logger::instance().load_settings(settings.get_child("log",{}));
 
-    settings_file = settings::find_config();
+        if ( !settings.empty() )
+        {
+            Log("sys",'!',0) << "Executing from " << Settings::global_settings.get("config","");
+            Melanobot bot(settings);
+            bot.run();
+            /// \todo some way to reload the config and restart the bot
+        }
+        return Settings::global_settings.get("exit_code",0);
 
-    if ( settings_file.empty() )
-        CRITICAL_ERROR("Cannot start without a config file");
-    settings::Settings settings = settings::load(settings_file);
-    
-    Logger::instance().load_settings(settings.get_child("log",{}));
+    } catch ( const CriticalException& exc ) {
+        /// \todo policy on how to handle exceptions
+        ErrorLog errlog("sys","Critical Error");
+        if ( Settings::global_settings.get("debug",0) )
+            errlog << exc.file << ':' << exc.line << ": in " << exc.function << "(): ";
+        errlog  << exc.what();
+        return 1;
+    } catch ( const std::exception& exc ) {
+        ErrorLog ("sys","Critical Error") << exc.what();
+        return 1;
+    }
 
-    Log("sys",'!',0) << "Executing from " << settings_file;
-
-    Melanobot bot(settings);
-
-    return bot.run();
 }

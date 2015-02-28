@@ -209,7 +209,7 @@ struct Message
 class ConnectionFactory
 {
 public:
-    typedef std::function<Connection*(Melanobot* bot, const settings::Settings&)> Contructor;
+    typedef std::function<Connection*(Melanobot* bot, const Settings&)> Contructor;
     /**
      * \brief Auto-registration helper
      */
@@ -244,7 +244,7 @@ public:
     /**
      * \brief Creates a connection from its settings
      */
-    Connection* create(Melanobot* bot, const settings::Settings& settings)
+    Connection* create(Melanobot* bot, const Settings& settings)
     {
         std::string protocol = settings.get("protocol",std::string());
         auto it = factory.find(protocol);

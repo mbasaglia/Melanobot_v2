@@ -28,14 +28,13 @@
 class Melanobot
 {
 public:
-    explicit Melanobot(const settings::Settings& settings);
+    explicit Melanobot(const Settings& settings);
     ~Melanobot();
 
     /**
      * \brief Runs the bot
-     * \return Exit status
      */
-    int run();
+    void run();
 private:
     std::vector<network::Connection*> connections;
 };

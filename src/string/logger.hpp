@@ -87,38 +87,9 @@ public:
      * \brief Log a message
      */
     void log (const std::string& type, char direction,
-        const string::FormattedString& message, int verbosity)
-    {
-        /// \todo lock mutex for log_destination
-        auto type_it = log_types.find(type);
-        if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
-            return;
+        const string::FormattedString& message, int verbosity);
 
-        if ( !timestamp.empty() )
-        {
-            log_destination <<  formatter->color(color::yellow) << '['
-                << boost::chrono::time_fmt(boost::chrono::timezone::local, timestamp)
-                << boost::chrono::system_clock::now()
-                << ']' << formatter->clear();
-        }
-
-        if ( type_it != log_types.end() )
-            log_destination <<  formatter->color(type_it->second.color);
-        log_destination << std::setw(log_type_length) << std::left << type;
-
-        log_destination << formatter->color(log_directions[direction]) << direction;
-
-        log_destination << formatter->clear() << message.encode(formatter)
-            << formatter->clear() << std::endl;
-    }
-
-    void load_settings(const settings::Settings& settings)
-    {
-        std::string format = settings.get("format",std::string("ansi-utf8"));
-        formatter = string::Formatter::formatter(format);
-        timestamp = settings.get("timestamp",std::string("%Y-%m-%d %T"));
-        /// \todo read verbosity levels
-    }
+    void load_settings(const Settings& settings);
 
 private:
     /**
@@ -138,7 +109,7 @@ private:
     std::unordered_map<char, color::Color12> log_directions;
     unsigned log_type_length = 0;
     string::Formatter* formatter = nullptr;
-    std::string timestamp;
+    std::string timestamp = "%Y-%m-%d %T";
 };
 
 /**
@@ -190,12 +161,45 @@ public:
 };
 
 /**
+ * \brief Utility for error messages
+ */
+class ErrorLog : public Log
+{
+public:
+    ErrorLog(const std::string& type, const std::string& error = "Error" )
+        : Log(type,'!',0)
+    {
+        stream << string::FormatFlags::BOLD << color::red << error
+            << string::ClearFormatting() << ": ";
+    }
+};
+
+/**
+ * \brief Critical error exception
+ *
+ * Class representing an error that cannot be recovered from or that
+ * doesn't allow any meaningful continuation of the program
+ */
+struct CriticalException : public std::logic_error
+{
+    std::string file;     ///< Source file name originating the error
+    int         line = 0; ///< Source line number originating the error
+    std::string function; ///< Source function name originating the error
+
+    CriticalException( const std::string& file,     int line,
+                       const std::string& function, const std::string& msg )
+        : std::logic_error(msg), file(file), line(line), function(function)
+    {}
+};
+
+
+/**
  * \brief Throws an exception with a standardized format
  */
 inline void error [[noreturn]] (const std::string& file, int line,
                          const std::string& function, const std::string& msg )
 {
-    throw std::logic_error(function+"@"+file+":"+std::to_string(line)+": error: "+msg);
+    throw CriticalException(file,line,function,msg);
 }
 /**
  * \brief Throws an exception pointing to the call line

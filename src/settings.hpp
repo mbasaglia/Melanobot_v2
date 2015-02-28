@@ -19,41 +19,69 @@
 #ifndef SETTINGS_HPP
 #define SETTINGS_HPP
 
+#include <string>
+#include <cstdint>
+#include <unordered_map>
+
 #include <boost/property_tree/ptree.hpp>
 
-namespace settings {
 
 /**
  * \brief Class containing hierarchical settings
  */
-typedef boost::property_tree::ptree Settings;
-
-/**
- * \brief File format used to open/save settings
- */
-enum class FileFormat
+class Settings : public boost::property_tree::ptree
 {
-    AUTO, ///< Deduce automatically
-    JSON,
-    INI,
-    XML,
-    INFO,
+public:
+    typedef boost::property_tree::ptree PTree;
+
+    /**
+    * \brief File format used to open/save settings
+    */
+    enum class FileFormat
+    {
+        AUTO, ///< Deduce automatically
+        JSON,
+        INI,
+        XML,
+        INFO,
+    };
+
+    /**
+     * \brief Settings with global information
+     */
+    static Settings global_settings;
+
+    /**
+     * \brief Parses the program options and returns the configurations
+     *
+     * It will also load the logger configuration
+     */
+    static Settings initialize ( int argc, char** argv );
+
+    /**
+     * \brief Tries to find a file from which settings can be loaded
+     */
+    static std::string find_config( FileFormat format = FileFormat::AUTO );
+
+    Settings() {}
+    Settings(const PTree& p) : PTree(p) {}
+
+    /**
+     * \brief Load settings from file
+     */
+    explicit Settings ( const std::string& file_name, FileFormat format = FileFormat::AUTO );
+
+private:
+    /**
+     * \brief Maps extensions to file formats
+     */
+    static std::unordered_map<std::string,FileFormat> format_extension;
+
+
+    /**
+     * \brief Tries to find a config file in the given directory
+     */
+    static std::string find_config ( const std::string& dir, FileFormat format);
 };
 
-/**
- * \brief Basically get the executable directory
- */
-void initialize ( int argc, char** argv );
-
-/**
- * \brief Load settings from file
- */
-Settings load ( const std::string& file_name, FileFormat format = FileFormat::AUTO );
-
-/**
- * \brief Tries to find a file from which settings can be loaded
- */
-std::string find_config( FileFormat format = FileFormat::AUTO );
-
-} // namespace settings
 #endif // SETTINGS_HPP

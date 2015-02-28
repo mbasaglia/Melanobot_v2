@@ -143,7 +143,7 @@ class IrcConnection;
 class Buffer
 {
 public:
-    explicit Buffer(IrcConnection& irc, const settings::Settings& settings = {});
+    explicit Buffer(IrcConnection& irc, const Settings& settings = {});
 
     /**
      * \brief Run the async process
@@ -265,23 +265,18 @@ class IrcConnection : public Connection
 {
 public:
     /**
-     * \brief Logs some kind of non-fatal error (eg: malformed commands)
-     */
-    static void error(const std::string& message);
-
-    /**
      * \brief Create from settings
      */
-    static IrcConnection* create(Melanobot* bot, const settings::Settings& settings);
+    static IrcConnection* create(Melanobot* bot, const Settings& settings);
 
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const Network& network, const settings::Settings& settings = {});
+    IrcConnection(Melanobot* bot, const Network& network, const Settings& settings = {});
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const Server& server, const settings::Settings& settings = {});
+    IrcConnection(Melanobot* bot, const Server& server, const Settings& settings = {});
     
     /**
      * \thread main \lock none

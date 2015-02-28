@@ -156,8 +156,7 @@ Formatter* Formatter::FormatterFactory::formatter(const std::string& name)
     auto it = formatters.find(name);
     if ( it == formatters.end() )
     {
-        Log("sys",'!',0) << ::color::red << "Error" << ::color::nocolor
-            << ": Invalid formatter: " << name;
+        ErrorLog("sys") << "Invalid formatter: " << name;
         if ( default_formatter )
             return default_formatter;
         CRITICAL_ERROR("Trying to access an invalid formatter");
@@ -168,8 +167,7 @@ Formatter* Formatter::FormatterFactory::formatter(const std::string& name)
 void Formatter::FormatterFactory::add_formatter(Formatter* instance)
 {
     if ( formatters.count(instance->name()) )
-        Log("sys",'!',0) << ::color::red << "Error" << ::color::nocolor
-            << ": Overwriting formatter: " << instance->name();
+        ErrorLog("sys") << "Overwriting formatter: " << instance->name();
     formatters[instance->name()] = instance;
     if ( ! default_formatter )
         default_formatter = instance;
@@ -278,7 +276,9 @@ std::string FormatterAnsi::color(const color::Color12& color) const
     bool bright = c4b & 8;
     int number = c4b & ~8;
 
-    return "\x1b[3"+std::to_string(number)+";"+(bright ? "1" : "22")+"m";
+    /// \todo add a flag to select whether to use the non-conformant 9x or ;1
+    return std::string("\x1b[")+(bright ? "9" : "3")+std::to_string(number)+"m";
+    //return "\x1b[3"+std::to_string(number)+";"+(bright ? "1" : "22")+"m";
 }
 std::string FormatterAnsi::format_flags(FormatFlags flags) const
 {

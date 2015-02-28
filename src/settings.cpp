@@ -18,10 +18,10 @@
  */
 #include "settings.hpp"
 
-#include <unordered_map>
 #include <cstdlib>
 
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
 #include <boost/property_tree/info_parser.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -30,34 +30,103 @@
 #include "string/logger.hpp"
 #include "config.hpp"
 
-namespace settings {
-
-static std::unordered_map<std::string,FileFormat> format_extension = {
+std::unordered_map<std::string,Settings::FileFormat> Settings::format_extension = {
     {".json",FileFormat::JSON},
     {".info",FileFormat::INFO},
     {".xml",FileFormat::XML},
     {".ini",FileFormat::INI},
 };
 
-static boost::filesystem::path exe_dir;
-static boost::filesystem::path home_dir;
+Settings Settings::global_settings;
 
-void initialize ( int argc, char** argv )
+Settings Settings::initialize ( int argc, char** argv )
 {
+    // By default exit code is 0 (success)
+    global_settings.put("exit_code",0);
+
+    // Find system paths
     boost::system::error_code err;
-
+    // Executable name and path
     boost::filesystem::path path = argv[0];
-    exe_dir = boost::filesystem::canonical(path.parent_path(),err);
-    if ( err )
-        exe_dir.clear();
-
+    global_settings.put("executable", path.filename().empty() ?
+        std::string(PROJECT_SHORTNAME) : path.filename().string() );
+    std::string exe_dir = boost::filesystem::canonical(path.parent_path(),err).string();
+    if ( !err )
+        global_settings.put("path.executable",exe_dir);
+    // Home
     path = std::getenv("HOME");
-    home_dir = boost::filesystem::canonical(path,err);
-    if ( err )
-        home_dir.clear();
+    std::string home_dir = boost::filesystem::canonical(path,err).string();
+    if ( !err )
+        global_settings.put("path.home",home_dir);
+
+    // Load command line options
+    namespace po = boost::program_options;
+    po::options_description described_options("Options");
+    described_options.add_options()
+        ("help", "Print a description of the command-line options")
+        ("config", po::value<std::string>(), "Configuration file path")
+    ;
+    po::options_description options;
+    options.add(described_options);
+    options.add_options()
+        ("log.debug", po::value<int>(), "")
+    ;
+    po::parsed_options parsed =
+        po::command_line_parser(argc, argv).options(options).allow_unregistered().run();
+    po::variables_map vm;
+    po::store(parsed, vm);
+    po::notify(vm);
+
+    // Show help and exit
+    if ( vm.count("help") )
+    {
+        std::cout << "Usage:\n";
+        std::cout << "  " << global_settings.get("executable","") << " [option ...]\n";
+        std::cout << described_options;
+        return {};
+    }
+
+    // Extract debug settings from command line because config might throw exceptions
+    int debug = 0;
+    if ( vm.count("log.debug") )
+    {
+        debug = vm["log.debug"].as<int>();
+        global_settings.put("debug",debug);
+    }
+
+    // Get the right config file
+    std::string settings_file;
+
+    if ( vm.count("config") )
+        settings_file = vm["config"].as<std::string>();
+    else
+        settings_file = find_config();
+
+    global_settings.put("config",settings_file);
+
+    if ( settings_file.empty() )
+    {
+        ErrorLog("sys") << "Cannot start without a config file";
+        return {};
+    }
+
+    // Load config
+    Settings settings(settings_file);
+
+    // Overwrite config options from the command line
+    for ( const auto& opt : parsed.options )
+    {
+        if ( opt.unregistered && !opt.value.empty() )
+            settings.put(opt.string_key,opt.value.front());
+    }
+
+    debug = settings.get("log.debug", debug);
+    global_settings.put("debug",debug);
+
+    return settings;
 }
 
-Settings load ( const std::string& file_name, FileFormat format )
+Settings::Settings ( const std::string& file_name, FileFormat format )
 {
     boost::filesystem::path path = file_name;
 
@@ -73,29 +142,27 @@ Settings load ( const std::string& file_name, FileFormat format )
     if ( status.type() != boost::filesystem::regular_file || err )
         CRITICAL_ERROR("Cannot load config file: "+file_name);
 
-    Settings settings;
+    PTree& ptree = *this;
     switch ( format )
     {
         case FileFormat::INFO:
-            boost::property_tree::info_parser::read_info(file_name,settings);
+            boost::property_tree::info_parser::read_info(file_name,ptree);
             break;
         case FileFormat::INI:
-            boost::property_tree::ini_parser::read_ini(file_name,settings);
+            boost::property_tree::ini_parser::read_ini(file_name,ptree);
             break;
         case FileFormat::JSON:
-            boost::property_tree::json_parser::read_json(file_name,settings);
+            boost::property_tree::json_parser::read_json(file_name,ptree);
             break;
         case FileFormat::XML:
-            boost::property_tree::xml_parser::read_xml(file_name,settings);
+            boost::property_tree::xml_parser::read_xml(file_name,ptree);
             break;
         case FileFormat::AUTO:
             CRITICAL_ERROR("Cannot detect file format for "+file_name);
     }
-
-    return settings;
 }
 
-static boost::filesystem::path find_config ( const boost::filesystem::path& dir, FileFormat format)
+std::string Settings::find_config ( const std::string& dir, FileFormat format)
 {
     boost::system::error_code err;
     auto status = boost::filesystem::status(dir,err);
@@ -107,39 +174,39 @@ static boost::filesystem::path find_config ( const boost::filesystem::path& dir,
     {
         if ( format == FileFormat::AUTO || format == p.second )
         {
-            boost::filesystem::path fp = dir.string() + ("/config"+p.first);
+            boost::filesystem::path fp = dir + "/config"+p.first;
             if ( boost::filesystem::exists(fp) )
             {
                 boost::system::error_code err;
                 fp = boost::filesystem::canonical(fp,err).string();
                 if ( !err )
-                    return fp;
+                    return fp.string();
             }
         }
     }
 
     return {};
 }
-std::string find_config(FileFormat format)
+std::string Settings::find_config(FileFormat format)
 {
-    std::vector<boost::filesystem::path> paths;
+    std::vector<std::string> paths;
     paths.push_back(".");
+    std::string exe_dir = global_settings.get("path.executable","");
     if ( !exe_dir.empty() )
         paths.push_back(exe_dir);
+    std::string home_dir = global_settings.get("path.home","");
     if ( !home_dir.empty() )
     {
-        paths.push_back(home_dir.string() + "/.config/" + PROJECT_SHORTNAME);
-        paths.push_back(home_dir.string() + ("/." PROJECT_SHORTNAME));
+        paths.push_back(home_dir + "/.config/" + PROJECT_SHORTNAME);
+        paths.push_back(home_dir + ("/." PROJECT_SHORTNAME));
     }
 
     for ( const auto& path : paths )
     {
         auto file = find_config(path, format);
         if ( !file.empty() )
-            return file.string();
+            return file;
     }
 
     return {};
 }
-
-} // namespace settings
