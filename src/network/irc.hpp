@@ -29,6 +29,7 @@
 
 #include <boost/asio.hpp>
 
+#include "concurrent_container.hpp"
 #include "connection.hpp"
 #include "../melanobot.hpp"
 #include "../settings.hpp"
@@ -146,34 +147,16 @@ public:
     explicit Buffer(IrcConnection& irc, const Settings& settings = {});
 
     /**
-     * \brief Run the async process
-     * \thread irc \lock none
-     */
-    void run();
-
-    /**
      * \brief Inserts a command to the buffer
      * \thread external \lock buffer
      */
     void insert(const Command& cmd);
 
     /**
-     * \brief Check if the buffer is empty
-     * \thread ? \lock buffer
-     */
-    bool empty() const;
-
-    /**
      * \brief Process the top command (if any)
      * \thread queue \lock buffer
      */
     void process();
-
-    /**
-     * \brief Clear all commands
-     * \thread ? \lock buffer
-     */
-    void clear();
 
     /**
      * \brief Outputs directly a line from the command
@@ -194,9 +177,14 @@ public:
     void disconnect();
 
     /**
+     * \brief Starts the io service
+     */
+    void start();
+
+    /**
      * \brief Stops the io service
      */
-    void quit();
+    void stop();
 
     /**
      * \brief Checks if the connection is active
@@ -205,7 +193,6 @@ public:
     bool connected() const;
 
 private:
-    mutable std::mutex mutex; /// locks access to the buffer
 
     IrcConnection& irc;
 
@@ -213,7 +200,15 @@ private:
     /**
      * \brief Store messages when it isn't possible to send them
      */
-    std::priority_queue<Command> buffer;
+    ConcurrentPriorityQueue<Command> buffer;
+    /**
+     * \brief Thread running the output
+     */
+    std::thread thread_output;
+    /**
+     * \brief Thread running the input
+     */
+    std::thread thread_input;
     /**
      * \brief Maximum nuber of bytes in a message (longer messages will be truncated)
      * \see http://tools.ietf.org/html/rfc2812#section-2.3
@@ -241,6 +236,15 @@ private:
     boost::asio::io_service             io_service;
     boost::asio::ip::tcp::resolver      resolver{io_service};
     boost::asio::ip::tcp::socket        socket{io_service};
+
+    /**
+     * \brief While active, keep processing reads
+     */
+    void run_input();
+    /**
+     * \brief While active, keep processing writes
+     */
+    void run_output();
 
     /**
      * \brief Schedules an asynchronous line read
@@ -291,7 +295,12 @@ public:
     /**
      * \thread irc \lock none
      */
-    void run() override;
+    void start() override;
+
+    /**
+     * \thread main \lock buffer(indirect)
+     */
+    void stop() override;
 
     /**
      * \thread ? \lock buffer
@@ -344,11 +353,6 @@ public:
      * \thread main, external, irc, async_read \lock buffer(indirect)
      */
     void disconnect() override;
-
-    /**
-     * \thread main \lock buffer(indirect)
-     */
-    void quit() override;
 
     /**
      * \thread external \lock none

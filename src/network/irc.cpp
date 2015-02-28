@@ -37,47 +37,59 @@ Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     flood_max_length = settings.get("max_length",510);
 }
 
-void Buffer::run()
+void Buffer::run_output()
 {
-    /// \todo wait if the io_service isn't running from the start and handle reconnects
-    schedule_read();
-    /// \todo execute process() in parallel to io_service.run()
+    while (buffer.active())
+        process();
+}
+void Buffer::run_input()
+{
     io_service.run();
+}
+
+void Buffer::start()
+{
+    schedule_read();
+    buffer.start();
+    if ( !thread_output.joinable() )
+        thread_output = std::move(std::thread([this]{run_output();}));
+    if ( !thread_input.joinable() )
+        thread_input = std::move(std::thread([this]{run_input();}));
+}
+
+void Buffer::stop()
+{
+    disconnect();
+    io_service.stop();
+    buffer.stop();
+    if ( !thread_input.joinable() )
+        thread_input.join();
+    if ( !thread_output.joinable() )
+        thread_output.join();
 }
 
 void Buffer::insert(const Command& cmd)
 {
-    LOCK(mutex);
     buffer.push(cmd);
-
-    /// \todo remove from here (needs to be async with flood conditions
-    write(cmd);
-}
-
-bool Buffer::empty() const
-{
-    LOCK(mutex);
-    return buffer.empty();
 }
 
 void Buffer::process()
 {
-    mutex.lock();
-        auto now = Clock::now();
-        while ( !buffer.empty() && buffer.top().timeout < now )
-            buffer.pop();
-        if ( buffer.empty() )
-            return;
-        Command cmd = buffer.top();
-        buffer.pop();
-    mutex.unlock();
-    write(cmd);
-}
+    Command cmd;
 
-void Buffer::clear()
-{
-    LOCK(mutex);
-    buffer = std::priority_queue<Command>();
+    do
+    {
+        buffer.pop(cmd);
+        if ( !buffer.active() )
+            return;
+
+        auto max_timer = Clock::now() + flood_timer_max;
+        if ( flood_timer+flood_timer_penalty > max_timer )
+            std::this_thread::sleep_for(max_timer-flood_timer);
+    }
+    while ( cmd.timeout < Clock::now() );
+
+    write(cmd);
 }
 
 void Buffer::write(const Command& cmd)
@@ -94,40 +106,6 @@ void Buffer::write(const Command& cmd)
     write_line(line);
 }
 
-void Buffer::connect(const Server& server)
-{
-    if ( connected() )
-        disconnect();
-    boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
-    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-    boost::asio::connect(socket, endpoint_iterator);
-    /// \todo async with error checking + cycle (ie: notify irc that connection failed and needs a reconnect)
-}
-
-void Buffer::disconnect()
-{
-    /// \todo try catch
-    socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-    socket.close();
-}
-
-void Buffer::quit()
-{
-    io_service.stop();
-    /// \todo clear the queue and stop the process() thread
-}
-
-bool Buffer::connected() const
-{
-    return socket.is_open();
-}
-
-void Buffer::schedule_read()
-{
-    boost::asio::async_read_until(socket, buffer_read, "\r\n",
-        std::bind(&Buffer::on_read_line, this, std::placeholders::_1));
-}
-
 void Buffer::write_line ( std::string line )
 {
     /// \note this is synchronous, if it becomes async, keep QUIT as a sync message before disconnect()
@@ -141,8 +119,37 @@ void Buffer::write_line ( std::string line )
     request_stream << line << "\r\n";
     Log("irc",'<',1) << irc.formatter()->decode(line);
     boost::asio::write(socket, buffer_write);
+    flood_timer += flood_timer_penalty;
 }
 
+void Buffer::connect(const Server& server)
+{
+    if ( connected() )
+        disconnect();
+    boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    boost::asio::connect(socket, endpoint_iterator);
+    flood_timer = Clock::now();
+    /// \todo async with error checking + cycle (ie: notify irc that connection failed and needs a reconnect)
+}
+
+void Buffer::disconnect()
+{
+    /// \todo try catch
+    socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+    socket.close();
+}
+
+bool Buffer::connected() const
+{
+    return socket.is_open();
+}
+
+void Buffer::schedule_read()
+{
+    boost::asio::async_read_until(socket, buffer_read, "\r\n",
+        std::bind(&Buffer::on_read_line, this, std::placeholders::_1));
+}
 
 void Buffer::on_read_line(const boost::system::error_code &error)
 {
@@ -236,13 +243,19 @@ IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Setti
 
 IrcConnection::~IrcConnection()
 {
-    buffer.disconnect();
+    buffer.stop();
 }
 
-void IrcConnection::run()
+void IrcConnection::start()
 {
     connect();
-    buffer.run();
+    buffer.start();
+}
+
+void IrcConnection::stop()
+{
+    disconnect();
+    buffer.stop();
 }
 
 const Server& IrcConnection::server() const
@@ -459,11 +472,6 @@ void IrcConnection::disconnect()
     if ( status() > CONNECTING )
         buffer.write({"QUIT",{},1024});
     buffer.disconnect();
-}
-
-void IrcConnection::quit()
-{
-    disconnect();
 }
 
 string::Formatter* IrcConnection::formatter()

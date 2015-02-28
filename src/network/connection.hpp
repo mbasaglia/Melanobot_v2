@@ -76,6 +76,8 @@ struct Command
     Time                        timein;         ///< Time of creation
     Time                        timeout;        ///< Time it becomes obsolete
 
+    Command() = default;
+
     Command ( const std::string&        command,
         const std::vector<std::string>& parameters = {},
         int                             priority = 0,
@@ -122,11 +124,6 @@ public:
     typedef std::atomic<Status> AtomicStatus;
 
     virtual ~Connection() {}
-
-    /**
-     * \brief Keeps the connection going (synchronous)
-     */
-    virtual void run() = 0;
 
     /**
      * \brief Returns the server object to which this connection is connected to
@@ -181,9 +178,14 @@ public:
     virtual void disconnect() = 0;
 
     /**
-     * \brief Disconnect and exit from run() (called asynchronously)
+     * \brief Disconnect and stop all processing
      */
-    virtual void quit() = 0;
+    virtual void stop() = 0;
+
+    /**
+     * \brief Start processing messages
+     */
+    virtual void start() = 0;
 
     /**
      * \brief Get the string formatter

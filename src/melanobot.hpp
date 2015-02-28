@@ -26,6 +26,7 @@
 #include <queue>
 #include <thread>
 
+#include "concurrent_container.hpp"
 #include "settings.hpp"
 #include "network/connection.hpp"
 
@@ -57,45 +58,9 @@ public:
     void message(const network::Message& msg);
 
 private:
-    /**
-     * \brief Runs a network::Connection in its own thread
-     */
-    class Connection
-    {
-    public:
-        explicit Connection(network::Connection* connection)
-            : connection(connection)
-        {}
+    std::list<network::Connection*> connections;
 
-        void start()
-        {
-            thread = std::move(std::thread([this]{connection->run();}));
-        }
-
-        void stop()
-        {
-            connection->quit();
-            if ( thread.joinable() )
-                thread.join();
-        }
-
-        network::Connection* connection;
-        std::thread thread;
-    };
-
-    std::list<Connection> connections;
-
-    std::queue<network::Message> messages;
-
-    std::atomic<bool> keep_running {true};
-    std::mutex mutex;
-    std::condition_variable condition;
-
-    /**
-     * \brief Extract a message from the queue
-     * \thread main \lock messages
-     */
-    void get_message(network::Message& msg);
+    ConcurrentQueue<network::Message> messages;
 };
 
 
