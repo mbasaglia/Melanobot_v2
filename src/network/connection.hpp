@@ -181,6 +181,11 @@ public:
     virtual void disconnect() = 0;
 
     /**
+     * \brief Disconnect and exit from run() (called asynchronously)
+     */
+    virtual void quit() = 0;
+
+    /**
      * \brief Get the string formatter
      */
     virtual string::Formatter* formatter() = 0;
@@ -196,8 +201,8 @@ struct Message
     std::string              raw;     ///< Raw contents
     std::string              command; ///< Protocol command name
     std::vector<std::string> params;  ///< Tokenized parameters
-    std::string              message; ///< (optional) Message contents
-    std::vector<std::string> channels;///< (optional) Channels originating from
+    //std::string              message; ///< (optional) Message contents
+    //std::vector<std::string> channels;///< (optional) Channels originating from
     std::string              from;    ///< (optional) Name of the user who created this command
 };
 

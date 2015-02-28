@@ -111,6 +111,12 @@ void Buffer::disconnect()
     socket.close();
 }
 
+void Buffer::quit()
+{
+    io_service.stop();
+    /// \todo clear the queue and stop the process() thread
+}
+
 bool Buffer::connected() const
 {
     return socket.is_open();
@@ -179,6 +185,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
         }
     }
 
+    msg.source = &irc;
     irc.handle_message(msg);
 
     schedule_read();
@@ -454,6 +461,11 @@ void IrcConnection::disconnect()
     buffer.disconnect();
 }
 
+void IrcConnection::quit()
+{
+    disconnect();
+}
+
 string::Formatter* IrcConnection::formatter()
 {
     return formatter_;
@@ -467,7 +479,6 @@ void IrcConnection::reconnect()
 
 void IrcConnection::handle_message(const Message& msg)
 {
-    /// \todo append Message to Melanobot
 
     // see http://tools.ietf.org/html/rfc2812#section-5.1
 
@@ -625,6 +636,8 @@ void IrcConnection::handle_message(const Message& msg)
      * 501
      * 502
      */
+
+    bot->message(msg);
 }
 
 void IrcConnection::login()

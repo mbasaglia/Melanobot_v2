@@ -19,6 +19,13 @@
 #ifndef MELANOBOT_HPP
 #define MELANOBOT_HPP
 
+#include <atomic>
+#include <condition_variable>
+#include <list>
+#include <mutex>
+#include <queue>
+#include <thread>
+
 #include "settings.hpp"
 #include "network/connection.hpp"
 
@@ -33,10 +40,58 @@ public:
 
     /**
      * \brief Runs the bot
+     * \thread main \lock messages(not continuous)
+     * \todo start the threads in here, not in the constructor
      */
     void run();
+
+    /**
+     * \brief Stops the bot
+     * \thread external \lock none
+     */
+    void stop();
+
+    /**
+     * \brief Inform the bot there's an incoming message
+     * \thread main \lock messages
+     */
+    void message(const network::Message& msg);
+
 private:
-    std::vector<network::Connection*> connections;
+    /**
+     * \brief Runs a network::Connection in its own thread
+     */
+    class Connection
+    {
+    public:
+        explicit Connection(network::Connection* connection)
+            : connection(connection), thread([this]{this->connection->run();})
+        {}
+
+        void stop()
+        {
+            connection->quit();
+            if ( thread.joinable() )
+                thread.join();
+        }
+
+        network::Connection* connection;
+        std::thread thread;
+    };
+
+    std::list<Connection> connections;
+
+    std::queue<network::Message> messages;
+
+    std::atomic<bool> keep_running {true};
+    std::mutex mutex;
+    std::condition_variable condition;
+
+    /**
+     * \brief Extract a message from the queue
+     * \thread main \lock messages
+     */
+    void get_message(network::Message& msg);
 };
 
 

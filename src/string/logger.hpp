@@ -21,6 +21,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -100,6 +101,7 @@ public:
 
     /**
      * \brief Log a message
+     * \thread any \lock mutex
      */
     void log (const std::string& type, char direction,
         const string::FormattedString& message, int verbosity);
@@ -129,6 +131,7 @@ private:
     unsigned log_type_length = 0;
     string::Formatter* formatter = nullptr;
     std::string timestamp = "%Y-%m-%d %T";
+    std::mutex mutex;
 };
 
 /**

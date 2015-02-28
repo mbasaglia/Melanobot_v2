@@ -30,6 +30,7 @@ void Logger::log (const std::string& type, char direction,
     if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
         return;
 
+    mutex.lock();
     if ( !timestamp.empty() )
     {
         log_destination <<  formatter->color(color::yellow) << '['
@@ -46,6 +47,7 @@ void Logger::log (const std::string& type, char direction,
 
     log_destination << formatter->clear() << message.encode(formatter)
         << formatter->clear() << std::endl;
+    mutex.unlock();
 }
 
 void Logger::load_settings(const Settings& settings)

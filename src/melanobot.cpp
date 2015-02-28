@@ -25,19 +25,49 @@ Melanobot::Melanobot(const Settings& settings )
     {
         network::Connection* conn = network::ConnectionFactory::instance().create(this,pt.second);
         if ( conn )
-            connections.push_back(conn);
+            connections.push_back(Connection(conn));
     }
     if ( connections.empty() )
         ErrorLog("sys") << "Creating a bot with no connections";
 }
 Melanobot::~Melanobot()
 {
-    for ( auto conn : connections )
-        delete conn;
+    stop();
+}
+void Melanobot::stop()
+{
+    Melanobot::keep_running = false;
+    for ( auto &conn : connections )
+    {
+        conn.stop();
+        delete conn.connection;
+    }
 }
 void Melanobot::run()
 {
-    /// \todo to each its own thread
-    for ( auto conn : connections )
-        conn->run();
+    while ( keep_running )
+    {
+        network::Message msg;
+        get_message(msg);
+        if ( !keep_running )
+            break;
+        /// \todo process messages
+    }
+}
+
+void Melanobot::message(const network::Message& msg)
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    messages.push(msg);
+    condition.notify_one();
+}
+
+void Melanobot::get_message(network::Message& msg)
+{
+    std::unique_lock<std::mutex> lock(mutex);
+    condition.wait(lock,[this]{return !messages.empty() && keep_running;});
+    if ( !keep_running )
+        return;
+    msg = messages.front();
+    messages.pop();
 }

@@ -194,6 +194,11 @@ public:
     void disconnect();
 
     /**
+     * \brief Stops the io service
+     */
+    void quit();
+
+    /**
      * \brief Checks if the connection is active
      * \thread irc, queue \lock none
      */
@@ -341,12 +346,17 @@ public:
     void disconnect() override;
 
     /**
+     * \thread main \lock buffer(indirect)
+     */
+    void quit() override;
+
+    /**
      * \thread external \lock none
      */
     string::Formatter* formatter() override;
 
     /**
-     * \brief Quit and connect
+     * \brief disconnect and connect
      * \thread async_read \lock buffer(indirect) data(indirect)
      */
     void reconnect();
