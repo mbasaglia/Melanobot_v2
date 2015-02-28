@@ -202,7 +202,7 @@ struct Message
 };
 
 #define REGISTER_CONNECTION(name,function) \
-    static ConnectionFactory::RegisterConnection register_##name(#name,function)
+    static network::ConnectionFactory::RegisterConnection RegisterConnection_##name(#name,function)
 /**
  * \brief Creates connections from settings
  */

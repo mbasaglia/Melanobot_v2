@@ -22,6 +22,9 @@
 
 #define LOCK(mutexname) std::lock_guard<std::mutex> lock_(mutexname)
 
+REGISTER_CONNECTION(irc,&network::irc::IrcConnection::create);
+REGISTER_LOG_TYPE(irc,color::dark_magenta);
+
 namespace network {
 namespace irc {
 
@@ -180,8 +183,6 @@ void Buffer::on_read_line(const boost::system::error_code &error)
 
     schedule_read();
 }
-
-REGISTER_CONNECTION(irc,&IrcConnection::create);
 
 IrcConnection* IrcConnection::create(Melanobot* bot, const Settings& settings)
 {

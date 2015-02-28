@@ -27,6 +27,9 @@
 
 #include "../string/logger.hpp"
 
+
+REGISTER_LOG_TYPE(web,color::dark_blue);
+
 namespace network {
 
 namespace http {

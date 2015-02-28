@@ -174,7 +174,7 @@ void Formatter::FormatterFactory::add_formatter(Formatter* instance)
 }
 
 #define REGISTER_FORMATTER(classname,name) \
-    static Formatter::RegisterFormatter register_##name = new classname
+    static Formatter::RegisterFormatter RegisterFormatter_##name = new classname
 
 static Formatter::RegisterDefaultFormatter register_default(new FormatterUtf8);
 

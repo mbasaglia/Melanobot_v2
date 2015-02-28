@@ -1,8 +1,6 @@
 #include "melanobot.hpp"
 #include "string/logger.hpp"
-#include "network/async_service.hpp"
-#include "network/irc.hpp"
-#include "string/string.hpp"
+#include "settings.hpp"
 
 int main(int argc, char **argv)
 {
@@ -11,11 +9,8 @@ int main(int argc, char **argv)
     Logger::instance().register_direction('!',color::dark_blue);
 
     /// \todo register these in the proper classes
-    Logger::instance().register_log_type("irc",color::dark_magenta);
-    Logger::instance().register_log_type("dp",color::dark_cyan);
-    Logger::instance().register_log_type("std",color::white);
-    Logger::instance().register_log_type("web",color::dark_blue);
-    Logger::instance().register_log_type("sys",color::dark_red);
+    REGISTER_LOG_TYPE(dp,color::dark_cyan);
+    REGISTER_LOG_TYPE(sys,color::dark_red);
 
     try {
         Settings settings = Settings::initialize(argc,argv);

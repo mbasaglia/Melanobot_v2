@@ -27,17 +27,32 @@
 
 #include <boost/chrono/io/time_point_io.hpp>
 
+#include "multibuf.hpp"
 #include "string.hpp"
 #include "settings.hpp"
 
 /**
+ * \brief Registers a log type
+ */
+#define REGISTER_LOG_TYPE(name,color) static Logger::RegisterLogType RegisterLogType_##name(#name,color)
+
+/**
  * \brief Singleton class handling logs
  * \see Log for a nicer interface
- * \todo read settings
  */
 class Logger
 {
 public:
+    /**
+     * \brief Dummy class which registers log types
+     */
+    struct RegisterLogType
+    {
+        RegisterLogType(const std::string& name, color::Color12 color)
+        {
+            Logger::instance().register_log_type(name,color);
+        }
+    };
 
     /**
      * \brief Singleton instance
@@ -101,10 +116,14 @@ private:
         int verbosity;
     };
 
-    Logger() {}
+    Logger()
+    {
+        log_buffer.push_buffer(std::cout.rdbuf());
+    }
     Logger(const Logger&) = delete;
 
-    std::ostream log_destination {std::cout.rdbuf()};
+    Multibuf     log_buffer;
+    std::ostream log_destination {&log_buffer};
     std::unordered_map<std::string, LogType> log_types;
     std::unordered_map<char, color::Color12> log_directions;
     unsigned log_type_length = 0;
@@ -133,8 +152,7 @@ public:
 
     ~Log()
     {
-        if ( color )
-            stream << color::nocolor;
+        stream << string::ClearFormatting();
         Logger::instance().log(type, direction, stream.str(), verbosity);
     }
 
@@ -145,19 +163,11 @@ public:
             return *this;
         }
 
-    const Log& operator<< ( const color::Color12& t ) const
-    {
-        color = true;
-        stream << t;
-        return *this;
-    }
-
 public:
     std::string type;
     char direction;
     int verbosity;
     string::FormattedStream stream;
-    mutable bool color = false;
 };
 
 /**

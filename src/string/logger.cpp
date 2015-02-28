@@ -59,4 +59,11 @@ void Logger::load_settings(const Settings& settings)
         if ( type_it != log_types.end() )
             type_it->second.verbosity = p.second.get_value(type_it->second.verbosity);
     }
+    /// \todo maybe should use different a formatter (ie: plain utf8) for log files
+    std::string output = settings.get("logfile","");
+    if ( !output.empty() )
+    {
+        if ( !log_buffer.push_file(output) )
+            ErrorLog("sys") << "Cannot open log file: " << output;
+    }
 }
