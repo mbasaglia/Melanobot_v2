@@ -45,6 +45,7 @@ struct Server
 
     Server( const std::string& host, uint16_t port ) : host(host), port(port) {}
 
+
     /**
      * \brief Creates object from host:port string
      */
@@ -161,11 +162,6 @@ public:
      * \brief Protocol identifier
      */
     virtual std::string protocol() const = 0;
-
-    /**
-     * \brief Connection name
-     */
-    virtual std::string connection_name() const = 0;
 
     /**
      * \brief Initialize the connection

@@ -21,10 +21,10 @@
 
 #include <atomic>
 #include <condition_variable>
-#include <list>
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <unordered_map>
 
 #include "concurrent_container.hpp"
 #include "settings.hpp"
@@ -57,8 +57,15 @@ public:
      */
     void message(const network::Message& msg);
 
+    /**
+     * \brief Get connection by name
+     * \return NULL if not found
+     */
+    network::Connection* connection(const std::string& name) const;
+
 private:
-    std::list<network::Connection*> connections;
+    /// \todo allow dynamic connection creation (requires locking)
+    std::unordered_map<std::string,network::Connection*> connections;
 
     ConcurrentQueue<network::Message> messages;
 };

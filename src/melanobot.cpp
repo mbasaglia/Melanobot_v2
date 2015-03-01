@@ -21,11 +21,19 @@
 
 Melanobot::Melanobot(const Settings& settings )
 {
+    static int counter = 0;
     for(const auto& pt : settings.get_child("connections",{}))
     {
         network::Connection* conn = network::ConnectionFactory::instance().create(this,pt.second);
+
+        std::string id = !pt.first.empty() ? pt.first :
+            "unnamed_connection_"+std::to_string(++counter);
+
         if ( conn )
-            connections.push_back(conn);
+            connections[id] = conn;
+        else
+            ErrorLog("sys") << "Could not create connection "
+                << string::FormatFlags::BOLD << id;
     }
     if ( connections.empty() )
         ErrorLog("sys") << "Creating a bot with no connections";
@@ -34,18 +42,18 @@ Melanobot::~Melanobot()
 {
     stop();
     for ( auto &conn : connections )
-        delete conn;
+        delete conn.second;
 }
 void Melanobot::stop()
 {
     messages.stop();
     for ( auto &conn : connections )
-        conn->stop();
+        conn.second->stop();
 }
 void Melanobot::run()
 {
     for ( auto &conn : connections )
-        conn->start();
+        conn.second->start();
 
     while ( messages.active() )
     {
@@ -61,4 +69,12 @@ void Melanobot::run()
 void Melanobot::message(const network::Message& msg)
 {
     messages.push(msg);
+}
+
+network::Connection* Melanobot::connection(const std::string& name) const
+{
+    auto it = connections.find(name);
+    if ( it == connections.end() )
+        return nullptr;
+    return it->second;
 }

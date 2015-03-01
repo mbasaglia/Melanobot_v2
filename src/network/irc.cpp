@@ -128,7 +128,7 @@ void Buffer::write(const Command& cmd)
 void Buffer::write_line ( std::string line )
 {
     /// \note this is synchronous, if it becomes async, keep QUIT as a sync message before disconnect()
-    /// \todo maybe try to trip \r and \n from line
+    /// \todo maybe try to strip \r and \n from line
     std::ostream request_stream(&buffer_write);
     if ( line.size() > flood_max_length )
     {
@@ -149,7 +149,7 @@ void Buffer::connect(const Server& server)
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
     boost::asio::connect(socket, endpoint_iterator);
     flood_timer = Clock::now();
-    /// \todo async with error checking + cycle (ie: notify irc that connection failed and needs a reconnect)
+    /// \todo async with error checking
 }
 
 void Buffer::disconnect()
@@ -225,35 +225,45 @@ IrcConnection* IrcConnection::create(Melanobot* bot, const Settings& settings)
         return nullptr;
     }
 
-    Network::ServerList network;
-
     Server server ( settings.get("server",std::string()) );
     if ( !server.port )
         server.port = 6667;
     server.host = settings.get("server.host",server.host);
     server.port = settings.get("server.port",server.port);
-    if ( !server.host.empty() && server.port )
-        network.push_back(server);
-
-    /// \todo handle named networks (insert at the end of \c network)
-
-    if ( network.empty() )
+    if ( server.host.empty() || !server.port )
     {
         ErrorLog("irc") << "IRC connection with no server";
         return nullptr;
     }
 
-    return new IrcConnection(bot, Network(network), settings);
+    return new IrcConnection(bot, server, settings);
 }
 
-IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Settings& settings )
-    : bot(bot), network(network), buffer(*this, settings.get_child("buffer"))
+IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
+    : bot(bot), main_server(server), current_server(server), buffer(*this, settings.get_child("buffer",{}))
 {
-    network_password = settings.get("server.password",std::string());
+    read_settings(settings);
+}
+
+IrcConnection::~IrcConnection()
+{
+    buffer.stop();
+}
+
+void IrcConnection::read_settings(const Settings& settings)
+{
+    /// \note doesn't read buffer settings
+    /// \todo if called from somewhere that is not the constructor, lock data
+    server_password  = settings.get("server.password",std::string());
+    main_server.host = settings.get("server.host",main_server.host);
+    main_server.port = settings.get("server.port",main_server.port);
+
     preferred_nick   = settings.get("nick","PleaseNameMe");
+    modes            = settings.get("modes",std::string());
+
     auth_nick        = settings.get("auth.nick",preferred_nick);
     auth_password    = settings.get("auth.password",std::string());
-    modes            = settings.get("modes",std::string());
+
     formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
     connection_status = DISCONNECTED;
 
@@ -262,14 +272,7 @@ IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Set
     while ( ss >> chan )
         channels_to_join.push_back(chan);
 }
-IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
-    : IrcConnection(bot,Network{server},settings)
-{}
 
-IrcConnection::~IrcConnection()
-{
-    buffer.stop();
-}
 
 void IrcConnection::start()
 {
@@ -286,7 +289,7 @@ void IrcConnection::stop()
 const Server& IrcConnection::server() const
 {
     LOCK(mutex);
-    return network.current();
+    return current_server;
 }
 
 void IrcConnection::command ( const Command& c )
@@ -294,7 +297,6 @@ void IrcConnection::command ( const Command& c )
     Command cmd = c;
     std::string command = strtoupper(cmd.command);
 
-    /// \todo Ugly if chain
     if ( command == "PRIVMSG" || command == "NOTICE" )
     {
         if ( cmd.parameters.size() != 2 )
@@ -399,9 +401,18 @@ void IrcConnection::command ( const Command& c )
         /// \todo Discard unexisting channels
         /// http://tools.ietf.org/html/rfc2812#section-3.2.2
     }
-    /**
-     * \todo custom commands: RECONNECT
-     */
+    else if ( command == "RECONNECT" )
+    {
+        // Custom command
+        reconnect();
+        return;
+    }
+    else if ( command == "DISCONNECT" )
+    {
+        // Custom command
+        disconnect();
+        return;
+    }
     /* Skipped: * = maybe later o = maybe disallow completely
      * OPER     o
      * SERVICE  o
@@ -472,22 +483,16 @@ std::string IrcConnection::protocol() const
     return "irc";
 }
 
-std::string IrcConnection::connection_name() const
-{
-    /// \todo this should be set at construction and never changed
-    /// => no lock
-    return "todo";
-}
-
-
 void IrcConnection::connect()
 {
     if ( !buffer.connected() )
     {
         connection_status = WAITING;
-        buffer.connect(network.current());
-        /// \todo cycle servers until finds a connection, or has cycled through too many servers
-        /// then trigger a graceful quit
+        buffer.connect(main_server);
+        mutex.lock();
+        current_server = main_server;
+        mutex.unlock();
+        /// \todo If connection fails, trigger a graceful quit
         connection_status = CONNECTING;
         login();
     }
@@ -509,16 +514,16 @@ string::Formatter* IrcConnection::formatter()
 void IrcConnection::reconnect()
 {
     disconnect();
-    network.next();
+    connect();
 }
 
 void IrcConnection::handle_message(Message msg)
 {
     if ( msg.command == "001" && msg.params.size() >= 1 )
     {
-        /// \todo store the server name
         // RPL_WELCOME
         mutex.lock();
+        /// \todo read current_server
         current_nick = msg.params[0];
         current_nick_lowecase = strtolower(current_nick);
         for ( const auto& s : channels_to_join )
@@ -571,7 +576,7 @@ void IrcConnection::handle_message(Message msg)
         std::string nickfrom = UserNick(msg.from).nick;
         msg.from = nickfrom;
         msg.message = message;
-        /// \todo parse it as a name+host
+
         if ( strtolower(msg.params[0]) == current_nick_lowecase )
             msg.channels = { strtolower(nickfrom) };
         else
@@ -782,8 +787,8 @@ void IrcConnection::handle_message(Message msg)
 
 void IrcConnection::login()
 {
-    if ( !network_password.empty() )
-        command({"PASS",{network_password},1024});
+    if ( !server_password.empty() )
+        command({"PASS",{server_password},1024});
     command({"NICK",{preferred_nick},1024});
     command({"USER",{preferred_nick, "0", preferred_nick, preferred_nick},1024});
 }

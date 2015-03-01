@@ -21,6 +21,7 @@
 #define IRC_HPP
 
 #include <algorithm>
+#include <list>
 #include <mutex>
 #include <queue>
 #include <regex>
@@ -100,67 +101,6 @@ struct UserNick
     std::string host;
 
     static std::regex prefix_regex;
-};
-
-/**
- * \brief A collection of servers
- */
-class Network
-{
-public:
-    typedef std::vector<Server> ServerList;
-
-    explicit Network ( const Server& server ) : Network(ServerList{server}) {}
-
-    explicit Network ( const ServerList& servers )
-        : servers(servers)
-    {
-        if ( servers.empty() )
-            CRITICAL_ERROR("Empty network");
-    }
-
-    Network ( const Network& other ) : Network(other.servers) {}
-
-    /**
-     * \note Deleted because it would require a lock for (servers = other.servers)
-     */
-    Network& operator= ( const Network& other ) = delete;
-
-    /**
-     * \brief Current server
-     */
-    const Server& current() const
-    {
-        return servers[current_server];
-    }
-
-    /**
-     * \brief Advances to the next server in the list and returns it
-     * \note Acts as a circular buffer, will always return a valid server
-     */
-    const Server& next()
-    {
-        ++current_server;
-        if ( current_server == servers.size() )
-            current_server = 0;
-        return current();
-    }
-
-    /**
-     * \brief Number of servers
-     * \note Always >= 0
-     */
-    int size() const
-    {
-        return servers.size();
-    }
-
-private:
-    ServerList servers;
-    /**
-     * \todo needs atomic?
-     */
-    std::atomic<unsigned> current_server { 0 };
 };
 
 class IrcConnection;
@@ -312,10 +252,6 @@ public:
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const Network& network, const Settings& settings = {});
-    /**
-     * \thread main \lock none
-     */
     IrcConnection(Melanobot* bot, const Server& server, const Settings& settings = {});
     
     /**
@@ -371,11 +307,6 @@ public:
     std::string protocol() const override;
 
     /**
-     * \thread ? \lock none
-     */
-    std::string connection_name() const override;
-
-    /**
      * \thread external \lock buffer(indirect) data(indirect)
      */
     void connect() override;
@@ -414,24 +345,35 @@ private:
 
     /**
      * \brief Extablish connection to the IRC server
-     * \thread irc_in \lock data buffer(indirect)
+     * \thread irc_in \lock buffer(indirect)
      */
     void login();
 
     /**
      * \brief AUTH to the server
-     * \thread irc_in \lock data buffer(indirect)
+     * \thread irc_in \lock buffer(indirect)
      */
     void auth();
+
+    /**
+     * \brief Read members from the given settings
+     */
+    void read_settings(const Settings& settings);
 
     mutable std::mutex mutex;
 
     Melanobot* bot;
 
     /**
-     * \brief IRC network
+     * \brief IRC server to connect to
      */
-    Network network;
+    Server main_server;
+
+    /**
+     * \brief Server the bot is connected to
+     * \todo
+     */
+    Server current_server;
 
     /**
      * \brief Command buffer
@@ -441,7 +383,7 @@ private:
     /**
      * \brief Network/Bouncer password
      */
-    std::string network_password;
+    std::string server_password;
     /**
      * \brief Contains the IRC features advertized by the server
      *
