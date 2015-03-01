@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <mutex>
 #include <queue>
+#include <regex>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -37,6 +38,16 @@
 
 namespace network {
 namespace irc {
+
+/**
+ * \brief Whether a character is a valid nickname character
+ * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
+ */
+inline bool is_nickchar(char c)
+{
+    return std::isalnum(c) || c == '-' ||
+        ( c >= 0x5B && c <= 0x60 ) || ( c >= 0x7B && c <= 0x7D );
+}
 
 /**
  * \brief Converts a string to lower case
@@ -74,6 +85,24 @@ inline std::string strtoupper ( std::string string )
 }
 
 /**
+ * \brief IRC User nick information
+ */
+struct UserNick
+{
+    /**
+     * \brief Parse :Nick!User@host
+     * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
+     */
+    UserNick ( const std::string& prefix );
+
+    std::string nick;
+    std::string user;
+    std::string host;
+
+    static std::regex prefix_regex;
+};
+
+/**
  * \brief A collection of servers
  */
 class Network
@@ -93,7 +122,7 @@ public:
     Network ( const Network& other ) : Network(other.servers) {}
 
     /**
-     * \note Deleted because it would require a lock
+     * \note Deleted because it would require a lock for (servers = other.servers)
      */
     Network& operator= ( const Network& other ) = delete;
 
@@ -154,41 +183,43 @@ public:
 
     /**
      * \brief Process the top command (if any)
-     * \thread queue \lock buffer
+     * \thread irc_out \lock buffer(waits for input, waits for flood timer)
      */
     void process();
 
     /**
      * \brief Outputs directly a line from the command
-     * \thread irc queue \lock none
+     * \thread irc_out, external(quit) \lock none
      */
     void write(const Command& cmd);
 
     /**
      * \brief Connect to the given server
-     * \thread irc, queue \lock none
+     * \thread external \lock none
      */
     void connect(const Server& server);
 
     /**
      * \brief Disconnect from the server
-     * \thread irc, queue \lock none
+     * \thread external \lock none
      */
     void disconnect();
 
     /**
      * \brief Starts the io service
+     * \thread main
      */
     void start();
 
     /**
      * \brief Stops the io service
+     * \thread main
      */
     void stop();
 
     /**
      * \brief Checks if the connection is active
-     * \thread irc, queue \lock none
+     * \thread external \lock none
      */
     bool connected() const;
 
@@ -248,19 +279,19 @@ private:
 
     /**
      * \brief Schedules an asynchronous line read
-     * \thread irc, async_read \lock none (async)
+     * \thread irc_in \lock none (async)
      */
     void schedule_read();
 
     /**
      * \brief Writes a line to the socket
-     * \thread irc, queue \lock none TODO?
+     * \thread irc_out, external(quit) \lock none
      */
     void write_line ( std::string line );
 
     /**
      * \brief Async hook on network input
-     * \thread async_read \lock none
+     * \thread irc_in \lock none
      */
     void on_read_line(const boost::system::error_code &error);
 
@@ -293,12 +324,12 @@ public:
     ~IrcConnection() override;
 
     /**
-     * \thread irc \lock none
+     * \thread external \lock none
      */
     void start() override;
 
     /**
-     * \thread main \lock buffer(indirect)
+     * \thread external \lock buffer(indirect)
      */
     void stop() override;
 
@@ -308,12 +339,12 @@ public:
     const Server& server() const override;
 
     /**
-     * \thread irc, external, async_read \lock data(sometimes) buffer(call)
+     * \thread external \lock data(sometimes) buffer(indirect)
      */
     void command ( const Command& cmd ) override;
 
     /**
-     * \thread external \lock data(sometimes) buffer(call)
+     * \thread external \lock data(sometimes) buffer(indirect)
      */
     void say ( const std::string& channel,
         const std::string& message,
@@ -321,7 +352,7 @@ public:
         const Time& timeout = Time::max() ) override;
 
     /**
-     * \thread external \lock data(sometimes) buffer(call)
+     * \thread external \lock data(sometimes) buffer(indirect)
      */
     void say_as ( const std::string& channel,
         const std::string& name,
@@ -335,7 +366,7 @@ public:
     Status status() const override;
 
     /**
-     * \thread ? \lock none
+     * \thread external \lock none
      */
     std::string protocol() const override;
 
@@ -345,12 +376,12 @@ public:
     std::string connection_name() const override;
 
     /**
-     * \thread main, external \lock buffer(indirect) data(indirect)
+     * \thread external \lock buffer(indirect) data(indirect)
      */
     void connect() override;
 
     /**
-     * \thread main, external, irc, async_read \lock buffer(indirect)
+     * \thread external \lock buffer(indirect)
      */
     void disconnect() override;
 
@@ -361,7 +392,7 @@ public:
 
     /**
      * \brief disconnect and connect
-     * \thread async_read \lock buffer(indirect) data(indirect)
+     * \thread external \lock buffer(indirect) data(indirect)
      */
     void reconnect();
 
@@ -377,19 +408,19 @@ private:
 
     /**
      * \brief Handle a IRC message
-     * \thread async_read \lock data(sometimes) buffer(indirect, sometimes)
+     * \thread irc_in \lock data(sometimes) buffer(indirect, sometimes)
      */
-    void handle_message(const Message& line);
+    void handle_message(Message line);
 
     /**
      * \brief Extablish connection to the IRC server
-     * \thread async_read \lock data buffer(indirect)
+     * \thread irc_in \lock data buffer(indirect)
      */
     void login();
 
     /**
      * \brief AUTH to the server
-     * \thread async_read \lock data buffer(indirect)
+     * \thread irc_in \lock data buffer(indirect)
      */
     void auth();
 
@@ -450,6 +481,14 @@ private:
      * \brief Input formatter
      */
     string::Formatter* formatter_ = nullptr;
+    /**
+     * \brief List of channels to join
+     */
+    std::list<std::string> channels_to_join;
+    /**
+     * \brief Connection status
+     */
+    AtomicStatus connection_status;
 };
 
 } // namespace network::irc

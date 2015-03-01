@@ -18,6 +18,7 @@
  */
 
 #include "irc.hpp"
+
 #include "../string/logger.hpp"
 
 #define LOCK(mutexname) std::lock_guard<std::mutex> lock_(mutexname)
@@ -27,6 +28,24 @@ REGISTER_LOG_TYPE(irc,color::dark_magenta);
 
 namespace network {
 namespace irc {
+
+/// \note the real regex would be stricter
+std::regex UserNick::prefix_regex{":?([^!@]+)(?:!([^@]+))?(?:@(.*))",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::ECMAScript };
+
+UserNick::UserNick ( const std::string& prefix )
+{
+    std::smatch match;
+
+    nick = prefix;
+    if ( std::regex_match(prefix,match,prefix_regex) )
+    {
+        nick = match[1].str();
+        user = match[2].str();
+        host = match[3].str();
+    }
+}
 
 Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     : irc(irc)
@@ -39,18 +58,18 @@ Buffer::Buffer(IrcConnection& irc, const Settings& settings)
 
 void Buffer::run_output()
 {
+    buffer.start();
     while (buffer.active())
         process();
 }
 void Buffer::run_input()
 {
+    schedule_read();
     io_service.run();
 }
 
 void Buffer::start()
 {
-    schedule_read();
-    buffer.start();
     if ( !thread_output.joinable() )
         thread_output = std::move(std::thread([this]{run_output();}));
     if ( !thread_input.joinable() )
@@ -193,7 +212,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     }
 
     msg.source = &irc;
-    irc.handle_message(msg);
+    irc.handle_message(std::move(msg));
 
     schedule_read();
 }
@@ -236,6 +255,12 @@ IrcConnection::IrcConnection ( Melanobot* bot, const Network& network, const Set
     auth_password    = settings.get("auth.password",std::string());
     modes            = settings.get("modes",std::string());
     formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
+    connection_status = DISCONNECTED;
+
+    std::istringstream ss ( settings.get("channels",std::string()) );
+    std::string chan;
+    while ( ss >> chan )
+        channels_to_join.push_back(chan);
 }
 IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
     : IrcConnection(bot,Network{server},settings)
@@ -439,8 +464,7 @@ void IrcConnection::say_as ( const std::string& channel,
 
 Connection::Status IrcConnection::status() const
 {
-    /// \todo
-    return Connection::DISCONNECTED;
+    return connection_status;
 }
 
 std::string IrcConnection::protocol() const
@@ -460,9 +484,11 @@ void IrcConnection::connect()
 {
     if ( !buffer.connected() )
     {
+        connection_status = WAITING;
         buffer.connect(network.current());
         /// \todo cycle servers until finds a connection, or has cycled through too many servers
         /// then trigger a graceful quit
+        connection_status = CONNECTING;
         login();
     }
 }
@@ -472,6 +498,7 @@ void IrcConnection::disconnect()
     if ( status() > CONNECTING )
         buffer.write({"QUIT",{},1024});
     buffer.disconnect();
+    connection_status = DISCONNECTED;
 }
 
 string::Formatter* IrcConnection::formatter()
@@ -485,19 +512,21 @@ void IrcConnection::reconnect()
     network.next();
 }
 
-void IrcConnection::handle_message(const Message& msg)
+void IrcConnection::handle_message(Message msg)
 {
-
-    // see http://tools.ietf.org/html/rfc2812#section-5.1
-
     if ( msg.command == "001" && msg.params.size() >= 1 )
     {
+        /// \todo store the server name
         // RPL_WELCOME
         mutex.lock();
         current_nick = msg.params[0];
         current_nick_lowecase = strtolower(current_nick);
+        for ( const auto& s : channels_to_join )
+            command({"JOIN",{s}});
+        channels_to_join.clear();
         mutex.unlock();
         auth();
+        connection_status = CONNECTED;
     }
     else if ( msg.command == "433" && msg.params.size() >= 1 )
     {
@@ -526,8 +555,111 @@ void IrcConnection::handle_message(const Message& msg)
         /// \todo set timer to the latest server message and call PING when too old
         command({"PONG",msg.params,1024,std::chrono::minutes(3)});
     }
+    else if ( msg.command == "PRIVMSG" )
+    {
+        if ( msg.params.size() != 2 || msg.params[1].empty() )
+            return; // Odd PRIVMSG format
 
-    /// \todo handle non-numeric commands
+        {
+            LOCK(mutex);
+            if ( strtolower(msg.from) == current_nick_lowecase )
+                return; // received our own message for some reason, disregard
+        }
+
+        std::string message = msg.params[1];
+
+        std::string nickfrom = UserNick(msg.from).nick;
+        msg.from = nickfrom;
+        msg.message = message;
+        /// \todo parse it as a name+host
+        if ( strtolower(msg.params[0]) == current_nick_lowecase )
+            msg.channels = { strtolower(nickfrom) };
+        else
+            msg.channels = { msg.params[0] };
+
+        // Handle CTCP
+        if ( msg.message[0] == '\1' )
+        {
+            static std::regex regex_ctcp("\1([^ \1]+)(?: ([^\1]+))?\1",
+                std::regex_constants::syntax_option_type::optimize |
+                std::regex_constants::syntax_option_type::ECMAScript);
+            std::smatch match;
+            std::regex_match(message,match,regex_ctcp);
+            msg.message.clear();
+            std::string ctcp = strtoupper(match[1].str());
+
+            if ( ctcp == "ACTION" )
+            {
+                msg.action = 1;
+            }
+            else
+            {
+                msg.command = "CTCP";
+                msg.params = { ctcp };
+                if ( !match[2].str().empty() )
+                    msg.params.push_back(match[2].str());
+            }
+        }
+    }
+    else if ( msg.command == "NOTICE" )
+    {
+        // http://tools.ietf.org/html/rfc2812#section-3.3.2
+        // Discard because you should never send automatic replies
+        return;
+    }
+    else if ( msg.command == "ERROR" )
+    {
+        ErrorLog errl("irc","Server Error:");
+        if ( msg.params.empty() )
+            errl << "Unknown error";
+        else
+            errl << msg.params[0];
+        bot->stop(); /// \todo is this the right thing to do?
+    }
+    // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
+    /* Skipped: * = maybe later X = surely later
+     * PASS
+     * USER
+     * OPER
+     * SERVICE
+     * QUIT     X
+     * SQUIT
+     * JOIN     X
+     * PART     X
+     * MODE     *
+     * TOPIC    *
+     * NAMES    X
+     * LIST
+     * INVITE   X
+     * KICK     X
+     * MOTD
+     * LUSERS
+     * VERSION
+     * STATS
+     * LINKS
+     * TIME
+     * CONNECT
+     * TRACE
+     * ADMIN
+     * INFO
+     * SERVLIST
+     * SQUERY
+     * WHO
+     * WHOIS
+     * WHOWAS
+     * KILL
+     * PONG     *
+     * AWAY     *
+     * REHASH
+     * DIE
+     * RESTART
+     * SUMMON
+     * USERS    *
+     * WALLOPS
+     * USERHOST
+     * ISON
+     */
+    // see http://tools.ietf.org/html/rfc2812#section-5.1 (Numeric)
     /// \todo print a message for all ERR_ responses (verbosity > 2)
     /* Skipped:
      * 0xx server-client
@@ -537,7 +669,7 @@ void IrcConnection::handle_message(const Message& msg)
      * 005      *
      * 2xx-3xx Replies to commands
      * 302
-     * 303
+     * 303      *
      * 301
      * 305
      * 306
@@ -565,7 +697,7 @@ void IrcConnection::handle_message(const Message& msg)
      * 351      ?
      * 352
      * 315
-     * 353      *
+     * 353      X
      * 366      ?
      * 364
      * 365
@@ -667,3 +799,4 @@ void IrcConnection::auth()
 
 } // namespace irc
 } // namespace network
+
