@@ -18,6 +18,7 @@
  */
 #include "melanobot.hpp"
 
+#include "handler/handler.hpp"
 
 Melanobot::Melanobot(const Settings& settings )
 {
@@ -37,12 +38,22 @@ Melanobot::Melanobot(const Settings& settings )
     }
     if ( connections.empty() )
         ErrorLog("sys") << "Creating a bot with no connections";
+
+    for(const auto& pt : settings.get_child("handlers",{}))
+    {
+        handler::Handler *hand = handler::HandlerFactory::instance().build(pt.first,pt.second,this);
+        if ( hand )
+            handlers.push_back(hand);
+    }
+
 }
 Melanobot::~Melanobot()
 {
     stop();
     for ( auto &conn : connections )
         delete conn.second;
+    for ( auto handler : handlers )
+        delete handler;
 }
 void Melanobot::stop()
 {
@@ -55,6 +66,9 @@ void Melanobot::run()
     for ( auto &conn : connections )
         conn.second->start();
 
+    for ( auto handler : handlers )
+        handler->initialize();
+
     while ( messages.active() )
     {
         network::Message msg;
@@ -63,7 +77,13 @@ void Melanobot::run()
             break;
         /// \todo process messages
         Log("sys",'!') << msg.raw;
+        for ( auto handler : handlers )
+            if ( handler->handle(msg) )
+                break;
     }
+
+    for ( auto handler : handlers )
+        handler->finalize();
 }
 
 void Melanobot::message(const network::Message& msg)

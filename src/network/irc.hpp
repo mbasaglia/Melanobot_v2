@@ -43,6 +43,7 @@ namespace irc {
 /**
  * \brief Whether a character is a valid nickname character
  * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
+ * \todo currently unused
  */
 inline bool is_nickchar(char c)
 {
@@ -283,18 +284,19 @@ public:
      * \thread external \lock data(sometimes) buffer(indirect)
      */
     void say ( const std::string& channel,
-        const std::string& message,
+        const string::FormattedString& message,
         int priority = 0,
-        const Time& timeout = Time::max() ) override;
+        const Time& timeout = Clock::time_point::max() ) override;
 
     /**
      * \thread external \lock data(sometimes) buffer(indirect)
      */
     void say_as ( const std::string& channel,
-        const std::string& name,
-        const std::string& message,
+        const string::FormattedString& name,
+        const string::FormattedString& message,
+        const string::FormattedString& prefix = {},
         int priority = 0,
-        const Time& timeout = Time::max()  ) override;
+        const Time& timeout = Clock::time_point::max()  )  override;
 
     /**
      * \thread ? \lock none

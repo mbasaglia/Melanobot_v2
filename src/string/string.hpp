@@ -21,7 +21,6 @@
 
 #include <cstdint>
 #include <functional>
-#include <iterator>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -35,34 +34,6 @@
  * \brief Namespace for string formatting
  */
 namespace string {
-
-/**
- * \brief Turn a container into a string
- * \pre Container::const_iterator is a ForwardIterator
- *      Container::value_type has the stream operator
- * \note Should work on arrays just fine
- */
-template<class Container>
-    std::string implode(const std::string& glue, const Container& elements)
-    {
-        auto iter = std::begin(elements);
-        auto end = std::end(elements);
-        if ( iter == end )
-            return "";
-
-        std::ostringstream ss;
-        while ( true )
-        {
-            ss << *iter;
-            ++iter;
-            if ( iter != end )
-                ss << glue;
-            else
-                break;
-        }
-
-        return ss.str();
-    }
 
 /**
  * \brief Class used to parse and convert UTF-8

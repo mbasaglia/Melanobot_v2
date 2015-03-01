@@ -457,20 +457,27 @@ void IrcConnection::command ( const Command& c )
     buffer.insert(cmd);
 }
 
-void IrcConnection::say ( const std::string& channel, const std::string& message,
-    int priority, const Time& timeout )
+
+void IrcConnection::say ( const std::string& channel,
+        const string::FormattedString& message,
+        int priority,
+        const Time& timeout )
 {
-    command({"PRIVMSG", {channel, message}, priority, timeout});
+    command({"PRIVMSG", {channel, message.encode(formatter_)}, priority, timeout});
 }
 
 void IrcConnection::say_as ( const std::string& channel,
-    const std::string& name,
-    const std::string& message,
-    int priority,
-    const Time& timeout )
+        const string::FormattedString& name,
+        const string::FormattedString& message,
+        const string::FormattedString& prefix,
+        int priority,
+        const Time& timeout )
 {
-    /// \todo name thing as a possibly colored string
-    command({"PRIVMSG", {channel, '<'+name+'>'+message}, priority, timeout});
+    string::FormattedString msg (
+        string::FormattedStream() << prefix << " <" << name << "> " << message
+    );
+
+    command({"PRIVMSG", {channel, msg.encode(formatter_)}, priority, timeout});
 }
 
 Connection::Status IrcConnection::status() const
@@ -578,9 +585,14 @@ void IrcConnection::handle_message(Message msg)
         msg.message = message;
 
         if ( strtolower(msg.params[0]) == current_nick_lowecase )
+        {
             msg.channels = { strtolower(nickfrom) };
+            msg.direct = 1;
+        }
         else
+        {
             msg.channels = { msg.params[0] };
+        }
 
         // Handle CTCP
         if ( msg.message[0] == '\1' )
@@ -603,6 +615,17 @@ void IrcConnection::handle_message(Message msg)
                 msg.params = { ctcp };
                 if ( !match[2].str().empty() )
                     msg.params.push_back(match[2].str());
+            }
+        }
+        else
+        {
+            /// \todo escape []\^{|} on current_nick
+            std::regex regex_direct(current_nick+":\\s*(.*)");
+            std::smatch match;
+            if ( std::regex_match(message,match,regex_direct) )
+            {
+                msg.direct = true;
+                msg.message = match[1];
             }
         }
     }

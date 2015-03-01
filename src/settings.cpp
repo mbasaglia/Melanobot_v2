@@ -41,6 +41,9 @@ Settings Settings::global_settings;
 
 Settings Settings::initialize ( int argc, char** argv )
 {
+    // Global settings
+    global_settings.put("website",PROJECT_WEBSITE);
+
     // By default exit code is 0 (success)
     global_settings.put("exit_code",0);
 

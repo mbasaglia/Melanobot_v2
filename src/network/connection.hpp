@@ -140,7 +140,7 @@ public:
      * \brief Sends a message to the given channel
      */
     virtual void say ( const std::string& channel,
-        const std::string& message,
+        const string::FormattedString& message,
         int priority = 0,
         const Time& timeout = Clock::time_point::max() ) = 0;
 
@@ -148,8 +148,9 @@ public:
      * \brief Sends a message to the given channel with the given name
      */
     virtual void say_as ( const std::string& channel,
-        const std::string& name,
-        const std::string& message,
+        const string::FormattedString& name,
+        const string::FormattedString& message,
+        const string::FormattedString& prefix = {},
         int priority = 0,
         const Time& timeout = Clock::time_point::max()  ) = 0;
 
@@ -203,7 +204,8 @@ struct Message
 
     std::string              message; ///< (optional) Simple message contents
     std::vector<std::string> channels;///< (optional) Simple message origin
-    bool               action = false;///< (optional) Simple message is an action
+    bool                     action{0};///<(optional) Simple message is an action
+    bool                     direct{0};///<(optional) Simple message has been addessed to the bot directly
 };
 
 #define REGISTER_CONNECTION(name,function) \

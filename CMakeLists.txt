@@ -20,6 +20,7 @@ string(TOLOWER MelanoBot EXECUTABLE_NAME)
 set (VERSION_MAJOR 2)
 set (VERSION_MINOR 0)
 set (MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
+set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
 
 set(ALL_SOURCES "")
 add_subdirectory(src)

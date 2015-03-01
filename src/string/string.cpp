@@ -25,6 +25,7 @@
 #include <boost/iterator/iterator_concepts.hpp>
 
 #include "logger.hpp"
+#include "string_functions.hpp"
 
 namespace string {
 

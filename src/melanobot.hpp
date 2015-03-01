@@ -30,6 +30,7 @@
 #include "settings.hpp"
 #include "network/connection.hpp"
 
+namespace handler { class Handler; }
 /**
  * \brief Main bot class
  */
@@ -64,8 +65,9 @@ public:
     network::Connection* connection(const std::string& name) const;
 
 private:
-    /// \todo allow dynamic connection creation (requires locking)
+    /// \todo allow dynamic connection/handler creation (requires locking)
     std::unordered_map<std::string,network::Connection*> connections;
+    std::vector<handler::Handler*> handlers;
 
     ConcurrentQueue<network::Message> messages;
 };
