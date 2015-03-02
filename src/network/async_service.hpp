@@ -21,7 +21,6 @@
 
 #include <functional>
 #include <string>
-#include <map>
 
 /**
  * \brief Namespace for network operations
@@ -47,6 +46,7 @@ struct Response
 {
     std::string error_message; ///< Message in the case of error, if empty not an error
     std::string contents;      ///< Message contents
+    std::string origin;        ///< Originating URL
 };
 
 /**
@@ -75,65 +75,24 @@ protected:
     /**
      * \brief Quick way to create a successful response
      */
-    Response ok(const std::string& contents)
+    Response ok(const std::string& contents, const Request& origin)
     {
         Response r;
         r.contents = contents;
+        r.origin = origin.location;
         return r;
     }
     /**
      * \brief Quick way to create a failure response
      */
-    Response error(const std::string& error_message)
+    Response error(const std::string& error_message, const Request& origin)
     {
         Response r;
         r.error_message = error_message;
+        r.origin = origin.location;
         return r;
     }
 };
-/**
- * \brief HTTP networking utilities
- * \todo move to its own file
- */
-namespace http {
-
-/**
- * \brief Request parameters
- */
-typedef std::map<std::string,std::string> Parameters;
-
-/**
- * \brief Encode a string to make it fit to be used in a url
- * \todo urldecode (?)
- * \see http://www.faqs.org/rfcs/rfc3986.html
- */
-std::string urlencode ( const std::string& text );
-
-/**
- * \brief Creates a query string from the given parameters
- */
-std::string build_query ( const Parameters& params );
-
-/**
- * \brief Creates a GET request
- */
-Request get(const std::string& url, const Parameters& params = Parameters());
-/**
- * \brief Creates a simple POST request
- */
-Request post(const std::string& url, const Parameters& params = Parameters());
-
-/**
- * \brief HTTP client
- */
-class Client : public AsyncService
-{
-public:
-    void async_query (const Request& request, const AsyncCallback& callback) override;
-    Response query (const Request& request) override;
-};
-
-} // namespace network::http
 
 } // namespace network
 #endif // ASYNC_SERVICE_HPP

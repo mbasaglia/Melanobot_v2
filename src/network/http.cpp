@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "async_service.hpp"
+#include "http.hpp"
 
 #include <cctype>
 #include <iomanip>
@@ -72,6 +72,8 @@ Request get(const std::string& url, const Parameters& params)
     {
         if ( url.find('?') == std::string::npos )
             r.location += '?';
+        else
+            r.location += '&';
         r.location += build_query(params);
     }
 
@@ -117,10 +119,10 @@ Response Client::query (const Request& request)
             response = client.delete_(netrequest);
 
         Log("web",'>') << request.command << ' ' << request.location;
-        return ok(body(response)); /// \todo preserve headers
+        return ok(body(response),request); /// \todo preserve headers
     } catch (std::exception & e) {
         Log("web",'!') << "Error processing " << request.location;
-        return error(e.what());
+        return error(e.what(),request);
     }
 }
 

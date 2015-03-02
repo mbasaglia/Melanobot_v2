@@ -24,10 +24,10 @@
 #include <boost/program_options.hpp>
 #include <boost/property_tree/info_parser.hpp>
 #include <boost/property_tree/ini_parser.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
 #include "string/logger.hpp"
+#include "string/json.hpp"
 #include "config.hpp"
 
 std::unordered_map<std::string,Settings::FileFormat> Settings::format_extension = {
@@ -155,8 +155,11 @@ Settings::Settings ( const std::string& file_name, FileFormat format )
             boost::property_tree::ini_parser::read_ini(file_name,ptree);
             break;
         case FileFormat::JSON:
-            boost::property_tree::json_parser::read_json(file_name,ptree);
+        {
+            JsonParser parser;
+            ptree = parser.parse_file(file_name);
             break;
+        }
         case FileFormat::XML:
             boost::property_tree::xml_parser::read_xml(file_name,ptree);
             break;

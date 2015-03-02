@@ -188,21 +188,33 @@ public:
 };
 
 /**
+ * \brief Exception that can be traced to a line in a file
+ */
+struct LocatableException : public std::logic_error
+{
+    std::string file;     ///< Source file name originating the error
+    int         line = 0; ///< Source line number originating the error
+
+    LocatableException( const std::string& file,
+                        int line, const std::string& msg )
+        : std::logic_error(msg), file(file), line(line) {}
+};
+
+
+/**
  * \brief Critical error exception
  *
  * Class representing an error that cannot be recovered from or that
  * doesn't allow any meaningful continuation of the program
  */
-struct CriticalException : public std::logic_error
+struct CriticalException : public LocatableException
 {
-    std::string file;     ///< Source file name originating the error
-    int         line = 0; ///< Source line number originating the error
-    std::string function; ///< Source function name originating the error
 
     CriticalException( const std::string& file,     int line,
                        const std::string& function, const std::string& msg )
-        : std::logic_error(msg), file(file), line(line), function(function)
-    {}
+        : LocatableException(file, line, msg), function(function) {}
+
+    std::string function; ///< Source function name originating the error
 };
 
 
