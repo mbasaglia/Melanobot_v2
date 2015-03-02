@@ -21,6 +21,7 @@
 
 #include <functional>
 #include <string>
+#include <stdexcept>
 #include <type_traits>
 #include <unordered_map>
 
@@ -87,11 +88,33 @@ protected:
 };
 
 /**
+ * \brief Class representing an error occurring during handler construction
+ */
+class HandlerError : public std::runtime_error
+{
+public:
+    HandlerError(const std::string& msg = "Invalid handler parameters")
+        : std::runtime_error(msg)
+    {}
+};
+
+/**
  * \brief A simple action sends a message to the same connection it came from
  */
 class SimpleAction : public Handler
 {
 public:
+    SimpleAction(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
+    {
+        trigger   = settings.get("trigger",default_trigger);
+        priority  = settings.get("priority",priority);
+        direct    = settings.get("direct",direct);
+        source    = bot->connection(settings.get("source",""));
+        this->bot = bot;
+        if ( !bot || trigger.empty() )
+            throw HandlerError();
+    }
+
     bool can_handle(const network::Message& msg) override
     {
         return msg.source == source && source && !msg.message.empty() &&
@@ -114,20 +137,6 @@ protected:
         reply_to(msg, (string::FormattedStream() << text).str());
     }
 
-    /**
-     * \brief Load settings
-     * \return \b true on success
-     */
-    bool load_settings(const Settings& settings, Melanobot* bot)
-    {
-        trigger   = settings.get("trigger",trigger);
-        priority  = settings.get("priority",priority);
-        direct    = settings.get("direct",direct);
-        source    = bot->connection(settings.get("source",""));
-        this->bot = bot;
-        return bot && !trigger.empty();
-    }
-
 protected:
     Melanobot*           bot;
     network::Connection* source = nullptr; ///< Connection which created the message
@@ -138,7 +147,11 @@ protected:
 };
 
 #define REGISTER_HANDLER(class_name,public_name) \
-    static HandlerFactory::RegisterHandler<class_name> RegisterHandler_##public_name(#public_name)
+    static HandlerFactory::RegisterHandler<class_name> \
+        RegisterHandler_##public_name(#public_name, \
+            [] ( const Settings& settings, Melanobot* bot ) -> Handler* { \
+                return new class_name(settings,bot); \
+        })
 
 /**
  * \brief Handler Factory
@@ -158,7 +171,7 @@ public:
     struct RegisterHandler
     {
         static_assert(std::is_base_of<Handler,HandlerClass>::value, "Wrong class for HandlerFactory");
-        RegisterHandler(const std::string& name, const CreateFunction& func=&HandlerClass::create)
+        RegisterHandler(const std::string& name, const CreateFunction& func)
         {
             if ( HandlerFactory().instance().factory.count(name) )
                 ErrorLog("sys") << "Overwriting handler " << name;
@@ -179,9 +192,18 @@ public:
     Handler* build(const std::string& handler_name,
                    const Settings& settings, Melanobot* bot) const
     {
-        auto it = factory.find(handler_name);
+        auto it = factory.find(settings.get("type",handler_name));
         if ( it != factory.end() )
-            return it->second(settings, bot);
+        {
+            try {
+                return it->second(settings, bot);
+            } catch ( const HandlerError& error )
+            {
+                ErrorLog("sys") << "Error creating " << handler_name << ": "
+                    << error.what();
+                return nullptr;
+            }
+        }
         ErrorLog("sys") << "Unknown handler type: " << handler_name;
         return nullptr;
     }

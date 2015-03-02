@@ -23,16 +23,10 @@ namespace handler {
 class License : public SimpleAction
 {
 public:
-    static License* create(const Settings& settings, Melanobot* bot)
+    License(const Settings& settings, Melanobot* bot)
+        : SimpleAction("license",settings,bot)
     {
-        License* obj = new License;
-        obj->sources_url = settings.get("url",Settings::global_settings.get("website",""));
-        obj->trigger = "license";
-        if ( obj->load_settings(settings,bot) )
-            return obj;
-        delete obj;
-        ErrorLog("sys") << "Error creating handler";
-        return nullptr;
+        sources_url = settings.get("url",Settings::global_settings.get("website",""));
     }
 
 protected:
@@ -43,7 +37,6 @@ protected:
     }
 
 private:
-    License() {}
     std::string sources_url;
 };
 REGISTER_HANDLER(License,License);

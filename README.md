@@ -47,7 +47,7 @@ Running
 Configuration
 -------------
 
-TODO
+See https://github.com/mbasaglia/Melanobot_v2/wiki/Config
 
 Installation
 ------------
