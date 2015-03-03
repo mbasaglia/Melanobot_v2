@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <regex>
 #include <sstream>
 #include <string>
 
@@ -76,6 +77,35 @@ inline std::string strtolower ( std::string string )
 {
     std::transform(string.begin(),string.end(),string.begin(), (int(*)(int))std::tolower);
     return std::move(string);
+}
+
+/**
+ * \brief If the string is longer than \c length,
+ * truncates to the last word and adds an ellipsis
+ */
+inline std::string elide ( std::string text, int length )
+{
+    if ( int(text.size()) <= length )
+        return std::move(text);
+
+    int p = length-3;
+    if ( !std::isspace(text[p+1]) )
+        for ( ; p >= 0 && !std::isspace(text[p]); p-- );
+    for ( ; p >= 0 && std::isspace(text[p]); p-- );
+
+    text.erase(p+1);
+    text += "...";
+
+    return std::move(text);
+}
+
+/**
+ * \brief Collapse all sequences of spaces to a single space character ' '
+ */
+inline std::string collapse_spaces ( const std::string& text )
+{
+    static std::regex regex_spaces("\\s+");
+    return std::move(std::regex_replace(text,regex_spaces," "));
 }
 
 } // namespace string

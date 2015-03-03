@@ -74,4 +74,31 @@ protected:
 };
 REGISTER_HANDLER(SearchImageGoogle,SearchImageGoogle);
 
+
+
+class UrbanDictionary : public SimpleJson
+{
+public:
+    UrbanDictionary(const Settings& settings, Melanobot* bot)
+        : SimpleJson("define",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string url = "http://api.urbandictionary.com/v0/define";
+        request_json(msg,network::http::get(url,{{"term",msg.message}}));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        std::string not_found_reply = "I don't know what "+msg.message+" means";
+        std::string result = parsed.get("list.0.definition",not_found_reply);
+        result = string::elide( string::collapse_spaces(result), 400 );
+        reply_to(msg,result);
+    }
+};
+REGISTER_HANDLER(UrbanDictionary,UrbanDictionary);
+
 } // namespace handler

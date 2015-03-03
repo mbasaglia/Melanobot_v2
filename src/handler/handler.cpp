@@ -22,6 +22,7 @@ namespace handler {
 
 REGISTER_HANDLER(SimpleGroup, Group);
 
+/// \todo option co copy settings from another group
 SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
     : SimpleAction("",settings,bot,true)
 {
