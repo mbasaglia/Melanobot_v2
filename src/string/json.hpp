@@ -261,9 +261,23 @@ private:
                     c = escape(stream.get());
                     if ( !stream )
                         break;
+
+                    if ( c == 'u' )
+                    {
+                        char hex[] = "0000";
+                        stream.read(hex,4);
+                        for ( int i = 0; i < 4; i++ )
+                        {
+                            if ( !std::isxdigit(hex[i]) )
+                                hex[i] = '0';
+                        }
+                        r += string::Utf8Parser::encode(std::stoul(hex,0,16));
+
+                        continue;
+                    }
+
                     if ( !escapeable(c) )
                         r += '\\';
-                    /// \todo escape \uxxxx codes
                 }
 
                 r += c;

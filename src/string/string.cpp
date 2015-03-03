@@ -98,7 +98,7 @@ std::string Utf8Parser::encode(uint32_t value)
         head |= 1;
     }
 
-    if ( uint8_t(s.back()) > (1 << (7 - s.size())) )
+    if ( uint8_t(s.back())&0b0011'1111 > (1 << (7 - s.size())) )
     {
         head <<= 1;
         head |= 1;

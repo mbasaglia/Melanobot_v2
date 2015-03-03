@@ -89,7 +89,7 @@ protected:
 
     void reply_to(const network::Message& msg, const std::string& text) const
     {
-        reply_to(msg, (string::FormattedStream() << text).str());
+        reply_to(msg, (string::FormattedStream("utf8") << text).str());
     }
 };
 

@@ -63,6 +63,8 @@ void Buffer::run_output()
 }
 void Buffer::run_input()
 {
+
+    /// \todo catch exception thrown on broken pipe
     schedule_read();
     io_service.run();
 }

@@ -101,4 +101,48 @@ protected:
 };
 REGISTER_HANDLER(UrbanDictionary,UrbanDictionary);
 
+
+class SearchWebSearx : public SimpleJson
+{
+public:
+    SearchWebSearx(const Settings& settings, Melanobot* bot)
+        : SimpleJson("search",settings,bot)
+    {
+        api_url = settings.get("url","https://searx.me/");
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg,network::http::get(api_url,{{"format","json"},{"q",msg.message}}));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        if ( parsed.has_child("results.0.title") )
+        {
+            string::FormattedStream title("utf8");
+            title << string::FormatFlags::BOLD << parsed.get("results.0.title","")
+                  << string::FormatFlags::NO_FORMAT << ": "
+                  << parsed.get("results.0.url","");
+            reply_to(msg,title.str());
+
+            std::string result = parsed.get("results.0.content","");
+            result = string::elide( string::collapse_spaces(result), 400 );
+            reply_to(msg,result);
+        }
+        else
+        {
+            reply_to(msg,"Didn't find anything about "+msg.message);
+        }
+
+    }
+private:
+
+    std::string api_url;
+};
+REGISTER_HANDLER(SearchWebSearx,SearchWebSearx);
+
+
 } // namespace handler
