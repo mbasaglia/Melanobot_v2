@@ -20,13 +20,13 @@
 
 namespace handler {
 
-class SearchVideo : public SimpleJson
+class SearchVideoYoutube : public SimpleJson
 {
 public:
-    SearchVideo(const Settings& settings, Melanobot* bot)
+    SearchVideoYoutube(const Settings& settings, Melanobot* bot)
         : SimpleJson("video",settings,bot)
     {
-        yt_api_url = settings.get("url",
+        api_url = settings.get("url",
             "https://gdata.youtube.com/feeds/api/videos?alt=json&max-results=1");
         not_found_reply = settings.get("not_found",
             "http://www.youtube.com/watch?v=oHg5SJYRHA0" );
@@ -34,8 +34,8 @@ public:
 
 protected:
     bool on_handle(network::Message& msg) override
-    {/// \todo strip prefix from msg
-        request_json(msg,network::http::get(yt_api_url,{{"q",msg.message}}));
+    {
+        request_json(msg,network::http::get(api_url,{{"q",msg.message}}));
         return true;
     }
 
@@ -45,9 +45,33 @@ protected:
     }
 
 private:
-    std::string yt_api_url;
+    std::string api_url;
     std::string not_found_reply;
 };
-REGISTER_HANDLER(SearchVideo,SearchVideo);
+REGISTER_HANDLER(SearchVideoYoutube,SearchVideoYoutube);
+
+
+class SearchImageGoogle : public SimpleJson
+{
+public:
+    SearchImageGoogle(const Settings& settings, Melanobot* bot)
+        : SimpleJson("image",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=1";
+        request_json(msg,network::http::get(url,{{"q",msg.message}}));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        std::string not_found_reply = "Didn't find any image of "+msg.message;
+        reply_to(msg,parsed.get("responseData.results.0.unescapedUrl",not_found_reply));
+    }
+};
+REGISTER_HANDLER(SearchImageGoogle,SearchImageGoogle);
 
 } // namespace handler
