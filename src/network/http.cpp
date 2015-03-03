@@ -22,8 +22,10 @@
 #include <iomanip>
 #include <sstream>
 
-#define BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/client.hpp>
+#include <curlpp/cURLpp.hpp>
+#include <curlpp/Easy.hpp>
+#include <curlpp/Options.hpp>
+#include <curlpp/Exception.hpp>
 
 #include "../string/logger.hpp"
 
@@ -71,10 +73,10 @@ Request get(const std::string& url, const Parameters& params)
     if ( !params.empty() )
     {
         if ( url.find('?') == std::string::npos )
-            r.location += '?';
+            r.parameters += '?';
         else
-            r.location += '&';
-        r.location += build_query(params);
+            r.parameters += '&';
+        r.parameters += build_query(params);
     }
 
     return r;
@@ -99,27 +101,39 @@ void Client::async_query (const Request& request, const AsyncCallback& callback)
 
 Response Client::query (const Request& request)
 {
-    typedef boost::network::http::client client_type;
-
-    client_type client{client_type::options().follow_redirects(true)};
     try {
-        client_type::request netrequest(request.location);
-        client_type::response response;
+        curlpp::Easy netrequest;
+        std::string url = request.location;
+        /// \todo read these from settings
+        netrequest.setOpt(curlpp::options::MaxRedirs(3));
+        netrequest.setOpt(curlpp::options::FollowLocation(true));
 
-         /// \todo POST/PUT with custom content type
         if ( request.command == "GET" )
-            response = client.get(netrequest);
+        {
+            url += request.parameters;
+        }
         else if ( request.command == "POST" )
-            response = client.post(netrequest,request.parameters);
+        {
+            netrequest.setOpt(curlpp::options::PostFields(request.parameters));
+        }
         else if ( request.command == "PUT" )
-            response = client.put(netrequest,request.parameters);
+        {
+            netrequest.setOpt(curlpp::options::PostFields(request.parameters));
+            netrequest.setOpt(curlpp::options::Put(true));
+        }
         else if ( request.command == "HEAD" )
-            response = client.head(netrequest);
-        else if ( request.command == "DELETE" )
-            response = client.delete_(netrequest);
+        {
+            netrequest.setOpt(curlpp::options::NoBody(true));
+        }
 
-        Log("web",'>') << request.command << ' ' << request.location;
-        return ok(body(response),request); /// \todo preserve headers
+        netrequest.setOpt(curlpp::options::Url(url));
+
+        Log("web",'<') << request.command << ' ' << request.location;
+        std::stringstream ss;
+        ss << netrequest;
+
+        return ok(ss.str(),request);
+
     } catch (std::exception & e) {
         Log("web",'!') << "Error processing " << request.location;
         return error(e.what(),request);

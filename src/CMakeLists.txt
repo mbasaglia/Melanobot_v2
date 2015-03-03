@@ -60,7 +60,5 @@ find_package (Boost COMPONENTS system chrono thread filesystem program_options R
 target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 
-# Cpp-netlib
-find_package ( cppnetlib 0.11.0 REQUIRED )
-include_directories ( ${CPPNETLIB_INCLUDE_DIRS} )
-target_link_libraries ( ${EXECUTABLE_NAME} ${CPPNETLIB_LIBRARIES} )
+# cURLpp
+target_link_libraries(${EXECUTABLE_NAME} curlpp curl)

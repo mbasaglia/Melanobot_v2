@@ -32,7 +32,7 @@ Dependencies
     * filesystem
     * program_options
     * property_tree
-* [Cpp-Netlib](http://cpp-netlib.org/)
+* [cURLpp](http://jpbarrette.github.io/curlpp/)
 
 Building
 --------

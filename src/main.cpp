@@ -34,7 +34,6 @@ int main(int argc, char **argv)
         errlog  << exc.what();
         return 1;
     } catch ( const LocatableException& exc ) {
-        /// \todo policy on how to handle exceptions
         ErrorLog errlog("sys","Critical Error");
         if ( Settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": ";
