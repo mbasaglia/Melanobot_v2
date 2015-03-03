@@ -54,6 +54,7 @@ inline bool is_nickchar(char c)
 /**
  * \brief Converts a string to lower case
  * \see http://tools.ietf.org/html/rfc2812#section-2.2
+ * \todo locale stuff if it's worth the effort
  */
 inline std::string strtolower ( std::string string )
 {

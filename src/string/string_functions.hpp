@@ -69,5 +69,14 @@ inline bool starts_with(const std::string& haystack, const std::string& prefix)
     return it2 == prefix.end();
 }
 
+/**
+ * \brief String to lower case
+ */
+inline std::string strtolower ( std::string string )
+{
+    std::transform(string.begin(),string.end(),string.begin(), (int(*)(int))std::tolower);
+    return std::move(string);
+}
+
 } // namespace string
 #endif // STRING_FUNCTIONS_HPP

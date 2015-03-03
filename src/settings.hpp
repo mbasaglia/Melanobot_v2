@@ -71,6 +71,32 @@ public:
      */
     explicit Settings ( const std::string& file_name, FileFormat format = FileFormat::AUTO );
 
+    /**
+     * \brief Whether a child node/property exists
+     */
+    bool has_child ( const path_type& path ) const
+    {
+        return get_child_optional(path);
+    }
+
+    /**
+     * \brief Merge a child node with the supplied values
+     * \param path      Path to the child
+     * \param child     Node with the properties to be read
+     * \param overwrite If \b true all of the properties of \c child will be used,
+     *                  if \b false, only those not already found in the tree
+     */
+    void merge_child( const path_type& path, const Settings& child, bool overwrite)
+    {
+        for ( const auto& prop : child )
+        {
+            path_type prop_path = path;
+            prop_path /= prop.first;
+            if ( overwrite || !has_child(prop_path) )
+                put(prop_path,prop.second.data());
+        }
+    }
+
 private:
     /**
      * \brief Maps extensions to file formats

@@ -33,7 +33,7 @@ public:
     }
 
 protected:
-    bool on_handle(const network::Message& msg) override
+    bool on_handle(network::Message& msg) override
     {/// \todo strip prefix from msg
         request_json(msg,network::http::get(yt_api_url,{{"q",msg.message}}));
         return true;

@@ -30,7 +30,7 @@ public:
     }
 
 protected:
-    bool on_handle(const network::Message& msg) override
+    bool on_handle(network::Message& msg) override
     {
         reply_to(msg,"AGPLv3+ (http://www.gnu.org/licenses/agpl-3.0.html), Sources: "+sources_url);
         return true;

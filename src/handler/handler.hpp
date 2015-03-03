@@ -45,17 +45,12 @@ class Handler
 public:
     virtual ~Handler() {}
 
-    /*
-     * \brief Virtual copy constructor
-     * \todo needed?
-     */
-    //virtual Handler* clone() const = 0;
-
     /**
      * \brief Attempt to handle the message
      * \return \b true if the message has been handled and needs no further processing
+     * \note Unless you really need to, override on_handle()
      */
-    virtual bool handle(const network::Message& msg)
+    virtual bool handle(network::Message& msg)
     {
         if ( can_handle(msg) )
             return on_handle(msg);
@@ -84,7 +79,18 @@ protected:
      * \brief Attempt to handle the message
      * \return \b true if the message has been handled and needs no further processing
      */
-    virtual bool on_handle(const network::Message& msg) = 0;
+    virtual bool on_handle(network::Message& msg) = 0;
+
+
+    /**
+     * \brief Send a reply to a message
+     */
+    virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const = 0;
+
+    void reply_to(const network::Message& msg, const std::string& text) const
+    {
+        reply_to(msg, (string::FormattedStream() << text).str());
+    }
 };
 
 /**
@@ -105,15 +111,7 @@ class SimpleAction : public Handler
 {
 public:
     SimpleAction(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
-    {
-        trigger   = settings.get("trigger",default_trigger);
-        priority  = settings.get("priority",priority);
-        direct    = settings.get("direct",direct);
-        source    = bot->connection(settings.get("source",""));
-        this->bot = bot;
-        if ( !bot || trigger.empty() )
-            throw HandlerError();
-    }
+        : SimpleAction ( default_trigger, settings, bot, false ) {}
 
     bool can_handle(const network::Message& msg) override
     {
@@ -122,28 +120,64 @@ public:
             string::starts_with(msg.message,trigger);
     }
 
+    virtual bool handle(network::Message& msg)
+    {
+        if ( can_handle(msg) )
+        {
+            network::Message trimmed_msg = msg;
+            auto it = trimmed_msg.message.begin()+trigger.size();
+            it = std::find_if(it,trimmed_msg.message.end(),[](char c){return !std::isspace(c);});
+            trimmed_msg.message.erase(trimmed_msg.message.begin(),it);
+            return on_handle(trimmed_msg);
+        }
+        return false;
+    }
+
 protected:
-    /**
-     * \brief Send a reply to a message
-     */
-    void reply_to(const network::Message& msg, const string::FormattedString& text)
+    using Handler::reply_to; // Show the overload to derived classes
+    void reply_to(const network::Message& msg, const string::FormattedString& text) const override
     {
         std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
         source->say(chan,text);
     }
 
-    void reply_to(const network::Message& msg, const std::string& text)
-    {
-        reply_to(msg, (string::FormattedStream() << text).str());
-    }
-
-protected:
     Melanobot*           bot;
     network::Connection* source = nullptr; ///< Connection which created the message
     std::string          trigger;          ///< String identifying the action
     bool                 direct = true;    ///< Whether the message needs to be direct
     int                  priority = 0;     ///< Response message priority
 
+private:
+
+    friend class SimpleGroup;
+
+    SimpleAction(const std::string& default_trigger, const Settings& settings,
+                 Melanobot* bot, bool allow_notrigger)
+    {
+        trigger   = settings.get("trigger",default_trigger);
+        priority  = settings.get("priority",priority);
+        direct    = settings.get("direct",direct);
+        source    = bot->connection(settings.get("source",""));
+        this->bot = bot;
+        if ( !bot || (!allow_notrigger && trigger.empty()) )
+            throw HandlerError();
+    }
+};
+
+/**
+ * \brief A simple group of actions which share some settings
+ * \todo Filter channels
+ */
+class SimpleGroup : public SimpleAction
+{
+public:
+    SimpleGroup(const Settings& settings, Melanobot* bot);
+    ~SimpleGroup() override;
+
+protected:
+    bool on_handle(network::Message& msg) override;
+
+    std::vector<Handler*> children;
 };
 
 #define REGISTER_HANDLER(class_name,public_name) \
@@ -173,9 +207,10 @@ public:
         static_assert(std::is_base_of<Handler,HandlerClass>::value, "Wrong class for HandlerFactory");
         RegisterHandler(const std::string& name, const CreateFunction& func)
         {
-            if ( HandlerFactory().instance().factory.count(name) )
+            std::string lcname = string::strtolower(name);
+            if ( HandlerFactory().instance().factory.count(lcname) )
                 ErrorLog("sys") << "Overwriting handler " << name;
-            HandlerFactory().instance().factory[name] = func;
+            HandlerFactory().instance().factory[lcname] = func;
         }
     };
 
@@ -192,7 +227,7 @@ public:
     Handler* build(const std::string& handler_name,
                    const Settings& settings, Melanobot* bot) const
     {
-        auto it = factory.find(settings.get("type",handler_name));
+        auto it = factory.find(settings.get("type",string::strtolower(handler_name)));
         if ( it != factory.end() )
         {
             try {

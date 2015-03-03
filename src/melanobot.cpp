@@ -75,8 +75,6 @@ void Melanobot::run()
         messages.pop(msg);
         if ( !messages.active() )
             break;
-        /// \todo process messages
-        Log("sys",'!') << msg.raw;
         for ( auto handler : handlers )
             if ( handler->handle(msg) )
                 break;

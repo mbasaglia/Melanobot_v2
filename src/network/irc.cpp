@@ -343,8 +343,8 @@ void IrcConnection::command ( const Command& c )
         /// \todo validate nick
         {
             LOCK(mutex);
-            attempted_nick = strtolower(cmd.parameters[0]);
-            if ( attempted_nick == current_nick_lowecase )
+            attempted_nick = cmd.parameters[0];
+            if ( strtolower(attempted_nick) == current_nick_lowecase )
             {
                 attempted_nick = "";
                 current_nick = cmd.parameters[0];
@@ -539,11 +539,11 @@ void IrcConnection::handle_message(Message msg)
         auth();
         connection_status = CONNECTED;
     }
-    else if ( msg.command == "433" && msg.params.size() >= 1 )
+    else if ( msg.command == "433" && msg.params.size() >= 2 )
     {
         // ERR_NICKNAMEINUSE
         mutex.lock();
-        if ( strtolower(attempted_nick) == strtolower(msg.params[0]) )
+        if ( strtolower(attempted_nick) == strtolower(msg.params[1]) )
         {
             Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
             /// \todo check nick max length
