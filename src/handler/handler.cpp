@@ -26,6 +26,8 @@ REGISTER_HANDLER(SimpleGroup, Group);
 SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
     : SimpleAction("",settings,bot,true)
 {
+    channels = settings.get("channels","");
+
     Settings default_settings;
     for ( const auto& p : settings )
         if ( !p.second.data().empty() && p.first != "trigger" )
@@ -48,17 +50,25 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
         }
     }
 }
+
 SimpleGroup::~SimpleGroup()
 {
     for ( Handler* h : children )
         delete h;
 }
+
 bool SimpleGroup::on_handle(network::Message& msg)
 {
     for ( Handler* h : children )
         if ( h->handle(msg) )
             return true;
     return false;
+}
+
+bool SimpleGroup::can_handle(const network::Message& msg)
+{
+    return SimpleAction::can_handle(msg) && (
+        channels.empty() || msg.source->channel_mask(msg.channels, channels) );
 }
 
 

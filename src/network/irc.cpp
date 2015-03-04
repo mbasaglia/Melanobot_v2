@@ -515,9 +515,29 @@ void IrcConnection::disconnect()
     connection_status = DISCONNECTED;
 }
 
-string::Formatter* IrcConnection::formatter()
+string::Formatter* IrcConnection::formatter() const
 {
     return formatter_;
+}
+bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
+                                 const std::string& mask) const
+{
+    static std::regex regex_commaspace ( "(,\\s*)|(\\s+)",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::ECMAScript );
+    std::vector<std::string> masks = string::regex_split(mask,regex_commaspace);
+    for ( const auto& m : masks )
+    {
+        bool match = false;
+        if ( m == "!" )
+            match = std::any_of(channels.begin(),channels.end(),
+                [](const std::string& ch){ return !ch.empty() && ch[0]!='#'; });
+        else
+            match = string::simple_wildcard(channels,m);
+        if ( match )
+            return true;
+    }
+    return false;
 }
 
 void IrcConnection::reconnect()

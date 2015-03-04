@@ -187,7 +187,14 @@ public:
     /**
      * \brief Get the string formatter
      */
-    virtual string::Formatter* formatter() = 0;
+    virtual string::Formatter* formatter() const = 0;
+
+    /**
+     * \brief Whether a list of channels matches the mask
+     * (Meaning depends on the specialized class)
+     */
+    virtual bool channel_mask(const std::vector<std::string>& channels,
+                              const std::string& mask) const = 0;
 
 };
 

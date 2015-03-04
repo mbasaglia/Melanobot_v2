@@ -174,10 +174,13 @@ public:
     SimpleGroup(const Settings& settings, Melanobot* bot);
     ~SimpleGroup() override;
 
+    bool can_handle(const network::Message& msg) override;
+
 protected:
     bool on_handle(network::Message& msg) override;
 
     std::vector<Handler*> children;
+    std::string           channels;
 };
 
 #define REGISTER_HANDLER(class_name,public_name) \

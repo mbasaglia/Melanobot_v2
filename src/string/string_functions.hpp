@@ -24,6 +24,7 @@
 #include <regex>
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 namespace string {
 
@@ -117,6 +118,24 @@ std::string str_replace(const std::string& input, const std::string& from, const
  * \c * matches any sequence of characters, all other characters match themselves
  */
 bool simple_wildcard(const std::string& text, const std::string& pattern);
+
+template <class Container>
+    bool simple_wildcard(const Container& input, const std::string& pattern)
+    {
+        static_assert(std::is_convertible<typename Container::value_type,std::string>::value,
+            "simple_wildcard requires a string container"
+        );
+        return std::any_of(input.begin(),input.end(),
+            [pattern](const std::string& t) { return simple_wildcard(t,pattern); });
+    }
+
+
+/**
+ * \brief Separate the string into components separated by \c pattern
+ */
+std::vector<std::string> regex_split(const std::string& input,
+                                     const std::regex& pattern,
+                                     bool skip_empty = true );
 
 
 } // namespace string

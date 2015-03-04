@@ -322,7 +322,16 @@ public:
     /**
      * \thread external \lock none
      */
-    string::Formatter* formatter() override;
+    string::Formatter* formatter() const override;
+
+    /**
+     * \thread external \lock none
+     * \param mask A list of channels names separated by commas or spaces,
+     *             the wildcard \c * is supported
+     *             and \c ! matches private messages
+     */
+    bool channel_mask(const std::vector<std::string>& channels,
+                      const std::string& mask) const override;
 
     /**
      * \brief disconnect and connect

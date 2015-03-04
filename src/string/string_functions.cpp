@@ -84,4 +84,21 @@ bool simple_wildcard(const std::string& text, const std::string& pattern)
 }
 
 
+std::vector<std::string> regex_split(const std::string& input,
+                                     const std::regex& pattern,
+                                     bool skip_empty )
+{
+    std::vector<std::string> out;
+    std::sregex_token_iterator iter(input.begin(), input.end(), pattern, -1);
+    while ( iter != std::sregex_token_iterator() )
+    {
+        std::string match = *iter;
+        if ( !skip_empty || !match.empty() )
+            out.push_back(match);
+        ++iter;
+    }
+    return std::move(out);
+}
+
+
 } // namespace string
