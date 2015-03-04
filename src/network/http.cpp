@@ -31,6 +31,7 @@
 
 
 REGISTER_LOG_TYPE(web,color::dark_blue);
+REGISTER_SERVICE(network::http::HttpService,web);
 
 namespace network {
 
@@ -93,18 +94,25 @@ Request post(const std::string& url, const Parameters& params)
     return r;
 }
 
-void Client::async_query (const Request& request, const AsyncCallback& callback)
+void HttpService::initialize(const Settings& settings)
+{
+    /// \todo
+}
+
+/*void HttpService::async_query (const Request& request, const AsyncCallback& callback)
 {
     /// \todo async
     callback(query(request));
-}
+}*/
 
-Response Client::query (const Request& request)
+Response HttpService::query (const Request& request)
 {
     try {
         curlpp::Easy netrequest;
         std::string url = request.location;
+
         /// \todo read these from settings
+        netrequest.setOpt(curlpp::options::UserAgent("TODO"));
         netrequest.setOpt(curlpp::options::MaxRedirs(3));
         netrequest.setOpt(curlpp::options::FollowLocation(true));
 

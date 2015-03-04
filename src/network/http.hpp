@@ -59,11 +59,18 @@ Request post(const std::string& url, const Parameters& params = Parameters());
 /**
  * \brief HTTP client
  */
-class Client : public AsyncService
+class HttpService : public ThreadedAsyncService
 {
 public:
-    void async_query (const Request& request, const AsyncCallback& callback) override;
     Response query (const Request& request) override;
+    void initialize(const Settings& settings) override;
+    bool auto_load() const override { return true; }
+
+    static HttpService& instance()
+    {
+        static HttpService singleton;
+        return singleton;
+    }
 };
 
 } // namespace network::http

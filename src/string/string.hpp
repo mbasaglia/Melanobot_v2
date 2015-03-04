@@ -204,6 +204,7 @@ private:
 
         /**
          * \brief Get a registered formatter
+         * \throws CriticalException If the formatter doesn't exist
          */
         Formatter* formatter(const std::string& name);
 
@@ -536,11 +537,19 @@ public:
         elements.insert(elements.end(),string.begin(),string.end());
     }
 
+    /**
+     * \brief Encode the string using the given formatter
+     * \throws CriticalException if the formatter is invalid
+     */
     std::string encode(const std::string& format) const
     {
         return encode(Formatter::formatter(format));
     }
 
+    /**
+     * \brief Encode the string using the given formatter
+     * \throws CriticalException if the formatter is invalid
+     */
     std::string encode(Formatter* formatter) const;
 
 private:

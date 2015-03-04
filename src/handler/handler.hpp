@@ -94,22 +94,18 @@ protected:
 };
 
 /**
- * \brief Class representing an error occurring during handler construction
- */
-class HandlerError : public std::runtime_error
-{
-public:
-    HandlerError(const std::string& msg = "Invalid handler parameters")
-        : std::runtime_error(msg)
-    {}
-};
-
-/**
  * \brief A simple action sends a message to the same connection it came from
  */
 class SimpleAction : public Handler
 {
 public:
+    /**
+     * \brief Sets up the trigger
+     * \param default_trigger Default value for \c trigger (must not be empty)
+     * \param settings        Settings
+     * \param bot             Pointer to the bot instance (cannot be null)
+     * \throws ConfigurationError If the requirements stated above are not met
+     */
     SimpleAction(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
         : SimpleAction ( default_trigger, settings, bot, false ) {}
 
@@ -151,6 +147,14 @@ private:
 
     friend class SimpleGroup;
 
+    /**
+     * \brief Sets up the trigger
+     * \param default_trigger Default value for \c trigger
+     * \param settings        Settings
+     * \param bot             Pointer to the bot instance (cannot be null)
+     * \param allow_notrigger Whether \c default_trigger can be empty
+     * \throws ConfigurationError If the requirements stated above are not met
+     */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
                  Melanobot* bot, bool allow_notrigger)
     {
@@ -160,7 +164,7 @@ private:
         source    = bot->connection(settings.get("source",""));
         this->bot = bot;
         if ( !bot || (!allow_notrigger && trigger.empty()) )
-            throw HandlerError();
+            throw ConfigurationError();
     }
 };
 
@@ -235,7 +239,7 @@ public:
         {
             try {
                 return it->second(settings, bot);
-            } catch ( const HandlerError& error )
+            } catch ( const ConfigurationError& error )
             {
                 ErrorLog("sys") << "Error creating " << handler_name << ": "
                     << error.what();

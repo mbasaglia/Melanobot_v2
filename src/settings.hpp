@@ -68,6 +68,7 @@ public:
 
     /**
      * \brief Load settings from file
+     * \throw CriticalException If \c file_name isn't valid
      */
     explicit Settings ( const std::string& file_name, FileFormat format = FileFormat::AUTO );
 
@@ -108,6 +109,19 @@ private:
      * \brief Tries to find a config file in the given directory
      */
     static std::string find_config ( const std::string& dir, FileFormat format);
+};
+
+
+
+/**
+ * \brief Class representing an error occurring during configuration
+ */
+class ConfigurationError : public std::runtime_error
+{
+public:
+    ConfigurationError(const std::string& msg = "Invalid configuration parameters")
+        : std::runtime_error(msg)
+    {}
 };
 
 #endif // SETTINGS_HPP

@@ -31,7 +31,11 @@ namespace handler {
 class SimpleWebApi : public SimpleAction
 {
 public:
-    using SimpleAction::SimpleAction;
+    SimpleWebApi(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
+        : SimpleAction ( default_trigger, settings, bot )
+    {
+        network::require_service("web");
+    }
 
 protected:
     /**
@@ -40,7 +44,7 @@ protected:
      */
     void request_http(const network::Message& msg, const network::Request& request)
     {
-        network::http::Client().async_query(request,
+        network::service("web")->async_query(request,
             [this,msg](const network::Response& resp)
             {
                 if ( resp.error_message.empty() )

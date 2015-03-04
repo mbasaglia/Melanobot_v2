@@ -220,6 +220,7 @@ struct CriticalException : public LocatableException
 
 /**
  * \brief Throws an exception with a standardized format
+ * \throws CriticalException
  */
 inline void error [[noreturn]] (const std::string& file, int line,
                          const std::string& function, const std::string& msg )
@@ -228,6 +229,7 @@ inline void error [[noreturn]] (const std::string& file, int line,
 }
 /**
  * \brief Throws an exception pointing to the call line
+ * \throws CriticalException
  */
 #define CRITICAL_ERROR(msg) \
         error(__FILE__,__LINE__,__func__,msg)

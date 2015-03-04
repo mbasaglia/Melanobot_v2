@@ -1,6 +1,7 @@
 #include "melanobot.hpp"
 #include "string/logger.hpp"
 #include "settings.hpp"
+#include "network/async_service.hpp"
 
 int main(int argc, char **argv)
 {
@@ -20,8 +21,11 @@ int main(int argc, char **argv)
         if ( !settings.empty() )
         {
             Log("sys",'!',0) << "Executing from " << Settings::global_settings.get("config","");
+            network::ServiceRegistry::instance().initialize(settings.get_child("services",{}));
+            network::ServiceRegistry::instance().start();
             Melanobot bot(settings);
             bot.run();
+            network::ServiceRegistry::instance().stop();
             /// \todo some way to reload the config and restart the bot
         }
         return Settings::global_settings.get("exit_code",0);
