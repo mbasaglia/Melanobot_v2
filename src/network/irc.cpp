@@ -18,7 +18,8 @@
  */
 #include "irc.hpp"
 
-#include "../string/logger.hpp"
+#include "string/logger.hpp"
+#include "string/string_functions.hpp"
 
 #define LOCK(mutexname) std::lock_guard<std::mutex> lock_(mutexname)
 
@@ -620,8 +621,7 @@ void IrcConnection::handle_message(Message msg)
         }
         else
         {
-            /// \todo escape []\^{|} on current_nick
-            std::regex regex_direct(current_nick+":\\s*(.*)");
+            std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
             std::smatch match;
             if ( std::regex_match(message,match,regex_direct) )
             {

@@ -25,9 +25,11 @@ include_directories("${PROJECT_BINARY_DIR}/src")
 
 set(ALL_SOURCES ${ALL_SOURCES} ${SOURCES} ${HEADERS} PARENT_SCOPE)
 
+set(EXECUTABLE_NAME melanobot) # repeated otherwise kdevelop messes up
+
 
 # Flags
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Werror")
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
 # Check C++14

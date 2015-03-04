@@ -83,21 +83,7 @@ inline std::string strtolower ( std::string string )
  * \brief If the string is longer than \c length,
  * truncates to the last word and adds an ellipsis
  */
-inline std::string elide ( std::string text, int length )
-{
-    if ( int(text.size()) <= length )
-        return std::move(text);
-
-    int p = length-3;
-    if ( !std::isspace(text[p+1]) )
-        for ( ; p >= 0 && !std::isspace(text[p]); p-- );
-    for ( ; p >= 0 && std::isspace(text[p]); p-- );
-
-    text.erase(p+1);
-    text += "...";
-
-    return std::move(text);
-}
+std::string elide ( std::string text, int length );
 
 /**
  * \brief Collapse all sequences of spaces to a single space character ' '
@@ -107,6 +93,31 @@ inline std::string collapse_spaces ( const std::string& text )
     static std::regex regex_spaces("\\s+");
     return std::move(std::regex_replace(text,regex_spaces," "));
 }
+
+/**
+ * \brief Escape all occurrences of \c characters with slashes
+ */
+std::string add_slashes ( const std::string& input, const std::string& characters );
+/**
+ * \brief Escapes \c input to be inserted in a regex
+ */
+inline std::string regex_escape( const std::string& input )
+{
+    return std::move(add_slashes(input,"^$\\.*+?()[]{}|"));
+}
+
+/**
+ * \brief Replace all occurrences of \c from in \c text to \c to
+ */
+std::string str_replace(const std::string& input, const std::string& from, const std::string& to);
+
+/**
+ * \brief Checks if \c text matches the wildcard \c pattern
+ *
+ * \c * matches any sequence of characters, all other characters match themselves
+ */
+bool simple_wildcard(const std::string& text, const std::string& pattern);
+
 
 } // namespace string
 #endif // STRING_FUNCTIONS_HPP
