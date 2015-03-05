@@ -1,0 +1,30 @@
+/**
+\page threads Threads
+
+This page describe how threads interact within the project.
+
+\section thread-main Main Thread
+
+The main thread is responsible for the object creation and for loading
+the configuration, when it reaches the end it signals other threads that
+it's time to quit and waits for them do comply.
+
+During the program execution, the class Melanobot waits for messages
+to come from the active connections, if no connection is sending anything
+the thread is put asleep.
+
+\section thread-irc IRC Connection
+
+The IRC connection (network::irc::IrcConnection) uses two threads:
+one to get input from the network and one to handle messages to send.
+
+Both will be blocked if there is no input coming to them.
+
+\section thread-web HTTP Service
+
+The service for HTTP requests (network::http::HttpService) creates
+a single thread to handle asyncronous requests.
+
+It will wait for an incoming request, then it will fully complete that
+before looking for the next one.
+*/

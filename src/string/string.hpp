@@ -2,7 +2,7 @@
  * \file
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
- * \section License
+ * \license
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -423,13 +423,20 @@ public:
         return formatter.qfont(*this);
     }
 
+    /**
+     * \brief Gets an alternative representation of the character
+     * \return An ASCII string aproximating the qfont character
+     */
     std::string alternative() const
     {
-        if ( index_ >= 0 && index_ < qfont_table.size() )
+        if ( index_ < qfont_table.size() )
             return qfont_table[index_];
         return "";
     }
 
+    /**
+     * \brief The qfont character as a custom unicode character
+     */
     uint32_t unicode_point() const
     {
         return 0xE000 | index_;
@@ -440,7 +447,7 @@ private:
      * \brief Maps weird characters to ASCII strings
      */
     static std::vector<std::string> qfont_table;
-    unsigned index_;
+    unsigned index_; ///< Index in the qfont_table
 };
 
 /**

@@ -2,7 +2,7 @@
  * \file
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
- * \section License
+ * \license
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -119,6 +119,9 @@ private:
     std::condition_variable condition;
 };
 
+/**
+ * \brief Makes a std::queue suitable for concurrency
+ */
 template<class T, class Container = std::deque<T>>
 class ConcurrentQueue : public ConcurrentContainer<std::queue<T,Container>>
 {
@@ -131,6 +134,9 @@ public:
     {}
 };
 
+/**
+ * \brief Makes a std::priority_queue suitable for concurrency
+ */
 template<class T,
          class Container = std::vector<T>,
          class Compare = std::less<typename Container::value_type> >

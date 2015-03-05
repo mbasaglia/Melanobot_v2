@@ -2,7 +2,7 @@
  * \file
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
- * \section License
+ * \license
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -149,6 +149,9 @@ class ThreadedAsyncService : public AsyncService
     }
 
 private:
+    /**
+     * \brief Internal request record
+     */
     struct Item
     {
         Request       request;

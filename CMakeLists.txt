@@ -17,9 +17,9 @@ cmake_minimum_required(VERSION 2.6)
 project(MelanoBot)
 
 string(TOLOWER MelanoBot EXECUTABLE_NAME)
-set (VERSION_MAJOR 2)
-set (VERSION_MINOR 0)
-set (MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
+set(VERSION_MAJOR 2)
+set(VERSION_MINOR 0)
+set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
 
 set(ALL_SOURCES "")
@@ -27,16 +27,25 @@ add_subdirectory(src)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-    set(DOXYGEN_OUTPUT doc)
-    foreach(source ${ALL_SOURCES})
-	set(DOXYGEN_INPUT "${DOXYGEN_INPUT} ${source}")
+
+    if ( ${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
+        set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/doc-out)
+    else()
+        set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/doc)
+    endif()
+
+    file(GLOB DOX_FILES doc/*.dox)
+    set(DOXYGEN_INPUT_FILES ${ALL_SOURCES} ${DOX_FILES})
+    foreach(source ${DOXYGEN_INPUT_FILES})
+        set(DOXYGEN_INPUT "${DOXYGEN_INPUT} ${source}")
     endforeach()
+
     configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
     add_custom_target(doc
-	    ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-	    DEPENDS ${PROJECT_BINARY_DIR}/Doxyfile ${ALL_SOURCES}
-	    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-	    COMMENT "Generating Doxygen Documentation" VERBATIM
+        ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+        DEPENDS ${PROJECT_BINARY_DIR}/Doxyfile ${DOXYGEN_INPUT_FILES}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        COMMENT "Generating Doxygen Documentation" VERBATIM
     )
     add_custom_target(doc-view
 	    xdg-open ${DOXYGEN_OUTPUT}/html/index.html

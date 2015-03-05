@@ -230,6 +230,7 @@ TAB_SIZE               = 4
 
 ALIASES                += "thread=\n\b Threading\n\li\b Threads:"
 ALIASES                += "lock=\n\li\b Locks:"
+ALIASES                += "license=\section License"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -1956,7 +1957,7 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           =
+INCLUDE_PATH           = "@CMAKE_SOURCE_DIR@/src" "@CMAKE_BINARY_DIR@/src"
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

@@ -2,7 +2,7 @@
  * \file
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
- * \section License
+ * \license
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -20,6 +20,9 @@
 
 namespace handler {
 
+/**
+ * \brief Handler searching a video on Youtube
+ */
 class SearchVideoYoutube : public SimpleJson
 {
 public:
@@ -51,6 +54,9 @@ private:
 REGISTER_HANDLER(SearchVideoYoutube,SearchVideoYoutube);
 
 
+/**
+ * \brief Handler searching images with Google
+ */
 class SearchImageGoogle : public SimpleJson
 {
 public:
@@ -76,6 +82,9 @@ REGISTER_HANDLER(SearchImageGoogle,SearchImageGoogle);
 
 
 
+/**
+ * \brief Handler searching a definition on Urban Dictionary
+ */
 class UrbanDictionary : public SimpleJson
 {
 public:
@@ -102,6 +111,9 @@ protected:
 REGISTER_HANDLER(UrbanDictionary,UrbanDictionary);
 
 
+/**
+ * \brief Handler searching a web page using Searx
+ */
 class SearchWebSearx : public SimpleJson
 {
 public:
