@@ -92,6 +92,7 @@ inline std::string strtoupper ( std::string string )
 
 /**
  * \brief IRC User nick information
+ * \todo Replace this with a function which returns a user::User
  */
 struct UserNick
 {
@@ -100,6 +101,14 @@ struct UserNick
      * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
      */
     UserNick ( const std::string& prefix );
+
+    operator user::User() const
+    {
+        user::User user;
+        user.name = user.local_id = nick;
+        user.host = host;
+        return user;
+    }
 
     std::string nick;
     std::string user;
@@ -446,6 +455,10 @@ private:
      * \brief Connection status
      */
     AtomicStatus connection_status;
+
+
+    user::UserManager user_manager;
+    user::AuthSystem  auth_system;
 };
 
 } // namespace network::irc

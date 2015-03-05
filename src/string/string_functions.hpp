@@ -137,6 +137,24 @@ std::vector<std::string> regex_split(const std::string& input,
                                      const std::regex& pattern,
                                      bool skip_empty = true );
 
+inline std::vector<std::string> regex_split(const std::string& input,
+                                            const std::string& pattern,
+                                            bool skip_empty = true )
+{
+    return regex_split ( input, std::regex(pattern), skip_empty );
+}
+
+
+/**
+ * \brief Split a string of element separated by commas and spaces
+ */
+inline std::vector<std::string> comma_split(const std::string& input,bool skip_empty = true)
+{
+    static std::regex regex_commaspace ( "(,\\s*)|(\\s+)",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::ECMAScript );
+    return std::move(string::regex_split(input,regex_commaspace));
+}
 
 } // namespace string
 #endif // STRING_FUNCTIONS_HPP

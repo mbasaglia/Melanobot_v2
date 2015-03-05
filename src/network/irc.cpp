@@ -30,7 +30,7 @@ namespace network {
 namespace irc {
 
 /// \note the real regex would be stricter
-std::regex UserNick::prefix_regex{":?([^!@]+)(?:!([^@]+))?(?:@(.*))",
+std::regex UserNick::prefix_regex{":?([^!@ ]+)(?:!([^@ ]+))?(?:@(\\S+))?",
         std::regex_constants::syntax_option_type::optimize |
         std::regex_constants::syntax_option_type::ECMAScript };
 
@@ -294,6 +294,394 @@ const Server& IrcConnection::server() const
     return current_server;
 }
 
+void IrcConnection::handle_message(Message msg)
+{
+    if ( msg.command == "001" )
+    {
+        // RPL_WELCOME: prefix 001 target :message
+        if ( msg.params.size() < 1 ) return;
+
+        mutex.lock();
+            /// \todo read current_server
+            current_nick = msg.params[0];
+            current_nick_lowecase = strtolower(current_nick);
+            // copy so we can unlock before command()
+            auto ctj = channels_to_join;
+            channels_to_join.clear();
+        mutex.unlock();
+        auth();
+        connection_status = CONNECTED;
+        for ( const auto& s : ctj )
+            command({"JOIN",{s}}); /// \todo maybe do more than one channel per command
+    }
+    else if ( msg.command == "353" )
+    {
+        // RPL_NAMREPLY: prefix 353 target channel_type channel :users...
+        if ( msg.params.size() < 4 ) return;
+
+        std::string channel = msg.params[2];
+        msg.channels = { channel };
+
+        std::vector<std::string> users = string::regex_split(msg.params[3],"\\s+");
+        mutex.lock();
+            for ( auto& user : users )
+            {
+                if ( user[0] == '@' || user[0] == '+' )
+                {
+                    /// \todo maybe it would be useful to store operator/voiced status
+                    user.erase(0,1);
+                }
+                user::User *found = user_manager.user(user);
+                if ( !found )
+                {
+                    user::User new_user;
+                    new_user.name = new_user.local_id = user;
+                    found = user_manager.add_user(new_user);
+                    Log("irc",'!',2) << "Added user " << color::dark_green << user;
+                }
+                found->add_channel(channel);
+                Log("irc",'!',3) << "User " << color::dark_cyan << user
+                    << color::dark_green << " joined " << color::nocolor << channel;
+            }
+        mutex.unlock();
+    }
+    else if ( msg.command == "433" )
+    {
+        // ERR_NICKNAMEINUSE
+        if ( msg.params.size() < 2 ) return;
+
+        mutex.lock();
+        if ( strtolower(attempted_nick) == strtolower(msg.params[1]) )
+        {
+            Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
+            /// \todo check nick max length
+            /// \todo system to try to get the best nick possible
+            Command cmd {{"NICK"},{attempted_nick+'_'},1024};
+            mutex.unlock();
+            command(cmd);
+        }
+        else
+            mutex.unlock();
+    }
+    else if ( msg.command == "464" || msg.command == "465" || msg.command == "466" )
+    {
+        // banned from server
+        reconnect();
+    }
+    else if ( msg.command == "PING" )
+    {
+        /// \todo read timeout in settings
+        /// \todo set timer to the latest server message and call PING when too old
+        command({"PONG",msg.params,1024,std::chrono::minutes(3)});
+    }
+    else if ( msg.command == "PRIVMSG" )
+    {
+        if ( msg.params.size() != 2 || msg.params[1].empty() )
+            return; // Odd PRIVMSG format
+
+        {
+            LOCK(mutex);
+            if ( strtolower(msg.from) == current_nick_lowecase )
+                return; // received our own message for some reason, disregard
+        }
+
+        std::string message = msg.params[1];
+
+        std::string nickfrom = UserNick(msg.from).nick;
+        msg.from = nickfrom;
+        msg.message = message;
+
+        if ( strtolower(msg.params[0]) == current_nick_lowecase )
+        {
+            msg.channels = { strtolower(nickfrom) };
+            msg.direct = 1;
+        }
+        else
+        {
+            msg.channels = { msg.params[0] };
+        }
+
+        // Handle CTCP
+        if ( msg.message[0] == '\1' )
+        {
+            static std::regex regex_ctcp("\1([^ \1]+)(?: ([^\1]+))?\1",
+                std::regex_constants::syntax_option_type::optimize |
+                std::regex_constants::syntax_option_type::ECMAScript);
+            std::smatch match;
+            std::regex_match(message,match,regex_ctcp);
+            msg.message.clear();
+            std::string ctcp = strtoupper(match[1].str());
+
+            if ( ctcp == "ACTION" )
+            {
+                msg.action = 1;
+            }
+            else
+            {
+                msg.command = "CTCP";
+                msg.params = { ctcp };
+                if ( !match[2].str().empty() )
+                    msg.params.push_back(match[2].str());
+            }
+        }
+        else
+        {
+            std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
+            std::smatch match;
+            if ( std::regex_match(message,match,regex_direct) )
+            {
+                msg.direct = true;
+                msg.message = match[1];
+            }
+        }
+    }
+    else if ( msg.command == "NOTICE" )
+    {
+        // http://tools.ietf.org/html/rfc2812#section-3.3.2
+        // Discard because you should never send automatic replies
+        return;
+    }
+    else if ( msg.command == "ERROR" )
+    {
+        ErrorLog errl("irc","Server Error:");
+        if ( msg.params.empty() )
+            errl << "Unknown error";
+        else
+            errl << msg.params[0];
+        bot->stop(); /// \todo is this the right thing to do?
+    }
+    else if ( msg.command == "JOIN" )
+    {
+        /// \todo handle the case when this notifies the bot itself has joined a channel
+        if ( msg.params.size() >= 1 )
+        {
+            user::User user = UserNick(msg.from);
+            user.channels = msg.params;
+            mutex.lock();
+                user::User *found = user_manager.user(user.local_id);
+                if ( !found )
+                {
+                    user_manager.add_user(user);
+                    Log("irc",'!',2) << "Added user " << color::dark_green << user.name;
+                }
+                else
+                {
+                    // we might not have the host if the user was added via 353
+                    found->host = user.host;
+
+                    for ( const auto& c : user.channels )
+                        found->add_channel(c);
+                }
+            mutex.unlock();
+            Log("irc",'!',3) << "User " << color::dark_cyan << user.name
+                << color::dark_green << " joined " << color::nocolor
+                << string::implode(", ",user.channels);
+            msg.from = user.name;
+            msg.channels = user.channels;
+        }
+    }
+    else if ( msg.command == "PART" )
+    {
+        if ( msg.params.size() >= 1 )
+        {
+            user::User user = UserNick(msg.from);
+            user.channels = string::comma_split(msg.params[0]);
+            mutex.lock();
+                user::User *found = user_manager.user(user.local_id);
+                if ( found )
+                {
+                    for ( const auto& c : user.channels )
+                        found->remove_channel(c);
+
+                    Log("irc",'!',3) << "User " << color::dark_cyan << found->name
+                        << color::dark_red << " parted " << color::nocolor
+                        << string::implode(", ",user.channels);
+
+                    if ( found->channels.empty() )
+                    {
+                        user_manager.remove_user(found->local_id);
+                        Log("irc",'!',2) << "Removed user " << color::dark_red << user.name;
+                    }
+                }
+            mutex.unlock();
+            msg.from = user.local_id;
+            msg.channels = user.channels;
+        }
+    }
+    else if ( msg.command == "QUIT" )
+    {
+        user::User user = UserNick(msg.from);
+        msg.from = user.local_id;
+        mutex.lock();
+            user::User *found = user_manager.user(user.local_id);
+            if ( found )
+            {
+                msg.channels = found->channels;
+                user_manager.remove_user(user.local_id);
+                Log("irc",'!',2) << "Removed user " << color::dark_red << user.name;
+            }
+        mutex.unlock();
+    }
+    // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
+    /* Skipped: * = maybe later X = surely later
+     * PASS
+     * USER
+     * OPER
+     * SERVICE
+     * SQUIT
+     * MODE     *
+     * TOPIC    *
+     * NAMES    X
+     * LIST
+     * INVITE   X
+     * KICK     X
+     * MOTD
+     * LUSERS
+     * VERSION
+     * STATS
+     * LINKS
+     * TIME
+     * CONNECT
+     * TRACE
+     * ADMIN
+     * INFO
+     * SERVLIST
+     * SQUERY
+     * WHO
+     * WHOIS
+     * WHOWAS
+     * KILL
+     * PONG     *
+     * AWAY     *
+     * REHASH
+     * DIE
+     * RESTART
+     * SUMMON
+     * USERS    *
+     * WALLOPS
+     * USERHOST
+     * ISON
+     */
+    // see http://tools.ietf.org/html/rfc2812#section-5.1 (Numeric)
+    /// \todo print a message for all ERR_ responses (verbosity > 2)
+    /* Skipped:
+     * 0xx server-client
+     * 002
+     * 003
+     * 004      *
+     * 005      *
+     * 2xx-3xx Replies to commands
+     * 302
+     * 303      *
+     * 301
+     * 305
+     * 306
+     * 311      *
+     * 312
+     * 313
+     * 317
+     * 318
+     * 319      *
+     * 314      ?
+     * 369
+     * 321
+     * 322      ?
+     * 323
+     * 325
+     * 324      ?
+     * 331      ?
+     * 332      ?
+     * 341
+     * 342
+     * 346
+     * 347
+     * 348
+     * 349
+     * 351      ?
+     * 352
+     * 315
+     * 366      ?
+     * 364
+     * 365
+     * 367      *
+     * 368      ?
+     * 371
+     * 374
+     * 372
+     * 376
+     * 381
+     * 382
+     * 383
+     * 391      ?
+     * 393
+     * 394
+     * 305
+     * 200-210
+     * 262
+     * 211
+     * 212
+     * 219
+     * 242
+     * 243
+     * 221      ?
+     * 234      ?
+     * 235      ?
+     * 251-255
+     * 256-259
+     * 263      ?
+     * 4xx errors
+     * 401
+     * 402
+     * 403
+     * 404      ?
+     * 405      *
+     * 406
+     * 407      ?
+     * 408
+     * 409
+     * 411
+     * 412-415  ?
+     * 421
+     * 422
+     * 423
+     * 424
+     * 431
+     * 432
+     * 436      ?
+     * 437
+     * 441
+     * 442
+     * 443
+     * 444
+     * 445
+     * 446      ?
+     * 451      *
+     * 461
+     * 462
+     * 463
+     * 464      *
+     * 465
+     * 467
+     * 472
+     * 473      *
+     * 474      *
+     * 475
+     * 476
+     * 477
+     * 478      *
+     * 481
+     * 482
+     * 483
+     * 484
+     * 485
+     * 491
+     * 501
+     * 502
+     */
+
+    bot->message(msg);
+}
+
 void IrcConnection::command ( const Command& c )
 {
     Command cmd = c;
@@ -386,6 +774,11 @@ void IrcConnection::command ( const Command& c )
         if ( cmd.parameters.size() < 1 )
         {
             ErrorLog("irc") << "Ill-formed JOIN";
+            return;
+        }
+        if ( connection_status <= CONNECTING )
+        {
+            channels_to_join.push_back(cmd.parameters[0]);
             return;
         }
         /// \todo Discard already joined channels,
@@ -522,10 +915,7 @@ string::Formatter* IrcConnection::formatter() const
 bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
                                  const std::string& mask) const
 {
-    static std::regex regex_commaspace ( "(,\\s*)|(\\s+)",
-        std::regex_constants::syntax_option_type::optimize |
-        std::regex_constants::syntax_option_type::ECMAScript );
-    std::vector<std::string> masks = string::regex_split(mask,regex_commaspace);
+    std::vector<std::string> masks = std::move(string::comma_split(mask));
     for ( const auto& m : masks )
     {
         bool match = false;
@@ -544,289 +934,6 @@ void IrcConnection::reconnect()
 {
     disconnect();
     connect();
-}
-
-void IrcConnection::handle_message(Message msg)
-{
-    if ( msg.command == "001" && msg.params.size() >= 1 )
-    {
-        // RPL_WELCOME
-        mutex.lock();
-        /// \todo read current_server
-        current_nick = msg.params[0];
-        current_nick_lowecase = strtolower(current_nick);
-        for ( const auto& s : channels_to_join )
-            command({"JOIN",{s}});
-        channels_to_join.clear();
-        mutex.unlock();
-        auth();
-        connection_status = CONNECTED;
-    }
-    else if ( msg.command == "433" && msg.params.size() >= 2 )
-    {
-        // ERR_NICKNAMEINUSE
-        mutex.lock();
-        if ( strtolower(attempted_nick) == strtolower(msg.params[1]) )
-        {
-            Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
-            /// \todo check nick max length
-            /// \todo system to try to get the best nick possible
-            Command cmd {{"NICK"},{attempted_nick+'_'},1024};
-            mutex.unlock();
-            command(cmd);
-        }
-        else
-            mutex.unlock();
-    }
-    else if ( msg.command == "464" || msg.command == "465" || msg.command == "466" )
-    {
-        // banned from server
-        reconnect();
-    }
-    else if ( msg.command == "PING" )
-    {
-        /// \todo read timeout in settings
-        /// \todo set timer to the latest server message and call PING when too old
-        command({"PONG",msg.params,1024,std::chrono::minutes(3)});
-    }
-    else if ( msg.command == "PRIVMSG" )
-    {
-        if ( msg.params.size() != 2 || msg.params[1].empty() )
-            return; // Odd PRIVMSG format
-
-        {
-            LOCK(mutex);
-            if ( strtolower(msg.from) == current_nick_lowecase )
-                return; // received our own message for some reason, disregard
-        }
-
-        std::string message = msg.params[1];
-
-        std::string nickfrom = UserNick(msg.from).nick;
-        msg.from = nickfrom;
-        msg.message = message;
-
-        if ( strtolower(msg.params[0]) == current_nick_lowecase )
-        {
-            msg.channels = { strtolower(nickfrom) };
-            msg.direct = 1;
-        }
-        else
-        {
-            msg.channels = { msg.params[0] };
-        }
-
-        // Handle CTCP
-        if ( msg.message[0] == '\1' )
-        {
-            static std::regex regex_ctcp("\1([^ \1]+)(?: ([^\1]+))?\1",
-                std::regex_constants::syntax_option_type::optimize |
-                std::regex_constants::syntax_option_type::ECMAScript);
-            std::smatch match;
-            std::regex_match(message,match,regex_ctcp);
-            msg.message.clear();
-            std::string ctcp = strtoupper(match[1].str());
-
-            if ( ctcp == "ACTION" )
-            {
-                msg.action = 1;
-            }
-            else
-            {
-                msg.command = "CTCP";
-                msg.params = { ctcp };
-                if ( !match[2].str().empty() )
-                    msg.params.push_back(match[2].str());
-            }
-        }
-        else
-        {
-            std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
-            std::smatch match;
-            if ( std::regex_match(message,match,regex_direct) )
-            {
-                msg.direct = true;
-                msg.message = match[1];
-            }
-        }
-    }
-    else if ( msg.command == "NOTICE" )
-    {
-        // http://tools.ietf.org/html/rfc2812#section-3.3.2
-        // Discard because you should never send automatic replies
-        return;
-    }
-    else if ( msg.command == "ERROR" )
-    {
-        ErrorLog errl("irc","Server Error:");
-        if ( msg.params.empty() )
-            errl << "Unknown error";
-        else
-            errl << msg.params[0];
-        bot->stop(); /// \todo is this the right thing to do?
-    }
-    // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
-    /* Skipped: * = maybe later X = surely later
-     * PASS
-     * USER
-     * OPER
-     * SERVICE
-     * QUIT     X
-     * SQUIT
-     * JOIN     X
-     * PART     X
-     * MODE     *
-     * TOPIC    *
-     * NAMES    X
-     * LIST
-     * INVITE   X
-     * KICK     X
-     * MOTD
-     * LUSERS
-     * VERSION
-     * STATS
-     * LINKS
-     * TIME
-     * CONNECT
-     * TRACE
-     * ADMIN
-     * INFO
-     * SERVLIST
-     * SQUERY
-     * WHO
-     * WHOIS
-     * WHOWAS
-     * KILL
-     * PONG     *
-     * AWAY     *
-     * REHASH
-     * DIE
-     * RESTART
-     * SUMMON
-     * USERS    *
-     * WALLOPS
-     * USERHOST
-     * ISON
-     */
-    // see http://tools.ietf.org/html/rfc2812#section-5.1 (Numeric)
-    /// \todo print a message for all ERR_ responses (verbosity > 2)
-    /* Skipped:
-     * 0xx server-client
-     * 002
-     * 003
-     * 004      *
-     * 005      *
-     * 2xx-3xx Replies to commands
-     * 302
-     * 303      *
-     * 301
-     * 305
-     * 306
-     * 311      *
-     * 312
-     * 313
-     * 317
-     * 318
-     * 319      *
-     * 314      ?
-     * 369
-     * 321
-     * 322      ?
-     * 323
-     * 325
-     * 324      ?
-     * 331      ?
-     * 332      ?
-     * 341
-     * 342
-     * 346
-     * 347
-     * 348
-     * 349
-     * 351      ?
-     * 352
-     * 315
-     * 353      X
-     * 366      ?
-     * 364
-     * 365
-     * 367      *
-     * 368      ?
-     * 371
-     * 374
-     * 372
-     * 376
-     * 381
-     * 382
-     * 383
-     * 391      ?
-     * 393
-     * 394
-     * 305
-     * 200-210
-     * 262
-     * 211
-     * 212
-     * 219
-     * 242
-     * 243
-     * 221      ?
-     * 234      ?
-     * 235      ?
-     * 251-255
-     * 256-259
-     * 263      ?
-     * 4xx errors
-     * 401
-     * 402
-     * 403
-     * 404      ?
-     * 405      *
-     * 406
-     * 407      ?
-     * 408
-     * 409
-     * 411
-     * 412-415  ?
-     * 421
-     * 422
-     * 423
-     * 424
-     * 431
-     * 432
-     * 436      ?
-     * 437
-     * 441
-     * 442
-     * 443
-     * 444
-     * 445
-     * 446      ?
-     * 451      *
-     * 461
-     * 462
-     * 463
-     * 464      *
-     * 465
-     * 467
-     * 472
-     * 473      *
-     * 474      *
-     * 475
-     * 476
-     * 477
-     * 478      *
-     * 481
-     * 482
-     * 483
-     * 484
-     * 485
-     * 491
-     * 501
-     * 502
-     */
-
-    bot->message(msg);
 }
 
 void IrcConnection::login()

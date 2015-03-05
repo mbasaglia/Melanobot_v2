@@ -24,8 +24,10 @@
 #include <cstdint>
 #include <sstream>
 
-#include "../string/string.hpp"
-#include "../string/logger.hpp"
+#include "string/string.hpp"
+#include "string/logger.hpp"
+#include "user/auth_system.hpp"
+#include "user/user_manager.hpp"
 
 class Melanobot;
 
@@ -195,7 +197,6 @@ public:
      */
     virtual bool channel_mask(const std::vector<std::string>& channels,
                               const std::string& mask) const = 0;
-
 };
 
 /**
