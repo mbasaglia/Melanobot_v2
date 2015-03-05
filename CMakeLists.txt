@@ -47,7 +47,11 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating Doxygen Documentation" VERBATIM
     )
     add_custom_target(doc-view
-	    xdg-open ${DOXYGEN_OUTPUT}/html/index.html
-	    COMMENT "Showing Doxygen documentation"
+        xdg-open ${DOXYGEN_OUTPUT}/html/index.html
+        COMMENT "Showing Doxygen documentation"
+    )
+    add_custom_target(doc-commit
+        COMMAND "${CMAKE_SOURCE_DIR}/commit-doc.sh" "${DOXYGEN_OUTPUT}/html"
+        COMMENT "Committing Doxygen documentation"
     )
 endif(DOXYGEN_FOUND)
