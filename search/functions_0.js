@@ -1,8 +1,13 @@
 var searchData=
 [
   ['active',['active',['../classConcurrentContainer.html#acde322ea4bc6a0f703291f024e30b2bf',1,'ConcurrentContainer']]],
+  ['add_5fchannel',['add_channel',['../structuser_1_1User.html#a21b297854675750c36c16b6c48083d3b',1,'user::User']]],
+  ['add_5fchild',['add_child',['../classuser_1_1UserGroup.html#a2b22889594869eb42729fba3d728d893',1,'user::UserGroup']]],
   ['add_5fformatter',['add_formatter',['../classstring_1_1Formatter_1_1FormatterFactory.html#a6267c2fd78fb58e8e5394f1467ff3b62',1,'string::Formatter::FormatterFactory']]],
+  ['add_5fgroup',['add_group',['../classuser_1_1AuthSystem.html#ae704a52a436825811da95614124f1bdc',1,'user::AuthSystem']]],
   ['add_5fslashes',['add_slashes',['../namespacestring.html#a9d62d5d4d36f2ee7421c5da3adf5c9e2',1,'string']]],
+  ['add_5fuser',['add_user',['../classuser_1_1UserManager.html#a01eb52c9f6e8b5c87b02805ac8413ee2',1,'user::UserManager::add_user()'],['../classuser_1_1UserGroup.html#abd742bf8a2efeb8feacafb0fb91569ff',1,'user::UserGroup::add_user()'],['../classuser_1_1AuthSystem.html#a575cad0174ea0ba9ae69e221076a39fb',1,'user::AuthSystem::add_user(const User &amp;user, const std::vector&lt; std::string &gt; &amp;groups)'],['../classuser_1_1AuthSystem.html#a3e1db5a085707f020de5bdc4c1884e9a',1,'user::AuthSystem::add_user(const User &amp;user, const std::string &amp;group)']]],
+  ['all_5fusers',['all_users',['../classuser_1_1UserGroup.html#a6616e328001e26953ccefe2328968798',1,'user::UserGroup']]],
   ['alternative',['alternative',['../classstring_1_1QFont.html#a560d5bafa5db49e473613614ebb2b621',1,'string::QFont']]],
   ['append',['append',['../classstring_1_1FormattedString.html#a9b6d52251ecfb38d07581d0982450b6f',1,'string::FormattedString::append(Element *element)'],['../classstring_1_1FormattedString.html#ae9cbc41ccb994b5e956df49825155009',1,'string::FormattedString::append(const FormattedString &amp;string)']]],
   ['ascii',['ascii',['../classstring_1_1Formatter.html#a8d66f333c3e9614df23b4bbd8c835cbb',1,'string::Formatter::ascii(char c) const =0'],['../classstring_1_1Formatter.html#aa15c173746faf821a23fe3624272f461',1,'string::Formatter::ascii(const std::string &amp;s) const =0'],['../classstring_1_1FormatterUtf8.html#a366b8baf4dcaf5342d7430936e5121c2',1,'string::FormatterUtf8::ascii(char c) const override'],['../classstring_1_1FormatterUtf8.html#a245581fc7dccb0c0e7355e57145f720e',1,'string::FormatterUtf8::ascii(const std::string &amp;s) const override'],['../classstring_1_1FormatterDarkplaces.html#aa11eaa3506ea7e92ae890412d14831ab',1,'string::FormatterDarkplaces::ascii(char c) const override'],['../classstring_1_1FormatterDarkplaces.html#a1680330014985214e3745faa2e9c66e0',1,'string::FormatterDarkplaces::ascii(const std::string &amp;s) const override']]],

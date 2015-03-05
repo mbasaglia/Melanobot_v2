@@ -17,5 +17,6 @@ var searchData=
   ['operator_7c',['operator|',['../classstring_1_1FormatFlags.html#ab4c648e9b8d181181bf376e5c0f01594',1,'string::FormatFlags']]],
   ['operator_7c_3d',['operator|=',['../classstring_1_1FormatFlags.html#ab2d1922d7a47acac4ee3f0910a383836',1,'string::FormatFlags']]],
   ['operator_7e',['operator~',['../classstring_1_1FormatFlags.html#a95edc488f4c6db0c097b540ff06d2927',1,'string::FormatFlags']]],
-  ['overflow',['overflow',['../classMultibuf.html#a0fd5420090cd35dff58d7ca76dafa1ca',1,'Multibuf']]]
+  ['overflow',['overflow',['../classMultibuf.html#a0fd5420090cd35dff58d7ca76dafa1ca',1,'Multibuf']]],
+  ['user',['User',['../structnetwork_1_1irc_1_1UserNick.html#a166ee076d8f72f967b3939ff3aeb5eab',1,'network::irc::UserNick']]]
 ];

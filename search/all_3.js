@@ -10,6 +10,7 @@ var searchData=
   ['default_5fformatter',['default_formatter',['../classstring_1_1Formatter_1_1FormatterFactory.html#a0498faa548610b4aa4432747506b102f',1,'string::Formatter::FormatterFactory']]],
   ['difference_5ftype',['difference_type',['../classstring_1_1FormattedString.html#a40486fb04830363c7e4946e03551cab7',1,'string::FormattedString']]],
   ['direct',['direct',['../structnetwork_1_1Message.html#ae33f9f027073b43e9bc491afc9b2c574',1,'network::Message::direct()'],['../classhandler_1_1SimpleAction.html#a18a6f9f77f02a1c5b5a7c183297cb4ee',1,'handler::SimpleAction::direct()']]],
+  ['direct_5fusers',['direct_users',['../classuser_1_1UserGroup.html#a138f49bbd492c54f0c7da9560cab9321',1,'user::UserGroup']]],
   ['direction',['direction',['../classLog.html#a739b327769436d99cffcc13d11eaaa50',1,'Log']]],
   ['disconnect',['disconnect',['../classnetwork_1_1Connection.html#a3d250ba711030aa4f656ec692ef0dfa3',1,'network::Connection::disconnect()'],['../classnetwork_1_1irc_1_1Buffer.html#ac01fa4e0425bec9759099cc851eeec37',1,'network::irc::Buffer::disconnect()'],['../classnetwork_1_1irc_1_1IrcConnection.html#a8bb312c0e024b0a065e5afde1966a3cc',1,'network::irc::IrcConnection::disconnect()']]],
   ['disconnected',['DISCONNECTED',['../classnetwork_1_1Connection.html#a60c9aae50344fc51b4b9770f30dfeda5ad189538304f94dde038f3b2e6f0dc180',1,'network::Connection']]],

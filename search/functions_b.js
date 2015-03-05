@@ -1,6 +1,7 @@
 var searchData=
 [
   ['main',['main',['../main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main.cpp']]],
+  ['matches',['matches',['../structuser_1_1User.html#ab08549a2a6eadc70a03cc87c31359704',1,'user::User']]],
   ['melanobot',['Melanobot',['../classMelanobot.html#a39d5829e17baa0d5d87671be56370902',1,'Melanobot']]],
   ['merge_5fchild',['merge_child',['../classSettings.html#abc5eaf4d69f803d016639fe2c6910b72',1,'Settings']]],
   ['message',['message',['../classMelanobot.html#af594bbfddf10609f945dddfbc4214896',1,'Melanobot']]],

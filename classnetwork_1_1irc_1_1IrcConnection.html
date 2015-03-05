@@ -113,7 +113,8 @@ Inheritance diagram for network::irc::IrcConnection:</div>
 <div class="dynheader">
 Collaboration diagram for network::irc::IrcConnection:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classnetwork_1_1irc_1_1IrcConnection__coll__graph.svg" width="100%" height="517"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classnetwork_1_1irc_1_1IrcConnection__coll__graph.svg" width="100%" height="593"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -229,6 +230,10 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a838f7f6e02fb676e98dfbe972a29eea6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classnetwork_1_1Connection.html#a4a09e9838133fa3fc9569460363186b4">AtomicStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a838f7f6e02fb676e98dfbe972a29eea6">connection_status</a></td></tr>
 <tr class="memdesc:a838f7f6e02fb676e98dfbe972a29eea6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classnetwork_1_1Connection.html" title="Abstract service connection. ">Connection</a> status.  <a href="#a838f7f6e02fb676e98dfbe972a29eea6">More...</a><br /></td></tr>
 <tr class="separator:a838f7f6e02fb676e98dfbe972a29eea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18391c1227a0bbab0ac8fec6f8930fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuser_1_1UserManager.html">user::UserManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a18391c1227a0bbab0ac8fec6f8930fbb">user_manager</a></td></tr>
+<tr class="separator:a18391c1227a0bbab0ac8fec6f8930fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf0f5ace38e1b9f2f86466d7e4a390cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuser_1_1AuthSystem.html">user::AuthSystem</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#abf0f5ace38e1b9f2f86466d7e4a390cc">auth_system</a></td></tr>
+<tr class="separator:abf0f5ace38e1b9f2f86466d7e4a390cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -254,7 +259,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>IRC connection. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00249">249</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00258">258</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aecd79ba17a920bd35d258a78ad003b9d"></a>
 <div class="memitem">
@@ -353,9 +358,9 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Locks:</b> buffer(indirect) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00840">840</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00947">947</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -403,7 +408,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a4065dc3c9b24ad1fd758317f4e5c76aa">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00522">522</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00915">915</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
 </div>
 </div>
@@ -432,17 +437,17 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Threads:</b> external </li>
 <li><b>Locks:</b> data(sometimes) buffer(indirect) </li>
 </ul>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>validate nick </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>sanitaze the mode string </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd>allow channel mode </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd>Discard already joined channels, keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a> </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd>Discard unexisting channels <a href="http://tools.ietf.org/html/rfc2812#section-3.2.2">http://tools.ietf.org/html/rfc2812#section-3.2.2</a> </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>validate nick </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>sanitaze the mode string </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd>allow channel mode </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>Discard already joined channels, keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a> </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000040">Todo:</a></b></dt><dd>Discard unexisting channels <a href="http://tools.ietf.org/html/rfc2812#section-3.2.2">http://tools.ietf.org/html/rfc2812#section-3.2.2</a> </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#af3d237aadf48cd582abfc1fd88bc2247">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00297">297</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00685">685</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00840">auth()</a>, <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>, <a class="el" href="irc_8cpp_source.html#l00832">login()</a>, <a class="el" href="irc_8cpp_source.html#l00463">say()</a>, and <a class="el" href="irc_8cpp_source.html#l00471">say_as()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00947">auth()</a>, <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>, <a class="el" href="irc_8cpp_source.html#l00939">login()</a>, <a class="el" href="irc_8cpp_source.html#l00856">say()</a>, and <a class="el" href="irc_8cpp_source.html#l00864">say_as()</a>.</p>
 
 </div>
 </div>
@@ -470,13 +475,13 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Threads:</b> external </li>
 <li><b>Locks:</b> buffer(indirect) data(indirect) </li>
 </ul>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000029">Todo:</a></b></dt><dd>If connection fails, trigger a graceful quit </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000041">Todo:</a></b></dt><dd>If connection fails, trigger a graceful quit </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#acbf3a85faf33744a86c58ee1649eb0c5">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00495">495</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00888">888</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00543">reconnect()</a>, and <a class="el" href="irc_8cpp_source.html#l00279">start()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00933">reconnect()</a>, and <a class="el" href="irc_8cpp_source.html#l00279">start()</a>.</p>
 
 </div>
 </div>
@@ -545,9 +550,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a3d250ba711030aa4f656ec692ef0dfa3">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00510">510</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00903">903</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, <a class="el" href="irc_8cpp_source.html#l00543">reconnect()</a>, and <a class="el" href="irc_8cpp_source.html#l00285">stop()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, <a class="el" href="irc_8cpp_source.html#l00933">reconnect()</a>, and <a class="el" href="irc_8cpp_source.html#l00285">stop()</a>.</p>
 
 </div>
 </div>
@@ -578,7 +583,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#aad236966fc18b940e28c8f51c57618a7">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00518">518</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00911">911</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="irc_8cpp_source.html#l00175">network::irc::Buffer::on_read_line()</a>, and <a class="el" href="irc_8cpp_source.html#l00130">network::irc::Buffer::write_line()</a>.</p>
 
@@ -611,15 +616,18 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Threads:</b> irc_in </li>
 <li><b>Locks:</b> data(sometimes) buffer(indirect, sometimes) </li>
 </ul>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000030">Todo:</a></b></dt><dd>read current_server </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000031">Todo:</a></b></dt><dd>check nick max length </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000032">Todo:</a></b></dt><dd>system to try to get the best nick possible </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000033">Todo:</a></b></dt><dd>read timeout in settings </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000034">Todo:</a></b></dt><dd>set timer to the latest server message and call PING when too old </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000035">Todo:</a></b></dt><dd>is this the right thing to do? </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>print a message for all ERR_ responses (verbosity &gt; 2) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd>read current_server </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd>maybe do more than one channel per command </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd>maybe it would be useful to store operator/voiced status </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000029">Todo:</a></b></dt><dd>check nick max length </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000030">Todo:</a></b></dt><dd>system to try to get the best nick possible </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000031">Todo:</a></b></dt><dd>read timeout in settings </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000032">Todo:</a></b></dt><dd>set timer to the latest server message and call PING when too old </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000033">Todo:</a></b></dt><dd>is this the right thing to do? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000034">Todo:</a></b></dt><dd>handle the case when this notifies the bot itself has joined a channel </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000035">Todo:</a></b></dt><dd>print a message for all ERR_ responses (verbosity &gt; 2) </dd></dl>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00549">549</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00297">297</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="irc_8cpp_source.html#l00175">network::irc::Buffer::on_read_line()</a>.</p>
 
@@ -652,9 +660,9 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Locks:</b> buffer(indirect) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00832">832</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00939">939</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00495">connect()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00888">connect()</a>.</p>
 
 </div>
 </div>
@@ -706,7 +714,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a2149c15b60e3de990cf83d1f233b487b">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00490">490</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00883">883</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
 </div>
 </div>
@@ -734,7 +742,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Read members from the given settings. </p>
 <dl class="section note"><dt>Note</dt><dd>doesn't read buffer settings </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000023">Todo:</a></b></dt><dd>if called from somewhere that is not the constructor, lock data </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>if called from somewhere that is not the constructor, lock data </dd></dl>
 
 <p>Definition at line <a class="el" href="irc_8cpp_source.html#l00255">255</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
@@ -759,9 +767,9 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Locks:</b> buffer(indirect) data(indirect) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00543">543</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00933">933</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -815,7 +823,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#ad1f698df7470eeac9a8635b347c13bc7">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00463">463</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00856">856</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
 </div>
 </div>
@@ -881,7 +889,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a010bcc014fcf48dd5f4bc96319a0ebea">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00471">471</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00864">864</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
 </div>
 </div>
@@ -974,9 +982,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a3c28e7224d23cde14743e414f68a00f8">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00485">485</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8cpp_source.html#l00878">878</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00510">disconnect()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00903">disconnect()</a>.</p>
 
 </div>
 </div>
@@ -1030,7 +1038,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00353">353</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00362">362</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="string__functions_8hpp_source.html#l00123">string::simple_wildcard()</a>.</p>
 
@@ -1057,9 +1065,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Nick used by the latest NICK command. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00424">424</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00433">433</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -1083,9 +1091,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Nick used to AUTH. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00428">428</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00437">437</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00840">auth()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00947">auth()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
 
 </div>
 </div>
@@ -1109,9 +1117,31 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Password used to AUTH. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00432">432</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00441">441</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00840">auth()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00947">auth()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abf0f5ace38e1b9f2f86466d7e4a390cc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classuser_1_1AuthSystem.html">user::AuthSystem</a> network::irc::IrcConnection::auth_system</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00461">461</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 </div>
 </div>
@@ -1133,9 +1163,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00380">380</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00389">389</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>, and <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>, and <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>.</p>
 
 </div>
 </div>
@@ -1159,9 +1189,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p><a class="el" href="structnetwork_1_1Command.html" title="A command to send to a connection. ">Command</a> buffer. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00396">396</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00405">405</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, <a class="el" href="irc_8cpp_source.html#l00495">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00510">disconnect()</a>, <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>, <a class="el" href="irc_8cpp_source.html#l00279">start()</a>, <a class="el" href="irc_8cpp_source.html#l00285">stop()</a>, and <a class="el" href="irc_8cpp_source.html#l00250">~IrcConnection()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, <a class="el" href="irc_8cpp_source.html#l00888">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00903">disconnect()</a>, <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>, <a class="el" href="irc_8cpp_source.html#l00279">start()</a>, <a class="el" href="irc_8cpp_source.html#l00285">stop()</a>, and <a class="el" href="irc_8cpp_source.html#l00250">~IrcConnection()</a>.</p>
 
 </div>
 </div>
@@ -1185,9 +1215,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>List of channels to join. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00444">444</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00453">453</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
 
 </div>
 </div>
@@ -1211,9 +1241,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p><a class="el" href="classnetwork_1_1Connection.html" title="Abstract service connection. ">Connection</a> status. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00448">448</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00457">457</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00495">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00510">disconnect()</a>, <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>, <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>, and <a class="el" href="irc_8cpp_source.html#l00485">status()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, <a class="el" href="irc_8cpp_source.html#l00888">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00903">disconnect()</a>, <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>, <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>, and <a class="el" href="irc_8cpp_source.html#l00878">status()</a>.</p>
 
 </div>
 </div>
@@ -1237,9 +1267,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current bot nick. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00412">412</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00421">421</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00840">auth()</a>, <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00947">auth()</a>, <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -1263,9 +1293,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current bot nick (normalized to lowercase) </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00416">416</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00425">425</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00549">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00685">command()</a>, and <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -1288,11 +1318,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="structnetwork_1_1Server.html" title="Identifies a network server. ">Server</a> the bot is connected to. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd></dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000045">Todo:</a></b></dt><dd></dd></dl>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00391">391</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00400">400</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00495">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>, and <a class="el" href="irc_8cpp_source.html#l00291">server()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00888">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>, and <a class="el" href="irc_8cpp_source.html#l00291">server()</a>.</p>
 
 </div>
 </div>
@@ -1316,9 +1346,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Input formatter. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00440">440</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00449">449</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00518">formatter()</a>, <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>, <a class="el" href="irc_8cpp_source.html#l00463">say()</a>, and <a class="el" href="irc_8cpp_source.html#l00471">say_as()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00911">formatter()</a>, <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>, <a class="el" href="irc_8cpp_source.html#l00856">say()</a>, and <a class="el" href="irc_8cpp_source.html#l00864">say_as()</a>.</p>
 
 </div>
 </div>
@@ -1342,9 +1372,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>IRC server to connect to. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00385">385</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00394">394</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00495">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00888">connect()</a>, <a class="el" href="irc_8cpp_source.html#l00244">IrcConnection()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
 
 </div>
 </div>
@@ -1368,9 +1398,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Modes to set after AUTH. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00436">436</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00445">445</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00840">auth()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00947">auth()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
 
 </div>
 </div>
@@ -1392,7 +1422,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00378">378</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00387">387</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 </div>
 </div>
@@ -1416,9 +1446,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Nick that should be used. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00420">420</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00429">429</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00832">login()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00939">login()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
 
 </div>
 </div>
@@ -1443,7 +1473,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Contains the IRC features advertized by the server. </p>
 <p>As seen on 005 (RPL_ISUPPORT) </p><dl class="section see"><dt>See also</dt><dd><a href="http://www.irc.org/tech_docs/005.html">http://www.irc.org/tech_docs/005.html</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00408">408</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00417">417</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 </div>
 </div>
@@ -1467,9 +1497,33 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Network/Bouncer password. </p>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00401">401</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00410">410</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00832">login()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00939">login()</a>, and <a class="el" href="irc_8cpp_source.html#l00255">read_settings()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a18391c1227a0bbab0ac8fec6f8930fbb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classuser_1_1UserManager.html">user::UserManager</a> network::irc::IrcConnection::user_manager</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00460">460</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -1480,7 +1534,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 10:32:58 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

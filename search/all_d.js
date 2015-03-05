@@ -19,5 +19,6 @@ var searchData=
   ['operator_7e',['operator~',['../classstring_1_1FormatFlags.html#a95edc488f4c6db0c097b540ff06d2927',1,'string::FormatFlags']]],
   ['origin',['origin',['../structnetwork_1_1Response.html#adb8a463ca5f65201d12314e23eeb4963',1,'network::Response']]],
   ['overflow',['overflow',['../classMultibuf.html#a0fd5420090cd35dff58d7ca76dafa1ca',1,'Multibuf']]],
-  ['owner',['owner',['../structMultibuf_1_1MultibufItem.html#ab54ffa6ded52e90994140e297bc22c5c',1,'Multibuf::MultibufItem']]]
+  ['owner',['owner',['../structMultibuf_1_1MultibufItem.html#ab54ffa6ded52e90994140e297bc22c5c',1,'Multibuf::MultibufItem']]],
+  ['user',['User',['../structnetwork_1_1irc_1_1UserNick.html#a166ee076d8f72f967b3939ff3aeb5eab',1,'network::irc::UserNick']]]
 ];

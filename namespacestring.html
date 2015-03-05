@@ -187,6 +187,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memTemplParams" colspan="2">template&lt;class Container &gt; </td></tr>
 <tr class="memitem:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a8fba2d530c961c266781ab8eda1c4b6c">simple_wildcard</a> (const Container &amp;input, const std::string &amp;pattern)</td></tr>
 <tr class="separator:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31c16fd95eaa6525d95edf2ec91e7e4d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a31c16fd95eaa6525d95edf2ec91e7e4d">regex_split</a> (const std::string &amp;input, const std::string &amp;pattern, bool skip_empty=true)</td></tr>
+<tr class="separator:a31c16fd95eaa6525d95edf2ec91e7e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69a8802894bb133b762d1034f1326ac2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a69a8802894bb133b762d1034f1326ac2">comma_split</a> (const std::string &amp;input, bool skip_empty=true)</td></tr>
+<tr class="memdesc:a69a8802894bb133b762d1034f1326ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split a string of element separated by commas and spaces.  <a href="#a69a8802894bb133b762d1034f1326ac2">More...</a><br /></td></tr>
+<tr class="separator:a69a8802894bb133b762d1034f1326ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02117147214bdf9da7583893d0dec4c7"><td class="memItemLeft" align="right" valign="top">static <br class="typebreak" />
 <a class="el" href="structstring_1_1Formatter_1_1RegisterDefaultFormatter.html">Formatter::RegisterDefaultFormatter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a02117147214bdf9da7583893d0dec4c7">register_default</a> (new <a class="el" href="classstring_1_1FormatterUtf8.html">FormatterUtf8</a>)</td></tr>
 <tr class="separator:a02117147214bdf9da7583893d0dec4c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,6 +271,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a69a8802894bb133b762d1034f1326ac2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; string::comma_split </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skip_empty</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Split a string of element separated by commas and spaces. </p>
+
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00151">151</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00915">network::irc::IrcConnection::channel_mask()</a>, and <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae653bb28385604968632306b1d54de11"></a>
 <div class="memitem">
 <div class="memproto">
@@ -330,7 +375,7 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00038">38</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8cpp_source.html#l00284">string::FormatterAnsi::format_flags()</a>.</p>
+<p>Referenced by <a class="el" href="string_8cpp_source.html#l00284">string::FormatterAnsi::format_flags()</a>, and <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -360,7 +405,7 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00105">105</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00549">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -398,7 +443,51 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8cpp_source.html#l00087">87</a> of file <a class="el" href="string__functions_8cpp_source.html">string_functions.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00522">network::irc::IrcConnection::channel_mask()</a>.</p>
+<p>Referenced by <a class="el" href="string__functions_8hpp_source.html#l00151">comma_split()</a>, and <a class="el" href="string__functions_8hpp_source.html#l00140">regex_split()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a31c16fd95eaa6525d95edf2ec91e7e4d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; string::regex_split </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>skip_empty</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00140">140</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -617,7 +706,7 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00123">123</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00522">network::irc::IrcConnection::channel_mask()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00915">network::irc::IrcConnection::channel_mask()</a>.</p>
 
 </div>
 </div>
@@ -732,7 +821,7 @@ template&lt;class Container &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 10:32:58 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

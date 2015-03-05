@@ -6,6 +6,7 @@ var searchData=
   ['line',['line',['../structLocatableException.html#a3449b836ca46413f3e67fb488f813619',1,'LocatableException::line()'],['../structJsonParser.html#ac6e325599a463554347559962ab25785',1,'JsonParser::line()']]],
   ['load_5fsettings',['load_settings',['../classLogger.html#afd8ac164f5cc7d2b3c39ba41dfe35c84',1,'Logger']]],
   ['loaded',['loaded',['../structnetwork_1_1ServiceRegistry_1_1Entry.html#acd1d81ff799d862f9c8b1b1427fb2830',1,'network::ServiceRegistry::Entry']]],
+  ['local_5fid',['local_id',['../structuser_1_1User.html#a95e2ef7e4b0ea27ce634f6e046bd61fb',1,'user::User']]],
   ['locatableexception',['LocatableException',['../structLocatableException.html',1,'LocatableException'],['../structLocatableException.html#aa9c0ff6647a5b9a77003b4be893e005f',1,'LocatableException::LocatableException()']]],
   ['location',['location',['../structnetwork_1_1Request.html#abff71891e22624c9997b4d40bea5c6df',1,'network::Request']]],
   ['lock',['LOCK',['../irc_8cpp.html#a2984326c10511da5d26433f94ffec2a6',1,'irc.cpp']]],

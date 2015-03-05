@@ -109,6 +109,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a319cc26ca7df8a3fc0ecef2f723dd1f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1irc_1_1UserNick.html#a319cc26ca7df8a3fc0ecef2f723dd1f9">UserNick</a> (const std::string &amp;prefix)</td></tr>
 <tr class="memdesc:a319cc26ca7df8a3fc0ecef2f723dd1f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse :Nick!User.  <a href="#a319cc26ca7df8a3fc0ecef2f723dd1f9">More...</a><br /></td></tr>
 <tr class="separator:a319cc26ca7df8a3fc0ecef2f723dd1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a166ee076d8f72f967b3939ff3aeb5eab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1irc_1_1UserNick.html#a166ee076d8f72f967b3939ff3aeb5eab">operator user::User</a> () const </td></tr>
+<tr class="separator:a166ee076d8f72f967b3939ff3aeb5eab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -126,8 +128,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>IRC User nick information. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000044">Todo:</a></b></dt><dd>Replace this with a function which returns a <a class="el" href="structuser_1_1User.html" title="A user visible from a connection. ">user::User</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00096">96</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00097">97</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a319cc26ca7df8a3fc0ecef2f723dd1f9"></a>
 <div class="memitem">
@@ -148,7 +151,33 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc_8cpp_source.html#l00037">37</a> of file <a class="el" href="irc_8cpp_source.html">irc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00549">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a166ee076d8f72f967b3939ff3aeb5eab"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">network::irc::UserNick::operator <a class="el" href="structuser_1_1User.html">user::User</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00105">105</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 </div>
 </div>
@@ -163,9 +192,9 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00106">106</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00115">115</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00037">UserNick()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8hpp_source.html#l00105">operator user::User()</a>, and <a class="el" href="irc_8cpp_source.html#l00037">UserNick()</a>.</p>
 
 </div>
 </div>
@@ -179,9 +208,9 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00104">104</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00113">113</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00549">network::irc::IrcConnection::handle_message()</a>, and <a class="el" href="irc_8cpp_source.html#l00037">UserNick()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>, <a class="el" href="irc_8hpp_source.html#l00105">operator user::User()</a>, and <a class="el" href="irc_8cpp_source.html#l00037">UserNick()</a>.</p>
 
 </div>
 </div>
@@ -202,12 +231,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{<span class="stringliteral">&quot;:?([^!@]+)(?:!([^@]+))?(?:@(.*))&quot;</span>,</div>
+<b>Initial value:</b><div class="fragment"><div class="line">{<span class="stringliteral">&quot;:?([^!@ ]+)(?:!([^@ ]+))?(?:@(\\S+))?&quot;</span>,</div>
 <div class="line">        std::regex_constants::syntax_option_type::optimize |</div>
 <div class="line">        std::regex_constants::syntax_option_type::ECMAScript }</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>the real regex would be stricter </dd></dl>
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00108">108</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00117">117</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="irc_8cpp_source.html#l00037">UserNick()</a>.</p>
 
@@ -223,7 +252,7 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00105">105</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc_8hpp_source.html#l00114">114</a> of file <a class="el" href="irc_8hpp_source.html">irc.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="irc_8cpp_source.html#l00037">UserNick()</a>.</p>
 
@@ -236,7 +265,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 10:32:58 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

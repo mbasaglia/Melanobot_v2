@@ -1,11 +1,13 @@
 <map id="network::irc::IrcConnection" name="network::irc::IrcConnection">
-<area shape="rect" id="node7" href="$classnetwork_1_1irc_1_1Buffer.html" title="IRC buffer. " alt="" coords="1137,106,1271,133"/>
+<area shape="rect" id="node8" href="$classnetwork_1_1irc_1_1Buffer.html" title="IRC buffer. " alt="" coords="1137,157,1271,183"/>
 <area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="558,101,701,127"/>
-<area shape="rect" id="node3" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="570,151,689,178"/>
-<area shape="rect" id="node4" href="$classMelanobot.html" title="Main bot class. " alt="" coords="588,202,671,229"/>
-<area shape="rect" id="node5" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="225,195,408,236"/>
-<area shape="rect" id="node6" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,187,176,243"/>
-<area shape="rect" id="node8" href="$classConcurrentPriorityQueue.html" title="ConcurrentPriorityQueue\l\&lt; network::Command \&gt;" alt="" coords="880,29,1045,71"/>
-<area shape="rect" id="node9" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::priority_queue\l\&lt; network::Command, Container,\l Compare \&gt; \&gt;" alt="" coords="521,5,737,76"/>
-<area shape="rect" id="node10" href="$structnetwork_1_1Server.html" title="Identifies a network server. " alt="" coords="572,257,687,283"/>
+<area shape="rect" id="node3" href="$classuser_1_1UserManager.html" title="user::UserManager" alt="" coords="563,151,696,178"/>
+<area shape="rect" id="node4" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="570,202,689,229"/>
+<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="588,253,671,279"/>
+<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="225,245,408,287"/>
+<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,238,176,294"/>
+<area shape="rect" id="node9" href="$classConcurrentPriorityQueue.html" title="ConcurrentPriorityQueue\l\&lt; network::Command \&gt;" alt="" coords="880,41,1045,83"/>
+<area shape="rect" id="node10" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::priority_queue\l\&lt; network::Command, Container,\l Compare \&gt; \&gt;" alt="" coords="521,5,737,76"/>
+<area shape="rect" id="node11" href="$classuser_1_1AuthSystem.html" title="User authorization system. " alt="" coords="566,303,693,330"/>
+<area shape="rect" id="node12" href="$structnetwork_1_1Server.html" title="Identifies a network server. " alt="" coords="572,358,687,385"/>
 </map>
