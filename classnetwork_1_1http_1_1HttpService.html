@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">MelanoBot
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">.</span>
    </div>
   </td>
  </tr>
@@ -91,6 +91,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classnetwork_1_1http_1_1HttpService-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">network::http::HttpService Class Reference</div>  </div>
@@ -131,6 +132,13 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aed7a1bcea52235ef4ad9f5b222be12fe"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classnetwork_1_1http_1_1HttpService.html">HttpService</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1http_1_1HttpService.html#aed7a1bcea52235ef4ad9f5b222be12fe">instance</a> ()</td></tr>
 <tr class="separator:aed7a1bcea52235ef4ad9f5b222be12fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a040b510548e156be08d04e6b085e4fad"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1http_1_1HttpService.html#a040b510548e156be08d04e6b085e4fad">user_agent</a></td></tr>
+<tr class="separator:a040b510548e156be08d04e6b085e4fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb563dce230d93b72bb33035a893589"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1http_1_1HttpService.html#a4eb563dce230d93b72bb33035a893589">max_redirs</a> = 3</td></tr>
+<tr class="separator:a4eb563dce230d93b72bb33035a893589"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -207,7 +215,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1AsyncService.html#a9f6103057f03380bf7bc8c6520df514f">network::AsyncService</a>.</p>
 
-<p>Definition at line <a class="el" href="http_8cpp_source.html#l00097">97</a> of file <a class="el" href="http_8cpp_source.html">http.cpp</a>.</p>
+<p>Definition at line <a class="el" href="http_8cpp_source.html#l00098">98</a> of file <a class="el" href="http_8cpp_source.html">http.cpp</a>.</p>
 
 </div>
 </div>
@@ -267,6 +275,55 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a4eb563dce230d93b72bb33035a893589"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int network::http::HttpService::max_redirs = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="http_8hpp_source.html#l00077">77</a> of file <a class="el" href="http_8hpp_source.html">http.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="http_8cpp_source.html#l00098">initialize()</a>, and <a class="el" href="http_8cpp_source.html#l00108">query()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a040b510548e156be08d04e6b085e4fad"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string network::http::HttpService::user_agent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="http_8hpp_source.html#l00076">76</a> of file <a class="el" href="http_8hpp_source.html">http.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="http_8cpp_source.html#l00098">initialize()</a>, and <a class="el" href="http_8cpp_source.html#l00108">query()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/network/<a class="el" href="http_8hpp_source.html">http.hpp</a></li>
 <li>src/network/<a class="el" href="http_8cpp_source.html">http.cpp</a></li>
@@ -274,7 +331,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 09:14:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 5 2015 10:17:22 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
