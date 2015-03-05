@@ -35,14 +35,14 @@ include_directories("${CMAKE_SOURCE_DIR}/src")
 # Check C++14
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag(--std=c++14 STD_CXX11)
-    if(STD_CXX11)
+    check_cxx_compiler_flag(--std=c++14 STD_CXX14)
+    if(STD_CXX14)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++14")
     else()
         message(SEND_ERROR "Requires C++14 or better")
     endif()
 else()
-    message(WARNING "Unrecognized compile, make sure it supports C++14")
+    message(WARNING "Unrecognized compiler: ${CMAKE_CXX_COMPILER_ID}, make sure it supports C++14")
 endif()
 
 # Enable Debug by default, can be changed with -D CMAKE_BUILD_TYPE=Release

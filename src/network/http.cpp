@@ -28,6 +28,7 @@
 #include <curlpp/Exception.hpp>
 
 #include "../string/logger.hpp"
+#include "config.hpp"
 
 
 REGISTER_LOG_TYPE(web,color::dark_blue);
@@ -97,13 +98,12 @@ Request post(const std::string& url, const Parameters& params)
 void HttpService::initialize(const Settings& settings)
 {
     /// \todo
+    if ( user_agent.empty() )
+        user_agent = PROJECT_NAME "/" PROJECT_VERSION " (" PROJECT_WEBSITE ") "
+                     "cURLpp/" LIBCURLPP_VERSION ;
+    user_agent = settings.get("user_agent", user_agent );
+    max_redirs = settings.get("user_agent",max_redirs);
 }
-
-/*void HttpService::async_query (const Request& request, const AsyncCallback& callback)
-{
-    /// \todo async
-    callback(query(request));
-}*/
 
 Response HttpService::query (const Request& request)
 {
@@ -112,9 +112,12 @@ Response HttpService::query (const Request& request)
         std::string url = request.location;
 
         /// \todo read these from settings
-        netrequest.setOpt(curlpp::options::UserAgent("TODO"));
-        netrequest.setOpt(curlpp::options::MaxRedirs(3));
-        netrequest.setOpt(curlpp::options::FollowLocation(true));
+        netrequest.setOpt(curlpp::options::UserAgent(user_agent));
+        if ( max_redirs )
+        {
+            netrequest.setOpt(curlpp::options::MaxRedirs(max_redirs));
+            netrequest.setOpt(curlpp::options::FollowLocation(true));
+        }
 
         if ( request.command == "GET" )
         {

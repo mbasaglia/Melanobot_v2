@@ -14,11 +14,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 2.6)
-project(MelanoBot)
+project(MelanoBot CXX)
 
+set(PROJECT_VERSION 2.0)
 string(TOLOWER MelanoBot EXECUTABLE_NAME)
-set(VERSION_MAJOR 2)
-set(VERSION_MINOR 0)
 set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
 

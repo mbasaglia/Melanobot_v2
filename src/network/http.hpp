@@ -71,6 +71,10 @@ public:
         static HttpService singleton;
         return singleton;
     }
+
+private:
+    std::string user_agent;
+    int         max_redirs = 3;
 };
 
 } // namespace network::http
