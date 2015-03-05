@@ -1,0 +1,6 @@
+<map id="handler::SearchImageGoogle" name="handler::SearchImageGoogle">
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="31,229,171,256"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="21,155,180,181"/>
+<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="26,80,175,107"/>
+<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="42,5,159,32"/>
+</map>

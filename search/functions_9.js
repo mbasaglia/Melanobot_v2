@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['json_5ffailure',['json_failure',['../classhandler_1_1SimpleJson.html#a7bb095c185450fcdc41242596f74d1e2',1,'handler::SimpleJson']]],
+  ['json_5fsuccess',['json_success',['../classhandler_1_1SearchVideoYoutube.html#a032f44578021e12d01d3b591a8fbe89c',1,'handler::SearchVideoYoutube::json_success()'],['../classhandler_1_1SearchImageGoogle.html#a467b70fc114091ebb255cedcc505bdfe',1,'handler::SearchImageGoogle::json_success()'],['../classhandler_1_1UrbanDictionary.html#a878c0fb6151b2ae75a1e451962a854b2',1,'handler::UrbanDictionary::json_success()'],['../classhandler_1_1SearchWebSearx.html#ad8bd17157d04fe9deb782504f128dd78',1,'handler::SearchWebSearx::json_success()'],['../classhandler_1_1SimpleJson.html#a07e30f6431c33ecae1cccc3fcc6a6477',1,'handler::SimpleJson::json_success()']]]
+];

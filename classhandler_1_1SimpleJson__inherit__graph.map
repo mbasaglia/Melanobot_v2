@@ -1,0 +1,9 @@
+<map id="handler::SimpleJson" name="handler::SimpleJson">
+<area shape="rect" id="node5" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="765,5,955,32"/>
+<area shape="rect" id="node6" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="763,56,957,83"/>
+<area shape="rect" id="node7" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="773,107,947,133"/>
+<area shape="rect" id="node8" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="777,157,943,184"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="368,81,527,108"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="171,81,320,108"/>
+<area shape="rect" id="node4" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="5,81,123,108"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,5,176,61"/>
+<area shape="rect" id="node2" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="224,13,407,54"/>
+</map>

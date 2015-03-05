@@ -1,0 +1,5 @@
+<map id="network::ThreadedAsyncService" name="network::ThreadedAsyncService">
+<area shape="rect" id="node2" href="$classnetwork_1_1AsyncService.html" title="Base class for external services that might take some time to execute. " alt="" coords="233,5,390,32"/>
+<area shape="rect" id="node3" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::ThreadedAsyncService\l::Item \&gt;" alt="" coords="220,56,403,112"/>
+<area shape="rect" id="node4" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::ThreadedAsyncService\l::Item, Container \&gt; \&gt;" alt="" coords="5,49,171,119"/>
+</map>

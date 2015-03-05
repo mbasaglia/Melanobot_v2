@@ -1,0 +1,8 @@
+<map id="handler::License" name="handler::License">
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="143,304,292,331"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="5,215,123,241"/>
+<area shape="rect" id="node4" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="146,215,289,241"/>
+<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="312,215,395,241"/>
+<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="262,111,445,152"/>
+<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="268,5,439,61"/>
+</map>

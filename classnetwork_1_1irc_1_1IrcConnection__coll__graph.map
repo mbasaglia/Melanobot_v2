@@ -1,0 +1,11 @@
+<map id="network::irc::IrcConnection" name="network::irc::IrcConnection">
+<area shape="rect" id="node7" href="$classnetwork_1_1irc_1_1Buffer.html" title="IRC buffer. " alt="" coords="1137,106,1271,133"/>
+<area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="558,101,701,127"/>
+<area shape="rect" id="node3" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="570,151,689,178"/>
+<area shape="rect" id="node4" href="$classMelanobot.html" title="Main bot class. " alt="" coords="588,202,671,229"/>
+<area shape="rect" id="node5" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="225,195,408,236"/>
+<area shape="rect" id="node6" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,187,176,243"/>
+<area shape="rect" id="node8" href="$classConcurrentPriorityQueue.html" title="ConcurrentPriorityQueue\l\&lt; network::Command \&gt;" alt="" coords="880,29,1045,71"/>
+<area shape="rect" id="node9" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::priority_queue\l\&lt; network::Command, Container,\l Compare \&gt; \&gt;" alt="" coords="521,5,737,76"/>
+<area shape="rect" id="node10" href="$structnetwork_1_1Server.html" title="Identifies a network server. " alt="" coords="572,257,687,283"/>
+</map>

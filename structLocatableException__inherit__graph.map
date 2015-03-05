@@ -1,0 +1,4 @@
+<map id="LocatableException" name="LocatableException">
+<area shape="rect" id="node3" href="$structCriticalException.html" title="Critical error exception. " alt="" coords="5,155,127,181"/>
+<area shape="rect" id="node4" href="$structJsonError.html" title="Error encountered when parsing JSON. " alt="" coords="151,155,229,181"/>
+</map>

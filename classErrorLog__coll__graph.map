@@ -1,0 +1,6 @@
+<map id="ErrorLog" name="ErrorLog">
+<area shape="rect" id="node2" href="$classLog.html" title="Simple log stream&#45;like interface. " alt="" coords="141,184,184,211"/>
+<area shape="rect" id="node3" href="$classstring_1_1FormattedStream.html" title="Simple way to create FormattedString objects. " alt="" coords="81,95,244,121"/>
+<area shape="rect" id="node4" href="$classstring_1_1FormattedString.html" title="A formatted string. " alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node5" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="183,5,302,32"/>
+</map>

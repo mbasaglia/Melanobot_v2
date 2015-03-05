@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$structLocatableException.html" title="Exception that can be traced to a line in a file. " alt="" coords="136,31,272,57"/>
+<area shape="rect" id="node3" href="$structCriticalException.html" title="Critical error exception. " alt="" coords="320,5,441,32"/>
+<area shape="rect" id="node4" href="$structJsonError.html" title="Error encountered when parsing JSON. " alt="" coords="341,56,420,83"/>
+</map>
