@@ -25,6 +25,9 @@
 
 namespace user {
 
+/**
+ * \brief A class to keep track of users
+ */
 class UserManager
 {
 public:
