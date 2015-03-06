@@ -130,6 +130,8 @@ Server IrcConnection::server() const
 
 void IrcConnection::handle_message(Message msg)
 {
+    if ( msg.command.empty() ) return;
+
     if ( msg.command == "001" )
     {
         // RPL_WELCOME: prefix 001 target :message
@@ -173,7 +175,7 @@ void IrcConnection::handle_message(Message msg)
                     found = user_manager.add_user(new_user);
                     Log("irc",'!',2) << "Added user " << color::dark_green << user;
                 }
-                found->add_channel(channel);
+                found->add_channel(strtolower(channel));
                 Log("irc",'!',3) << "User " << color::dark_cyan << user
                     << color::dark_green << " joined " << color::nocolor << channel;
             }
@@ -222,7 +224,6 @@ void IrcConnection::handle_message(Message msg)
         std::string message = msg.params[1];
 
         user::User userfrom = parse_prefix(msg.from);
-        msg.from = userfrom.local_id;
         msg.message = message;
 
         mutex.lock();
@@ -235,10 +236,6 @@ void IrcConnection::handle_message(Message msg)
             {
                 msg.channels = { msg.params[0] };
             }
-
-        user::User *user = user_manager.user(userfrom.local_id);
-        if ( user )
-            user->host = userfrom.host;
         mutex.unlock();
 
         // Handle CTCP
@@ -312,13 +309,12 @@ void IrcConnection::handle_message(Message msg)
                     found->host = user.host;
 
                     for ( const auto& c : user.channels )
-                        found->add_channel(c);
+                        found->add_channel(strtolower(c));
                 }
             mutex.unlock();
             Log("irc",'!',3) << "User " << color::dark_cyan << user.name
                 << color::dark_green << " joined " << color::nocolor
                 << string::implode(", ",user.channels);
-            msg.from = user.name;
             msg.channels = user.channels;
         }
     }
@@ -346,14 +342,12 @@ void IrcConnection::handle_message(Message msg)
                     }
                 }
             mutex.unlock();
-            msg.from = user.local_id;
             msg.channels = user.channels;
         }
     }
     else if ( msg.command == "QUIT" )
     {
         user::User user = parse_prefix(msg.from);
-        msg.from = user.local_id;
         mutex.lock();
             user::User *found = user_manager.user(user.local_id);
             if ( found )
@@ -378,7 +372,6 @@ void IrcConnection::handle_message(Message msg)
         if ( msg.params.size() == 1 )
         {
             user::User user = parse_prefix(msg.from);
-            msg.from = user.local_id;
             mutex.lock();
                 user::User *found = user_manager.user(user.local_id);
                 if ( found )
@@ -556,11 +549,25 @@ void IrcConnection::handle_message(Message msg)
      * 502
      */
 
+    if ( !std::isdigit(msg.command[0]) )
+    {
+        user::User userfrom = parse_prefix(msg.from);
+        LOCK(mutex);
+        user::User *user = user_manager.user(userfrom.local_id);
+        if ( user )
+        {
+            user->host = userfrom.host;
+            msg.from = userfrom.local_id;
+        }
+    }
+
     bot->message(msg);
 }
 
 void IrcConnection::command ( const Command& c )
 {
+    if ( c.command.empty() ) return;
+
     Command cmd = c;
     std::string command = strtoupper(cmd.command);
 
@@ -649,7 +656,7 @@ void IrcConnection::command ( const Command& c )
             cmd.parameters[0] = current_nick;
         }
         else if ( cmd.parameters.size() != 2 ||
-            strtolower(cmd.parameters[0]) == current_nick_lowecase )
+            strtolower(cmd.parameters[0]) != current_nick_lowecase )
         {
             ErrorLog("irc") << "Ill-formed MODE";
             return;
@@ -659,18 +666,52 @@ void IrcConnection::command ( const Command& c )
     }
     else if ( command == "JOIN" )
     {
+        /**
+         * \note incoming JOIN is treated differently from how the
+         * IRC specification says: each parameter is handled like
+         * a separate channel
+         */
+
         if ( cmd.parameters.size() < 1 )
         {
             ErrorLog("irc") << "Ill-formed JOIN";
             return;
         }
+
+        LOCK(mutex);
+
+        std::vector<std::string> channels;
+
+        user::User* self_user = user_manager.user(current_nick);
+        if ( self_user )
+        {
+            std::sort(self_user->channels.begin(), self_user->channels.end());
+            std::sort(cmd.parameters.begin(), cmd.parameters.end());
+            std::transform(cmd.parameters.begin(), cmd.parameters.end(),
+                           cmd.parameters.begin(), strtolower);
+
+            std::set_difference(self_user->channels.begin(), self_user->channels.end(),
+                                cmd.parameters.begin(), cmd.parameters.end(),
+                                std::inserter(channels, channels.begin()));
+        }
+        else
+        {
+            channels = cmd.parameters;
+        }
+
+        if ( channels.empty() )
+            return;
+
+        cmd.parameters = { string::implode(",",cmd.parameters) };
+
         if ( connection_status <= CONNECTING )
         {
-            channels_to_join.push_back(cmd.parameters[0]);
+            channels_to_join.insert(channels_to_join.end(),
+                                    cmd.parameters.begin(),
+                                    cmd.parameters.end());
             return;
         }
-        /// \todo Discard already joined channels,
-        /// keep track of too many channels,
+        /// \todo keep track of too many channels,
         /// check that channel names are ok
         /// http://tools.ietf.org/html/rfc2812#section-3.2.1
     }
@@ -681,8 +722,17 @@ void IrcConnection::command ( const Command& c )
             ErrorLog("irc") << "Ill-formed PART";
             return;
         }
-        /// \todo Discard unexisting channels
-        /// http://tools.ietf.org/html/rfc2812#section-3.2.2
+
+        LOCK(mutex);
+        user::User* self_user = user_manager.user(current_nick);
+        if ( self_user )
+        {
+            auto it = std::find(self_user->channels.begin(),
+                                self_user->channels.end(),
+                                strtolower(cmd.parameters[0]));
+            if ( it == self_user->channels.end() )
+                return;
+        }
     }
     else if ( command == "RECONNECT" )
     {
@@ -798,15 +848,26 @@ string::Formatter* IrcConnection::formatter() const
 bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
                                  const std::string& mask) const
 {
-    std::vector<std::string> masks = std::move(string::comma_split(mask));
+    std::vector<std::string> masks = std::move(string::comma_split(strtolower(mask)));
     for ( const auto& m : masks )
     {
         bool match = false;
         if ( m == "!" )
+        {
+            // find channels not starting with #
             match = std::any_of(channels.begin(),channels.end(),
                 [](const std::string& ch){ return !ch.empty() && ch[0]!='#'; });
+        }
         else
-            match = string::simple_wildcard(channels,m);
+        {
+            for ( const auto& chan : channels )
+                if ( string::simple_wildcard(strtolower(chan),m) )
+                {
+                    match = true;
+                    break;
+                }
+        }
+
         if ( match )
             return true;
     }
@@ -854,7 +915,7 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
         user.host = match[2].str();
     }
 
-    return user;
+    return std::move(user);
 }
 
 bool IrcConnection::user_auth(const std::string& local_id,

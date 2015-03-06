@@ -79,7 +79,6 @@ private:
 };
 REGISTER_HANDLER(AdminQuit,Quit);
 
-
 /**
  * \brief Changes the bot nick (IRC)
  */
@@ -102,5 +101,82 @@ protected:
     }
 };
 REGISTER_HANDLER(AdminNick,Nick);
+
+/**
+ * \brief Makes the bot join channels (IRC)
+ */
+class AdminJoin: public SimpleAction
+{
+public:
+    AdminJoin(const Settings& settings, Melanobot* bot)
+        : SimpleAction("join",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::vector<std::string> channels;
+        if ( !msg.message.empty() )
+            channels = string::comma_split(msg.message);
+        else if ( !msg.channels.empty() )
+            channels = msg.channels;
+        else
+            return false;
+        msg.source->command({"JOIN",channels});
+        return true;
+    }
+};
+REGISTER_HANDLER(AdminJoin,Join);
+
+/**
+ * \brief Makes the bot part channels (IRC)
+ */
+class AdminPart: public SimpleAction
+{
+public:
+    AdminPart(const Settings& settings, Melanobot* bot)
+        : SimpleAction("part",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string channel;
+        if ( !msg.message.empty() )
+            channel = msg.message; /// \todo gather part message
+        else if ( msg.channels.size() == 1 )
+            channel = msg.channels[0];
+        else
+            return false;
+        msg.source->command({"PART",{channel}});
+        return true;
+    }
+};
+REGISTER_HANDLER(AdminPart,Part);
+
+
+/**
+ * \brief Makes the bot join channels (IRC)
+ * \note Use this inside a group
+ */
+class AcceptInvite: public Handler
+{
+public:
+    AcceptInvite(const Settings& settings, Melanobot* bot)
+        : Handler(settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        if ( msg.command == "INVITE" && msg.params.size() == 2 )
+        {
+            msg.source->command({"JOIN",{msg.params[1]}});
+            return true;
+        }
+        return false;
+    }
+};
+REGISTER_HANDLER(AcceptInvite,Accept_Invite);
 
 } // namespace handler

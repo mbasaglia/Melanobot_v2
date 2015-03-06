@@ -30,7 +30,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
 
     Settings default_settings;
     for ( const auto& p : settings )
-        if ( !p.second.data().empty() && p.first != "trigger" )
+        if ( !p.second.data().empty() && p.first != "trigger" && p.first != "auth" )
             default_settings.put(p.first,p.second.data());
 
     Settings child_settings = settings;

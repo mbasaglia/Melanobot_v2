@@ -43,9 +43,11 @@ namespace handler {
 class Handler
 {
 public:
-    Handler( const Settings& settings )
+    Handler( const Settings& settings, Melanobot* bot ) : bot ( bot )
     {
         auth = settings.get("auth",auth);
+        if ( !bot )
+            throw ConfigurationError();
     }
 
     virtual ~Handler() {}
@@ -101,7 +103,14 @@ protected:
     /**
      * \brief Send a reply to a message
      */
-    virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const = 0;
+    virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const
+    {
+        if ( msg.source )
+        {
+            std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
+            msg.source->say(chan,text);
+        }
+    }
 
     void reply_to(const network::Message& msg, const std::string& text) const
     {
@@ -112,6 +121,7 @@ protected:
      * \brief Authorization group required for a user message to be handled
      */
     std::string auth;
+    Melanobot*  bot = nullptr;
 };
 
 /**
@@ -132,8 +142,7 @@ public:
 
     bool can_handle(const network::Message& msg) override
     {
-        return msg.source == source && source &&
-            authorized(msg) && !msg.message.empty() &&
+        return msg.source == source && source && authorized(msg) &&
             ( msg.direct || !direct ) && msg.channels.size() < 2 &&
             string::starts_with(msg.message,trigger);
     }
@@ -159,7 +168,6 @@ protected:
         source->say(chan,text);
     }
 
-    Melanobot*           bot;
     network::Connection* source = nullptr; ///< Connection which created the message
     std::string          trigger;          ///< String identifying the action
     bool                 direct = true;    ///< Whether the message needs to be direct
@@ -179,14 +187,13 @@ private:
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
                  Melanobot* bot, bool allow_notrigger)
-        : Handler(settings)
+        : Handler(settings,bot)
     {
         trigger   = settings.get("trigger",default_trigger);
         priority  = settings.get("priority",priority);
         direct    = settings.get("direct",direct);
         source    = bot->connection(settings.get("source",""));
-        this->bot = bot;
-        if ( !bot || (!allow_notrigger && trigger.empty()) )
+        if ( !allow_notrigger && trigger.empty() )
             throw ConfigurationError();
     }
 };
