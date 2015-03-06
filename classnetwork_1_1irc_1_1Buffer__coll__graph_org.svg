@@ -79,7 +79,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="classuser_1_1UserManager.html" target="_top" xlink:title="user::UserManager">
+<g id="a_node6"><a xlink:href="classuser_1_1UserManager.html" target="_top" xlink:title="A class to keep track of users. ">
 <polygon fill="none" stroke="black" points="424.5,-223 424.5,-242 524.5,-242 524.5,-223 424.5,-223"/>
 <text text-anchor="middle" x="474.5" y="-230" font-family="Helvetica,sans-Serif" font-size="10.00">user::UserManager</text>
 </a>

@@ -3,7 +3,7 @@
 <area shape="rect" id="node2" href="$classConcurrentPriorityQueue.html" title="ConcurrentPriorityQueue\l\&lt; network::Command \&gt;" alt="" coords="279,323,445,365"/>
 <area shape="rect" id="node3" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::priority_queue\l\&lt; network::Command, Container,\l Compare \&gt; \&gt;" alt="" coords="5,309,221,379"/>
 <area shape="rect" id="node5" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="567,5,709,32"/>
-<area shape="rect" id="node6" href="$classuser_1_1UserManager.html" title="user::UserManager" alt="" coords="571,56,705,83"/>
+<area shape="rect" id="node6" href="$classuser_1_1UserManager.html" title="A class to keep track of users. " alt="" coords="571,56,705,83"/>
 <area shape="rect" id="node7" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="579,107,697,133"/>
 <area shape="rect" id="node8" href="$classMelanobot.html" title="Main bot class. " alt="" coords="597,157,679,184"/>
 <area shape="rect" id="node9" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="271,150,453,191"/>
