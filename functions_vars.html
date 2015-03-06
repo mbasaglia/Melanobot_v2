@@ -136,6 +136,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>attempted_nick
 : <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ab5e799bca753e7f610920db5729190c4">network::irc::IrcConnection</a>
 </li>
+<li>auth
+: <a class="el" href="classhandler_1_1Handler.html#a106f3e972beb61dfe66eb5d8c148873f">handler::Handler</a>
+</li>
 <li>auth_nick
 : <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4d8e4ce1f3ea376591acfe20db60591c">network::irc::IrcConnection</a>
 </li>
@@ -153,7 +156,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classcolor_1_1Color12.html#ab7f6df715335a00a6f641f70f3eb425f">color::Color12</a>
 </li>
 <li>bot
-: <a class="el" href="classhandler_1_1SimpleAction.html#ac7298ddbb4fb33989889154a1827063b">handler::SimpleAction</a>
+: <a class="el" href="classhandler_1_1Handler.html#a0b1dd2d445ba3e9dee3e05f2beeae26b">handler::Handler</a>
 , <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a3a948b9471a637a0a9fcf50b347f8ac1">network::irc::IrcConnection</a>
 </li>
 <li>buffer
@@ -341,8 +344,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classMelanobot.html#a728c27c48bbb6f029204653354b23bf9">Melanobot</a>
 </li>
 <li>host
-: <a class="el" href="structnetwork_1_1irc_1_1UserNick.html#a0396fa41d4a0868058be061090ffb7ca">network::irc::UserNick</a>
-, <a class="el" href="structnetwork_1_1Server.html#a0be60b9fd1df98865afd8fa1e16c680a">network::Server</a>
+: <a class="el" href="structnetwork_1_1Server.html#a0be60b9fd1df98865afd8fa1e16c680a">network::Server</a>
 , <a class="el" href="structuser_1_1User.html#a5c3c87a3b77076a7f33d4a838d00a947">user::User</a>
 </li>
 </ul>
@@ -407,7 +409,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classnetwork_1_1http_1_1HttpService.html#a4eb563dce230d93b72bb33035a893589">network::http::HttpService</a>
 </li>
 <li>message
-: <a class="el" href="structnetwork_1_1Message.html#afebf3524b498060675a8954236561efc">network::Message</a>
+: <a class="el" href="classhandler_1_1AdminQuit.html#adaaf600e857dbbc989c463efda40da23">handler::AdminQuit</a>
+, <a class="el" href="structnetwork_1_1Message.html#afebf3524b498060675a8954236561efc">network::Message</a>
 </li>
 <li>messages
 : <a class="el" href="classMelanobot.html#a98b3ea20bb87f7e58cdc7b3c4f6e13c9">Melanobot</a>
@@ -427,9 +430,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>name
 : <a class="el" href="structJsonParser_1_1Context.html#a64749350df396a87ddc4f8e16e820c6b">JsonParser::Context</a>
 , <a class="el" href="structuser_1_1User.html#a067b11f50b3f12e9a0dfe656a8531189">user::User</a>
-</li>
-<li>nick
-: <a class="el" href="structnetwork_1_1irc_1_1UserNick.html#a4c0b60208a07a2d3582f4ffb77bb33a6">network::irc::UserNick</a>
 </li>
 <li>not_found_reply
 : <a class="el" href="classhandler_1_1SearchVideoYoutube.html#a71acbbc3ae53eb9afebbe9aaf2d5cfc3">handler::SearchVideoYoutube</a>
@@ -464,15 +464,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>preferred_nick
 : <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a824a9a71ef4e2b28eae2d1d01a68c692">network::irc::IrcConnection</a>
 </li>
-<li>prefix_regex
-: <a class="el" href="structnetwork_1_1irc_1_1UserNick.html#ab89185de63c3504fb569209c09e78fe1">network::irc::UserNick</a>
-</li>
 <li>priority
 : <a class="el" href="classhandler_1_1SimpleAction.html#aa8ffaf01e88def8898e2c4a151a13e50">handler::SimpleAction</a>
 , <a class="el" href="structnetwork_1_1Command.html#a84f66014fba36c2ac21068629bcd26f2">network::Command</a>
 </li>
 <li>properties
-: <a class="el" href="structuser_1_1User.html#a73229488b4cbbc7072bfffbce25fff35">user::User</a>
+: <a class="el" href="structuser_1_1User.html#a6a73ccfc9a84ca46f1326b0e0dfbe639">user::User</a>
 </li>
 <li>ptree
 : <a class="el" href="structJsonParser.html#ac48b40b42a29e8f075884e94a67f6090">JsonParser</a>
@@ -514,7 +511,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classstring_1_1AsciiSubstring.html#aab05e7b3c77f315b9f75c803ab0a7658">string::AsciiSubstring</a>
 </li>
 <li>server_features
-: <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1bb8474d60af42a1973cd9f72188b8af">network::irc::IrcConnection</a>
+: <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aea7b47728d2ea500c532df7a093d3668">network::irc::IrcConnection</a>
 </li>
 <li>server_password
 : <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a9bce8f25a20d943aeb7d5f6319f26c53">network::irc::IrcConnection</a>
@@ -577,9 +574,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>unicode
 : <a class="el" href="classstring_1_1Utf8Parser.html#a2ffdd8074b2ad6e6754ceb159d324a32">string::Utf8Parser</a>
 </li>
-<li>user
-: <a class="el" href="structnetwork_1_1irc_1_1UserNick.html#a220750ac2c209cf39ecfe752fe1b0e8f">network::irc::UserNick</a>
-</li>
 <li>user_agent
 : <a class="el" href="classnetwork_1_1http_1_1HttpService.html#a040b510548e156be08d04e6b085e4fad">network::http::HttpService</a>
 </li>
@@ -617,7 +611,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:53 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:40 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -1,0 +1,13 @@
+<map id="src/network/irc_buffer.hpp" name="src/network/irc_buffer.hpp">
+<area shape="rect" id="node5" href="$connection_8hpp.html" title="connection.hpp" alt="" coords="655,80,766,107"/>
+<area shape="rect" id="node20" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="655,229,774,256"/>
+<area shape="rect" id="node33" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1243,80,1411,107"/>
+<area shape="rect" id="node10" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="447,311,561,338"/>
+<area shape="rect" id="node28" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="749,155,899,181"/>
+<area shape="rect" id="node31" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="923,155,1082,181"/>
+<area shape="rect" id="node17" href="$color_8hpp.html" title="color.hpp" alt="" coords="449,393,524,420"/>
+<area shape="rect" id="node24" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="993,311,1087,338"/>
+<area shape="rect" id="node26" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1175,393,1268,420"/>
+<area shape="rect" id="node29" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1013,229,1123,256"/>
+<area shape="rect" id="node30" href="$user_8hpp.html" title="user.hpp" alt="" coords="1364,311,1436,338"/>
+</map>

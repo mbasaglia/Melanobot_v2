@@ -92,6 +92,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classhandler_1_1Handler-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">handler::Handler Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -105,36 +106,56 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for handler::Handler:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classhandler_1_1Handler__inherit__graph.svg" width="100%" height="461"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classhandler_1_1Handler__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for handler::Handler:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1Handler__coll__graph.svg" width="194" height="336"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ae0fffddf35a0e5b33ecaa56f501c1f86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ae0fffddf35a0e5b33ecaa56f501c1f86">Handler</a> (const <a class="el" href="classSettings.html">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html">Melanobot</a> *<a class="el" href="classhandler_1_1Handler.html#a0b1dd2d445ba3e9dee3e05f2beeae26b">bot</a>)</td></tr>
+<tr class="separator:ae0fffddf35a0e5b33ecaa56f501c1f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab570c2d7db0eee3b4cd62630902f0de4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ab570c2d7db0eee3b4cd62630902f0de4">~Handler</a> ()</td></tr>
 <tr class="separator:ab570c2d7db0eee3b4cd62630902f0de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a105124a15fba64cbfae4aebe9581f243"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a105124a15fba64cbfae4aebe9581f243">handle</a> (<a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg)</td></tr>
 <tr class="memdesc:a105124a15fba64cbfae4aebe9581f243"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to handle the message.  <a href="#a105124a15fba64cbfae4aebe9581f243">More...</a><br /></td></tr>
 <tr class="separator:a105124a15fba64cbfae4aebe9581f243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af21263e6bfb831b1e1158f06d67701c3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#af21263e6bfb831b1e1158f06d67701c3">can_handle</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg)=0</td></tr>
-<tr class="memdesc:af21263e6bfb831b1e1158f06d67701c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a message can be handled.  <a href="#af21263e6bfb831b1e1158f06d67701c3">More...</a><br /></td></tr>
-<tr class="separator:af21263e6bfb831b1e1158f06d67701c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a5eabdf8686e1d61b65ffbe20cc39e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a10a5eabdf8686e1d61b65ffbe20cc39e">can_handle</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg)</td></tr>
+<tr class="memdesc:a10a5eabdf8686e1d61b65ffbe20cc39e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a message can be handled.  <a href="#a10a5eabdf8686e1d61b65ffbe20cc39e">More...</a><br /></td></tr>
+<tr class="separator:a10a5eabdf8686e1d61b65ffbe20cc39e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c6b00c624bfba80346fb2d4257c8042"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a2c6b00c624bfba80346fb2d4257c8042">initialize</a> ()</td></tr>
 <tr class="memdesc:a2c6b00c624bfba80346fb2d4257c8042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at startup in case it needs to perform some initialization.  <a href="#a2c6b00c624bfba80346fb2d4257c8042">More...</a><br /></td></tr>
 <tr class="separator:a2c6b00c624bfba80346fb2d4257c8042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af722963ee48de2ff1cd2055b9fb94972"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#af722963ee48de2ff1cd2055b9fb94972">finalize</a> ()</td></tr>
 <tr class="memdesc:af722963ee48de2ff1cd2055b9fb94972"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the connection ends.  <a href="#af722963ee48de2ff1cd2055b9fb94972">More...</a><br /></td></tr>
 <tr class="separator:af722963ee48de2ff1cd2055b9fb94972"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e8c64588c72b6b4f560dea050fcb4b1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a7e8c64588c72b6b4f560dea050fcb4b1">authorized</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg) const </td></tr>
+<tr class="memdesc:a7e8c64588c72b6b4f560dea050fcb4b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a message is authorized to be executed by this message.  <a href="#a7e8c64588c72b6b4f560dea050fcb4b1">More...</a><br /></td></tr>
+<tr class="separator:a7e8c64588c72b6b4f560dea050fcb4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:af56231a77ff17aee132828094daca760"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#af56231a77ff17aee132828094daca760">on_handle</a> (<a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg)=0</td></tr>
 <tr class="memdesc:af56231a77ff17aee132828094daca760"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to handle the message.  <a href="#af56231a77ff17aee132828094daca760">More...</a><br /></td></tr>
 <tr class="separator:af56231a77ff17aee132828094daca760"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70908cea7443b9a3236c2c618b3b18e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ab70908cea7443b9a3236c2c618b3b18e">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const <a class="el" href="classstring_1_1FormattedString.html">string::FormattedString</a> &amp;text) const =0</td></tr>
-<tr class="memdesc:ab70908cea7443b9a3236c2c618b3b18e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a reply to a message.  <a href="#ab70908cea7443b9a3236c2c618b3b18e">More...</a><br /></td></tr>
-<tr class="separator:ab70908cea7443b9a3236c2c618b3b18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac12797faf2d343a2b1151243f7e7328e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ac12797faf2d343a2b1151243f7e7328e">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const <a class="el" href="classstring_1_1FormattedString.html">string::FormattedString</a> &amp;text) const </td></tr>
+<tr class="memdesc:ac12797faf2d343a2b1151243f7e7328e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a reply to a message.  <a href="#ac12797faf2d343a2b1151243f7e7328e">More...</a><br /></td></tr>
+<tr class="separator:ac12797faf2d343a2b1151243f7e7328e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2b43f4fe082719d1b7c3223e35777fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ad2b43f4fe082719d1b7c3223e35777fb">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const std::string &amp;text) const </td></tr>
 <tr class="separator:ad2b43f4fe082719d1b7c3223e35777fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a106f3e972beb61dfe66eb5d8c148873f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a106f3e972beb61dfe66eb5d8c148873f">auth</a></td></tr>
+<tr class="memdesc:a106f3e972beb61dfe66eb5d8c148873f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authorization group required for a user message to be handled.  <a href="#a106f3e972beb61dfe66eb5d8c148873f">More...</a><br /></td></tr>
+<tr class="separator:a106f3e972beb61dfe66eb5d8c148873f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b1dd2d445ba3e9dee3e05f2beeae26b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMelanobot.html">Melanobot</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a0b1dd2d445ba3e9dee3e05f2beeae26b">bot</a> = nullptr</td></tr>
+<tr class="separator:a0b1dd2d445ba3e9dee3e05f2beeae26b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Message handler abstract base class. </p>
@@ -142,6 +163,44 @@ Protected Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="handler_8hpp_source.html#l00043">43</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ae0fffddf35a0e5b33ecaa56f501c1f86"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">handler::Handler::Handler </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSettings.html">Settings</a> &amp;&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMelanobot.html">Melanobot</a> *&#160;</td>
+          <td class="paramname"><em>bot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00046">46</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="core_8cpp_source.html#l00165">handler::AcceptInvite::AcceptInvite()</a>, and <a class="el" href="handler_8hpp_source.html#l00188">handler::SimpleAction::SimpleAction()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ab570c2d7db0eee3b4cd62630902f0de4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -163,12 +222,42 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00046">46</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00053">53</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="af21263e6bfb831b1e1158f06d67701c3"></a>
+<a class="anchor" id="a7e8c64588c72b6b4f560dea050fcb4b1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool handler::Handler::authorized </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if a message is authorized to be executed by this message. </p>
+
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00090">90</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00071">can_handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00143">handler::SimpleAction::can_handle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a10a5eabdf8686e1d61b65ffbe20cc39e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -185,7 +274,7 @@ Protected Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -193,9 +282,11 @@ Protected Member Functions</h2></td></tr>
 <p>Checks if a message can be handled. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message can be handled by the handler </dd></dl>
 
-<p>Implemented in <a class="el" href="classhandler_1_1SimpleGroup.html#ab37ec7b3205ee7296374136aaea309a1">handler::SimpleGroup</a>, and <a class="el" href="classhandler_1_1SimpleAction.html#aab69a6012215c6bd4acefa75dffdaf1b">handler::SimpleAction</a>.</p>
+<p>Reimplemented in <a class="el" href="classhandler_1_1SimpleGroup.html#ab37ec7b3205ee7296374136aaea309a1">handler::SimpleGroup</a>, and <a class="el" href="classhandler_1_1SimpleAction.html#aab69a6012215c6bd4acefa75dffdaf1b">handler::SimpleAction</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00053">handle()</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00071">71</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00060">handle()</a>.</p>
 
 </div>
 </div>
@@ -223,7 +314,7 @@ Protected Member Functions</h2></td></tr>
 <p>Called when the connection ends. </p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>see todo in <a class="el" href="classhandler_1_1Handler.html#a2c6b00c624bfba80346fb2d4257c8042" title="Called at startup in case it needs to perform some initialization. ">initialize()</a>, also is this needed? </dd></dl>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00075">75</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00085">85</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>.</p>
 
@@ -257,7 +348,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classhandler_1_1SimpleAction.html#aa0032ba3a9fe78bc08bab0b8e0e04116">handler::SimpleAction</a>.</p>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00053">53</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00060">60</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="handler_8cpp_source.html#l00060">handler::SimpleGroup::on_handle()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>.</p>
 
@@ -287,7 +378,7 @@ Protected Member Functions</h2></td></tr>
 <p>Called at startup in case it needs to perform some initialization. </p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>Run after the connection has been established? (needs to know what connections this class handles) </dd></dl>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00070">70</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00080">80</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>.</p>
 
@@ -318,13 +409,13 @@ Protected Member Functions</h2></td></tr>
 <p>Attempt to handle the message. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message has been handled and needs no further processing </dd></dl>
 
-<p>Implemented in <a class="el" href="classhandler_1_1SimpleGroup.html#adb6e0fc3c9c5a98c957764140b67029a">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1SearchWebSearx.html#a6b7f7f6ae223cbf6b2ff129cf0f3f265">handler::SearchWebSearx</a>, <a class="el" href="classhandler_1_1UrbanDictionary.html#a6c90303aa9a4ed0a4ca98106068f2f12">handler::UrbanDictionary</a>, <a class="el" href="classhandler_1_1SearchImageGoogle.html#a8803ff31b288c270184a8f90c4c1d2b1">handler::SearchImageGoogle</a>, <a class="el" href="classhandler_1_1SearchVideoYoutube.html#a83018ec6d907182bf6bdeac572d91be3">handler::SearchVideoYoutube</a>, and <a class="el" href="classhandler_1_1License.html#a95f6ea7f6c44fbce40f1c0b7db6ffb3d">handler::License</a>.</p>
+<p>Implemented in <a class="el" href="classhandler_1_1SimpleGroup.html#adb6e0fc3c9c5a98c957764140b67029a">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1AcceptInvite.html#a45a580a3852886ccbfcc6494c01bbcb4">handler::AcceptInvite</a>, <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart</a>, <a class="el" href="classhandler_1_1SearchWebSearx.html#a6b7f7f6ae223cbf6b2ff129cf0f3f265">handler::SearchWebSearx</a>, <a class="el" href="classhandler_1_1AdminJoin.html#a967551bc0eebd98fa12175f405638615">handler::AdminJoin</a>, <a class="el" href="classhandler_1_1UrbanDictionary.html#a6c90303aa9a4ed0a4ca98106068f2f12">handler::UrbanDictionary</a>, <a class="el" href="classhandler_1_1AdminNick.html#a49e3c78071b77277c7b2e8781286143e">handler::AdminNick</a>, <a class="el" href="classhandler_1_1SearchImageGoogle.html#a8803ff31b288c270184a8f90c4c1d2b1">handler::SearchImageGoogle</a>, <a class="el" href="classhandler_1_1AdminQuit.html#af586d8c18c28b28b9738c81106fa3d53">handler::AdminQuit</a>, <a class="el" href="classhandler_1_1SearchVideoYoutube.html#a83018ec6d907182bf6bdeac572d91be3">handler::SearchVideoYoutube</a>, and <a class="el" href="classhandler_1_1License.html#a95f6ea7f6c44fbce40f1c0b7db6ffb3d">handler::License</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00053">handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00119">handler::SimpleAction::handle()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00060">handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00150">handler::SimpleAction::handle()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab70908cea7443b9a3236c2c618b3b18e"></a>
+<a class="anchor" id="ac12797faf2d343a2b1151243f7e7328e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -351,16 +442,18 @@ Protected Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Send a reply to a message. </p>
 
-<p>Implemented in <a class="el" href="classhandler_1_1SimpleAction.html#ac8489287c95415d7ff8a04bc461a2a44">handler::SimpleAction</a>.</p>
+<p>Reimplemented in <a class="el" href="classhandler_1_1SimpleAction.html#ac8489287c95415d7ff8a04bc461a2a44">handler::SimpleAction</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00090">reply_to()</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00106">106</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00115">reply_to()</a>.</p>
 
 </div>
 </div>
@@ -396,9 +489,60 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00090">90</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00115">115</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00045">handler::SearchVideoYoutube::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00075">handler::SearchImageGoogle::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00103">handler::UrbanDictionary::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00133">handler::SearchWebSearx::json_success()</a>, and <a class="el" href="simple_8cpp_source.html#l00036">handler::License::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00045">handler::SearchVideoYoutube::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00075">handler::SearchImageGoogle::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00103">handler::UrbanDictionary::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00133">handler::SearchWebSearx::json_success()</a>, and <a class="el" href="core_8cpp_source.html#l00039">handler::License::on_handle()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a106f3e972beb61dfe66eb5d8c148873f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string handler::Handler::auth</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Authorization group required for a user message to be handled. </p>
+
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00123">123</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00090">authorized()</a>, and <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0b1dd2d445ba3e9dee3e05f2beeae26b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMelanobot.html">Melanobot</a>* handler::Handler::bot = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00124">124</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>, and <a class="el" href="core_8cpp_source.html#l00064">handler::AdminQuit::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -408,7 +552,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:38 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

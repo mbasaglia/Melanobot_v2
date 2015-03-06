@@ -1,7 +1,7 @@
 var searchData=
 [
   ['call_5fback',['call_back',['../classstring_1_1Utf8Parser.html#a1428253f502df7d7973b7588cbef0943',1,'string::Utf8Parser']]],
-  ['can_5fhandle',['can_handle',['../classhandler_1_1Handler.html#af21263e6bfb831b1e1158f06d67701c3',1,'handler::Handler::can_handle()'],['../classhandler_1_1SimpleAction.html#aab69a6012215c6bd4acefa75dffdaf1b',1,'handler::SimpleAction::can_handle()'],['../classhandler_1_1SimpleGroup.html#ab37ec7b3205ee7296374136aaea309a1',1,'handler::SimpleGroup::can_handle()']]],
+  ['can_5fhandle',['can_handle',['../classhandler_1_1Handler.html#a10a5eabdf8686e1d61b65ffbe20cc39e',1,'handler::Handler::can_handle()'],['../classhandler_1_1SimpleAction.html#aab69a6012215c6bd4acefa75dffdaf1b',1,'handler::SimpleAction::can_handle()'],['../classhandler_1_1SimpleGroup.html#ab37ec7b3205ee7296374136aaea309a1',1,'handler::SimpleGroup::can_handle()']]],
   ['cbegin',['cbegin',['../classstring_1_1FormattedString.html#a245081367965dfcf38c5fde495c5cb49',1,'string::FormattedString']]],
   ['cend',['cend',['../classstring_1_1FormattedString.html#afe4c7448a928fcb8f1f6d2338a849672',1,'string::FormattedString']]],
   ['change_5fid',['change_id',['../classuser_1_1UserManager.html#ae9448d4a7287cfe708c93d54422d3ff3',1,'user::UserManager']]],
@@ -26,7 +26,7 @@ var searchData=
   ['connected',['connected',['../classnetwork_1_1irc_1_1Buffer.html#a0fc1809cfef891d12101ced1c056d11f',1,'network::irc::Buffer']]],
   ['connection',['connection',['../classMelanobot.html#af04fbe0b22a882218022138597eaa7f9',1,'Melanobot']]],
   ['connectionfactory',['ConnectionFactory',['../classnetwork_1_1ConnectionFactory.html#a16a15e6c4db7d93f4b3f83e51b356c3c',1,'network::ConnectionFactory::ConnectionFactory()'],['../classnetwork_1_1ConnectionFactory.html#a611ba89a9100ddd53827b9153d6c94b4',1,'network::ConnectionFactory::ConnectionFactory(const ConnectionFactory &amp;)=delete']]],
-  ['contains',['contains',['../classuser_1_1UserGroup.html#adba24f634c51ecb43ff03f808054b333',1,'user::UserGroup']]],
+  ['contains',['contains',['../classuser_1_1UserGroup.html#a54bd0a8bc73fb34e567a1d6354843cb7',1,'user::UserGroup']]],
   ['context',['Context',['../structJsonParser_1_1Context.html#a041e0ab2fc19cc1ca0715ed732820c64',1,'JsonParser::Context']]],
   ['context_5fpop',['context_pop',['../structJsonParser.html#a369359d392995bbda62d601749e3b5c7',1,'JsonParser']]],
   ['context_5fpos',['context_pos',['../structJsonParser.html#abb9db8c33e0f99ac4b5f900cc192ec95',1,'JsonParser']]],

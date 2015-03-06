@@ -122,6 +122,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afe7f7db06d3587f30922fd3187e40209"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1AuthSystem.html#afe7f7db06d3587f30922fd3187e40209">in_group</a> (const <a class="el" href="structuser_1_1User.html">User</a> &amp;user, const std::string &amp;group)</td></tr>
 <tr class="memdesc:afe7f7db06d3587f30922fd3187e40209"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if <code>user</code> is in <code>group</code>.  <a href="#afe7f7db06d3587f30922fd3187e40209">More...</a><br /></td></tr>
 <tr class="separator:afe7f7db06d3587f30922fd3187e40209"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd469d073027b9beaacff49fddeaa26a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1AuthSystem.html#abd469d073027b9beaacff49fddeaa26a">in_group</a> (const <a class="el" href="structuser_1_1User.html">User</a> &amp;user, const std::string &amp;group) const </td></tr>
+<tr class="separator:abd469d073027b9beaacff49fddeaa26a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59f8dbe80e9669d22ab43c6d5973270d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structuser_1_1User.html">User</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1AuthSystem.html#a59f8dbe80e9669d22ab43c6d5973270d">users_with_auth</a> (const std::string &amp;group)</td></tr>
 <tr class="memdesc:a59f8dbe80e9669d22ab43c6d5973270d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the list of users with the given authorization level.  <a href="#a59f8dbe80e9669d22ab43c6d5973270d">More...</a><br /></td></tr>
 <tr class="separator:a59f8dbe80e9669d22ab43c6d5973270d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,6 +203,8 @@ Private Attributes</h2></td></tr>
 <p>If any of the groups doesn't exists, it will be created </p>
 
 <p>Definition at line <a class="el" href="auth__system_8hpp_source.html#l00039">39</a> of file <a class="el" href="auth__system_8hpp_source.html">auth_system.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00065">network::irc::IrcConnection::read_settings()</a>.</p>
 
 </div>
 </div>
@@ -318,6 +322,44 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="abd469d073027b9beaacff49fddeaa26a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool user::AuthSystem::in_group </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structuser_1_1User.html">User</a> &amp;&#160;</td>
+          <td class="paramname"><em>user</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>group</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="auth__system_8hpp_source.html#l00084">84</a> of file <a class="el" href="auth__system_8hpp_source.html">auth_system.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00921">network::irc::IrcConnection::user_auth()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a764b12f0b4648c2846ff237c3d56e95b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -380,7 +422,7 @@ Private Attributes</h2></td></tr>
 
 <p>Gets the list of users with the given authorization level. </p>
 
-<p>Definition at line <a class="el" href="auth__system_8hpp_source.html#l00087">87</a> of file <a class="el" href="auth__system_8hpp_source.html">auth_system.hpp</a>.</p>
+<p>Definition at line <a class="el" href="auth__system_8hpp_source.html#l00095">95</a> of file <a class="el" href="auth__system_8hpp_source.html">auth_system.hpp</a>.</p>
 
 </div>
 </div>
@@ -403,9 +445,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="auth__system_8hpp_source.html#l00094">94</a> of file <a class="el" href="auth__system_8hpp_source.html">auth_system.hpp</a>.</p>
+<p>Definition at line <a class="el" href="auth__system_8hpp_source.html#l00102">102</a> of file <a class="el" href="auth__system_8hpp_source.html">auth_system.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="auth__system_8hpp_source.html#l00062">add_group()</a>, <a class="el" href="auth__system_8hpp_source.html#l00045">add_user()</a>, <a class="el" href="auth__system_8hpp_source.html#l00070">grant_access()</a>, <a class="el" href="auth__system_8hpp_source.html#l00079">in_group()</a>, <a class="el" href="auth__system_8hpp_source.html#l00053">remove_user()</a>, and <a class="el" href="auth__system_8hpp_source.html#l00087">users_with_auth()</a>.</p>
+<p>Referenced by <a class="el" href="auth__system_8hpp_source.html#l00062">add_group()</a>, <a class="el" href="auth__system_8hpp_source.html#l00045">add_user()</a>, <a class="el" href="auth__system_8hpp_source.html#l00070">grant_access()</a>, <a class="el" href="auth__system_8hpp_source.html#l00079">in_group()</a>, <a class="el" href="auth__system_8hpp_source.html#l00053">remove_user()</a>, and <a class="el" href="auth__system_8hpp_source.html#l00095">users_with_auth()</a>.</p>
 
 </div>
 </div>
@@ -415,7 +457,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:38 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

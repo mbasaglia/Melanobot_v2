@@ -127,9 +127,9 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a96bc48f575aac87571f40a991505148f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a96bc48f575aac87571f40a991505148f">~Connection</a> ()</td></tr>
 <tr class="separator:a96bc48f575aac87571f40a991505148f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a862df828169bc7e28ebbddb37908530f"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="structnetwork_1_1Server.html">Server</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a862df828169bc7e28ebbddb37908530f">server</a> () const =0</td></tr>
-<tr class="memdesc:a862df828169bc7e28ebbddb37908530f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the server object to which this connection is connected to.  <a href="#a862df828169bc7e28ebbddb37908530f">More...</a><br /></td></tr>
-<tr class="separator:a862df828169bc7e28ebbddb37908530f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00b0f12230d5edce406f59645b561193"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structnetwork_1_1Server.html">Server</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a00b0f12230d5edce406f59645b561193">server</a> () const =0</td></tr>
+<tr class="memdesc:a00b0f12230d5edce406f59645b561193"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the server object to which this connection is connected to.  <a href="#a00b0f12230d5edce406f59645b561193">More...</a><br /></td></tr>
+<tr class="separator:a00b0f12230d5edce406f59645b561193"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3d237aadf48cd582abfc1fd88bc2247"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#af3d237aadf48cd582abfc1fd88bc2247">command</a> (const <a class="el" href="structnetwork_1_1Command.html">Command</a> &amp;cmd)=0</td></tr>
 <tr class="memdesc:af3d237aadf48cd582abfc1fd88bc2247"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedules a command for execution.  <a href="#af3d237aadf48cd582abfc1fd88bc2247">More...</a><br /></td></tr>
 <tr class="separator:af3d237aadf48cd582abfc1fd88bc2247"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,9 +148,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acbf3a85faf33744a86c58ee1649eb0c5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#acbf3a85faf33744a86c58ee1649eb0c5">connect</a> ()=0</td></tr>
 <tr class="memdesc:acbf3a85faf33744a86c58ee1649eb0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the connection.  <a href="#acbf3a85faf33744a86c58ee1649eb0c5">More...</a><br /></td></tr>
 <tr class="separator:acbf3a85faf33744a86c58ee1649eb0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d250ba711030aa4f656ec692ef0dfa3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a3d250ba711030aa4f656ec692ef0dfa3">disconnect</a> ()=0</td></tr>
-<tr class="memdesc:a3d250ba711030aa4f656ec692ef0dfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the connection.  <a href="#a3d250ba711030aa4f656ec692ef0dfa3">More...</a><br /></td></tr>
-<tr class="separator:a3d250ba711030aa4f656ec692ef0dfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae25738db9722cda300f2649a0e7bff4b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#ae25738db9722cda300f2649a0e7bff4b">disconnect</a> (const std::string &amp;message={})=0</td></tr>
+<tr class="memdesc:ae25738db9722cda300f2649a0e7bff4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the connection.  <a href="#ae25738db9722cda300f2649a0e7bff4b">More...</a><br /></td></tr>
+<tr class="separator:ae25738db9722cda300f2649a0e7bff4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54a68659a67ca95932506d554466fb2f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a54a68659a67ca95932506d554466fb2f">stop</a> ()=0</td></tr>
 <tr class="memdesc:a54a68659a67ca95932506d554466fb2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnect and stop all processing.  <a href="#a54a68659a67ca95932506d554466fb2f">More...</a><br /></td></tr>
 <tr class="separator:a54a68659a67ca95932506d554466fb2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,6 +163,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4065dc3c9b24ad1fd758317f4e5c76aa"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a4065dc3c9b24ad1fd758317f4e5c76aa">channel_mask</a> (const std::vector&lt; std::string &gt; &amp;channels, const std::string &amp;mask) const =0</td></tr>
 <tr class="memdesc:a4065dc3c9b24ad1fd758317f4e5c76aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether a list of channels matches the mask (Meaning depends on the specialized class)  <a href="#a4065dc3c9b24ad1fd758317f4e5c76aa">More...</a><br /></td></tr>
 <tr class="separator:a4065dc3c9b24ad1fd758317f4e5c76aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad634a6ca4f9c1fef61d2bef85c2b9beb"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#ad634a6ca4f9c1fef61d2bef85c2b9beb">user_auth</a> (const std::string &amp;local_id, const std::string &amp;auth_group) const =0</td></tr>
+<tr class="memdesc:ad634a6ca4f9c1fef61d2bef85c2b9beb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether a user has the given authorization level.  <a href="#ad634a6ca4f9c1fef61d2bef85c2b9beb">More...</a><br /></td></tr>
+<tr class="separator:ad634a6ca4f9c1fef61d2bef85c2b9beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b4b4784fbd07b0364c4b8682b35e826"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a4b4b4784fbd07b0364c4b8682b35e826">update_user</a> (const std::string &amp;local_id, const <a class="el" href="settings_8hpp.html#a1937c97b7058a8be10dc4b9cba6ada0a">Properties</a> &amp;properties)=0</td></tr>
+<tr class="memdesc:a4b4b4784fbd07b0364c4b8682b35e826"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the properties of a user by local_id.  <a href="#a4b4b4784fbd07b0364c4b8682b35e826">More...</a><br /></td></tr>
+<tr class="separator:a4b4b4784fbd07b0364c4b8682b35e826"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract service connection. </p>
@@ -308,6 +314,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection</a>.</p>
 
+<p>Referenced by <a class="el" href="core_8cpp_source.html#l00093">handler::AdminNick::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00116">handler::AdminJoin::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00142">handler::AdminPart::on_handle()</a>, and <a class="el" href="core_8cpp_source.html#l00170">handler::AcceptInvite::on_handle()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="acbf3a85faf33744a86c58ee1649eb0c5"></a>
@@ -337,7 +345,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3d250ba711030aa4f656ec692ef0dfa3"></a>
+<a class="anchor" id="ae25738db9722cda300f2649a0e7bff4b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -347,7 +355,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void network::Connection::disconnect </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>message</em> = <code>{}</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -360,7 +369,9 @@ Public Member Functions</h2></td></tr>
 
 <p>Close the connection. </p>
 
-<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a8bb312c0e024b0a065e5afde1966a3cc">network::irc::IrcConnection</a>.</p>
+<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a53f13c87b98241ef1be9688b6676deab">network::irc::IrcConnection</a>.</p>
+
+<p>Referenced by <a class="el" href="core_8cpp_source.html#l00064">handler::AdminQuit::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -466,7 +477,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aeece055e169a1fd3183ca0ab5962656b">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00134">handler::SimpleAction::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00106">handler::Handler::reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00165">handler::SimpleAction::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -532,7 +543,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a862df828169bc7e28ebbddb37908530f"></a>
+<a class="anchor" id="a00b0f12230d5edce406f59645b561193"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -540,7 +551,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const <a class="el" href="structnetwork_1_1Server.html">Server</a>&amp; network::Connection::server </td>
+          <td class="memname">virtual <a class="el" href="structnetwork_1_1Server.html">Server</a> network::Connection::server </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -555,7 +566,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Returns the server object to which this connection is connected to. </p>
 
-<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4bac554fc079b288c5433038f5e7a435">network::irc::IrcConnection</a>.</p>
+<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a01bc7bfe818b3edeef7bc829a72a64a5">network::irc::IrcConnection</a>.</p>
 
 </div>
 </div>
@@ -644,13 +655,91 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a4b4b4784fbd07b0364c4b8682b35e826"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void network::Connection::update_user </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>local_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="settings_8hpp.html#a1937c97b7058a8be10dc4b9cba6ada0a">Properties</a> &amp;&#160;</td>
+          <td class="paramname"><em>properties</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the properties of a user by local_id. </p>
+
+<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a631b432071e21f7fc18d7c346510e92b">network::irc::IrcConnection</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad634a6ca4f9c1fef61d2bef85c2b9beb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool network::Connection::user_auth </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>local_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>auth_group</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get whether a user has the given authorization level. </p>
+
+<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ad096a3137e8873702d8c77053bfd45dc">network::irc::IrcConnection</a>.</p>
+
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00090">handler::Handler::authorized()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/network/<a class="el" href="connection_8hpp_source.html">connection.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:38 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -1,7 +1,6 @@
 var searchData=
 [
   ['unicode',['unicode',['../classstring_1_1Utf8Parser.html#a2ffdd8074b2ad6e6754ceb159d324a32',1,'string::Utf8Parser']]],
-  ['user',['user',['../structnetwork_1_1irc_1_1UserNick.html#a220750ac2c209cf39ecfe752fe1b0e8f',1,'network::irc::UserNick']]],
   ['user_5fagent',['user_agent',['../classnetwork_1_1http_1_1HttpService.html#a040b510548e156be08d04e6b085e4fad',1,'network::http::HttpService']]],
   ['user_5fgroups',['user_groups',['../classuser_1_1AuthSystem.html#a8a7d6f0ff75fb92a8016045fb5925a36',1,'user::AuthSystem']]],
   ['user_5fmanager',['user_manager',['../classnetwork_1_1irc_1_1IrcConnection.html#a18391c1227a0bbab0ac8fec6f8930fbb',1,'network::irc::IrcConnection']]],

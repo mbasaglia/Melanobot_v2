@@ -111,9 +111,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2220b1a0a2b6434c69a558e5e384cdf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserGroup.html#a2220b1a0a2b6434c69a558e5e384cdf8">remove_user</a> (const <a class="el" href="structuser_1_1User.html">User</a> &amp;user)</td></tr>
 <tr class="memdesc:a2220b1a0a2b6434c69a558e5e384cdf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the user from the group.  <a href="#a2220b1a0a2b6434c69a558e5e384cdf8">More...</a><br /></td></tr>
 <tr class="separator:a2220b1a0a2b6434c69a558e5e384cdf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adba24f634c51ecb43ff03f808054b333"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserGroup.html#adba24f634c51ecb43ff03f808054b333">contains</a> (const <a class="el" href="structuser_1_1User.html">User</a> &amp;user)</td></tr>
-<tr class="memdesc:adba24f634c51ecb43ff03f808054b333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the user is in the group or any of its children.  <a href="#adba24f634c51ecb43ff03f808054b333">More...</a><br /></td></tr>
-<tr class="separator:adba24f634c51ecb43ff03f808054b333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54bd0a8bc73fb34e567a1d6354843cb7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserGroup.html#a54bd0a8bc73fb34e567a1d6354843cb7">contains</a> (const <a class="el" href="structuser_1_1User.html">User</a> &amp;user) const </td></tr>
+<tr class="memdesc:a54bd0a8bc73fb34e567a1d6354843cb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the user is in the group or any of its children.  <a href="#a54bd0a8bc73fb34e567a1d6354843cb7">More...</a><br /></td></tr>
+<tr class="separator:a54bd0a8bc73fb34e567a1d6354843cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b22889594869eb42729fba3d728d893"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserGroup.html#a2b22889594869eb42729fba3d728d893">add_child</a> (<a class="el" href="classuser_1_1UserGroup.html">UserGroup</a> *child)</td></tr>
 <tr class="memdesc:a2b22889594869eb42729fba3d728d893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a child group.  <a href="#a2b22889594869eb42729fba3d728d893">More...</a><br /></td></tr>
 <tr class="separator:a2b22889594869eb42729fba3d728d893"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,7 +156,7 @@ Private Attributes</h2></td></tr>
 <p>The child group will inherit the same access as this group</p>
 <dl class="section note"><dt>Note</dt><dd>Always keep the structure as a tree, not doing so will mess up </dd></dl>
 
-<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00052">52</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00055">55</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="auth__system_8hpp_source.html#l00070">user::AuthSystem::grant_access()</a>.</p>
 
@@ -179,6 +179,7 @@ Private Attributes</h2></td></tr>
 <p>Add a user to the group. </p>
 <p>The way users are matched depends on which attributes <code>user</code> has set.</p>
 <p>In order of priority, it will look for: <code>global_id</code>, <code>host</code>, <code>name</code> </p>
+<p>If a previously added user matches <code>user</code>, it won't be inserted </p>
 
 <p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00024">24</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
 
@@ -201,13 +202,13 @@ Private Attributes</h2></td></tr>
 
 <p>Users in this group or in its children. </p>
 
-<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00065">65</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00068">68</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00065">all_users()</a>, and <a class="el" href="auth__system_8hpp_source.html#l00087">user::AuthSystem::users_with_auth()</a>.</p>
+<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00068">all_users()</a>, and <a class="el" href="auth__system_8hpp_source.html#l00095">user::AuthSystem::users_with_auth()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="adba24f634c51ecb43ff03f808054b333"></a>
+<a class="anchor" id="a54bd0a8bc73fb34e567a1d6354843cb7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -216,16 +217,16 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structuser_1_1User.html">User</a> &amp;&#160;</td>
           <td class="paramname"><em>user</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Whether the user is in the group or any of its children. </p>
 
-<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00041">41</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00044">44</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00041">contains()</a>, and <a class="el" href="auth__system_8hpp_source.html#l00079">user::AuthSystem::in_group()</a>.</p>
+<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00044">contains()</a>, and <a class="el" href="auth__system_8hpp_source.html#l00079">user::AuthSystem::in_group()</a>.</p>
 
 </div>
 </div>
@@ -244,9 +245,9 @@ Private Attributes</h2></td></tr>
 
 <p>Users directly in this group. </p>
 
-<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00060">60</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00063">63</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00065">all_users()</a>.</p>
+<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00068">all_users()</a>.</p>
 
 </div>
 </div>
@@ -265,8 +266,9 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Remove the user from the group. </p>
+<p>Removes all matching users. </p>
 
-<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00029">29</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8cpp_source.html#l00032">32</a> of file <a class="el" href="user__group_8cpp_source.html">user_group.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="auth__system_8hpp_source.html#l00053">user::AuthSystem::remove_user()</a>.</p>
 
@@ -293,9 +295,9 @@ Private Attributes</h2></td></tr>
 
 <p>Groups which inherit this group. </p>
 
-<p>Definition at line <a class="el" href="user__group_8hpp_source.html#l00075">75</a> of file <a class="el" href="user__group_8hpp_source.html">user_group.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8hpp_source.html#l00079">79</a> of file <a class="el" href="user__group_8hpp_source.html">user_group.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00052">add_child()</a>.</p>
+<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00055">add_child()</a>.</p>
 
 </div>
 </div>
@@ -319,9 +321,9 @@ Private Attributes</h2></td></tr>
 
 <p>List of users. </p>
 
-<p>Definition at line <a class="el" href="user__group_8hpp_source.html#l00074">74</a> of file <a class="el" href="user__group_8hpp_source.html">user_group.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__group_8hpp_source.html#l00078">78</a> of file <a class="el" href="user__group_8hpp_source.html">user_group.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__group_8cpp_source.html#l00060">direct_users()</a>, and <a class="el" href="user__group_8cpp_source.html#l00029">remove_user()</a>.</p>
+<p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__group_8cpp_source.html#l00063">direct_users()</a>, and <a class="el" href="user__group_8cpp_source.html#l00032">remove_user()</a>.</p>
 
 </div>
 </div>
@@ -332,7 +334,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:38 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

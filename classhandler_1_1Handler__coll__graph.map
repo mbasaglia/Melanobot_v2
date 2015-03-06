@@ -1,0 +1,5 @@
+<map id="handler::Handler" name="handler::Handler">
+<area shape="rect" id="node2" href="$classMelanobot.html" title="Main bot class. " alt="" coords="55,215,138,241"/>
+<area shape="rect" id="node3" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="5,111,188,152"/>
+<area shape="rect" id="node4" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="11,5,182,61"/>
+</map>

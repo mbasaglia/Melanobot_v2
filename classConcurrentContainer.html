@@ -88,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classConcurrentContainer-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -144,6 +145,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab66d25a436cc53124a60302b68f49d57"><td class="memItemLeft" align="right" valign="top">Container &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ab66d25a436cc53124a60302b68f49d57">get_container</a> ()</td></tr>
 <tr class="memdesc:ab66d25a436cc53124a60302b68f49d57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the container without any locks.  <a href="#ab66d25a436cc53124a60302b68f49d57">More...</a><br /></td></tr>
 <tr class="separator:ab66d25a436cc53124a60302b68f49d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ad279147a8fba67deef7ced59d2718499"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ad279147a8fba67deef7ced59d2718499">wait_condition</a> () const </td></tr>
+<tr class="separator:ad279147a8fba67deef7ced59d2718499"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -356,7 +362,7 @@ template&lt;class Container&gt; </div>
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00085">85</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00097">network::irc::Buffer::process()</a>, <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, <a class="el" href="async__service_8hpp_source.html#l00164">network::ThreadedAsyncService::run()</a>, and <a class="el" href="irc_8cpp_source.html#l00059">network::irc::Buffer::run_output()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00074">network::irc::Buffer::process()</a>, <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, <a class="el" href="async__service_8hpp_source.html#l00164">network::ThreadedAsyncService::run()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00036">network::irc::Buffer::run_output()</a>.</p>
 
 </div>
 </div>
@@ -385,7 +391,7 @@ template&lt;class Container&gt; </div>
 
 <p>Returns a reference to the container without any locks. </p>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00109">109</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00110">110</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
 </div>
 </div>
@@ -418,7 +424,7 @@ template&lt;class Container&gt; </div>
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00072">72</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00097">network::irc::Buffer::process()</a>, <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, and <a class="el" href="async__service_8hpp_source.html#l00164">network::ThreadedAsyncService::run()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00074">network::irc::Buffer::process()</a>, <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, and <a class="el" href="async__service_8hpp_source.html#l00164">network::ThreadedAsyncService::run()</a>.</p>
 
 </div>
 </div>
@@ -452,7 +458,7 @@ template&lt;class Container&gt; </div>
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00059">59</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00146">network::ThreadedAsyncService::async_query()</a>, <a class="el" href="irc_8cpp_source.html#l00092">network::irc::Buffer::insert()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00087">Melanobot::message()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00146">network::ThreadedAsyncService::async_query()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00069">network::irc::Buffer::insert()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00087">Melanobot::message()</a>.</p>
 
 </div>
 </div>
@@ -485,7 +491,7 @@ template&lt;class Container&gt; </div>
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00092">92</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00059">network::irc::Buffer::run_output()</a>, and <a class="el" href="async__service_8hpp_source.html#l00132">network::ThreadedAsyncService::start()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00036">network::irc::Buffer::run_output()</a>, and <a class="el" href="async__service_8hpp_source.html#l00132">network::ThreadedAsyncService::start()</a>.</p>
 
 </div>
 </div>
@@ -517,7 +523,36 @@ template&lt;class Container&gt; </div>
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00101">101</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00058">Melanobot::stop()</a>, <a class="el" href="async__service_8hpp_source.html#l00139">network::ThreadedAsyncService::stop()</a>, and <a class="el" href="irc_8cpp_source.html#l00081">network::irc::Buffer::stop()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00058">Melanobot::stop()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00058">network::irc::Buffer::stop()</a>, and <a class="el" href="async__service_8hpp_source.html#l00139">network::ThreadedAsyncService::stop()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad279147a8fba67deef7ced59d2718499"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::wait_condition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00122">122</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
 
 </div>
 </div>
@@ -542,9 +577,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00119">119</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00120">120</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00101">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>.</p>
 
 </div>
 </div>
@@ -568,9 +603,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00115">115</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00116">116</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00109">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::get_container()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00110">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::get_container()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00122">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::wait_condition()</a>.</p>
 
 </div>
 </div>
@@ -594,7 +629,7 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00114">114</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00115">115</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
 
@@ -620,7 +655,7 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00113">113</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00114">114</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
 
@@ -646,7 +681,7 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00112">112</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00113">113</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>.</p>
 
@@ -672,7 +707,7 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00118">118</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00119">119</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
 </div>
 </div>
@@ -696,9 +731,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00117">117</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00118">118</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00085">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::active()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00092">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::start()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00101">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00085">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::active()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00092">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::start()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00101">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00122">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::wait_condition()</a>.</p>
 
 </div>
 </div>
@@ -708,7 +743,7 @@ template&lt;class Container&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:38 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

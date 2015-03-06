@@ -108,9 +108,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6369607853783ec7acff192e88881898"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structuser_1_1User.html">User</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#a6369607853783ec7acff192e88881898">user</a> (const std::string &amp;local_id)</td></tr>
 <tr class="memdesc:a6369607853783ec7acff192e88881898"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a user by local id.  <a href="#a6369607853783ec7acff192e88881898">More...</a><br /></td></tr>
 <tr class="separator:a6369607853783ec7acff192e88881898"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06d1265fc1b8a9b8b4d751ad92127766"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structuser_1_1User.html">User</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#a06d1265fc1b8a9b8b4d751ad92127766">user</a> (const std::string &amp;local_id) const </td></tr>
+<tr class="separator:a06d1265fc1b8a9b8b4d751ad92127766"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa46cf08d7bd3b0714dbff9630d751697"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structuser_1_1User.html">User</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#aa46cf08d7bd3b0714dbff9630d751697">user_by_property</a> (const std::string &amp;property_name, const std::string &amp;property_value)</td></tr>
 <tr class="memdesc:aa46cf08d7bd3b0714dbff9630d751697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the first user with the matching property.  <a href="#aa46cf08d7bd3b0714dbff9630d751697">More...</a><br /></td></tr>
 <tr class="separator:aa46cf08d7bd3b0714dbff9630d751697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17c97360d9bd5bdcb25e04e4ed410ba6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structuser_1_1User.html">User</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#a17c97360d9bd5bdcb25e04e4ed410ba6">user_by_property</a> (const std::string &amp;property_name, const std::string &amp;property_value) const </td></tr>
+<tr class="separator:a17c97360d9bd5bdcb25e04e4ed410ba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae350a4c6a2f316522afdcef85ba2eea9"><td class="memItemLeft" align="right" valign="top">std::list&lt; <a class="el" href="structuser_1_1User.html">User</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#ae350a4c6a2f316522afdcef85ba2eea9">users</a> () const </td></tr>
 <tr class="memdesc:ae350a4c6a2f316522afdcef85ba2eea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all users.  <a href="#ae350a4c6a2f316522afdcef85ba2eea9">More...</a><br /></td></tr>
 <tr class="separator:ae350a4c6a2f316522afdcef85ba2eea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,7 +163,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00024">24</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00131">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -191,7 +195,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> on success </dd></dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>maybe check if there is some other user with new_local_id </dd></dl>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00082">82</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00099">99</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -211,7 +215,7 @@ Private Attributes</h2></td></tr>
 
 <p>Get all users on the given channel. </p>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00054">54</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00071">71</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -232,9 +236,9 @@ Private Attributes</h2></td></tr>
 <p>Remove a user by local_id. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> on success </dd></dl>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00071">71</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00088">88</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00131">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -265,7 +269,7 @@ Private Attributes</h2></td></tr>
 <p>Update a user. </p>
 <p>If there's no user matching <code>local_id</code>, <code>user</code> is inserted </p>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00094">94</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00111">111</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -288,7 +292,27 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00037">37</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00297">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00567">network::irc::IrcConnection::command()</a>, <a class="el" href="irc_8cpp_source.html#l00131">network::irc::IrcConnection::handle_message()</a>, and <a class="el" href="irc_8cpp_source.html#l00931">network::irc::IrcConnection::update_user()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a06d1265fc1b8a9b8b4d751ad92127766"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structuser_1_1User.html">User</a> * user::UserManager::user </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>local_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00045">45</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc_8cpp_source.html#l00921">network::irc::IrcConnection::user_auth()</a>.</p>
 
 </div>
 </div>
@@ -319,7 +343,35 @@ Private Attributes</h2></td></tr>
 <p>Get the first user with the matching property. </p>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to the user or null if not found </dd></dl>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00045">45</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00053">53</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a17c97360d9bd5bdcb25e04e4ed410ba6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structuser_1_1User.html">User</a> * user::UserManager::user_by_property </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>property_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>property_value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00062">62</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -346,7 +398,7 @@ Private Attributes</h2></td></tr>
 
 <p>Get all users. </p>
 
-<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00053">53</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00055">55</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
 </div>
 </div>
@@ -376,7 +428,7 @@ template&lt;class UnaryPredicate &gt; </div>
 
 <p>Get all users matching the given condition. </p>
 
-<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00059">59</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00061">61</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
 </div>
 </div>
@@ -399,9 +451,9 @@ template&lt;class UnaryPredicate &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00093">93</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00095">95</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00082">change_id()</a>, <a class="el" href="user__manager_8cpp_source.html#l00071">remove_user()</a>, and <a class="el" href="user__manager_8hpp_source.html#l00053">users()</a>.</p>
+<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00099">change_id()</a>, <a class="el" href="user__manager_8cpp_source.html#l00088">remove_user()</a>, and <a class="el" href="user__manager_8hpp_source.html#l00055">users()</a>.</p>
 
 </div>
 </div>
@@ -412,7 +464,7 @@ template&lt;class UnaryPredicate &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 5 2015 21:24:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 6 2015 18:23:38 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

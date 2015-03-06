@@ -1,7 +1,7 @@
 var searchData=
 [
   ['implode',['implode',['../namespacestring.html#a18ed1b936ff7e3ce99f3177c762638c9',1,'string']]],
-  ['in_5fgroup',['in_group',['../classuser_1_1AuthSystem.html#afe7f7db06d3587f30922fd3187e40209',1,'user::AuthSystem']]],
+  ['in_5fgroup',['in_group',['../classuser_1_1AuthSystem.html#afe7f7db06d3587f30922fd3187e40209',1,'user::AuthSystem::in_group(const User &amp;user, const std::string &amp;group)'],['../classuser_1_1AuthSystem.html#abd469d073027b9beaacff49fddeaa26a',1,'user::AuthSystem::in_group(const User &amp;user, const std::string &amp;group) const ']]],
   ['index',['index',['../classstring_1_1QFont.html#a06e14cafe86e48f59b17568d17ade79d',1,'string::QFont']]],
   ['index_5f',['index_',['../classstring_1_1QFont.html#a1fab5377dd261f6ad00a3cde306d9ebb',1,'string::QFont']]],
   ['info',['INFO',['../classSettings.html#ad16df62d407753259389b3c440125be3a551b723eafd6a31d444fcb2f5920fbd3',1,'Settings']]],
@@ -14,6 +14,8 @@ var searchData=
   ['irc',['irc',['../classnetwork_1_1irc_1_1Buffer.html#a76768b8a6607f532af71d20d493c6556',1,'network::irc::Buffer']]],
   ['irc_2ecpp',['irc.cpp',['../irc_8cpp.html',1,'']]],
   ['irc_2ehpp',['irc.hpp',['../irc_8hpp.html',1,'']]],
+  ['irc_5fbuffer_2ecpp',['irc_buffer.cpp',['../irc__buffer_8cpp.html',1,'']]],
+  ['irc_5fbuffer_2ehpp',['irc_buffer.hpp',['../irc__buffer_8hpp.html',1,'']]],
   ['ircconnection',['IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html#aecd79ba17a920bd35d258a78ad003b9d',1,'network::irc::IrcConnection']]],
   ['ircconnection',['IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html',1,'network::irc']]],
   ['is_5fascii',['is_ascii',['../classstring_1_1Utf8Parser.html#a90edabbcd0130d37688741131a3c5ce1',1,'string::Utf8Parser']]],

@@ -12,7 +12,7 @@ var searchData=
   ['melanobot_2ehpp',['melanobot.hpp',['../melanobot_8hpp.html',1,'']]],
   ['merge_5fchild',['merge_child',['../classSettings.html#abc5eaf4d69f803d016639fe2c6910b72',1,'Settings']]],
   ['message',['Message',['../structnetwork_1_1Message.html',1,'network']]],
-  ['message',['message',['../structnetwork_1_1Message.html#afebf3524b498060675a8954236561efc',1,'network::Message::message()'],['../classMelanobot.html#af594bbfddf10609f945dddfbc4214896',1,'Melanobot::message()']]],
+  ['message',['message',['../structnetwork_1_1Message.html#afebf3524b498060675a8954236561efc',1,'network::Message::message()'],['../classhandler_1_1AdminQuit.html#adaaf600e857dbbc989c463efda40da23',1,'handler::AdminQuit::message()'],['../classMelanobot.html#af594bbfddf10609f945dddfbc4214896',1,'Melanobot::message()']]],
   ['messages',['messages',['../classMelanobot.html#a98b3ea20bb87f7e58cdc7b3c4f6e13c9',1,'Melanobot']]],
   ['method_5fget',['method_get',['../classConcurrentContainer.html#aebd629ca77cd946d84b017bead73cacb',1,'ConcurrentContainer']]],
   ['method_5fpop',['method_pop',['../classConcurrentContainer.html#a4cee4e33cca879c6722f9d80ec34d545',1,'ConcurrentContainer']]],
