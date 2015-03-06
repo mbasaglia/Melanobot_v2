@@ -40,12 +40,14 @@ public:
      * \return A pointer to the user or null if not found
      */
     User* user(const std::string& local_id);
+    const User* user(const std::string& local_id) const;
 
     /**
      * \brief Get the first user with the matching property
      * \return A pointer to the user or null if not found
      */
     User* user_by_property(const std::string& property_name, const std::string& property_value);
+    const User* user_by_property(const std::string& property_name, const std::string& property_value) const;
 
     /**
      * \brief Get all users

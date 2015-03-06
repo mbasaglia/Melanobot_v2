@@ -29,24 +29,6 @@ REGISTER_LOG_TYPE(irc,color::dark_magenta);
 namespace network {
 namespace irc {
 
-/// \note the real regex would be stricter
-std::regex UserNick::prefix_regex{":?([^!@ ]+)(?:!([^@ ]+))?(?:@(\\S+))?",
-        std::regex_constants::syntax_option_type::optimize |
-        std::regex_constants::syntax_option_type::ECMAScript };
-
-UserNick::UserNick ( const std::string& prefix )
-{
-    std::smatch match;
-
-    nick = prefix;
-    if ( std::regex_match(prefix,match,prefix_regex) )
-    {
-        nick = match[1].str();
-        user = match[2].str();
-        host = match[3].str();
-    }
-}
-
 Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     : irc(irc)
 {
@@ -83,9 +65,9 @@ void Buffer::stop()
     disconnect();
     io_service.stop();
     buffer.stop();
-    if ( !thread_input.joinable() )
+    if ( thread_input.joinable() )
         thread_input.join();
-    if ( !thread_output.joinable() )
+    if ( thread_output.joinable() )
         thread_output.join();
 }
 
@@ -157,8 +139,11 @@ void Buffer::connect(const Server& server)
 void Buffer::disconnect()
 {
     /// \todo try catch
-    socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-    socket.close();
+    if ( connected() )
+    {
+        socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        socket.close();
+    }
 }
 
 bool Buffer::connected() const
@@ -273,6 +258,30 @@ void IrcConnection::read_settings(const Settings& settings)
     std::string chan;
     while ( ss >> chan )
         channels_to_join.push_back(chan);
+
+    for ( const auto pt: settings.get_child("users",{}) )
+    {
+        if ( pt.first.empty() )
+            continue;
+        std::vector<std::string> groups = string::comma_split(pt.second.data());
+
+        user::User user;
+
+        if ( pt.first[0] == '!' && pt.first.size() > 1 )
+            user.global_id = pt.first.substr(1);
+        else if ( pt.first[0] == '@' && pt.first.size() > 1 )
+            user.host = pt.first.substr(1);
+        else
+            user.name = pt.first;
+
+        if ( !groups.empty() )
+        {
+            auth_system.add_user(user,groups);
+            Log("irc",'!',3) << "Registered user " << color::cyan
+                << pt.first << color::nocolor << " in "
+                << string::implode(", ",groups);
+        }
+    }
 }
 
 
@@ -288,7 +297,7 @@ void IrcConnection::stop()
     buffer.stop();
 }
 
-const Server& IrcConnection::server() const
+Server IrcConnection::server() const
 {
     LOCK(mutex);
     return current_server;
@@ -387,19 +396,25 @@ void IrcConnection::handle_message(Message msg)
 
         std::string message = msg.params[1];
 
-        std::string nickfrom = UserNick(msg.from).nick;
-        msg.from = nickfrom;
+        user::User userfrom = parse_prefix(msg.from);
+        msg.from = userfrom.local_id;
         msg.message = message;
 
-        if ( strtolower(msg.params[0]) == current_nick_lowecase )
-        {
-            msg.channels = { strtolower(nickfrom) };
-            msg.direct = 1;
-        }
-        else
-        {
-            msg.channels = { msg.params[0] };
-        }
+        mutex.lock();
+            if ( strtolower(msg.params[0]) == current_nick_lowecase )
+            {
+                msg.channels = { strtolower(userfrom.local_id) };
+                msg.direct = 1;
+            }
+            else
+            {
+                msg.channels = { msg.params[0] };
+            }
+
+        user::User *user = user_manager.user(userfrom.local_id);
+        if ( user )
+            user->host = userfrom.host;
+        mutex.unlock();
 
         // Handle CTCP
         if ( msg.message[0] == '\1' )
@@ -426,7 +441,9 @@ void IrcConnection::handle_message(Message msg)
         }
         else
         {
-            std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
+            mutex.lock();
+                std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
+            mutex.unlock();
             std::smatch match;
             if ( std::regex_match(message,match,regex_direct) )
             {
@@ -455,7 +472,7 @@ void IrcConnection::handle_message(Message msg)
         /// \todo handle the case when this notifies the bot itself has joined a channel
         if ( msg.params.size() >= 1 )
         {
-            user::User user = UserNick(msg.from);
+            user::User user = parse_prefix(msg.from);
             user.channels = msg.params;
             mutex.lock();
                 user::User *found = user_manager.user(user.local_id);
@@ -484,7 +501,7 @@ void IrcConnection::handle_message(Message msg)
     {
         if ( msg.params.size() >= 1 )
         {
-            user::User user = UserNick(msg.from);
+            user::User user = parse_prefix(msg.from);
             user.channels = string::comma_split(msg.params[0]);
             mutex.lock();
                 user::User *found = user_manager.user(user.local_id);
@@ -510,7 +527,7 @@ void IrcConnection::handle_message(Message msg)
     }
     else if ( msg.command == "QUIT" )
     {
-        user::User user = UserNick(msg.from);
+        user::User user = parse_prefix(msg.from);
         msg.from = user.local_id;
         mutex.lock();
             user::User *found = user_manager.user(user.local_id);
@@ -519,8 +536,43 @@ void IrcConnection::handle_message(Message msg)
                 msg.channels = found->channels;
                 user_manager.remove_user(user.local_id);
                 Log("irc",'!',2) << "Removed user " << color::dark_red << user.name;
+
+                if ( strtolower(preferred_nick) == strtolower(user.local_id) )
+                {
+                    mutex.unlock();
+                    command({"NICK",{preferred_nick}});
+                    // doesn't need to lock
+                    // but lock again to match the following unlock
+                    mutex.lock();
+                }
             }
         mutex.unlock();
+    }
+    else if ( msg.command == "NICK" )
+    {
+        if ( msg.params.size() == 1 )
+        {
+            user::User user = parse_prefix(msg.from);
+            msg.from = user.local_id;
+            mutex.lock();
+                user::User *found = user_manager.user(user.local_id);
+                if ( found )
+                {
+                    msg.channels = found->channels;
+                    found->name = found->local_id = msg.params[0];
+
+                    Log("irc",'!',2) << "Renamed user " << color::dark_cyan << user.name
+                        << color::nocolor << " to " << color::dark_cyan << found->name;
+
+                    if ( strtolower(user.name) == current_nick_lowecase )
+                    {
+                        current_nick = found->name;
+                        current_nick_lowecase = strtolower(current_nick);
+                        attempted_nick.clear();
+                    }
+                }
+            mutex.unlock();
+        }
     }
     // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
     /* Skipped: * = maybe later X = surely later
@@ -691,7 +743,7 @@ void IrcConnection::command ( const Command& c )
     {
         if ( cmd.parameters.size() != 2 )
         {
-            ErrorLog("irc") << "Wrong parameters for PRIVMSG";
+            ErrorLog("irc") << "Wrong parameters for " << command;
             return;
         }
         std::string to = strtolower(cmd.parameters[0]);
@@ -699,13 +751,13 @@ void IrcConnection::command ( const Command& c )
             LOCK(mutex);
             if ( to == current_nick_lowecase )
             {
-                ErrorLog("irc") << "Cannot send PRIVMSG to self";
+                ErrorLog("irc") << "Cannot send " << command << " to self";
                 return;
             }
         }
         if ( cmd.parameters[1].empty() )
         {
-            ErrorLog("irc") << "Empty PRIVMSG";
+            ErrorLog("irc") << "Empty " << command;
             return;
         }
 
@@ -726,21 +778,32 @@ void IrcConnection::command ( const Command& c )
     }
     else if ( command == "NICK" )
     {
-        if ( cmd.parameters.size() != 1 )
+        std::string new_nick;
+
+        if ( cmd.parameters.size() == 1 )
+            for ( char c : cmd.parameters[0] )
+            {
+                /// \todo if size > max nick length, break
+                if ( !is_nickchar(c) )
+                    break;
+                new_nick += c;
+            }
+
+        if ( new_nick.empty() )
         {
             ErrorLog("irc") << "Ill-formed NICK";
             return;
         }
+        cmd.parameters[0] = new_nick;
+
         /// \todo validate nick
         {
             LOCK(mutex);
-            attempted_nick = cmd.parameters[0];
-            if ( strtolower(attempted_nick) == current_nick_lowecase )
-            {
-                attempted_nick = "";
-                current_nick = cmd.parameters[0];
+            if ( new_nick == current_nick )
                 return;
-            }
+            if ( attempted_nick.empty() )
+                preferred_nick = new_nick;
+            attempted_nick = new_nick;
         }
     }
     else if ( command == "USER" )
@@ -800,12 +863,6 @@ void IrcConnection::command ( const Command& c )
     {
         // Custom command
         reconnect();
-        return;
-    }
-    else if ( command == "DISCONNECT" )
-    {
-        // Custom command
-        disconnect();
         return;
     }
     /* Skipped: * = maybe later o = maybe disallow completely
@@ -900,11 +957,12 @@ void IrcConnection::connect()
     }
 }
 
-void IrcConnection::disconnect()
+void IrcConnection::disconnect(const std::string& message)
 {
-    if ( status() > CONNECTING )
-        buffer.write({"QUIT",{},1024});
-    buffer.disconnect();
+    if ( connection_status > CONNECTING )
+        buffer.write({"QUIT",{message},1024});
+    if ( connection_status != DISCONNECTED )
+        buffer.disconnect();
     connection_status = DISCONNECTED;
 }
 
@@ -951,6 +1009,46 @@ void IrcConnection::auth()
     if ( !modes.empty() )
         command({"MODE",{current_nick, modes},1024});
 
+}
+
+
+user::User IrcConnection::parse_prefix(const std::string& prefix)
+{
+    /// \note the real regex would be stricter
+    static std::regex regex_prefix{":?([^!@ ]+)(?:![^@ ]+)?(?:@(\\S+))?",
+        std::regex_constants::syntax_option_type::optimize |
+        std::regex_constants::syntax_option_type::ECMAScript };
+
+    std::smatch match;
+
+    user::User user;
+
+    if ( std::regex_match(prefix,match,regex_prefix) )
+    {
+        user.name = user.local_id = match[1].str();
+        user.host = match[2].str();
+    }
+
+    return user;
+}
+
+bool IrcConnection::user_auth(const std::string& local_id,
+                              const std::string& auth_group) const
+{
+    LOCK(mutex);
+    const user::User* user = user_manager.user(local_id);
+    if ( !user )
+        return false;
+    return auth_system.in_group(*user,auth_group);
+}
+
+void IrcConnection::update_user(const std::string& local_id,
+                                const Properties& properties)
+{
+    LOCK(mutex);
+    user::User* user = user_manager.user(local_id);
+    if ( user )
+        user->update(properties);
 }
 
 } // namespace irc

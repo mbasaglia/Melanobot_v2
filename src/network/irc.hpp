@@ -90,33 +90,6 @@ inline std::string strtoupper ( std::string string )
     return string;
 }
 
-/**
- * \brief IRC User nick information
- * \todo Replace this with a function which returns a user::User
- */
-struct UserNick
-{
-    /**
-     * \brief Parse :Nick!User@host
-     * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
-     */
-    UserNick ( const std::string& prefix );
-
-    operator user::User() const
-    {
-        user::User user;
-        user.name = user.local_id = nick;
-        user.host = host;
-        return user;
-    }
-
-    std::string nick;
-    std::string user;
-    std::string host;
-
-    static std::regex prefix_regex;
-};
-
 class IrcConnection;
 
 /**
@@ -128,6 +101,7 @@ class Buffer
 {
 public:
     explicit Buffer(IrcConnection& irc, const Settings& settings = {});
+    ~Buffer() { stop(); }
 
     /**
      * \brief Inserts a command to the buffer
@@ -284,9 +258,9 @@ public:
     void stop() override;
 
     /**
-     * \thread ? \lock buffer
+     * \thread ? \lock data
      */
-    const Server& server() const override;
+    Server server() const override;
 
     /**
      * \thread external \lock data(sometimes) buffer(indirect)
@@ -329,7 +303,7 @@ public:
     /**
      * \thread external \lock buffer(indirect)
      */
-    void disconnect() override;
+    void disconnect(const std::string& message = {}) override;
 
     /**
      * \thread external \lock none
@@ -357,6 +331,22 @@ public:
      */
     std::string nick() const;
 
+    /**
+     * \brief Parse :Nick!User@host
+     * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
+     */
+    static user::User parse_prefix(const std::string& prefix);
+
+    /**
+     * \brief Get whether a user has the given authorization level
+     */
+    bool user_auth(const std::string& local_id,
+                   const std::string& auth_group) const override;
+    /**
+     * \brief Update the properties of a user by local_id
+     */
+    void update_user(const std::string& local_id,
+                     const Properties& properties) override;
 private:
 
     friend class Buffer;
@@ -414,7 +404,7 @@ private:
      * As seen on 005 (RPL_ISUPPORT)
      * \see http://www.irc.org/tech_docs/005.html
      */
-    std::unordered_map<std::string,std::string> server_features;
+    Properties server_features;
     /**
      * \brief Current bot nick
      */

@@ -42,10 +42,27 @@ User* UserManager::user(const std::string& local_id)
     return nullptr;
 }
 
+const User* UserManager::user(const std::string& local_id) const
+{
+    for ( const User& u : users_ )
+        if ( u.local_id == local_id )
+            return &u;
+    return nullptr;
+}
+
 User* UserManager::user_by_property(const std::string& property_name,
                                     const std::string& property_value)
 {
     for ( User& u : users_ )
+        if ( u.property(property_name) == property_value )
+            return &u;
+    return nullptr;
+}
+
+const User* UserManager::user_by_property(const std::string& property_name,
+                                          const std::string& property_value) const
+{
+    for ( const User& u : users_ )
         if ( u.property(property_name) == property_value )
             return &u;
     return nullptr;

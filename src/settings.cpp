@@ -216,3 +216,24 @@ std::string Settings::find_config(FileFormat format)
 
     return {};
 }
+
+/**
+ * \brief Recustively prints a ptree
+ */
+static std::ostream& recursive_print(std::ostream& stream,
+                                     const boost::property_tree::ptree& tree,
+                                     int depth = 0)
+{
+    for ( const auto& p : tree )
+    {
+        stream << std::string(depth*2,' ') << p.first << ": " << p.second.data() << '\n';
+        recursive_print(stream,p.second,depth+1);
+    }
+    return stream;
+}
+
+
+std::ostream& operator<< ( std::ostream& stream, const Settings& settings )
+{
+    return recursive_print(stream,settings);
+}

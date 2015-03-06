@@ -46,7 +46,10 @@ int main(int argc, char **argv)
             network::ServiceRegistry::instance().stop();
             /// \todo some way to reload the config and restart the bot
         }
-        return Settings::global_settings.get("exit_code",0);
+
+        int exit_code = Settings::global_settings.get("exit_code",0);
+        Log("sys",'!',4) << "Exiting with status " << exit_code;
+        return exit_code;
 
     } catch ( const CriticalException& exc ) {
         /// \todo policy on how to handle exceptions

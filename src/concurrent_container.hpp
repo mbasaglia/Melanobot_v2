@@ -72,7 +72,7 @@ public:
     void pop(reference item)
     {
         std::unique_lock<std::mutex> lock(mutex);
-        condition.wait(lock,[this]{return !container.empty() && run;});
+        condition.wait(lock,[this]{return !wait_condition();});
         if ( !run )
             return;
         item = (container.*container_get)();
@@ -101,6 +101,7 @@ public:
     void stop()
     {
         run = false;
+        condition.notify_one();
     }
 
     /**
@@ -117,6 +118,11 @@ private:
     std::atomic<bool> run {true};
     std::mutex mutex;
     std::condition_variable condition;
+
+    bool wait_condition() const
+    {
+        return container.empty() && run;
+    }
 };
 
 /**

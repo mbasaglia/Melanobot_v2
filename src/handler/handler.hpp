@@ -43,6 +43,11 @@ namespace handler {
 class Handler
 {
 public:
+    Handler( const Settings& settings )
+    {
+        auth = settings.get("auth",auth);
+    }
+
     virtual ~Handler() {}
 
     /**
@@ -61,7 +66,10 @@ public:
      * \brief Checks if a message can be handled
      * \return \b true if the message can be handled by the handler
      */
-    virtual bool can_handle(const network::Message& msg) = 0;
+    virtual bool can_handle(const network::Message& msg)
+    {
+        return authorized(msg);
+    }
 
     /**
      * \brief Called at startup in case it needs to perform some initialization
@@ -73,6 +81,14 @@ public:
      * \todo see todo in initialize(), also is this needed?
      */
     virtual void finalize() {}
+
+    /**
+     * \brief Checks if a message is authorized to be executed by this message
+     */
+    virtual bool authorized(const network::Message& msg) const
+    {
+        return auth.empty() || ( msg.source && msg.source->user_auth(msg.from,auth));
+    }
 
 protected:
     /**
@@ -91,6 +107,11 @@ protected:
     {
         reply_to(msg, (string::FormattedStream("utf8") << text).str());
     }
+
+    /**
+     * \brief Authorization group required for a user message to be handled
+     */
+    std::string auth;
 };
 
 /**
@@ -111,7 +132,8 @@ public:
 
     bool can_handle(const network::Message& msg) override
     {
-        return msg.source == source && source && !msg.message.empty() &&
+        return msg.source == source && source &&
+            authorized(msg) && !msg.message.empty() &&
             ( msg.direct || !direct ) && msg.channels.size() < 2 &&
             string::starts_with(msg.message,trigger);
     }
@@ -157,6 +179,7 @@ private:
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
                  Melanobot* bot, bool allow_notrigger)
+        : Handler(settings)
     {
         trigger   = settings.get("trigger",default_trigger);
         priority  = settings.get("priority",priority);

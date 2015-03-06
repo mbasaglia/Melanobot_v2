@@ -81,6 +81,14 @@ public:
         return user_groups[group].contains(user);
     }
 
+    bool in_group(const User& user, const std::string& group) const
+    {
+        auto it = user_groups.find(group);
+        if ( it != user_groups.end() )
+            return it->second.contains(user);
+        return false;
+    }
+
     /**
      * \brief Gets the list of users with the given authorization level
      */

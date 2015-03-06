@@ -23,6 +23,9 @@ namespace user {
 
 void UserGroup::add_user ( const User& user )
 {
+    for ( const User& u : users )
+        if ( u.matches(user) )
+            return;
     users.push_back(user);
 }
 
@@ -38,7 +41,7 @@ void UserGroup::remove_user ( const User& user )
     }
 }
 
-bool UserGroup::contains ( const User& user )
+bool UserGroup::contains ( const User& user ) const
 {
     for ( const User& u : users )
         if ( u.matches(user) )

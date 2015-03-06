@@ -1,5 +1,8 @@
 /**
  * \file
+ * \brief This file defines handlers which are essential for proper usage of the bot
+ *
+ *
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \license
@@ -43,5 +46,61 @@ private:
     std::string sources_url;
 };
 REGISTER_HANDLER(License,License);
+
+
+/**
+ * \brief Quits the bot
+ */
+class AdminQuit: public SimpleAction
+{
+public:
+    AdminQuit(const Settings& settings, Melanobot* bot)
+        : SimpleAction("quit",settings,bot)
+    {
+        message = settings.get("message",message);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string quit_msg;
+        if ( !msg.message.empty() )
+            quit_msg = msg.message;
+        else
+            quit_msg = message;
+
+        msg.source->disconnect(quit_msg);
+        bot->stop();
+        return true;
+    }
+
+private:
+    std::string message = "Bye!";
+};
+REGISTER_HANDLER(AdminQuit,Quit);
+
+
+/**
+ * \brief Changes the bot nick (IRC)
+ */
+class AdminNick: public SimpleAction
+{
+public:
+    AdminNick(const Settings& settings, Melanobot* bot)
+        : SimpleAction("nick",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        if ( !msg.message.empty() )
+        {
+            msg.source->command({"NICK",{msg.message}});
+            return true;
+        }
+        return false;
+    }
+};
+REGISTER_HANDLER(AdminNick,Nick);
 
 } // namespace handler

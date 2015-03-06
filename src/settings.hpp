@@ -25,7 +25,6 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-
 /**
  * \brief Class containing hierarchical settings
  */
@@ -111,7 +110,12 @@ private:
     static std::string find_config ( const std::string& dir, FileFormat format);
 };
 
+std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
 
+/**
+ * \brief Key-value map used to store object properties
+ */
+typedef std::unordered_map<std::string,std::string> Properties;
 
 /**
  * \brief Class representing an error occurring during configuration

@@ -23,6 +23,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include "settings.hpp"
+
 /**
  * \brief Namespace for user handling utilities
  */
@@ -51,12 +53,12 @@ struct User
     bool matches ( const User& user ) const
     {
         if ( !global_id.empty() )
-            return user.global_id != global_id;
+            return user.global_id == global_id;
         if ( !host.empty() )
-            return user.host != host;
+            return user.host == host;
         if ( !local_id.empty() )
-            return user.local_id != local_id;
-        return user.name != name;
+            return user.local_id == local_id;
+        return user.name == name;
     }
 
     /**
@@ -94,6 +96,25 @@ struct User
     }
 
     /**
+     * \brief Update attributes and properties from \c props
+     */
+    void update(const Properties& props)
+    {
+        static std::unordered_map<std::string,std::string (User::*)> attributes = {
+            {"name",&User::name}, {"host",&User::host},
+            {"local_id", &User::local_id}, {"global_id",&User::global_id}
+        };
+        for ( const auto& p : props )
+        {
+            auto it = attributes.find(p.first);
+            if ( it != attributes.end() )
+                this->*(it->second) = p.second;
+            else
+                properties[p.first] = p.second;
+        }
+    }
+
+    /**
      * \brief User name
      *
      * It might have some custom formatting,
@@ -124,7 +145,7 @@ struct User
     /**
      * \brief Custom properties associated to the user
      */
-    std::unordered_map<std::string,std::string> properties;
+    Properties properties;
 };
 
 } // namespace user

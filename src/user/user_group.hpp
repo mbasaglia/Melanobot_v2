@@ -37,18 +37,22 @@ public:
      * The way users are matched depends on which attributes \c user has set.
      *
      * In order of priority, it will look for: \c global_id, \c host, \c name
+     *
+     * If a previously added user matches \c user, it won't be inserted
      */
     void add_user ( const User& user );
 
     /**
      * \brief Remove the user from the group
+     *
+     * Removes all matching users.
      */
     void remove_user ( const User& user );
 
     /**
      * \brief Whether the user is in the group or any of its children
      */
-    bool contains ( const User& user );
+    bool contains ( const User& user ) const;
 
     /**
      * \brief Adds a child group

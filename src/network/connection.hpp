@@ -131,7 +131,7 @@ public:
     /**
      * \brief Returns the server object to which this connection is connected to
      */
-    virtual const Server& server() const = 0;
+    virtual Server server() const = 0;
 
     /**
      * \brief Schedules a command for execution
@@ -174,7 +174,7 @@ public:
     /**
      * \brief Close the connection
      */
-    virtual void disconnect() = 0;
+    virtual void disconnect(const std::string& message = {}) = 0;
 
     /**
      * \brief Disconnect and stop all processing
@@ -197,6 +197,17 @@ public:
      */
     virtual bool channel_mask(const std::vector<std::string>& channels,
                               const std::string& mask) const = 0;
+
+    /**
+     * \brief Get whether a user has the given authorization level
+     */
+    virtual bool user_auth(const std::string& local_id,
+                           const std::string& auth_group) const = 0;
+    /**
+     * \brief Update the properties of a user by local_id
+     */
+    virtual void update_user(const std::string& local_id,
+                             const Properties& properties) = 0;
 };
 
 /**
