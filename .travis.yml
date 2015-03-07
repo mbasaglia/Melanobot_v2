@@ -9,4 +9,4 @@ script: mkdir build && cd build && cmake .. && make
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y g++-4.9 libboost-dev libcurlpp-dev
+  - sudo apt-get install -y libboost-dev libcurlpp-dev
