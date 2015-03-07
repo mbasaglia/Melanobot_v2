@@ -275,12 +275,6 @@ void IrcConnection::handle_message(Message msg)
             }
         }
     }
-    else if ( msg.command == "NOTICE" )
-    {
-        // http://tools.ietf.org/html/rfc2812#section-3.3.2
-        // Discard because you should never send automatic replies
-        return;
-    }
     else if ( msg.command == "ERROR" )
     {
         ErrorLog errl("irc","Server Error:");
@@ -935,7 +929,29 @@ void IrcConnection::update_user(const std::string& local_id,
     LOCK(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
+    {
         user->update(properties);
+
+        auto it = properties.find("global_id");
+        if ( it != properties.end() )
+            Log("irc",'!',3) << "User " << color::dark_cyan << local_id
+                << color::nocolor << " is authed as " << color::cyan << it->second;
+    }
+}
+
+std::string IrcConnection::nick() const
+{
+    LOCK(mutex);
+    return current_nick;
+}
+
+user::User IrcConnection::get_user(const std::string& local_id) const
+{
+    LOCK(mutex);
+    const user::User* user = user_manager.user(local_id);
+    if ( user )
+        return *user;
+    return {};
 }
 
 } // namespace irc

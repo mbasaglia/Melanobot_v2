@@ -206,6 +206,23 @@ public:
      */
     virtual void update_user(const std::string& local_id,
                              const Properties& properties) = 0;
+
+    /**
+     * \brief Returns a copy of the user object identified by \c local_id
+     * \return A copy of the internal record identifying the user or
+     *         an empty object if the user is not found.
+     */
+    virtual user::User get_user(const std::string& local_id) const = 0;
+
+    /* *
+     * \brief Get a connection property
+     */
+    //virtual std::string get_property(const std::string& property) const = 0;
+
+    /* *
+     * \brief Set a connection property
+     */
+    //virtual bool set_property(const std::string& property, const std::string value ) = 0;
 };
 
 /**

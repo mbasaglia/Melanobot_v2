@@ -158,8 +158,10 @@ public:
      */
     void update_user(const std::string& local_id,
                      const Properties& properties) override;
-private:
 
+    user::User get_user(const std::string& local_id) const override;
+
+private:
     friend class Buffer;
 
     /**
@@ -257,8 +259,13 @@ private:
      */
     AtomicStatus connection_status;
 
-
+    /**
+     * \brief User manager
+     */
     user::UserManager user_manager;
+    /**
+     * \brief User authorization system
+     */
     user::AuthSystem  auth_system;
 };
 

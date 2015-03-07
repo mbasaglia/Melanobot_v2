@@ -205,7 +205,8 @@ private:
 
 /**
  * \brief A simple group of actions which share some settings
- * \todo Filter channels
+ * \todo Add a simple way to create pre-defined group classes which will have
+ *       a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration)
  */
 class SimpleGroup : public SimpleAction
 {
