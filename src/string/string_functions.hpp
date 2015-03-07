@@ -81,6 +81,15 @@ inline std::string strtolower ( std::string string )
 }
 
 /**
+ * \brief String to upper case
+ */
+inline std::string strtoupper ( std::string string )
+{
+    std::transform(string.begin(),string.end(),string.begin(), (int(*)(int))std::toupper);
+    return std::move(string);
+}
+
+/**
  * \brief If the string is longer than \c length,
  * truncates to the last word and adds an ellipsis
  */

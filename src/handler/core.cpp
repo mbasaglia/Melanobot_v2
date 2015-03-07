@@ -25,6 +25,7 @@ namespace handler {
 
 /**
  * \brief Handler showing licensing information
+ * \note Must be enabled to comply to the AGPL
  */
 class License : public SimpleAction
 {
@@ -177,6 +178,6 @@ protected:
         return false;
     }
 };
-REGISTER_HANDLER(AcceptInvite,Accept_Invite);
+REGISTER_HANDLER(AcceptInvite,AcceptInvite);
 
 } // namespace handler

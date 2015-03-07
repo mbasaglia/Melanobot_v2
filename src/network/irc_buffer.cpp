@@ -19,7 +19,7 @@
 
 #include "irc_buffer.hpp"
 
-#include "irc.hpp"
+#include "irc_connection.hpp"
 
 namespace network {
 namespace irc {

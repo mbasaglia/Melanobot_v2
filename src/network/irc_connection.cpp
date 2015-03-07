@@ -16,10 +16,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "irc.hpp"
+#include "irc_connection.hpp"
 
 #include "string/logger.hpp"
 #include "string/string_functions.hpp"
+#include "irc_functions.hpp"
 
 #define LOCK(mutexname) std::lock_guard<std::mutex> lock_(mutexname)
 
@@ -229,7 +230,7 @@ void IrcConnection::handle_message(Message msg)
         mutex.lock();
             if ( strtolower(msg.params[0]) == current_nick_lowecase )
             {
-                msg.channels = { strtolower(userfrom.local_id) };
+                msg.channels = { userfrom.local_id };
                 msg.direct = 1;
             }
             else

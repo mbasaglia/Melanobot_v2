@@ -67,6 +67,7 @@ public:
     /**
      * \brief Checks if a message can be handled
      * \return \b true if the message can be handled by the handler
+     * \todo \b const?
      */
     virtual bool can_handle(const network::Message& msg)
     {

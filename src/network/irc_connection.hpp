@@ -17,15 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IRC_HPP
-#define IRC_HPP
+#ifndef IRC_CONNECTION_HPP
+#define IRC_CONNECTION_HPP
 
-#include <algorithm>
 #include <list>
 #include <queue>
 #include <regex>
 #include <stdexcept>
-#include <string>
 #include <unordered_map>
 
 #include "connection.hpp"
@@ -38,53 +36,6 @@ namespace network {
  * \brief Namespace contaning classes and functions handling the IRC protocol
  */
 namespace irc {
-
-/**
- * \brief Whether a character is a valid nickname character
- * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
- * \todo currently unused
- */
-inline bool is_nickchar(char c)
-{
-    return std::isalnum(c) || c == '-' ||
-        ( c >= 0x5B && c <= 0x60 ) || ( c >= 0x7B && c <= 0x7D );
-}
-
-/**
- * \brief Converts a string to lower case
- * \see http://tools.ietf.org/html/rfc2812#section-2.2
- * \todo locale stuff if it's worth the effort
- */
-inline std::string strtolower ( std::string string )
-{
-    std::transform(string.begin(),string.end(),string.begin(),[](char c)->char {
-        switch (c) {
-            case '[': return '{';
-            case ']': return '}';
-            case '\\': return '|';
-            case '~': return '^';
-            default:  return std::tolower(c);
-        }
-    });
-    return string;
-}
-/**
- * \brief Converts a string to upper case
- * \see http://tools.ietf.org/html/rfc2812#section-2.2
- */
-inline std::string strtoupper ( std::string string )
-{
-    std::transform(string.begin(),string.end(),string.begin(),[](char c)->char {
-        switch (c) {
-            case '{': return '[';
-            case '}': return ']';
-            case '|': return '\\';
-            case '^': return '~';
-            default:  return std::toupper(c);
-        }
-    });
-    return string;
-}
 
 /**
  * \brief IRC connection
@@ -313,4 +264,4 @@ private:
 
 } // namespace network::irc
 } // namespace network
-#endif // IRC_HPP
+#endif // IRC_CONNECTION_HPP
