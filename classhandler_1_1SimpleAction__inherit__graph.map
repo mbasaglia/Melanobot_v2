@@ -1,15 +1,17 @@
 <map id="handler::SimpleAction" name="handler::SimpleAction">
-<area shape="rect" id="node3" href="$classhandler_1_1AdminJoin.html" title="Makes the bot join channels (IRC) " alt="" coords="381,5,514,32"/>
-<area shape="rect" id="node4" href="$classhandler_1_1AdminNick.html" title="Changes the bot nick (IRC) " alt="" coords="379,56,515,83"/>
-<area shape="rect" id="node5" href="$classhandler_1_1AdminPart.html" title="Makes the bot part channels (IRC) " alt="" coords="381,107,514,133"/>
-<area shape="rect" id="node6" href="$classhandler_1_1AdminQuit.html" title="Quits the bot. " alt="" coords="381,157,514,184"/>
-<area shape="rect" id="node7" href="$classhandler_1_1License.html" title="Handler showing licensing information. " alt="" coords="389,208,506,235"/>
-<area shape="rect" id="node8" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share some settings. " alt="" coords="374,259,521,285"/>
-<area shape="rect" id="node9" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="368,309,527,336"/>
-<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="5,157,123,184"/>
-<area shape="rect" id="node10" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="575,309,715,336"/>
-<area shape="rect" id="node11" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="765,233,955,260"/>
-<area shape="rect" id="node12" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="763,284,957,311"/>
-<area shape="rect" id="node13" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="773,335,947,361"/>
-<area shape="rect" id="node14" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="777,385,943,412"/>
+<area shape="rect" id="node3" href="$classhandler_1_1AdminJoin.html" title="Makes the bot join channels (IRC) " alt="" coords="384,5,517,32"/>
+<area shape="rect" id="node4" href="$classhandler_1_1AdminNick.html" title="Changes the bot nick (IRC) " alt="" coords="383,56,519,83"/>
+<area shape="rect" id="node5" href="$classhandler_1_1AdminPart.html" title="Makes the bot part channels (IRC) " alt="" coords="384,107,517,133"/>
+<area shape="rect" id="node6" href="$classhandler_1_1AdminQuit.html" title="Quits the bot. " alt="" coords="384,157,517,184"/>
+<area shape="rect" id="node7" href="$classhandler_1_1AdminRaw.html" title="Makes the bot execute a raw command (IRC) " alt="" coords="383,208,519,235"/>
+<area shape="rect" id="node8" href="$classhandler_1_1License.html" title="Handler showing licensing information. " alt="" coords="392,259,509,285"/>
+<area shape="rect" id="node9" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share some settings. " alt="" coords="377,309,524,336"/>
+<area shape="rect" id="node10" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="371,360,530,387"/>
+<area shape="rect" id="node16" href="$classhandler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="368,411,533,437"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="5,208,123,235"/>
+<area shape="rect" id="node11" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="581,360,721,387"/>
+<area shape="rect" id="node12" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="771,284,962,311"/>
+<area shape="rect" id="node13" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="769,335,964,361"/>
+<area shape="rect" id="node14" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="779,385,954,412"/>
+<area shape="rect" id="node15" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="783,436,950,463"/>
 </map>

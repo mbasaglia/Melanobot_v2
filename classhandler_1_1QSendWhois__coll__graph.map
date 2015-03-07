@@ -1,0 +1,6 @@
+<map id="handler::QSendWhois" name="handler::QSendWhois">
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="38,304,155,331"/>
+<area shape="rect" id="node3" href="$classMelanobot.html" title="Main bot class. " alt="" coords="55,215,138,241"/>
+<area shape="rect" id="node4" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="5,111,188,152"/>
+<area shape="rect" id="node5" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="11,5,182,61"/>
+</map>

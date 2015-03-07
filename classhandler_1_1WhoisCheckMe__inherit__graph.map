@@ -1,0 +1,4 @@
+<map id="handler::WhoisCheckMe" name="handler::WhoisCheckMe">
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="13,80,163,107"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="29,5,147,32"/>
+</map>

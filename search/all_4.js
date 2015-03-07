@@ -12,5 +12,6 @@ var searchData=
   ['error_5fmessage',['error_message',['../structnetwork_1_1Response.html#ac1514fcf435fbe2d0b78e6bce837ef97',1,'network::Response']]],
   ['errorlog',['ErrorLog',['../classErrorLog.html',1,'ErrorLog'],['../classErrorLog.html#ae984398bab0918419461af5c69ddcce8',1,'ErrorLog::ErrorLog()']]],
   ['escape',['escape',['../structJsonParser.html#a34ffc8814baff3d94cde6d9624d6cb4e',1,'JsonParser']]],
-  ['escapeable',['escapeable',['../structJsonParser.html#a2e40240b273fde5d5a9b39a7d3368807',1,'JsonParser']]]
+  ['escapeable',['escapeable',['../structJsonParser.html#a2e40240b273fde5d5a9b39a7d3368807',1,'JsonParser']]],
+  ['expects_5fusers',['expects_users',['../classhandler_1_1QGetWhois.html#a8c7e3fa69a194ac1df79641afeb0c7b5',1,'handler::QGetWhois']]]
 ];

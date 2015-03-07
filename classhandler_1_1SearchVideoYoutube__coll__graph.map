@@ -1,10 +1,9 @@
 <map id="handler::SearchVideoYoutube" name="handler::SearchVideoYoutube">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="141,545,281,572"/>
-<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="132,469,291,496"/>
-<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="137,393,286,420"/>
-<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="38,304,155,331"/>
-<area shape="rect" id="node6" href="$classMelanobot.html" title="Main bot class. " alt="" coords="55,215,138,241"/>
-<area shape="rect" id="node7" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="5,111,188,152"/>
-<area shape="rect" id="node8" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="11,5,182,61"/>
-<area shape="rect" id="node9" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="179,304,321,331"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="33,532,173,559"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="23,456,182,483"/>
+<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="28,380,177,407"/>
+<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="44,304,161,331"/>
+<area shape="rect" id="node6" href="$classMelanobot.html" title="Main bot class. " alt="" coords="61,215,144,241"/>
+<area shape="rect" id="node7" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="11,111,194,152"/>
+<area shape="rect" id="node8" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="17,5,188,61"/>
 </map>

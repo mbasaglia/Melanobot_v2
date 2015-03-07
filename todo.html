@@ -84,7 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><dl class="reflist">
 <dt><a class="anchor" id="_todo000016"></a>File <a class="el" href="ctcp_8cpp.html">ctcp.cpp</a>  </dt>
 <dd>CtcpClientInfo  </dd>
-<dt><a class="anchor" id="_todo000023"></a>Member <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
+<dt><a class="anchor" id="_todo000024"></a>Member <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
 <dd>gather part message  </dd>
 <dt><a class="anchor" id="_todo000017"></a>Member <a class="el" href="classhandler_1_1CtcpVersion.html#a4455c28d360ac95a8ed9b2e97fcd63db">handler::CtcpVersion::CtcpVersion</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
 <dd>more detailed system information  </dd>
@@ -97,8 +97,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <dt><a class="anchor" id="_todo000014"></a>Member <a class="el" href="classhandler_1_1Handler.html#a2c6b00c624bfba80346fb2d4257c8042">handler::Handler::initialize</a>  ()</dt>
 <dd>Run after the connection has been established? (needs to know what connections this class handles)  </dd>
 <dt><a class="anchor" id="_todo000012"></a>Class <a class="el" href="classhandler_1_1SimpleGroup.html">handler::SimpleGroup</a>  </dt>
-<dd>Filter channels  </dd>
-<dt><a class="anchor" id="_todo000024"></a>Member <a class="el" href="classhandler_1_1SimpleGroup.html#a3e56c03bdefd771708a16c8d7956bc71">handler::SimpleGroup::SimpleGroup</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
+<dd>Add a simple way to create pre-defined group classes which will have a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration)  </dd>
+<dt><a class="anchor" id="_todo000025"></a>Member <a class="el" href="classhandler_1_1SimpleGroup.html#a3e56c03bdefd771708a16c8d7956bc71">handler::SimpleGroup::SimpleGroup</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
 <dd>option co copy settings from another group  </dd>
 <dt><a class="anchor" id="_todo000022"></a>Member <a class="el" href="structJsonParser.html#a8d29983beae6467f7056bf3abb1f9c85">JsonParser::get_skipws</a>  ()</dt>
 <dd>possibly skip comments  </dd>
@@ -131,18 +131,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <dt><a class="anchor" id="_todo000044"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a378fdcdd852e4796ecd4f954e7b65768">network::irc::Buffer::write_line</a>  (std::string line)</dt>
 <dd>maybe try to strip  and <br />
  from line  </dd>
-<dt><a class="anchor" id="_todo000036"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection::command</a>  (const Command &amp;cmd) override</dt>
+<dt><a class="anchor" id="_todo000037"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection::command</a>  (const Command &amp;cmd) override</dt>
 <dd><p class="startdd">if size &gt; max nick length, break </p>
 <p>validate nick </p>
 <p>sanitaze the mode string </p>
 <p>allow channel mode </p>
 <p class="enddd">keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a>  </p>
 </dd>
-<dt><a class="anchor" id="_todo000041"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ae54665196d8b93ebcd707f01742cc55c">network::irc::IrcConnection::connect</a>  () override</dt>
+<dt><a class="anchor" id="_todo000042"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ae54665196d8b93ebcd707f01742cc55c">network::irc::IrcConnection::connect</a>  () override</dt>
 <dd>If connection fails, trigger a graceful quit  </dd>
-<dt><a class="anchor" id="_todo000042"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a49d7a7513cc00402000473c9da566704">network::irc::IrcConnection::current_server</a>  </dt>
+<dt><a class="anchor" id="_todo000023"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a49d7a7513cc00402000473c9da566704">network::irc::IrcConnection::current_server</a>  </dt>
 <dd></dd>
-<dt><a class="anchor" id="_todo000026"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436">network::irc::IrcConnection::handle_message</a>  (Message line)</dt>
+<dt><a class="anchor" id="_todo000027"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436">network::irc::IrcConnection::handle_message</a>  (Message line)</dt>
 <dd><p class="startdd">read current_server </p>
 <p>maybe do more than one channel per command </p>
 <p>maybe it would be useful to store operator/voiced status </p>
@@ -154,7 +154,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>handle the case when this notifies the bot itself has joined a channel </p>
 <p class="enddd">print a message for all ERR_ responses (verbosity &gt; 2)  </p>
 </dd>
-<dt><a class="anchor" id="_todo000025"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aa97e91c931f8c4c18754a9722a8c3b7f">network::irc::IrcConnection::read_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
+<dt><a class="anchor" id="_todo000026"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aa97e91c931f8c4c18754a9722a8c3b7f">network::irc::IrcConnection::read_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
 <dd>if called from somewhere that is not the constructor, lock data  </dd>
 <dt><a class="anchor" id="_todo000018"></a>Member <a class="el" href="namespacenetwork_1_1irc.html#ac15c863971041cf2b22071e32f36e009">network::irc::is_nickchar</a>  (char c)</dt>
 <dd>currently unused  </dd>
@@ -180,7 +180,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 11:01:37 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

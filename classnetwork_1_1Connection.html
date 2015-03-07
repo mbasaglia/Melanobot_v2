@@ -169,11 +169,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b4b4784fbd07b0364c4b8682b35e826"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a4b4b4784fbd07b0364c4b8682b35e826">update_user</a> (const std::string &amp;local_id, const <a class="el" href="settings_8hpp.html#a1937c97b7058a8be10dc4b9cba6ada0a">Properties</a> &amp;properties)=0</td></tr>
 <tr class="memdesc:a4b4b4784fbd07b0364c4b8682b35e826"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the properties of a user by local_id.  <a href="#a4b4b4784fbd07b0364c4b8682b35e826">More...</a><br /></td></tr>
 <tr class="separator:a4b4b4784fbd07b0364c4b8682b35e826"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4102f0253adc1fea04b84ff8f8e5652f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structuser_1_1User.html">user::User</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a4102f0253adc1fea04b84ff8f8e5652f">get_user</a> (const std::string &amp;local_id) const =0</td></tr>
+<tr class="memdesc:a4102f0253adc1fea04b84ff8f8e5652f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a copy of the user object identified by <code>local_id</code>.  <a href="#a4102f0253adc1fea04b84ff8f8e5652f">More...</a><br /></td></tr>
+<tr class="separator:a4102f0253adc1fea04b84ff8f8e5652f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract service connection. </p>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00116">116</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00114">114</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a4a09e9838133fa3fc9569460363186b4"></a>
 <div class="memitem">
@@ -185,7 +188,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00127">127</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00125">125</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -217,7 +220,7 @@ Public Member Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00119">119</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00117">117</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -243,7 +246,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00129">129</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00127">127</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -284,7 +287,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a8bcb5630f85fa42271ca51347df19911">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8cpp_source.html#l00068">handler::SimpleGroup::can_handle()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8cpp_source.html#l00071">handler::SimpleGroup::can_handle()</a>.</p>
 
 </div>
 </div>
@@ -314,7 +317,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="core_8cpp_source.html#l00094">handler::AdminNick::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00117">handler::AdminJoin::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00143">handler::AdminPart::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00171">handler::AcceptInvite::on_handle()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00053">handler::CtcpBase::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="core_8cpp_source.html#l00094">handler::AdminNick::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00117">handler::AdminJoin::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00143">handler::AdminPart::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00171">handler::AcceptInvite::on_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00175">handler::WhoisCheckMe::on_handle()</a>, <a class="el" href="core_8cpp_source.html#l00195">handler::AdminRaw::on_handle()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00053">handler::CtcpBase::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -404,6 +407,35 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a4102f0253adc1fea04b84ff8f8e5652f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structuser_1_1User.html">user::User</a> network::Connection::get_user </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>local_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a copy of the user object identified by <code>local_id</code>. </p>
+<dl class="section return"><dt>Returns</dt><dd>A copy of the internal record identifying the user or an empty object if the user is not found. </dd></dl>
+
+<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1d675270805d4ac2a8c7a6da195ee361">network::irc::IrcConnection</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a2149c15b60e3de990cf83d1f233b487b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -429,7 +461,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ac2fae723113817bd55ece53d02093259">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00040">handler::CtcpBase::can_handle()</a>.</p>
+<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00040">handler::CtcpBase::can_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00063">handler::QSendWhois::can_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00106">handler::QGetWhois::can_handle()</a>, and <a class="el" href="irc__whois_8cpp_source.html#l00168">handler::WhoisCheckMe::can_handle()</a>.</p>
 
 </div>
 </div>
@@ -481,7 +513,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aeece055e169a1fd3183ca0ab5962656b">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00107">handler::Handler::reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00166">handler::SimpleAction::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00108">handler::Handler::reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00174">handler::SimpleAction::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -695,6 +727,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a631b432071e21f7fc18d7c346510e92b">network::irc::IrcConnection</a>.</p>
 
+<p>Referenced by <a class="el" href="irc__whois_8cpp_source.html#l00040">handler::Whois330::on_handle()</a>, and <a class="el" href="irc__whois_8cpp_source.html#l00114">handler::QGetWhois::on_handle()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ad634a6ca4f9c1fef61d2bef85c2b9beb"></a>
@@ -733,7 +767,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ad096a3137e8873702d8c77053bfd45dc">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00091">handler::Handler::authorized()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00092">handler::Handler::authorized()</a>.</p>
 
 </div>
 </div>
@@ -743,7 +777,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 11:01:37 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -20,7 +20,7 @@ var searchData=
   ['port',['port',['../structnetwork_1_1Server.html#ac34927b725f2692679ff19f29094f8a4',1,'network::Server']]],
   ['post',['post',['../namespacenetwork_1_1http.html#a193080b78a08af1e3da5486aa4ce0330',1,'network::http']]],
   ['preferred_5fnick',['preferred_nick',['../classnetwork_1_1irc_1_1IrcConnection.html#a824a9a71ef4e2b28eae2d1d01a68c692',1,'network::irc::IrcConnection']]],
-  ['priority',['priority',['../structnetwork_1_1Command.html#a84f66014fba36c2ac21068629bcd26f2',1,'network::Command::priority()'],['../classhandler_1_1SimpleAction.html#aa8ffaf01e88def8898e2c4a151a13e50',1,'handler::SimpleAction::priority()']]],
+  ['priority',['priority',['../structnetwork_1_1Command.html#a84f66014fba36c2ac21068629bcd26f2',1,'network::Command::priority()'],['../classhandler_1_1Handler.html#adae0c95540147cb22da4a57f45d9f0ae',1,'handler::Handler::priority()']]],
   ['process',['process',['../classnetwork_1_1irc_1_1Buffer.html#aadb00c7da83e901eaa2a0aaac3247642',1,'network::irc::Buffer']]],
   ['project_5fname',['PROJECT_NAME',['../config_8hpp.html#ae73053051efbb45c3a39751f5ce9fb36',1,'config.hpp']]],
   ['project_5fshortname',['PROJECT_SHORTNAME',['../config_8hpp.html#ad879560b47e0bb0a519a1f2c19ebeee4',1,'config.hpp']]],

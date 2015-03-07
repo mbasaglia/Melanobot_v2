@@ -17,6 +17,7 @@ var searchData=
   ['irc_5fconnection_2ecpp',['irc_connection.cpp',['../irc__connection_8cpp.html',1,'']]],
   ['irc_5fconnection_2ehpp',['irc_connection.hpp',['../irc__connection_8hpp.html',1,'']]],
   ['irc_5ffunctions_2ehpp',['irc_functions.hpp',['../irc__functions_8hpp.html',1,'']]],
+  ['irc_5fwhois_2ecpp',['irc_whois.cpp',['../irc__whois_8cpp.html',1,'']]],
   ['ircconnection',['IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html#aecd79ba17a920bd35d258a78ad003b9d',1,'network::irc::IrcConnection']]],
   ['ircconnection',['IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html',1,'network::irc']]],
   ['is_5fascii',['is_ascii',['../classstring_1_1Utf8Parser.html#a90edabbcd0130d37688741131a3c5ce1',1,'string::Utf8Parser']]],

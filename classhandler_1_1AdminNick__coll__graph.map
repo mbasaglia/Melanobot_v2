@@ -1,8 +1,7 @@
 <map id="handler::AdminNick" name="handler::AdminNick">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="137,393,286,420"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="22,380,171,407"/>
 <area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="38,304,155,331"/>
 <area shape="rect" id="node4" href="$classMelanobot.html" title="Main bot class. " alt="" coords="55,215,138,241"/>
 <area shape="rect" id="node5" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="5,111,188,152"/>
 <area shape="rect" id="node6" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="11,5,182,61"/>
-<area shape="rect" id="node7" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="179,304,321,331"/>
 </map>

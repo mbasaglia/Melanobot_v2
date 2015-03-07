@@ -1,16 +1,17 @@
 <map id="src/user/auth_system.hpp" name="src/user/auth_system.hpp">
-<area shape="rect" id="node2" href="$connection_8hpp.html" title="src/network/connection.hpp" alt="" coords="688,80,871,107"/>
-<area shape="rect" id="node3" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="664,155,793,181"/>
-<area shape="rect" id="node5" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="473,229,630,256"/>
-<area shape="rect" id="node11" href="$irc__connection_8hpp.html" title="src/network/irc_connection.hpp" alt="" coords="854,229,1057,256"/>
-<area shape="rect" id="node15" href="$irc__buffer_8hpp.html" title="src/network/irc_buffer.hpp" alt="" coords="869,155,1042,181"/>
-<area shape="rect" id="node4" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="700,304,829,331"/>
-<area shape="rect" id="node14" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="655,229,752,256"/>
-<area shape="rect" id="node6" href="$ctcp_8cpp.html" title="src/handler/ctcp.cpp" alt="" coords="352,304,492,331"/>
-<area shape="rect" id="node7" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="517,304,677,331"/>
-<area shape="rect" id="node9" href="$core_8cpp.html" title="This file defines handlers which are essential for proper usage of the bot. " alt="" coords="5,304,145,331"/>
-<area shape="rect" id="node10" href="$handler_8cpp.html" title="src/handler/handler.cpp" alt="" coords="170,304,327,331"/>
-<area shape="rect" id="node8" href="$web-api_8cpp.html" title="src/handler/web&#45;api.cpp" alt="" coords="517,379,677,405"/>
-<area shape="rect" id="node12" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="854,304,1057,331"/>
-<area shape="rect" id="node13" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="1081,304,1254,331"/>
+<area shape="rect" id="node2" href="$connection_8hpp.html" title="src/network/connection.hpp" alt="" coords="761,80,943,107"/>
+<area shape="rect" id="node3" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="737,155,866,181"/>
+<area shape="rect" id="node5" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="528,229,685,256"/>
+<area shape="rect" id="node12" href="$irc__connection_8hpp.html" title="src/network/irc_connection.hpp" alt="" coords="883,229,1085,256"/>
+<area shape="rect" id="node16" href="$irc__buffer_8hpp.html" title="src/network/irc_buffer.hpp" alt="" coords="941,155,1115,181"/>
+<area shape="rect" id="node4" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="701,304,830,331"/>
+<area shape="rect" id="node15" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="710,229,807,256"/>
+<area shape="rect" id="node6" href="$ctcp_8cpp.html" title="src/handler/ctcp.cpp" alt="" coords="187,304,327,331"/>
+<area shape="rect" id="node7" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="352,304,512,331"/>
+<area shape="rect" id="node9" href="$irc__whois_8cpp.html" title="src/handler/irc_whois.cpp" alt="" coords="855,304,1025,331"/>
+<area shape="rect" id="node10" href="$core_8cpp.html" title="This file defines handlers which are essential for proper usage of the bot. " alt="" coords="537,304,677,331"/>
+<area shape="rect" id="node11" href="$handler_8cpp.html" title="src/handler/handler.cpp" alt="" coords="5,304,163,331"/>
+<area shape="rect" id="node8" href="$web-api_8cpp.html" title="src/handler/web&#45;api.cpp" alt="" coords="352,379,512,405"/>
+<area shape="rect" id="node13" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="1049,304,1252,331"/>
+<area shape="rect" id="node14" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="1276,304,1449,331"/>
 </map>
