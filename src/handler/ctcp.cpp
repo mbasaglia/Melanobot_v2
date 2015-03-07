@@ -1,5 +1,7 @@
 /**
  * \file
+ * \brief This files has handlers for CTCP messages
+ * 
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \section License

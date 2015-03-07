@@ -1,5 +1,7 @@
 /**
  * \file
+ * \brief This files defines some simple Handlers using web APIs
+ *
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \license

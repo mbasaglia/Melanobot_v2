@@ -1,5 +1,7 @@
 /**
  * \file
+ * \brief This file contains the definitions for the most basic and reusable handlers
+ * 
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \license

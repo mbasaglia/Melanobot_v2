@@ -1,5 +1,7 @@
 /**
  * \file
+ * \brief This file contains handlers for WHOIS recognition on IRC
+ * 
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \section License

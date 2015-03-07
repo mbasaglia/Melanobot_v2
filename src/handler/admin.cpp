@@ -1,7 +1,7 @@
 /**
  * \file
- * \brief This file defines handlers which are essential for proper usage of the bot
- *
+ * \brief This file defines handlers which allows admin to administrate the bot
+ *        (Mostly IRC-specific action)
  *
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
@@ -22,32 +22,6 @@
 #include "handler.hpp"
 
 namespace handler {
-
-/**
- * \brief Handler showing licensing information
- * \note Must be enabled to comply to the AGPL
- */
-class License : public SimpleAction
-{
-public:
-    License(const Settings& settings, Melanobot* bot)
-        : SimpleAction("license",settings,bot)
-    {
-        sources_url = settings.get("url",Settings::global_settings.get("website",""));
-    }
-
-protected:
-    bool on_handle(network::Message& msg) override
-    {
-        reply_to(msg,"AGPLv3+ (http://www.gnu.org/licenses/agpl-3.0.html), Sources: "+sources_url);
-        return true;
-    }
-
-private:
-    std::string sources_url;
-};
-REGISTER_HANDLER(License,License);
-
 
 /**
  * \brief Quits the bot
