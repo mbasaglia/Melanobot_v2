@@ -41,9 +41,9 @@ protected:
                 std::regex_constants::syntax_option_type::optimize |
                 std::regex_constants::syntax_option_type::ECMAScript);
 
+        std::string result;
         if ( std::regex_match(msg.message,regex_morse) )
         {
-            std::string result;
             auto morse_array = string::regex_split(msg.message," ",false);
             for ( const auto& mc : morse_array )
             {
@@ -62,7 +62,6 @@ protected:
                 }
 
             }
-            reply_to(msg,result);
         }
         else
         {
@@ -74,8 +73,12 @@ protected:
                 if ( it != morse.end() )
                     morse_string.push_back(it->second);
             }
-            reply_to(msg,string::implode(" ",morse_string));
+            result = string::implode(" ",morse_string);
         }
+
+        if ( !result.empty() )
+            reply_to(msg,result);
+
         return true;
     }
 
@@ -142,4 +145,136 @@ private:
 };
 REGISTER_HANDLER(Morse,Morse);
 
+/**
+ * \brief Turn ASCII characters upside-down
+ */
+class ReverseText : public SimpleAction
+{
+public:
+    ReverseText(const Settings& settings, Melanobot* bot)
+        : SimpleAction("reverse",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string ascii = msg.source->formatter()->decode(msg.message).encode("ascii");
+        if ( ascii.empty() )
+            return true;
+
+        std::string result;
+        for ( char c : ascii )
+        {
+            auto it = reverse_ascii.find(c);
+            if ( it !=  reverse_ascii.end() )
+                result = it->second + result;
+            else
+                result = c + result;
+        }
+
+        reply_to(msg,result);
+
+        return true;
+    }
+
+private:
+    std::unordered_map<char,std::string> reverse_ascii {
+        { ' ', " " },
+        { '!', "¡" },
+        { '"', "„" },
+        { '#', "#" },
+        { '$', "$" },
+        { '%', "%" }, // :-(
+        { '&', "⅋" },
+        { '\'', "ˌ" },
+        { '(', ")" },
+        { ')', "(" },
+        { '*', "*" },
+        { '+', "+" },
+        { ',', "ʻ" },
+        { '-', "-" },
+        { '.', "˙" },
+        { '/', "\\" },
+        { '0', "0" },
+        { '1', "⇂" }, // Ɩ
+        { '2', "ح" },//ᄅ
+        { '3', "Ꜫ" },
+        { '4', "ᔭ" },
+        { '5', "2" }, // meh
+        { '6', "9" },
+        { '7', "ㄥ" },
+        { '8', "8" },
+        { '9', "6" },
+        { ':', ":" },
+        { ';', "؛" },
+        { '<', ">" },
+        { '=', "=" },
+        { '>', "<" },
+        { '?', "¿" },
+        { '@', "@" }, // :-(
+        { 'A', "Ɐ" },
+        { 'B', "ᗺ" },
+        { 'C', "Ɔ" },
+        { 'D', "ᗡ" },
+        { 'E', "Ǝ" },
+        { 'F', "Ⅎ" },
+        { 'G', "⅁" },
+        { 'H', "H" },
+        { 'I', "I" },
+        { 'J', "ſ" },
+        { 'K', "ʞ" }, // :-/
+        { 'L', "Ꞁ" },
+        { 'M', "ꟽ" },
+        { 'N', "N" },
+        { 'O', "O" },
+        { 'P', "d" },// meh
+        { 'Q', "Ò" },
+        { 'R', "ᴚ" },
+        { 'S', "S" },
+        { 'T', "⊥" },
+        { 'U', "⋂" },
+        { 'V', "Λ" },
+        { 'W', "M" }, // meh
+        { 'X', "X" },
+        { 'Y', "⅄" },
+        { 'Z', "Z" },
+        { '[', "]" },
+        { '\\', "/" },
+        { ']', "[" },
+        { '^', "˯" },
+        { '_', "¯" },
+        { '`', "ˎ" },
+        { 'a', "ɐ" },
+        { 'b', "q" },
+        { 'c', "ɔ" },
+        { 'd', "p" },
+        { 'e', "ə" },
+        { 'f', "ɟ" },
+        { 'g', "δ" },
+        { 'h', "ɥ" },
+        { 'i', "ᴉ" },
+        { 'j', "ɾ" },
+        { 'k', "ʞ" },
+        { 'l', "ꞁ" },
+        { 'm', "ɯ" },
+        { 'n', "u" },
+        { 'o', "o" },
+        { 'p', "d" },
+        { 'q', "b" },
+        { 'r', "ɹ" },
+        { 's', "s" },
+        { 't', "ʇ" },
+        { 'u', "n" },
+        { 'v', "ʌ" },
+        { 'w', "ʍ" },
+        { 'x', "x" },
+        { 'y', "ʎ" },
+        { 'z', "z" },
+        { '{', "}" },
+        { '|', "|" },
+        { '}', "{" },
+        { '~', "∽" },
+    };
+};
+REGISTER_HANDLER(ReverseText,ReverseText);
 } // namespace handler
