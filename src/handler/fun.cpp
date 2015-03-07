@@ -146,7 +146,7 @@ private:
 REGISTER_HANDLER(Morse,Morse);
 
 /**
- * \brief Turn ASCII characters upside-down
+ * \brief Turns ASCII characters upside-down
  */
 class ReverseText : public SimpleAction
 {
@@ -277,4 +277,46 @@ private:
     };
 };
 REGISTER_HANDLER(ReverseText,ReverseText);
+
+/**
+ * \brief Searches for a Chuck Norris joke
+ */
+class ChuckNorris : public SimpleJson
+{
+public:
+    ChuckNorris(const Settings& settings, Melanobot* bot)
+        : SimpleJson("norris",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        static std::regex regex_name("(?:([^ ]+) )?\\s*(.*)",
+                std::regex_constants::syntax_option_type::optimize |
+                std::regex_constants::syntax_option_type::ECMAScript);
+
+        network::http::Parameters params;
+        std::smatch match;
+
+        if ( std::regex_match(msg.message, match, regex_name) )
+        {
+            params["firstName"] = match[1];
+            params["lastName"]  = match[2];
+        }
+
+        request_json(msg,network::http::get(api_url,params));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        /// \todo convert html entities
+        reply_to(msg,parsed.get("value.joke",""));
+    }
+
+private:
+    std::string api_url = "http://api.icndb.com/jokes/random";
+};
+REGISTER_HANDLER(ChuckNorris,ChuckNorris);
+
 } // namespace handler
