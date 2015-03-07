@@ -151,7 +151,7 @@ public:
 
     bool can_handle(const network::Message& msg) override
     {
-        return msg.source == source && source && authorized(msg) &&
+        return msg.source && authorized(msg) &&
             ( msg.direct || !direct ) && msg.channels.size() < 2 &&
             string::starts_with(msg.message,trigger);
     }
@@ -174,12 +174,11 @@ protected:
     void reply_to(const network::Message& msg, const string::FormattedString& text) const override
     {
         std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
-        source->say(chan,text,priority);
+        msg.source->say(chan,text,priority);
     }
 
-    network::Connection* source = nullptr; ///< Connection which created the message
     std::string          trigger;          ///< String identifying the action
-    bool                 direct = true;    ///< Whether the message needs to be direct
+    bool                 direct = false;   ///< Whether the message needs to be direct
 
 private:
 
@@ -199,7 +198,6 @@ private:
     {
         trigger   = settings.get("trigger",default_trigger);
         direct    = settings.get("direct",direct);
-        source    = bot->connection(settings.get("source",""));
         if ( !allow_notrigger && trigger.empty() )
             throw ConfigurationError();
     }
@@ -222,6 +220,7 @@ protected:
 
     std::vector<Handler*> children;
     std::string           channels;
+    network::Connection*  source = nullptr; ///< Connection which created the message
 };
 
 #define REGISTER_HANDLER(class_name,public_name) \

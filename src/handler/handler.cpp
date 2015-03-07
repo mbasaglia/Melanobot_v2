@@ -27,6 +27,9 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
     : SimpleAction("",settings,bot,true)
 {
     channels = settings.get("channels","");
+    std::string source_name = settings.get("source","");
+    if ( !source_name.empty() )
+        source = bot->connection(source_name);
 
     Settings default_settings;
     for ( const auto& p : settings )
@@ -67,8 +70,8 @@ bool SimpleGroup::on_handle(network::Message& msg)
 
 bool SimpleGroup::can_handle(const network::Message& msg)
 {
-    return SimpleAction::can_handle(msg) && (
-        channels.empty() || msg.source->channel_mask(msg.channels, channels) );
+    return SimpleAction::can_handle(msg) && (!source || msg.source == source) &&
+        (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
 
