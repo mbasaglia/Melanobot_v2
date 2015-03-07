@@ -79,9 +79,7 @@ struct Command
     Time                        timein;         ///< Time of creation
     Time                        timeout;        ///< Time it becomes obsolete
 
-    Command() = default;
-
-    Command ( const std::string&        command,
+    Command ( const std::string&        command = {},
         const std::vector<std::string>& parameters = {},
         int                             priority = 0,
         const Time&                     timeout = Time::max() )

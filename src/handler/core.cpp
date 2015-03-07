@@ -180,4 +180,48 @@ protected:
 };
 REGISTER_HANDLER(AcceptInvite,AcceptInvite);
 
+
+/**
+ * \brief Makes the bot execute a raw command (IRC)
+ */
+class AdminRaw: public SimpleAction
+{
+public:
+    AdminRaw(const Settings& settings, Melanobot* bot)
+        : SimpleAction("raw",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        if ( !msg.message.empty() )
+        {
+            std::istringstream ss(msg.message);
+            network::Command cmd;
+            ss >> cmd.command;
+            char c;
+            std::string param;
+            while ( ss >> c )
+            {
+                if ( c == ':' )
+                {
+                    std::getline(ss, param);
+                    cmd.parameters.push_back(param);
+                    break;
+                }
+                else
+                {
+                    ss.putback(c);
+                    ss >> param;
+                    cmd.parameters.push_back(param);
+                }
+            }
+            msg.source->command(cmd);
+        }
+        return true;
+    }
+};
+REGISTER_HANDLER(AdminRaw,Raw);
+
+
 } // namespace handler

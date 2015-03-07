@@ -46,6 +46,7 @@ public:
     Handler( const Settings& settings, Melanobot* bot ) : bot ( bot )
     {
         auth = settings.get("auth",auth);
+        priority = settings.get("priority",priority);
         if ( !bot )
             throw ConfigurationError();
     }
@@ -109,7 +110,7 @@ protected:
         if ( msg.source )
         {
             std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
-            msg.source->say(chan,text);
+            msg.source->say(chan,text,priority);
         }
     }
 
@@ -122,6 +123,13 @@ protected:
      * \brief Authorization group required for a user message to be handled
      */
     std::string auth;
+    /**
+     * \brief Message priority
+     */
+    int priority = 0;
+    /**
+     * \brief Pointer to the main bot
+     */
     Melanobot*  bot = nullptr;
 };
 
@@ -166,13 +174,12 @@ protected:
     void reply_to(const network::Message& msg, const string::FormattedString& text) const override
     {
         std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
-        source->say(chan,text);
+        source->say(chan,text,priority);
     }
 
     network::Connection* source = nullptr; ///< Connection which created the message
     std::string          trigger;          ///< String identifying the action
     bool                 direct = true;    ///< Whether the message needs to be direct
-    int                  priority = 0;     ///< Response message priority
 
 private:
 
@@ -191,7 +198,6 @@ private:
         : Handler(settings,bot)
     {
         trigger   = settings.get("trigger",default_trigger);
-        priority  = settings.get("priority",priority);
         direct    = settings.get("direct",direct);
         source    = bot->connection(settings.get("source",""));
         if ( !allow_notrigger && trigger.empty() )

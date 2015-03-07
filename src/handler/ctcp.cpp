@@ -55,7 +55,8 @@ protected:
     {
         string::FormattedStream s;
         s << '\1' << ctcp << ' ' << text << '\1';
-        msg.source->command({"NOTICE",{msg.from,s.str().encode(msg.source->formatter())}});
+        msg.source->command({"NOTICE",
+            {msg.from,s.str().encode(msg.source->formatter())}, priority});
     }
     using Handler::reply_to;
 
