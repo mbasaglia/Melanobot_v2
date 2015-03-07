@@ -1,4 +1,5 @@
 <map id="build/src/config.hpp" name="build/src/config.hpp">
-<area shape="rect" id="node2" href="$http_8cpp.html" title="src/network/http.cpp" alt="" coords="5,80,147,107"/>
-<area shape="rect" id="node3" href="$settings_8cpp.html" title="src/settings.cpp" alt="" coords="171,80,285,107"/>
+<area shape="rect" id="node2" href="$ctcp_8cpp.html" title="src/handler/ctcp.cpp" alt="" coords="5,80,145,107"/>
+<area shape="rect" id="node3" href="$http_8cpp.html" title="src/network/http.cpp" alt="" coords="170,80,311,107"/>
+<area shape="rect" id="node4" href="$settings_8cpp.html" title="src/settings.cpp" alt="" coords="335,80,450,107"/>
 </map>

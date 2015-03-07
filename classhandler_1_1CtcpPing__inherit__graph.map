@@ -1,0 +1,4 @@
+<map id="handler::CtcpPing" name="handler::CtcpPing">
+<area shape="rect" id="node2" href="$classhandler_1_1CtcpBase.html" title="Base class for handling CTCP requests. " alt="" coords="5,80,136,107"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="12,5,129,32"/>
+</map>

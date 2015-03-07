@@ -2,10 +2,11 @@
 <area shape="rect" id="node2" href="$string__functions_8cpp.html" title="src/string/string_functions.cpp" alt="" coords="5,80,203,107"/>
 <area shape="rect" id="node3" href="$string_8cpp.html" title="src/string/string.cpp" alt="" coords="227,80,365,107"/>
 <area shape="rect" id="node4" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="389,80,547,107"/>
-<area shape="rect" id="node10" href="$irc_8cpp.html" title="src/network/irc.cpp" alt="" coords="571,80,704,107"/>
-<area shape="rect" id="node5" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="147,155,277,181"/>
-<area shape="rect" id="node6" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="300,155,460,181"/>
-<area shape="rect" id="node8" href="$core_8cpp.html" title="This file defines handlers which are essential for proper usage of the bot. " alt="" coords="485,155,625,181"/>
-<area shape="rect" id="node9" href="$handler_8cpp.html" title="src/handler/handler.cpp" alt="" coords="649,155,807,181"/>
-<area shape="rect" id="node7" href="$web-api_8cpp.html" title="src/handler/web&#45;api.cpp" alt="" coords="300,229,460,256"/>
+<area shape="rect" id="node11" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="571,80,773,107"/>
+<area shape="rect" id="node5" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="70,155,199,181"/>
+<area shape="rect" id="node6" href="$ctcp_8cpp.html" title="src/handler/ctcp.cpp" alt="" coords="223,155,363,181"/>
+<area shape="rect" id="node7" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="388,155,548,181"/>
+<area shape="rect" id="node9" href="$core_8cpp.html" title="This file defines handlers which are essential for proper usage of the bot. " alt="" coords="573,155,713,181"/>
+<area shape="rect" id="node10" href="$handler_8cpp.html" title="src/handler/handler.cpp" alt="" coords="737,155,895,181"/>
+<area shape="rect" id="node8" href="$web-api_8cpp.html" title="src/handler/web&#45;api.cpp" alt="" coords="388,229,548,256"/>
 </map>

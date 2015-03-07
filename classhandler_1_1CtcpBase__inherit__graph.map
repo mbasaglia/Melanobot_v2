@@ -1,0 +1,8 @@
+<map id="handler::CtcpBase" name="handler::CtcpBase">
+<area shape="rect" id="node3" href="$classhandler_1_1CtcpPing.html" title="CTCP PING reply, Used to measure round&#45;trip message delays. " alt="" coords="361,5,488,32"/>
+<area shape="rect" id="node4" href="$classhandler_1_1CtcpSource.html" title="CTCP SOURCE reply, shows a URL with the sources. " alt="" coords="354,56,495,83"/>
+<area shape="rect" id="node5" href="$classhandler_1_1CtcpTime.html" title="CTCP TIME reply, Shows the local time. " alt="" coords="360,107,489,133"/>
+<area shape="rect" id="node6" href="$classhandler_1_1CtcpUserInfo.html" title="CTCP USERINFO reply, shows a user&#45;defined string. " alt="" coords="349,157,500,184"/>
+<area shape="rect" id="node7" href="$classhandler_1_1CtcpVersion.html" title="CTCP VERSION reply, shows a pre&#45;formatted version string. " alt="" coords="353,208,497,235"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="5,107,123,133"/>
+</map>

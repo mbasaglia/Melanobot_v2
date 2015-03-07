@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 503;
+var viewWidth = 627;
 var viewHeight = 140;
 var sectionId = 'dynsection-1';
 </script>
@@ -56,8 +56,8 @@ var sectionId = 'dynsection-1';
 <title>src/handler/handler.hpp</title>
 <!-- Node1 -->
 <g id="node1" class="node"><title>Node1</title>
-<polygon fill="#bfbfbf" stroke="black" points="180.5,-112.5 180.5,-131.5 298.5,-131.5 298.5,-112.5 180.5,-112.5"/>
-<text text-anchor="middle" x="239.5" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/handler.hpp</text>
+<polygon fill="#bfbfbf" stroke="black" points="239.5,-112.5 239.5,-131.5 357.5,-131.5 357.5,-112.5 239.5,-112.5"/>
+<text text-anchor="middle" x="298.5" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/handler.hpp</text>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
@@ -69,60 +69,73 @@ var sectionId = 'dynsection-1';
 </g>
 <!-- Node1&#45;&gt;Node2 -->
 <g id="edge1" class="edge"><title>Node1&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M199.527,-109.699C163.479,-99.507 111.257,-84.7429 78.6229,-75.5164"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="198.66,-113.091 209.235,-112.444 200.565,-106.355 198.66,-113.091"/>
+<path fill="none" stroke="midnightblue" d="M248.877,-110.281C201.634,-100.077 131.464,-84.9203 87.9279,-75.5164"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="248.373,-113.753 258.887,-112.444 249.851,-106.911 248.373,-113.753"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="web-api_8hpp.html" target="_top" xlink:title="src/handler/web&#45;api.hpp">
-<polygon fill="none" stroke="black" points="114.5,-56.5 114.5,-75.5 234.5,-75.5 234.5,-56.5 114.5,-56.5"/>
-<text text-anchor="middle" x="174.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/web&#45;api.hpp</text>
+<g id="a_node3"><a xlink:href="ctcp_8cpp.html" target="_top" xlink:title="src/handler/ctcp.cpp">
+<polygon fill="none" stroke="black" points="115,-56.5 115,-75.5 220,-75.5 220,-56.5 115,-56.5"/>
+<text text-anchor="middle" x="167.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/ctcp.cpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node3 -->
 <g id="edge2" class="edge"><title>Node1&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M221.227,-105.82C209.582,-96.1452 194.901,-83.9481 185.133,-75.8339"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="219.128,-108.626 229.057,-112.324 223.601,-103.242 219.128,-108.626"/>
+<path fill="none" stroke="midnightblue" d="M268.183,-108.503C243.624,-98.3795 209.682,-84.388 188.16,-75.5164"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="267.163,-111.868 277.743,-112.444 269.831,-105.397 267.163,-111.868"/>
 </g>
-<!-- Node5 -->
-<g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="core_8cpp.html" target="_top" xlink:title="This file defines handlers which are essential for proper usage of the bot. ">
-<polygon fill="none" stroke="black" points="253,-56.5 253,-75.5 358,-75.5 358,-56.5 253,-56.5"/>
-<text text-anchor="middle" x="305.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/core.cpp</text>
+<!-- Node4 -->
+<g id="node4" class="node"><title>Node4</title>
+<g id="a_node4"><a xlink:href="web-api_8hpp.html" target="_top" xlink:title="src/handler/web&#45;api.hpp">
+<polygon fill="none" stroke="black" points="238.5,-56.5 238.5,-75.5 358.5,-75.5 358.5,-56.5 238.5,-56.5"/>
+<text text-anchor="middle" x="298.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/web&#45;api.hpp</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node5 -->
-<g id="edge4" class="edge"><title>Node1&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M258.054,-105.82C269.878,-96.1452 284.786,-83.9481 294.703,-75.8339"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="255.627,-103.283 250.104,-112.324 260.06,-108.7 255.627,-103.283"/>
+<!-- Node1&#45;&gt;Node4 -->
+<g id="edge3" class="edge"><title>Node1&#45;&gt;Node4</title>
+<path fill="none" stroke="midnightblue" d="M298.5,-101.805C298.5,-92.9102 298.5,-82.7798 298.5,-75.7511"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="295,-102.083 298.5,-112.083 302,-102.083 295,-102.083"/>
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="handler_8cpp.html" target="_top" xlink:title="src/handler/handler.cpp">
-<polygon fill="none" stroke="black" points="376.5,-56.5 376.5,-75.5 494.5,-75.5 494.5,-56.5 376.5,-56.5"/>
-<text text-anchor="middle" x="435.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/handler.cpp</text>
+<g id="a_node6"><a xlink:href="core_8cpp.html" target="_top" xlink:title="This file defines handlers which are essential for proper usage of the bot. ">
+<polygon fill="none" stroke="black" points="377,-56.5 377,-75.5 482,-75.5 482,-56.5 377,-56.5"/>
+<text text-anchor="middle" x="429.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/core.cpp</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node6 -->
 <g id="edge5" class="edge"><title>Node1&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M280.52,-109.699C317.511,-99.507 371.1,-84.7429 404.589,-75.5164"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="279.268,-106.413 270.557,-112.444 281.127,-113.162 279.268,-106.413"/>
+<path fill="none" stroke="midnightblue" d="M328.817,-108.503C353.376,-98.3795 387.318,-84.388 408.84,-75.5164"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="327.169,-105.397 319.257,-112.444 329.837,-111.868 327.169,-105.397"/>
 </g>
-<!-- Node4 -->
-<g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="web-api_8cpp.html" target="_top" xlink:title="src/handler/web&#45;api.cpp">
-<polygon fill="none" stroke="black" points="114.5,-0.5 114.5,-19.5 234.5,-19.5 234.5,-0.5 114.5,-0.5"/>
-<text text-anchor="middle" x="174.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/web&#45;api.cpp</text>
+<!-- Node7 -->
+<g id="node7" class="node"><title>Node7</title>
+<g id="a_node7"><a xlink:href="handler_8cpp.html" target="_top" xlink:title="src/handler/handler.cpp">
+<polygon fill="none" stroke="black" points="500.5,-56.5 500.5,-75.5 618.5,-75.5 618.5,-56.5 500.5,-56.5"/>
+<text text-anchor="middle" x="559.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/handler.cpp</text>
 </a>
 </g>
 </g>
-<!-- Node3&#45;&gt;Node4 -->
-<g id="edge3" class="edge"><title>Node3&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M174.5,-45.8045C174.5,-36.9102 174.5,-26.7798 174.5,-19.7511"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="171,-46.083 174.5,-56.083 178,-46.083 171,-46.083"/>
+<!-- Node1&#45;&gt;Node7 -->
+<g id="edge6" class="edge"><title>Node1&#45;&gt;Node7</title>
+<path fill="none" stroke="midnightblue" d="M349.687,-110.41C399.013,-100.204 472.695,-84.9597 518.337,-75.5164"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="348.94,-106.99 339.856,-112.444 350.358,-113.845 348.94,-106.99"/>
+</g>
+<!-- Node5 -->
+<g id="node5" class="node"><title>Node5</title>
+<g id="a_node5"><a xlink:href="web-api_8cpp.html" target="_top" xlink:title="src/handler/web&#45;api.cpp">
+<polygon fill="none" stroke="black" points="238.5,-0.5 238.5,-19.5 358.5,-19.5 358.5,-0.5 238.5,-0.5"/>
+<text text-anchor="middle" x="298.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/web&#45;api.cpp</text>
+</a>
+</g>
+</g>
+<!-- Node4&#45;&gt;Node5 -->
+<g id="edge4" class="edge"><title>Node4&#45;&gt;Node5</title>
+<path fill="none" stroke="midnightblue" d="M298.5,-45.8045C298.5,-36.9102 298.5,-26.7798 298.5,-19.7511"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="295,-46.083 298.5,-56.083 302,-46.083 295,-46.083"/>
 </g>
 </g>
 </svg>

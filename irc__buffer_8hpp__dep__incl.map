@@ -1,5 +1,5 @@
 <map id="src/network/irc_buffer.hpp" name="src/network/irc_buffer.hpp">
-<area shape="rect" id="node2" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="5,155,179,181"/>
-<area shape="rect" id="node3" href="$irc_8hpp.html" title="src/network/irc.hpp" alt="" coords="129,80,263,107"/>
-<area shape="rect" id="node4" href="$irc_8cpp.html" title="src/network/irc.cpp" alt="" coords="203,155,336,181"/>
+<area shape="rect" id="node2" href="$irc__connection_8hpp.html" title="src/network/irc_connection.hpp" alt="" coords="79,80,281,107"/>
+<area shape="rect" id="node4" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="232,155,405,181"/>
+<area shape="rect" id="node3" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="5,155,208,181"/>
 </map>
