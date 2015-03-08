@@ -1,16 +1,18 @@
 <map id="src/network/connection.hpp" name="src/network/connection.hpp">
-<area shape="rect" id="node2" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="737,80,866,107"/>
-<area shape="rect" id="node4" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="528,155,685,181"/>
-<area shape="rect" id="node11" href="$irc__connection_8hpp.html" title="src/network/irc_connection.hpp" alt="" coords="883,155,1085,181"/>
-<area shape="rect" id="node15" href="$irc__buffer_8hpp.html" title="src/network/irc_buffer.hpp" alt="" coords="941,80,1115,107"/>
-<area shape="rect" id="node3" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="701,229,830,256"/>
-<area shape="rect" id="node14" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="710,155,807,181"/>
-<area shape="rect" id="node5" href="$ctcp_8cpp.html" title="src/handler/ctcp.cpp" alt="" coords="187,229,327,256"/>
-<area shape="rect" id="node6" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="352,229,512,256"/>
-<area shape="rect" id="node8" href="$irc__whois_8cpp.html" title="src/handler/irc_whois.cpp" alt="" coords="855,229,1025,256"/>
-<area shape="rect" id="node9" href="$core_8cpp.html" title="This file defines handlers which are essential for proper usage of the bot. " alt="" coords="537,229,677,256"/>
-<area shape="rect" id="node10" href="$handler_8cpp.html" title="src/handler/handler.cpp" alt="" coords="5,229,163,256"/>
-<area shape="rect" id="node7" href="$web-api_8cpp.html" title="src/handler/web&#45;api.cpp" alt="" coords="352,304,512,331"/>
-<area shape="rect" id="node12" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="1049,229,1252,256"/>
-<area shape="rect" id="node13" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="1276,229,1449,256"/>
+<area shape="rect" id="node2" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="950,80,1079,107"/>
+<area shape="rect" id="node4" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="735,155,892,181"/>
+<area shape="rect" id="node13" href="$irc__connection_8hpp.html" title="src/network/irc_connection.hpp" alt="" coords="1115,155,1317,181"/>
+<area shape="rect" id="node17" href="$irc__buffer_8hpp.html" title="src/network/irc_buffer.hpp" alt="" coords="1155,80,1328,107"/>
+<area shape="rect" id="node3" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="963,229,1093,256"/>
+<area shape="rect" id="node16" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="917,155,1014,181"/>
+<area shape="rect" id="node5" href="$ctcp_8cpp.html" title="This files has handlers for CTCP messages. " alt="" coords="799,229,939,256"/>
+<area shape="rect" id="node6" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="91,229,251,256"/>
+<area shape="rect" id="node9" href="$misc_8cpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="275,229,418,256"/>
+<area shape="rect" id="node10" href="$irc__whois_8cpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="1117,229,1288,256"/>
+<area shape="rect" id="node11" href="$admin_8cpp.html" title="This file defines handlers which allows admin to administrate the bot (Mostly IRC&#45;specific action) ..." alt="" coords="442,229,593,256"/>
+<area shape="rect" id="node12" href="$handler_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="617,229,775,256"/>
+<area shape="rect" id="node7" href="$web-api_8cpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="5,304,165,331"/>
+<area shape="rect" id="node8" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="189,304,323,331"/>
+<area shape="rect" id="node14" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="1312,229,1515,256"/>
+<area shape="rect" id="node15" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="1539,229,1712,256"/>
 </map>

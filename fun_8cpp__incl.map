@@ -1,0 +1,22 @@
+<map id="src/handler/fun.cpp" name="src/handler/fun.cpp">
+<area shape="rect" id="node4" href="$web-api_8hpp.html" title="web&#45;api.hpp" alt="" coords="1813,80,1905,107"/>
+<area shape="rect" id="node50" href="$math_8hpp.html" title="math.hpp" alt="" coords="2095,80,2171,107"/>
+<area shape="rect" id="node5" href="$handler_8hpp.html" title="handler.hpp" alt="" coords="1605,155,1694,181"/>
+<area shape="rect" id="node44" href="$http_8hpp.html" title="network/http.hpp" alt="" coords="2010,155,2129,181"/>
+<area shape="rect" id="node47" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="2292,379,2399,405"/>
+<area shape="rect" id="node10" href="$connection_8hpp.html" title="network/connection.hpp" alt="" coords="509,304,669,331"/>
+<area shape="rect" id="node20" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1618,453,1737,480"/>
+<area shape="rect" id="node27" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="732,617,825,644"/>
+<area shape="rect" id="node34" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="1562,229,1737,256"/>
+<area shape="rect" id="node38" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="964,229,1071,256"/>
+<area shape="rect" id="node15" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="1092,535,1207,562"/>
+<area shape="rect" id="node29" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="514,379,665,405"/>
+<area shape="rect" id="node32" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="331,379,490,405"/>
+<area shape="rect" id="node18" href="$color_8hpp.html" title="color.hpp" alt="" coords="1127,617,1201,644"/>
+<area shape="rect" id="node25" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="2025,535,2119,562"/>
+<area shape="rect" id="node30" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="817,453,927,480"/>
+<area shape="rect" id="node31" href="$user_8hpp.html" title="user.hpp" alt="" coords="816,535,888,562"/>
+<area shape="rect" id="node42" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1105,304,1273,331"/>
+<area shape="rect" id="node43" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="547,453,741,480"/>
+<area shape="rect" id="node45" href="$async__service_8hpp.html" title="async_service.hpp" alt="" coords="2004,229,2135,256"/>
+</map>

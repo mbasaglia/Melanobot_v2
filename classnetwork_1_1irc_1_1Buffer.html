@@ -106,7 +106,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Collaboration diagram for network::irc::Buffer:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classnetwork_1_1irc_1_1Buffer__coll__graph.svg" width="100%" height="589"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classnetwork_1_1irc_1_1Buffer__coll__graph.svg" width="100%" height="589"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -180,9 +181,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:aaea30b29408c5f0b470cff16f75b2f1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1Buffer.html#aaea30b29408c5f0b470cff16f75b2f1c">flood_timer_max</a></td></tr>
 <tr class="memdesc:aaea30b29408c5f0b470cff16f75b2f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum duration the flood timer can be ahead of now.  <a href="#aaea30b29408c5f0b470cff16f75b2f1c">More...</a><br /></td></tr>
 <tr class="separator:aaea30b29408c5f0b470cff16f75b2f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a08977ef5d6062304b41b241c1761b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a6a08977ef5d6062304b41b241c1761b2">flood_timer_penalty</a></td></tr>
-<tr class="memdesc:a6a08977ef5d6062304b41b241c1761b2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a> penalty.  <a href="#a6a08977ef5d6062304b41b241c1761b2">More...</a><br /></td></tr>
-<tr class="separator:a6a08977ef5d6062304b41b241c1761b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9cd7d3a8f7f90f2e14f2a151cd975dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1Buffer.html#ae9cd7d3a8f7f90f2e14f2a151cd975dd">flood_message_penalty</a></td></tr>
+<tr class="memdesc:ae9cd7d3a8f7f90f2e14f2a151cd975dd"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a> penalty.  <a href="#ae9cd7d3a8f7f90f2e14f2a151cd975dd">More...</a><br /></td></tr>
+<tr class="separator:ae9cd7d3a8f7f90f2e14f2a151cd975dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7298596fd9551a91f415930a50293079"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a7298596fd9551a91f415930a50293079">flood_bytes_penalty</a> = 0</td></tr>
+<tr class="memdesc:a7298596fd9551a91f415930a50293079"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a> size penalty.  <a href="#a7298596fd9551a91f415930a50293079">More...</a><br /></td></tr>
+<tr class="separator:a7298596fd9551a91f415930a50293079"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af867531a73301162de9df8d8087fb892"><td class="memItemLeft" align="right" valign="top">boost::asio::streambuf&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1Buffer.html#af867531a73301162de9df8d8087fb892">buffer_read</a></td></tr>
 <tr class="separator:af867531a73301162de9df8d8087fb892"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79a8cbce613a3e176d92c8ee3858c10a"><td class="memItemLeft" align="right" valign="top">boost::asio::streambuf&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a79a8cbce613a3e176d92c8ee3858c10a">buffer_write</a></td></tr>
@@ -283,11 +287,11 @@ Private Attributes</h2></td></tr>
 <li><b>Threads:</b> external </li>
 <li><b>Locks:</b> none </li>
 </ul>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000045">Todo:</a></b></dt><dd>async with error checking </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000049">Todo:</a></b></dt><dd>async with error checking </dd></dl>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00123">123</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00136">136</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00815">network::irc::IrcConnection::connect()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00825">network::irc::IrcConnection::connect()</a>.</p>
 
 </div>
 </div>
@@ -310,9 +314,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> none </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00144">144</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00157">157</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00123">connect()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00815">network::irc::IrcConnection::connect()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00134">disconnect()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00136">connect()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00825">network::irc::IrcConnection::connect()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00147">disconnect()</a>.</p>
 
 </div>
 </div>
@@ -334,11 +338,11 @@ Private Attributes</h2></td></tr>
 <li><b>Threads:</b> external </li>
 <li><b>Locks:</b> none </li>
 </ul>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000046">Todo:</a></b></dt><dd>try catch </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000050">Todo:</a></b></dt><dd>try catch </dd></dl>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00134">134</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00147">147</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00123">connect()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00830">network::irc::IrcConnection::disconnect()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00058">stop()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00136">connect()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00840">network::irc::IrcConnection::disconnect()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00059">stop()</a>.</p>
 
 </div>
 </div>
@@ -362,9 +366,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> buffer </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00069">69</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00070">70</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00562">network::irc::IrcConnection::command()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00572">network::irc::IrcConnection::command()</a>.</p>
 
 </div>
 </div>
@@ -396,9 +400,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> none </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00155">155</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00168">168</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00149">schedule_read()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00162">schedule_read()</a>.</p>
 
 </div>
 </div>
@@ -421,9 +425,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> buffer(waits for input, waits for flood timer) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00074">74</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00075">75</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00036">run_output()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00037">run_output()</a>.</p>
 
 </div>
 </div>
@@ -449,11 +453,11 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>While active, keep processing reads. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000043">Todo:</a></b></dt><dd>catch exception thrown on broken pipe </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000047">Todo:</a></b></dt><dd>catch exception thrown on broken pipe </dd></dl>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00042">42</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00043">43</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00050">start()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00051">start()</a>.</p>
 
 </div>
 </div>
@@ -480,9 +484,9 @@ Private Attributes</h2></td></tr>
 
 <p>While active, keep processing writes. </p>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00036">36</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00037">37</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00050">start()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00051">start()</a>.</p>
 
 </div>
 </div>
@@ -513,9 +517,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> none (async) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00149">149</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00162">162</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00155">on_read_line()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00042">run_input()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00168">on_read_line()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00043">run_input()</a>.</p>
 
 </div>
 </div>
@@ -537,9 +541,9 @@ Private Attributes</h2></td></tr>
 <li><b>Threads:</b> main </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00050">50</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00051">51</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00114">network::irc::IrcConnection::start()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00124">network::irc::IrcConnection::start()</a>.</p>
 
 </div>
 </div>
@@ -561,9 +565,9 @@ Private Attributes</h2></td></tr>
 <li><b>Threads:</b> main </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00058">58</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00059">59</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00120">network::irc::IrcConnection::stop()</a>, <a class="el" href="irc__buffer_8hpp_source.html#l00045">~Buffer()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00061">network::irc::IrcConnection::~IrcConnection()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00130">network::irc::IrcConnection::stop()</a>, <a class="el" href="irc__buffer_8hpp_source.html#l00045">~Buffer()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00061">network::irc::IrcConnection::~IrcConnection()</a>.</p>
 
 </div>
 </div>
@@ -587,9 +591,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> none </li>
 </ul>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00093">93</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00096">96</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00830">network::irc::IrcConnection::disconnect()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00074">process()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00840">network::irc::IrcConnection::disconnect()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00075">process()</a>.</p>
 
 </div>
 </div>
@@ -621,12 +625,12 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> none </li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>this is synchronous, if it becomes async, keep QUIT as a sync message before <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#ac01fa4e0425bec9759099cc851eeec37" title="Disconnect from the server. ">disconnect()</a> </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000044">Todo:</a></b></dt><dd>maybe try to strip  and <br />
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000048">Todo:</a></b></dt><dd>maybe try to strip  and <br />
  from line </dd></dl>
 
-<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00107">107</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8cpp_source.html#l00110">110</a> of file <a class="el" href="irc__buffer_8cpp_source.html">irc_buffer.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00093">write()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00096">write()</a>.</p>
 
 </div>
 </div>
@@ -653,7 +657,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00103">103</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00069">insert()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00074">process()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00036">run_output()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00058">stop()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00070">insert()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00075">process()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00037">run_output()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00059">stop()</a>.</p>
 
 </div>
 </div>
@@ -675,9 +679,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00134">134</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00146">146</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00155">on_read_line()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00149">schedule_read()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00168">on_read_line()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00162">schedule_read()</a>.</p>
 
 </div>
 </div>
@@ -699,9 +703,36 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00135">135</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00147">147</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00107">write_line()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00110">write_line()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7298596fd9551a91f415930a50293079"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int network::irc::Buffer::flood_bytes_penalty = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a> size penalty. </p>
+<p>Number of bytes which will cause an extra second to be added <code>flood_timer</code> when a message is sent to the server </p>
+
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00143">143</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00110">write_line()</a>.</p>
 
 </div>
 </div>
@@ -728,7 +759,35 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00116">116</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00107">write_line()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00110">write_line()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae9cd7d3a8f7f90f2e14f2a151cd975dd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">Duration</a> network::irc::Buffer::flood_message_penalty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a> penalty. </p>
+<dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a></dd></dl>
+<p>Fixed amount added to <code>flood_timer</code> with each message. </p>
+
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00136">136</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00075">process()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00110">write_line()</a>.</p>
 
 </div>
 </div>
@@ -755,7 +814,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00121">121</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00123">connect()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00074">process()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00107">write_line()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00136">connect()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00075">process()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00110">write_line()</a>.</p>
 
 </div>
 </div>
@@ -778,38 +837,12 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Maximum duration the flood timer can be ahead of now. </p>
-<dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a></dd></dl>
+<p>When <code>flood_timer</code> reaches <code>flood_timer_max</code>, the buffer will have to wait a while before sending a new message to the server </p>
 
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00126">126</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00129">129</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00074">process()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6a08977ef5d6062304b41b241c1761b2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">Duration</a> network::irc::Buffer::flood_timer_penalty</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a> penalty. </p>
-<dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a> </dd></dl>
-
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00131">131</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00074">process()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00107">write_line()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00075">process()</a>.</p>
 
 </div>
 </div>
@@ -831,7 +864,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00136">136</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00148">148</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -855,7 +888,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00097">97</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00155">on_read_line()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00107">write_line()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00027">Buffer()</a>, <a class="el" href="irc__buffer_8cpp_source.html#l00168">on_read_line()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00110">write_line()</a>.</p>
 
 </div>
 </div>
@@ -877,7 +910,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00137">137</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00149">149</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -899,7 +932,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00138">138</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00150">150</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -925,7 +958,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00111">111</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00050">start()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00058">stop()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00051">start()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00059">stop()</a>.</p>
 
 </div>
 </div>
@@ -951,7 +984,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="irc__buffer_8hpp_source.html#l00107">107</a> of file <a class="el" href="irc__buffer_8hpp_source.html">irc_buffer.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00050">start()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00058">stop()</a>.</p>
+<p>Referenced by <a class="el" href="irc__buffer_8cpp_source.html#l00051">start()</a>, and <a class="el" href="irc__buffer_8cpp_source.html#l00059">stop()</a>.</p>
 
 </div>
 </div>
@@ -962,7 +995,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 8 2015 21:10:19 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -112,7 +112,8 @@ Inheritance diagram for handler::Handler:</div>
 <div class="dynheader">
 Collaboration diagram for handler::Handler:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1Handler__coll__graph.svg" width="194" height="336"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1Handler__coll__graph.svg" width="392" height="336"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -136,6 +137,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7e8c64588c72b6b4f560dea050fcb4b1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a7e8c64588c72b6b4f560dea050fcb4b1">authorized</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg) const </td></tr>
 <tr class="memdesc:a7e8c64588c72b6b4f560dea050fcb4b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a message is authorized to be executed by this message.  <a href="#a7e8c64588c72b6b4f560dea050fcb4b1">More...</a><br /></td></tr>
 <tr class="separator:a7e8c64588c72b6b4f560dea050fcb4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ce9da86813f76fa357ffac09a7c9fd"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a83ce9da86813f76fa357ffac09a7c9fd">get_property</a> (const std::string &amp;name) const </td></tr>
+<tr class="memdesc:a83ce9da86813f76fa357ffac09a7c9fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a property by name.  <a href="#a83ce9da86813f76fa357ffac09a7c9fd">More...</a><br /></td></tr>
+<tr class="separator:a83ce9da86813f76fa357ffac09a7c9fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d68fc235c6126a1b7c4181ee276e04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#af6d68fc235c6126a1b7c4181ee276e04">populate_properties</a> (const std::vector&lt; std::string &gt; &amp;properties, <a class="el" href="settings_8hpp.html#a15ece709c6b6e61496f543f62e8ba439">PropertyTree</a> &amp;output) const override</td></tr>
+<tr class="memdesc:af6d68fc235c6126a1b7c4181ee276e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simply appends globally the given property.  <a href="#af6d68fc235c6126a1b7c4181ee276e04">More...</a><br /></td></tr>
+<tr class="separator:af6d68fc235c6126a1b7c4181ee276e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classhandler_1_1HandlerContainer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classhandler_1_1HandlerContainer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classhandler_1_1HandlerContainer.html">handler::HandlerContainer</a></td></tr>
+<tr class="memitem:a2b7d5775701f30750cde74ebd4dc711e inherit pub_methods_classhandler_1_1HandlerContainer"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">~HandlerContainer</a> ()</td></tr>
+<tr class="separator:a2b7d5775701f30750cde74ebd4dc711e inherit pub_methods_classhandler_1_1HandlerContainer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -200,7 +210,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="handler_8hpp_source.html#l00046">46</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="core_8cpp_source.html#l00166">handler::AcceptInvite::AcceptInvite()</a>, <a class="el" href="ctcp_8cpp_source.html#l00033">handler::CtcpBase::CtcpBase()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00100">handler::QGetWhois::QGetWhois()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00057">handler::QSendWhois::QSendWhois()</a>, <a class="el" href="handler_8hpp_source.html#l00195">handler::SimpleAction::SimpleAction()</a>, and <a class="el" href="irc__whois_8cpp_source.html#l00031">handler::Whois330::Whois330()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00151">handler::AcceptInvite::AcceptInvite()</a>, <a class="el" href="ctcp_8cpp_source.html#l00035">handler::CtcpBase::CtcpBase()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00102">handler::QGetWhois::QGetWhois()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00059">handler::QSendWhois::QSendWhois()</a>, <a class="el" href="handler_8hpp_source.html#l00241">handler::SimpleAction::SimpleAction()</a>, and <a class="el" href="irc__whois_8cpp_source.html#l00033">handler::Whois330::Whois330()</a>.</p>
 
 </div>
 </div>
@@ -256,7 +266,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="handler_8hpp_source.html#l00092">92</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00040">handler::CtcpBase::can_handle()</a>, <a class="el" href="handler_8hpp_source.html#l00073">can_handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00152">handler::SimpleAction::can_handle()</a>.</p>
+<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00042">handler::CtcpBase::can_handle()</a>, <a class="el" href="handler_8hpp_source.html#l00073">can_handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00182">handler::SimpleAction::can_handle()</a>.</p>
 
 </div>
 </div>
@@ -286,7 +296,7 @@ Protected Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message can be handled by the handler </dd></dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd><b>const</b>? </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classhandler_1_1SimpleGroup.html#ab37ec7b3205ee7296374136aaea309a1">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1WhoisCheckMe.html#a92e51cfe8dc2197ec2855639a4f19e3d">handler::WhoisCheckMe</a>, <a class="el" href="classhandler_1_1SimpleAction.html#aab69a6012215c6bd4acefa75dffdaf1b">handler::SimpleAction</a>, <a class="el" href="classhandler_1_1QGetWhois.html#abda2d457ec81422a5fdb63ccca5375b9">handler::QGetWhois</a>, <a class="el" href="classhandler_1_1QSendWhois.html#af078cfb6ebddeb311a04aa1d3c39625b">handler::QSendWhois</a>, <a class="el" href="classhandler_1_1CtcpBase.html#a8ac89c13ed3be67a1af37f7a8c3a949d">handler::CtcpBase</a>, and <a class="el" href="classhandler_1_1Whois330.html#a8e14e9f18175bd4bf5c9929295bcd03e">handler::Whois330</a>.</p>
+<p>Reimplemented in <a class="el" href="classhandler_1_1SimpleGroup.html#ab37ec7b3205ee7296374136aaea309a1">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1SimpleAction.html#aab69a6012215c6bd4acefa75dffdaf1b">handler::SimpleAction</a>, <a class="el" href="classhandler_1_1WhoisCheckMe.html#a92e51cfe8dc2197ec2855639a4f19e3d">handler::WhoisCheckMe</a>, <a class="el" href="classhandler_1_1QGetWhois.html#abda2d457ec81422a5fdb63ccca5375b9">handler::QGetWhois</a>, <a class="el" href="classhandler_1_1QSendWhois.html#af078cfb6ebddeb311a04aa1d3c39625b">handler::QSendWhois</a>, <a class="el" href="classhandler_1_1CtcpBase.html#a8ac89c13ed3be67a1af37f7a8c3a949d">handler::CtcpBase</a>, and <a class="el" href="classhandler_1_1Whois330.html#a8e14e9f18175bd4bf5c9929295bcd03e">handler::Whois330</a>.</p>
 
 <p>Definition at line <a class="el" href="handler_8hpp_source.html#l00073">73</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
@@ -324,6 +334,41 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a83ce9da86813f76fa357ffac09a7c9fd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::string handler::Handler::get_property </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a property by name. </p>
+<dl class="section note"><dt>Note</dt><dd>If you inherit a <a class="el" href="classhandler_1_1Handler.html" title="Message handler abstract base class. ">Handler</a> class, it is recommended that you override this for properties of that class but still call the parent version. </dd>
+<dd>
+The <a class="el" href="classhandler_1_1Help.html" title="Handler showing help on the available handlers. ">Help</a> handler uses the property "name" to determine if a handler has to be displayed, and uses "synopsis" and "help" to display information </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classhandler_1_1SimpleGroup.html#aac22eb5bba101053d09def49dee3f142">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1SimpleAction.html#a00e7807f14405605263ab78dcf8c3a79">handler::SimpleAction</a>, <a class="el" href="classhandler_1_1Help.html#ac735092764539d222caf7317bbce8a19">handler::Help</a>, <a class="el" href="classhandler_1_1CtcpBase.html#a11ec18c81d491b589e46aaa0b6216c8e">handler::CtcpBase</a>, and <a class="el" href="classhandler_1_1License.html#af459bd9ef3e76b72067c2c88ac46cb2a">handler::License</a>.</p>
+
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00106">106</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00051">handler::CtcpBase::get_property()</a>, <a class="el" href="handler_8hpp_source.html#l00202">handler::SimpleAction::get_property()</a>, <a class="el" href="melanobot_8cpp_source.html#l00100">Melanobot::populate_properties()</a>, <a class="el" href="handler_8hpp_source.html#l00118">populate_properties()</a>, and <a class="el" href="handler_8cpp_source.html#l00082">handler::SimpleGroup::populate_properties()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a105124a15fba64cbfae4aebe9581f243"></a>
 <div class="memitem">
 <div class="memproto">
@@ -354,7 +399,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="handler_8hpp_source.html#l00061">61</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8cpp_source.html#l00063">handler::SimpleGroup::on_handle()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8cpp_source.html#l00068">handler::SimpleGroup::on_handle()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>.</p>
 
 </div>
 </div>
@@ -413,9 +458,53 @@ Protected Attributes</h2></td></tr>
 <p>Attempt to handle the message. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message has been handled and needs no further processing </dd></dl>
 
-<p>Implemented in <a class="el" href="classhandler_1_1SimpleGroup.html#adb6e0fc3c9c5a98c957764140b67029a">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1AdminRaw.html#a609b736a34d01c29b8d6b1012cdcbafe">handler::AdminRaw</a>, <a class="el" href="classhandler_1_1CtcpTime.html#a7dfabb2b19a77b56e1ad7515db1d86ed">handler::CtcpTime</a>, <a class="el" href="classhandler_1_1WhoisCheckMe.html#ac5e220df285346d065fd0febae9cafd0">handler::WhoisCheckMe</a>, <a class="el" href="classhandler_1_1AcceptInvite.html#a45a580a3852886ccbfcc6494c01bbcb4">handler::AcceptInvite</a>, <a class="el" href="classhandler_1_1CtcpPing.html#a93074218afba04ffe9ce7a3f4c2cfcb1">handler::CtcpPing</a>, <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart</a>, <a class="el" href="classhandler_1_1CtcpUserInfo.html#a1df76f25b359b9ea22986d03468365cb">handler::CtcpUserInfo</a>, <a class="el" href="classhandler_1_1SearchWebSearx.html#a6b7f7f6ae223cbf6b2ff129cf0f3f265">handler::SearchWebSearx</a>, <a class="el" href="classhandler_1_1AdminJoin.html#a967551bc0eebd98fa12175f405638615">handler::AdminJoin</a>, <a class="el" href="classhandler_1_1QGetWhois.html#a33ed8d040fd0abb33d91dc4f2907f57c">handler::QGetWhois</a>, <a class="el" href="classhandler_1_1CtcpSource.html#a24be2b130abb30462293b5348c6ec49c">handler::CtcpSource</a>, <a class="el" href="classhandler_1_1UrbanDictionary.html#a6c90303aa9a4ed0a4ca98106068f2f12">handler::UrbanDictionary</a>, <a class="el" href="classhandler_1_1AdminNick.html#a49e3c78071b77277c7b2e8781286143e">handler::AdminNick</a>, <a class="el" href="classhandler_1_1CtcpVersion.html#ad87b69cdfb4e9cf43336a473309ffad6">handler::CtcpVersion</a>, <a class="el" href="classhandler_1_1QSendWhois.html#a32cd09c994c27819a965930a0502e4c3">handler::QSendWhois</a>, <a class="el" href="classhandler_1_1SearchImageGoogle.html#a8803ff31b288c270184a8f90c4c1d2b1">handler::SearchImageGoogle</a>, <a class="el" href="classhandler_1_1AdminQuit.html#af586d8c18c28b28b9738c81106fa3d53">handler::AdminQuit</a>, <a class="el" href="classhandler_1_1Whois330.html#a3df3a399e60f5155f3dc8655a1b9c825">handler::Whois330</a>, <a class="el" href="classhandler_1_1License.html#a95f6ea7f6c44fbce40f1c0b7db6ffb3d">handler::License</a>, and <a class="el" href="classhandler_1_1SearchVideoYoutube.html#a83018ec6d907182bf6bdeac572d91be3">handler::SearchVideoYoutube</a>.</p>
+<p>Implemented in <a class="el" href="classhandler_1_1RenderPony.html#a1d62ab7fb1243c084f929a6f8bdd28df">handler::RenderPony</a>, <a class="el" href="classhandler_1_1ChuckNorris.html#aaed35c6c1b6a2c7e61da88c3f13b13bf">handler::ChuckNorris</a>, <a class="el" href="classhandler_1_1SimpleGroup.html#adb6e0fc3c9c5a98c957764140b67029a">handler::SimpleGroup</a>, <a class="el" href="classhandler_1_1CtcpClientInfo.html#a2709b67b708e8f16b631b0c6f32f4776">handler::CtcpClientInfo</a>, <a class="el" href="classhandler_1_1CtcpTime.html#a7dfabb2b19a77b56e1ad7515db1d86ed">handler::CtcpTime</a>, <a class="el" href="classhandler_1_1AdminRaw.html#a609b736a34d01c29b8d6b1012cdcbafe">handler::AdminRaw</a>, <a class="el" href="classhandler_1_1CtcpPing.html#a93074218afba04ffe9ce7a3f4c2cfcb1">handler::CtcpPing</a>, <a class="el" href="classhandler_1_1WhoisCheckMe.html#ac5e220df285346d065fd0febae9cafd0">handler::WhoisCheckMe</a>, <a class="el" href="classhandler_1_1ReverseText.html#abdbb5802c8f90b7963a4a11dacb41141">handler::ReverseText</a>, <a class="el" href="classhandler_1_1AcceptInvite.html#a45a580a3852886ccbfcc6494c01bbcb4">handler::AcceptInvite</a>, <a class="el" href="classhandler_1_1CtcpUserInfo.html#a1df76f25b359b9ea22986d03468365cb">handler::CtcpUserInfo</a>, <a class="el" href="classhandler_1_1SearchWebSearx.html#a6b7f7f6ae223cbf6b2ff129cf0f3f265">handler::SearchWebSearx</a>, <a class="el" href="classhandler_1_1CtcpSource.html#a24be2b130abb30462293b5348c6ec49c">handler::CtcpSource</a>, <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart</a>, <a class="el" href="classhandler_1_1QGetWhois.html#a33ed8d040fd0abb33d91dc4f2907f57c">handler::QGetWhois</a>, <a class="el" href="classhandler_1_1CtcpVersion.html#ad87b69cdfb4e9cf43336a473309ffad6">handler::CtcpVersion</a>, <a class="el" href="classhandler_1_1AdminJoin.html#a967551bc0eebd98fa12175f405638615">handler::AdminJoin</a>, <a class="el" href="classhandler_1_1UrbanDictionary.html#a6c90303aa9a4ed0a4ca98106068f2f12">handler::UrbanDictionary</a>, <a class="el" href="classhandler_1_1Help.html#ac5185a498320798ce4e5d92caaddf9c7">handler::Help</a>, <a class="el" href="classhandler_1_1AdminNick.html#a49e3c78071b77277c7b2e8781286143e">handler::AdminNick</a>, <a class="el" href="classhandler_1_1QSendWhois.html#a32cd09c994c27819a965930a0502e4c3">handler::QSendWhois</a>, <a class="el" href="classhandler_1_1SearchImageGoogle.html#a8803ff31b288c270184a8f90c4c1d2b1">handler::SearchImageGoogle</a>, <a class="el" href="classhandler_1_1License.html#a95f6ea7f6c44fbce40f1c0b7db6ffb3d">handler::License</a>, <a class="el" href="classhandler_1_1Morse.html#afc55ba498e052321f46bcec4e4beb694">handler::Morse</a>, <a class="el" href="classhandler_1_1Whois330.html#a3df3a399e60f5155f3dc8655a1b9c825">handler::Whois330</a>, <a class="el" href="classhandler_1_1SearchVideoYoutube.html#a83018ec6d907182bf6bdeac572d91be3">handler::SearchVideoYoutube</a>, and <a class="el" href="classhandler_1_1AdminQuit.html#af586d8c18c28b28b9738c81106fa3d53">handler::AdminQuit</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00061">handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00159">handler::SimpleAction::handle()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00061">handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00189">handler::SimpleAction::handle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af6d68fc235c6126a1b7c4181ee276e04"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void handler::Handler::populate_properties </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>properties</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="settings_8hpp.html#a15ece709c6b6e61496f543f62e8ba439">PropertyTree</a> &amp;&#160;</td>
+          <td class="paramname"><em>output</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Simply appends globally the given property. </p>
+
+<p>Implements <a class="el" href="classhandler_1_1HandlerContainer.html#a27eaed76908da7889b0c95bf0723d195">handler::HandlerContainer</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classhandler_1_1SimpleGroup.html#ab03eaca62ff768dac8c7c0339a7c4740">handler::SimpleGroup</a>.</p>
+
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00118">118</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00100">Melanobot::populate_properties()</a>, and <a class="el" href="handler_8cpp_source.html#l00082">handler::SimpleGroup::populate_properties()</a>.</p>
 
 </div>
 </div>
@@ -455,9 +544,9 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classhandler_1_1SimpleAction.html#ac8489287c95415d7ff8a04bc461a2a44">handler::SimpleAction</a>, and <a class="el" href="classhandler_1_1CtcpBase.html#abb786364c0a51a214f215be3fcb5e231">handler::CtcpBase</a>.</p>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00108">108</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00138">138</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00117">reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00147">reply_to()</a>.</p>
 
 </div>
 </div>
@@ -493,9 +582,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00117">117</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00147">147</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00045">handler::SearchVideoYoutube::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00075">handler::SearchImageGoogle::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00103">handler::UrbanDictionary::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00133">handler::SearchWebSearx::json_success()</a>, <a class="el" href="core_8cpp_source.html#l00040">handler::License::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00086">handler::CtcpVersion::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00113">handler::CtcpSource::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00139">handler::CtcpUserInfo::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00167">handler::CtcpPing::on_handle()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00191">handler::CtcpTime::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00047">handler::SearchVideoYoutube::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00077">handler::SearchImageGoogle::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00105">handler::UrbanDictionary::json_success()</a>, <a class="el" href="web-api_8cpp_source.html#l00135">handler::SearchWebSearx::json_success()</a>, <a class="el" href="fun_8cpp_source.html#l00324">handler::ChuckNorris::json_success()</a>, <a class="el" href="fun_8cpp_source.html#l00045">handler::Morse::on_handle()</a>, <a class="el" href="misc_8cpp_source.html#l00047">handler::License::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00100">handler::CtcpVersion::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00128">handler::CtcpSource::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00155">handler::CtcpUserInfo::on_handle()</a>, <a class="el" href="fun_8cpp_source.html#l00169">handler::ReverseText::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00180">handler::CtcpPing::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00205">handler::CtcpTime::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00236">handler::CtcpClientInfo::on_handle()</a>, and <a class="el" href="fun_8cpp_source.html#l00347">handler::RenderPony::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -520,9 +609,9 @@ Protected Attributes</h2></td></tr>
 
 <p>Authorization group required for a user message to be handled. </p>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00125">125</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00155">155</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00092">authorized()</a>, and <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00092">authorized()</a>, <a class="el" href="handler_8hpp_source.html#l00106">get_property()</a>, and <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>.</p>
 
 </div>
 </div>
@@ -546,9 +635,9 @@ Protected Attributes</h2></td></tr>
 
 <p>Pointer to the main bot. </p>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00133">133</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00163">163</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>, and <a class="el" href="core_8cpp_source.html#l00065">handler::AdminQuit::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>, <a class="el" href="admin_8cpp_source.html#l00041">handler::AdminQuit::on_handle()</a>, <a class="el" href="misc_8cpp_source.html#l00077">handler::Help::on_handle()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00236">handler::CtcpClientInfo::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -572,9 +661,9 @@ Protected Attributes</h2></td></tr>
 
 <p>Message priority. </p>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00129">129</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00159">159</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00070">handler::QSendWhois::on_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00175">handler::WhoisCheckMe::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00053">handler::CtcpBase::reply_to()</a>, <a class="el" href="handler_8hpp_source.html#l00108">reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00174">handler::SimpleAction::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00106">get_property()</a>, <a class="el" href="handler_8hpp_source.html#l00046">Handler()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00072">handler::QSendWhois::on_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00177">handler::WhoisCheckMe::on_handle()</a>, <a class="el" href="ctcp_8cpp_source.html#l00064">handler::CtcpBase::reply_to()</a>, <a class="el" href="handler_8hpp_source.html#l00138">reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00217">handler::SimpleAction::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -584,7 +673,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 8 2015 21:10:19 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

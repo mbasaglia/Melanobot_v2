@@ -5,6 +5,7 @@ var searchData=
   ['handler',['Handler',['../classhandler_1_1Handler.html#ae0fffddf35a0e5b33ecaa56f501c1f86',1,'handler::Handler']]],
   ['handlerfactory',['HandlerFactory',['../classhandler_1_1HandlerFactory.html#a4adcb21f2356c87341d9a323867cec9e',1,'handler::HandlerFactory::HandlerFactory()'],['../classhandler_1_1HandlerFactory.html#a71acac16408d3c1d2412371408232206',1,'handler::HandlerFactory::HandlerFactory(const HandlerFactory &amp;)=delete']]],
   ['has_5fchild',['has_child',['../classSettings.html#a9d8cb2957fa6787b34a9d747d426f503',1,'Settings']]],
+  ['help',['Help',['../classhandler_1_1Help.html#a4221bb57781cc9f0163815f8ce36fe8d',1,'handler::Help']]],
   ['hex_5fblue',['hex_blue',['../classcolor_1_1Color12.html#aad9a4b13978569fc982cc32fe722989b',1,'color::Color12']]],
   ['hex_5fgreen',['hex_green',['../classcolor_1_1Color12.html#ad26c0ea0e0ec4c9d1cb34e7cf0b00ef0',1,'color::Color12']]],
   ['hex_5fred',['hex_red',['../classcolor_1_1Color12.html#a0a01d589f2c9ed775d4cd34fda865fe6',1,'color::Color12']]],

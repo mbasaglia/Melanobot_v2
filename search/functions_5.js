@@ -1,6 +1,7 @@
 var searchData=
 [
   ['finalize',['finalize',['../classhandler_1_1Handler.html#af722963ee48de2ff1cd2055b9fb94972',1,'handler::Handler']]],
+  ['find',['find',['../classhandler_1_1Help.html#a8fa6df10188b0b66e32348e9a8a971ac',1,'handler::Help']]],
   ['find_5fconfig',['find_config',['../classSettings.html#a9b5af85ec639c7c4daa6ea6e5b05f5bd',1,'Settings::find_config(FileFormat format=FileFormat::AUTO)'],['../classSettings.html#afaac31c1604478c71656dfa5ded8ab7a',1,'Settings::find_config(const std::string &amp;dir, FileFormat format)']]],
   ['finished',['finished',['../classstring_1_1Utf8Parser.html#af107e1159856c18d25bb1fb7440038ae',1,'string::Utf8Parser']]],
   ['format',['Format',['../classstring_1_1Format.html#a723c29d014f174a9d3893fc9a221e2ff',1,'string::Format']]],

@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structMultibuf_1_1MultibufItem.html" title="Buffer item. " alt="" coords="5,5,153,32"/>
+<area shape="rect" id="node1" href="$classnetwork_1_1AsyncService.html" title="Base class for external services that might take some time to execute. " alt="" coords="5,5,163,32"/>
+<area shape="rect" id="node2" href="$classnetwork_1_1ThreadedAsyncService.html" title="An AsyncService implemented with a separate thread. " alt="" coords="211,5,421,32"/>
+<area shape="rect" id="node3" href="$classnetwork_1_1http_1_1HttpService.html" title="HTTP client. " alt="" coords="469,5,644,32"/>
 </map>

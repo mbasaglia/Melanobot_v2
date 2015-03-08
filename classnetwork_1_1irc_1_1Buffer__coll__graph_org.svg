@@ -22,7 +22,7 @@
 </g>
 </g>
 <!-- Node1&#45;&gt;Node4 -->
-<g id="edge10" class="edge"><title>Node1&#45;&gt;Node4</title>
+<g id="edge11" class="edge"><title>Node1&#45;&gt;Node4</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M526.088,-38.8025C552.639,-46.4147 585.142,-57.605 612,-72.5 642.038,-89.1586 671.822,-117.006 686.531,-131.713"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="526.8,-35.3677 516.228,-36.06 524.925,-42.1117 526.8,-35.3677"/>
 <text text-anchor="middle" x="579" y="-75.5" font-family="Helvetica,sans-Serif" font-size="10.00"> buffer</text>
@@ -121,58 +121,71 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="classConcurrentQueue.html" target="_top" xlink:title="ConcurrentQueue\&lt; network\l::Message \&gt;">
-<polygon fill="none" stroke="black" points="199,-141.5 199,-171.5 336,-171.5 336,-141.5 199,-141.5"/>
-<text text-anchor="start" x="207" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">ConcurrentQueue&lt; network</text>
-<text text-anchor="middle" x="267.5" y="-148.5" font-family="Helvetica,sans-Serif" font-size="10.00">::Message &gt;</text>
+<g id="a_node9"><a xlink:href="classhandler_1_1HandlerContainer.html" target="_top" xlink:title="Base class for classes which may contain handlers. ">
+<polygon fill="none" stroke="black" points="202.5,-169 202.5,-188 332.5,-188 332.5,-169 202.5,-169"/>
+<text text-anchor="middle" x="267.5" y="-176" font-family="Helvetica,sans-Serif" font-size="10.00">handler::HandlerContainer</text>
 </a>
 </g>
 </g>
 <!-- Node9&#45;&gt;Node8 -->
 <g id="edge8" class="edge"><title>Node9&#45;&gt;Node8</title>
-<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M346.55,-156.5C380.371,-156.5 417.963,-156.5 443.4,-156.5"/>
-<polygon fill="#9a32cd" stroke="#9a32cd" points="346.193,-153 336.193,-156.5 346.193,-160 346.193,-153"/>
-<text text-anchor="middle" x="378.5" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00"> messages</text>
+<path fill="none" stroke="midnightblue" d="M342.667,-170.541C377.454,-166.807 416.968,-162.567 443.383,-159.732"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="342.089,-167.082 332.52,-171.63 342.836,-174.042 342.089,-167.082"/>
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="classConcurrentContainer.html" target="_top" xlink:title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;">
-<polygon fill="none" stroke="black" points="17,-136 17,-177 145,-177 145,-136 17,-136"/>
-<text text-anchor="start" x="25" y="-165" font-family="Helvetica,sans-Serif" font-size="10.00">ConcurrentContainer</text>
-<text text-anchor="start" x="25" y="-154" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; std::queue&lt; network</text>
-<text text-anchor="middle" x="81" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">::Message, Container &gt; &gt;</text>
+<g id="a_node10"><a xlink:href="classConcurrentQueue.html" target="_top" xlink:title="ConcurrentQueue\&lt; network\l::Message \&gt;">
+<polygon fill="none" stroke="black" points="199,-119.5 199,-149.5 336,-149.5 336,-119.5 199,-119.5"/>
+<text text-anchor="start" x="207" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00">ConcurrentQueue&lt; network</text>
+<text text-anchor="middle" x="267.5" y="-126.5" font-family="Helvetica,sans-Serif" font-size="10.00">::Message &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node10&#45;&gt;Node9 -->
-<g id="edge9" class="edge"><title>Node10&#45;&gt;Node9</title>
-<path fill="none" stroke="midnightblue" d="M155.535,-156.5C169.861,-156.5 184.815,-156.5 198.936,-156.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="155.236,-153 145.236,-156.5 155.236,-160 155.236,-153"/>
+<!-- Node10&#45;&gt;Node8 -->
+<g id="edge9" class="edge"><title>Node10&#45;&gt;Node8</title>
+<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M346.55,-142.876C380.371,-146.506 417.963,-150.54 443.4,-153.27"/>
+<polygon fill="#9a32cd" stroke="#9a32cd" points="346.509,-139.352 336.193,-141.765 345.762,-146.312 346.509,-139.352"/>
+<text text-anchor="middle" x="378.5" y="-152.5" font-family="Helvetica,sans-Serif" font-size="10.00"> messages</text>
 </g>
 <!-- Node11 -->
 <g id="node11" class="node"><title>Node11</title>
-<g id="a_node11"><a xlink:href="classuser_1_1AuthSystem.html" target="_top" xlink:title="User authorization system. ">
+<g id="a_node11"><a xlink:href="classConcurrentContainer.html" target="_top" xlink:title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;">
+<polygon fill="none" stroke="black" points="17,-114 17,-155 145,-155 145,-114 17,-114"/>
+<text text-anchor="start" x="25" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">ConcurrentContainer</text>
+<text text-anchor="start" x="25" y="-132" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; std::queue&lt; network</text>
+<text text-anchor="middle" x="81" y="-121" font-family="Helvetica,sans-Serif" font-size="10.00">::Message, Container &gt; &gt;</text>
+</a>
+</g>
+</g>
+<!-- Node11&#45;&gt;Node10 -->
+<g id="edge10" class="edge"><title>Node11&#45;&gt;Node10</title>
+<path fill="none" stroke="midnightblue" d="M155.535,-134.5C169.861,-134.5 184.815,-134.5 198.936,-134.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="155.236,-131 145.236,-134.5 155.236,-138 155.236,-131"/>
+</g>
+<!-- Node12 -->
+<g id="node12" class="node"><title>Node12</title>
+<g id="a_node12"><a xlink:href="classuser_1_1AuthSystem.html" target="_top" xlink:title="User authorization system. ">
 <polygon fill="none" stroke="black" points="427,-109 427,-128 522,-128 522,-109 427,-109"/>
 <text text-anchor="middle" x="474.5" y="-116" font-family="Helvetica,sans-Serif" font-size="10.00">user::AuthSystem</text>
 </a>
 </g>
 </g>
-<!-- Node11&#45;&gt;Node4 -->
-<g id="edge11" class="edge"><title>Node11&#45;&gt;Node4</title>
+<!-- Node12&#45;&gt;Node4 -->
+<g id="edge12" class="edge"><title>Node12&#45;&gt;Node4</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M532.455,-124.283C556.94,-126.785 585.879,-129.761 612,-132.5 617.835,-133.112 623.897,-133.752 629.973,-134.397"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="532.559,-120.776 522.255,-123.243 531.848,-127.74 532.559,-120.776"/>
 <text text-anchor="middle" x="579" y="-135.5" font-family="Helvetica,sans-Serif" font-size="10.00"> auth_system</text>
 </g>
-<!-- Node12 -->
-<g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="structnetwork_1_1Server.html" target="_top" xlink:title="Identifies a network server. ">
+<!-- Node13 -->
+<g id="node13" class="node"><title>Node13</title>
+<g id="a_node13"><a xlink:href="structnetwork_1_1Server.html" target="_top" xlink:title="Identifies a network server. ">
 <polygon fill="none" stroke="black" points="431.5,-70 431.5,-89 517.5,-89 517.5,-70 431.5,-70"/>
 <text text-anchor="middle" x="474.5" y="-77" font-family="Helvetica,sans-Serif" font-size="10.00">network::Server</text>
 </a>
 </g>
 </g>
-<!-- Node12&#45;&gt;Node4 -->
-<g id="edge12" class="edge"><title>Node12&#45;&gt;Node4</title>
+<!-- Node13&#45;&gt;Node4 -->
+<g id="edge13" class="edge"><title>Node13&#45;&gt;Node4</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M527.712,-83.8026C553.499,-86.8621 584.83,-91.9952 612,-100.5 636.934,-108.305 663.729,-122.509 680.183,-131.977"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="528.085,-80.3226 517.758,-82.6908 527.308,-87.2793 528.085,-80.3226"/>
 <text text-anchor="middle" x="579" y="-114.5" font-family="Helvetica,sans-Serif" font-size="10.00"> current_server</text>

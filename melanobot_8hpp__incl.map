@@ -1,13 +1,14 @@
 <map id="src/melanobot.hpp" name="src/melanobot.hpp">
-<area shape="rect" id="node8" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="167,80,335,107"/>
-<area shape="rect" id="node11" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1259,393,1353,420"/>
-<area shape="rect" id="node15" href="$connection_8hpp.html" title="network/connection.hpp" alt="" coords="545,80,705,107"/>
+<area shape="rect" id="node8" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="222,80,390,107"/>
+<area shape="rect" id="node11" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1217,393,1310,420"/>
+<area shape="rect" id="node15" href="$connection_8hpp.html" title="network/connection.hpp" alt="" coords="679,80,839,107"/>
+<area shape="rect" id="node35" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1537,229,1731,256"/>
 <area shape="rect" id="node18" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="422,311,537,338"/>
-<area shape="rect" id="node24" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="687,229,805,256"/>
-<area shape="rect" id="node30" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1165,155,1316,181"/>
-<area shape="rect" id="node33" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="907,155,1065,181"/>
-<area shape="rect" id="node21" href="$color_8hpp.html" title="color.hpp" alt="" coords="241,393,315,420"/>
-<area shape="rect" id="node28" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="803,311,897,338"/>
-<area shape="rect" id="node31" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1185,229,1296,256"/>
+<area shape="rect" id="node24" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="700,229,819,256"/>
+<area shape="rect" id="node30" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1311,155,1461,181"/>
+<area shape="rect" id="node33" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1041,155,1200,181"/>
+<area shape="rect" id="node21" href="$color_8hpp.html" title="color.hpp" alt="" coords="269,393,343,420"/>
+<area shape="rect" id="node28" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="713,311,806,338"/>
+<area shape="rect" id="node31" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1269,229,1380,256"/>
 <area shape="rect" id="node32" href="$user_8hpp.html" title="user.hpp" alt="" coords="1289,311,1361,338"/>
 </map>

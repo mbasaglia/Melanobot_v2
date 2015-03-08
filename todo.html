@@ -82,10 +82,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt><a class="anchor" id="_todo000016"></a>File <a class="el" href="ctcp_8cpp.html">ctcp.cpp</a>  </dt>
-<dd>CtcpClientInfo  </dd>
-<dt><a class="anchor" id="_todo000024"></a>Member <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
+<dt><a class="anchor" id="_todo000027"></a>Member <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
 <dd>gather part message  </dd>
+<dt><a class="anchor" id="_todo000028"></a>Member <a class="el" href="classhandler_1_1ChuckNorris.html#a4576b36b5720be1c8e8075cdccf865dc">handler::ChuckNorris::json_success</a>  (const <a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg, const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;parsed) override</dt>
+<dd>convert html entities  </dd>
+<dt><a class="anchor" id="_todo000018"></a>Member <a class="el" href="classhandler_1_1CtcpClientInfo.html#a2709b67b708e8f16b631b0c6f32f4776">handler::CtcpClientInfo::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
+<dd>Discard commands available for other connections  </dd>
 <dt><a class="anchor" id="_todo000017"></a>Member <a class="el" href="classhandler_1_1CtcpVersion.html#a4455c28d360ac95a8ed9b2e97fcd63db">handler::CtcpVersion::CtcpVersion</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
 <dd>more detailed system information  </dd>
 <dt><a class="anchor" id="_todo000011"></a>Class <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a>  </dt>
@@ -96,53 +98,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <dd>see todo in initialize(), also is this needed?  </dd>
 <dt><a class="anchor" id="_todo000014"></a>Member <a class="el" href="classhandler_1_1Handler.html#a2c6b00c624bfba80346fb2d4257c8042">handler::Handler::initialize</a>  ()</dt>
 <dd>Run after the connection has been established? (needs to know what connections this class handles)  </dd>
+<dt><a class="anchor" id="_todo000024"></a>Class <a class="el" href="classhandler_1_1Help.html">handler::Help</a>  </dt>
+<dd>option for inline help (synopsis+message all on the same line)  </dd>
+<dt><a class="anchor" id="_todo000025"></a>Member <a class="el" href="classhandler_1_1Help.html#ac5185a498320798ce4e5d92caaddf9c7">handler::Help::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
+<dd>Discard commands available for other connections  </dd>
+<dt><a class="anchor" id="_todo000016"></a>Member <a class="el" href="classhandler_1_1SimpleAction.html#a5a9cea2c67d7a177c40b1dea9d57378d">handler::SimpleAction::SimpleGroup</a>  </dt>
+<dd>help and synopsis should be formatted strings  </dd>
 <dt><a class="anchor" id="_todo000012"></a>Class <a class="el" href="classhandler_1_1SimpleGroup.html">handler::SimpleGroup</a>  </dt>
 <dd>Add a simple way to create pre-defined group classes which will have a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration)  </dd>
-<dt><a class="anchor" id="_todo000025"></a>Member <a class="el" href="classhandler_1_1SimpleGroup.html#a3e56c03bdefd771708a16c8d7956bc71">handler::SimpleGroup::SimpleGroup</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
+<dt><a class="anchor" id="_todo000029"></a>Member <a class="el" href="classhandler_1_1SimpleGroup.html#a3e56c03bdefd771708a16c8d7956bc71">handler::SimpleGroup::SimpleGroup</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
 <dd>option co copy settings from another group  </dd>
-<dt><a class="anchor" id="_todo000022"></a>Member <a class="el" href="structJsonParser.html#a8d29983beae6467f7056bf3abb1f9c85">JsonParser::get_skipws</a>  ()</dt>
+<dt><a class="anchor" id="_todo000023"></a>Member <a class="el" href="structJsonParser.html#a8d29983beae6467f7056bf3abb1f9c85">JsonParser::get_skipws</a>  ()</dt>
 <dd>possibly skip comments  </dd>
-<dt><a class="anchor" id="_todo000021"></a>Member <a class="el" href="structJsonParser.html#a49ebf850ee0d372b91a8b6b23d95fa03">JsonParser::parse_literal</a>  ()</dt>
+<dt><a class="anchor" id="_todo000022"></a>Member <a class="el" href="structJsonParser.html#a49ebf850ee0d372b91a8b6b23d95fa03">JsonParser::parse_literal</a>  ()</dt>
 <dd>handle null?  </dd>
 <dt><a class="anchor" id="_todo000007"></a>Member <a class="el" href="classLogger.html#afd8ac164f5cc7d2b3c39ba41dfe35c84">Logger::load_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
 <dd>maybe should use different a formatter (ie: plain utf8) for log files  </dd>
 <dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="classLogger.html#abb439d1e9453722f4c145e9c9c46c697">Logger::log</a>  (const std::string &amp;type, char direction, const <a class="el" href="classstring_1_1FormattedString.html" title="A formatted string. ">string::FormattedString</a> &amp;message, int verbosity)</dt>
 <dd>lock mutex for log_destination  </dd>
-<dt><a class="anchor" id="_todo000049"></a>Member <a class="el" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>  (int argc, char **argv)</dt>
+<dt><a class="anchor" id="_todo000053"></a>Member <a class="el" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>  (int argc, char **argv)</dt>
 <dd><p class="startdd">register these in the proper classes </p>
 <p>some way to reload the config and restart the bot </p>
 <p class="enddd">policy on how to handle exceptions  </p>
 </dd>
 <dt><a class="anchor" id="_todo000010"></a>Member <a class="el" href="classMelanobot.html#ac0892a693c056c33129e7867f7511180">Melanobot::connections</a>  </dt>
 <dd>allow dynamic connection/handler creation (requires locking)  </dd>
-<dt><a class="anchor" id="_todo000047"></a>Member <a class="el" href="classnetwork_1_1http_1_1HttpService.html#a577cf1dc4587fa5466b6cc0185bfa41a">network::http::HttpService::initialize</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings) override</dt>
+<dt><a class="anchor" id="_todo000051"></a>Member <a class="el" href="classnetwork_1_1http_1_1HttpService.html#a577cf1dc4587fa5466b6cc0185bfa41a">network::http::HttpService::initialize</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings) override</dt>
 <dd></dd>
-<dt><a class="anchor" id="_todo000048"></a>Member <a class="el" href="classnetwork_1_1http_1_1HttpService.html#ab3b330b7c92bd491bd102a87198bab06">network::http::HttpService::query</a>  (const Request &amp;request) override</dt>
+<dt><a class="anchor" id="_todo000052"></a>Member <a class="el" href="classnetwork_1_1http_1_1HttpService.html#ab3b330b7c92bd491bd102a87198bab06">network::http::HttpService::query</a>  (const Request &amp;request) override</dt>
 <dd>read these from settings  </dd>
-<dt><a class="anchor" id="_todo000020"></a>Member <a class="el" href="namespacenetwork_1_1http.html#adfb7ede7b00df506c94a9f8e6ee08210">network::http::urlencode</a>  (const std::string &amp;text)</dt>
+<dt><a class="anchor" id="_todo000021"></a>Member <a class="el" href="namespacenetwork_1_1http.html#adfb7ede7b00df506c94a9f8e6ee08210">network::http::urlencode</a>  (const std::string &amp;text)</dt>
 <dd>urldecode (?) <dl class="section see"><dt>See also</dt><dd><a href="http://www.faqs.org/rfcs/rfc3986.html">http://www.faqs.org/rfcs/rfc3986.html</a>  </dd></dl>
 </dd>
-<dt><a class="anchor" id="_todo000045"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a2be757835ff0ec8c1528f809db58b007">network::irc::Buffer::connect</a>  (const Server &amp;server)</dt>
+<dt><a class="anchor" id="_todo000049"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a2be757835ff0ec8c1528f809db58b007">network::irc::Buffer::connect</a>  (const Server &amp;server)</dt>
 <dd>async with error checking  </dd>
-<dt><a class="anchor" id="_todo000046"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#ac01fa4e0425bec9759099cc851eeec37">network::irc::Buffer::disconnect</a>  ()</dt>
+<dt><a class="anchor" id="_todo000050"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#ac01fa4e0425bec9759099cc851eeec37">network::irc::Buffer::disconnect</a>  ()</dt>
 <dd>try catch  </dd>
-<dt><a class="anchor" id="_todo000043"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a5a2b87e1aa46626f4da24ff5d6aa5388">network::irc::Buffer::run_input</a>  ()</dt>
+<dt><a class="anchor" id="_todo000047"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a5a2b87e1aa46626f4da24ff5d6aa5388">network::irc::Buffer::run_input</a>  ()</dt>
 <dd>catch exception thrown on broken pipe  </dd>
-<dt><a class="anchor" id="_todo000044"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a378fdcdd852e4796ecd4f954e7b65768">network::irc::Buffer::write_line</a>  (std::string line)</dt>
+<dt><a class="anchor" id="_todo000048"></a>Member <a class="el" href="classnetwork_1_1irc_1_1Buffer.html#a378fdcdd852e4796ecd4f954e7b65768">network::irc::Buffer::write_line</a>  (std::string line)</dt>
 <dd>maybe try to strip  and <br />
  from line  </dd>
-<dt><a class="anchor" id="_todo000037"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection::command</a>  (const Command &amp;cmd) override</dt>
+<dt><a class="anchor" id="_todo000041"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection::command</a>  (const Command &amp;cmd) override</dt>
 <dd><p class="startdd">if size &gt; max nick length, break </p>
 <p>validate nick </p>
 <p>sanitaze the mode string </p>
 <p>allow channel mode </p>
 <p class="enddd">keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a>  </p>
 </dd>
-<dt><a class="anchor" id="_todo000042"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ae54665196d8b93ebcd707f01742cc55c">network::irc::IrcConnection::connect</a>  () override</dt>
+<dt><a class="anchor" id="_todo000046"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ae54665196d8b93ebcd707f01742cc55c">network::irc::IrcConnection::connect</a>  () override</dt>
 <dd>If connection fails, trigger a graceful quit  </dd>
-<dt><a class="anchor" id="_todo000023"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a49d7a7513cc00402000473c9da566704">network::irc::IrcConnection::current_server</a>  </dt>
+<dt><a class="anchor" id="_todo000026"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a49d7a7513cc00402000473c9da566704">network::irc::IrcConnection::current_server</a>  </dt>
 <dd></dd>
-<dt><a class="anchor" id="_todo000027"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436">network::irc::IrcConnection::handle_message</a>  (Message line)</dt>
+<dt><a class="anchor" id="_todo000031"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436">network::irc::IrcConnection::handle_message</a>  (Message line)</dt>
 <dd><p class="startdd">read current_server </p>
 <p>maybe do more than one channel per command </p>
 <p>maybe it would be useful to store operator/voiced status </p>
@@ -154,11 +162,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>handle the case when this notifies the bot itself has joined a channel </p>
 <p class="enddd">print a message for all ERR_ responses (verbosity &gt; 2)  </p>
 </dd>
-<dt><a class="anchor" id="_todo000026"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aa97e91c931f8c4c18754a9722a8c3b7f">network::irc::IrcConnection::read_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
+<dt><a class="anchor" id="_todo000030"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aa97e91c931f8c4c18754a9722a8c3b7f">network::irc::IrcConnection::read_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
 <dd>if called from somewhere that is not the constructor, lock data  </dd>
-<dt><a class="anchor" id="_todo000018"></a>Member <a class="el" href="namespacenetwork_1_1irc.html#ac15c863971041cf2b22071e32f36e009">network::irc::is_nickchar</a>  (char c)</dt>
+<dt><a class="anchor" id="_todo000019"></a>Member <a class="el" href="namespacenetwork_1_1irc.html#ac15c863971041cf2b22071e32f36e009">network::irc::is_nickchar</a>  (char c)</dt>
 <dd>currently unused  </dd>
-<dt><a class="anchor" id="_todo000019"></a>Member <a class="el" href="namespacenetwork_1_1irc.html#a0b4f56807f296da0bc67966429d83ca7">network::irc::strtolower</a>  (std::string string)</dt>
+<dt><a class="anchor" id="_todo000020"></a>Member <a class="el" href="namespacenetwork_1_1irc.html#a0b4f56807f296da0bc67966429d83ca7">network::irc::strtolower</a>  (std::string string)</dt>
 <dd>locale stuff if it's worth the effort  </dd>
 <dt><a class="anchor" id="_todo000005"></a>Member <a class="el" href="classstring_1_1Formatter.html#a0f5053aa0db32797537c28e380d78068">string::Formatter::color</a>  (const <a class="el" href="classcolor_1_1Color12.html" title="12 bit color ">color::Color12</a> &amp;color) const =0</dt>
 <dd>Background colors?  </dd>
@@ -180,7 +188,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 8 2015 21:10:19 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

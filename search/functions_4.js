@@ -1,7 +1,7 @@
 var searchData=
 [
   ['elide',['elide',['../namespacestring.html#ae653bb28385604968632306b1d54de11',1,'string']]],
-  ['empty',['empty',['../classstring_1_1FormattedString.html#af3c01266f9e753d02977db05f9ee1ac4',1,'string::FormattedString']]],
+  ['empty',['empty',['../classstring_1_1FormattedString.html#af3c01266f9e753d02977db05f9ee1ac4',1,'string::FormattedString::empty()'],['../classstring_1_1FormattedStream.html#aa32034fabd28cdc8961ddce23fb3d11f',1,'string::FormattedStream::empty()']]],
   ['encode',['encode',['../classstring_1_1Utf8Parser.html#a33c15b9ba47792457455989f3c382c28',1,'string::Utf8Parser::encode()'],['../classstring_1_1FormattedString.html#a8d6e2b64be8a9f0c9a9b35f9133f4597',1,'string::FormattedString::encode(const std::string &amp;format) const '],['../classstring_1_1FormattedString.html#a8c5e992a86c7fbfe3abe4ffbef0be9a9',1,'string::FormattedString::encode(Formatter *formatter) const '],['../classstring_1_1FormattedStream.html#a0ebd9c5ac4fcbed3514f03d4f26cc510',1,'string::FormattedStream::encode()']]],
   ['end',['end',['../classstring_1_1FormattedString.html#a8e9f9b6ba1e3ad6da2ae84e55af758bb',1,'string::FormattedString::end()'],['../classstring_1_1FormattedString.html#ae879845b30e4ee3d89252e5b48059797',1,'string::FormattedString::end() const ']]],
   ['erase',['erase',['../classstring_1_1FormattedString.html#a6e04ca1f185884691aa7e46dc95eb8ee',1,'string::FormattedString::erase(const const_iterator &amp;q)'],['../classstring_1_1FormattedString.html#af88dc100701a8de5e02d20813d122ee4',1,'string::FormattedString::erase(const const_iterator &amp;p, const const_iterator &amp;q)']]],

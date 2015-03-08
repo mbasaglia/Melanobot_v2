@@ -1,18 +1,19 @@
 <map id="src/handler/ctcp.cpp" name="src/handler/ctcp.cpp">
-<area shape="rect" id="node2" href="$handler_8hpp.html" title="handler.hpp" alt="" coords="953,80,1043,107"/>
-<area shape="rect" id="node42" href="$config_8hpp.html" title="config.hpp" alt="" coords="1067,80,1150,107"/>
-<area shape="rect" id="node43" href="$irc__functions_8hpp.html" title="network/irc_functions.hpp" alt="" coords="1093,461,1263,487"/>
-<area shape="rect" id="node8" href="$connection_8hpp.html" title="network/connection.hpp" alt="" coords="1223,229,1383,256"/>
-<area shape="rect" id="node19" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="939,379,1057,405"/>
-<area shape="rect" id="node26" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1577,543,1670,569"/>
-<area shape="rect" id="node33" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="229,461,404,487"/>
-<area shape="rect" id="node37" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1851,155,1958,181"/>
-<area shape="rect" id="node13" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="1287,461,1402,487"/>
-<area shape="rect" id="node28" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1712,304,1863,331"/>
-<area shape="rect" id="node31" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1376,304,1535,331"/>
-<area shape="rect" id="node16" href="$color_8hpp.html" title="color.hpp" alt="" coords="1249,543,1323,569"/>
-<area shape="rect" id="node24" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="719,461,813,487"/>
-<area shape="rect" id="node29" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1763,379,1873,405"/>
-<area shape="rect" id="node30" href="$user_8hpp.html" title="user.hpp" alt="" coords="1711,461,1783,487"/>
-<area shape="rect" id="node41" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1967,229,2135,256"/>
+<area shape="rect" id="node2" href="$handler_8hpp.html" title="handler.hpp" alt="" coords="597,80,686,107"/>
+<area shape="rect" id="node43" href="$config_8hpp.html" title="config.hpp" alt="" coords="711,80,793,107"/>
+<area shape="rect" id="node44" href="$irc__functions_8hpp.html" title="network/irc_functions.hpp" alt="" coords="5,461,176,487"/>
+<area shape="rect" id="node8" href="$connection_8hpp.html" title="network/connection.hpp" alt="" coords="1015,229,1175,256"/>
+<area shape="rect" id="node19" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="971,379,1090,405"/>
+<area shape="rect" id="node26" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1452,543,1545,569"/>
+<area shape="rect" id="node33" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="277,461,451,487"/>
+<area shape="rect" id="node37" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1589,155,1696,181"/>
+<area shape="rect" id="node13" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="780,461,895,487"/>
+<area shape="rect" id="node28" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1681,304,1831,331"/>
+<area shape="rect" id="node31" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1259,304,1418,331"/>
+<area shape="rect" id="node16" href="$color_8hpp.html" title="color.hpp" alt="" coords="761,543,836,569"/>
+<area shape="rect" id="node24" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1225,461,1319,487"/>
+<area shape="rect" id="node29" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1767,379,1878,405"/>
+<area shape="rect" id="node30" href="$user_8hpp.html" title="user.hpp" alt="" coords="1679,461,1751,487"/>
+<area shape="rect" id="node41" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1835,229,2003,256"/>
+<area shape="rect" id="node42" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1497,379,1692,405"/>
 </map>

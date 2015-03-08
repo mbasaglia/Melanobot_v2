@@ -1,4 +1,5 @@
 <map id="Melanobot" name="Melanobot">
-<area shape="rect" id="node2" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="5,111,188,152"/>
-<area shape="rect" id="node3" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="11,5,182,61"/>
+<area shape="rect" id="node2" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,118,179,145"/>
+<area shape="rect" id="node3" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="203,111,386,152"/>
+<area shape="rect" id="node4" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="209,5,380,61"/>
 </map>

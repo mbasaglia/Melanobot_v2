@@ -1,6 +1,7 @@
 var searchData=
 [
   ['character',['Character',['../classstring_1_1Character.html',1,'string']]],
+  ['chucknorris',['ChuckNorris',['../classhandler_1_1ChuckNorris.html',1,'handler']]],
   ['clearformatting',['ClearFormatting',['../classstring_1_1ClearFormatting.html',1,'string']]],
   ['color',['Color',['../classstring_1_1Color.html',1,'string']]],
   ['color12',['Color12',['../classcolor_1_1Color12.html',1,'color']]],
@@ -22,6 +23,7 @@ var searchData=
   ['context',['Context',['../structJsonParser_1_1Context.html',1,'JsonParser']]],
   ['criticalexception',['CriticalException',['../structCriticalException.html',1,'']]],
   ['ctcpbase',['CtcpBase',['../classhandler_1_1CtcpBase.html',1,'handler']]],
+  ['ctcpclientinfo',['CtcpClientInfo',['../classhandler_1_1CtcpClientInfo.html',1,'handler']]],
   ['ctcpping',['CtcpPing',['../classhandler_1_1CtcpPing.html',1,'handler']]],
   ['ctcpsource',['CtcpSource',['../classhandler_1_1CtcpSource.html',1,'handler']]],
   ['ctcptime',['CtcpTime',['../classhandler_1_1CtcpTime.html',1,'handler']]],

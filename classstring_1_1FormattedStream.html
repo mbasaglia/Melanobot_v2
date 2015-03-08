@@ -139,6 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac435996b5ae5641bea58743269100c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ebd9c5ac4fcbed3514f03d4f26cc510"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedStream.html#a0ebd9c5ac4fcbed3514f03d4f26cc510">encode</a> (const std::string &amp;output_formatter) const </td></tr>
 <tr class="separator:a0ebd9c5ac4fcbed3514f03d4f26cc510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa32034fabd28cdc8961ddce23fb3d11f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedStream.html#aa32034fabd28cdc8961ddce23fb3d11f">empty</a> () const </td></tr>
+<tr class="separator:aa32034fabd28cdc8961ddce23fb3d11f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -176,7 +178,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="string_8hpp_source.html#l00572">572</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00133">handler::SearchWebSearx::json_success()</a>, and <a class="el" href="handler_8hpp_source.html#l00117">handler::Handler::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00135">handler::SearchWebSearx::json_success()</a>, and <a class="el" href="handler_8hpp_source.html#l00147">handler::Handler::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -203,11 +205,38 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="string_8hpp_source.html#l00574">574</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00791">network::irc::IrcConnection::say_as()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00077">handler::Help::on_handle()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00801">network::irc::IrcConnection::say_as()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aa32034fabd28cdc8961ddce23fb3d11f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool string::FormattedStream::empty </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00635">635</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00077">handler::Help::on_handle()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a0ebd9c5ac4fcbed3514f03d4f26cc510"></a>
 <div class="memitem">
 <div class="memproto">
@@ -518,7 +547,7 @@ template&lt;class T &gt; </div>
 
 <p>Definition at line <a class="el" href="string_8hpp_source.html#l00578">578</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00133">handler::SearchWebSearx::json_success()</a>, <a class="el" href="string_8hpp_source.html#l00577">operator FormattedString()</a>, <a class="el" href="ctcp_8cpp_source.html#l00053">handler::CtcpBase::reply_to()</a>, <a class="el" href="handler_8hpp_source.html#l00117">handler::Handler::reply_to()</a>, and <a class="el" href="logger_8hpp_source.html#l00156">Log::~Log()</a>.</p>
+<p>Referenced by <a class="el" href="web-api_8cpp_source.html#l00135">handler::SearchWebSearx::json_success()</a>, <a class="el" href="misc_8cpp_source.html#l00077">handler::Help::on_handle()</a>, <a class="el" href="string_8hpp_source.html#l00577">operator FormattedString()</a>, <a class="el" href="ctcp_8cpp_source.html#l00064">handler::CtcpBase::reply_to()</a>, <a class="el" href="handler_8hpp_source.html#l00147">handler::Handler::reply_to()</a>, and <a class="el" href="logger_8hpp_source.html#l00156">Log::~Log()</a>.</p>
 
 </div>
 </div>
@@ -541,9 +570,9 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00636">636</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00638">638</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00630">encode()</a>, <a class="el" href="string_8hpp_source.html#l00580">operator&lt;&lt;()</a>, and <a class="el" href="string_8hpp_source.html#l00578">str()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00635">empty()</a>, <a class="el" href="string_8hpp_source.html#l00630">encode()</a>, <a class="el" href="string_8hpp_source.html#l00580">operator&lt;&lt;()</a>, and <a class="el" href="string_8hpp_source.html#l00578">str()</a>.</p>
 
 </div>
 </div>
@@ -565,7 +594,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00637">637</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00639">639</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="string_8hpp_source.html#l00572">FormattedStream()</a>, and <a class="el" href="string_8hpp_source.html#l00580">operator&lt;&lt;()</a>.</p>
 
@@ -577,7 +606,7 @@ template&lt;class T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 8 2015 21:10:19 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

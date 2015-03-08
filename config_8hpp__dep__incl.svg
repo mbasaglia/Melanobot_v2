@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="ctcp_8cpp.html" target="_top" xlink:title="src/handler/ctcp.cpp">
+<g id="a_node2"><a xlink:href="ctcp_8cpp.html" target="_top" xlink:title="This files has handlers for CTCP messages. ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-19.5 105,-19.5 105,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="52.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/handler/ctcp.cpp</text>
 </a>

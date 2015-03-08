@@ -1,6 +1,7 @@
 <map id="handler::SearchImageGoogle" name="handler::SearchImageGoogle">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="31,229,171,256"/>
-<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="21,155,180,181"/>
-<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="26,80,175,107"/>
-<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="42,5,159,32"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="31,304,171,331"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="21,229,180,256"/>
+<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="26,155,175,181"/>
+<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="42,80,159,107"/>
+<area shape="rect" id="node6" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="14,5,187,32"/>
 </map>

@@ -1,0 +1,17 @@
+<map id="src/handler/handler_container.hpp" name="src/handler/handler_container.hpp">
+<area shape="rect" id="node2" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="868,95,997,121"/>
+<area shape="rect" id="node3" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="5,244,135,271"/>
+<area shape="rect" id="node4" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="586,169,743,196"/>
+<area shape="rect" id="node13" href="$irc__connection_8hpp.html" title="src/network/irc_connection.hpp" alt="" coords="1015,169,1218,196"/>
+<area shape="rect" id="node16" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="1243,169,1340,196"/>
+<area shape="rect" id="node5" href="$ctcp_8cpp.html" title="This files has handlers for CTCP messages. " alt="" coords="159,244,299,271"/>
+<area shape="rect" id="node6" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="323,244,483,271"/>
+<area shape="rect" id="node9" href="$misc_8cpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="508,244,651,271"/>
+<area shape="rect" id="node10" href="$irc__whois_8cpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="1031,244,1202,271"/>
+<area shape="rect" id="node11" href="$admin_8cpp.html" title="This file defines handlers which allows admin to administrate the bot (Mostly IRC&#45;specific action) ..." alt="" coords="675,244,825,271"/>
+<area shape="rect" id="node12" href="$handler_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="850,244,1007,271"/>
+<area shape="rect" id="node7" href="$web-api_8cpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="238,319,398,345"/>
+<area shape="rect" id="node8" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="422,319,555,345"/>
+<area shape="rect" id="node14" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="1226,244,1429,271"/>
+<area shape="rect" id="node15" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="1453,244,1626,271"/>
+</map>

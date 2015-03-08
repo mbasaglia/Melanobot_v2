@@ -104,12 +104,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for handler::License:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1License__inherit__graph.svg" width="160" height="187"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1License__inherit__graph.svg" width="184" height="262"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for handler::License:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1License__coll__graph.svg" width="194" height="488"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1License__coll__graph.svg" width="392" height="488"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -117,6 +118,9 @@ Collaboration diagram for handler::License:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae30f02c3e9487a3b9bd74ee076fcd86c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1License.html#ae30f02c3e9487a3b9bd74ee076fcd86c">License</a> (const <a class="el" href="classSettings.html">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html">Melanobot</a> *<a class="el" href="classhandler_1_1Handler.html#a0b1dd2d445ba3e9dee3e05f2beeae26b">bot</a>)</td></tr>
 <tr class="separator:ae30f02c3e9487a3b9bd74ee076fcd86c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af459bd9ef3e76b72067c2c88ac46cb2a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1License.html#af459bd9ef3e76b72067c2c88ac46cb2a">get_property</a> (const std::string &amp;name) const override</td></tr>
+<tr class="memdesc:af459bd9ef3e76b72067c2c88ac46cb2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a property by name.  <a href="#af459bd9ef3e76b72067c2c88ac46cb2a">More...</a><br /></td></tr>
+<tr class="separator:af459bd9ef3e76b72067c2c88ac46cb2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classhandler_1_1SimpleAction"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classhandler_1_1SimpleAction')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classhandler_1_1SimpleAction.html">handler::SimpleAction</a></td></tr>
 <tr class="memitem:a1bff58ef38d7d83b2ef79bbaa1ab5e3c inherit pub_methods_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a1bff58ef38d7d83b2ef79bbaa1ab5e3c">SimpleAction</a> (const std::string &amp;default_trigger, const <a class="el" href="classSettings.html">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html">Melanobot</a> *<a class="el" href="classhandler_1_1Handler.html#a0b1dd2d445ba3e9dee3e05f2beeae26b">bot</a>)</td></tr>
 <tr class="memdesc:a1bff58ef38d7d83b2ef79bbaa1ab5e3c inherit pub_methods_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the trigger.  <a href="#a1bff58ef38d7d83b2ef79bbaa1ab5e3c">More...</a><br /></td></tr>
@@ -141,6 +145,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7e8c64588c72b6b4f560dea050fcb4b1 inherit pub_methods_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a7e8c64588c72b6b4f560dea050fcb4b1">authorized</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg) const </td></tr>
 <tr class="memdesc:a7e8c64588c72b6b4f560dea050fcb4b1 inherit pub_methods_classhandler_1_1Handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a message is authorized to be executed by this message.  <a href="#a7e8c64588c72b6b4f560dea050fcb4b1">More...</a><br /></td></tr>
 <tr class="separator:a7e8c64588c72b6b4f560dea050fcb4b1 inherit pub_methods_classhandler_1_1Handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d68fc235c6126a1b7c4181ee276e04 inherit pub_methods_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#af6d68fc235c6126a1b7c4181ee276e04">populate_properties</a> (const std::vector&lt; std::string &gt; &amp;properties, <a class="el" href="settings_8hpp.html#a15ece709c6b6e61496f543f62e8ba439">PropertyTree</a> &amp;output) const override</td></tr>
+<tr class="memdesc:af6d68fc235c6126a1b7c4181ee276e04 inherit pub_methods_classhandler_1_1Handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simply appends globally the given property.  <a href="#af6d68fc235c6126a1b7c4181ee276e04">More...</a><br /></td></tr>
+<tr class="separator:af6d68fc235c6126a1b7c4181ee276e04 inherit pub_methods_classhandler_1_1Handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classhandler_1_1HandlerContainer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classhandler_1_1HandlerContainer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classhandler_1_1HandlerContainer.html">handler::HandlerContainer</a></td></tr>
+<tr class="memitem:a2b7d5775701f30750cde74ebd4dc711e inherit pub_methods_classhandler_1_1HandlerContainer"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">~HandlerContainer</a> ()</td></tr>
+<tr class="separator:a2b7d5775701f30750cde74ebd4dc711e inherit pub_methods_classhandler_1_1HandlerContainer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -169,6 +179,11 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a18a6f9f77f02a1c5b5a7c183297cb4ee inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a18a6f9f77f02a1c5b5a7c183297cb4ee">direct</a> = false</td></tr>
 <tr class="memdesc:a18a6f9f77f02a1c5b5a7c183297cb4ee inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the message needs to be direct.  <a href="#a18a6f9f77f02a1c5b5a7c183297cb4ee">More...</a><br /></td></tr>
 <tr class="separator:a18a6f9f77f02a1c5b5a7c183297cb4ee inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a362db8a8835c31529cd076c15161223c inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a362db8a8835c31529cd076c15161223c">synopsis</a></td></tr>
+<tr class="memdesc:a362db8a8835c31529cd076c15161223c inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classhandler_1_1Help.html" title="Handler showing help on the available handlers. ">Help</a> synopsis.  <a href="#a362db8a8835c31529cd076c15161223c">More...</a><br /></td></tr>
+<tr class="separator:a362db8a8835c31529cd076c15161223c inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a3a545b40591427f5dbd82a8feec418 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a5a3a545b40591427f5dbd82a8feec418">help</a> =&quot;Undocumented&quot;</td></tr>
+<tr class="separator:a5a3a545b40591427f5dbd82a8feec418 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classhandler_1_1Handler"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classhandler_1_1Handler')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a></td></tr>
 <tr class="memitem:a106f3e972beb61dfe66eb5d8c148873f inherit pro_attribs_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a106f3e972beb61dfe66eb5d8c148873f">auth</a></td></tr>
 <tr class="memdesc:a106f3e972beb61dfe66eb5d8c148873f inherit pro_attribs_classhandler_1_1Handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authorization group required for a user message to be handled.  <a href="#a106f3e972beb61dfe66eb5d8c148873f">More...</a><br /></td></tr>
@@ -184,7 +199,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p><a class="el" href="classhandler_1_1Handler.html" title="Message handler abstract base class. ">Handler</a> showing licensing information. </p>
 <dl class="section note"><dt>Note</dt><dd>Must be enabled to comply to the AGPL </dd></dl>
 
-<p>Definition at line <a class="el" href="core_8cpp_source.html#l00030">30</a> of file <a class="el" href="core_8cpp_source.html">core.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00030">30</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ae30f02c3e9487a3b9bd74ee076fcd86c"></a>
 <div class="memitem">
@@ -218,11 +233,44 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="core_8cpp_source.html#l00033">33</a> of file <a class="el" href="core_8cpp_source.html">core.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00033">33</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="af459bd9ef3e76b72067c2c88ac46cb2a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string handler::License::get_property </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a property by name. </p>
+<dl class="section note"><dt>Note</dt><dd>If you inherit a <a class="el" href="classhandler_1_1Handler.html" title="Message handler abstract base class. ">Handler</a> class, it is recommended that you override this for properties of that class but still call the parent version. </dd>
+<dd>
+The <a class="el" href="classhandler_1_1Help.html" title="Handler showing help on the available handlers. ">Help</a> handler uses the property "name" to determine if a handler has to be displayed, and uses "synopsis" and "help" to display information </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classhandler_1_1SimpleAction.html#a00e7807f14405605263ab78dcf8c3a79">handler::SimpleAction</a>.</p>
+
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00039">39</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a95f6ea7f6c44fbce40f1c0b7db6ffb3d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +298,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classhandler_1_1Handler.html#af56231a77ff17aee132828094daca760">handler::Handler</a>.</p>
 
-<p>Definition at line <a class="el" href="core_8cpp_source.html#l00040">40</a> of file <a class="el" href="core_8cpp_source.html">core.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00047">47</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
 </div>
 </div>
@@ -273,19 +321,19 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="core_8cpp_source.html#l00047">47</a> of file <a class="el" href="core_8cpp_source.html">core.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00054">54</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="core_8cpp_source.html#l00033">License()</a>, and <a class="el" href="core_8cpp_source.html#l00040">on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00033">License()</a>, and <a class="el" href="misc_8cpp_source.html#l00047">on_handle()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/handler/<a class="el" href="core_8cpp_source.html">core.cpp</a></li>
+<li>src/handler/<a class="el" href="misc_8cpp_source.html">misc.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 8 2015 21:10:19 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

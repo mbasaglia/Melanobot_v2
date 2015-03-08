@@ -1,5 +1,5 @@
 <map id="src/network/irc_connection.hpp" name="src/network/irc_connection.hpp">
-<area shape="rect" id="node2" href="$irc__whois_8cpp.html" title="src/handler/irc_whois.cpp" alt="" coords="5,80,176,107"/>
+<area shape="rect" id="node2" href="$irc__whois_8cpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="5,80,176,107"/>
 <area shape="rect" id="node3" href="$irc__connection_8cpp.html" title="src/network/irc_connection.cpp" alt="" coords="200,80,403,107"/>
 <area shape="rect" id="node4" href="$irc__buffer_8cpp.html" title="src/network/irc_buffer.cpp" alt="" coords="427,80,600,107"/>
 </map>

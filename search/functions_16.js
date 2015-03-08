@@ -7,6 +7,7 @@ var searchData=
   ['_7eformatter',['~Formatter',['../classstring_1_1Formatter.html#a91d0a7edfd8ec1a320f0e700cdb07ef4',1,'string::Formatter']]],
   ['_7eformatterfactory',['~FormatterFactory',['../classstring_1_1Formatter_1_1FormatterFactory.html#a52130a3066b6275f9d731551183aed64',1,'string::Formatter::FormatterFactory']]],
   ['_7ehandler',['~Handler',['../classhandler_1_1Handler.html#ab570c2d7db0eee3b4cd62630902f0de4',1,'handler::Handler']]],
+  ['_7ehandlercontainer',['~HandlerContainer',['../classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e',1,'handler::HandlerContainer']]],
   ['_7eircconnection',['~IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html#a24a13b9520ceb8e3e5388418ec7d043b',1,'network::irc::IrcConnection']]],
   ['_7elog',['~Log',['../classLog.html#a0fbfda88fbee5027c89f6eb121059360',1,'Log']]],
   ['_7emelanobot',['~Melanobot',['../classMelanobot.html#aca74a36de6cd9a8d141a98f60f4ee127',1,'Melanobot']]],

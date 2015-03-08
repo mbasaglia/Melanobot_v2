@@ -1,6 +1,7 @@
 <map id="handler::UrbanDictionary" name="handler::UrbanDictionary">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="19,229,159,256"/>
-<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="9,155,168,181"/>
-<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="14,80,163,107"/>
-<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="30,5,147,32"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="22,304,162,331"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="13,229,171,256"/>
+<area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="17,155,167,181"/>
+<area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="33,80,151,107"/>
+<area shape="rect" id="node6" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,5,179,32"/>
 </map>
