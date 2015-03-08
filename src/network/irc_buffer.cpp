@@ -29,7 +29,8 @@ Buffer::Buffer(IrcConnection& irc, const Settings& settings)
 {
     flood_timer = Clock::now();
     flood_timer_max = std::chrono::seconds(settings.get("timer_max",10));
-    flood_timer_penalty = std::chrono::seconds(settings.get("timer_penalty",2));
+    flood_message_penalty = std::chrono::seconds(settings.get("message_penalty",2));
+    flood_bytes_penalty = settings.get("bytes_penalty",120);
     flood_max_length = settings.get("max_length",510);
 }
 
@@ -82,8 +83,10 @@ void Buffer::process()
             return;
 
         auto max_timer = Clock::now() + flood_timer_max;
-        if ( flood_timer+flood_timer_penalty > max_timer )
-            std::this_thread::sleep_for(max_timer-flood_timer);
+        if ( flood_timer+flood_message_penalty > max_timer )
+        {
+            std::this_thread::sleep_for(std::max(flood_message_penalty,flood_timer-max_timer));
+        }
     }
     while ( cmd.timeout < Clock::now() );
 
@@ -117,7 +120,11 @@ void Buffer::write_line ( std::string line )
     request_stream << line << "\r\n";
     Log("irc",'<',1) << irc.formatter()->decode(line);
     boost::asio::write(socket, buffer_write);
-    flood_timer += flood_timer_penalty;
+
+    flood_timer += flood_message_penalty;
+    if ( flood_bytes_penalty > 0 )
+        flood_timer += std::chrono::seconds(line.size()/flood_bytes_penalty);
+
 }
 
 void Buffer::connect(const Server& server)

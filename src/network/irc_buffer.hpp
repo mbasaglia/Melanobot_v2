@@ -122,13 +122,25 @@ private:
     /**
      * \brief Maximum duration the flood timer can be ahead of now
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
+     *
+     * When \c flood_timer reaches \c flood_timer_max, the buffer will have
+     * to wait a while before sending a new message to the server
      */
     Duration    flood_timer_max;
     /**
      * \brief Message penalty
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
+     *
+     * Fixed amount added to \c flood_timer with each message.
      */
-    Duration    flood_timer_penalty;
+    Duration    flood_message_penalty;
+    /**
+     * \brief Message size penalty
+     *
+     * Number of bytes which will cause an extra second to be added
+     * \c flood_timer when a message is sent to the server
+     */
+    int         flood_bytes_penalty = 0;
 
 // Network:
     boost::asio::streambuf              buffer_read;

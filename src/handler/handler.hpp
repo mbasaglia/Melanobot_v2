@@ -96,6 +96,12 @@ public:
 
     /**
      * \brief Get a property by name
+     * \note If you inherit a Handler class, it is recommended that you
+     *       override this for properties of that class but still call the
+     *       parent version.
+     * \note The Help handler uses the property "name" to determine if a handler
+     *       has to be displayed, and uses "synopsis" and "help" to display
+     *       information
      */
     virtual std::string get_property(const std::string& name) const
     {
