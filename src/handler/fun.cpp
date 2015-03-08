@@ -21,7 +21,10 @@
 
 #include <unordered_map>
 
+#include <boost/filesystem.hpp>
+
 #include "web-api.hpp"
+#include "math.hpp"
 
 namespace handler {
 
@@ -32,7 +35,11 @@ class Morse : public SimpleAction
 {
 public:
     Morse(const Settings& settings, Melanobot* bot)
-        : SimpleAction("morse",settings,bot) {}
+        : SimpleAction("morse",settings,bot)
+    {
+        synopsis += " text|morse";
+        help = "Converts between ASCII and Morse code";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -153,7 +160,10 @@ class ReverseText : public SimpleAction
 public:
     ReverseText(const Settings& settings, Melanobot* bot)
         : SimpleAction("reverse",settings,bot)
-    {}
+    {
+        synopsis += " text";
+        help = "Turns ASCII upside-down";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -286,7 +296,10 @@ class ChuckNorris : public SimpleJson
 public:
     ChuckNorris(const Settings& settings, Melanobot* bot)
         : SimpleJson("norris",settings,bot)
-    {}
+    {
+        synopsis += " [name]";
+        help = "Shows a Chuck Norris joke from http://icndb.com";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -318,5 +331,79 @@ private:
     std::string api_url = "http://api.icndb.com/jokes/random";
 };
 REGISTER_HANDLER(ChuckNorris,ChuckNorris);
+
+class RenderPony : public SimpleAction
+{
+public:
+    RenderPony(const Settings& settings, Melanobot* bot)
+        : SimpleAction("render_pony",settings,bot)
+    {
+        synopsis += " pony";
+        help = "Draws a pretty pony /)^3^(\\";
+        pony_path = settings.get("path",pony_path);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        using namespace boost::filesystem;
+
+        if ( exists(pony_path) && is_directory(pony_path))
+        {
+            std::string pony_search = msg.message;
+            int score = -1;
+            std::vector<std::string> files;
+
+            for( directory_iterator dir_iter(pony_path) ;
+                dir_iter != directory_iterator() ; ++dir_iter)
+            {
+                if ( is_regular_file(dir_iter->status()) )
+                {
+                    if ( pony_search.empty() )
+                    {
+                        files.push_back(dir_iter->path().string());
+                    }
+                    else
+                    {
+                        int local_score = string::similarity(
+                            dir_iter->path().filename().string(), pony_search );
+                        if ( local_score > score )
+                        {
+                            score = local_score;
+                            files = { dir_iter->path().string() };
+                        }
+                        else if ( local_score > score )
+                        {
+                            files.push_back( dir_iter->path().string() );
+                        }
+                    }
+                }
+            }
+
+            if ( !files.empty() )
+            {
+                std::fstream file(files[math::random(files.size()-1)]);
+                if ( file.is_open() )
+                {
+                    std::string line;
+                    while(true)
+                    {
+                        std::getline(file,line);
+                        if ( !file ) break;
+                        reply_to(msg,line);
+                    }
+                    return true;
+                }
+            }
+        }
+
+        reply_to(msg,"Didn't find anypony D:");
+        return true;
+    }
+
+private:
+    std::string pony_path;
+};
+REGISTER_HANDLER(RenderPony,RenderPony);
 
 } // namespace handler

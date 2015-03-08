@@ -119,7 +119,13 @@ void Buffer::write_line ( std::string line )
     }
     request_stream << line << "\r\n";
     Log("irc",'<',1) << irc.formatter()->decode(line);
-    boost::asio::write(socket, buffer_write);
+
+    boost::system::error_code error;
+    boost::asio::write(socket, buffer_write, error);
+    if (error && error != boost::asio::error::eof )
+    {
+        ErrorLog("irc","Network Error") << error.message();
+    }
 
     flood_timer += flood_message_penalty;
     if ( flood_bytes_penalty > 0 )

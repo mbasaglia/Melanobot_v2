@@ -100,5 +100,59 @@ std::vector<std::string> regex_split(const std::string& input,
     return std::move(out);
 }
 
+std::string::size_type similarity(const std::string& s1, const std::string& s2)
+{
+    /**
+     * \note  This can be done more accurately but it doesn't matter for the
+     * purpose of where this function is called so a simple yet inaccurate
+     * algorithm is acceptable.
+     *
+     */
+
+    typedef std::string::size_type int_;
+    int_ result = 0;
+
+    int_ i1 = 0; // Current position on s1
+    int_ i2 = 0; // Current position on s2
+
+    while ( i1 < s1.size() && i2 < s2.size() )
+    {
+        // find the where the first character of a string is found in the other
+        int_ next1 = s1.find(s2[i2],i1);
+        int_ next2 = s2.find(s1[i1],i2);
+
+        // found: the character of s2 isn't too far in s1
+        if ( next1 < next2 )
+        {
+            result += i1 == next1 ? 3 : 1;
+            i1 = next1+1; // moving forward in s1
+            i2++; // using that character in s2
+        }
+        // same as above, other way round
+        else if ( next1 > next2 )
+        {
+            result += i2 == next2 ? 3 : 1;
+            i1++; // using that character in s1
+            i2 = next2+1; // moving forward in s2
+        }
+        // here next1 == next2
+        // not found
+        else if ( next1 == std::string::npos )
+        {
+            // skip this character
+            i1++;
+            i2++;
+        }
+        // found on the same place
+        else
+        {
+            result += i1 == next1 ? 3 : 1;
+            i1 = next1+1; // moving forward in s1
+            i2 = next2+1; // moving forward in s2
+        }
+    }
+
+    return result;
+}
 
 } // namespace string

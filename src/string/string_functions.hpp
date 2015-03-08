@@ -165,5 +165,10 @@ inline std::vector<std::string> comma_split(const std::string& input,bool skip_e
     return std::move(string::regex_split(input,regex_commaspace));
 }
 
+/**
+ * \brief Returns a value representing how similar the two strings are
+ */
+std::string::size_type similarity(const std::string& s1, const std::string& s2);
+
 } // namespace string
 #endif // STRING_FUNCTIONS_HPP
