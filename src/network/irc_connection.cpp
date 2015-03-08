@@ -916,6 +916,9 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
 bool IrcConnection::user_auth(const std::string& local_id,
                               const std::string& auth_group) const
 {
+    if ( auth_group.empty() )
+        return true;
+    
     LOCK(mutex);
     const user::User* user = user_manager.user(local_id);
     if ( !user )

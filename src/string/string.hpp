@@ -632,6 +632,8 @@ public:
         return buffer.encode(output_formatter);
     }
 
+    bool empty() const { return buffer.empty(); }
+
 private:
     mutable FormattedString buffer;
     Formatter* formatter;

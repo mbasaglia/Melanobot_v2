@@ -25,14 +25,14 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+
+typedef boost::property_tree::ptree PropertyTree;
 /**
  * \brief Class containing hierarchical settings
  */
-class Settings : public boost::property_tree::ptree
+class Settings : public PropertyTree
 {
 public:
-    typedef boost::property_tree::ptree PTree;
-
     /**
     * \brief File format used to open/save settings
     */
@@ -63,7 +63,7 @@ public:
     static std::string find_config( FileFormat format = FileFormat::AUTO );
 
     Settings() {}
-    Settings(const PTree& p) : PTree(p) {}
+    Settings(const PropertyTree& p) : PropertyTree(p) {}
 
     /**
      * \brief Load settings from file

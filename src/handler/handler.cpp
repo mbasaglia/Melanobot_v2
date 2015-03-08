@@ -29,13 +29,16 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
     : SimpleAction("",settings,bot,true)
 {
     channels = settings.get("channels","");
+    name = settings.get("name",trigger);
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
         source = bot->connection(source_name);
+    synopsis = help = "";
 
     Settings default_settings;
     for ( const auto& p : settings )
-        if ( !p.second.data().empty() && p.first != "trigger" && p.first != "auth" )
+        if ( !p.second.data().empty() && p.first != "trigger" &&
+                p.first != "auth" && p.first != "name" )
             default_settings.put(p.first,p.second.data());
 
     Settings child_settings = settings;
@@ -76,5 +79,22 @@ bool SimpleGroup::can_handle(const network::Message& msg)
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
+void SimpleGroup::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
+{
+    Handler::populate_properties(properties, output);
+
+    for ( unsigned i = 0; i < children.size(); i++ )
+    {
+        PropertyTree child;
+        children[i]->populate_properties(properties,child);
+        if ( !child.empty() || !child.data().empty() )
+        {
+            std::string name = children[i]->get_property("name");
+            if ( name.empty() )
+                name = std::to_string(i);
+            output.put_child(name,child);
+        }
+    }
+}
 
 } // namespace handler

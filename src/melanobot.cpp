@@ -96,3 +96,21 @@ network::Connection* Melanobot::connection(const std::string& name) const
         return nullptr;
     return it->second;
 }
+
+void Melanobot::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
+{
+    for ( unsigned i = 0; i < handlers.size(); i++ )
+    {
+        PropertyTree child;
+        handlers[i]->populate_properties(properties,child);
+        if ( !child.empty() || !child.data().empty() )
+        {
+            std::string name = handlers[i]->get_property("name");
+            if ( name.empty() )
+                name = std::to_string(i);
+            output.put_child(name,child);
+        }
+    }
+}
+
+

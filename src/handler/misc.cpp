@@ -36,6 +36,13 @@ public:
         sources_url = settings.get("url",Settings::global_settings.get("website",""));
     }
 
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "help" )
+            return "Shows licensing information";
+        return SimpleAction::get_property(name);
+    }
+
 protected:
     bool on_handle(network::Message& msg) override
     {
@@ -48,4 +55,167 @@ private:
 };
 REGISTER_HANDLER(License,License);
 
+/**
+ * \brief Handler showing help on the available handlers
+ * \note It is trongly recommended that this is enabled
+ * \todo option for inline help (synopsis+message all on the same line)
+ */
+class Help : public SimpleAction
+{
+public:
+    Help(const Settings& settings, Melanobot* bot)
+        : SimpleAction("help",settings,bot) {}
+
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "help" )
+            return "Shows available commands";
+        return SimpleAction::get_property(name);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        PropertyTree props;
+        /// \todo Discard commands available for other connections
+        bot->populate_properties({"name","help","auth","synopsis"},props);
+
+        if ( cleanup(msg, props) )
+        {
+            PropertyTree result;
+            restructure(props,&result);
+
+            auto queried = find(result,msg.message);
+            if ( queried )
+            {
+                string::FormattedStream synopsis;
+                std::string name = queried->get("name","");
+
+                if ( !name.empty() )
+                    synopsis << color::red << name << color::nocolor;
+
+                std::vector<std::string> names;
+                gather(*queried, names);
+                if ( names.size() > 1 )
+                {
+                    std::sort(names.begin(),names.end());
+                    if ( !synopsis.empty() )
+                        synopsis << ": ";
+                    synopsis << string::implode(" ",names);
+                }
+
+                std::string synopsis_string = queried->get("synopsis","");
+                if ( !synopsis_string.empty() )
+                {
+                    if ( !synopsis.empty() )
+                        synopsis << ": ";
+                    synopsis << color::gray << synopsis_string;
+                }
+
+                reply_to(msg,synopsis.str());
+
+                std::string help = queried->get("help","");
+                if ( !help.empty() )
+                {
+                    reply_to(msg,(string::FormattedStream()
+                        << color::dark_blue << help).str());
+                }
+            }
+        }
+        else
+        {
+            reply_to(msg,(string::FormattedStream() << "Not found: " <<
+                string::FormatFlags::BOLD << msg.message).str());
+        }
+
+        return true;
+    }
+
+private:
+    /**
+     * \brief Remove items the user can't perform
+     * \return \b false if \c propeties shall not be considered
+     */
+    bool cleanup(network::Message& msg, PropertyTree& properties ) const
+    {
+        if ( msg.source->user_auth(msg.from,properties.get("auth","")) )
+        {
+            for ( auto it = properties.begin(); it != properties.end(); )
+            {
+                if ( !cleanup(msg,it->second) )
+                    it = properties.erase(it);
+                else
+                     ++it;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * \brief removes all internal nodes which don't have a name key
+     */
+    boost::optional<PropertyTree> restructure ( const PropertyTree& input, PropertyTree* parent ) const
+    {
+        boost::optional<PropertyTree> ret;
+
+        if ( input.get_optional<std::string>("name") )
+        {
+            ret = PropertyTree();
+            parent = &*ret;
+        }
+
+        for ( const auto& p : input )
+        {
+            if ( !p.second.empty() )
+            {
+                auto child = restructure(p.second,parent);
+                if ( child )
+                    parent->put_child(p.first,*child);
+            }
+            else if ( ret && !p.second.data().empty() )
+            {
+                ret->put(p.first,p.second.data());
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * \brief Gathers top-level names
+     */
+    void gather(const PropertyTree& properties, std::vector<std::string>& out) const
+    {
+        for ( const auto& p : properties )
+        {
+            auto name = p.second.get_optional<std::string>("name");
+            if ( name )
+                out.push_back(*name);
+            else
+                gather(p.second, out);
+        }
+    }
+    /**
+     * \brief Searches for a help item with the given name
+     */
+    boost::optional<const PropertyTree&> find ( const PropertyTree& tree,
+                                                const std::string& name ) const
+    {
+        auto opt = tree.get_child_optional(name);
+
+        if ( opt && !opt->empty() )
+            return opt;
+
+        for ( const auto& p : tree )
+        {
+            opt = find(p.second,name);
+            if ( opt && !opt->empty() )
+                return opt;
+        }
+
+        return {};
+    }
+};
+REGISTER_HANDLER(Help,Help);
 } // namespace handler

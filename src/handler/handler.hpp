@@ -40,7 +40,7 @@ namespace handler {
  * \brief Message handler abstract base class
  * \todo User authorization level, help entries
  */
-class Handler
+class Handler : public handler::HandlerContainer
 {
 public:
     Handler( const Settings& settings, Melanobot* bot ) : bot ( bot )
@@ -94,13 +94,37 @@ public:
         return auth.empty() || ( msg.source && msg.source->user_auth(msg.from,auth));
     }
 
+    /**
+     * \brief Get a property by name
+     */
+    virtual std::string get_property(const std::string& name) const
+    {
+        if ( name == "auth" )
+            return auth;
+        else if ( name == "priority" )
+            return std::to_string(priority);
+        return {};
+    }
+
+    /**
+     * \brief Simply appends globally the given property
+     */
+    void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override
+    {
+        for ( const auto& p : properties )
+        {
+            std::string value = get_property(p);
+            if ( !value.empty() )
+                output.put(p,value);
+        }
+    }
+
 protected:
     /**
      * \brief Attempt to handle the message
      * \return \b true if the message has been handled and needs no further processing
      */
     virtual bool on_handle(network::Message& msg) = 0;
-
 
     /**
      * \brief Send a reply to a message
@@ -169,6 +193,19 @@ public:
         return false;
     }
 
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "trigger" || name == "name" )
+            return trigger;
+        else if ( name == "direct" )
+            return direct ? "1" : "0";
+        else if ( name == "synopsis" )
+            return synopsis;
+        else if ( name == "help" )
+            return help;
+        return Handler::get_property(name);
+    }
+
 protected:
     using Handler::reply_to; // Show the overload to derived classes
     void reply_to(const network::Message& msg, const string::FormattedString& text) const override
@@ -179,6 +216,9 @@ protected:
 
     std::string          trigger;          ///< String identifying the action
     bool                 direct = false;   ///< Whether the message needs to be direct
+    std::string          synopsis;         ///< Help synopsis
+    std::string          help="Undocumented";///< Help string
+    /// \todo help and synopsis should be formatted strings
 
 private:
 
@@ -197,6 +237,7 @@ private:
         : Handler(settings,bot)
     {
         trigger   = settings.get("trigger",default_trigger);
+        synopsis  = trigger;
         direct    = settings.get("direct",direct);
         if ( !allow_notrigger && trigger.empty() )
             throw ConfigurationError();
@@ -216,11 +257,21 @@ public:
 
     bool can_handle(const network::Message& msg) override;
 
+    void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override;
+
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "name" )
+            return this->name;
+        return SimpleAction::get_property(name);
+    }
+
 protected:
     bool on_handle(network::Message& msg) override;
 
-    std::vector<Handler*> children;
-    std::string           channels;
+    std::vector<Handler*> children;         ///< Contained handlers
+    std::string           channels;         ///< Channel filter
+    std::string           name;             ///< Name to show in help
     network::Connection*  source = nullptr; ///< Connection which created the message
 };
 

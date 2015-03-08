@@ -33,6 +33,8 @@ public:
         : SimpleAction("quit",settings,bot)
     {
         message = settings.get("message",message);
+        synopsis += " [message]";
+        help = "Shuts down the bot";
     }
 
 protected:
@@ -62,7 +64,10 @@ class AdminNick: public SimpleAction
 public:
     AdminNick(const Settings& settings, Melanobot* bot)
         : SimpleAction("nick",settings,bot)
-    {}
+    {
+        synopsis += " nickname";
+        help = "Changes the bot nickname";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -85,7 +90,10 @@ class AdminJoin: public SimpleAction
 public:
     AdminJoin(const Settings& settings, Melanobot* bot)
         : SimpleAction("join",settings,bot)
-    {}
+    {
+        synopsis += " channel...";
+        help = "Makes the bot join one or more channels";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -111,7 +119,10 @@ class AdminPart: public SimpleAction
 public:
     AdminPart(const Settings& settings, Melanobot* bot)
         : SimpleAction("part",settings,bot)
-    {}
+    {
+        synopsis += " [channel]";
+        help = "Makes the bot part a channel";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -163,7 +174,10 @@ class AdminRaw: public SimpleAction
 public:
     AdminRaw(const Settings& settings, Melanobot* bot)
         : SimpleAction("raw",settings,bot)
-    {}
+    {
+        synopsis += " command";
+        help = "Sends raw IRC commands";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override

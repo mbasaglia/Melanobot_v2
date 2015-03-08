@@ -29,12 +29,12 @@
 #include "concurrent_container.hpp"
 #include "settings.hpp"
 #include "network/connection.hpp"
+#include "handler/handler_container.hpp"
 
-namespace handler { class Handler; }
 /**
  * \brief Main bot class
  */
-class Melanobot
+class Melanobot : public handler::HandlerContainer
 {
 public:
     explicit Melanobot(const Settings& settings);
@@ -63,6 +63,8 @@ public:
      * \return NULL if not found
      */
     network::Connection* connection(const std::string& name) const;
+
+    void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
 private:
     /// \todo allow dynamic connection/handler creation (requires locking)

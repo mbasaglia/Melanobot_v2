@@ -145,7 +145,7 @@ Settings::Settings ( const std::string& file_name, FileFormat format )
     if ( status.type() != boost::filesystem::regular_file || err )
         CRITICAL_ERROR("Cannot load config file: "+file_name);
 
-    PTree& ptree = *this;
+    PropertyTree& ptree = *this;
     switch ( format )
     {
         case FileFormat::INFO:
