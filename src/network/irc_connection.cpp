@@ -108,6 +108,16 @@ void IrcConnection::read_settings(const Settings& settings)
                 << string::implode(", ",groups);
         }
     }
+
+    auto groups = settings.get_child_optional("groups");
+    if ( groups )
+        for ( const auto pt: *groups )
+        {
+            auth_system.add_group(pt.first);
+            auto inherits = string::comma_split(pt.second.data());
+            for ( const auto& inh : inherits )
+                auth_system.grant_access(inh,pt.first);
+        }
 }
 
 

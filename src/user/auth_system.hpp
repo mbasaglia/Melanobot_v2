@@ -65,12 +65,12 @@ public:
     }
 
     /**
-     * \brief Grants access from group \c parent to group \c child
+     * \brief Grants access from group \c from to group \c to
      */
-    void grant_access(const std::string& child, const std::string& parent)
+    void grant_access(const std::string& from, const std::string& to)
     {
-        UserGroup* child_group = &user_groups[child];
-        user_groups[parent].add_child(child_group);
+        UserGroup* child_group = &user_groups[to];
+        user_groups[from].add_child(child_group);
     }
 
     /**
