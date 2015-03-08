@@ -48,6 +48,15 @@ public:
             network::irc::strtoupper(msg.params[0]) == ctcp;
     }
 
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "ctcp" || name == "name" )
+            return ctcp;
+        else if ( name == "clientinfo" )
+            return clientinfo;
+        return Handler::get_property(name);
+    }
+
 protected:
     /**
      * \brief Sends a properly formatted reply corresponding to \c ctctp
@@ -61,6 +70,8 @@ protected:
             {msg.from,s.str().encode(msg.source->formatter())}, priority});
     }
     using Handler::reply_to;
+
+   std::string clientinfo; ///< String to be shown on clientinfo
 
 private:
    std::string ctcp; ///< Name of the ctcp command to reply to
@@ -78,6 +89,7 @@ public:
         : CtcpBase("VERSION", settings, bot)
     {
         version = settings.get("version","");
+        clientinfo = ": Shows the bot's version";
 
         /// \todo more detailed system information
         if ( version.empty() )
@@ -109,6 +121,7 @@ public:
         : CtcpBase("SOURCE", settings, bot)
     {
         sources_url = settings.get("url",Settings::global_settings.get("website",""));
+        clientinfo = ": Shows the bot's source URL";
     }
 
 protected:
@@ -135,12 +148,13 @@ public:
         : CtcpBase(settings.get("ctcp","USERINFO"), settings, bot)
     {
         reply = settings.get("reply","");
+        clientinfo = settings.get("clientinfo","");
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,":"+reply);
+        reply_to(msg,reply);
         return true;
     }
 
@@ -148,11 +162,6 @@ private:
     std::string reply; ///< Fixed reply
 };
 REGISTER_HANDLER(CtcpUserInfo,CtcpUserInfo);
-
-/**
- * \file
- * \todo CtcpClientInfo
- */
 
 /**
  * \brief CTCP PING reply, Used to measure round-trip message delays
@@ -163,14 +172,16 @@ class CtcpPing: public CtcpBase
 public:
     CtcpPing ( const Settings& settings, Melanobot* bot )
         : CtcpBase("PING", settings, bot)
-    {}
+    {
+        clientinfo = "time_string : Replies the same as the input";
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
         /// \note should return a timestamp in the same format as the one
         /// provided by \c msg, but that's kinda hard to detect...
-        reply_to(msg,msg.params.empty() ? "" : msg.params[1]);
+        reply_to(msg,msg.params.size() < 2 ? "" : msg.params[1]);
         return true;
     }
 };
@@ -187,6 +198,7 @@ public:
         : CtcpBase("TIME", settings, bot)
     {
         format = settings.get("format","%c %Z");
+        clientinfo = ": Shows local time";
     }
 
 protected:
@@ -205,5 +217,70 @@ private:
     std::string format; ///< Timestamp format
 };
 REGISTER_HANDLER(CtcpTime,CtcpTime);
+
+/**
+ * \brief Shows help about other CTCP handlers
+ * \note Strongly recommended to be enabled
+ */
+class CtcpClientInfo: public CtcpBase
+{
+
+public:
+    CtcpClientInfo ( const Settings& settings, Melanobot* bot )
+        : CtcpBase("CLIENTINFO", settings, bot)
+    {
+        clientinfo = "[command] : Shows help on CTCP commands";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        PropertyTree props;
+        /// \todo Discard commands available for other connections
+        bot->populate_properties({"ctcp","clientinfo"},props);
+
+        Properties clientinfo;
+        gather(props, clientinfo);
+
+        if ( !clientinfo.empty() )
+        {
+            std::string query = msg.params.size() < 2 ? "" : msg.params[1];
+            auto it = clientinfo.find(network::irc::strtoupper(query));
+            if ( it != clientinfo.end() )
+            {
+                reply_to(msg,it->first+" "+it->second);
+            }
+            else
+            {
+                std::vector<std::string> ctcp;
+                ctcp.reserve(clientinfo.size());
+                for ( const auto& p : clientinfo )
+                    ctcp.push_back(p.first);
+                std::sort(ctcp.begin(),ctcp.end());
+
+                reply_to(msg,string::implode(" ",ctcp));
+            }
+        }
+
+        return true;
+    }
+
+private:
+
+    /**
+     * \brief Gathers ctcp clientinfo
+     */
+    void gather(const PropertyTree& properties, Properties& out) const
+    {
+        for ( const auto& p : properties )
+        {
+            auto name = p.second.get("ctcp","");
+            if ( !name.empty() )
+                out[name] = p.second.get("clientinfo","");
+            gather(p.second, out);
+        }
+    }
+};
+REGISTER_HANDLER(CtcpClientInfo,CtcpClientInfo);
 
 } // namespace handler
