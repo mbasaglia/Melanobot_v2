@@ -13,6 +13,6 @@ var searchData=
   ['formatter',['formatter',['../classstring_1_1FormattedStream.html#a0d8e90a8c0d72bb54e5d9dc4c98c1074',1,'string::FormattedStream::formatter()'],['../classLogger.html#ab4713f4aad41013b0106280f3b402211',1,'Logger::formatter()']]],
   ['formatter_5f',['formatter_',['../classnetwork_1_1irc_1_1IrcConnection.html#a70aca52e3f0e67aa17972abcc88aa41f',1,'network::irc::IrcConnection']]],
   ['formatters',['formatters',['../classstring_1_1Formatter_1_1FormatterFactory.html#a8bf02ed99d47d65baf0a20010fb4169d',1,'string::Formatter::FormatterFactory']]],
-  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message']]],
+  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message::from()'],['../structnetwork_1_1OutputMessage.html#afab075920835fba8198b34a99950e27b',1,'network::OutputMessage::from()']]],
   ['function',['function',['../structCriticalException.html#a119f0b2e123396ec2489eb5b894fec7c',1,'CriticalException']]]
 ];

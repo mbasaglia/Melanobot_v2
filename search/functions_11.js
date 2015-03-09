@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['say',['say',['../classnetwork_1_1Connection.html#ad1f698df7470eeac9a8635b347c13bc7',1,'network::Connection::say()'],['../classnetwork_1_1irc_1_1IrcConnection.html#aeece055e169a1fd3183ca0ab5962656b',1,'network::irc::IrcConnection::say()']]],
-  ['say_5fas',['say_as',['../classnetwork_1_1Connection.html#a010bcc014fcf48dd5f4bc96319a0ebea',1,'network::Connection::say_as()'],['../classnetwork_1_1irc_1_1IrcConnection.html#a918287f3ab8faa6c5b00f23c9fd78e55',1,'network::irc::IrcConnection::say_as()']]],
+  ['say',['say',['../classnetwork_1_1Connection.html#a380528411afcb01109512030dd7dcd37',1,'network::Connection::say()'],['../classnetwork_1_1irc_1_1IrcConnection.html#ae5051348931587e2877cf61daf95bc08',1,'network::irc::IrcConnection::say()']]],
   ['schedule_5fread',['schedule_read',['../classnetwork_1_1irc_1_1Buffer.html#a9d16cf2422f4079c335c9eca348a90b1',1,'network::irc::Buffer']]],
   ['searchimagegoogle',['SearchImageGoogle',['../classhandler_1_1SearchImageGoogle.html#afbc91c4fbe0590ed5a37b8bb1bc7ee2e',1,'handler::SearchImageGoogle']]],
   ['searchvideoyoutube',['SearchVideoYoutube',['../classhandler_1_1SearchVideoYoutube.html#a909f4448b47c4effbec6e574bb123ab3',1,'handler::SearchVideoYoutube']]],

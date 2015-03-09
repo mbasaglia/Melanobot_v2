@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['throws',['throws',['../structJsonParser.html#a45991629e32b21fa0a3ba79540167ddf',1,'JsonParser::throws() const '],['../structJsonParser.html#a202ee8e3db16886108b95f53e83aed06',1,'JsonParser::throws(bool throws)']]],
   ['to_5f4bit',['to_4bit',['../classcolor_1_1Color12.html#a9a8ae5cd7a2a710c946b1cc907285603',1,'color::Color12']]],
   ['to_5fbit_5fmask',['to_bit_mask',['../classcolor_1_1Color12.html#ad0cd7d532b022eb5139c7af188f76b08',1,'color::Color12']]],
   ['to_5fhtml',['to_html',['../classcolor_1_1Color12.html#a5ce5dce878d9827171485952a10dd937',1,'color::Color12']]],

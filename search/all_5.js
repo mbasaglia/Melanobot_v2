@@ -35,7 +35,7 @@ var searchData=
   ['formatterirc',['FormatterIrc',['../classstring_1_1FormatterIrc.html',1,'string']]],
   ['formatters',['formatters',['../classstring_1_1Formatter_1_1FormatterFactory.html#a8bf02ed99d47d65baf0a20010fb4169d',1,'string::Formatter::FormatterFactory']]],
   ['formatterutf8',['FormatterUtf8',['../classstring_1_1FormatterUtf8.html',1,'string']]],
-  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message']]],
+  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message::from()'],['../structnetwork_1_1OutputMessage.html#afab075920835fba8198b34a99950e27b',1,'network::OutputMessage::from()']]],
   ['from_5f4bit',['from_4bit',['../classcolor_1_1Color12.html#a309f9a2a6152a899e5078295f6ef8d8b',1,'color::Color12']]],
   ['fun_2ecpp',['fun.cpp',['../fun_8cpp.html',1,'']]],
   ['function',['function',['../structCriticalException.html#a119f0b2e123396ec2489eb5b894fec7c',1,'CriticalException']]]

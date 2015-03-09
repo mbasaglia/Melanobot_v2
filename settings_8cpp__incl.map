@@ -1,9 +1,9 @@
 <map id="src/settings.cpp" name="src/settings.cpp">
-<area shape="rect" id="node2" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1149,251,1243,278"/>
-<area shape="rect" id="node13" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="689,169,807,196"/>
-<area shape="rect" id="node28" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="1179,87,1285,114"/>
-<area shape="rect" id="node31" href="$config_8hpp.html" title="config.hpp" alt="" coords="1360,87,1443,114"/>
-<area shape="rect" id="node19" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="975,251,1068,278"/>
-<area shape="rect" id="node22" href="$string_8hpp.html" title="string.hpp" alt="" coords="382,251,461,278"/>
-<area shape="rect" id="node26" href="$color_8hpp.html" title="color.hpp" alt="" coords="147,341,221,367"/>
+<area shape="rect" id="node2" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="269,251,362,278"/>
+<area shape="rect" id="node13" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="808,169,927,196"/>
+<area shape="rect" id="node28" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="1014,87,1121,114"/>
+<area shape="rect" id="node31" href="$config_8hpp.html" title="config.hpp" alt="" coords="1145,87,1227,114"/>
+<area shape="rect" id="node19" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1221,251,1314,278"/>
+<area shape="rect" id="node22" href="$string_8hpp.html" title="string.hpp" alt="" coords="832,251,911,278"/>
+<area shape="rect" id="node26" href="$color_8hpp.html" title="color.hpp" alt="" coords="166,341,241,367"/>
 </map>
