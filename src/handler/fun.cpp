@@ -332,6 +332,12 @@ private:
 };
 REGISTER_HANDLER(ChuckNorris,ChuckNorris);
 
+/**
+ * \brief Draws a pretty My Little Pony ASCII art
+ * \note Very useful to see how the bot handles flooding
+ * \note Even more useful to see pretty ponies ;-)
+ * \see https://github.com/mbasaglia/ASCII-Pony
+ */
 class RenderPony : public SimpleAction
 {
 public:
