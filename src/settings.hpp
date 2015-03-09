@@ -80,20 +80,18 @@ public:
     }
 
     /**
-     * \brief Merge a child node with the supplied values
-     * \param path      Path to the child
-     * \param child     Node with the properties to be read
-     * \param overwrite If \b true all of the properties of \c child will be used,
+     * \brief Merge a node with the supplied values
+     * \param target    Node to be overwritten
+     * \param source    Node with the properties to be read
+     * \param overwrite If \b true all of the properties of \c source will be used,
      *                  if \b false, only those not already found in the tree
      */
-    void merge_child( const path_type& path, const Settings& child, bool overwrite)
+    static void merge( PropertyTree& target, const PropertyTree& source, bool overwrite)
     {
-        for ( const auto& prop : child )
+        for ( const auto& prop : source )
         {
-            path_type prop_path = path;
-            prop_path /= prop.first;
-            if ( overwrite || !has_child(prop_path) )
-                put(prop_path,prop.second.data());
+            if ( overwrite || !target.get_child_optional(prop.first) )
+                target.put(prop.first,prop.second.data());
         }
     }
 

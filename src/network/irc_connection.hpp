@@ -124,10 +124,10 @@ public:
     void reconnect();
 
     /**
-     * \brief Bot's current nick
-     * \thread ? \lock data
+     * \return The bot's current nick
+     * \thead external \lock data
      */
-    std::string nick() const;
+    std::string name() const override;
 
     /**
      * \brief Parse :Nick!User@host
@@ -137,23 +137,52 @@ public:
 
     /**
      * \brief Get whether a user has the given authorization level
+     * \thead external \lock data
      */
     bool user_auth(const std::string& local_id,
                    const std::string& auth_group) const override;
     /**
      * \brief Update the properties of a user by local_id
+     * \thead external \lock data
      */
     void update_user(const std::string& local_id,
                      const Properties& properties) override;
 
+    /**
+     * \thead external \lock data
+     */
     user::User get_user(const std::string& local_id) const override;
 
+    /**
+     * \thead external \lock data
+     */
     std::vector<user::User> get_users( const std::string& channel ) const override;
 
     /**
-     * \return The bot's nick
+     * \param user  A user local_id, if it begins with a \@, it's considered a
+     *              host name, if it begins with a !, it's considered a global_id
+     * \param group A list of groups separated by commas or spaces
+     * \thead external \lock data
      */
-    std::string name() const override;
+    bool add_to_group(const std::string& user, const std::string& group) override;
+
+    /**
+     * \param user  A user local_id, if it begins with a \@, it's considered a
+     *              host name, if it begins with a !, it's considered a global_id
+     * \param group A list of groups separated by commas or spaces
+     * \thead external \lock data
+     */
+    bool remove_from_group(const std::string& user, const std::string& group) override;
+
+    /**
+     * \note Always fails, use remove_from_group()
+     */
+    bool clear_group(std::string&) override { return false; }
+
+    /**
+     * \thead external \lock data
+     */
+    std::vector<user::User> users_in_group(const std::string& group) const override;
 
 private:
     friend class Buffer;

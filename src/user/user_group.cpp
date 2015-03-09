@@ -41,14 +41,17 @@ void UserGroup::remove_user ( const User& user )
     }
 }
 
-bool UserGroup::contains ( const User& user ) const
+bool UserGroup::contains ( const User& user, bool recursive ) const
 {
     for ( const User& u : users )
         if ( u.matches(user) )
             return true;
-    for ( UserGroup* g : children )
-        if ( g->contains(user) )
-            return true;
+    if ( recursive )
+    {
+        for ( UserGroup* g : children )
+            if ( g->contains(user,true) )
+                return true;
+    }
     return false;
 }
 

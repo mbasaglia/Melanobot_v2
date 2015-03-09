@@ -43,11 +43,11 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
 
     Settings child_settings = settings;
 
-    for ( const auto& p : child_settings )
+    for ( auto& p : child_settings )
     {
         if ( p.second.data().empty() )
         {
-            child_settings.merge_child(p.first,default_settings,false);
+            Settings::merge(p.second,default_settings,false);
             handler::Handler *hand = handler::HandlerFactory::instance().build(
                 p.first,
                 p.second,
@@ -95,6 +95,155 @@ void SimpleGroup::populate_properties(const std::vector<std::string>& properties
             output.put_child(name,child);
         }
     }
+}
+
+
+/**
+ * \brief Used by \c AbstractList to add elements
+ */
+class ListInsert : public SimpleAction
+{
+public:
+    ListInsert(AbstractList* parent, const Settings& settings, Melanobot* bot)
+    : SimpleAction("+",settings,bot), parent(parent)
+    {
+        if ( !parent )
+            throw ConfigurationError();
+        synopsis += " element...";
+        help = "Add elements to the list";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::vector<std::string> ok;
+        std::vector<std::string> ko;
+
+        for ( const auto& s : string::comma_split(msg.message) )
+            ( parent->add(s) ? ok : ko ).push_back(s);
+
+        if ( ok.empty() )
+            reply_to(msg,"No items were added to "+parent->get_property("list_name"));
+        else
+            reply_to(msg,"Added to "+parent->get_property("list_name")
+                +": "+string::implode(" ",ok));
+            
+        if ( !ko.empty() )
+            reply_to(msg,"Not added to "+parent->get_property("list_name")
+                +": "+string::implode(" ",ko));
+
+        return true;
+    }
+
+    AbstractList* parent;
+};
+
+/**
+ * \brief Used by \c AbstractList to remove elements
+ */
+class ListRemove : public SimpleAction
+{
+public:
+    ListRemove(AbstractList* parent, const Settings& settings, Melanobot* bot)
+    : SimpleAction("-",settings,bot), parent(parent)
+    {
+        if ( !parent )
+            throw ConfigurationError();
+        synopsis += " element...";
+        help = "Remove elements from the list";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::vector<std::string> ok;
+        std::vector<std::string> ko;
+
+        for ( const auto& s : string::comma_split(msg.message) )
+            ( parent->remove(s) ? ok : ko ).push_back(s);
+
+        if ( ok.empty() )
+            reply_to(msg,"No items were removed from "
+                +parent->get_property("list_name"));
+        else
+            reply_to(msg,"Removed from "+parent->get_property("list_name")
+                +": "+string::implode(" ",ok));
+
+        if ( !ko.empty() )
+            reply_to(msg,"Not removed from "+parent->get_property("list_name")
+                +": "+string::implode(" ",ko));
+
+        return true;
+    }
+
+    AbstractList* parent;
+};
+
+/**
+ * \brief Used by \c AbstractList to remove all elements
+ */
+class ListClear : public SimpleAction
+{
+public:
+    ListClear(AbstractList* parent, const Settings& settings, Melanobot* bot)
+    : SimpleAction("clear",settings,bot), parent(parent)
+    {
+        if ( !parent )
+            throw ConfigurationError();
+        help = "Removes all elements from the list";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        if ( parent->clear() )
+            reply_to(msg,parent->get_property("list_name")+" has been cleared");
+        else
+            reply_to(msg,parent->get_property("list_name")+" could not be cleared");
+
+        return true;
+    }
+
+    AbstractList* parent;
+};
+
+AbstractList::AbstractList(const std::string& default_trigger,
+                           const Settings& settings, Melanobot* bot)
+    : SimpleGroup(settings, bot)
+{
+    if ( trigger.empty() )
+        trigger = name = default_trigger;
+
+    Settings child_settings;
+    for ( const auto& p : settings )
+    {
+        if ( !p.second.data().empty() )
+        {
+            if ( p.first == "edit" )
+                child_settings.put("auth",p.second.data());
+            else if ( p.first != "trigger" && p.first != "auth" && p.first != "name" )
+                child_settings.put(p.first,p.second.data());
+        }
+    }
+
+    children.push_back(new ListInsert(this,child_settings,bot));
+    children.push_back(new ListRemove(this,child_settings,bot));
+    children.push_back(new ListClear(this,child_settings,bot));
+}
+
+bool AbstractList::on_handle(network::Message& msg)
+{
+    if ( msg.message.empty() )
+    {
+        auto elem = elements();
+        if ( elem.empty() )
+            reply_to(msg,get_property("list_name")+" is empty");
+        else
+            reply_to(msg,get_property("list_name")+": "+string::implode(" ",elem));
+        return true;
+    }
+
+    return SimpleGroup::on_handle(msg);
 }
 
 } // namespace handler

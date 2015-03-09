@@ -279,6 +279,51 @@ protected:
     network::Connection*  source = nullptr; ///< Connection which created the message
 };
 
+/**
+ * \brief Handles a list of elements (base class)
+ * \note Derived classes shall provide the property \c list_name
+ *       which contains a human-readable name of the list,
+ *       used for descriptions of the handler.
+ */
+class AbstractList : public SimpleGroup
+{
+public:
+    AbstractList(const std::string& default_trigger,
+                 const Settings& settings, Melanobot* bot);
+
+    /**
+     * \brief Adds \c element to the list
+     * \return \b true on success
+     */
+    virtual bool add(const std::string& element) = 0;
+    /**
+     * \brief Removes \c element from the list
+     * \return \b true on success
+     */
+    virtual bool remove(const std::string& element) = 0;
+    /**
+     * \brief Removes all elements from the list
+     * \return \b true on success
+     */
+    virtual bool clear() = 0;
+
+    /**
+     * \brief Returns a vector containing all the elements of the string
+     */
+    virtual std::vector<std::string> elements() const = 0;
+
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "help" )
+            return "Manages "+get_property("list_name");
+        return SimpleGroup::get_property(name);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override;
+};
+
+
 #define REGISTER_HANDLER(class_name,public_name) \
     static HandlerFactory::RegisterHandler<class_name> \
         RegisterHandler_##public_name(#public_name, \

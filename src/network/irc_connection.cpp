@@ -87,26 +87,7 @@ void IrcConnection::read_settings(const Settings& settings)
 
     for ( const auto pt: settings.get_child("users",{}) )
     {
-        if ( pt.first.empty() )
-            continue;
-        std::vector<std::string> groups = string::comma_split(pt.second.data());
-
-        user::User user;
-
-        if ( pt.first[0] == '!' && pt.first.size() > 1 )
-            user.global_id = pt.first.substr(1);
-        else if ( pt.first[0] == '@' && pt.first.size() > 1 )
-            user.host = pt.first.substr(1);
-        else
-            user.name = pt.first;
-
-        if ( !groups.empty() )
-        {
-            auth_system.add_user(user,groups);
-            Log("irc",'!',3) << "Registered user " << color::cyan
-                << pt.first << color::nocolor << " in "
-                << string::implode(", ",groups);
-        }
+        add_to_group(pt.first,pt.second.data());
     }
 
     auto groups = settings.get_child_optional("groups");
@@ -944,7 +925,7 @@ void IrcConnection::update_user(const std::string& local_id,
     }
 }
 
-std::string IrcConnection::nick() const
+std::string IrcConnection::name() const
 {
     LOCK(mutex);
     return current_nick;
@@ -974,10 +955,71 @@ std::vector<user::User> IrcConnection::get_users(const std::string& channel) con
     return std::vector<user::User>(list.begin(),list.end());
 }
 
-std::string IrcConnection::name() const
+bool IrcConnection::add_to_group( const std::string& username, const std::string& group )
+{
+    std::vector<std::string> groups = string::comma_split(group);
+
+    user::User user;
+
+    if ( groups.empty() || username.empty() )
+        return false;
+
+    if ( username[0] == '!' && username.size() > 1 )
+        user.global_id = username.substr(1);
+    else if ( username[0] == '@' && username.size() > 1 )
+        user.host = username.substr(1);
+    else
+        user.name = username;
+
+    if ( !groups.empty() )
+    {
+        LOCK(mutex);
+        groups.erase(std::remove_if(groups.begin(),groups.end(),
+                        [this,user](const std::string& str)
+                        { return auth_system.in_group(user,str); }),
+                    groups.end()
+        );
+        if ( !groups.empty() )
+        {
+            auth_system.add_user(user,groups);
+            Log("irc",'!',3) << "Registered user " << color::cyan
+                << username << color::nocolor << " in "
+                << string::implode(", ",groups);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IrcConnection::remove_from_group(const std::string& username, const std::string& group)
+{
+    user::User user;
+
+    if ( group.empty() || username.empty() )
+        return false;
+
+    if ( username[0] == '!' && username.size() > 1 )
+        user.global_id = username.substr(1);
+    else if ( username[0] == '@' && username.size() > 1 )
+        user.host = username.substr(1);
+    else
+        user.name = username;
+
+    LOCK(mutex);
+    if ( auth_system.in_group(user,group,false) )
+    {
+        auth_system.remove_user(user,group);
+        return true;
+    }
+
+    return false;
+}
+
+
+std::vector<user::User> IrcConnection::users_in_group(const std::string& group) const
 {
     LOCK(mutex);
-    return current_nick;
+    return auth_system.users_with_auth(group);
 }
 
 } // namespace irc

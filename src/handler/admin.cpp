@@ -165,7 +165,6 @@ protected:
 };
 REGISTER_HANDLER(AcceptInvite,AcceptInvite);
 
-
 /**
  * \brief Makes the bot execute a raw command (IRC)
  */
@@ -210,6 +209,67 @@ protected:
     }
 };
 REGISTER_HANDLER(AdminRaw,Raw);
+
+
+/**
+ * \brief Manages a user group
+ */
+class AdminGroup: public AbstractList
+{
+public:
+    AdminGroup(const Settings& settings, Melanobot* bot)
+        : AbstractList(settings.get("group",""),settings,bot)
+    {
+        if ( !source )
+            throw ConfigurationError();
+
+        description = settings.get("description",trigger+" group");
+    }
+
+    bool add(const std::string& element) override
+    {
+        return source->add_to_group(element,trigger);
+    }
+
+    bool remove(const std::string& element) override
+    {
+        return source->remove_from_group(element,trigger);
+    }
+
+    bool clear() override
+    {
+        return source->clear_group(trigger);
+    }
+
+    std::vector<std::string> elements() const override
+    {
+        auto users = source->users_in_group(trigger);
+        std::vector<std::string> names;
+        for ( const user::User& user : users )
+        {
+            if ( !user.global_id.empty() )
+                names.push_back('!'+user.global_id);
+            else if ( !user.host.empty() )
+                names.push_back('@'+user.host);
+            else if ( !user.local_id.empty() )
+                names.push_back(user.local_id);
+            else if ( !user.name.empty() )
+                names.push_back(user.name);
+        }
+        return names;
+    }
+
+
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "list_name" )
+            return description;
+        return AbstractList::get_property(name);
+    }
+private:
+    std::string description;
+};
+REGISTER_HANDLER(AdminGroup,AdminGroup);
 
 
 } // namespace handler

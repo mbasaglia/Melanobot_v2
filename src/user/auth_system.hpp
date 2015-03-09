@@ -76,25 +76,29 @@ public:
     /**
      * \brief Check if \c user is in \c group
      */
-    bool in_group(const User& user, const std::string& group)
+    bool in_group(const User& user, const std::string& group, bool recursive = true)
     {
-        return user_groups[group].contains(user);
+        return user_groups[group].contains(user, recursive);
     }
 
-    bool in_group(const User& user, const std::string& group) const
+    bool in_group(const User& user, const std::string& group,
+                  bool recursive = true) const
     {
         auto it = user_groups.find(group);
         if ( it != user_groups.end() )
-            return it->second.contains(user);
+            return it->second.contains(user, recursive);
         return false;
     }
 
     /**
      * \brief Gets the list of users with the given authorization level
      */
-    std::vector<User> users_with_auth(const std::string& group)
+    std::vector<User> users_with_auth(const std::string& group) const
     {
-        return user_groups[group].all_users();
+        auto it = user_groups.find(group);
+        if ( it == user_groups.end() )
+            return {};
+        return it->second.all_users();
     }
 
 

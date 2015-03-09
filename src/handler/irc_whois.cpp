@@ -74,7 +74,7 @@ protected:
         network::irc::IrcConnection * source
             = reinterpret_cast<network::irc::IrcConnection*>(msg.source);
 
-        if ( source->nick() == msg.from )
+        if ( source->name() == msg.from )
         {
             source->command({"PRIVMSG",{q_bot,"users "+msg.channels[0]},priority});
         }

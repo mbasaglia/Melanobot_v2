@@ -50,7 +50,7 @@ public:
 
     std::string get_property(const std::string& name) const override
     {
-        if ( name == "ctcp" || name == "name" )
+        if ( name == "ctcp" )
             return ctcp;
         else if ( name == "clientinfo" )
             return clientinfo;

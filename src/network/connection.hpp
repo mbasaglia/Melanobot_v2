@@ -108,7 +108,6 @@ struct Command
     }
 };
 
-
 /**
  * \brief A message originating from a connection
  */
@@ -273,6 +272,32 @@ public:
      *        or all the users if empty
      */
     virtual std::vector<user::User> get_users( const std::string& channel_mask = "" ) const = 0;
+
+    /**
+     * \brief Adds a user identified by \c user to the group \c group
+     * \param user  The user \c local_id, derived classes may perform some
+     *              parsing to interpret it as a host or global_id
+     * \param group Group name
+     */
+    virtual bool add_to_group(const std::string& user, const std::string& group) = 0;
+
+    /**
+     * \brief Removes a user identified by \c user to the group \c group
+     * \param user  The user \c local_id, derived classes may perform some
+     *              parsing to interpret it as a host or global_id
+     * \param group Group name
+     */
+    virtual bool remove_from_group(const std::string& user, const std::string& group) = 0;
+
+    /**
+     * \brief Clears a group from its users
+     */
+    virtual bool clear_group(std::string& group) = 0;
+
+    /**
+     * \brief Get a vector with the users in the given group
+     */
+    virtual std::vector<user::User> users_in_group(const std::string& group) const = 0;
 
     /**
      * \brief Name of the service provided by this connection,

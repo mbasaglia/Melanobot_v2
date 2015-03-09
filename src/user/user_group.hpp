@@ -51,8 +51,10 @@ public:
 
     /**
      * \brief Whether the user is in the group or any of its children
+     * \param user      User to be checked
+     * \param recursive Whether to check inherited groups
      */
-    bool contains ( const User& user ) const;
+    bool contains ( const User& user, bool recursive ) const;
 
     /**
      * \brief Adds a child group
