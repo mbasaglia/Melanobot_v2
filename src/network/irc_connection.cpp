@@ -790,26 +790,18 @@ void IrcConnection::command ( const Command& c )
 }
 
 
-void IrcConnection::say ( const std::string& channel,
-        const string::FormattedString& message,
-        int priority,
-        const Time& timeout )
+void IrcConnection::say ( const OutputMessage& message )
 {
-    command({"PRIVMSG", {channel, message.encode(formatter_)}, priority, timeout});
-}
-
-void IrcConnection::say_as ( const std::string& channel,
-        const string::FormattedString& name,
-        const string::FormattedString& message,
-        const string::FormattedString& prefix,
-        int priority,
-        const Time& timeout )
-{
-    string::FormattedString msg (
-        string::FormattedStream() << prefix << " <" << name << "> " << message
-    );
-
-    command({"PRIVMSG", {channel, msg.encode(formatter_)}, priority, timeout});
+    string::FormattedStream str;
+    if ( !message.prefix.empty() )
+        str << message.prefix << color::nocolor;
+    if ( !message.from.empty() )
+        str << '<' << message.from << color::nocolor << "> ";
+    str << message.message;
+    std::string text = str.encode(formatter_);
+    if ( message.action )
+        text = "\1ACTION "+text+'\1';
+    command({"PRIVMSG", {message.target, text}, message.priority, message.timeout});
 }
 
 Connection::Status IrcConnection::status() const

@@ -108,6 +108,73 @@ struct Command
     }
 };
 
+
+/**
+ * \brief A message originating from a connection
+ */
+struct Message
+{
+    class Connection*        source;  ///< Connection originating this message
+    std::string              raw;     ///< Raw contents
+    std::string              command; ///< Protocol command name
+    std::vector<std::string> params;  ///< Tokenized parameters
+    std::string              from;    ///< (optional) Name of the user who created this command
+
+    std::string              message; ///< (optional) Simple message contents
+    std::vector<std::string> channels;///< (optional) Simple message origin
+    bool                     action{0};///<(optional) Simple message is an action
+    bool                     direct{0};///<(optional) Simple message has been addessed to the bot directly
+};
+
+/**
+ * \brief A message given to a connection
+ *
+ * This is similar to \c Command but at a higher level
+ * (doesn't require knowledge of the protocol used by the connection)
+ */
+struct OutputMessage
+{
+    OutputMessage(std::string target,
+                  const string::FormattedString& message,
+                  int priority = 0,
+                  const string::FormattedString& prefix = {},
+                  const string::FormattedString& from = {},
+                  const Time& timeout = Clock::time_point::max()
+    ) : target(target), message(message), from(from), prefix(prefix),
+        action(false), priority(priority), timeout(timeout)
+    {}
+
+
+    /**
+     * \brief Channel or user id to which the message shall be delivered to
+     */
+    std::string target;
+    /**
+     * \brief Message contents
+     */
+    string::FormattedString message;
+    /**
+     * \brief If not empty, the bot will make it look like the message comes from this user
+     */
+    string::FormattedString from;
+    /**
+     * \brief Prefix to prepend to the message
+     */
+    string::FormattedString prefix;
+    /**
+     * \brief Whether the message is an action
+     */
+    bool action = false;
+    /**
+     * \brief Priority, higher = handled sooner
+     */
+    int priority = 0;
+    /**
+     * \brief Time at which this message becomes obsolete
+     */
+    Time timeout;
+};
+
 /**
  * \brief Abstract service connection
  */
@@ -139,20 +206,7 @@ public:
     /**
      * \brief Sends a message to the given channel
      */
-    virtual void say ( const std::string& channel,
-        const string::FormattedString& message,
-        int priority = 0,
-        const Time& timeout = Clock::time_point::max() ) = 0;
-
-    /**
-     * \brief Sends a message to the given channel with the given name
-     */
-    virtual void say_as ( const std::string& channel,
-        const string::FormattedString& name,
-        const string::FormattedString& message,
-        const string::FormattedString& prefix = {},
-        int priority = 0,
-        const Time& timeout = Clock::time_point::max()  ) = 0;
+    virtual void say ( const OutputMessage& message ) = 0;
 
     /**
      * \brief Returns the connection status
@@ -235,23 +289,6 @@ public:
      * \brief Set a connection property
      */
     //virtual bool set_property(const std::string& property, const std::string value ) = 0;
-};
-
-/**
- * \brief A message originating from a connection
- */
-struct Message
-{
-    Connection*              source;  ///< Connection originating this message
-    std::string              raw;     ///< Raw contents
-    std::string              command; ///< Protocol command name
-    std::vector<std::string> params;  ///< Tokenized parameters
-    std::string              from;    ///< (optional) Name of the user who created this command
-
-    std::string              message; ///< (optional) Simple message contents
-    std::vector<std::string> channels;///< (optional) Simple message origin
-    bool                     action{0};///<(optional) Simple message is an action
-    bool                     direct{0};///<(optional) Simple message has been addessed to the bot directly
 };
 
 #define REGISTER_CONNECTION(name,function) \

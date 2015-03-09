@@ -579,10 +579,13 @@ public:
 
     const FormattedStream& operator<< ( const std::string& text ) const
     {
-        if ( formatter )
-            buffer.append(formatter->decode(text));
-        else
-            buffer.append(new AsciiSubstring(text));
+        if ( !text.empty() )
+        {
+            if ( formatter )
+                buffer.append(formatter->decode(text));
+            else
+                buffer.append(new AsciiSubstring(text));
+        }
         return *this;
     }
     const FormattedStream& operator<< ( const char* text ) const
@@ -616,7 +619,8 @@ public:
     }
     const FormattedStream& operator<< ( const FormattedString& string ) const
     {
-        buffer.append(string);
+        if ( !string.empty() )
+            buffer.append(string);
         return *this;
     }
     template <class T>
@@ -628,6 +632,11 @@ public:
         }
 
     std::string encode(const std::string& output_formatter) const
+    {
+        return buffer.encode(output_formatter);
+    }
+
+    std::string encode(Formatter* output_formatter) const
     {
         return buffer.encode(output_formatter);
     }

@@ -81,20 +81,7 @@ public:
     /**
      * \thread external \lock data(sometimes) buffer(indirect)
      */
-    void say ( const std::string& channel,
-        const string::FormattedString& message,
-        int priority = 0,
-        const Time& timeout = Clock::time_point::max() ) override;
-
-    /**
-     * \thread external \lock data(sometimes) buffer(indirect)
-     */
-    void say_as ( const std::string& channel,
-        const string::FormattedString& name,
-        const string::FormattedString& message,
-        const string::FormattedString& prefix = {},
-        int priority = 0,
-        const Time& timeout = Clock::time_point::max()  )  override;
+    void say ( const OutputMessage& message ) override;
 
     /**
      * \thread ? \lock none

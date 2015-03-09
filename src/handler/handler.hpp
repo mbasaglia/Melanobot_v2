@@ -139,8 +139,12 @@ protected:
     {
         if ( msg.source )
         {
-            std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
-            msg.source->say(chan,text,priority);
+            network::OutputMessage out(
+                msg.channels.empty() ? std::string() : msg.channels[0],
+                text,
+                priority
+            );
+            msg.source->say(out);
         }
     }
 
