@@ -34,13 +34,7 @@ public:
         : SimpleAction("license",settings,bot)
     {
         sources_url = settings.get("url",Settings::global_settings.get("website",""));
-    }
-
-    std::string get_property(const std::string& name) const override
-    {
-        if ( name == "help" )
-            return "Shows licensing information";
-        return SimpleAction::get_property(name);
+        help = "Shows licensing information";
     }
 
 protected:
@@ -64,13 +58,10 @@ class Help : public SimpleAction
 {
 public:
     Help(const Settings& settings, Melanobot* bot)
-        : SimpleAction("help",settings,bot) {}
-
-    std::string get_property(const std::string& name) const override
+        : SimpleAction("help",settings,bot)
     {
-        if ( name == "help" )
-            return "Shows available commands";
-        return SimpleAction::get_property(name);
+        help = "Shows available commands";
+        synopsis += " [command|group]";
     }
 
 protected:
@@ -218,4 +209,28 @@ private:
     }
 };
 REGISTER_HANDLER(Help,Help);
+
+
+/**
+ * \brief Just repeat what it has been told
+ */
+class Echo : public SimpleAction
+{
+public:
+    Echo(const Settings& settings, Melanobot* bot)
+        : SimpleAction("echo",settings,bot)
+    {
+        help = "Repeats \"Text...\"";
+        synopsis += " Text...";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        reply_to(msg,msg.message);
+        return true;
+    }
+};
+REGISTER_HANDLER(Echo,Echo);
+
 } // namespace handler
