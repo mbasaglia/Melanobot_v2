@@ -161,6 +161,13 @@ public:
 
     user::User get_user(const std::string& local_id) const override;
 
+    std::vector<user::User> get_users( const std::string& channel ) const override;
+
+    /**
+     * \return The bot's nick
+     */
+    std::string name() const override;
+
 private:
     friend class Buffer;
 

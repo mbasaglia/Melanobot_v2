@@ -72,6 +72,21 @@ inline bool starts_with(const std::string& haystack, const std::string& prefix)
 }
 
 /**
+ * \brief Whether a string ends with the given suffix
+ */
+inline bool ends_with(const std::string& haystack, const std::string& suffix)
+{
+    auto it1 = haystack.rbegin();
+    auto it2 = suffix.rbegin();
+    while ( it1 != haystack.rend() && it2 != suffix.rend() && *it1 == *it2 )
+    {
+        ++it1;
+        ++it2;
+    }
+    return it2 == suffix.rend();
+}
+
+/**
  * \brief String to lower case
  */
 inline std::string strtolower ( std::string string )

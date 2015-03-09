@@ -22,6 +22,7 @@
 #include <fstream>
 #include <istream>
 #include <stack>
+#include <sstream>
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
@@ -55,34 +56,43 @@ struct JsonParser
      */
     const Settings& parse(std::istream& stream, const std::string& stream_name="")
     {
-        ptree.clear();
         this->stream.rdbuf(stream.rdbuf());
         this->stream_name = stream_name;
         line = 1;
-        parse_object();
+        parse_root();
         if ( !context.empty() )
             error("Abrupt ending");
         return ptree;
     }
 
     /**
-     * \brief Parse the stream
+     * \brief Parse the given file
      * \throws JsonError On bad syntax
      * \returns The property tree populated from the stream
      */
     const Settings& parse_file(const std::string& file_name )
     {
-        ptree.clear();
         std::filebuf buf;
         line = 1;
         stream_name = file_name;
         if ( !buf.open(file_name,std::ios::in) )
             error("Cannot open file");
         this->stream.rdbuf(&buf);
-        parse_object();
+        parse_root();
         if ( !context.empty() )
             error("Abrupt ending");
         return ptree;
+    }
+
+    /**
+     * \brief Parse the string
+     * \throws JsonError On bad syntax
+     * \returns The property tree populated from the stream
+     */
+    const Settings& parse_string(const std::string& json, const std::string& stream_name="" )
+    {
+        std::istringstream ss(json);
+        return parse(ss,stream_name);
     }
 
     /**
@@ -93,6 +103,30 @@ struct JsonParser
         return ptree;
     }
 
+    /**
+     * \brief Whether there has been a parsing error
+     */
+    bool error() const
+    {
+        return error_flag;
+    }
+
+    /**
+     * \brief Whether the parser can throw
+     */
+    bool throws() const
+    {
+        return !nothrow;
+    }
+
+    /**
+     * \brief Sets whether the parser can throw
+     */
+    void throws(bool throws)
+    {
+        nothrow = !throws;
+    }
+
 private:
     /**
      * \brief Throws an exception pointing to the current line
@@ -100,6 +134,32 @@ private:
     void error [[noreturn]] (const std::string& message)
     {
         throw JsonError(stream_name,line,message);
+    }
+
+    /**
+     * \brief Parses the entire file
+     */
+    void parse_root()
+    {
+        error_flag = false;
+        ptree.clear();
+        context = decltype(context)();
+
+        if ( nothrow )
+        {
+            try {
+                parse_object();
+            } catch ( const JsonError& err ) {
+                ErrorLog errlog("web","JSON Error");
+                if ( Settings::global_settings.get("debug",0) )
+                    errlog << err.file << ':' << err.line << ": ";
+                errlog << err.what();
+            }
+        }
+        else
+        {
+            parse_object();
+        }
     }
 
     /**
@@ -437,6 +497,8 @@ private:
     int line = 0;               ///< Line number
     Settings ptree;             ///< Output tree
     std::stack<Context> context;///< Context stack
+    bool nothrow = false;       ///< If true, don't throw
+    bool error_flag = false;    ///< If true, there has been an error
 };
 
 #endif // JSON_HPP

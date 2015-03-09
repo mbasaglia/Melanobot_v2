@@ -967,5 +967,26 @@ user::User IrcConnection::get_user(const std::string& local_id) const
     return {};
 }
 
+std::vector<user::User> IrcConnection::get_users(const std::string& channel) const
+{
+    LOCK(mutex);
+
+    std::list<user::User> list;
+    if ( channel.empty() )
+        list = std::move(user_manager.users());
+    else if ( channel[0] == '#' )
+        list = std::move(user_manager.channel_users(channel));
+    else
+        list = { *user_manager.user(channel) };
+
+    return std::vector<user::User>(list.begin(),list.end());
+}
+
+std::string IrcConnection::name() const
+{
+    LOCK(mutex);
+    return current_nick;
+}
+
 } // namespace irc
 } // namespace network

@@ -88,17 +88,13 @@ protected:
     {
         Settings ptree;
         JsonParser parser;
-        std::istringstream file(response.contents);
-        try {
-            ptree = parser.parse(file,response.origin);
+        parser.throws(false);
+        ptree = parser.parse_string(response.contents,response.origin);
+
+        if ( parser.error() )
+            json_failure(msg);
+        else
             json_success(msg,ptree);
-        } catch ( const JsonError& err ) {
-            ErrorLog errlog("web","JSON Error");
-            if ( Settings::global_settings.get("debug",0) )
-                errlog << err.file << ':' << err.line << ": ";
-            errlog << err.what();
-        }
-        json_failure(msg);
     }
 
     void http_failure(const network::Message& msg, const network::Response&)

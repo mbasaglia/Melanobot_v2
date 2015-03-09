@@ -68,7 +68,7 @@ const User* UserManager::user_by_property(const std::string& property_name,
     return nullptr;
 }
 
-std::list<User> UserManager::channel_users(const std::string& channel)
+std::list<User> UserManager::channel_users(const std::string& channel) const
 {
     std::list<User> ret;
     for ( const User& user : users_ )

@@ -214,6 +214,18 @@ public:
      */
     virtual user::User get_user(const std::string& local_id) const = 0;
 
+    /**
+     * \brief Get a vector with the users in the given channel
+     *        or all the users if empty
+     */
+    virtual std::vector<user::User> get_users( const std::string& channel_mask = "" ) const = 0;
+
+    /**
+     * \brief Name of the service provided by this connection,
+     *        as seen by the handled protocol
+     */
+    virtual std::string name() const = 0;
+
     /* *
      * \brief Get a connection property
      */

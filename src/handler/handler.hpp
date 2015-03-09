@@ -213,12 +213,6 @@ public:
     }
 
 protected:
-    using Handler::reply_to; // Show the overload to derived classes
-    void reply_to(const network::Message& msg, const string::FormattedString& text) const override
-    {
-        std::string chan = msg.channels.empty() ? std::string() : msg.channels[0];
-        msg.source->say(chan,text,priority);
-    }
 
     std::string          trigger;          ///< String identifying the action
     bool                 direct = false;   ///< Whether the message needs to be direct

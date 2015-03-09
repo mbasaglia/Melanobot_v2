@@ -73,7 +73,7 @@ public:
     /**
      * \brief Get all users on the given channel
      */
-    std::list<User> channel_users(const std::string& channel);
+    std::list<User> channel_users(const std::string& channel) const;
 
     /**
      * \brief Remove a user by local_id
