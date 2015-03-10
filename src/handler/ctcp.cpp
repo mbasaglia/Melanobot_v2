@@ -230,14 +230,14 @@ public:
         : CtcpBase("CLIENTINFO", settings, bot)
     {
         clientinfo = "[command] : Shows help on CTCP commands";
+        help_group = settings.get("help_group",help_group);
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        /// \todo Discard commands available for other connections
-        bot->populate_properties({"ctcp","clientinfo"},props);
+        bot->populate_properties({"ctcp","clientinfo","help_group"},props);
 
         Properties clientinfo;
         gather(props, clientinfo);
@@ -266,12 +266,15 @@ protected:
     }
 
 private:
+    std::string help_group; ///< Only shows help for members of this group
 
     /**
      * \brief Gathers ctcp clientinfo
      */
     void gather(const PropertyTree& properties, Properties& out) const
     {
+        if ( properties.get("help_group",help_group) != help_group )
+            return;
         for ( const auto& p : properties )
         {
             auto name = p.second.get("ctcp","");

@@ -62,14 +62,15 @@ public:
     {
         help = "Shows available commands";
         synopsis += " [command|group]";
+        help_group = settings.get("help_group",help_group);
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        /// \todo Discard commands available for other connections
-        bot->populate_properties({"name","help","auth","synopsis"},props);
+        bot->populate_properties({"name","help","auth","synopsis","help_group"},
+                                 props);
 
         if ( cleanup(msg, props) )
         {
@@ -123,13 +124,16 @@ protected:
     }
 
 private:
+    std::string help_group; ///< Only shows help for members of this group
+
     /**
      * \brief Remove items the user can't perform
      * \return \b false if \c propeties shall not be considered
      */
     bool cleanup(network::Message& msg, PropertyTree& properties ) const
     {
-        if ( msg.source->user_auth(msg.from,properties.get("auth","")) )
+        if ( msg.source->user_auth(msg.from,properties.get("auth","")) &&
+            properties.get("help_group",help_group) == help_group )
         {
             for ( auto it = properties.begin(); it != properties.end(); )
             {

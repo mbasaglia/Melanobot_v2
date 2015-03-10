@@ -281,6 +281,8 @@ public:
     {
         if ( name == "name" )
             return this->name;
+        else if ( name == "help_group" )
+            return help_group;
         return SimpleAction::get_property(name);
     }
 
@@ -290,6 +292,7 @@ protected:
     std::vector<Handler*> children;         ///< Contained handlers
     std::string           channels;         ///< Channel filter
     std::string           name;             ///< Name to show in help
+    std::string           help_group;       ///< Selects whether to be shown in help
     network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)
 };
 
