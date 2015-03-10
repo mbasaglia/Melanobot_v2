@@ -80,6 +80,8 @@ void IrcConnection::read_settings(const Settings& settings)
     formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
     connection_status = DISCONNECTED;
 
+    private_notice = settings.get("notice",private_notice);
+
     std::istringstream ss ( settings.get("channels",std::string()) );
     std::string chan;
     while ( ss >> chan )
@@ -798,7 +800,11 @@ void IrcConnection::say ( const OutputMessage& message )
     std::string text = str.encode(formatter_);
     if ( message.action )
         text = "\1ACTION "+text+'\1';
-    command({"PRIVMSG", {message.target, text}, message.priority, message.timeout});
+
+    std::string irc_command = "PRIVMSG";
+    if ( private_notice && message.target[0] != '#' )
+        irc_command = "NOTICE";
+    command({irc_command, {message.target, text}, message.priority, message.timeout});
 }
 
 Connection::Status IrcConnection::status() const

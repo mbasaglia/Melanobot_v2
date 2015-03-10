@@ -136,6 +136,8 @@ protected:
 
     /**
      * \brief Send a reply to a message
+     *
+     * If \c msg comes from multiple channels, the first one is used
      */
     virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const
     {
@@ -216,11 +218,24 @@ public:
 
 protected:
 
-    std::string          trigger;          ///< String identifying the action
-    bool                 direct = false;   ///< Whether the message needs to be direct
-    std::string          synopsis;         ///< Help synopsis
-    std::string          help="Undocumented";///< Help string
+    std::string          trigger;            ///< String identifying the action
+    bool                 direct = false;     ///< Whether the message needs to be direct
     /// \todo help and synopsis should be formatted strings
+    std::string          synopsis;           ///< Help synopsis
+    std::string          help="Undocumented";///< Help string
+    bool                 public_reply = true;///< Whether to reply publicly or just to the sender of the message
+
+    using Handler::reply_to;
+    void reply_to(const network::Message& msg, const string::FormattedString& text) const
+    {
+        std::string channel;
+        if ( !public_reply )
+            channel = msg.from;
+        else if ( !msg.channels.empty() )
+            channel = msg.channels[0];
+        network::OutputMessage out(channel,text,priority);
+        msg.source->say(out);
+    }
 
 private:
 
@@ -238,9 +253,10 @@ private:
                  Melanobot* bot, bool allow_notrigger)
         : Handler(settings,bot)
     {
-        trigger   = settings.get("trigger",default_trigger);
-        synopsis  = trigger;
-        direct    = settings.get("direct",direct);
+        trigger      = settings.get("trigger",default_trigger);
+        synopsis     = trigger;
+        direct       = settings.get("direct",direct);
+        public_reply = settings.get("public",public_reply);
         if ( !allow_notrigger && trigger.empty() )
             throw ConfigurationError();
     }

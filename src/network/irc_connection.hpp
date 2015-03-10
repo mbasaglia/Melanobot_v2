@@ -282,6 +282,11 @@ private:
      */
     std::string modes;
     /**
+     * \brief Whether private messages to other users shall be done via "NOTICE"
+     *        instead than "PRIVMSG"
+     */
+    bool private_notice = true;
+    /**
      * \brief Input formatter
      */
     string::Formatter* formatter_ = nullptr;
