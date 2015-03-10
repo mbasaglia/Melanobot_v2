@@ -223,6 +223,11 @@ private:
      */
     void read_settings(const Settings& settings);
 
+    /**
+     * \brief Stop caused by an error
+     */
+    void error_stop();
+
     mutable std::mutex mutex;
 
     Melanobot* bot;

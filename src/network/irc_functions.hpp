@@ -29,7 +29,6 @@ namespace irc {
 /**
  * \brief Whether a character is a valid nickname character
  * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
- * \todo currently unused
  */
 inline bool is_nickchar(char c)
 {

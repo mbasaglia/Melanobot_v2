@@ -185,5 +185,13 @@ inline std::vector<std::string> comma_split(const std::string& input,bool skip_e
  */
 std::string::size_type similarity(const std::string& s1, const std::string& s2);
 
+/**
+ * \brief Converts \c string to an unsigned integer
+ * \returns The corresponding integer or \c default_value on failure
+ */
+unsigned long to_uint(const std::string& string,
+                     unsigned long base = 10,
+                     unsigned long default_value = 0);
+
 } // namespace string
 #endif // STRING_FUNCTIONS_HPP

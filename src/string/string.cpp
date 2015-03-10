@@ -301,7 +301,6 @@ std::string FormatterAnsi::unicode(const Unicode& c) const
 }
 FormattedString FormatterAnsi::decode(const std::string& source) const
 {
-    /// \todo decode ansi codes
     FormattedString str;
 
     Utf8Parser parser;
@@ -543,7 +542,7 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
     if ( !std::regex_match(color,match,regex) )
         return Color12();
 
-    switch ( std::stoi(match[1].str()) )
+    switch ( string::to_uint(match[1].str()) )
     {
         case  0: return white;
         case  1: return black;

@@ -45,7 +45,13 @@ void Buffer::run_input()
 
     /// \todo catch exception thrown on broken pipe
     schedule_read();
-    io_service.run();
+    boost::system::error_code err;
+    io_service.run(err);
+    if ( err )
+    {
+        ErrorLog("irc","Network Error") << err.message();
+        irc.error_stop();
+    }
 }
 
 void Buffer::start()
@@ -133,24 +139,33 @@ void Buffer::write_line ( std::string line )
 
 }
 
-void Buffer::connect(const Server& server)
+bool Buffer::connect(const Server& server)
 {
     if ( connected() )
         disconnect();
-    boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
-    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-    boost::asio::connect(socket, endpoint_iterator);
-    flood_timer = Clock::now();
-    /// \todo async with error checking
+    try {
+        boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
+        boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+        boost::asio::connect(socket, endpoint_iterator);
+        flood_timer = Clock::now();
+    } catch ( const boost::system::system_error& err ) {
+        ErrorLog("irc","Network Error") << err.what();
+        irc.error_stop();
+        return false;
+    }
+    return true;
 }
 
 void Buffer::disconnect()
 {
-    /// \todo try catch
     if ( connected() )
     {
-        socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-        socket.close();
+        try {
+            socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+            socket.close();
+        } catch ( const boost::system::system_error& err ) {
+            ErrorLog("irc","Network Error") << err.what();
+        }
     }
 }
 

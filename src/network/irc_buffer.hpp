@@ -66,7 +66,7 @@ public:
      * \brief Connect to the given server
      * \thread external \lock none
      */
-    void connect(const Server& server);
+    bool connect( const network::Server& server );
 
     /**
      * \brief Disconnect from the server

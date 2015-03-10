@@ -26,6 +26,7 @@
 
 #include "string/string.hpp"
 #include "string/logger.hpp"
+#include "string/string_functions.hpp"
 #include "user/auth_system.hpp"
 #include "user/user_manager.hpp"
 
@@ -57,7 +58,7 @@ struct Server
         auto p = server.find(':');
         host = server.substr(0,p);
         if ( p != std::string::npos && p < server.size()-1 && std::isdigit(server[p+1]) )
-            port = std::stoul(server.substr(p+1));
+            port = string::to_uint(server.substr(p+1));
     }
 
     std::string name() const

@@ -24,14 +24,14 @@ namespace handler {
 
 REGISTER_HANDLER(SimpleGroup, Group);
 
-/// \todo option co copy settings from another group
+/// \todo option to copy settings from another group
 SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
     : SimpleAction("",settings,bot,true)
 {
     channels = settings.get("channels","");
     name = settings.get("name",trigger);
     help_group = settings.get("help_group",help_group);
-    
+
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
         source = bot->connection(source_name);

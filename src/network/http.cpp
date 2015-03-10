@@ -97,7 +97,6 @@ Request post(const std::string& url, const Parameters& params)
 
 void HttpService::initialize(const Settings& settings)
 {
-    /// \todo
     if ( user_agent.empty() )
         user_agent = PROJECT_NAME "/" PROJECT_VERSION " (" PROJECT_WEBSITE ") "
                      "cURLpp/" LIBCURLPP_VERSION ;
@@ -111,7 +110,6 @@ Response HttpService::query (const Request& request)
         curlpp::Easy netrequest;
         std::string url = request.location;
 
-        /// \todo read these from settings
         netrequest.setOpt(curlpp::options::UserAgent(user_agent));
         if ( max_redirs )
         {

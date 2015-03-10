@@ -155,4 +155,14 @@ std::string::size_type similarity(const std::string& s1, const std::string& s2)
     return result;
 }
 
+
+unsigned long to_uint(const std::string& string,
+                     unsigned long base,
+                     unsigned long default_value)
+try {
+    return std::stoul(string,0,base);
+} catch(const std::exception&) {
+    return default_value;
+}
+
 } // namespace string

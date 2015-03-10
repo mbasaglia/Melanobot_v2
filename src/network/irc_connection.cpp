@@ -116,6 +116,14 @@ void IrcConnection::stop()
     buffer.stop();
 }
 
+
+void IrcConnection::error_stop()
+{
+    stop();
+    Settings::global_settings.put("exit_code",1);
+    bot->stop(); /// \todo is this the right thing to do?
+}
+
 Server IrcConnection::server() const
 {
     LOCK(mutex);
@@ -132,7 +140,6 @@ void IrcConnection::handle_message(Message msg)
         if ( msg.params.size() < 1 ) return;
 
         mutex.lock();
-            /// \todo read current_server
             current_nick = msg.params[0];
             current_server.host = msg.from;
             current_nick_lowecase = strtolower(current_nick);
@@ -149,7 +156,7 @@ void IrcConnection::handle_message(Message msg)
     {
         // RPL_ISUPPORT: prefix 005 target option[=value]... :are supported by this server
         /**
-         * \todo Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING NETWORK
+         * \todo Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING
          */
         for ( std::string::size_type i = 1; i < msg.params.size()-1; i++ )
         {
@@ -290,11 +297,10 @@ void IrcConnection::handle_message(Message msg)
             errl << "Unknown error";
         else
             errl << msg.params[0];
-        bot->stop(); /// \todo is this the right thing to do?
+        error_stop();
     }
     else if ( msg.command == "JOIN" )
     {
-        /// \todo handle the case when this notifies the bot itself has joined a channel
         if ( msg.params.size() >= 1 )
         {
             user::User user = parse_prefix(msg.from);
@@ -625,13 +631,16 @@ void IrcConnection::command ( const Command& c )
         std::string new_nick;
 
         if ( cmd.parameters.size() == 1 )
-            for ( char c : cmd.parameters[0] )
+        {
+            std::string::size_type nick_length = string::to_uint(server_features["NICKLEN"],10,-1);
+            nick_length = std::min(nick_length,cmd.parameters[0].size());
+            for ( unsigned i = 0; i < nick_length; i++ )
             {
-                /// \todo if size > max nick length, break
-                if ( !is_nickchar(c) )
+                if ( !is_nickchar(cmd.parameters[0][i]) )
                     break;
-                new_nick += c;
+                new_nick += cmd.parameters[0][i];
             }
+        };
 
         if ( new_nick.empty() )
         {
@@ -822,11 +831,11 @@ void IrcConnection::connect()
     if ( !buffer.connected() )
     {
         connection_status = WAITING;
-        buffer.connect(main_server);
+        if ( !buffer.connect(main_server) )
+            return;
         mutex.lock();
         current_server = main_server;
         mutex.unlock();
-        /// \todo If connection fails, trigger a graceful quit
         connection_status = CONNECTING;
         login();
     }

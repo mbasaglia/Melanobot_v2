@@ -38,7 +38,6 @@ namespace handler {
 
 /**
  * \brief Message handler abstract base class
- * \todo User authorization level, help entries
  */
 class Handler : public handler::HandlerContainer
 {
@@ -291,6 +290,7 @@ protected:
 
     std::vector<Handler*> children;         ///< Contained handlers
     std::string           channels;         ///< Channel filter
+    /// \todo if posible, merge name and help_group
     std::string           name;             ///< Name to show in help
     std::string           help_group;       ///< Selects whether to be shown in help
     network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)

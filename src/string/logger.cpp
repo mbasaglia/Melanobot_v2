@@ -25,7 +25,6 @@ void Logger::log (const std::string& type, char direction,
     if ( !formatter )
         formatter = new string::FormatterAnsi(true);
 
-    /// \todo lock mutex for log_destination
     auto type_it = log_types.find(type);
     if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
         return;
