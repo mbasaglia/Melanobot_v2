@@ -22,7 +22,7 @@ set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
 
 set(ALL_SOURCES "")
-add_subdirectory(src)
+add_subdirectory(src ${CMAKE_BINARY_DIR}/bin)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

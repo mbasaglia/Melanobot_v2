@@ -42,7 +42,7 @@ Building
 Running
 -------
 
-    src/melanobot
+    bin/melanobot
 
 Configuration
 -------------
