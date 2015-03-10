@@ -83,7 +83,7 @@ void IrcConnection::read_settings(const Settings& settings)
     std::istringstream ss ( settings.get("channels",std::string()) );
     std::string chan;
     while ( ss >> chan )
-        channels_to_join.push_back(chan);
+        command({"JOIN",{chan}});
 
     for ( const auto pt: settings.get_child("users",{}) )
     {
@@ -134,13 +134,13 @@ void IrcConnection::handle_message(Message msg)
             current_nick = msg.params[0];
             current_nick_lowecase = strtolower(current_nick);
             // copy so we can unlock before command()
-            auto ctj = channels_to_join;
-            channels_to_join.clear();
+            std::list<Command> missed_commands;
+            scheduled_commands.swap(missed_commands);
         mutex.unlock();
         auth();
         connection_status = CONNECTED;
-        for ( const auto& s : ctj )
-            command({"JOIN",{s}}); /// \todo maybe do more than one channel per command
+        for ( const auto& c : missed_commands )
+            command(c);
     }
     else if ( msg.command == "353" )
     {
@@ -555,13 +555,23 @@ void IrcConnection::command ( const Command& c )
     if ( c.command.empty() ) return;
 
     Command cmd = c;
-    std::string command = strtoupper(cmd.command);
+    cmd.command = strtoupper(cmd.command);
 
-    if ( command == "PRIVMSG" || command == "NOTICE" )
+
+    if ( connection_status <= CONNECTING && cmd.command != "PASS" &&
+        cmd.command != "NICK" && cmd.command != "USER" &&
+        cmd.command != "PONG" && cmd.command != "AUTH" &&
+        cmd.command != "MODE" && cmd.command != "RECONNECT" )
+    {
+        scheduled_commands.push_back(cmd);
+        return;
+    }
+
+    if ( cmd.command == "PRIVMSG" || cmd.command == "NOTICE" )
     {
         if ( cmd.parameters.size() != 2 )
         {
-            ErrorLog("irc") << "Wrong parameters for " << command;
+            ErrorLog("irc") << "Wrong parameters for " << cmd.command;
             return;
         }
         std::string to = strtolower(cmd.parameters[0]);
@@ -569,19 +579,19 @@ void IrcConnection::command ( const Command& c )
             LOCK(mutex);
             if ( to == current_nick_lowecase )
             {
-                ErrorLog("irc") << "Cannot send " << command << " to self";
+                ErrorLog("irc") << "Cannot send " << cmd.command << " to self";
                 return;
             }
         }
         if ( cmd.parameters[1].empty() )
         {
-            ErrorLog("irc") << "Empty " << command;
+            ErrorLog("irc") << "Empty " << cmd.command;
             return;
         }
 
         cmd.parameters[0] = to;
     }
-    else if ( command == "PASS" )
+    else if ( cmd.command == "PASS" )
     {
         if ( status() != Connection::WAITING )
         {
@@ -594,7 +604,7 @@ void IrcConnection::command ( const Command& c )
             return;
         }
     }
-    else if ( command == "NICK" )
+    else if ( cmd.command == "NICK" )
     {
         std::string new_nick;
 
@@ -624,7 +634,7 @@ void IrcConnection::command ( const Command& c )
             attempted_nick = new_nick;
         }
     }
-    else if ( command == "USER" )
+    else if ( cmd.command == "USER" )
     {
         if ( cmd.parameters.size() != 4 )
         {
@@ -632,7 +642,7 @@ void IrcConnection::command ( const Command& c )
             return;
         }
     }
-    else if ( command == "MODE" )
+    else if ( cmd.command == "MODE" )
     {
         LOCK(mutex);
         if ( cmd.parameters.size() == 1 )
@@ -650,7 +660,7 @@ void IrcConnection::command ( const Command& c )
         /// \todo sanitaze the mode string
         /// \todo allow channel mode
     }
-    else if ( command == "JOIN" )
+    else if ( cmd.command == "JOIN" )
     {
         /**
          * \note incoming JOIN is treated differently from how the
@@ -689,19 +699,11 @@ void IrcConnection::command ( const Command& c )
             return;
 
         cmd.parameters = { string::implode(",",cmd.parameters) };
-
-        if ( connection_status <= CONNECTING )
-        {
-            channels_to_join.insert(channels_to_join.end(),
-                                    cmd.parameters.begin(),
-                                    cmd.parameters.end());
-            return;
-        }
         /// \todo keep track of too many channels,
         /// check that channel names are ok
         /// http://tools.ietf.org/html/rfc2812#section-3.2.1
     }
-    else if ( command == "PART" )
+    else if ( cmd.command == "PART" )
     {
         if ( cmd.parameters.size() < 1 )
         {
@@ -720,7 +722,7 @@ void IrcConnection::command ( const Command& c )
                 return;
         }
     }
-    else if ( command == "RECONNECT" )
+    else if ( cmd.command == "RECONNECT" )
     {
         // Custom command
         reconnect();

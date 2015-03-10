@@ -276,9 +276,9 @@ private:
      */
     string::Formatter* formatter_ = nullptr;
     /**
-     * \brief List of channels to join
+     * \brief List of commands which could not be processed right away
      */
-    std::list<std::string> channels_to_join;
+    std::list<Command> scheduled_commands;
     /**
      * \brief Connection status
      */
