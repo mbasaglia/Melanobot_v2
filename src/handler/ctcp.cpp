@@ -42,7 +42,7 @@ public:
     bool can_handle(const network::Message& msg) override
     {
         return authorized(msg) && !msg.params.empty() &&
-            msg.source && msg.source->protocol() == "irc" &&
+            msg.source->protocol() == "irc" &&
             msg.channels.size() == 1 && msg.from == msg.channels[0] &&
             network::irc::strtoupper(msg.command) == "CTCP" &&
             network::irc::strtoupper(msg.params[0]) == ctcp;

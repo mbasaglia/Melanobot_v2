@@ -82,6 +82,13 @@ void Melanobot::run()
         messages.pop(msg);
         if ( !messages.active() )
             break;
+
+        if ( !msg.source )
+        {
+            ErrorLog("sys") << "Received a message without source";
+            continue;
+        }
+
         for ( auto handler : handlers )
             if ( handler->handle(msg) )
                 break;

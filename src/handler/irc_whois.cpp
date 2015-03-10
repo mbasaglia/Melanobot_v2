@@ -35,7 +35,7 @@ public:
 
     bool can_handle(const network::Message& msg) override
     {
-        return msg.command == "330" && msg.source && msg.params.size() > 2;
+        return msg.command == "330" && msg.params.size() > 2;
     }
 
 protected:
@@ -65,7 +65,7 @@ public:
     bool can_handle(const network::Message& msg) override
     {
         return msg.command == "JOIN" && msg.params.size() == 1 &&
-            msg.source && msg.source->protocol() == "irc";
+            msg.source->protocol() == "irc";
     }
 
 protected:
@@ -108,7 +108,7 @@ public:
     bool can_handle(const network::Message& msg) override
     {
         return msg.command == "NOTICE" && msg.from == q_bot &&
-            msg.source && msg.source->protocol() == "irc" &&
+            msg.source->protocol() == "irc" &&
             msg.params.size() == 2;
     }
 
@@ -170,7 +170,7 @@ public:
     bool can_handle(const network::Message& msg) override
     {
         return SimpleAction::can_handle(msg) &&
-            msg.source && msg.source->protocol() == "irc";
+            msg.source->protocol() == "irc";
     }
 
 protected:

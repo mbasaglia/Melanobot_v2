@@ -55,6 +55,7 @@ public:
 
     /**
      * \brief Attempt to handle the message
+     * \pre msg.source not null
      * \return \b true if the message has been handled and needs no further processing
      * \note Unless you really need to, override on_handle()
      */
@@ -67,6 +68,7 @@ public:
 
     /**
      * \brief Checks if a message can be handled
+     * \pre msg.source not null
      * \return \b true if the message can be handled by the handler
      * \todo \b const?
      */
@@ -91,7 +93,7 @@ public:
      */
     virtual bool authorized(const network::Message& msg) const
     {
-        return auth.empty() || ( msg.source && msg.source->user_auth(msg.from,auth));
+        return auth.empty() || msg.source->user_auth(msg.from,auth);
     }
 
     /**
@@ -137,15 +139,12 @@ protected:
      */
     virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const
     {
-        if ( msg.source )
-        {
-            network::OutputMessage out(
-                msg.channels.empty() ? std::string() : msg.channels[0],
-                text,
-                priority
-            );
-            msg.source->say(out);
-        }
+        network::OutputMessage out(
+            msg.channels.empty() ? std::string() : msg.channels[0],
+            text,
+            priority
+        );
+        msg.source->say(out);
     }
 
     void reply_to(const network::Message& msg, const std::string& text) const
@@ -185,9 +184,8 @@ public:
 
     bool can_handle(const network::Message& msg) override
     {
-        return msg.source && authorized(msg) &&
-            ( msg.direct || !direct ) && msg.channels.size() < 2 &&
-            string::starts_with(msg.message,trigger);
+        return authorized(msg) && ( msg.direct || !direct ) &&
+            msg.channels.size() < 2 && string::starts_with(msg.message,trigger);
     }
 
     virtual bool handle(network::Message& msg)
@@ -276,7 +274,7 @@ protected:
     std::vector<Handler*> children;         ///< Contained handlers
     std::string           channels;         ///< Channel filter
     std::string           name;             ///< Name to show in help
-    network::Connection*  source = nullptr; ///< Connection which created the message
+    network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)
 };
 
 /**
