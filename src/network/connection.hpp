@@ -290,11 +290,6 @@ public:
     virtual bool remove_from_group(const std::string& user, const std::string& group) = 0;
 
     /**
-     * \brief Clears a group from its users
-     */
-    virtual bool clear_group(std::string& group) = 0;
-
-    /**
      * \brief Get a vector with the users in the given group
      */
     virtual std::vector<user::User> users_in_group(const std::string& group) const = 0;

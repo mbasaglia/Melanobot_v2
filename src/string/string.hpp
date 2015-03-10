@@ -574,7 +574,7 @@ public:
     FormattedStream()
         : formatter(nullptr) {}
 
-    explicit operator FormattedString() const { return str(); }
+    operator FormattedString() const { return str(); }
     FormattedString str() const { return buffer; }
 
     const FormattedStream& operator<< ( const std::string& text ) const

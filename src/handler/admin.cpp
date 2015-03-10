@@ -218,7 +218,7 @@ class AdminGroup: public AbstractList
 {
 public:
     AdminGroup(const Settings& settings, Melanobot* bot)
-        : AbstractList(settings.get("group",""),settings,bot)
+        : AbstractList(settings.get("group",""),false,settings,bot)
     {
         if ( !source )
             throw ConfigurationError();
@@ -238,7 +238,7 @@ public:
 
     bool clear() override
     {
-        return source->clear_group(trigger);
+        return false;
     }
 
     std::vector<std::string> elements() const override

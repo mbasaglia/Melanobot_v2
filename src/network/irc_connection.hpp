@@ -175,11 +175,6 @@ public:
     bool remove_from_group(const std::string& user, const std::string& group) override;
 
     /**
-     * \note Always fails, use remove_from_group()
-     */
-    bool clear_group(std::string&) override { return false; }
-
-    /**
      * \thead external \lock data
      */
     std::vector<user::User> users_in_group(const std::string& group) const override;

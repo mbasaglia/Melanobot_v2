@@ -36,8 +36,12 @@ Melanobot::Melanobot(const Settings& settings )
             ErrorLog("sys") << "Could not create connection "
                 << string::FormatFlags::BOLD << id;
     }
+
     if ( connections.empty() )
+    {
+        Settings::global_settings.put("exit_code",1);
         ErrorLog("sys") << "Creating a bot with no connections";
+    }
 
     for(const auto& pt : settings.get_child("handlers",{}))
     {
@@ -63,6 +67,9 @@ void Melanobot::stop()
 }
 void Melanobot::run()
 {
+    if ( connections.empty() )
+        return;
+    
     for ( auto &conn : connections )
         conn.second->start();
 

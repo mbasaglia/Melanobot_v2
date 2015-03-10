@@ -104,8 +104,8 @@ void SimpleGroup::populate_properties(const std::vector<std::string>& properties
 class ListInsert : public SimpleAction
 {
 public:
-    ListInsert(AbstractList* parent, const Settings& settings, Melanobot* bot)
-    : SimpleAction("+",settings,bot), parent(parent)
+    ListInsert(std::string trigger, AbstractList* parent, const Settings& settings, Melanobot* bot)
+    : SimpleAction(trigger,settings,bot), parent(parent)
     {
         if ( !parent )
             throw ConfigurationError();
@@ -122,15 +122,19 @@ protected:
         for ( const auto& s : string::comma_split(msg.message) )
             ( parent->add(s) ? ok : ko ).push_back(s);
 
-        if ( ok.empty() )
-            reply_to(msg,"No items were added to "+parent->get_property("list_name"));
-        else
-            reply_to(msg,"Added to "+parent->get_property("list_name")
-                +": "+string::implode(" ",ok));
-            
+        if ( !ok.empty() )
+            reply_to(msg,string::FormattedStream() <<
+                "Added to "+parent->get_property("list_name")
+                +": " << color::green << string::implode(" ",ok));
+        else if ( ko.empty() )
+            reply_to(msg,"No items were added to "
+                +parent->get_property("list_name"));
+
         if ( !ko.empty() )
-            reply_to(msg,"Not added to "+parent->get_property("list_name")
-                +": "+string::implode(" ",ko));
+            reply_to(msg,string::FormattedStream() <<
+                string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
+                " added to "+parent->get_property("list_name")
+                    +": " << color::dark_yellow << string::implode(" ",ko));
 
         return true;
     }
@@ -144,8 +148,8 @@ protected:
 class ListRemove : public SimpleAction
 {
 public:
-    ListRemove(AbstractList* parent, const Settings& settings, Melanobot* bot)
-    : SimpleAction("-",settings,bot), parent(parent)
+    ListRemove(std::string trigger, AbstractList* parent, const Settings& settings, Melanobot* bot)
+    : SimpleAction(trigger,settings,bot), parent(parent)
     {
         if ( !parent )
             throw ConfigurationError();
@@ -162,16 +166,19 @@ protected:
         for ( const auto& s : string::comma_split(msg.message) )
             ( parent->remove(s) ? ok : ko ).push_back(s);
 
-        if ( ok.empty() )
+        if ( !ok.empty() )
+            reply_to(msg,string::FormattedStream() <<
+                "Removed from "+parent->get_property("list_name")
+                +": " << color::red << string::implode(" ",ok));
+        else if ( ko.empty() )
             reply_to(msg,"No items were removed from "
                 +parent->get_property("list_name"));
-        else
-            reply_to(msg,"Removed from "+parent->get_property("list_name")
-                +": "+string::implode(" ",ok));
 
         if ( !ko.empty() )
-            reply_to(msg,"Not removed from "+parent->get_property("list_name")
-                +": "+string::implode(" ",ko));
+            reply_to(msg,string::FormattedStream() <<
+                string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
+                " removed from "+parent->get_property("list_name")
+                    +": " << color::dark_yellow << string::implode(" ",ko));
 
         return true;
     }
@@ -207,7 +214,7 @@ protected:
     AbstractList* parent;
 };
 
-AbstractList::AbstractList(const std::string& default_trigger,
+AbstractList::AbstractList(const std::string& default_trigger, bool clear,
                            const Settings& settings, Melanobot* bot)
     : SimpleGroup(settings, bot)
 {
@@ -226,9 +233,12 @@ AbstractList::AbstractList(const std::string& default_trigger,
         }
     }
 
-    children.push_back(new ListInsert(this,child_settings,bot));
-    children.push_back(new ListRemove(this,child_settings,bot));
-    children.push_back(new ListClear(this,child_settings,bot));
+    children.push_back(new ListInsert("+",this,child_settings,bot));
+    children.push_back(new ListInsert("add",this,child_settings,bot));
+    children.push_back(new ListRemove("-",this,child_settings,bot));
+    children.push_back(new ListRemove("rm",this,child_settings,bot));
+    if ( clear )
+        children.push_back(new ListClear(this,child_settings,bot));
 }
 
 bool AbstractList::on_handle(network::Message& msg)

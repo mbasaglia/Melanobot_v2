@@ -109,6 +109,7 @@ Settings Settings::initialize ( int argc, char** argv )
 
     if ( settings_file.empty() )
     {
+        global_settings.put("exit_code",1);
         ErrorLog("sys") << "Cannot start without a config file";
         return {};
     }

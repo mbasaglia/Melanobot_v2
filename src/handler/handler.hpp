@@ -288,7 +288,13 @@ protected:
 class AbstractList : public SimpleGroup
 {
 public:
-    AbstractList(const std::string& default_trigger,
+    /**
+     * \param default_trigger   Default trigger/group name
+     * \param clear             Whether to allow clearing the list
+     * \param settings          Handler settings
+     * \param bot               Main bot
+     */
+    AbstractList(const std::string& default_trigger, bool clear,
                  const Settings& settings, Melanobot* bot);
 
     /**
