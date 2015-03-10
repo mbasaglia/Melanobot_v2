@@ -271,5 +271,25 @@ private:
 };
 REGISTER_HANDLER(AdminGroup,AdminGroup);
 
+/**
+ * \brief Discards messages coming from certain users
+ */
+class FilterGroup: public Handler
+{
+public:
+    FilterGroup(const Settings& settings, Melanobot* bot)
+        : Handler(settings,bot)
+    {
+        if ( auth.empty() )
+            throw ConfigurationError();
+    }
+
+private:
+    bool on_handle(network::Message&) override
+    {
+        return true;
+    }
+};
+REGISTER_HANDLER(FilterGroup,FilterGroup);
 
 } // namespace handler
