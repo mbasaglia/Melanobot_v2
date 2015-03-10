@@ -210,7 +210,6 @@ private:
 };
 REGISTER_HANDLER(Help,Help);
 
-
 /**
  * \brief Just repeat what it has been told
  */
@@ -232,5 +231,27 @@ protected:
     }
 };
 REGISTER_HANDLER(Echo,Echo);
+
+/**
+ * \brief Shows the server the bot is connected to
+ */
+class ServerHost : public SimpleAction
+{
+public:
+    ServerHost(const Settings& settings, Melanobot* bot)
+        : SimpleAction("server",settings,bot)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string irc_network = msg.source->get_property("NETWORK");
+        if ( !irc_network.empty() )
+            irc_network = '('+irc_network+") ";
+        reply_to(msg,irc_network+msg.source->server().name());
+        return true;
+    }
+};
+REGISTER_HANDLER(ServerHost,ServerHost);
 
 } // namespace handler

@@ -186,6 +186,17 @@ public:
      */
     user::User build_user(const std::string& exname) const;
 
+    /**
+     * \brief Returns properties reported by RPL_ISUPPORT, for features
+     *        without a value "1" is reported.
+     */
+    std::string get_property(const std::string& property) const override;
+
+    /**
+     * \brief Always fails
+     */
+    bool set_property(const std::string& property, const std::string value ) override;
+
 private:
     friend class Buffer;
 
@@ -223,7 +234,6 @@ private:
 
     /**
      * \brief Server the bot is connected to
-     * \todo
      */
     Server current_server;
 

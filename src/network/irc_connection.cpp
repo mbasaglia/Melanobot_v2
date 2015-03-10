@@ -132,6 +132,7 @@ void IrcConnection::handle_message(Message msg)
         mutex.lock();
             /// \todo read current_server
             current_nick = msg.params[0];
+            current_server.host = msg.from;
             current_nick_lowecase = strtolower(current_nick);
             // copy so we can unlock before command()
             std::list<Command> missed_commands;
@@ -141,6 +142,20 @@ void IrcConnection::handle_message(Message msg)
         connection_status = CONNECTED;
         for ( const auto& c : missed_commands )
             command(c);
+    }
+    else if ( msg.command == "005" )
+    {
+        // RPL_ISUPPORT: prefix 005 target option[=value]... :are supported by this server
+        /**
+         * \todo Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING NETWORK
+         */
+        for ( std::string::size_type i = 1; i < msg.params.size()-1; i++ )
+        {
+            auto eq = msg.params[i].find('=');
+            std::string name = msg.params[i].substr(0,eq);
+            std::string value = eq == std::string::npos ? "1" : msg.params[i].substr(eq+1);
+            server_features[name] = value;
+        }
     }
     else if ( msg.command == "353" )
     {
@@ -425,7 +440,6 @@ void IrcConnection::handle_message(Message msg)
      * 002
      * 003
      * 004      *
-     * 005      *
      * 2xx-3xx Replies to commands
      * 302
      * 303      *
@@ -1026,6 +1040,17 @@ std::vector<user::User> IrcConnection::users_in_group(const std::string& group) 
 {
     LOCK(mutex);
     return auth_system.users_with_auth(group);
+}
+
+std::string IrcConnection::get_property(const std::string& property) const
+{
+    auto it = server_features.find(property);
+    return it == server_features.end() ? "" : it->second;
+}
+
+bool IrcConnection::set_property(const std::string& , const std::string )
+{
+    return false;
 }
 
 } // namespace irc

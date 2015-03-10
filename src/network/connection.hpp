@@ -300,15 +300,16 @@ public:
      */
     virtual std::string name() const = 0;
 
-    /* *
+    /**
      * \brief Get a connection property
      */
-    //virtual std::string get_property(const std::string& property) const = 0;
+    virtual std::string get_property(const std::string& property) const = 0;
 
-    /* *
+    /**
      * \brief Set a connection property
+     * \return \b true on success
      */
-    //virtual bool set_property(const std::string& property, const std::string value ) = 0;
+    virtual bool set_property(const std::string& property, const std::string value ) = 0;
 };
 
 #define REGISTER_CONNECTION(name,function) \
