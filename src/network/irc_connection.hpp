@@ -179,6 +179,13 @@ public:
      */
     std::vector<user::User> users_in_group(const std::string& group) const override;
 
+    /**
+     * \brief Build a user::User from an extended name
+     * \param exname A user local_id, if it begins with a \@, it's considered a
+     *               host name, if it begins with a !, it's considered a global_id
+     */
+    user::User build_user(const std::string& exname) const;
+
 private:
     friend class Buffer;
 

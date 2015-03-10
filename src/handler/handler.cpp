@@ -183,6 +183,7 @@ protected:
         return true;
     }
 
+private:
     AbstractList* parent;
 };
 

@@ -223,17 +223,22 @@ public:
         if ( !source )
             throw ConfigurationError();
 
-        description = settings.get("description",trigger+" group");
+        description = settings.get("description","the "+trigger+" group");
+        ignore = settings.get("ignore","");
     }
 
     bool add(const std::string& element) override
     {
-        return source->add_to_group(element,trigger);
+        if ( ignore.empty() || !source->user_auth(element, ignore) )
+            return source->add_to_group(element,trigger);
+        return false;
     }
 
     bool remove(const std::string& element) override
     {
-        return source->remove_from_group(element,trigger);
+        if ( ignore.empty() || !source->user_auth(element, ignore) )
+            return source->remove_from_group(element,trigger);
+        return false;
     }
 
     bool clear() override
@@ -267,7 +272,8 @@ public:
         return AbstractList::get_property(name);
     }
 private:
-    std::string description;
+    std::string description; ///< Used as list_name property
+    std::string ignore;      ///< Group to be ignored on add/remove
 };
 REGISTER_HANDLER(AdminGroup,AdminGroup);
 

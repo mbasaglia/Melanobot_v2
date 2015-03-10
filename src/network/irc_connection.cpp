@@ -904,9 +904,10 @@ bool IrcConnection::user_auth(const std::string& local_id,
     
     LOCK(mutex);
     const user::User* user = user_manager.user(local_id);
-    if ( !user )
-        return false;
-    return auth_system.in_group(*user,auth_group);
+    if ( user )
+        return auth_system.in_group(*user,auth_group);
+
+    return auth_system.in_group(build_user(local_id),auth_group);
 }
 
 void IrcConnection::update_user(const std::string& local_id,
@@ -955,21 +956,31 @@ std::vector<user::User> IrcConnection::get_users(const std::string& channel) con
     return std::vector<user::User>(list.begin(),list.end());
 }
 
+user::User IrcConnection::build_user(const std::string& exname) const
+{
+    if ( exname.empty() )
+        return {};
+
+    user::User user;
+
+    if ( exname[0] == '!' && exname.size() > 1 )
+        user.global_id = exname.substr(1);
+    else if ( exname[0] == '@' && exname.size() > 1 )
+        user.host = exname.substr(1);
+    else
+        user.name = exname;
+
+    return std::move(user);
+}
+
 bool IrcConnection::add_to_group( const std::string& username, const std::string& group )
 {
     std::vector<std::string> groups = string::comma_split(group);
 
-    user::User user;
-
     if ( groups.empty() || username.empty() )
         return false;
 
-    if ( username[0] == '!' && username.size() > 1 )
-        user.global_id = username.substr(1);
-    else if ( username[0] == '@' && username.size() > 1 )
-        user.host = username.substr(1);
-    else
-        user.name = username;
+    user::User user = build_user(username);
 
     if ( !groups.empty() )
     {
@@ -993,17 +1004,10 @@ bool IrcConnection::add_to_group( const std::string& username, const std::string
 
 bool IrcConnection::remove_from_group(const std::string& username, const std::string& group)
 {
-    user::User user;
-
     if ( group.empty() || username.empty() )
         return false;
 
-    if ( username[0] == '!' && username.size() > 1 )
-        user.global_id = username.substr(1);
-    else if ( username[0] == '@' && username.size() > 1 )
-        user.host = username.substr(1);
-    else
-        user.name = username;
+    user::User user = build_user(username);
 
     LOCK(mutex);
     if ( auth_system.in_group(user,group,false) )
