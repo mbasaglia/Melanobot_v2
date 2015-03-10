@@ -14,5 +14,6 @@ var searchData=
   ['buffers',['buffers',['../classMultibuf.html#aed1e860d257b5c76f38ed18210b2c762',1,'Multibuf']]],
   ['build',['build',['../classhandler_1_1HandlerFactory.html#a645d70945396e457031440554191f4dc',1,'handler::HandlerFactory']]],
   ['build_5fquery',['build_query',['../namespacenetwork_1_1http.html#aa82129818935772c6e7263b5027fdb95',1,'network::http']]],
+  ['build_5fuser',['build_user',['../classnetwork_1_1irc_1_1IrcConnection.html#acd917753d41ad879930ba2a30ba714bd',1,'network::irc::IrcConnection']]],
   ['byte',['Byte',['../classstring_1_1Utf8Parser.html#aa2474bd7b27e204becdfcfbd1b423e36',1,'string::Utf8Parser']]]
 ];

@@ -93,6 +93,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classhandler_1_1Help-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">handler::Help Class Reference</div>  </div>
@@ -155,10 +156,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ac5185a498320798ce4e5d92caaddf9c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Help.html#ac5185a498320798ce4e5d92caaddf9c7">on_handle</a> (<a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg) override</td></tr>
 <tr class="memdesc:ac5185a498320798ce4e5d92caaddf9c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to handle the message.  <a href="#ac5185a498320798ce4e5d92caaddf9c7">More...</a><br /></td></tr>
 <tr class="separator:ac5185a498320798ce4e5d92caaddf9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classhandler_1_1SimpleAction"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classhandler_1_1SimpleAction')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classhandler_1_1SimpleAction.html">handler::SimpleAction</a></td></tr>
+<tr class="memitem:a472b45cbad911ff6c8e33c716f02ac7b inherit pro_methods_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a472b45cbad911ff6c8e33c716f02ac7b">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const <a class="el" href="classstring_1_1FormattedString.html">string::FormattedString</a> &amp;text) const </td></tr>
+<tr class="memdesc:a472b45cbad911ff6c8e33c716f02ac7b inherit pro_methods_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a reply to a message.  <a href="#a472b45cbad911ff6c8e33c716f02ac7b">More...</a><br /></td></tr>
+<tr class="separator:a472b45cbad911ff6c8e33c716f02ac7b inherit pro_methods_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classhandler_1_1Handler"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classhandler_1_1Handler')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a></td></tr>
-<tr class="memitem:ac12797faf2d343a2b1151243f7e7328e inherit pro_methods_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ac12797faf2d343a2b1151243f7e7328e">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const <a class="el" href="classstring_1_1FormattedString.html">string::FormattedString</a> &amp;text) const </td></tr>
-<tr class="memdesc:ac12797faf2d343a2b1151243f7e7328e inherit pro_methods_classhandler_1_1Handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a reply to a message.  <a href="#ac12797faf2d343a2b1151243f7e7328e">More...</a><br /></td></tr>
-<tr class="separator:ac12797faf2d343a2b1151243f7e7328e inherit pro_methods_classhandler_1_1Handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2b43f4fe082719d1b7c3223e35777fb inherit pro_methods_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ad2b43f4fe082719d1b7c3223e35777fb">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const std::string &amp;text) const </td></tr>
 <tr class="separator:ad2b43f4fe082719d1b7c3223e35777fb inherit pro_methods_classhandler_1_1Handler"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -178,6 +180,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a8fa6df10188b0b66e32348e9a8a971ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for a help item with the given name.  <a href="#a8fa6df10188b0b66e32348e9a8a971ac">More...</a><br /></td></tr>
 <tr class="separator:a8fa6df10188b0b66e32348e9a8a971ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:ac9d787c1b66dec911f84d62478964230"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Help.html#ac9d787c1b66dec911f84d62478964230">help_group</a></td></tr>
+<tr class="memdesc:ac9d787c1b66dec911f84d62478964230"><td class="mdescLeft">&#160;</td><td class="mdescRight">Only shows help for members of this group.  <a href="#ac9d787c1b66dec911f84d62478964230">More...</a><br /></td></tr>
+<tr class="separator:ac9d787c1b66dec911f84d62478964230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classhandler_1_1SimpleAction"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classhandler_1_1SimpleAction')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classhandler_1_1SimpleAction.html">handler::SimpleAction</a></td></tr>
@@ -185,13 +193,16 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:a587e220e85a8cff8c4105b8465be7131 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight">String identifying the action.  <a href="#a587e220e85a8cff8c4105b8465be7131">More...</a><br /></td></tr>
 <tr class="separator:a587e220e85a8cff8c4105b8465be7131 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18a6f9f77f02a1c5b5a7c183297cb4ee inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a18a6f9f77f02a1c5b5a7c183297cb4ee">direct</a> = false</td></tr>
-<tr class="memdesc:a18a6f9f77f02a1c5b5a7c183297cb4ee inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the message needs to be direct.  <a href="#a18a6f9f77f02a1c5b5a7c183297cb4ee">More...</a><br /></td></tr>
 <tr class="separator:a18a6f9f77f02a1c5b5a7c183297cb4ee inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a362db8a8835c31529cd076c15161223c inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a362db8a8835c31529cd076c15161223c">synopsis</a></td></tr>
 <tr class="memdesc:a362db8a8835c31529cd076c15161223c inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classhandler_1_1Help.html" title="Handler showing help on the available handlers. ">Help</a> synopsis.  <a href="#a362db8a8835c31529cd076c15161223c">More...</a><br /></td></tr>
 <tr class="separator:a362db8a8835c31529cd076c15161223c inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a3a545b40591427f5dbd82a8feec418 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#a5a3a545b40591427f5dbd82a8feec418">help</a> =&quot;Undocumented&quot;</td></tr>
+<tr class="memdesc:a5a3a545b40591427f5dbd82a8feec418 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classhandler_1_1Help.html" title="Handler showing help on the available handlers. ">Help</a> string.  <a href="#a5a3a545b40591427f5dbd82a8feec418">More...</a><br /></td></tr>
 <tr class="separator:a5a3a545b40591427f5dbd82a8feec418 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab292e9b3342fd87831e9e6a77989e529 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1SimpleAction.html#ab292e9b3342fd87831e9e6a77989e529">public_reply</a> = true</td></tr>
+<tr class="memdesc:ab292e9b3342fd87831e9e6a77989e529 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether to reply publicly or just to the sender of the message.  <a href="#ab292e9b3342fd87831e9e6a77989e529">More...</a><br /></td></tr>
+<tr class="separator:ab292e9b3342fd87831e9e6a77989e529 inherit pro_attribs_classhandler_1_1SimpleAction"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classhandler_1_1Handler"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classhandler_1_1Handler')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a></td></tr>
 <tr class="memitem:a106f3e972beb61dfe66eb5d8c148873f inherit pro_attribs_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#a106f3e972beb61dfe66eb5d8c148873f">auth</a></td></tr>
 <tr class="memdesc:a106f3e972beb61dfe66eb5d8c148873f inherit pro_attribs_classhandler_1_1Handler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authorization group required for a user message to be handled.  <a href="#a106f3e972beb61dfe66eb5d8c148873f">More...</a><br /></td></tr>
@@ -206,7 +217,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classhandler_1_1Handler.html" title="Message handler abstract base class. ">Handler</a> showing help on the available handlers. </p>
 <dl class="section note"><dt>Note</dt><dd>It is trongly recommended that this is enabled </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>option for inline help (synopsis+message all on the same line) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000020">Todo:</a></b></dt><dd>option for inline help (synopsis+message all on the same line) </dd></dl>
 
 <p>Definition at line <a class="el" href="misc_8cpp_source.html#l00057">57</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -282,9 +293,9 @@ Additional Inherited Members</h2></td></tr>
 <p>Remove items the user can't perform. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>false</b> if <code>propeties</code> shall not be considered </dd></dl>
 
-<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00130">130</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00133">133</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00130">cleanup()</a>, and <a class="el" href="misc_8cpp_source.html#l00068">on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00133">cleanup()</a>, and <a class="el" href="misc_8cpp_source.html#l00069">on_handle()</a>.</p>
 
 </div>
 </div>
@@ -322,9 +333,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Searches for a help item with the given name. </p>
 
-<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00193">193</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00197">197</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00193">find()</a>, and <a class="el" href="misc_8cpp_source.html#l00068">on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00197">find()</a>, and <a class="el" href="misc_8cpp_source.html#l00069">on_handle()</a>.</p>
 
 </div>
 </div>
@@ -362,9 +373,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gathers top-level names. </p>
 
-<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00179">179</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00183">183</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00179">gather()</a>, and <a class="el" href="misc_8cpp_source.html#l00068">on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00183">gather()</a>, and <a class="el" href="misc_8cpp_source.html#l00069">on_handle()</a>.</p>
 
 </div>
 </div>
@@ -392,11 +403,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Attempt to handle the message. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message has been handled and needs no further processing </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>Discard commands available for other connections </dd></dl>
 
 <p>Implements <a class="el" href="classhandler_1_1Handler.html#af56231a77ff17aee132828094daca760">handler::Handler</a>.</p>
 
-<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00068">68</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00069">69</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
 </div>
 </div>
@@ -434,9 +444,36 @@ Additional Inherited Members</h2></td></tr>
 
 <p>removes all internal nodes which don't have a name key </p>
 
-<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00149">149</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00153">153</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00068">on_handle()</a>, and <a class="el" href="misc_8cpp_source.html#l00149">restructure()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00069">on_handle()</a>, and <a class="el" href="misc_8cpp_source.html#l00153">restructure()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="ac9d787c1b66dec911f84d62478964230"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string handler::Help::help_group</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Only shows help for members of this group. </p>
+
+<p>Definition at line <a class="el" href="misc_8cpp_source.html#l00127">127</a> of file <a class="el" href="misc_8cpp_source.html">misc.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00133">cleanup()</a>, and <a class="el" href="misc_8cpp_source.html#l00060">Help()</a>.</p>
 
 </div>
 </div>
@@ -446,7 +483,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 9 2015 21:10:57 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

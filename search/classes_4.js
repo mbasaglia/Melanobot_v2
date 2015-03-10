@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['filtergroup',['FilterGroup',['../classhandler_1_1FilterGroup.html',1,'handler']]],
   ['format',['Format',['../classstring_1_1Format.html',1,'string']]],
   ['formatflags',['FormatFlags',['../classstring_1_1FormatFlags.html',1,'string']]],
   ['formattedstream',['FormattedStream',['../classstring_1_1FormattedStream.html',1,'string']]],

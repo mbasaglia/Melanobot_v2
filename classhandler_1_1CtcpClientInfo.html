@@ -93,6 +93,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classhandler_1_1CtcpClientInfo-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">handler::CtcpClientInfo Class Reference</div>  </div>
@@ -167,6 +168,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a56e2c19dcc69f2987c1e2727dc90e8aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1CtcpClientInfo.html#a56e2c19dcc69f2987c1e2727dc90e8aa">gather</a> (const <a class="el" href="settings_8hpp.html#a15ece709c6b6e61496f543f62e8ba439">PropertyTree</a> &amp;properties, <a class="el" href="settings_8hpp.html#a1937c97b7058a8be10dc4b9cba6ada0a">Properties</a> &amp;out) const </td></tr>
 <tr class="memdesc:a56e2c19dcc69f2987c1e2727dc90e8aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gathers ctcp clientinfo.  <a href="#a56e2c19dcc69f2987c1e2727dc90e8aa">More...</a><br /></td></tr>
 <tr class="separator:a56e2c19dcc69f2987c1e2727dc90e8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aea06ef44494b735d5f81bf1669bd795c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1CtcpClientInfo.html#aea06ef44494b735d5f81bf1669bd795c">help_group</a></td></tr>
+<tr class="memdesc:aea06ef44494b735d5f81bf1669bd795c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Only shows help for members of this group.  <a href="#aea06ef44494b735d5f81bf1669bd795c">More...</a><br /></td></tr>
+<tr class="separator:aea06ef44494b735d5f81bf1669bd795c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -262,9 +269,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gathers ctcp clientinfo. </p>
 
-<p>Definition at line <a class="el" href="ctcp_8cpp_source.html#l00273">273</a> of file <a class="el" href="ctcp_8cpp_source.html">ctcp.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ctcp_8cpp_source.html#l00274">274</a> of file <a class="el" href="ctcp_8cpp_source.html">ctcp.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00273">gather()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00236">on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00274">gather()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00237">on_handle()</a>.</p>
 
 </div>
 </div>
@@ -292,11 +299,37 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Attempt to handle the message. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message has been handled and needs no further processing </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000018">Todo:</a></b></dt><dd>Discard commands available for other connections </dd></dl>
 
 <p>Implements <a class="el" href="classhandler_1_1Handler.html#af56231a77ff17aee132828094daca760">handler::Handler</a>.</p>
 
-<p>Definition at line <a class="el" href="ctcp_8cpp_source.html#l00236">236</a> of file <a class="el" href="ctcp_8cpp_source.html">ctcp.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ctcp_8cpp_source.html#l00237">237</a> of file <a class="el" href="ctcp_8cpp_source.html">ctcp.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="aea06ef44494b735d5f81bf1669bd795c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string handler::CtcpClientInfo::help_group</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Only shows help for members of this group. </p>
+
+<p>Definition at line <a class="el" href="ctcp_8cpp_source.html#l00269">269</a> of file <a class="el" href="ctcp_8cpp_source.html">ctcp.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00229">CtcpClientInfo()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00274">gather()</a>.</p>
 
 </div>
 </div>
@@ -306,7 +339,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 9 2015 21:10:57 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
