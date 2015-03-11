@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="classnetwork_1_1http_1_1HttpService.html" target="_top" xlink:title="HTTP client. ">
+<g id="a_node3"><a xlink:href="classnetwork_1_1http_1_1HttpService.html" target="_top" xlink:title="HTTP Service. ">
 <polygon fill="none" stroke="black" points="13.5,-0.5 13.5,-19.5 144.5,-19.5 144.5,-0.5 13.5,-0.5"/>
 <text text-anchor="middle" x="79" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">network::http::HttpService</text>
 </a>

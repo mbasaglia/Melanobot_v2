@@ -1,4 +1,4 @@
 <map id="network::ThreadedAsyncService" name="network::ThreadedAsyncService">
-<area shape="rect" id="node3" href="$classnetwork_1_1http_1_1HttpService.html" title="HTTP client. " alt="" coords="23,155,198,181"/>
+<area shape="rect" id="node3" href="$classnetwork_1_1http_1_1HttpService.html" title="HTTP Service. " alt="" coords="23,155,198,181"/>
 <area shape="rect" id="node2" href="$classnetwork_1_1AsyncService.html" title="Base class for external services that might take some time to execute. " alt="" coords="32,5,189,32"/>
 </map>

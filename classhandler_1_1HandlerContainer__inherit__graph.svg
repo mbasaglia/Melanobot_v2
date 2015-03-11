@@ -464,7 +464,7 @@ var sectionId = 'dynsection-0';
 </g>
 <!-- Node31 -->
 <g id="node31" class="node"><title>Node31</title>
-<g id="a_node31"><a xlink:href="classhandler_1_1SimpleGroup.html" target="_top" xlink:title="A simple group of actions which share some settings. ">
+<g id="a_node31"><a xlink:href="classhandler_1_1SimpleGroup.html" target="_top" xlink:title="A simple group of actions which share settings. ">
 <polygon fill="none" stroke="black" points="464,-142.5 464,-161.5 574,-161.5 574,-142.5 464,-142.5"/>
 <text text-anchor="middle" x="519" y="-149.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::SimpleGroup</text>
 </a>

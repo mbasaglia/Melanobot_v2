@@ -193,8 +193,13 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract service connection. </p>
+<p>Instances of this class will be created by <code><a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a></code> from the configuration and will send <code><a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">Message</a></code> objects and receive either <code><a class="el" href="structnetwork_1_1Command.html" title="A command to send to a connection. ">Command</a></code> or <code><a class="el" href="structnetwork_1_1OutputMessage.html" title="A message given to a connection. ">OutputMessage</a></code> objects.</p>
+<p>To create your own class, inherith this one and override the pure virtual methods. Then use <a class="el" href="connection_8hpp.html#a80b0ab81096825afc0a05eb2d6a74279" title="Registers a Connection class to ConnectionFactory. ">REGISTER_CONNECTION()</a> to register the class to the <code><a class="el" href="classnetwork_1_1ConnectionFactory.html" title="Creates connections from settings. ">ConnectionFactory</a></code>.</p>
+<p>It is recommended that you add a static method called <code>create</code> in the derived class with the following signature: </p><div class="fragment"><div class="line">YourClass* create(<a class="code" href="classMelanobot.html">Melanobot</a>* bot, <span class="keyword">const</span> <a class="code" href="classSettings.html">Settings</a>&amp; settings);</div>
+</div><!-- fragment --><p> to be used with REGISTER_CONNECTION.</p>
+<p>You should also have a corresponding log type to use for the connection, registered with <a class="el" href="logger_8hpp.html#af2b9581fa3a7c7455b759b6db96a8725" title="Registers a log type. ">REGISTER_LOG_TYPE()</a>. </p>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00181">181</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00199">199</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a4a09e9838133fa3fc9569460363186b4"></a>
 <div class="memitem">
@@ -206,7 +211,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00192">192</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00210">210</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -238,7 +243,7 @@ Public Member Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00184">184</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00202">202</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +269,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00194">194</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00212">212</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -692,7 +697,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ae5051348931587e2877cf61daf95bc08">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00141">handler::Handler::reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00228">handler::SimpleAction::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00153">handler::Handler::reply_to()</a>, and <a class="el" href="handler_8hpp_source.html#l00282">handler::SimpleAction::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -925,7 +930,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ad096a3137e8873702d8c77053bfd45dc">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00230">handler::AdminGroup::add()</a>, <a class="el" href="handler_8hpp_source.html#l00093">handler::Handler::authorized()</a>, <a class="el" href="misc_8cpp_source.html#l00133">handler::Help::cleanup()</a>, and <a class="el" href="admin_8cpp_source.html#l00237">handler::AdminGroup::remove()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00230">handler::AdminGroup::add()</a>, <a class="el" href="handler_8hpp_source.html#l00105">handler::Handler::authorized()</a>, <a class="el" href="misc_8cpp_source.html#l00133">handler::Help::cleanup()</a>, and <a class="el" href="admin_8cpp_source.html#l00237">handler::AdminGroup::remove()</a>.</p>
 
 </div>
 </div>
@@ -965,7 +970,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

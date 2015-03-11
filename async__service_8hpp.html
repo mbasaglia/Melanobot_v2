@@ -164,7 +164,7 @@ Response &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class=
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a4a2833668cbe0697cf042405ca8d6c80"><td class="memItemLeft" align="right" valign="top">AsyncService *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a4a2833668cbe0697cf042405ca8d6c80">network::service</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:a4a2833668cbe0697cf042405ca8d6c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get service by name (less verbode than through <a class="el" href="classnetwork_1_1ServiceRegistry.html" title="Class storing the service objects. ">ServiceRegistry</a>)  <a href="#a4a2833668cbe0697cf042405ca8d6c80">More...</a><br /></td></tr>
+<tr class="memdesc:a4a2833668cbe0697cf042405ca8d6c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get service by name (less verbose than through <a class="el" href="classnetwork_1_1ServiceRegistry.html" title="Class storing the service objects. ">ServiceRegistry</a>)  <a href="#a4a2833668cbe0697cf042405ca8d6c80">More...</a><br /></td></tr>
 <tr class="separator:a4a2833668cbe0697cf042405ca8d6c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a433afee2c4263a09324106a3d13e0451"><td class="memItemLeft" align="right" valign="top">AsyncService *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a433afee2c4263a09324106a3d13e0451">network::require_service</a> (const std::string &amp;name)</td></tr>
 <tr class="memdesc:a433afee2c4263a09324106a3d13e0451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the service object or throws an exception.  <a href="#a433afee2c4263a09324106a3d13e0451">More...</a><br /></td></tr>
@@ -209,15 +209,22 @@ License</h1>
 </div><!-- fragment -->
 <p>Register a service to ServiceRegistry. </p>
 <dl class="section pre"><dt>Precondition</dt><dd><code>classname</code> is a singleton with a static method called <code>instance()</code> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">classname</td><td>Name of the service class </td></tr>
+    <tr><td class="paramname">servicename</td><td>Service identifier as a C++ token </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00285">285</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00298">298</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

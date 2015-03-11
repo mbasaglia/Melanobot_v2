@@ -14,7 +14,7 @@
 <area shape="rect" id="node16" href="$classhandler_1_1RenderPony.html" title="Draws a pretty My Little Pony ASCII art. " alt="" coords="600,613,744,640"/>
 <area shape="rect" id="node17" href="$classhandler_1_1ReverseText.html" title="Turns ASCII characters upside&#45;down. " alt="" coords="599,664,745,691"/>
 <area shape="rect" id="node18" href="$classhandler_1_1ServerHost.html" title="Shows the server the bot is connected to. " alt="" coords="603,715,741,741"/>
-<area shape="rect" id="node19" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share some settings. " alt="" coords="599,765,745,792"/>
+<area shape="rect" id="node19" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="599,765,745,792"/>
 <area shape="rect" id="node22" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="593,816,751,843"/>
 <area shape="rect" id="node29" href="$classhandler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="589,867,755,893"/>
 <area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,436,344,463"/>

@@ -108,8 +108,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for connection.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="connection_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="connection_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -140,7 +139,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates connections from settings.  <a href="classnetwork_1_1ConnectionFactory.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory_1_1RegisterConnection.html">network::ConnectionFactory::RegisterConnection</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Auto-registration helper.  <a href="classnetwork_1_1ConnectionFactory_1_1RegisterConnection.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy class used for automatic registration.  <a href="classnetwork_1_1ConnectionFactory_1_1RegisterConnection.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -152,6 +151,7 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a80b0ab81096825afc0a05eb2d6a74279"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8hpp.html#a80b0ab81096825afc0a05eb2d6a74279">REGISTER_CONNECTION</a>(name, function)&#160;&#160;&#160;static <a class="el" href="classnetwork_1_1ConnectionFactory_1_1RegisterConnection.html">network::ConnectionFactory::RegisterConnection</a> RegisterConnection_##name(#name,function)</td></tr>
+<tr class="memdesc:a80b0ab81096825afc0a05eb2d6a74279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a Connection class to ConnectionFactory.  <a href="#a80b0ab81096825afc0a05eb2d6a74279">More...</a><br /></td></tr>
 <tr class="separator:a80b0ab81096825afc0a05eb2d6a74279"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -198,14 +198,24 @@ License</h1>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00316">316</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Registers a Connection class to ConnectionFactory. </p>
+<dl class="section note"><dt>Note</dt><dd>Use in implementation files, not headers </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Connection protocol name as a C++ token </td></tr>
+    <tr><td class="paramname">function</td><td>Function used to create an object for the connection </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00340">340</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

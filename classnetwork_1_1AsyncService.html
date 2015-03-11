@@ -128,7 +128,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a81a2d627b652ce178987c0d021d9d6e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronous query.  <a href="#a81a2d627b652ce178987c0d021d9d6e2">More...</a><br /></td></tr>
 <tr class="separator:a81a2d627b652ce178987c0d021d9d6e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5db666733ad2915be6a6f953d5d0274"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1AsyncService.html#ad5db666733ad2915be6a6f953d5d0274">auto_load</a> () const =0</td></tr>
-<tr class="memdesc:ad5db666733ad2915be6a6f953d5d0274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the service should always be loaded.  <a href="#ad5db666733ad2915be6a6f953d5d0274">More...</a><br /></td></tr>
+<tr class="memdesc:ad5db666733ad2915be6a6f953d5d0274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the service should be loaded without explicit configuration.  <a href="#ad5db666733ad2915be6a6f953d5d0274">More...</a><br /></td></tr>
 <tr class="separator:ad5db666733ad2915be6a6f953d5d0274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
@@ -146,8 +146,10 @@ Protected Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for external services that might take some time to execute. </p>
+<p>To specialize, inherit this class and register to <a class="el" href="classnetwork_1_1ServiceRegistry.html" title="Class storing the service objects. ">ServiceRegistry</a> using <a class="el" href="async__service_8hpp.html#aa36753e152eb34953498aa9c40e8b8d4" title="Register a service to ServiceRegistry. ">REGISTER_SERVICE()</a>. The derived classes should act as singletons.</p>
+<p>You should also have a corresponding log type to use for the service, registered with <a class="el" href="logger_8hpp.html#af2b9581fa3a7c7455b759b6db96a8725" title="Registers a log type. ">REGISTER_LOG_TYPE()</a>. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00064">64</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00070">70</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a713c3cab38f2aed1cd977bb7d6dbf9ec"></a>
 <div class="memitem">
@@ -170,7 +172,7 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00067">67</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00073">73</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +197,7 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00101">101</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00107">107</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
@@ -285,11 +287,11 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Whether the service should always be loaded. </p>
+<p>Whether the service should be loaded without explicit configuration. </p>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1http_1_1HttpService.html#a6dc9b811ba747b27f70c5d9817806e2a">network::http::HttpService</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00189">network::ServiceRegistry::RegisterService::RegisterService()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00200">network::ServiceRegistry::RegisterService::RegisterService()</a>.</p>
 
 </div>
 </div>
@@ -327,7 +329,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Quick way to create a failure response. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00117">117</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00123">123</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="http_8cpp_source.html#l00107">network::http::HttpService::query()</a>.</p>
 
@@ -359,7 +361,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1http_1_1HttpService.html#a577cf1dc4587fa5466b6cc0185bfa41a">network::http::HttpService</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00207">network::ServiceRegistry::initialize()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00218">network::ServiceRegistry::initialize()</a>.</p>
 
 </div>
 </div>
@@ -397,7 +399,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Quick way to create a successful response. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00107">107</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00113">113</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="http_8cpp_source.html#l00107">network::http::HttpService::query()</a>.</p>
 
@@ -458,7 +460,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1ThreadedAsyncService.html#a892a64e23600a63dc37c3124dbb012ca">network::ThreadedAsyncService</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00228">network::ServiceRegistry::start()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00239">network::ServiceRegistry::start()</a>.</p>
 
 </div>
 </div>
@@ -487,7 +489,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1ThreadedAsyncService.html#a5c651b5b283480bc090a0c03e34a511e">network::ThreadedAsyncService</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00238">network::ServiceRegistry::stop()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00249">network::ServiceRegistry::stop()</a>.</p>
 
 </div>
 </div>
@@ -497,7 +499,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

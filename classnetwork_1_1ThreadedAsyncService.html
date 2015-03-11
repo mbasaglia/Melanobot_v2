@@ -153,7 +153,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:a81a2d627b652ce178987c0d021d9d6e2 inherit pub_methods_classnetwork_1_1AsyncService"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronous query.  <a href="#a81a2d627b652ce178987c0d021d9d6e2">More...</a><br /></td></tr>
 <tr class="separator:a81a2d627b652ce178987c0d021d9d6e2 inherit pub_methods_classnetwork_1_1AsyncService"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5db666733ad2915be6a6f953d5d0274 inherit pub_methods_classnetwork_1_1AsyncService"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1AsyncService.html#ad5db666733ad2915be6a6f953d5d0274">auto_load</a> () const =0</td></tr>
-<tr class="memdesc:ad5db666733ad2915be6a6f953d5d0274 inherit pub_methods_classnetwork_1_1AsyncService"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the service should always be loaded.  <a href="#ad5db666733ad2915be6a6f953d5d0274">More...</a><br /></td></tr>
+<tr class="memdesc:ad5db666733ad2915be6a6f953d5d0274 inherit pub_methods_classnetwork_1_1AsyncService"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the service should be loaded without explicit configuration.  <a href="#ad5db666733ad2915be6a6f953d5d0274">More...</a><br /></td></tr>
 <tr class="separator:ad5db666733ad2915be6a6f953d5d0274 inherit pub_methods_classnetwork_1_1AsyncService"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classnetwork_1_1AsyncService"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classnetwork_1_1AsyncService')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classnetwork_1_1AsyncService.html">network::AsyncService</a></td></tr>
 <tr class="memitem:a5af245d2b476ec2289d7aa4e5704d076 inherit pro_methods_classnetwork_1_1AsyncService"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1AsyncService.html#a5af245d2b476ec2289d7aa4e5704d076">AsyncService</a> ()</td></tr>
@@ -169,8 +169,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An <a class="el" href="classnetwork_1_1AsyncService.html" title="Base class for external services that might take some time to execute. ">AsyncService</a> implemented with a separate thread. </p>
+<p>Handles asynchronous calls as a queue of synchronous calls performed sequentially in a separate thread.</p>
+<p>Derived classes only need to override <a class="el" href="classnetwork_1_1AsyncService.html#a81a2d627b652ce178987c0d021d9d6e2" title="Synchronous query. ">query()</a> and <a class="el" href="classnetwork_1_1AsyncService.html#ad5db666733ad2915be6a6f953d5d0274" title="Whether the service should be loaded without explicit configuration. ">auto_load()</a>. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00129">129</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00140">140</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ade9ebd274247c365c37543bcf87a2f6c"></a>
 <div class="memitem">
@@ -208,7 +210,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1AsyncService.html#ad368f80c0bd5d91deb818c05f06e1edc">network::AsyncService</a>.</p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00146">146</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00157">157</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
@@ -233,9 +235,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00164">164</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00175">175</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00132">start()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00143">start()</a>.</p>
 
 </div>
 </div>
@@ -264,7 +266,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1AsyncService.html#a0c87ae8f89e940ccacf74d9d54d0b298">network::AsyncService</a>.</p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00132">132</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00143">143</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
@@ -293,7 +295,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1AsyncService.html#a48f7b5ca744b16e12eb0fb5638919afb">network::AsyncService</a>.</p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00139">139</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00150">150</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
@@ -316,9 +318,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00161">161</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00172">172</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00146">async_query()</a>, <a class="el" href="async__service_8hpp_source.html#l00164">run()</a>, <a class="el" href="async__service_8hpp_source.html#l00132">start()</a>, and <a class="el" href="async__service_8hpp_source.html#l00139">stop()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00157">async_query()</a>, <a class="el" href="async__service_8hpp_source.html#l00175">run()</a>, <a class="el" href="async__service_8hpp_source.html#l00143">start()</a>, and <a class="el" href="async__service_8hpp_source.html#l00150">stop()</a>.</p>
 
 </div>
 </div>
@@ -340,7 +342,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00162">162</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00173">173</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 </div>
 </div>
@@ -350,7 +352,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

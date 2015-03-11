@@ -28,7 +28,7 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="classhandler_1_1SimpleGroup.html" target="_top" xlink:title="A simple group of actions which share some settings. ">
+<g id="a_node9"><a xlink:href="classhandler_1_1SimpleGroup.html" target="_top" xlink:title="A simple group of actions which share settings. ">
 <polygon fill="none" stroke="black" points="42.5,-124.5 42.5,-143.5 152.5,-143.5 152.5,-124.5 42.5,-124.5"/>
 <text text-anchor="middle" x="97.5" y="-131.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::SimpleGroup</text>
 </a>

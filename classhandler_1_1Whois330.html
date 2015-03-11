@@ -148,7 +148,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a3df3a399e60f5155f3dc8655a1b9c825"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Whois330.html#a3df3a399e60f5155f3dc8655a1b9c825">on_handle</a> (<a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg) override</td></tr>
-<tr class="memdesc:a3df3a399e60f5155f3dc8655a1b9c825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to handle the message.  <a href="#a3df3a399e60f5155f3dc8655a1b9c825">More...</a><br /></td></tr>
+<tr class="memdesc:a3df3a399e60f5155f3dc8655a1b9c825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Required for concrete handlers, performs the handler actions.  <a href="#a3df3a399e60f5155f3dc8655a1b9c825">More...</a><br /></td></tr>
 <tr class="separator:a3df3a399e60f5155f3dc8655a1b9c825"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classhandler_1_1Handler"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classhandler_1_1Handler')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a></td></tr>
 <tr class="memitem:ac12797faf2d343a2b1151243f7e7328e inherit pro_methods_classhandler_1_1Handler"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Handler.html#ac12797faf2d343a2b1151243f7e7328e">reply_to</a> (const <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &amp;msg, const <a class="el" href="classstring_1_1FormattedString.html">string::FormattedString</a> &amp;text) const </td></tr>
@@ -237,7 +237,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Checks if a message can be handled. </p>
 <dl class="section pre"><dt>Precondition</dt><dd>msg.source not null </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message can be handled by the handler </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd><b>const</b>? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd><b>const</b>? </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classhandler_1_1Handler.html#a10a5eabdf8686e1d61b65ffbe20cc39e">handler::Handler</a>.</p>
 
@@ -267,7 +267,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Attempt to handle the message. </p>
+<p>Required for concrete handlers, performs the handler actions. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if the message has been handled and needs no further processing </dd></dl>
 
 <p>Implements <a class="el" href="classhandler_1_1Handler.html#af56231a77ff17aee132828094daca760">handler::Handler</a>.</p>
@@ -282,7 +282,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 10 2015 20:18:47 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -1,6 +1,6 @@
 <map id="handler::AdminGroup" name="handler::AdminGroup">
 <area shape="rect" id="node2" href="$classhandler_1_1AbstractList.html" title="Handles a list of elements (base class) " alt="" coords="169,545,311,572"/>
-<area shape="rect" id="node3" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share some settings. " alt="" coords="167,469,313,496"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="167,469,313,496"/>
 <area shape="rect" id="node4" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="39,380,188,407"/>
 <area shape="rect" id="node5" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="55,304,172,331"/>
 <area shape="rect" id="node6" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,118,179,145"/>
