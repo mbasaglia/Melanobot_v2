@@ -99,10 +99,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This file defines handlers which perform miscellaneous tasks.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="handler_8hpp_source.html">handler.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="math_8hpp_source.html">math.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for misc.cpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="misc_8cpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="misc_8cpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </div>
 <p><a href="misc_8cpp_source.html">Go to the source code of this file.</a></p>
@@ -121,6 +123,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1ServerHost.html">handler::ServerHost</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows the server the bot is connected to.  <a href="classhandler_1_1ServerHost.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Cointoss.html">handler::Cointoss</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows one of the given items, at random.  <a href="classhandler_1_1Cointoss.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1Reply.html">handler::Reply</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed reply.  <a href="classhandler_1_1Reply.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -138,6 +146,10 @@ Functions</h2></td></tr>
 <tr class="separator:a567c3c24614e1a3706cd720d16cc9a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27689555cfc9f8966cb4f43076568bd3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a27689555cfc9f8966cb4f43076568bd3">handler::REGISTER_HANDLER</a> (ServerHost, ServerHost)</td></tr>
 <tr class="separator:a27689555cfc9f8966cb4f43076568bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab442307729f8dade28e1af7a97302bc8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#ab442307729f8dade28e1af7a97302bc8">handler::REGISTER_HANDLER</a> (Cointoss, Cointoss)</td></tr>
+<tr class="separator:ab442307729f8dade28e1af7a97302bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2647215078b31c79b361e22b8c25091"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#ac2647215078b31c79b361e22b8c25091">handler::REGISTER_HANDLER</a> (Reply, Reply)</td></tr>
+<tr class="separator:ac2647215078b31c79b361e22b8c25091"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file defines handlers which perform miscellaneous tasks. </p>
@@ -153,7 +165,7 @@ License</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 11 2015 11:11:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 11 2015 17:19:51 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

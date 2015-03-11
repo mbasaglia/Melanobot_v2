@@ -7,7 +7,8 @@ var searchData=
   ['dark_5fred',['dark_red',['../namespacecolor.html#ad9ed37d086492840df7b92a2363a9fd2',1,'color']]],
   ['dark_5fyellow',['dark_yellow',['../namespacecolor.html#af1b7ac51586032f214565e1229cc2121',1,'color']]],
   ['default_5fformatter',['default_formatter',['../classstring_1_1Formatter_1_1FormatterFactory.html#a0498faa548610b4aa4432747506b102f',1,'string::Formatter::FormatterFactory']]],
+  ['default_5fitems',['default_items',['../classhandler_1_1Cointoss.html#a3ac2747f7122f3143629d332d2123976',1,'handler::Cointoss']]],
   ['description',['description',['../classhandler_1_1AdminGroup.html#ac662aa4248effd7a37e80e429e0cf000',1,'handler::AdminGroup']]],
-  ['direct',['direct',['../structnetwork_1_1Message.html#ae33f9f027073b43e9bc491afc9b2c574',1,'network::Message::direct()'],['../classhandler_1_1SimpleAction.html#a18a6f9f77f02a1c5b5a7c183297cb4ee',1,'handler::SimpleAction::direct()'],['../classhandler_1_1AnswerQuestions.html#a99ac76cdf2ec8f9c1d1d5f9447e956ee',1,'handler::AnswerQuestions::direct()']]],
+  ['direct',['direct',['../structnetwork_1_1Message.html#ae33f9f027073b43e9bc491afc9b2c574',1,'network::Message::direct()'],['../classhandler_1_1SimpleAction.html#a18a6f9f77f02a1c5b5a7c183297cb4ee',1,'handler::SimpleAction::direct()'],['../classhandler_1_1Reply.html#a6f10a61f5b9ae39c7e306c407ef2100f',1,'handler::Reply::direct()'],['../classhandler_1_1AnswerQuestions.html#a99ac76cdf2ec8f9c1d1d5f9447e956ee',1,'handler::AnswerQuestions::direct()']]],
   ['direction',['direction',['../classLog.html#a739b327769436d99cffcc13d11eaaa50',1,'Log']]]
 ];

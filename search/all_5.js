@@ -16,7 +16,7 @@ var searchData=
   ['flood_5ftimer',['flood_timer',['../classnetwork_1_1irc_1_1Buffer.html#aa49afeb43fabc1cf05ea0ecaa1c395e4',1,'network::irc::Buffer']]],
   ['flood_5ftimer_5fmax',['flood_timer_max',['../classnetwork_1_1irc_1_1Buffer.html#aaea30b29408c5f0b470cff16f75b2f1c',1,'network::irc::Buffer']]],
   ['format',['Format',['../classstring_1_1Format.html',1,'string']]],
-  ['format',['Format',['../classstring_1_1Format.html#a723c29d014f174a9d3893fc9a221e2ff',1,'string::Format::Format()'],['../classhandler_1_1CtcpTime.html#a258ac337bd0a937767578f4c491d7834',1,'handler::CtcpTime::format()']]],
+  ['format',['format',['../classhandler_1_1CtcpTime.html#a258ac337bd0a937767578f4c491d7834',1,'handler::CtcpTime::format()'],['../classstring_1_1Format.html#a723c29d014f174a9d3893fc9a221e2ff',1,'string::Format::Format()']]],
   ['format_5fextension',['format_extension',['../classSettings.html#ad778b233a8942b545434f1417e6ecb79',1,'Settings']]],
   ['format_5fflags',['format_flags',['../classstring_1_1Formatter.html#af8d0c5edb14bc7bc82043ca3de8a7bf9',1,'string::Formatter::format_flags()'],['../classstring_1_1FormatterUtf8.html#a1fe7d728ed91ec6416d7179eb51a7b43',1,'string::FormatterUtf8::format_flags()'],['../classstring_1_1FormatterAnsi.html#a7e0613c0c7b1250e763c638126c0d0af',1,'string::FormatterAnsi::format_flags()'],['../classstring_1_1FormatterIrc.html#a3a39cd0bc5d7b5429be8ad876215e8bb',1,'string::FormatterIrc::format_flags()'],['../classstring_1_1FormatterDarkplaces.html#addd367777559d1e6a9fb221f609a7cde',1,'string::FormatterDarkplaces::format_flags()']]],
   ['formatflags',['FormatFlags',['../classstring_1_1FormatFlags.html',1,'string']]],

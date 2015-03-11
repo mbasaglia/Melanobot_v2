@@ -6,6 +6,7 @@ var searchData=
   ['callback_5fend',['callback_end',['../classstring_1_1Utf8Parser.html#a2fbf5864dd0b22a11477cc587c4b5325',1,'string::Utf8Parser']]],
   ['callback_5finvalid',['callback_invalid',['../classstring_1_1Utf8Parser.html#a637c16539fe5932ea0aace8e15ec7d57',1,'string::Utf8Parser']]],
   ['callback_5futf8',['callback_utf8',['../classstring_1_1Utf8Parser.html#aca26e5dd8980285e976a342042af068a',1,'string::Utf8Parser']]],
+  ['case_5fsensitive',['case_sensitive',['../classhandler_1_1Reply.html#a6a44a674f7a9e07d147c3232786ded75',1,'handler::Reply']]],
   ['category_5fdunno',['category_dunno',['../classhandler_1_1AnswerQuestions.html#a5c6e83a0c3e528ba67e9f1bb93eac5c5',1,'handler::AnswerQuestions']]],
   ['category_5fwhen',['category_when',['../classhandler_1_1AnswerQuestions.html#a84531c0ad092ef8acf05287aa726ffc5',1,'handler::AnswerQuestions']]],
   ['category_5fwhen_5fdid',['category_when_did',['../classhandler_1_1AnswerQuestions.html#adbff210e99a5d689da5374ac402d2fd5',1,'handler::AnswerQuestions']]],
@@ -29,5 +30,6 @@ var searchData=
   ['current_5fnick',['current_nick',['../classnetwork_1_1irc_1_1IrcConnection.html#a2d3aa6779adeefc0ad10e0931b4e9ba5',1,'network::irc::IrcConnection']]],
   ['current_5fnick_5flowecase',['current_nick_lowecase',['../classnetwork_1_1irc_1_1IrcConnection.html#a7e769b5e2b93567ae9fd4fc2c34315ea',1,'network::irc::IrcConnection']]],
   ['current_5fserver',['current_server',['../classnetwork_1_1irc_1_1IrcConnection.html#a49d7a7513cc00402000473c9da566704',1,'network::irc::IrcConnection']]],
+  ['customizable',['customizable',['../classhandler_1_1Cointoss.html#a77cb2cdbcaa737e9d7efbb7501938a68',1,'handler::Cointoss']]],
   ['cyan',['cyan',['../namespacecolor.html#a41bcae5e90716a2ad6ca78d484edade6',1,'color']]]
 ];

@@ -3,6 +3,7 @@ var searchData=
   ['character',['Character',['../classstring_1_1Character.html',1,'string']]],
   ['chucknorris',['ChuckNorris',['../classhandler_1_1ChuckNorris.html',1,'handler']]],
   ['clearformatting',['ClearFormatting',['../classstring_1_1ClearFormatting.html',1,'string']]],
+  ['cointoss',['Cointoss',['../classhandler_1_1Cointoss.html',1,'handler']]],
   ['color',['Color',['../classstring_1_1Color.html',1,'string']]],
   ['color12',['Color12',['../classcolor_1_1Color12.html',1,'color']]],
   ['command',['Command',['../structnetwork_1_1Command.html',1,'network']]],

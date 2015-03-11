@@ -7,6 +7,6 @@ var searchData=
   ['timein',['timein',['../structnetwork_1_1Command.html#a487ae245cbdb90ec63acea7e06afe635',1,'network::Command']]],
   ['timeout',['timeout',['../structnetwork_1_1Command.html#abadd68cf21d1943cea9e55e732d65ddb',1,'network::Command::timeout()'],['../structnetwork_1_1OutputMessage.html#af7e3e7259d0c05afc095980e7a5e36da',1,'network::OutputMessage::timeout()']]],
   ['timestamp',['timestamp',['../classLogger.html#a17d51aec7003331eb0e9d660681b89df',1,'Logger']]],
-  ['trigger',['trigger',['../classhandler_1_1SimpleAction.html#a587e220e85a8cff8c4105b8465be7131',1,'handler::SimpleAction']]],
+  ['trigger',['trigger',['../classhandler_1_1SimpleAction.html#a587e220e85a8cff8c4105b8465be7131',1,'handler::SimpleAction::trigger()'],['../classhandler_1_1Reply.html#af473e700b981aae49c9ba823f6623313',1,'handler::Reply::trigger()']]],
   ['type',['type',['../classLog.html#aca7df4a36a16cc24a10d2a1f71978e0b',1,'Log']]]
 ];
