@@ -365,6 +365,13 @@ protected:
             reply_to(msg,reply);
             return true;
         }
+        else if ( !case_sensitive &&
+            string::strtolower(msg.message) == string::strtolower(trigger) )
+        {
+            reply_to(msg,reply);
+            return true;
+        }
+        
         return false;
     }
 
