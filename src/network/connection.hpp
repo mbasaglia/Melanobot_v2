@@ -247,6 +247,11 @@ public:
     virtual void disconnect(const std::string& message = {}) = 0;
 
     /**
+     * \brief Disconnect and connect again
+     */
+    virtual void reconnect(const std::string& quit_message = {}) = 0;
+
+    /**
      * \brief Disconnect and stop all processing
      */
     virtual void stop() = 0;

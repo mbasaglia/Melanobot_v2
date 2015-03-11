@@ -42,7 +42,7 @@ class Buffer
 {
 public:
     explicit Buffer(IrcConnection& irc, const Settings& settings = {});
-    ~Buffer() { stop(); }
+    ~Buffer();
 
     /**
      * \brief Inserts a command to the buffer

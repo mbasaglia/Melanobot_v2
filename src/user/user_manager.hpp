@@ -76,6 +76,11 @@ public:
     std::list<User> channel_users(const std::string& channel) const;
 
     /**
+     * \brief Get all users on the given channel
+     */
+    std::list<User*> channel_user_pointers(const std::string& channel);
+
+    /**
      * \brief Remove a user by local_id
      * \return \b true on success
      */
@@ -93,6 +98,11 @@ public:
      * If there's no user matching \c local_id, \c user is inserted
      */
     void update_user(const std::string& local_id, const User& user);
+
+    /**
+     * \brief Removes all users
+     */
+    void clear() { users_.clear(); }
 
 private:
     std::list<User> users_;

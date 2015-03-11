@@ -121,7 +121,7 @@ public:
      * \brief disconnect and connect
      * \thread external \lock buffer(indirect) data(indirect)
      */
-    void reconnect();
+    void reconnect(const std::string& quit_message = {}) override;
 
     /**
      * \return The bot's current nick

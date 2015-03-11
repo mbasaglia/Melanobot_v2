@@ -103,6 +103,51 @@ void IrcConnection::read_settings(const Settings& settings)
         }
 }
 
+void IrcConnection::connect()
+{
+    if ( !buffer.connected() )
+    {
+        connection_status = WAITING;
+        if ( !buffer.connect(main_server) )
+            return;
+        mutex.lock();
+        current_server = main_server;
+        mutex.unlock();
+        connection_status = CONNECTING;
+        login();
+    }
+}
+
+void IrcConnection::disconnect(const std::string& message)
+{
+    if ( connection_status > CONNECTING )
+        buffer.write({"QUIT",{message},1024});
+    if ( connection_status != DISCONNECTED )
+        buffer.disconnect();
+    LOCK(mutex);
+    connection_status = DISCONNECTED;
+    current_nick = "";
+    current_server = main_server;
+    server_features.clear();
+    user_manager.clear();
+}
+
+void IrcConnection::reconnect(const std::string& quit_message)
+{
+    mutex.lock();
+        user::User* user = user_manager.user(current_nick);
+        if ( user )
+        {
+            for (const auto& chan: user->channels)
+                scheduled_commands.push_back({"JOIN",{chan}});
+        }
+    mutex.unlock();
+
+    disconnect(quit_message);
+    buffer.stop();
+    connect();
+    buffer.start();
+}
 
 void IrcConnection::start()
 {
@@ -333,7 +378,26 @@ void IrcConnection::handle_message(Message msg)
         {
             user::User user = parse_prefix(msg.from);
             user.channels = string::comma_split(msg.params[0]);
-            mutex.lock();
+            LOCK(mutex);
+            if ( strtolower(user.local_id) == current_nick_lowecase )
+            {
+                // Can it ever receive more than one channel?
+                std::string channel = msg.params[0];
+                std::list<user::User*> chan_users
+                    = std::move(user_manager.channel_user_pointers(channel));
+                // NOTE: chan_users must contain unique values!
+                for ( user::User* chuser : chan_users )
+                {
+                    chuser->remove_channel(channel);
+                    if ( chuser->channels.empty() )
+                    {
+                        Log("irc",'!',2) << "Removed user " << color::dark_red << chuser->name;
+                        user_manager.remove_user(chuser->local_id);
+                    }
+                }
+            }
+            else
+            {
                 user::User *found = user_manager.user(user.local_id);
                 if ( found )
                 {
@@ -350,14 +414,20 @@ void IrcConnection::handle_message(Message msg)
                         Log("irc",'!',2) << "Removed user " << color::dark_red << user.name;
                     }
                 }
-            mutex.unlock();
+            }
             msg.channels = user.channels;
         }
     }
     else if ( msg.command == "QUIT" )
     {
         user::User user = parse_prefix(msg.from);
-        mutex.lock();
+        LOCK(mutex);
+        if ( strtolower(user.local_id) == current_nick_lowecase )
+        {
+            user_manager.clear();
+        }
+        else
+        {
             user::User *found = user_manager.user(user.local_id);
             if ( found )
             {
@@ -374,7 +444,7 @@ void IrcConnection::handle_message(Message msg)
                     mutex.lock();
                 }
             }
-        mutex.unlock();
+        }
     }
     else if ( msg.command == "NICK" )
     {
@@ -583,7 +653,7 @@ void IrcConnection::command ( const Command& c )
     if ( connection_status <= CONNECTING && cmd.command != "PASS" &&
         cmd.command != "NICK" && cmd.command != "USER" &&
         cmd.command != "PONG" && cmd.command != "AUTH" &&
-        cmd.command != "MODE" && cmd.command != "RECONNECT" )
+        cmd.command != "MODE" )
     {
         scheduled_commands.push_back(cmd);
         return;
@@ -747,12 +817,6 @@ void IrcConnection::command ( const Command& c )
                 return;
         }
     }
-    else if ( cmd.command == "RECONNECT" )
-    {
-        // Custom command
-        reconnect();
-        return;
-    }
     /* Skipped: * = maybe later o = maybe disallow completely
      * OPER     o
      * SERVICE  o
@@ -826,29 +890,6 @@ std::string IrcConnection::protocol() const
     return "irc";
 }
 
-void IrcConnection::connect()
-{
-    if ( !buffer.connected() )
-    {
-        connection_status = WAITING;
-        if ( !buffer.connect(main_server) )
-            return;
-        mutex.lock();
-        current_server = main_server;
-        mutex.unlock();
-        connection_status = CONNECTING;
-        login();
-    }
-}
-
-void IrcConnection::disconnect(const std::string& message)
-{
-    if ( connection_status > CONNECTING )
-        buffer.write({"QUIT",{message},1024});
-    if ( connection_status != DISCONNECTED )
-        buffer.disconnect();
-    connection_status = DISCONNECTED;
-}
 
 string::Formatter* IrcConnection::formatter() const
 {
@@ -881,12 +922,6 @@ bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
             return true;
     }
     return false;
-}
-
-void IrcConnection::reconnect()
-{
-    disconnect();
-    connect();
 }
 
 void IrcConnection::login()

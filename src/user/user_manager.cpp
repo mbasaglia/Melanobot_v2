@@ -85,6 +85,23 @@ std::list<User> UserManager::channel_users(const std::string& channel) const
     return std::move(ret);
 }
 
+std::list<User*> UserManager::channel_user_pointers(const std::string& channel)
+{
+    std::list<User*> ret;
+    for ( User& user : users_ )
+    {
+        for ( const std::string& chan : user.channels )
+        {
+            if ( chan == channel )
+            {
+                ret.push_back(&user);
+                break;
+            }
+        }
+    }
+    return std::move(ret);
+}
+
 bool UserManager::remove_user(const std::string& local_id)
 {
     for ( auto iter = users_.begin(); iter != users_.end(); ++iter )

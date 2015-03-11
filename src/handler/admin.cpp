@@ -298,4 +298,36 @@ private:
 };
 REGISTER_HANDLER(FilterGroup,FilterGroup);
 
+/**
+ * \brief Makes the bot reconnect
+ */
+class AdminReconnect: public SimpleAction
+{
+public:
+    AdminReconnect(const Settings& settings, Melanobot* bot)
+        : SimpleAction("reconnect",settings,bot)
+    {
+        message = settings.get("message",message);
+        synopsis += " [message]";
+        help = "Reconnects bot";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string quit_msg;
+        if ( !msg.message.empty() )
+            quit_msg = msg.message;
+        else
+            quit_msg = message;
+
+        msg.source->reconnect(quit_msg);
+        return true;
+    }
+
+private:
+    std::string message = "Reconnecting...";
+};
+REGISTER_HANDLER(AdminReconnect,Reconnect);
+
 } // namespace handler

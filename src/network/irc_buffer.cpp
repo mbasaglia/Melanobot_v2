@@ -33,6 +33,10 @@ Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     flood_bytes_penalty = settings.get("bytes_penalty",120);
     flood_max_length = settings.get("max_length",510);
 }
+Buffer::~Buffer()
+{
+    stop();
+}
 
 void Buffer::run_output()
 {
@@ -56,6 +60,9 @@ void Buffer::run_input()
 
 void Buffer::start()
 {
+    buffer.start();
+    if ( io_service.stopped() )
+        io_service.reset();
     if ( !thread_output.joinable() )
         thread_output = std::move(std::thread([this]{run_output();}));
     if ( !thread_input.joinable() )
@@ -144,6 +151,7 @@ bool Buffer::connect(const Server& server)
     if ( connected() )
         disconnect();
     try {
+        buffer.start();
         boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
         boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
         boost::asio::connect(socket, endpoint_iterator);
