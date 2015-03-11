@@ -33,11 +33,23 @@
 
 /**
  * \brief Namespace for classes that handle connection messages
+ *
+ * \see Handler and SimpleAction for base classes.
  */
 namespace handler {
 
 /**
  * \brief Message handler abstract base class
+ *
+ * To create concrete handlers, inherit this class and specialize the virtual
+ * methods (see their own documentation).
+ *
+ * For simple cases, inherit \c SimpleAction and specialize on_handle().
+ *
+ * To make a handler visible to \c HandlerFactory, use REGISTER_HANDLER(class_name,public_name) .
+ *
+ * The constructor of a handler class must have the same signature as the
+ * one used here to work properly.
  */
 class Handler : public handler::HandlerContainer
 {
@@ -128,7 +140,7 @@ public:
 
 protected:
     /**
-     * \brief Attempt to handle the message
+     * \brief Required for concrete handlers, performs the handler actions
      * \return \b true if the message has been handled and needs no further processing
      */
     virtual bool on_handle(network::Message& msg) = 0;
@@ -169,6 +181,32 @@ protected:
 
 /**
  * \brief A simple action sends a message to the same connection it came from
+ *
+ * Follows the most basic example to define a SimpleAction handler:
+ * \code{.cpp}
+class MyAction : public SimpleAction
+{
+public:
+    MyAction(const Settings& settings, Melanobot* bot)
+        : SimpleAction("default_handler",settings,bot)
+    {
+        some_setting = settings.get("some_setting",some_setting);
+        synopsis += "
+        help = "Help message for MyAction";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        reply_to(msg,"I got: \""+msg.message+"\" from "+msg.from);
+        return true;
+    }
+
+private:
+    std::string some_setting = "Default value";
+};
+REGISTER_HANDLER(MyAction,MyAction);
+ * \endcode
  */
 class SimpleAction : public Handler
 {
@@ -183,12 +221,20 @@ public:
     SimpleAction(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
         : SimpleAction ( default_trigger, settings, bot, false ) {}
 
+    /**
+     * Checks authorization, \c direct, \c trigger and available reply channels.
+     */
     bool can_handle(const network::Message& msg) override
     {
         return authorized(msg) && ( msg.direct || !direct ) &&
             msg.channels.size() < 2 && string::starts_with(msg.message,trigger);
     }
 
+    /**
+     * Checks with can_handle(),
+     * then creates a new message which will have the trigger stripped off
+     * and calls on_handle() with that.
+     */
     virtual bool handle(network::Message& msg)
     {
         if ( can_handle(msg) )
@@ -202,6 +248,14 @@ public:
         return false;
     }
 
+    /**
+     * Extra properties:
+     *  * trigger
+     *  * name (same as trigger)
+     *  * direct
+     *  * help
+     *  * synopsis
+     */
     std::string get_property(const std::string& name) const override
     {
         if ( name == "trigger" || name == "name" )
@@ -262,7 +316,7 @@ private:
 };
 
 /**
- * \brief A simple group of actions which share some settings
+ * \brief A simple group of actions which share settings
  * \todo Add a simple way to create pre-defined group classes which will have
  *       a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration)
  */
@@ -346,7 +400,11 @@ protected:
     bool on_handle(network::Message& msg) override;
 };
 
-
+/**
+ * \brief Registers a Handler to the HandlerFactory
+ * \param class_name  Class to be registered
+ * \param public_name Name to be used in the configuration, as a C++ symbol
+ */
 #define REGISTER_HANDLER(class_name,public_name) \
     static HandlerFactory::RegisterHandler<class_name> \
         RegisterHandler_##public_name(#public_name, \

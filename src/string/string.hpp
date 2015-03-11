@@ -452,6 +452,9 @@ private:
 
 /**
  * \brief A formatted string
+ * \todo Might be worth mergin this class with \c FormattedStream
+ *       to simplify its us.
+ *       (Right now \c FormattedString is pretty unusable directly)
  */
 class FormattedString
 {
@@ -732,6 +735,15 @@ public:
      */
     static color::Color12 color_from_string(const std::string& color);
 };
+
+
+/**
+ * \brief Registers a formatter
+ * \param classname Formatter class
+ * \param name      Unique identifier (used only as registration token)
+ */
+#define REGISTER_FORMATTER(classname,name) \
+    static Formatter::RegisterFormatter RegisterFormatter_##name = new classname
 
 } // namespace string
 #endif // STRING_HPP

@@ -59,7 +59,13 @@ struct Response
 typedef std::function<void(const Response&)> AsyncCallback;
 
 /**
- * \brief Base class for external services that might take some time to execute
+ * \brief Base class for external services that might take some time to execute.
+ *
+ * To specialize, inherit this class and register to ServiceRegistry
+ * using REGISTER_SERVICE(). The derived classes should act as singletons.
+ *
+ * You should also have a corresponding log type to use for the service,
+ * registered with REGISTER_LOG_TYPE().
  */
 class AsyncService
 {
@@ -93,7 +99,7 @@ public:
     virtual Response query (const Request& request) = 0;
 
     /**
-     * \brief Whether the service should always be loaded
+     * \brief Whether the service should be loaded without explicit configuration
      */
     virtual bool auto_load() const = 0;
 
@@ -124,7 +130,12 @@ protected:
 };
 
 /**
- * \brief An AsyncService implemented with a separate thread
+ * \brief An AsyncService implemented with a separate thread.
+ *
+ * Handles asynchronous calls as a queue of synchronous calls performed
+ * sequentially in a separate thread.
+ *
+ * Derived classes only need to override query() and auto_load().
  */
 class ThreadedAsyncService : public AsyncService
 {
@@ -281,13 +292,15 @@ private:
 /**
  * \brief Register a service to ServiceRegistry
  * \pre \c classname is a singleton with a static method called \c instance()
+ * \param classname     Name of the service class
+ * \param servicename   Service identifier as a C++ token
  */
 #define REGISTER_SERVICE(classname,servicename) \
     static network::ServiceRegistry::RegisterService \
         RegisterService_##servicename(#servicename,&classname::instance())
 
 /**
- * \brief Get service by name (less verbode than through ServiceRegistry)
+ * \brief Get service by name (less verbose than through ServiceRegistry)
  */
 inline AsyncService* service(const std::string& name)
 {

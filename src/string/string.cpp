@@ -174,9 +174,6 @@ void Formatter::FormatterFactory::add_formatter(Formatter* instance)
         default_formatter = instance;
 }
 
-#define REGISTER_FORMATTER(classname,name) \
-    static Formatter::RegisterFormatter RegisterFormatter_##name = new classname
-
 static Formatter::RegisterDefaultFormatter register_default(new FormatterUtf8);
 
 std::string FormatterUtf8::ascii(char c) const

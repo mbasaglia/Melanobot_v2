@@ -36,7 +36,7 @@ class IrcConnection;
 /**
  * \brief IRC buffer
  *
- * Contains the network connection and performs flood checking
+ * Contains the network connection and performs flood checking.
  */
 class Buffer
 {

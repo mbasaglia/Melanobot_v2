@@ -27,6 +27,7 @@
 
 
 typedef boost::property_tree::ptree PropertyTree;
+
 /**
  * \brief Class containing hierarchical settings
  */

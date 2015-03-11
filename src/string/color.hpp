@@ -69,6 +69,9 @@ public:
         }
     }
 
+    /**
+     * \brief Whether the color is an actual color or invalid
+     */
     bool is_valid() const { return valid; }
 
     /**

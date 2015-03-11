@@ -34,6 +34,9 @@
 
 /**
  * \brief Registers a log type
+ * \note Use in implementation files, not headers
+ * \param name  Log type name as a C++ token
+ * \param color Color used to identify the log type (color::Color12 object)
  */
 #define REGISTER_LOG_TYPE(name,color) static Logger::RegisterLogType RegisterLogType_##name(#name,color)
 

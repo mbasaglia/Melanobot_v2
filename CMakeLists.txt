@@ -24,7 +24,7 @@ set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
 
 set(ALL_SOURCES "")
 
-add_subdirectory(src ${CMAKE_BINARY_DIR}/bin)
+add_subdirectory(src bin)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

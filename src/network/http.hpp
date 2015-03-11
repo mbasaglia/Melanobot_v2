@@ -57,7 +57,7 @@ Request get(const std::string& url, const Parameters& params = Parameters());
 Request post(const std::string& url, const Parameters& params = Parameters());
 
 /**
- * \brief HTTP client
+ * \brief HTTP Service
  */
 class HttpService : public ThreadedAsyncService
 {

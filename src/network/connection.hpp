@@ -177,6 +177,24 @@ struct OutputMessage
 
 /**
  * \brief Abstract service connection
+ *
+ * Instances of this class will be created by \c Melanobot from the
+ * configuration and will send \c Message objects and receive either
+ * \c Command or \c OutputMessage objects.
+ *
+ * To create your own class, inherith this one and override the pure virtual
+ * methods. Then use REGISTER_CONNECTION() to register the class to the
+ * \c ConnectionFactory.
+ *
+ * It is recommended that you add a static method called \c create in the
+ * derived class with the following signature:
+ * \code{.cpp}
+ *      YourClass* create(Melanobot* bot, const Settings& settings);
+ * \endcode
+ * to be used with REGISTER_CONNECTION.
+ *
+ * You should also have a corresponding log type to use for the connection,
+ * registered with REGISTER_LOG_TYPE().
  */
 class Connection
 {
@@ -313,6 +331,12 @@ public:
     virtual bool set_property(const std::string& property, const std::string value ) = 0;
 };
 
+/**
+ * \brief Registers a Connection class to ConnectionFactory
+ * \note Use in implementation files, not headers
+ * \param name          Connection protocol name as a C++ token
+ * \param function      Function used to create an object for the connection
+ */
 #define REGISTER_CONNECTION(name,function) \
     static network::ConnectionFactory::RegisterConnection RegisterConnection_##name(#name,function)
 /**
@@ -322,8 +346,10 @@ class ConnectionFactory
 {
 public:
     typedef std::function<Connection*(Melanobot* bot, const Settings&)> Contructor;
+
     /**
-     * \brief Auto-registration helper
+     * \brief Dummy class used for automatic registration
+     * \see REGISTER_CONNECTION()
      */
     class RegisterConnection
     {
