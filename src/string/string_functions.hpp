@@ -26,6 +26,8 @@
 #include <string>
 #include <type_traits>
 
+#include "settings.hpp"
+
 namespace string {
 
 /**
@@ -134,7 +136,12 @@ inline std::string regex_escape( const std::string& input )
 /**
  * \brief Replace all occurrences of \c from in \c text to \c to
  */
-std::string str_replace(const std::string& input, const std::string& from, const std::string& to);
+std::string replace(const std::string& input, const std::string& from, const std::string& to);
+
+/**
+ * \brief Replaces the keys of \c map to the respective values in \c subject
+ */
+std::string replace(const std::string& subject, const Properties& map, char prefix);
 
 /**
  * \brief Checks if \c text matches the wildcard \c pattern

@@ -310,4 +310,71 @@ private:
 };
 REGISTER_HANDLER(Cointoss,Cointoss);
 
+
+/**
+ * \brief Fixed reply
+ */
+class Reply : public Handler
+{
+public:
+    Reply(const Settings& settings, Melanobot* bot)
+        : Handler(settings,bot)
+    {
+        trigger         = settings.get("trigger","");
+        reply           = settings.get("reply","");
+        regex           = settings.get("regex",0);
+        case_sensitive  = settings.get("case_sensitive",1);
+        direct          = settings.get("direct",1);
+
+        if ( trigger.empty() || reply.empty() )
+            throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) override
+    {
+        return Handler::can_handle(msg) && !msg.message.empty() &&
+            (!direct || msg.direct);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        if ( regex )
+        {
+            std::smatch match;
+            auto flags = std::regex::ECMAScript;
+            if ( !case_sensitive )
+                flags |= std::regex::icase;
+            if ( std::regex_match(msg.message,match,std::regex(trigger,flags)) )
+            {
+                std::string myreply = reply;
+                if ( !match.empty() )
+                {
+                    Properties map;
+                    map["sender"] = msg.from;
+                    for ( unsigned i = 0; i < match.size(); i++ )
+                        map[std::to_string(i)] = match[i];
+                    myreply = string::replace(myreply,map,'\\');
+                }
+                reply_to(msg,myreply);
+                return true;
+            }
+        }
+        else if ( msg.message == trigger )
+        {
+            reply_to(msg,reply);
+            return true;
+        }
+        return false;
+    }
+
+private:
+    std::string trigger;
+    std::string reply;
+    bool        regex = false;
+    bool        case_sensitive = true;
+    bool        direct = true;
+};
+REGISTER_HANDLER(Reply,Reply);
+
 } // namespace handler

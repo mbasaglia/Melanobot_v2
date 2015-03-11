@@ -56,7 +56,7 @@ std::string add_slashes ( const std::string& input, const std::string& character
     return std::move(out);
 }
 
-std::string str_replace(const std::string& input, const std::string& from, const std::string& to)
+std::string replace(const std::string& input, const std::string& from, const std::string& to)
 {
     std::string out;
     out.reserve(input.size());
@@ -79,7 +79,7 @@ std::string str_replace(const std::string& input, const std::string& from, const
 bool simple_wildcard(const std::string& text, const std::string& pattern)
 {
     std::regex regex_pattern (
-        "^"+str_replace(add_slashes(pattern,"^$\\.+?()[]{}|"),"*",".*")+"$" );
+        "^"+replace(add_slashes(pattern,"^$\\.+?()[]{}|"),"*",".*")+"$" );
     return std::regex_match(text,regex_pattern);
 }
 
@@ -163,6 +163,38 @@ try {
     return std::stoul(string,0,base);
 } catch(const std::exception&) {
     return default_value;
+}
+
+
+std::string replace(const std::string& subject, const Properties& map, char prefix)
+{
+    /// \todo could use a better algorithm, maybe build a trie from \c map
+    std::string output;
+
+    std::string::size_type start = 0;
+    std::string::size_type pos = 0;
+    for ( ; pos < subject.size(); pos++ )
+    {
+        if ( subject[pos] == prefix )
+        {
+            output += subject.substr(start,pos-start);
+            start = pos;
+            for ( pos++; pos < subject.size() && subject[pos] != prefix; pos++ )
+            {
+                auto it = map.find(subject.substr(start+1,pos-start));
+                if ( it != map.end() )
+                {
+                    output += it->second;
+                    start = pos+1;
+                    break;
+                }
+            }
+        }
+    }
+    if ( start < pos )
+        output += subject.substr(start,pos-start);
+
+    return std::move(output);
 }
 
 } // namespace string
