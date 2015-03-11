@@ -351,7 +351,7 @@ protected:
                 if ( !match.empty() )
                 {
                     Properties map;
-                    map["sender"] = msg.from;
+                    map["sender"] = msg.source->get_user(msg.from).name;
                     for ( unsigned i = 0; i < match.size(); i++ )
                         map[std::to_string(i)] = match[i];
                     myreply = string::replace(myreply,map,'\\');
@@ -371,7 +371,7 @@ protected:
             reply_to(msg,reply);
             return true;
         }
-        
+
         return false;
     }
 
