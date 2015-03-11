@@ -15,6 +15,10 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * \todo Try to check if boost/algorithm/string stuff can be used in here
+ *       http://www.boost.org/doc/libs/1_55_0/doc/html/string_algo.html
+ *       (Some of those are identical to functions defined here)
  */
 
 #include "string.hpp"
