@@ -20,6 +20,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "handler.hpp"
+#include "math.hpp"
 
 namespace handler {
 
@@ -257,5 +258,56 @@ protected:
     }
 };
 REGISTER_HANDLER(ServerHost,ServerHost);
+
+/**
+ * \brief Shows one of the given items, at random
+ */
+class Cointoss : public SimpleAction
+{
+public:
+    Cointoss(const Settings& settings, Melanobot* bot)
+        : SimpleAction("cointoss",settings,bot)
+    {
+        auto items = settings.get_optional<std::string>("items");
+        if ( items )
+            default_items = string::regex_split(*items,",\\s*");
+        customizable = settings.get("customizable",customizable);
+
+        help = "Get a random element out of ";
+        if ( customizable )
+        {
+            synopsis += " [item...]";
+            help += "the given items";
+        }
+        else
+        {
+            help += *items;
+        }
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::vector<std::string> item_vector;
+        if ( customizable )
+        {
+            item_vector = string::comma_split(msg.message);
+            if ( item_vector.size() < 2 )
+                item_vector = default_items;
+        }
+        else
+            item_vector = default_items;
+
+        if ( !item_vector.empty() )
+            reply_to(msg,item_vector[math::random(item_vector.size()-1)]);
+
+        return true;
+    }
+
+private:
+    std::vector<std::string> default_items = { "Heads", "Tails" };
+    bool                     customizable = true;
+};
+REGISTER_HANDLER(Cointoss,Cointoss);
 
 } // namespace handler
