@@ -140,10 +140,10 @@ void Buffer::write_line ( std::string line )
         ErrorLog("irc","Network Error") << error.message();
     }
 
+    flood_timer = std::max(flood_timer,Clock::now());
     flood_timer += flood_message_penalty;
     if ( flood_bytes_penalty > 0 )
         flood_timer += std::chrono::seconds(line.size()/flood_bytes_penalty);
-
 }
 
 bool Buffer::connect(const Server& server)
