@@ -88,6 +88,8 @@ void Melanobot::run()
             ErrorLog("sys") << "Received a message without source";
             continue;
         }
+        if ( !msg.destination )
+            msg.source = msg.destination;
 
         for ( auto handler : handlers )
             if ( handler->handle(msg) )

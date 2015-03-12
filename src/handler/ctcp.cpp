@@ -42,7 +42,7 @@ public:
     bool can_handle(const network::Message& msg) override
     {
         return authorized(msg) && !msg.params.empty() &&
-            msg.source->protocol() == "irc" &&
+            msg.source->protocol() == "irc" && msg.source == msg.destination &&
             msg.channels.size() == 1 && msg.from == msg.channels[0] &&
             network::irc::strtoupper(msg.command) == "CTCP" &&
             network::irc::strtoupper(msg.params[0]) == ctcp;
@@ -66,8 +66,8 @@ protected:
     {
         string::FormattedStream s;
         s << '\1' << ctcp << ' ' << text << '\1';
-        msg.source->command({"NOTICE",
-            {msg.from,s.str().encode(msg.source->formatter())}, priority});
+        msg.destination->command({"NOTICE",
+            {msg.from,s.str().encode(msg.destination->formatter())}, priority});
     }
     using Handler::reply_to;
 

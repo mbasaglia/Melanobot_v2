@@ -229,7 +229,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
         }
     }
 
-    msg.source = &irc;
+    msg.source = msg.destination = &irc;
     irc.handle_message(std::move(msg));
 
     schedule_read();

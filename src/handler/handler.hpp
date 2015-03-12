@@ -66,7 +66,7 @@ public:
 
     /**
      * \brief Attempt to handle the message
-     * \pre msg.source not null
+     * \pre msg.source and msg.destination not null
      * \return \b true if the message has been handled and needs no further processing
      * \note Unless you really need to, override on_handle()
      */
@@ -157,7 +157,7 @@ protected:
             text,
             priority
         );
-        msg.source->say(out);
+        msg.destination->say(out);
     }
 
     void reply_to(const network::Message& msg, const std::string& text) const
@@ -287,7 +287,7 @@ protected:
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
         network::OutputMessage out(channel,text,priority);
-        msg.source->say(out);
+        msg.destination->say(out);
     }
 
 private:

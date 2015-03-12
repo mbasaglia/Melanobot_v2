@@ -20,7 +20,6 @@
  */
 
 #include "handler.hpp"
-#include "network/irc_connection.hpp"
 
 namespace handler {
 
@@ -35,7 +34,8 @@ public:
 
     bool can_handle(const network::Message& msg) override
     {
-        return msg.command == "330" && msg.params.size() > 2;
+        return msg.command == "330" && msg.params.size() > 2 &&
+            msg.source == msg.destination;
     }
 
 protected:
@@ -71,18 +71,15 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        network::irc::IrcConnection * source
-            = reinterpret_cast<network::irc::IrcConnection*>(msg.source);
-
-        if ( source->name() == msg.from )
+        if ( msg.source->name() == msg.from )
         {
-            source->command({"PRIVMSG",{q_bot,"users "+msg.channels[0]},priority});
+            msg.destination->command({"PRIVMSG",{q_bot,"users "+msg.channels[0]},priority});
         }
         else
         {
-            user::User user = source->get_user(msg.from);
+            user::User user = msg.source->get_user(msg.from);
             if ( user.global_id.empty() )
-                source->command({"PRIVMSG",{q_bot,"whois "+msg.from},priority});
+                msg.destination->command({"PRIVMSG",{q_bot,"whois "+msg.from},priority});
         }
 
         return false; // reacts to the message but allows to do futher processing
@@ -176,7 +173,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.source->command({"WHOIS",{msg.from},priority});
+        msg.destination->command({"WHOIS",{msg.from},priority});
         return true;
     }
 

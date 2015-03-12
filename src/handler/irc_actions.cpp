@@ -131,7 +131,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.source->command({"JOIN",msg.channels,priority});
+        msg.destination->command({"JOIN",msg.channels,priority});
         if ( !message.empty() )
             reply_to(msg,string::replace(message,{
                 {"channel", msg.channels[0]},

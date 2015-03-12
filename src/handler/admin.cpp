@@ -46,7 +46,7 @@ protected:
         else
             quit_msg = message;
 
-        msg.source->disconnect(quit_msg);
+        msg.destination->disconnect(quit_msg);
         bot->stop();
         return true;
     }
@@ -74,7 +74,7 @@ protected:
     {
         if ( !msg.message.empty() )
         {
-            msg.source->command({"NICK",{msg.message}});
+            msg.destination->command({"NICK",{msg.message}});
             return true;
         }
         return false;
@@ -105,7 +105,7 @@ protected:
             channels = msg.channels;
         else
             return false;
-        msg.source->command({"JOIN",channels});
+        msg.destination->command({"JOIN",channels});
         return true;
     }
 };
@@ -134,7 +134,7 @@ protected:
             channel = msg.channels[0];
         else
             return false;
-        msg.source->command({"PART",{channel}});
+        msg.destination->command({"PART",{channel}});
         return true;
     }
 };
@@ -157,7 +157,7 @@ protected:
     {
         if ( msg.command == "INVITE" && msg.params.size() == 2 )
         {
-            msg.source->command({"JOIN",{msg.params[1]}});
+            msg.destination->command({"JOIN",{msg.params[1]}});
             return true;
         }
         return false;
@@ -203,7 +203,7 @@ protected:
                     cmd.parameters.push_back(param);
                 }
             }
-            msg.source->command(cmd);
+            msg.destination->command(cmd);
         }
         return true;
     }
@@ -321,7 +321,7 @@ protected:
         else
             quit_msg = message;
 
-        msg.source->reconnect(quit_msg);
+        msg.destination->reconnect(quit_msg);
         return true;
     }
 
