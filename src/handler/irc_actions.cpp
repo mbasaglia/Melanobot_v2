@@ -65,4 +65,85 @@ private:
 };
 REGISTER_HANDLER(IrcJoinMessage,IrcJoinMessage);
 
+/**
+ * \brief Prints a message when a user is kicked from a channel
+ */
+class IrcKickMessage: public Handler
+{
+public:
+    IrcKickMessage(const Settings& settings, Melanobot* bot)
+        : Handler(settings,bot)
+    {
+        message = settings.get("message",message);
+        on_self = settings.get("on_self",on_self);
+        on_others=settings.get("on_others",on_others);
+        if ( message.empty() || !(on_others || on_self) )
+            throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) override
+    {
+        return Handler::can_handle(msg) && !msg.channels.empty() &&
+            msg.command == "KICK" && msg.params.size() >= 2 &&
+            msg.params[0] != msg.source->name() &&
+            ( ( on_others && msg.from != msg.source->name() ) ||
+              ( on_self && msg.from == msg.source->name() ) );
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        reply_to(msg,string::replace(message,{
+            {"channel",msg.channels[0]},
+            {"kicker", msg.from},
+            {"kicked", msg.params[0]},
+            {"message", msg.params.size() > 1 ? msg.params.back() : "" }
+        },'%'));
+        return true;
+    }
+
+private:
+    std::string message;
+    bool        on_self = false;
+    bool        on_others = true;
+};
+REGISTER_HANDLER(IrcKickMessage,IrcKickMessage);
+
+/**
+ * \brief Joins again once kicked
+ */
+class IrcKickRejoin: public Handler
+{
+public:
+    IrcKickRejoin(const Settings& settings, Melanobot* bot)
+        : Handler(settings,bot)
+    {
+        message = settings.get("message",message);
+    }
+
+    bool can_handle(const network::Message& msg) override
+    {
+        return Handler::can_handle(msg) && !msg.channels.empty() &&
+            msg.command == "KICK" && msg.params.size() >= 2 &&
+            msg.params[0] == msg.source->name();
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        msg.source->command({"JOIN",msg.channels,priority});
+        if ( !message.empty() )
+            reply_to(msg,string::replace(message,{
+                {"channel", msg.channels[0]},
+                {"kicker", msg.from},
+                {"message", msg.params.size() > 1 ? msg.params.back() : "" }
+            },'%'));
+        return true;
+    }
+
+private:
+    std::string message;
+};
+REGISTER_HANDLER(IrcKickRejoin,IrcKickRejoin);
+
 } // namespace handler

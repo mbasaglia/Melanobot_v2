@@ -265,6 +265,14 @@ private:
      */
     void error_stop();
 
+    /**
+     * \brief Removes a user from a channel and
+     *        if it has no more channels from the user manager
+     * \thread external \lock data
+     */
+    void remove_from_channel(const std::string& user_id,
+                             const std::vector<std::string>& channels);
+
     mutable std::mutex mutex;
 
     Melanobot* bot;

@@ -182,6 +182,60 @@ Server IrcConnection::server() const
     return current_server;
 }
 
+
+void IrcConnection::remove_from_channel(const std::string& user_id,
+                                        const std::vector<std::string>& channels)
+{
+    if ( channels.empty() )
+        return;
+
+    LOCK(mutex);
+    if ( strtolower(user_id) == current_nick_lowecase )
+    {
+        // Can it ever receive more than one channel?
+        std::string channel = channels[0];
+        std::list<user::User*> chan_users
+            = std::move(user_manager.channel_user_pointers(channel));
+        // NOTE: chan_users must contain unique values!
+        for ( user::User* user : chan_users )
+        {
+            user->remove_channel(channel);
+            if ( user->channels.empty() )
+            {
+                Log("irc",'!',2) << "Removed user " << color::dark_red << user->name;
+                user_manager.remove_user(user->local_id);
+            }
+            else
+            {
+                Log("irc",'!',3) << "User " << color::dark_cyan << user->name
+                    << color::dark_red << " parted " << color::nocolor
+                    << channel;
+            }
+        }
+    }
+    else
+    {
+        user::User *found = user_manager.user(user_id);
+        if ( found )
+        {
+            for ( const auto& c : channels )
+                found->remove_channel(c);
+
+            if ( found->channels.empty() )
+            {
+                Log("irc",'!',2) << "Removed user " << color::dark_red << found->name;
+                user_manager.remove_user(found->local_id);
+            }
+            else
+            {
+                Log("irc",'!',3) << "User " << color::dark_cyan << found->name
+                    << color::dark_red << " parted " << color::nocolor
+                    << string::implode(", ",channels);
+            }
+        }
+    }
+}
+
 void IrcConnection::handle_message(Message msg)
 {
     if ( msg.command.empty() ) return;
@@ -383,46 +437,11 @@ void IrcConnection::handle_message(Message msg)
     {
         if ( msg.params.size() >= 1 )
         {
-            user::User user = parse_prefix(msg.from);
-            user.channels = string::comma_split(msg.params[0]);
-            LOCK(mutex);
-            if ( strtolower(user.local_id) == current_nick_lowecase )
-            {
-                // Can it ever receive more than one channel?
-                std::string channel = msg.params[0];
-                std::list<user::User*> chan_users
-                    = std::move(user_manager.channel_user_pointers(channel));
-                // NOTE: chan_users must contain unique values!
-                for ( user::User* chuser : chan_users )
-                {
-                    chuser->remove_channel(channel);
-                    if ( chuser->channels.empty() )
-                    {
-                        Log("irc",'!',2) << "Removed user " << color::dark_red << chuser->name;
-                        user_manager.remove_user(chuser->local_id);
-                    }
-                }
-            }
-            else
-            {
-                user::User *found = user_manager.user(user.local_id);
-                if ( found )
-                {
-                    for ( const auto& c : user.channels )
-                        found->remove_channel(c);
+            // needs to be set here because the user might be removed
+            msg.from = parse_prefix(msg.from).local_id;
 
-                    Log("irc",'!',3) << "User " << color::dark_cyan << found->name
-                        << color::dark_red << " parted " << color::nocolor
-                        << string::implode(", ",user.channels);
-
-                    if ( found->channels.empty() )
-                    {
-                        user_manager.remove_user(found->local_id);
-                        Log("irc",'!',2) << "Removed user " << color::dark_red << user.name;
-                    }
-                }
-            }
-            msg.channels = user.channels;
+            msg.channels = string::comma_split(msg.params[0]);
+            remove_from_channel(msg.from,msg.channels);
         }
     }
     else if ( msg.command == "QUIT" )
@@ -478,6 +497,19 @@ void IrcConnection::handle_message(Message msg)
             mutex.unlock();
         }
     }
+    else if ( msg.command == "KICK" )
+    {
+        if ( msg.params.size() >= 2 )
+        {
+            // needs to be set here because the user might be removed
+            msg.from = parse_prefix(msg.from).local_id;
+
+            msg.channels = string::comma_split(msg.params[0]);
+            /// \note Assumes a single victim
+            msg.params.erase(msg.params.begin());
+            remove_from_channel(msg.params[0],msg.channels);
+        }
+    }
     // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
     /* Skipped: * = maybe later X = surely later
      * PASS
@@ -490,7 +522,6 @@ void IrcConnection::handle_message(Message msg)
      * NAMES    X
      * LIST
      * INVITE   X
-     * KICK     X
      * MOTD
      * LUSERS
      * VERSION
