@@ -38,6 +38,43 @@ namespace network {
 namespace irc {
 
 /**
+ * \brief IRC log-in system
+ */
+struct LoginInfo
+{
+    std::string nick;           ///< Nick used to log in
+    std::string password;       ///< Password used to log in
+    std::string service;        ///< Service used to log in
+    std::string command;        ///< Command used to log in
+
+    LoginInfo(){}
+    /**
+     * \brief Read from settings
+     */
+    explicit LoginInfo(const Settings& settings, const std::string& nick="");
+
+    /**
+     * \brief Whether it has all the required information to auth
+     */
+    bool can_auth() const
+    {
+        return !nick.empty() && !password.empty() &&
+               !service.empty() && !command.empty();
+    }
+
+    /**
+     * \brief Builds the auth command
+     *
+     * PRIVMSG \c service :\c command \c nick \c password
+     */
+    Command irc_command(int priority) const
+    {
+        return {"PRIVMSG",{service,command+' '+nick+' '+password},priority};
+    }
+};
+
+
+/**
  * \brief IRC connection
  */
 class IrcConnection : public Connection
@@ -275,15 +312,11 @@ private:
      */
     std::string attempted_nick;
     /**
-     * \brief Nick used to AUTH
+     * \brief System used to log in
      */
-    std::string auth_nick;
+    LoginInfo login_info;
     /**
-     * \brief Password used to AUTH
-     */
-    std::string auth_password;
-    /**
-     * \brief Modes to set after AUTH
+     * \brief Modes to set after logging in
      */
     std::string modes;
     /**

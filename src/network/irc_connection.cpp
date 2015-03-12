@@ -30,6 +30,14 @@ REGISTER_LOG_TYPE(irc,color::dark_magenta);
 namespace network {
 namespace irc {
 
+LoginInfo::LoginInfo(const Settings& settings, const std::string& default_nick)
+{
+    nick        = settings.get("nick",default_nick);
+    password    = settings.get("password","");
+    service     = settings.get("service","");
+    command     = settings.get("command","");
+}
+
 IrcConnection* IrcConnection::create(Melanobot* bot, const Settings& settings)
 {
     if ( settings.get("protocol",std::string()) != "irc" )
@@ -74,8 +82,7 @@ void IrcConnection::read_settings(const Settings& settings)
     preferred_nick   = settings.get("nick","PleaseNameMe");
     modes            = settings.get("modes",std::string());
 
-    auth_nick        = settings.get("auth.nick",preferred_nick);
-    auth_password    = settings.get("auth.password",std::string());
+    login_info = LoginInfo(settings.get_child("login",{}),preferred_nick);
 
     formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
     connection_status = DISCONNECTED;
@@ -192,8 +199,8 @@ void IrcConnection::handle_message(Message msg)
             std::list<Command> missed_commands;
             scheduled_commands.swap(missed_commands);
         mutex.unlock();
-        auth();
         connection_status = CONNECTED;
+        auth();
         for ( const auto& c : missed_commands )
             command(c);
     }
@@ -652,8 +659,7 @@ void IrcConnection::command ( const Command& c )
 
     if ( connection_status <= CONNECTING && cmd.command != "PASS" &&
         cmd.command != "NICK" && cmd.command != "USER" &&
-        cmd.command != "PONG" && cmd.command != "AUTH" &&
-        cmd.command != "MODE" )
+        cmd.command != "PONG" && cmd.command != "MODE" )
     {
         scheduled_commands.push_back(cmd);
         return;
@@ -934,8 +940,8 @@ void IrcConnection::login()
 
 void IrcConnection::auth()
 {
-    if ( !auth_password.empty() )
-        command({"AUTH",{auth_nick, auth_password},1024});
+    if ( login_info.can_auth() )
+        command(login_info.irc_command(1024));
     if ( !modes.empty() )
         command({"MODE",{current_nick, modes},1024});
 
