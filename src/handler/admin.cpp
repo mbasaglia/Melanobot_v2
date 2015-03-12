@@ -330,4 +330,55 @@ private:
 };
 REGISTER_HANDLER(AdminReconnect,Reconnect);
 
+
+/**
+ * \brief Makes the bot reconnect
+ */
+class Chanhax: public Handler
+{
+public:
+    Chanhax(const Settings& settings, Melanobot* bot)
+        : Handler(settings,bot)
+    {
+        trigger = settings.get("trigger",trigger);
+        regex_chanhax = std::regex(
+            "(.+)\\s*"+string::regex_escape(trigger)+"\\s+(\\S+)",
+            std::regex::ECMAScript|std::regex::optimize
+        );
+    }
+
+    bool can_handle(const network::Message& msg)
+    {
+        return Handler::can_handle(msg) && !msg.message.empty();
+    }
+
+    std::string get_property(const std::string& name) const override
+    {
+        if ( name == "name" || name == "trigger" )
+            return trigger;
+        else if ( name == "help" )
+            return "Changes the channel of the message";
+        else if ( name == "synopsis" )
+            return "(message) "+trigger+" channel...";
+        return Handler::get_property(name);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::smatch match;
+        if ( std::regex_match(msg.message,match,regex_chanhax) )
+        {
+            msg.message = match[1];
+            msg.channels = {match[2]};
+        }
+        return false;
+    }
+
+private:
+    std::string trigger = "chanhax";
+    std::regex  regex_chanhax;
+};
+REGISTER_HANDLER(Chanhax,Chanhax);
+
 } // namespace handler
