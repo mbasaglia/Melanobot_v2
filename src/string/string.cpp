@@ -501,8 +501,14 @@ FormattedString FormatterIrc::decode(const std::string& source) const
                     if ( parser.input.peek() == ',' )
                     {
                         parser.input.ignore();
-                        if ( std::isdigit(parser.input.peek()) ) parser.input.ignore();
-                        if ( std::isdigit(parser.input.peek()) ) parser.input.ignore();
+                        if ( std::isdigit(parser.input.peek()) )
+                        {
+                            parser.input.ignore();
+                            if ( std::isdigit(parser.input.peek()) )
+                                parser.input.ignore();
+                        }
+                        else
+                            parser.input.unget();
                     }
                 }
                 str.append(new Color(FormatterIrc::color_from_string(fg)));
