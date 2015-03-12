@@ -128,6 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a661257066f00743fc9d862c636f19b60"><td class="memItemLeft" align="right" valign="top">std::list&lt; <a class="el" href="structuser_1_1User.html">User</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#a661257066f00743fc9d862c636f19b60">channel_users</a> (const std::string &amp;channel) const </td></tr>
 <tr class="memdesc:a661257066f00743fc9d862c636f19b60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all users on the given channel.  <a href="#a661257066f00743fc9d862c636f19b60">More...</a><br /></td></tr>
 <tr class="separator:a661257066f00743fc9d862c636f19b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab90aedb0fbe0cc43cdb933bb02ce8d6b"><td class="memItemLeft" align="right" valign="top">std::list&lt; <a class="el" href="structuser_1_1User.html">User</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#ab90aedb0fbe0cc43cdb933bb02ce8d6b">channel_user_pointers</a> (const std::string &amp;channel)</td></tr>
+<tr class="memdesc:ab90aedb0fbe0cc43cdb933bb02ce8d6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all users on the given channel.  <a href="#ab90aedb0fbe0cc43cdb933bb02ce8d6b">More...</a><br /></td></tr>
+<tr class="separator:ab90aedb0fbe0cc43cdb933bb02ce8d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee4640cb44e158c20d452a798f152fad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#aee4640cb44e158c20d452a798f152fad">remove_user</a> (const std::string &amp;local_id)</td></tr>
 <tr class="memdesc:aee4640cb44e158c20d452a798f152fad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a user by local_id.  <a href="#aee4640cb44e158c20d452a798f152fad">More...</a><br /></td></tr>
 <tr class="separator:aee4640cb44e158c20d452a798f152fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +140,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3b842e553c9589e631b700103ee6602d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#a3b842e553c9589e631b700103ee6602d">update_user</a> (const std::string &amp;local_id, const <a class="el" href="structuser_1_1User.html">User</a> &amp;<a class="el" href="classuser_1_1UserManager.html#a6369607853783ec7acff192e88881898">user</a>)</td></tr>
 <tr class="memdesc:a3b842e553c9589e631b700103ee6602d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update a user.  <a href="#a3b842e553c9589e631b700103ee6602d">More...</a><br /></td></tr>
 <tr class="separator:a3b842e553c9589e631b700103ee6602d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addcee55d5ca13d0ba8cde0aa97c507a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classuser_1_1UserManager.html#addcee55d5ca13d0ba8cde0aa97c507a3">clear</a> ()</td></tr>
+<tr class="memdesc:addcee55d5ca13d0ba8cde0aa97c507a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all users.  <a href="#addcee55d5ca13d0ba8cde0aa97c507a3">More...</a><br /></td></tr>
+<tr class="separator:addcee55d5ca13d0ba8cde0aa97c507a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -167,7 +173,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00024">24</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00133">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -197,9 +203,31 @@ Private Attributes</h2></td></tr>
 
 <p>Change user id. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> on success </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>maybe check if there is some other user with new_local_id </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>maybe check if there is some other user with new_local_id </dd></dl>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00099">99</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00116">116</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab90aedb0fbe0cc43cdb933bb02ce8d6b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::list&lt; <a class="el" href="structuser_1_1User.html">User</a> * &gt; user::UserManager::channel_user_pointers </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get all users on the given channel. </p>
+
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00088">88</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -221,7 +249,36 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00071">71</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00975">network::irc::IrcConnection::get_users()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l01016">network::irc::IrcConnection::get_users()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="addcee55d5ca13d0ba8cde0aa97c507a3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void user::UserManager::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes all users. </p>
+
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00105">105</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00128">network::irc::IrcConnection::disconnect()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -242,9 +299,9 @@ Private Attributes</h2></td></tr>
 <p>Remove a user by local_id. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> on success </dd></dl>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00088">88</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00105">105</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00133">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -275,7 +332,7 @@ Private Attributes</h2></td></tr>
 <p>Update a user. </p>
 <p>If there's no user matching <code>local_id</code>, <code>user</code> is inserted </p>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00111">111</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00128">128</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -298,7 +355,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00037">37</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00575">network::irc::IrcConnection::command()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00133">network::irc::IrcConnection::handle_message()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00944">network::irc::IrcConnection::update_user()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00652">network::irc::IrcConnection::command()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00142">network::irc::IrcConnection::reconnect()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00985">network::irc::IrcConnection::update_user()</a>.</p>
 
 </div>
 </div>
@@ -318,7 +375,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00045">45</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00966">network::irc::IrcConnection::get_user()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00975">network::irc::IrcConnection::get_users()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00930">network::irc::IrcConnection::user_auth()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l01007">network::irc::IrcConnection::get_user()</a>, <a class="el" href="irc__connection_8cpp_source.html#l01016">network::irc::IrcConnection::get_users()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00971">network::irc::IrcConnection::user_auth()</a>.</p>
 
 </div>
 </div>
@@ -406,7 +463,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00058">58</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00975">network::irc::IrcConnection::get_users()</a>.</p>
+<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l01016">network::irc::IrcConnection::get_users()</a>.</p>
 
 </div>
 </div>
@@ -459,9 +516,9 @@ template&lt;class UnaryPredicate &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00098">98</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00108">108</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00099">change_id()</a>, <a class="el" href="user__manager_8cpp_source.html#l00088">remove_user()</a>, and <a class="el" href="user__manager_8hpp_source.html#l00058">users()</a>.</p>
+<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">change_id()</a>, <a class="el" href="user__manager_8hpp_source.html#l00105">clear()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">remove_user()</a>, and <a class="el" href="user__manager_8hpp_source.html#l00058">users()</a>.</p>
 
 </div>
 </div>
@@ -472,7 +529,7 @@ template&lt;class UnaryPredicate &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 11 2015 17:19:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

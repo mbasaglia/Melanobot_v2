@@ -8,6 +8,7 @@ var searchData=
   ['adminpart',['AdminPart',['../classhandler_1_1AdminPart.html',1,'handler']]],
   ['adminquit',['AdminQuit',['../classhandler_1_1AdminQuit.html',1,'handler']]],
   ['adminraw',['AdminRaw',['../classhandler_1_1AdminRaw.html',1,'handler']]],
+  ['adminreconnect',['AdminReconnect',['../classhandler_1_1AdminReconnect.html',1,'handler']]],
   ['answerquestions',['AnswerQuestions',['../classhandler_1_1AnswerQuestions.html',1,'handler']]],
   ['asciisubstring',['AsciiSubstring',['../classstring_1_1AsciiSubstring.html',1,'string']]],
   ['asyncservice',['AsyncService',['../classnetwork_1_1AsyncService.html',1,'network']]],

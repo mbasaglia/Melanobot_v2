@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['chanhax',['Chanhax',['../classhandler_1_1Chanhax.html',1,'handler']]],
   ['character',['Character',['../classstring_1_1Character.html',1,'string']]],
   ['chucknorris',['ChuckNorris',['../classhandler_1_1ChuckNorris.html',1,'handler']]],
   ['clearformatting',['ClearFormatting',['../classstring_1_1ClearFormatting.html',1,'string']]],

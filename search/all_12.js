@@ -19,6 +19,6 @@ var searchData=
   ['to_5fuint',['to_uint',['../namespacestring.html#a89f65e2090f404d89f8868d62a7438b0',1,'string']]],
   ['todo_20list',['Todo List',['../todo.html',1,'']]],
   ['tree',['tree',['../structJsonParser.html#ae2e1e24a5ed2d1f20190b9e6fea96fca',1,'JsonParser']]],
-  ['trigger',['trigger',['../classhandler_1_1SimpleAction.html#a587e220e85a8cff8c4105b8465be7131',1,'handler::SimpleAction::trigger()'],['../classhandler_1_1Reply.html#af473e700b981aae49c9ba823f6623313',1,'handler::Reply::trigger()']]],
+  ['trigger',['trigger',['../classhandler_1_1SimpleAction.html#a587e220e85a8cff8c4105b8465be7131',1,'handler::SimpleAction::trigger()'],['../classhandler_1_1Reply.html#af473e700b981aae49c9ba823f6623313',1,'handler::Reply::trigger()'],['../classhandler_1_1Chanhax.html#a04618ba94ba1a121e951e4c4ba16e862',1,'handler::Chanhax::trigger()']]],
   ['type',['type',['../classLog.html#aca7df4a36a16cc24a10d2a1f71978e0b',1,'Log']]]
 ];

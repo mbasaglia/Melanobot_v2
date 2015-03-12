@@ -6,8 +6,8 @@ var searchData=
   ['line',['line',['../structLocatableException.html#a3449b836ca46413f3e67fb488f813619',1,'LocatableException::line()'],['../structJsonParser.html#ac6e325599a463554347559962ab25785',1,'JsonParser::line()']]],
   ['listclear',['ListClear',['../classhandler_1_1ListClear.html',1,'handler']]],
   ['listclear',['ListClear',['../classhandler_1_1ListClear.html#aa166d280ac1040b45e9e50f92f5fd07e',1,'handler::ListClear']]],
-  ['listinsert',['ListInsert',['../classhandler_1_1ListInsert.html',1,'handler']]],
   ['listinsert',['ListInsert',['../classhandler_1_1ListInsert.html#a83e652f7bcd4260f0fdca7b465800762',1,'handler::ListInsert']]],
+  ['listinsert',['ListInsert',['../classhandler_1_1ListInsert.html',1,'handler']]],
   ['listremove',['ListRemove',['../classhandler_1_1ListRemove.html',1,'handler']]],
   ['listremove',['ListRemove',['../classhandler_1_1ListRemove.html#a49eee0e37786c421c13995df28d13f62',1,'handler::ListRemove']]],
   ['load_5fsettings',['load_settings',['../classLogger.html#afd8ac164f5cc7d2b3c39ba41dfe35c84',1,'Logger']]],
@@ -26,5 +26,8 @@ var searchData=
   ['logger_2ecpp',['logger.cpp',['../logger_8cpp.html',1,'']]],
   ['logger_2ehpp',['logger.hpp',['../logger_8hpp.html',1,'']]],
   ['login',['login',['../classnetwork_1_1irc_1_1IrcConnection.html#a5f18f67bb47fe29af7a980644579f2dc',1,'network::irc::IrcConnection']]],
+  ['login_5finfo',['login_info',['../classnetwork_1_1irc_1_1IrcConnection.html#a26843ae05b4ef3746076f98019193722',1,'network::irc::IrcConnection']]],
+  ['logininfo',['LoginInfo',['../structnetwork_1_1irc_1_1LoginInfo.html',1,'network::irc']]],
+  ['logininfo',['LoginInfo',['../structnetwork_1_1irc_1_1LoginInfo.html#a957eba61f32d4f7e430d9b3692936de3',1,'network::irc::LoginInfo::LoginInfo()'],['../structnetwork_1_1irc_1_1LoginInfo.html#affdc520b5ed0da991a45d4a0c35b329e',1,'network::irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)']]],
   ['logtype',['LogType',['../structLogger_1_1LogType.html',1,'Logger']]]
 ];

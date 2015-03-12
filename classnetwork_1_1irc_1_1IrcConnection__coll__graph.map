@@ -1,14 +1,15 @@
 <map id="network::irc::IrcConnection" name="network::irc::IrcConnection">
-<area shape="rect" id="node9" href="$classnetwork_1_1irc_1_1Buffer.html" title="IRC buffer. " alt="" coords="1137,157,1271,183"/>
+<area shape="rect" id="node10" href="$classnetwork_1_1irc_1_1Buffer.html" title="IRC buffer. " alt="" coords="1137,190,1271,217"/>
 <area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="558,101,701,127"/>
-<area shape="rect" id="node3" href="$classuser_1_1UserManager.html" title="A class to keep track of users. " alt="" coords="563,151,696,178"/>
-<area shape="rect" id="node4" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="570,202,689,229"/>
-<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="588,253,671,279"/>
-<area shape="rect" id="node6" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="230,235,403,262"/>
-<area shape="rect" id="node7" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="225,287,408,328"/>
-<area shape="rect" id="node8" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,279,176,335"/>
-<area shape="rect" id="node10" href="$classConcurrentPriorityQueue.html" title="ConcurrentPriorityQueue\l\&lt; network::Command \&gt;" alt="" coords="880,41,1045,83"/>
-<area shape="rect" id="node11" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::priority_queue\l\&lt; network::Command, Container,\l Compare \&gt; \&gt;" alt="" coords="521,5,737,76"/>
-<area shape="rect" id="node12" href="$classuser_1_1AuthSystem.html" title="User authorization system. " alt="" coords="566,303,693,330"/>
-<area shape="rect" id="node13" href="$structnetwork_1_1Server.html" title="Identifies a network server. " alt="" coords="572,358,687,385"/>
+<area shape="rect" id="node3" href="$structnetwork_1_1irc_1_1LoginInfo.html" title="IRC log&#45;in system. " alt="" coords="554,151,705,178"/>
+<area shape="rect" id="node4" href="$classuser_1_1UserManager.html" title="A class to keep track of users. " alt="" coords="563,202,696,229"/>
+<area shape="rect" id="node5" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="570,253,689,279"/>
+<area shape="rect" id="node6" href="$classMelanobot.html" title="Main bot class. " alt="" coords="588,303,671,330"/>
+<area shape="rect" id="node7" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="230,286,403,313"/>
+<area shape="rect" id="node8" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="225,337,408,379"/>
+<area shape="rect" id="node9" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,330,176,386"/>
+<area shape="rect" id="node11" href="$classConcurrentPriorityQueue.html" title="ConcurrentPriorityQueue\l\&lt; network::Command \&gt;" alt="" coords="880,37,1045,79"/>
+<area shape="rect" id="node12" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::priority_queue\l\&lt; network::Command, Container,\l Compare \&gt; \&gt;" alt="" coords="521,5,737,76"/>
+<area shape="rect" id="node13" href="$classuser_1_1AuthSystem.html" title="User authorization system. " alt="" coords="566,354,693,381"/>
+<area shape="rect" id="node14" href="$structnetwork_1_1Server.html" title="Identifies a network server. " alt="" coords="572,409,687,435"/>
 </map>

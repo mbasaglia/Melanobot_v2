@@ -148,6 +148,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae25738db9722cda300f2649a0e7bff4b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#ae25738db9722cda300f2649a0e7bff4b">disconnect</a> (const std::string &amp;message={})=0</td></tr>
 <tr class="memdesc:ae25738db9722cda300f2649a0e7bff4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the connection.  <a href="#ae25738db9722cda300f2649a0e7bff4b">More...</a><br /></td></tr>
 <tr class="separator:ae25738db9722cda300f2649a0e7bff4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a151bab5eeb8514624a980d7240adf83f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a151bab5eeb8514624a980d7240adf83f">reconnect</a> (const std::string &amp;quit_message={})=0</td></tr>
+<tr class="memdesc:a151bab5eeb8514624a980d7240adf83f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnect and connect again.  <a href="#a151bab5eeb8514624a980d7240adf83f">More...</a><br /></td></tr>
+<tr class="separator:a151bab5eeb8514624a980d7240adf83f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54a68659a67ca95932506d554466fb2f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1Connection.html#a54a68659a67ca95932506d554466fb2f">stop</a> ()=0</td></tr>
 <tr class="memdesc:a54a68659a67ca95932506d554466fb2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnect and stop all processing.  <a href="#a54a68659a67ca95932506d554466fb2f">More...</a><br /></td></tr>
 <tr class="separator:a54a68659a67ca95932506d554466fb2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -534,6 +537,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1d675270805d4ac2a8c7a6da195ee361">network::irc::IrcConnection</a>.</p>
 
+<p>Referenced by <a class="el" href="irc__actions_8cpp_source.html#l00049">handler::IrcJoinMessage::on_handle()</a>, and <a class="el" href="misc_8cpp_source.html#l00340">handler::Reply::on_handle()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a7410ca4dd4fdee613cf0df8df4666bbf"></a>
@@ -591,7 +596,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ad1c1094233efdfe7dfcdb134dcd85bd2">network::irc::IrcConnection</a>.</p>
 
-<p>Referenced by <a class="el" href="fun_8cpp_source.html#l00448">handler::AnswerQuestions::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="irc__actions_8cpp_source.html#l00040">handler::IrcJoinMessage::can_handle()</a>, and <a class="el" href="fun_8cpp_source.html#l00448">handler::AnswerQuestions::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -621,6 +626,36 @@ Public Member Functions</h2></td></tr>
 <p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#ac2fae723113817bd55ece53d02093259">network::irc::IrcConnection</a>.</p>
 
 <p>Referenced by <a class="el" href="ctcp_8cpp_source.html#l00042">handler::CtcpBase::can_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00065">handler::QSendWhois::can_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00108">handler::QGetWhois::can_handle()</a>, and <a class="el" href="irc__whois_8cpp_source.html#l00170">handler::WhoisCheckMe::can_handle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a151bab5eeb8514624a980d7240adf83f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void network::Connection::reconnect </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>quit_message</em> = <code>{}</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Disconnect and connect again. </p>
+
+<p>Implemented in <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a7ce49962bb30e8f2b28421828a6ff232">network::irc::IrcConnection</a>.</p>
+
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00316">handler::AdminReconnect::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -970,7 +1005,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 11 2015 17:19:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

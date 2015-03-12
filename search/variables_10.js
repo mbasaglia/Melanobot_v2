@@ -4,7 +4,7 @@ var searchData=
   ['scheduled_5fcommands',['scheduled_commands',['../classnetwork_1_1irc_1_1IrcConnection.html#a950e37532bc59c6b489585eae34078bc',1,'network::irc::IrcConnection']]],
   ['server_5ffeatures',['server_features',['../classnetwork_1_1irc_1_1IrcConnection.html#aea7b47728d2ea500c532df7a093d3668',1,'network::irc::IrcConnection']]],
   ['server_5fpassword',['server_password',['../classnetwork_1_1irc_1_1IrcConnection.html#a9bce8f25a20d943aeb7d5f6319f26c53',1,'network::irc::IrcConnection']]],
-  ['service',['service',['../structnetwork_1_1ServiceRegistry_1_1Entry.html#a220dd24cd0b9bef7d4b5e7040b9e2fc6',1,'network::ServiceRegistry::Entry']]],
+  ['service',['service',['../structnetwork_1_1ServiceRegistry_1_1Entry.html#a220dd24cd0b9bef7d4b5e7040b9e2fc6',1,'network::ServiceRegistry::Entry::service()'],['../structnetwork_1_1irc_1_1LoginInfo.html#ab3149fffe2d27bbfdb1b33e2578d4f91',1,'network::irc::LoginInfo::service()']]],
   ['services',['services',['../classnetwork_1_1ServiceRegistry.html#ab5b6b30f587a64a869266dfdd3430cf2',1,'network::ServiceRegistry']]],
   ['silver',['silver',['../namespacecolor.html#ae224c5684ccebac8ae7c432243055929',1,'color']]],
   ['socket',['socket',['../classnetwork_1_1irc_1_1Buffer.html#ab6edb1d6fad4cb136f7ec386f0df16a9',1,'network::irc::Buffer']]],

@@ -17,6 +17,7 @@ var searchData=
   ['adminpart',['AdminPart',['../classhandler_1_1AdminPart.html#a9e6aa1132a168f32811efc3aecffa8de',1,'handler::AdminPart']]],
   ['adminquit',['AdminQuit',['../classhandler_1_1AdminQuit.html#a63311fda0c52460c627a40cd6ce6ff21',1,'handler::AdminQuit']]],
   ['adminraw',['AdminRaw',['../classhandler_1_1AdminRaw.html#a09c88aa7d048c94ac8b63ab13e9fc4f5',1,'handler::AdminRaw']]],
+  ['adminreconnect',['AdminReconnect',['../classhandler_1_1AdminReconnect.html#a1209d06650c274a53c21649cc5bf67a7',1,'handler::AdminReconnect']]],
   ['all_5fusers',['all_users',['../classuser_1_1UserGroup.html#a6616e328001e26953ccefe2328968798',1,'user::UserGroup']]],
   ['alternative',['alternative',['../classstring_1_1QFont.html#a560d5bafa5db49e473613614ebb2b621',1,'string::QFont']]],
   ['answerquestions',['AnswerQuestions',['../classhandler_1_1AnswerQuestions.html#a6d80c5f7d5617d7c3b6e079d84f3971e',1,'handler::AnswerQuestions']]],
