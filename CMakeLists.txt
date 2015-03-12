@@ -21,6 +21,7 @@ string(TOLOWER MelanoBot EXECUTABLE_NAME)
 set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 set(ALL_SOURCES "")
 

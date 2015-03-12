@@ -62,4 +62,6 @@ target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 
 # cURLpp
-target_link_libraries(${EXECUTABLE_NAME} curlpp curl)
+find_package (cURLpp REQUIRED)
+target_link_libraries(${EXECUTABLE_NAME} ${cURLpp_LIBRARIES})
+include_directories (${cURLpp_INCLUDE_DIRS})
