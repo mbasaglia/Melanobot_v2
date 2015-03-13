@@ -78,7 +78,7 @@ std::vector<User> UserGroup::all_users() const
         ret.insert(ret.end(),tmp.begin(),tmp.end());
     }
 
-    return std::move(ret);
+    return ret;
 }
 
 } // namespace user

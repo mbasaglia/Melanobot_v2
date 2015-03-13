@@ -23,7 +23,7 @@ namespace string {
 std::string elide ( std::string text, int length )
 {
     if ( int(text.size()) <= length )
-        return std::move(text);
+        return text;
 
     int p = length-3;
     if ( !std::isspace(text[p+1]) )
@@ -33,7 +33,7 @@ std::string elide ( std::string text, int length )
     text.erase(p+1);
     text += "...";
 
-    return std::move(text);
+    return text;
 }
 
 std::string add_slashes ( const std::string& input, const std::string& characters )
@@ -53,7 +53,7 @@ std::string add_slashes ( const std::string& input, const std::string& character
         it++;
     }
 
-    return std::move(out);
+    return out;
 }
 
 std::string replace(const std::string& input, const std::string& from, const std::string& to)
@@ -73,7 +73,7 @@ std::string replace(const std::string& input, const std::string& from, const std
         prev = it;
     }
     out.shrink_to_fit();
-    return std::move(out);
+    return out;
 }
 
 bool simple_wildcard(const std::string& text, const std::string& pattern)
@@ -97,7 +97,7 @@ std::vector<std::string> regex_split(const std::string& input,
             out.push_back(match);
         ++iter;
     }
-    return std::move(out);
+    return out;
 }
 
 std::string::size_type similarity(const std::string& s1, const std::string& s2)
@@ -194,7 +194,7 @@ std::string replace(const std::string& subject, const Properties& map, char pref
     if ( start < pos )
         output += subject.substr(start,pos-start);
 
-    return std::move(output);
+    return output;
 }
 
 } // namespace string

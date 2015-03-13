@@ -67,7 +67,7 @@ public:
             for ( const User& u : users_ )
                 if ( predicate(u) )
                     ret.push_back(u);
-            return std::move(ret);
+            return ret;
         }
 
     /**

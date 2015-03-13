@@ -82,7 +82,7 @@ std::list<User> UserManager::channel_users(const std::string& channel) const
             }
         }
     }
-    return std::move(ret);
+    return ret;
 }
 
 std::list<User*> UserManager::channel_user_pointers(const std::string& channel)
@@ -99,7 +99,7 @@ std::list<User*> UserManager::channel_user_pointers(const std::string& channel)
             }
         }
     }
-    return std::move(ret);
+    return ret;
 }
 
 bool UserManager::remove_user(const std::string& local_id)

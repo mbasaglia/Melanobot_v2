@@ -941,7 +941,7 @@ string::Formatter* IrcConnection::formatter() const
 bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
                                  const std::string& mask) const
 {
-    std::vector<std::string> masks = std::move(string::comma_split(strtolower(mask)));
+    std::vector<std::string> masks = string::comma_split(strtolower(mask));
     for ( const auto& m : masks )
     {
         bool match = false;
@@ -1002,7 +1002,7 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
         user.host = match[2].str();
     }
 
-    return std::move(user);
+    return user;
 }
 
 bool IrcConnection::user_auth(const std::string& local_id,
@@ -1056,9 +1056,9 @@ std::vector<user::User> IrcConnection::get_users(const std::string& channel) con
 
     std::list<user::User> list;
     if ( channel.empty() )
-        list = std::move(user_manager.users());
+        list = user_manager.users();
     else if ( channel[0] == '#' )
-        list = std::move(user_manager.channel_users(channel));
+        list = user_manager.channel_users(channel);
     else
         list = { *user_manager.user(channel) };
 
@@ -1079,7 +1079,7 @@ user::User IrcConnection::build_user(const std::string& exname) const
     else
         user.name = exname;
 
-    return std::move(user);
+    return user;
 }
 
 bool IrcConnection::add_to_group( const std::string& username, const std::string& group )

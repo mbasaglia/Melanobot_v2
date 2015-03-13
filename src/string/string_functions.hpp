@@ -94,7 +94,7 @@ inline bool ends_with(const std::string& haystack, const std::string& suffix)
 inline std::string strtolower ( std::string string )
 {
     std::transform(string.begin(),string.end(),string.begin(), (int(*)(int))std::tolower);
-    return std::move(string);
+    return string;
 }
 
 /**
@@ -103,7 +103,7 @@ inline std::string strtolower ( std::string string )
 inline std::string strtoupper ( std::string string )
 {
     std::transform(string.begin(),string.end(),string.begin(), (int(*)(int))std::toupper);
-    return std::move(string);
+    return string;
 }
 
 /**
@@ -118,7 +118,7 @@ std::string elide ( std::string text, int length );
 inline std::string collapse_spaces ( const std::string& text )
 {
     static std::regex regex_spaces("\\s+");
-    return std::move(std::regex_replace(text,regex_spaces," "));
+    return std::regex_replace(text,regex_spaces," ");
 }
 
 /**
@@ -130,7 +130,7 @@ std::string add_slashes ( const std::string& input, const std::string& character
  */
 inline std::string regex_escape( const std::string& input )
 {
-    return std::move(add_slashes(input,"^$\\.*+?()[]{}|"));
+    return add_slashes(input,"^$\\.*+?()[]{}|");
 }
 
 /**
@@ -184,7 +184,7 @@ inline std::vector<std::string> comma_split(const std::string& input,bool skip_e
     static std::regex regex_commaspace ( "(,\\s*)|(\\s+)",
         std::regex_constants::syntax_option_type::optimize |
         std::regex_constants::syntax_option_type::ECMAScript );
-    return std::move(string::regex_split(input,regex_commaspace));
+    return string::regex_split(input,regex_commaspace);
 }
 
 /**
