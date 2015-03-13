@@ -152,12 +152,12 @@ protected:
      */
     virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const
     {
-        network::OutputMessage out(
-            msg.channels.empty() ? std::string() : msg.channels[0],
-            text,
-            priority
-        );
-        msg.destination->say(out);
+        std::string channel;
+        if ( msg.dst_channel )
+            channel = *msg.dst_channel;
+        else if ( !msg.channels.empty() )
+            channel = msg.channels[0];
+        msg.destination->say(network::OutputMessage(channel,text,priority));
     }
 
     void reply_to(const network::Message& msg, const std::string& text) const
@@ -282,12 +282,13 @@ protected:
     void reply_to(const network::Message& msg, const string::FormattedString& text) const
     {
         std::string channel;
-        if ( !public_reply )
+        if ( msg.dst_channel )
+            channel = *msg.dst_channel;
+        else if ( !public_reply )
             channel = msg.from;
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
-        network::OutputMessage out(channel,text,priority);
-        msg.destination->say(out);
+        msg.destination->say(network::OutputMessage(channel,text,priority));
     }
 
 private:
