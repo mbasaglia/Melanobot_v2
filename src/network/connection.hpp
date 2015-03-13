@@ -141,11 +141,13 @@ struct OutputMessage
     OutputMessage(std::string target,
                   const string::FormattedString& message,
                   int priority = 0,
-                  const string::FormattedString& prefix = {},
                   const string::FormattedString& from = {},
+                  const string::FormattedString& prefix = {},
+                  bool action = false,
                   const Time& timeout = Clock::time_point::max()
-    ) : target(target), message(message), from(from), prefix(prefix),
-        action(false), priority(priority), timeout(timeout)
+    ) : target(target), message(message), priority(priority),
+        from(from), prefix(prefix),
+        action(action), timeout(timeout)
     {}
 
 
@@ -158,6 +160,10 @@ struct OutputMessage
      */
     string::FormattedString message;
     /**
+     * \brief Priority, higher = handled sooner
+     */
+    int priority = 0;
+    /**
      * \brief If not empty, the bot will make it look like the message comes from this user
      */
     string::FormattedString from;
@@ -169,10 +175,6 @@ struct OutputMessage
      * \brief Whether the message is an action
      */
     bool action = false;
-    /**
-     * \brief Priority, higher = handled sooner
-     */
-    int priority = 0;
     /**
      * \brief Time at which this message becomes obsolete
      */

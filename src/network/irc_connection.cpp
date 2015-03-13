@@ -374,6 +374,7 @@ void IrcConnection::handle_message(Message msg)
             if ( ctcp == "ACTION" )
             {
                 msg.action = 1;
+                msg.message = match[2];
             }
             else
             {
@@ -903,12 +904,17 @@ void IrcConnection::say ( const OutputMessage& message )
 {
     string::FormattedStream str;
     if ( !message.prefix.empty() )
-        str << message.prefix << color::nocolor;
+        str << message.prefix << ' ' << color::nocolor;
     if ( !message.from.empty() )
-        str << '<' << message.from << color::nocolor << "> ";
+    {
+        if ( message.action )
+            str << "* " << message.from << ' ';
+        else
+            str << '<' << message.from << color::nocolor << "> ";
+    }
     str << message.message;
     std::string text = str.encode(formatter_);
-    if ( message.action )
+    if ( message.action && message.from.empty() )
         text = "\1ACTION "+text+'\1';
 
     std::string irc_command = "PRIVMSG";
