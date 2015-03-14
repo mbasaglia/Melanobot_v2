@@ -347,7 +347,7 @@ public:
         );
     }
 
-    bool can_handle(const network::Message& msg)
+    bool can_handle(const network::Message& msg) const
     {
         return Handler::can_handle(msg) && !msg.message.empty();
     }

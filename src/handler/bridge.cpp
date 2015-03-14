@@ -63,7 +63,7 @@ public:
         ignore_self = settings.get("ignore_self",ignore_self);
     }
 
-    bool can_handle(const network::Message& msg)
+    bool can_handle(const network::Message& msg) const
     {
         return Handler::can_handle(msg) && !msg.message.empty() &&
             msg.dst_channel && (!ignore_self || msg.from != msg.source->name());

@@ -37,7 +37,7 @@ public:
             throw ConfigurationError();
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return Handler::can_handle(msg) && !msg.channels.empty() &&
             msg.command == "JOIN" &&
@@ -81,7 +81,7 @@ public:
             throw ConfigurationError();
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return Handler::can_handle(msg) && !msg.channels.empty() &&
             msg.command == "KICK" && msg.params.size() >= 2 &&
@@ -121,7 +121,7 @@ public:
         message = settings.get("message",message);
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return Handler::can_handle(msg) && !msg.channels.empty() &&
             msg.command == "KICK" && msg.params.size() >= 2 &&

@@ -83,9 +83,8 @@ public:
      * \brief Checks if a message can be handled
      * \pre msg.source not null
      * \return \b true if the message can be handled by the handler
-     * \todo \b const?
      */
-    virtual bool can_handle(const network::Message& msg)
+    virtual bool can_handle(const network::Message& msg) const
     {
         return authorized(msg);
     }
@@ -226,7 +225,7 @@ public:
     /**
      * Checks authorization, \c direct, \c trigger and available reply channels.
      */
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return authorized(msg) && ( msg.direct || !direct ) &&
             msg.channels.size() < 2 && string::starts_with(msg.message,trigger);
@@ -328,7 +327,7 @@ class SimpleGroup : public SimpleAction
 public:
     SimpleGroup(const Settings& settings, Melanobot* bot);
 
-    bool can_handle(const network::Message& msg) override;
+    bool can_handle(const network::Message& msg) const override;
 
     void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override;
 

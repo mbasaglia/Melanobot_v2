@@ -32,7 +32,7 @@ public:
     Whois330(const Settings& settings, Melanobot* bot)
         : Handler(settings,bot) {}
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return msg.command == "330" && msg.params.size() > 2 &&
             msg.source == msg.destination;
@@ -62,7 +62,7 @@ public:
         q_bot = settings.get("q_to",q_bot);
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return msg.command == "JOIN" && msg.params.size() == 1 &&
             msg.source->protocol() == "irc";
@@ -102,7 +102,7 @@ public:
         q_bot = settings.get("q_from",q_bot);
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return msg.command == "NOTICE" && msg.from == q_bot &&
             msg.source->protocol() == "irc" &&
@@ -164,7 +164,7 @@ public:
         : SimpleAction("checkme",settings,bot)
     {}
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return SimpleAction::can_handle(msg) &&
             msg.source->protocol() == "irc";

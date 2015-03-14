@@ -69,7 +69,7 @@ bool SimpleGroup::on_handle(network::Message& msg)
     return false;
 }
 
-bool SimpleGroup::can_handle(const network::Message& msg)
+bool SimpleGroup::can_handle(const network::Message& msg) const
 {
     return SimpleAction::can_handle(msg) && (!source || msg.source == source) &&
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));

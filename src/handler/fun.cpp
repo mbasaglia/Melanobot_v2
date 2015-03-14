@@ -451,7 +451,7 @@ public:
         direct    = settings.get("direct",direct);
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return msg.direct && !msg.message.empty() && msg.message.back() == '?';
     }

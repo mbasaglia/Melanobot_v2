@@ -39,7 +39,7 @@ public:
             throw ConfigurationError();
     }
 
-    bool can_handle(const network::Message& msg) override
+    bool can_handle(const network::Message& msg) const override
     {
         return authorized(msg) && !msg.params.empty() &&
             msg.source->protocol() == "irc" && msg.source == msg.destination &&
