@@ -157,4 +157,6 @@ public:
     {}
 };
 
+typedef std::unique_lock<std::mutex> Lock;
+
 #endif // CONCURRENT_CONTAINER_HPP
