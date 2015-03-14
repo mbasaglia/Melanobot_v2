@@ -17,9 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "irc_buffer.hpp"
+#include "network/irc/buffer.hpp"
 
-#include "irc_connection.hpp"
+#include "network/irc/connection.hpp"
 
 namespace network {
 namespace irc {
@@ -123,7 +123,7 @@ void Buffer::write_line ( std::string line )
     line.erase(std::remove_if(line.begin(), line.end(),
         [](char c){return c == '\n' || c == '\r' || c == '\0';}),
         line.end());
-    
+
     std::ostream request_stream(&buffer_write);
     if ( line.size() > flood_max_length )
     {

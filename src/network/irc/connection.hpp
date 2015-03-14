@@ -26,8 +26,8 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#include "connection.hpp"
-#include "irc_buffer.hpp"
+#include "network/connection.hpp"
+#include "network/irc/buffer.hpp"
 
 #include "melanobot.hpp"
 

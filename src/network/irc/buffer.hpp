@@ -24,7 +24,7 @@
 
 #include <boost/asio.hpp>
 
-#include "connection.hpp"
+#include "network/connection.hpp"
 #include "concurrent_container.hpp"
 #include "string/logger.hpp"
 
