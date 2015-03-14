@@ -339,7 +339,7 @@ public:
      * \brief Set a connection property
      * \return \b true on success
      */
-    virtual bool set_property(const std::string& property, const std::string value ) = 0;
+    virtual bool set_property(const std::string& property, const std::string& value ) = 0;
 };
 
 /**
@@ -396,13 +396,22 @@ public:
      */
     std::unique_ptr<Connection> create(Melanobot* bot, const Settings& settings)
     {
-        std::string protocol = settings.get("protocol",std::string());
-        auto it = factory.find(protocol);
-        if ( it != factory.end() )
-            return it->second(bot, settings);
+        try {
+            std::string protocol = settings.get("protocol",std::string());
+            auto it = factory.find(protocol);
+            if ( it != factory.end() )
+                return it->second(bot, settings);
+            Log("sys",'!',0) << color::red << "Error" << color::nocolor
+                << ": Uknown connection protocol "+protocol;
+        } catch ( const LocatableException& exc ) {
+            ErrorLog errlog("sys","Connection Error");
+            if ( Settings::global_settings.get("debug",0) )
+                errlog << exc.file << ':' << exc.line << ": ";
+            errlog  << exc.what();
+        } catch ( const std::exception& exc ) {
+            ErrorLog ("sys","Connection Error") << exc.what();
+        }
 
-        Log("sys",'!',0) << color::red << "Error" << color::nocolor
-            << ": Uknown connection protocol "+protocol;
         return nullptr;
     }
 

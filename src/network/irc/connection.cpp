@@ -1142,7 +1142,7 @@ std::string IrcConnection::get_property(const std::string& property) const
     return it == server_features.end() ? "" : it->second;
 }
 
-bool IrcConnection::set_property(const std::string& , const std::string )
+bool IrcConnection::set_property( const std::string& property, const std::string& value )
 {
     return false;
 }

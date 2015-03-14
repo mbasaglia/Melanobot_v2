@@ -232,7 +232,7 @@ public:
     /**
      * \brief Always fails
      */
-    bool set_property(const std::string& property, const std::string value ) override;
+    bool set_property(const std::string& property, const std::string& value ) override;
 
 private:
     friend class Buffer;

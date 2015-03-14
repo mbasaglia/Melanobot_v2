@@ -85,7 +85,7 @@ void Melanobot::run()
             continue;
         }
         if ( !msg.destination )
-            msg.source = msg.destination;
+            msg.destination = msg.source;
 
         for ( const auto& handler : handlers )
             if ( handler->handle(msg) )
