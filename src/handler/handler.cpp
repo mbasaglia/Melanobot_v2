@@ -50,26 +50,20 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
         if ( p.second.data().empty() )
         {
             Settings::merge(p.second,default_settings,false);
-            handler::Handler *hand = handler::HandlerFactory::instance().build(
+            auto hand = handler::HandlerFactory::instance().build(
                 p.first,
                 p.second,
                 bot
             );
             if ( hand )
-                children.push_back(hand);
+                children.push_back(std::move(hand));
         }
     }
 }
 
-SimpleGroup::~SimpleGroup()
-{
-    for ( Handler* h : children )
-        delete h;
-}
-
 bool SimpleGroup::on_handle(network::Message& msg)
 {
-    for ( Handler* h : children )
+    for ( const auto& h : children )
         if ( h->handle(msg) )
             return true;
     return false;
@@ -236,12 +230,12 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
-    children.push_back(new ListInsert("+",this,child_settings,bot));
-    children.push_back(new ListInsert("add",this,child_settings,bot));
-    children.push_back(new ListRemove("-",this,child_settings,bot));
-    children.push_back(new ListRemove("rm",this,child_settings,bot));
+    children.push_back(std::make_unique<ListInsert>("+",this,child_settings,bot));
+    children.push_back(std::make_unique<ListInsert>("add",this,child_settings,bot));
+    children.push_back(std::make_unique<ListRemove>("-",this,child_settings,bot));
+    children.push_back(std::make_unique<ListRemove>("rm",this,child_settings,bot));
     if ( clear )
-        children.push_back(new ListClear(this,child_settings,bot));
+        children.push_back(std::make_unique<ListClear>(this,child_settings,bot));
 }
 
 bool AbstractList::on_handle(network::Message& msg)

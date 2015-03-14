@@ -20,6 +20,7 @@
 #define HANDLER_HPP
 
 #include <functional>
+#include <memory>
 #include <string>
 #include <stdexcept>
 #include <type_traits>
@@ -61,7 +62,8 @@ public:
         if ( !bot )
             throw ConfigurationError();
     }
-
+    Handler(const Handler&) = delete;
+    Handler& operator=(const Handler&) = delete;
     virtual ~Handler() {}
 
     /**
@@ -325,7 +327,6 @@ class SimpleGroup : public SimpleAction
 {
 public:
     SimpleGroup(const Settings& settings, Melanobot* bot);
-    ~SimpleGroup() override;
 
     bool can_handle(const network::Message& msg) override;
 
@@ -343,7 +344,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    std::vector<Handler*> children;         ///< Contained handlers
+    std::vector<std::unique_ptr<Handler>> children;         ///< Contained handlers
     std::string           channels;         ///< Channel filter
     /// \todo if posible, merge name and help_group
     std::string           name;             ///< Name to show in help
@@ -409,8 +410,9 @@ protected:
 #define REGISTER_HANDLER(class_name,public_name) \
     static HandlerFactory::RegisterHandler<class_name> \
         RegisterHandler_##public_name(#public_name, \
-            [] ( const Settings& settings, Melanobot* bot ) -> Handler* { \
-                return new class_name(settings,bot); \
+            [] ( const Settings& settings, Melanobot* bot )  \
+                -> std::unique_ptr<Handler> { \
+                return std::make_unique<class_name>(settings,bot); \
         })
 
 /**
@@ -422,7 +424,7 @@ public:
     /**
      * \brief Function object type used to create instances
      */
-    typedef std::function<Handler*(const Settings&,Melanobot*)> CreateFunction;
+    typedef std::function<std::unique_ptr<Handler>(const Settings&,Melanobot*)> CreateFunction;
 
     /**
      * \brief Dummy class for auto-registration
@@ -450,7 +452,7 @@ public:
      * \brief Build a handler from its name and settings
      * \return \c nullptr if it could not be created
      */
-    Handler* build(const std::string& handler_name,
+    std::unique_ptr<Handler> build(const std::string& handler_name,
                    const Settings& settings, Melanobot* bot) const
     {
         auto it = factory.find(settings.get("type",string::strtolower(handler_name)));

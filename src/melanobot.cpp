@@ -25,13 +25,13 @@ Melanobot::Melanobot(const Settings& settings )
     static int counter = 0;
     for(const auto& pt : settings.get_child("connections",{}))
     {
-        network::Connection* conn = network::ConnectionFactory::instance().create(this,pt.second);
+        auto conn = network::ConnectionFactory::instance().create(this,pt.second);
 
         std::string id = !pt.first.empty() ? pt.first :
             "unnamed_connection_"+std::to_string(++counter);
 
         if ( conn )
-            connections[id] = conn;
+            connections[id] = std::move(conn);
         else
             ErrorLog("sys") << "Could not create connection "
                 << string::FormatFlags::BOLD << id;
@@ -45,19 +45,15 @@ Melanobot::Melanobot(const Settings& settings )
 
     for(const auto& pt : settings.get_child("handlers",{}))
     {
-        handler::Handler *hand = handler::HandlerFactory::instance().build(pt.first,pt.second,this);
+        auto hand = handler::HandlerFactory::instance().build(pt.first,pt.second,this);
         if ( hand )
-            handlers.push_back(hand);
+            handlers.push_back(std::move(hand));
     }
 
 }
 Melanobot::~Melanobot()
 {
     stop();
-    for ( auto &conn : connections )
-        delete conn.second;
-    for ( auto handler : handlers )
-        delete handler;
 }
 void Melanobot::stop()
 {
@@ -73,7 +69,7 @@ void Melanobot::run()
     for ( auto &conn : connections )
         conn.second->start();
 
-    for ( auto handler : handlers )
+    for ( const auto& handler : handlers )
         handler->initialize();
 
     while ( messages.active() )
@@ -91,12 +87,12 @@ void Melanobot::run()
         if ( !msg.destination )
             msg.source = msg.destination;
 
-        for ( auto handler : handlers )
+        for ( const auto& handler : handlers )
             if ( handler->handle(msg) )
                 break;
     }
 
-    for ( auto handler : handlers )
+    for ( const auto& handler : handlers )
         handler->finalize();
 }
 
@@ -110,7 +106,7 @@ network::Connection* Melanobot::connection(const std::string& name) const
     auto it = connections.find(name);
     if ( it == connections.end() )
         return nullptr;
-    return it->second;
+    return it->second.get();
 }
 
 void Melanobot::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const

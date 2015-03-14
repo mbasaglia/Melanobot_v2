@@ -38,7 +38,7 @@ LoginInfo::LoginInfo(const Settings& settings, const std::string& default_nick)
     command     = settings.get("command","");
 }
 
-IrcConnection* IrcConnection::create(Melanobot* bot, const Settings& settings)
+std::unique_ptr<IrcConnection> IrcConnection::create(Melanobot* bot, const Settings& settings)
 {
     if ( settings.get("protocol",std::string()) != "irc" )
     {
@@ -57,7 +57,7 @@ IrcConnection* IrcConnection::create(Melanobot* bot, const Settings& settings)
         return nullptr;
     }
 
-    return new IrcConnection(bot, server, settings);
+    return std::make_unique<IrcConnection>(bot, server, settings);
 }
 
 IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )

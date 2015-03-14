@@ -535,12 +535,13 @@ public:
 // Non-C++ container methods
 
     /**
-     * \brief Append an element (takes ownership)
+     * \brief Append an element
      */
-    void append ( Element* element )
+    void append ( std::shared_ptr<Element> element )
     {
-        elements.push_back(container::value_type{element});
+        elements.push_back(element);
     }
+
 
     void append ( const FormattedString& string )
     {
@@ -587,7 +588,7 @@ public:
             if ( formatter )
                 buffer.append(formatter->decode(text));
             else
-                buffer.append(new AsciiSubstring(text));
+                buffer.append(std::make_shared<AsciiSubstring>(text));
         }
         return *this;
     }
@@ -597,27 +598,27 @@ public:
     }
     const FormattedStream& operator<< ( const color::Color12& color ) const
     {
-        buffer.append(new Color(color));
+        buffer.append(std::make_shared<Color>(color));
         return *this;
     }
     const FormattedStream& operator<< ( const FormatFlags& format_flags ) const
     {
-        buffer.append(new Format(format_flags));
+        buffer.append(std::make_shared<Format>(format_flags));
         return *this;
     }
     const FormattedStream& operator<< ( FormatFlags::FormatFlagsEnum format_flags ) const
     {
-        buffer.append(new Format(format_flags));
+        buffer.append(std::make_shared<Format>(format_flags));
         return *this;
     }
     const FormattedStream& operator<< ( ClearFormatting ) const
     {
-        buffer.append(new ClearFormatting);
+        buffer.append(std::make_shared<ClearFormatting>());
         return *this;
     }
     const FormattedStream& operator<< ( char c ) const
     {
-        buffer.append(new Character(c));
+        buffer.append(std::make_shared<Character>(c));
         return *this;
     }
     const FormattedStream& operator<< ( const FormattedString& string ) const

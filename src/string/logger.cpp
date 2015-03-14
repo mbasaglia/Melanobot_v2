@@ -23,7 +23,7 @@ void Logger::log (const std::string& type, char direction,
     const string::FormattedString& message, int verbosity)
 {
     if ( !formatter )
-        formatter = new string::FormatterAnsi(true);
+        formatter = new string::FormatterAnsi(true); // This happens when everything else has failed and will leak
 
     auto type_it = log_types.find(type);
     if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )

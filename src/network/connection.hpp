@@ -356,7 +356,7 @@ public:
 class ConnectionFactory
 {
 public:
-    typedef std::function<Connection*(Melanobot* bot, const Settings&)> Contructor;
+    typedef std::function<std::unique_ptr<Connection>(Melanobot* bot, const Settings&)> Contructor;
 
     /**
      * \brief Dummy class used for automatic registration
@@ -394,7 +394,7 @@ public:
     /**
      * \brief Creates a connection from its settings
      */
-    Connection* create(Melanobot* bot, const Settings& settings)
+    std::unique_ptr<Connection> create(Melanobot* bot, const Settings& settings)
     {
         std::string protocol = settings.get("protocol",std::string());
         auto it = factory.find(protocol);

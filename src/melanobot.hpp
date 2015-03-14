@@ -60,7 +60,9 @@ public:
 
     /**
      * \brief Get connection by name
-     * \return NULL if not found
+     * \return \b nullptr if not found
+     * \note The returned pointer will become invalid afther
+     *       the Melanobot object is destructed
      */
     network::Connection* connection(const std::string& name) const;
 
@@ -68,8 +70,8 @@ public:
 
 private:
     /// \todo allow dynamic connection/handler creation (requires locking)
-    std::unordered_map<std::string,network::Connection*> connections;
-    std::vector<handler::Handler*> handlers;
+    std::unordered_map<std::string,std::unique_ptr<network::Connection>> connections;
+    std::vector<std::unique_ptr<handler::Handler>> handlers;
 
     ConcurrentQueue<network::Message> messages;
 };

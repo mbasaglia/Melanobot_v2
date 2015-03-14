@@ -220,7 +220,7 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
     {
         if ( !ascii.empty() )
         {
-            str.append(new AsciiSubstring(ascii));
+            str.append(std::make_shared<AsciiSubstring>(ascii));
             ascii.clear();
         }
     };
@@ -232,7 +232,7 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
     parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
     {
         push_ascii();
-        str.append(new Unicode(utf8,unicode));
+        str.append(std::make_shared<Unicode>(utf8,unicode));
     };
     parser.callback_end = push_ascii;
 
@@ -256,7 +256,7 @@ std::string FormatterAscii::unicode(const Unicode& c) const
 FormattedString FormatterAscii::decode(const std::string& source) const
 {
     FormattedString str;
-    str.append(new AsciiSubstring(source));
+    str.append(std::make_shared<AsciiSubstring>(source));
     return str;
 }
 
@@ -312,7 +312,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
     {
         if ( !ascii.empty() )
         {
-            str.append(new AsciiSubstring(ascii));
+            str.append(std::make_shared<AsciiSubstring>(ascii));
             ascii.clear();
         }
     };
@@ -344,7 +344,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
             {
                 if ( i == 0)
                 {
-                    str.append(new ClearFormatting);
+                    str.append(std::make_shared<ClearFormatting>());
                 }
                 else if ( i == 1 )
                 {
@@ -368,7 +368,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                 }
                 else if ( i == 39 )
                 {
-                    str.append(new Color(color::nocolor));
+                    str.append(std::make_shared<Color>(color::nocolor));
                 }
                 else if ( i >= 30 && i <= 37 )
                 {
@@ -379,17 +379,17 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                         flags = FormatFlags::NO_FORMAT;
                         use_flags = false;
                     }
-                    str.append(new Color(color::Color12::from_4bit(i)));
+                    str.append(std::make_shared<Color>(color::Color12::from_4bit(i)));
                 }
                 else if ( i >= 90 && i <= 97 )
                 {
                     i -= 90;
                     i &= 0xf;
-                    str.append(new Color(color::Color12::from_4bit(i)));
+                    str.append(std::make_shared<Color>(color::Color12::from_4bit(i)));
                 }
             }
             if ( use_flags )
-                str.append(new Format(flags));
+                str.append(std::make_shared<Format>(flags));
         }
         else
         {
@@ -400,7 +400,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
     {
         push_ascii();
         if ( this->utf8 )
-            str.append(new Unicode(utf8,unicode));
+            str.append(std::make_shared<Unicode>(utf8,unicode));
     };
     parser.callback_end = push_ascii;
 
@@ -475,19 +475,19 @@ FormattedString FormatterIrc::decode(const std::string& source) const
                 if ( !(flags & FormatFlags::BOLD) )
                 {
                     flags |= FormatFlags::BOLD;
-                    str.append(new Format(flags));
+                    str.append(std::make_shared<Format>(flags));
                 }
                 break;
             case '\x1f':
                 if ( !(flags & FormatFlags::UNDERLINE) )
                 {
                     flags |= FormatFlags::UNDERLINE;
-                    str.append(new Format(flags));
+                    str.append(std::make_shared<Format>(flags));
                 }
                 break;
             case '\xf':
                 flags = FormatFlags::NO_FORMAT;
-                str.append(new ClearFormatting);
+                str.append(std::make_shared<ClearFormatting>());
                 break;
             case '\3':
             {
@@ -511,20 +511,20 @@ FormattedString FormatterIrc::decode(const std::string& source) const
                             parser.input.unget();
                     }
                 }
-                str.append(new Color(FormatterIrc::color_from_string(fg)));
+                str.append(std::make_shared<Color>(FormatterIrc::color_from_string(fg)));
                 break;
             }
             case '\x1d': case '\x16':
                 // Skip unsupported format flags
                 break;
             default:
-                str.append(new Character(byte));
+                str.append(std::make_shared<Character>(byte));
                 break;
         }
     };
     parser.callback_utf8 = [&str](uint32_t unicode,const std::string& utf8)
     {
-        str.append(new Unicode(utf8,unicode));
+        str.append(std::make_shared<Unicode>(utf8,unicode));
     };
 
     parser.parse(source);
@@ -627,12 +627,12 @@ FormattedString FormatterDarkplaces::decode(const std::string& source) const
             char next = parser.input.get();
             if ( next == '^' )
             {
-                str.append(new Character('^'));
+                str.append(std::make_shared<Character>('^'));
                 return;
             }
             else if ( std::isdigit(next) )
             {
-                str.append(new Color(FormatterDarkplaces::color_from_string(std::string(1,next))));
+                str.append(std::make_shared<Color>(FormatterDarkplaces::color_from_string(std::string(1,next))));
                 return;
             }
             else if ( next == 'x' )
@@ -645,20 +645,20 @@ FormattedString FormatterDarkplaces::decode(const std::string& source) const
                 }
                 if ( col.size() == 5 )
                 {
-                    str.append(new Color(FormatterDarkplaces::color_from_string(col)));
+                    str.append(std::make_shared<Color>(FormatterDarkplaces::color_from_string(col)));
                     return;
                 }
             }
             parser.input.seekg(pos);
         }
-        str.append(new Character(byte));
+        str.append(std::make_shared<Character>(byte));
     };
     parser.callback_utf8 = [&str](uint32_t unicode,const std::string& utf8)
     {
         if ( (unicode & 0xff00) == 0xe000 )
-            str.append(new QFont(unicode&0xff));
+            str.append(std::make_shared<QFont>(unicode&0xff));
         else
-            str.append(new Unicode(utf8,unicode));
+            str.append(std::make_shared<Unicode>(utf8,unicode));
     };
 
     parser.parse(source);
