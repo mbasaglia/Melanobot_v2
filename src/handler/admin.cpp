@@ -1,7 +1,6 @@
 /**
  * \file
  * \brief This file defines handlers which allows admin to administrate the bot
- *        (Mostly IRC-specific action)
  *
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
