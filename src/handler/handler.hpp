@@ -236,7 +236,7 @@ public:
      * then creates a new message which will have the trigger stripped off
      * and calls on_handle() with that.
      */
-    virtual bool handle(network::Message& msg)
+    virtual bool handle(network::Message& msg) override
     {
         if ( can_handle(msg) )
         {
@@ -280,7 +280,7 @@ protected:
     bool                 public_reply = true;///< Whether to reply publicly or just to the sender of the message
 
     using Handler::reply_to;
-    void reply_to(const network::Message& msg, const string::FormattedString& text) const
+    void reply_to(const network::Message& msg, const string::FormattedString& text) const override
     {
         std::string channel;
         if ( msg.dst_channel )

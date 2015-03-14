@@ -93,7 +93,7 @@ std::string Utf8Parser::encode(uint32_t value)
 
     std::list<uint8_t> s;
 
-    uint8_t head;
+    uint8_t head = 0;
     while ( value )
     {
         s.push_back((value&0b0011'1111)|0b1000'0000);

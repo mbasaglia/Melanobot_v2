@@ -46,7 +46,7 @@ struct Server
     std::string host;
     uint16_t    port;
 
-    Server( const std::string& host, uint16_t port ) : host(host), port(port) {}
+    Server( std::string host, uint16_t port ) : host(std::move(host)), port(port) {}
 
 
     /**
@@ -80,23 +80,23 @@ struct Command
     Time                        timein;         ///< Time of creation
     Time                        timeout;        ///< Time it becomes obsolete
 
-    Command ( const std::string&        command = {},
-        const std::vector<std::string>& parameters = {},
-        int                             priority = 0,
-        const Time&                     timeout = Time::max() )
-    :   command(command),
-        parameters(parameters),
+    Command ( std::string         command = {},
+        std::vector<std::string>  parameters = {},
+        int                       priority = 0,
+        Time                      timeout = Time::max() )
+    :   command(std::move(command)),
+        parameters(std::move(parameters)),
         priority(priority),
         timein(Clock::now()),
-        timeout(timeout)
+        timeout(std::move(timeout))
     {}
 
-    Command ( const std::string&        command,
-        const std::vector<std::string>& parameters,
+    Command ( std::string         command,
+        std::vector<std::string>  parameters,
         int                             priority,
         const Duration&                 duration )
-    :   command(command),
-        parameters(parameters),
+    :   command(std::move(command)),
+        parameters(std::move(parameters)),
         priority(priority),
         timein(Clock::now()),
         timeout(Clock::now()+duration)
@@ -139,15 +139,15 @@ struct Message
 struct OutputMessage
 {
     OutputMessage(std::string target,
-                  const string::FormattedString& message,
+                  string::FormattedString  message,
                   int priority = 0,
-                  const string::FormattedString& from = {},
-                  const string::FormattedString& prefix = {},
+                  string::FormattedString  from = {},
+                  string::FormattedString  prefix = {},
                   bool action = false,
-                  const Time& timeout = Clock::time_point::max()
-    ) : target(target), message(message), priority(priority),
-        from(from), prefix(prefix),
-        action(action), timeout(timeout)
+                  Time  timeout = Clock::time_point::max()
+    ) : target(std::move(target)), message(std::move(message)), priority(priority),
+        from(std::move(from)), prefix(std::move(prefix)),
+        action(action), timeout(std::move(timeout))
     {}
 
 

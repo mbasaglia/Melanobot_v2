@@ -60,7 +60,7 @@ public:
      */
     bool push_file(const std::string& name, std::ios::openmode mode = std::ios::out|std::ios::app)
     {
-        std::filebuf *buf = new std::filebuf;
+        std::filebuf* buf = new std::filebuf;
         buf->open(name, mode);
         if ( buf->is_open() )
         {

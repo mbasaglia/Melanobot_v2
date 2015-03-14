@@ -143,8 +143,8 @@ private:
 class Log
 {
 public:
-    Log(const std::string& type, char direction, int verbosity = 2)
-        : type(type), direction(direction), verbosity(verbosity)
+    Log(std::string type, char direction, int verbosity = 2)
+        : type(std::move(type)), direction(direction), verbosity(verbosity)
     {}
 
     Log(const std::string& type, char direction, const std::string& message, int verbosity = 2)
@@ -198,9 +198,9 @@ struct LocatableException : public std::logic_error
     std::string file;     ///< Source file name originating the error
     int         line = 0; ///< Source line number originating the error
 
-    LocatableException( const std::string& file,
+    LocatableException( std::string file,
                         int line, const std::string& msg )
-        : std::logic_error(msg), file(file), line(line) {}
+        : std::logic_error(msg), file(std::move(file)), line(line) {}
 };
 
 
@@ -213,9 +213,9 @@ struct LocatableException : public std::logic_error
 struct CriticalException : public LocatableException
 {
 
-    CriticalException( const std::string& file,     int line,
-                       const std::string& function, const std::string& msg )
-        : LocatableException(file, line, msg), function(function) {}
+    CriticalException( std::string file,     int line,
+                       std::string function, std::string msg )
+        : LocatableException(file, line, msg), function(std::move(function)) {}
 
     std::string function; ///< Source function name originating the error
 };

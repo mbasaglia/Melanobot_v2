@@ -97,7 +97,7 @@ protected:
             json_success(msg,ptree);
     }
 
-    void http_failure(const network::Message& msg, const network::Response&)
+    void http_failure(const network::Message& msg, const network::Response&) override
     {
         json_failure(msg);
     }

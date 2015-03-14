@@ -341,7 +341,7 @@ private:
 class AsciiSubstring : public Element
 {
 public:
-    AsciiSubstring(const std::string& s) : s(s) {}
+    AsciiSubstring(std::string s) : s(std::move(s)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
@@ -358,7 +358,7 @@ private:
 class Color : public Element
 {
 public:
-    Color ( const color::Color12& color ) : color(color) {}
+    Color ( color::Color12  color ) : color(std::move(color)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
@@ -375,7 +375,7 @@ private:
 class Format : public Element
 {
 public:
-    Format ( const FormatFlags& flags ) : flags(flags) {}
+    Format ( FormatFlags  flags ) : flags(std::move(flags)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
@@ -392,8 +392,8 @@ private:
 class Unicode : public Element
 {
 public:
-    Unicode ( const std::string& utf8, uint32_t point )
-        : utf8_(utf8), point_(point) {}
+    Unicode ( std::string utf8, uint32_t point )
+        : utf8_(std::move(utf8)), point_(point) {}
 
     std::string to_string(const Formatter& formatter) const override
     {

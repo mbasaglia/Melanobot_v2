@@ -512,7 +512,7 @@ private:
     {
         std::string name;
         int array_index = -1;
-        Context(const std::string& name) : name(name) {}
+        Context(std::string name) : name(std::move(name)) {}
     };
 
     std::istream stream{nullptr};///< Input stream
