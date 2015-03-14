@@ -120,8 +120,10 @@ void Buffer::write(const Command& cmd)
 
 void Buffer::write_line ( std::string line )
 {
-    /// \note this is synchronous, if it becomes async, keep QUIT as a sync message before disconnect()
-    /// \todo maybe try to strip \r and \n from line
+    line.erase(std::remove_if(line.begin(), line.end(),
+        [](char c){return c == '\n' || c == '\r' || c == '\0';}),
+        line.end());
+    
     std::ostream request_stream(&buffer_write);
     if ( line.size() > flood_max_length )
     {
