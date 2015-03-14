@@ -60,7 +60,7 @@ struct JsonParser
         this->stream.rdbuf(stream.rdbuf());
         this->stream_name = stream_name;
         line = 1;
-        parse_root();
+        parse_json_root();
         if ( !context.empty() )
             error("Abrupt ending");
         return ptree;
@@ -79,7 +79,7 @@ struct JsonParser
         if ( !buf.open(file_name,std::ios::in) )
             error("Cannot open file");
         this->stream.rdbuf(&buf);
-        parse_root();
+        parse_json_root();
         if ( !context.empty() )
             error("Abrupt ending");
         return ptree;
@@ -140,7 +140,7 @@ private:
     /**
      * \brief Parses the entire file
      */
-    void parse_root()
+    void parse_json_root()
     {
         error_flag = false;
         ptree.clear();
@@ -149,7 +149,7 @@ private:
         if ( nothrow )
         {
             try {
-                parse_object();
+                parse_json_object();
             } catch ( const JsonError& err ) {
                 ErrorLog errlog("web","JSON Error");
                 if ( Settings::global_settings.get("debug",0) )
@@ -159,14 +159,14 @@ private:
         }
         else
         {
-            parse_object();
+            parse_json_object();
         }
     }
 
     /**
      * \brief Parse a JSON object
      */
-    void parse_object()
+    void parse_json_object()
     {
         char c = get_skipws();
         if ( c != '{' )
@@ -175,13 +175,13 @@ private:
         if ( !context.empty() )
             ptree.put_child(context_pos(),{});
 
-        parse_properties();
+        parse_json_properties();
     }
 
     /**
      * \brief Parse object properties
      */
-    void parse_properties()
+    void parse_json_properties()
     {
         char c = get_skipws();
         while ( true )
@@ -192,18 +192,25 @@ private:
             if ( c == '}' )
                 break;
 
-            if ( c != '\"' && ! std::isalpha(c) )
+            if ( c == '\"' )
+            {
+                stream.unget();
+                context_push(parse_json_string());
+            }
+            else if ( std::isalpha(c) )
+            {
+                stream.unget();
+                context_push(parse_json_identifier());
+            }
+            else
                 error("Expected property name");
 
-            stream.unget();
-
-            context_push(parse_string());
 
             c = get_skipws();
             if ( c != ':' )
                 stream.unget();
 
-            parse_value();
+            parse_json_value();
             context_pop();
 
             c = get_skipws();
@@ -216,7 +223,7 @@ private:
     /**
      * \brief Parse a JSON array
      */
-    void parse_array()
+    void parse_json_array()
     {
         char c = get_skipws();
         if ( c != '[' )
@@ -226,14 +233,14 @@ private:
             ptree.put_child(context_pos(),{});
 
         context_push_array();
-        parse_array_elements();
+        parse_json_array_elements();
         context_pop();
     }
 
     /**
      * \brief Parse array elements
      */
-    void parse_array_elements()
+    void parse_json_array_elements()
     {
         char c = get_skipws();
 
@@ -247,7 +254,7 @@ private:
 
             stream.unget();
 
-            parse_value();
+            parse_json_value();
 
             c = get_skipws();
 
@@ -261,41 +268,45 @@ private:
     /**
      * \brief Parse a value (number, string, array, object, or other literal)
      */
-    void parse_value()
+    void parse_json_value()
     {
         char c = get_skipws();
         stream.unget();
         if ( c == '{' )
-            parse_object();
+            parse_json_object();
         else if ( c == '[' )
-            parse_array();
+            parse_json_array();
         else
-            parse_literal();
+            parse_json_literal();
 
     }
 
     /**
      * \brief Parse numeric, string and boolean literals
      */
-    void parse_literal()
+    void parse_json_literal()
     {
         char c = get_skipws();
-        if ( std::isalpha(c) || c == '\"' )
+        if ( std::isalpha(c) )
         {
             stream.unget();
-            std::string val = parse_string();
+            std::string val = parse_json_identifier();
             if ( val == "true" )
                 put(true);
             else if ( val == "false" )
                 put(false);
-            /// \todo handle null?
-            else
+            else if ( val != "null" ) // Null => no value
                 put(val);
+        }
+        else if ( c == '\"' )
+        {
+            stream.unget();
+            put(parse_json_string());
         }
         else if ( std::isdigit(c) || c == '.' || c == '-' || c == '+' )
         {
             stream.unget();
-            put(parse_number());
+            put(parse_json_number());
         }
         else
         {
@@ -306,7 +317,7 @@ private:
     /**
      * \brief Parse a string literal
      */
-    std::string parse_string()
+    std::string parse_json_string()
     {
         char c = get_skipws();
         std::string r;
@@ -332,7 +343,7 @@ private:
                             if ( !std::isxdigit(hex[i]) )
                                 hex[i] = '0';
                         }
-                        r += string::Utf8Parser::encode(string::to_uint(hex,0,16));
+                        r += string::Utf8Parser::encode(string::to_uint(hex,16));
 
                         continue;
                     }
@@ -347,17 +358,28 @@ private:
                     line++;
             }
         }
-        else
+
+        return r;
+    }
+
+    /**
+     * \brief Parses an identifier
+     */
+    std::string parse_json_identifier()
+    {
+        char c = get_skipws();
+        if ( !std::isalpha(c) )
+            return {};
+
+        std::string r;
+        while ( true )
         {
-            while ( true )
-            {
-                r += c;
-                c = stream.get();
-                if ( !stream || ( !std::isalnum(c) && c != '_' && c != '-' ) )
-                    break;
-            }
-            stream.unget();
+            r += c;
+            c = stream.get();
+            if ( !stream || ( !std::isalnum(c) && c != '_' && c != '-' ) )
+                break;
         }
+        stream.unget();
 
         return r;
     }
@@ -365,7 +387,7 @@ private:
     /**
      * \brief Parse a numeric literal
      */
-    double parse_number()
+    double parse_json_number()
     {
         double d = 0;
 

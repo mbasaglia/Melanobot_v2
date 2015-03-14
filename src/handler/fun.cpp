@@ -316,7 +316,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        static std::regex regex_name("(?:([^ ]+) )?\\s*(.*)",
+        static std::regex regex_name("(?:([^ ]+) )\\s*(.*)",
                 std::regex_constants::syntax_option_type::optimize |
                 std::regex_constants::syntax_option_type::ECMAScript);
 

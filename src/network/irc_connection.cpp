@@ -326,7 +326,7 @@ void IrcConnection::handle_message(Message msg)
     }
     else if ( msg.command == "PING" )
     {
-        /// \todo read timeout in settings
+        /// \todo read PING timeout in settings
         /// \todo set timer to the latest server message and call PING when too old
         command({"PONG",msg.params,1024,std::chrono::minutes(3)});
     }
@@ -739,8 +739,10 @@ void IrcConnection::command ( const Command& c )
 
         if ( cmd.parameters.size() == 1 )
         {
-            std::string::size_type nick_length = string::to_uint(server_features["NICKLEN"],10,-1);
+            std::string::size_type nick_length =
+                string::to_uint(server_features["NICKLEN"],10,std::string::npos);
             nick_length = std::min(nick_length,cmd.parameters[0].size());
+            /// \note NICK validation is very basic, the spec is more precise
             for ( unsigned i = 0; i < nick_length; i++ )
             {
                 if ( !is_nickchar(cmd.parameters[0][i]) )
@@ -756,7 +758,6 @@ void IrcConnection::command ( const Command& c )
         }
         cmd.parameters[0] = new_nick;
 
-        /// \todo validate nick
         {
             Lock lock(mutex);
             if ( new_nick == current_nick )
