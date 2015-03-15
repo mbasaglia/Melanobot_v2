@@ -15,7 +15,7 @@ the thread is put asleep.
 
 \section thread-irc IRC Connection
 
-The IRC connection (network::irc::IrcConnection) uses two threads:
+The IRC connection (irc::IrcConnection) uses two threads:
 one to get input from the network and one to handle messages to send.
 
 Both will be blocked if there is no input coming to them.
@@ -27,4 +27,10 @@ a single thread to handle asyncronous requests.
 
 It will wait for an incoming request, then it will fully complete that
 before looking for the next one.
+
+\section thread-stdin POSIX Stdin Connection
+
+The Stdin "connection" (StdinConnection) uses a thread to
+get input from the user.
+
 */

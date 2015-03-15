@@ -12,9 +12,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+set(MODULE_NAME melanomodule_posix)
 
-include_directories("${CMAKE_SOURCE_DIR}/modules")
+set(SOURCES stdin.cpp)
 
-melanomodule(irc "Internet Relay Chat support" ON)
-melanomodule(xonotic "Xonotic integration" ON)
-melanomodule(posix "Extra features for POSIX systems" OFF)
+add_library(${MODULE_NAME} ${SOURCES})

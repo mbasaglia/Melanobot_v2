@@ -27,12 +27,10 @@
 #include "melanobot.hpp"
 #include "network/connection.hpp"
 
-namespace network {
-
 /**
  * \brief Acts as a network connection to handle standard input
  */
-class StdinConnection : public Connection
+class StdinConnection : public network::Connection
 {
 public:
     static std::unique_ptr<StdinConnection> create(Melanobot* bot, const Settings& settings)
@@ -75,7 +73,7 @@ public:
 
     std::string protocol() const override { return "stdin"; }
     std::string name() const override { return "stdin"; }
-    Server server() const override { return {"stdin",0}; }
+    network::Server server() const override { return {"stdin",0}; }
 
     // dummy overrides:
     Status status() const override { return CONNECTED; }
@@ -93,8 +91,8 @@ public:
     // maybe could be given some actual functionality:
     std::string get_property(const std::string&) const override { return {}; }
     bool set_property(const std::string& , const std::string& ) override { return false; }
-    void command ( const Command&) override {}
-    void say ( const OutputMessage& ) override {}
+    void command ( const network::Command&) override {}
+    void say ( const network::OutputMessage& ) override {}
 
 private:
     Melanobot*                            bot;
@@ -132,7 +130,7 @@ private:
         }
 
         std::istream buffer_stream(&buffer_read);
-        Message msg;
+        network::Message msg;
         std::getline(buffer_stream,msg.raw);
         Log("std",'>',1) << formatter_->decode(msg.raw);
         std::istringstream socket_stream(msg.raw);
@@ -147,9 +145,12 @@ private:
     }
 
 };
-REGISTER_CONNECTION(stdin,&network::StdinConnection::create);
-REGISTER_LOG_TYPE(std,color::white);
-
-} // namespace network
-
+/**
+ * \brief POSIX module initialization
+ */
+void melanomodule_posix()
+{
+    REGISTER_CONNECTION(stdin,&StdinConnection::create);
+    REGISTER_LOG_TYPE(std,color::white);
+}
 #endif // BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR
