@@ -192,7 +192,7 @@ public:
         : SimpleAction("default_handler",settings,bot)
     {
         some_setting = settings.get("some_setting",some_setting);
-        synopsis += "
+        synopsis += " text...";
         help = "Help message for MyAction";
     }
 

@@ -30,32 +30,31 @@ void melanomodule_irc()
 {
     /**
      * \todo Turn more REGISTER_ macros into templates
-     * \todo wrap irc stuff in the irc namespace (as a top-level namespace)
      * \todo Extract more stuff from src/ into modules/
      */
-    REGISTER_CONNECTION(irc,&network::irc::IrcConnection::create);
+    REGISTER_CONNECTION(irc,&irc::IrcConnection::create);
     REGISTER_LOG_TYPE(irc,color::dark_magenta);
-    REGISTER_FORMATTER<string::FormatterIrc>();
+    REGISTER_FORMATTER<irc::FormatterIrc>();
 
-    REGISTER_HANDLER(handler::CtcpVersion,CtcpVersion);
-    REGISTER_HANDLER(handler::CtcpSource,CtcpSource);
-    REGISTER_HANDLER(handler::CtcpUserInfo,CtcpUserInfo);
-    REGISTER_HANDLER(handler::CtcpPing,CtcpPing);
-    REGISTER_HANDLER(handler::CtcpTime,CtcpTime);
-    REGISTER_HANDLER(handler::CtcpClientInfo,CtcpClientInfo);
+    REGISTER_HANDLER(irc::handler::CtcpVersion,CtcpVersion);
+    REGISTER_HANDLER(irc::handler::CtcpSource,CtcpSource);
+    REGISTER_HANDLER(irc::handler::CtcpUserInfo,CtcpUserInfo);
+    REGISTER_HANDLER(irc::handler::CtcpPing,CtcpPing);
+    REGISTER_HANDLER(irc::handler::CtcpTime,CtcpTime);
+    REGISTER_HANDLER(irc::handler::CtcpClientInfo,CtcpClientInfo);
 
-    REGISTER_HANDLER(handler::IrcJoinMessage,IrcJoinMessage);
-    REGISTER_HANDLER(handler::IrcKickMessage,IrcKickMessage);
-    REGISTER_HANDLER(handler::IrcKickRejoin,IrcKickRejoin);
+    REGISTER_HANDLER(irc::handler::IrcJoinMessage,IrcJoinMessage);
+    REGISTER_HANDLER(irc::handler::IrcKickMessage,IrcKickMessage);
+    REGISTER_HANDLER(irc::handler::IrcKickRejoin,IrcKickRejoin);
 
-    REGISTER_HANDLER(handler::AdminNick,Nick);
-    REGISTER_HANDLER(handler::AdminJoin,Join);
-    REGISTER_HANDLER(handler::AdminPart,Part);
-    REGISTER_HANDLER(handler::AcceptInvite,AcceptInvite);
-    REGISTER_HANDLER(handler::AdminRaw,Raw);
+    REGISTER_HANDLER(irc::handler::AdminNick,Nick);
+    REGISTER_HANDLER(irc::handler::AdminJoin,Join);
+    REGISTER_HANDLER(irc::handler::AdminPart,Part);
+    REGISTER_HANDLER(irc::handler::AcceptInvite,AcceptInvite);
+    REGISTER_HANDLER(irc::handler::AdminRaw,Raw);
 
-    REGISTER_HANDLER(handler::Whois330,Whois330);
-    REGISTER_HANDLER(handler::QSendWhois,QSendWhois);
-    REGISTER_HANDLER(handler::QGetWhois,QGetWhois);
-    REGISTER_HANDLER(handler::WhoisCheckMe,WhoisCheckMe);
+    REGISTER_HANDLER(irc::handler::Whois330,Whois330);
+    REGISTER_HANDLER(irc::handler::QSendWhois,QSendWhois);
+    REGISTER_HANDLER(irc::handler::QGetWhois,QGetWhois);
+    REGISTER_HANDLER(irc::handler::WhoisCheckMe,WhoisCheckMe);
 }

@@ -23,12 +23,13 @@
 
 #include "handler/handler.hpp"
 
+namespace irc {
 namespace handler {
 
 /**
  * \brief Sets the global id based on a 330 reply from whois (IRC)
  */
-class Whois330 : public Handler
+class Whois330 : public ::handler::Handler
 {
 public:
     Whois330(const Settings& settings, Melanobot* bot)
@@ -54,7 +55,7 @@ protected:
  * \note This will only work if the bot has a Q account, and USERS requires +k
  *       or better on the channel.
  */
-class QSendWhois : public Handler
+class QSendWhois : public ::handler::Handler
 {
 public:
     QSendWhois(const Settings& settings, Melanobot* bot)
@@ -93,7 +94,7 @@ private:
 /**
  * \brief Parses responses from Q WHOIS and USER (IRC)
  */
-class QGetWhois : public Handler
+class QGetWhois : public ::handler::Handler
 {
 public:
     QGetWhois(const Settings& settings, Melanobot* bot)
@@ -156,7 +157,7 @@ private:
 /**
  * \brief Sends a WHOIS about the message sender
  */
-class WhoisCheckMe : public SimpleAction
+class WhoisCheckMe : public ::handler::SimpleAction
 {
 public:
     WhoisCheckMe(const Settings& settings, Melanobot* bot)
@@ -182,4 +183,5 @@ private:
 
 
 } // namespace handler
+} // namespace irc
 #endif // IRC_HANDLER_WHOIS

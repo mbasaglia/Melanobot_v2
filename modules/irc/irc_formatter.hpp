@@ -21,18 +21,18 @@
 
 #include "string/string.hpp"
 
-namespace string {
+namespace irc {
 
 /**
  * \brief UTF-8 with IRC colors
  */
-class FormatterIrc : public FormatterUtf8
+class FormatterIrc : public string::FormatterUtf8
 {
 public:
     std::string color(const color::Color12& color) const override;
-    std::string format_flags(FormatFlags flags) const override;
+    std::string format_flags(string::FormatFlags flags) const override;
     std::string clear() const override;
-    FormattedString decode(const std::string& source) const override;
+    string::FormattedString decode(const std::string& source) const override;
     std::string name() const override;
     /**
      * \brief Creates a color from an IRC color string \3..
@@ -40,5 +40,5 @@ public:
     static color::Color12 color_from_string(const std::string& color);
 };
 
-} // namespace string
+} // namespace irc
 #endif // IRC_FORMATTER_HPP

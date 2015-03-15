@@ -25,18 +25,22 @@
 #include "config.hpp"
 #include "irc/network/functions.hpp"
 
+namespace irc {
+/**
+ * \brief IRC-Specific handlers
+ */
 namespace handler {
 
 /**
  * \brief Base class for handling CTCP requests
  * \see http://www.irchelp.org/irchelp/rfc/ctcpspec.html
  */
-class CtcpBase : public Handler
+class CtcpBase : public ::handler::Handler
 {
 public:
 
     CtcpBase(const std::string& ctcp, const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot), ctcp(network::irc::strtoupper(ctcp))
+        : Handler(settings,bot), ctcp(irc::strtoupper(ctcp))
     {
         if ( ctcp.empty() )
             throw ConfigurationError();
@@ -47,8 +51,8 @@ public:
         return authorized(msg) && !msg.params.empty() &&
             msg.source->protocol() == "irc" && msg.source == msg.destination &&
             msg.channels.size() == 1 && msg.from == msg.channels[0] &&
-            network::irc::strtoupper(msg.command) == "CTCP" &&
-            network::irc::strtoupper(msg.params[0]) == ctcp;
+            irc::strtoupper(msg.command) == "CTCP" &&
+            irc::strtoupper(msg.params[0]) == ctcp;
     }
 
     std::string get_property(const std::string& name) const override
@@ -243,7 +247,7 @@ protected:
         if ( !clientinfo.empty() )
         {
             std::string query = msg.params.size() < 2 ? "" : msg.params[1];
-            auto it = clientinfo.find(network::irc::strtoupper(query));
+            auto it = clientinfo.find(irc::strtoupper(query));
             if ( it != clientinfo.end() )
             {
                 reply_to(msg,it->first+" "+it->second);
@@ -284,5 +288,5 @@ private:
 };
 
 } // namespace handler
-
+} // namespace irc
 #endif // IRC_HANDLER_CTCP

@@ -28,7 +28,6 @@
 #include "concurrent_container.hpp"
 #include "string/logger.hpp"
 
-namespace network {
 namespace irc {
 
 class IrcConnection;
@@ -48,7 +47,7 @@ public:
      * \brief Inserts a command to the buffer
      * \thread external \lock buffer
      */
-    void insert(const Command& cmd);
+    void insert(const network::Command& cmd);
 
     /**
      * \brief Process the top command (if any)
@@ -60,7 +59,7 @@ public:
      * \brief Outputs directly a line from the command
      * \thread irc_out, external(quit) \lock none
      */
-    void write(const Command& cmd);
+    void write(const network::Command& cmd);
 
     /**
      * \brief Connect to the given server
@@ -100,7 +99,7 @@ private:
     /**
      * \brief Store messages when it isn't possible to send them
      */
-    ConcurrentPriorityQueue<Command> buffer;
+    ConcurrentPriorityQueue<network::Command> buffer;
     /**
      * \brief Thread running the output
      */
@@ -118,7 +117,7 @@ private:
      * \brief Message timer
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
      */
-    Time        flood_timer;
+    network::Time flood_timer;
     /**
      * \brief Maximum duration the flood timer can be ahead of now
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
@@ -126,14 +125,14 @@ private:
      * When \c flood_timer reaches \c flood_timer_max, the buffer will have
      * to wait a while before sending a new message to the server
      */
-    Duration    flood_timer_max;
+    network::Duration flood_timer_max;
     /**
      * \brief Message penalty
      * \see http://tools.ietf.org/html/rfc2813#section-5.8
      *
      * Fixed amount added to \c flood_timer with each message.
      */
-    Duration    flood_message_penalty;
+    network::Duration flood_message_penalty;
     /**
      * \brief Message size penalty
      *
@@ -180,5 +179,4 @@ private:
 };
 
 } // namespace irc
-} // namespace network
 #endif // IRC_BUFFER_HPP

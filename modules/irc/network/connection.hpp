@@ -31,7 +31,6 @@
 
 #include "melanobot.hpp"
 
-namespace network {
 /**
  * \brief Namespace contaning classes and functions handling the IRC protocol
  */
@@ -67,7 +66,7 @@ struct LoginInfo
      *
      * PRIVMSG \c service :\c command \c nick \c password
      */
-    Command irc_command(int priority) const
+    network::Command irc_command(int priority) const
     {
         return {"PRIVMSG",{service,command+' '+nick+' '+password},priority};
     }
@@ -77,7 +76,7 @@ struct LoginInfo
 /**
  * \brief IRC connection
  */
-class IrcConnection : public Connection
+class IrcConnection : public network::Connection
 {
 public:
     /**
@@ -88,7 +87,7 @@ public:
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const Server& server, const Settings& settings = {});
+    IrcConnection(Melanobot* bot, const network::Server& server, const Settings& settings = {});
     
     /**
      * \thread main \lock none
@@ -108,17 +107,17 @@ public:
     /**
      * \thread ? \lock data
      */
-    Server server() const override;
+    network::Server server() const override;
 
     /**
      * \thread external \lock data(sometimes) buffer(indirect)
      */
-    void command ( const Command& cmd ) override;
+    void command ( const network::Command& cmd ) override;
 
     /**
      * \thread external \lock data(sometimes) buffer(indirect)
      */
-    void say ( const OutputMessage& message ) override;
+    void say ( const network::OutputMessage& message ) override;
 
     /**
      * \thread ? \lock none
@@ -241,7 +240,7 @@ private:
      * \brief Handle a IRC message
      * \thread irc_in \lock data(sometimes) buffer(indirect, sometimes)
      */
-    void handle_message(Message line);
+    void handle_message(network::Message line);
 
     /**
      * \brief Extablish connection to the IRC server
@@ -280,12 +279,12 @@ private:
     /**
      * \brief IRC server to connect to
      */
-    Server main_server;
+    network::Server main_server;
 
     /**
      * \brief Server the bot is connected to
      */
-    Server current_server;
+    network::Server current_server;
 
     /**
      * \brief Command buffer
@@ -339,7 +338,7 @@ private:
     /**
      * \brief List of commands which could not be processed right away
      */
-    std::list<Command> scheduled_commands;
+    std::list<network::Command> scheduled_commands;
     /**
      * \brief Connection status
      */
@@ -355,6 +354,5 @@ private:
     user::AuthSystem  auth_system;
 };
 
-} // namespace network::irc
-} // namespace network
+} // namespace irc
 #endif // IRC_CONNECTION_HPP

@@ -1,5 +1,7 @@
 /**
  * \file
+ * \brief File containing Handlers which manage responses to various IRC commands
+ *
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \section License
@@ -21,12 +23,13 @@
 
 #include "handler/handler.hpp"
 
+namespace irc {
 namespace handler {
 
 /**
  * \brief Prints a message when a user joins a channel
  */
-class IrcJoinMessage: public Handler
+class IrcJoinMessage: public ::handler::Handler
 {
 public:
     IrcJoinMessage(const Settings& settings, Melanobot* bot)
@@ -69,7 +72,7 @@ private:
 /**
  * \brief Prints a message when a user is kicked from a channel
  */
-class IrcKickMessage: public Handler
+class IrcKickMessage: public ::handler::Handler
 {
 public:
     IrcKickMessage(const Settings& settings, Melanobot* bot)
@@ -112,7 +115,7 @@ private:
 /**
  * \brief Joins again once kicked
  */
-class IrcKickRejoin: public Handler
+class IrcKickRejoin: public ::handler::Handler
 {
 public:
     IrcKickRejoin(const Settings& settings, Melanobot* bot)
@@ -146,5 +149,5 @@ private:
 };
 
 } // namespace handler
-
+} // namespace irc
 #endif // IRC_HANDLER_IRC_ACTIONS

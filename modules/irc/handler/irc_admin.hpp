@@ -24,12 +24,13 @@
 
 #include "handler/handler.hpp"
 
+namespace irc {
 namespace handler {
 
 /**
  * \brief Changes the bot nick (IRC)
  */
-class AdminNick: public SimpleAction
+class AdminNick: public ::handler::SimpleAction
 {
 public:
     AdminNick(const Settings& settings, Melanobot* bot)
@@ -54,7 +55,7 @@ protected:
 /**
  * \brief Makes the bot join channels (IRC)
  */
-class AdminJoin: public SimpleAction
+class AdminJoin: public ::handler::SimpleAction
 {
 public:
     AdminJoin(const Settings& settings, Melanobot* bot)
@@ -82,7 +83,7 @@ protected:
 /**
  * \brief Makes the bot part channels (IRC)
  */
-class AdminPart: public SimpleAction
+class AdminPart: public ::handler::SimpleAction
 {
 public:
     AdminPart(const Settings& settings, Melanobot* bot)
@@ -112,7 +113,7 @@ protected:
  * \brief Makes the bot join channels (IRC)
  * \note Use this inside a group
  */
-class AcceptInvite: public Handler
+class AcceptInvite: public ::handler::Handler
 {
 public:
     AcceptInvite(const Settings& settings, Melanobot* bot)
@@ -134,7 +135,7 @@ protected:
 /**
  * \brief Makes the bot execute a raw command (IRC)
  */
-class AdminRaw: public SimpleAction
+class AdminRaw: public ::handler::SimpleAction
 {
 public:
     AdminRaw(const Settings& settings, Melanobot* bot)
@@ -176,5 +177,6 @@ protected:
 };
 
 } // namespace handler
+} // namespace irc
 
 #endif // IRC_HANDLER_ADMIN

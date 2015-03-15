@@ -22,7 +22,6 @@
 #include "string/string_functions.hpp"
 #include "irc/network/functions.hpp"
 
-namespace network {
 namespace irc {
 
 LoginInfo::LoginInfo(const Settings& settings, const std::string& default_nick)
@@ -41,7 +40,7 @@ std::unique_ptr<IrcConnection> IrcConnection::create(Melanobot* bot, const Setti
         return nullptr;
     }
 
-    Server server ( settings.get("server",std::string()) );
+    network::Server server ( settings.get("server",std::string()) );
     if ( !server.port )
         server.port = 6667;
     server.host = settings.get("server.host",server.host);
@@ -55,8 +54,10 @@ std::unique_ptr<IrcConnection> IrcConnection::create(Melanobot* bot, const Setti
     return std::make_unique<IrcConnection>(bot, server, settings);
 }
 
-IrcConnection::IrcConnection ( Melanobot* bot, const Server& server, const Settings& settings )
-    : bot(bot), main_server(server), current_server(server), buffer(*this, settings.get_child("buffer",{}))
+IrcConnection::IrcConnection ( Melanobot* bot, const network::Server& server,
+                               const Settings& settings )
+    : bot(bot), main_server(server), current_server(server),
+    buffer(*this, settings.get_child("buffer",{}))
 {
     read_settings(settings);
 }
@@ -171,7 +172,7 @@ void IrcConnection::error_stop()
     bot->stop(); /// \todo is this the right thing to do?
 }
 
-Server IrcConnection::server() const
+network::Server IrcConnection::server() const
 {
     Lock lock(mutex);
     return current_server;
@@ -231,7 +232,7 @@ void IrcConnection::remove_from_channel(const std::string& user_id,
     }
 }
 
-void IrcConnection::handle_message(Message msg)
+void IrcConnection::handle_message(network::Message msg)
 {
     if ( msg.command.empty() ) return;
 
@@ -245,7 +246,7 @@ void IrcConnection::handle_message(Message msg)
             current_server.host = msg.from;
             current_nick_lowecase = strtolower(current_nick);
             // copy so we can unlock before command()
-            std::list<Command> missed_commands;
+            std::list<network::Command> missed_commands;
             scheduled_commands.swap(missed_commands);
         lock.unlock();
         connection_status = CONNECTED;
@@ -311,7 +312,7 @@ void IrcConnection::handle_message(Message msg)
             Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
             /// \todo check nick max length
             /// \todo system to try to get the best nick possible
-            Command cmd {{"NICK"},{attempted_nick+'_'},1024};
+            network::Command cmd {{"NICK"},{attempted_nick+'_'},1024};
             lock.unlock();
             command(cmd);
         }
@@ -677,11 +678,11 @@ void IrcConnection::handle_message(Message msg)
     bot->message(msg);
 }
 
-void IrcConnection::command ( const Command& c )
+void IrcConnection::command ( const network::Command& c )
 {
     if ( c.command.empty() ) return;
 
-    Command cmd = c;
+    network::Command cmd = c;
     cmd.command = strtoupper(cmd.command);
 
 
@@ -897,7 +898,7 @@ void IrcConnection::command ( const Command& c )
 }
 
 
-void IrcConnection::say ( const OutputMessage& message )
+void IrcConnection::say ( const network::OutputMessage& message )
 {
     string::FormattedStream str;
     if ( !message.prefix.empty() )
@@ -920,7 +921,7 @@ void IrcConnection::say ( const OutputMessage& message )
     command({irc_command, {message.target, text}, message.priority, message.timeout});
 }
 
-Connection::Status IrcConnection::status() const
+network::Connection::Status IrcConnection::status() const
 {
     return connection_status;
 }
@@ -1145,4 +1146,3 @@ bool IrcConnection::set_property( const std::string& property, const std::string
 }
 
 } // namespace irc
-} // namespace network

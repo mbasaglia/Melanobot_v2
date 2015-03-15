@@ -21,6 +21,9 @@
 
 #include "string/string.hpp"
 
+/**
+ * \brief Namespace for Xonotic integration
+ */
 namespace xonotic {
 
 /**

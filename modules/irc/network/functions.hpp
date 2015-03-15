@@ -23,7 +23,6 @@
 #include <cctype>
 #include <string>
 
-namespace network{
 namespace irc {
 
 /**
@@ -73,6 +72,6 @@ inline std::string strtoupper ( std::string string )
 }
 
 
-} // namespace network::irc
-} // namespace network
+} // namespace irc
+
 #endif // IRC_FUNCTIONS_HPP
