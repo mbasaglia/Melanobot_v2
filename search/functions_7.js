@@ -1,7 +1,7 @@
 var searchData=
 [
   ['handle',['handle',['../classhandler_1_1Handler.html#a105124a15fba64cbfae4aebe9581f243',1,'handler::Handler::handle()'],['../classhandler_1_1SimpleAction.html#ac6b37c745d5a22c5ef606259864852c5',1,'handler::SimpleAction::handle()']]],
-  ['handle_5fmessage',['handle_message',['../classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436',1,'network::irc::IrcConnection']]],
+  ['handle_5fmessage',['handle_message',['../classirc_1_1IrcConnection.html#ae22ce0da5da885daf1ac66c1b64a3f53',1,'irc::IrcConnection']]],
   ['handler',['Handler',['../classhandler_1_1Handler.html#ae0fffddf35a0e5b33ecaa56f501c1f86',1,'handler::Handler::Handler(const Settings &amp;settings, Melanobot *bot)'],['../classhandler_1_1Handler.html#a773303bb11280b65e695d7bd7ea306c0',1,'handler::Handler::Handler(const Handler &amp;)=delete']]],
   ['handlerfactory',['HandlerFactory',['../classhandler_1_1HandlerFactory.html#a4adcb21f2356c87341d9a323867cec9e',1,'handler::HandlerFactory::HandlerFactory()'],['../classhandler_1_1HandlerFactory.html#a71acac16408d3c1d2412371408232206',1,'handler::HandlerFactory::HandlerFactory(const HandlerFactory &amp;)=delete']]],
   ['has_5fchild',['has_child',['../classSettings.html#a9d8cb2957fa6787b34a9d747d426f503',1,'Settings']]],

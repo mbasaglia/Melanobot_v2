@@ -10,5 +10,5 @@ var searchData=
   ['log_5fdirections',['log_directions',['../classLogger.html#a8562aa8a8e0455e40f2a0b2599fe8e51',1,'Logger']]],
   ['log_5ftype_5flength',['log_type_length',['../classLogger.html#aeb84e55757ef3d6a54ab6cb3ec4523ff',1,'Logger']]],
   ['log_5ftypes',['log_types',['../classLogger.html#a2ecdc47a6ce72e9889954a21273e1ca5',1,'Logger']]],
-  ['login_5finfo',['login_info',['../classnetwork_1_1irc_1_1IrcConnection.html#a26843ae05b4ef3746076f98019193722',1,'network::irc::IrcConnection']]]
+  ['login_5finfo',['login_info',['../classirc_1_1IrcConnection.html#aebf63e1c085be4219320a3723e517b88',1,'irc::IrcConnection']]]
 ];

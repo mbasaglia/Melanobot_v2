@@ -429,7 +429,7 @@ var sectionId = 'dynsection-1';
 </g>
 <!-- Node19 -->
 <g id="node19" class="node"><title>Node19</title>
-<g id="a_node19"><a xlink:href="irc__actions_8hpp.html" target="_top" xlink:title="modules/irc/handler\l/irc_actions.hpp">
+<g id="a_node19"><a xlink:href="irc__actions_8hpp.html" target="_top" xlink:title="File containing Handlers which manage responses to various IRC commands. ">
 <polygon fill="none" stroke="black" points="996,-56.5 996,-86.5 1097,-86.5 1097,-56.5 996,-56.5"/>
 <text text-anchor="start" x="1004" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">modules/irc/handler</text>
 <text text-anchor="middle" x="1046.5" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">/irc_actions.hpp</text>

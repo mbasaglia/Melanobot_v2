@@ -10,6 +10,6 @@ var searchData=
   ['formatteransi',['FormatterAnsi',['../classstring_1_1FormatterAnsi.html',1,'string']]],
   ['formatterascii',['FormatterAscii',['../classstring_1_1FormatterAscii.html',1,'string']]],
   ['formatterfactory',['FormatterFactory',['../classstring_1_1Formatter_1_1FormatterFactory.html',1,'string::Formatter']]],
-  ['formatterirc',['FormatterIrc',['../classstring_1_1FormatterIrc.html',1,'string']]],
+  ['formatterirc',['FormatterIrc',['../classirc_1_1FormatterIrc.html',1,'irc']]],
   ['formatterutf8',['FormatterUtf8',['../classstring_1_1FormatterUtf8.html',1,'string']]]
 ];

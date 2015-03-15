@@ -2,7 +2,7 @@
 <area shape="rect" id="node2" href="$modules_2irc_2network_2connection_8hpp.html" title="irc/network/connection.hpp" alt="" coords="624,155,803,181"/>
 <area shape="rect" id="node43" href="$irc__formatter_8hpp.html" title="irc/irc_formatter.hpp" alt="" coords="2104,229,2243,256"/>
 <area shape="rect" id="node44" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="2200,80,2336,107"/>
-<area shape="rect" id="node48" href="$irc__actions_8hpp.html" title="irc/handler/irc_actions.hpp" alt="" coords="1738,80,1913,107"/>
+<area shape="rect" id="node48" href="$irc__actions_8hpp.html" title="File containing Handlers which manage responses to various IRC commands. " alt="" coords="1738,80,1913,107"/>
 <area shape="rect" id="node49" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="1937,80,2103,107"/>
 <area shape="rect" id="node50" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="1547,80,1714,107"/>
 <area shape="rect" id="node8" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="1245,304,1405,331"/>

@@ -24,11 +24,11 @@ var searchData=
   ['connectionfactory',['ConnectionFactory',['../classnetwork_1_1ConnectionFactory.html',1,'network']]],
   ['context',['Context',['../structJsonParser_1_1Context.html',1,'JsonParser']]],
   ['criticalexception',['CriticalException',['../structCriticalException.html',1,'']]],
-  ['ctcpbase',['CtcpBase',['../classhandler_1_1CtcpBase.html',1,'handler']]],
-  ['ctcpclientinfo',['CtcpClientInfo',['../classhandler_1_1CtcpClientInfo.html',1,'handler']]],
-  ['ctcpping',['CtcpPing',['../classhandler_1_1CtcpPing.html',1,'handler']]],
-  ['ctcpsource',['CtcpSource',['../classhandler_1_1CtcpSource.html',1,'handler']]],
-  ['ctcptime',['CtcpTime',['../classhandler_1_1CtcpTime.html',1,'handler']]],
-  ['ctcpuserinfo',['CtcpUserInfo',['../classhandler_1_1CtcpUserInfo.html',1,'handler']]],
-  ['ctcpversion',['CtcpVersion',['../classhandler_1_1CtcpVersion.html',1,'handler']]]
+  ['ctcpbase',['CtcpBase',['../classirc_1_1handler_1_1CtcpBase.html',1,'irc::handler']]],
+  ['ctcpclientinfo',['CtcpClientInfo',['../classirc_1_1handler_1_1CtcpClientInfo.html',1,'irc::handler']]],
+  ['ctcpping',['CtcpPing',['../classirc_1_1handler_1_1CtcpPing.html',1,'irc::handler']]],
+  ['ctcpsource',['CtcpSource',['../classirc_1_1handler_1_1CtcpSource.html',1,'irc::handler']]],
+  ['ctcptime',['CtcpTime',['../classirc_1_1handler_1_1CtcpTime.html',1,'irc::handler']]],
+  ['ctcpuserinfo',['CtcpUserInfo',['../classirc_1_1handler_1_1CtcpUserInfo.html',1,'irc::handler']]],
+  ['ctcpversion',['CtcpVersion',['../classirc_1_1handler_1_1CtcpVersion.html',1,'irc::handler']]]
 ];

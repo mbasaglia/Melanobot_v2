@@ -82,14 +82,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt><a class="anchor" id="_todo000042"></a>Member <a class="el" href="classhandler_1_1AdminPart.html#ac3897b785a00ff2a6871f633493edc90">handler::AdminPart::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
-<dd>gather part message  </dd>
 <dt><a class="anchor" id="_todo000021"></a>Class <a class="el" href="classhandler_1_1Bridge.html">handler::Bridge</a>  </dt>
 <dd>attachable to other connections (maybe limiting the protocol)  </dd>
 <dt><a class="anchor" id="_todo000022"></a>Member <a class="el" href="classhandler_1_1ChuckNorris.html#a4576b36b5720be1c8e8075cdccf865dc">handler::ChuckNorris::json_success</a>  (const <a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg, const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;parsed) override</dt>
 <dd>convert html entities  </dd>
-<dt><a class="anchor" id="_todo000041"></a>Member <a class="el" href="classhandler_1_1CtcpVersion.html#a4455c28d360ac95a8ed9b2e97fcd63db">handler::CtcpVersion::CtcpVersion</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
-<dd>more detailed system information  </dd>
 <dt><a class="anchor" id="_todo000015"></a>Member <a class="el" href="classhandler_1_1Handler.html#af722963ee48de2ff1cd2055b9fb94972">handler::Handler::finalize</a>  ()</dt>
 <dd>see todo in initialize(), also is this needed?  </dd>
 <dt><a class="anchor" id="_todo000014"></a>Member <a class="el" href="classhandler_1_1Handler.html#a2c6b00c624bfba80346fb2d4257c8042">handler::Handler::initialize</a>  ()</dt>
@@ -104,6 +100,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <dd>if posible, merge name and help_group  </dd>
 <dt><a class="anchor" id="_todo000023"></a>Member <a class="el" href="classhandler_1_1SimpleGroup.html#a3e56c03bdefd771708a16c8d7956bc71">handler::SimpleGroup::SimpleGroup</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
 <dd>option to copy settings from another group  </dd>
+<dt><a class="anchor" id="_todo000041"></a>Member <a class="el" href="classirc_1_1handler_1_1AdminPart.html#aa555c0081da458a7aeb32f3e904e1e7b">irc::handler::AdminPart::on_handle</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> &amp;msg) override</dt>
+<dd>gather part message  </dd>
+<dt><a class="anchor" id="_todo000040"></a>Member <a class="el" href="classirc_1_1handler_1_1CtcpVersion.html#a1d28d40c2ddb6cac079b8ad269f4208d">irc::handler::CtcpVersion::CtcpVersion</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings, <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> *bot)</dt>
+<dd>more detailed system information  </dd>
+<dt><a class="anchor" id="_todo000037"></a>Member <a class="el" href="classirc_1_1IrcConnection.html#af9e1bcbae925f6ee788c759302377a7f">irc::IrcConnection::command</a>  (const <a class="el" href="structnetwork_1_1Command.html" title="A command to send to a connection. ">network::Command</a> &amp;cmd) override</dt>
+<dd><p class="startdd">sanitaze the mode string </p>
+<p>allow channel mode </p>
+<p class="enddd">keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a>  </p>
+</dd>
+<dt><a class="anchor" id="_todo000029"></a>Member <a class="el" href="classirc_1_1IrcConnection.html#a5cee80d3674dc23db2dbe201263f7828">irc::IrcConnection::error_stop</a>  ()</dt>
+<dd>is this the right thing to do?  </dd>
+<dt><a class="anchor" id="_todo000030"></a>Member <a class="el" href="classirc_1_1IrcConnection.html#ae22ce0da5da885daf1ac66c1b64a3f53">irc::IrcConnection::handle_message</a>  (<a class="el" href="structnetwork_1_1Message.html" title="A message originating from a connection. ">network::Message</a> line)</dt>
+<dd><p class="startdd">Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING </p>
+<p>maybe it would be useful to store operator/voiced status </p>
+<p>check nick max length </p>
+<p>system to try to get the best nick possible </p>
+<p>read PING timeout in settings </p>
+<p>set timer to the latest server message and call PING when too old </p>
+<p class="enddd">print a message for all ERR_ responses (verbosity &gt; 2)  </p>
+</dd>
+<dt><a class="anchor" id="_todo000028"></a>Member <a class="el" href="classirc_1_1IrcConnection.html#a6e7486fdcc132ffc0041bc8dd65d33da">irc::IrcConnection::read_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
+<dd>if called from somewhere that is not the constructor, lock data  </dd>
+<dt><a class="anchor" id="_todo000042"></a>Member <a class="el" href="namespaceirc.html#a8fd3c0e9512407449f8a730ae5dfac75">irc::strtolower</a>  (std::string string)</dt>
+<dd>locale stuff if it's worth the effort  </dd>
 <dt><a class="anchor" id="_todo000019"></a>Member <a class="el" href="structJsonParser.html#a8d29983beae6467f7056bf3abb1f9c85">JsonParser::get_skipws</a>  ()</dt>
 <dd>possibly skip comments  </dd>
 <dt><a class="anchor" id="_todo000009"></a>Member <a class="el" href="classLogger.html#afd8ac164f5cc7d2b3c39ba41dfe35c84">Logger::load_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
@@ -116,32 +136,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <dd>allow dynamic connection/handler creation (requires locking)  </dd>
 <dt><a class="anchor" id="_todo000026"></a>Member <a class="el" href="irc_8cpp.html#ad36b50a455f2dad75512c34ef770e45a">melanomodule_irc</a>  ()</dt>
 <dd><p class="startdd">Turn more REGISTER_ macros into templates </p>
-<p>wrap irc stuff in the irc namespace (as a top-level namespace) </p>
 <p class="enddd">Extract more stuff from src/ into modules/  </p>
 </dd>
 <dt><a class="anchor" id="_todo000018"></a>Member <a class="el" href="namespacenetwork_1_1http.html#adfb7ede7b00df506c94a9f8e6ee08210">network::http::urlencode</a>  (const std::string &amp;text)</dt>
 <dd>urldecode (?) <dl class="section see"><dt>See also</dt><dd><a href="http://www.faqs.org/rfcs/rfc3986.html">http://www.faqs.org/rfcs/rfc3986.html</a>  </dd></dl>
 </dd>
-<dt><a class="anchor" id="_todo000038"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a1c6a91407612f82cdea7ffd83837e370">network::irc::IrcConnection::command</a>  (const Command &amp;cmd) override</dt>
-<dd><p class="startdd">sanitaze the mode string </p>
-<p>allow channel mode </p>
-<p class="enddd">keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a>  </p>
-</dd>
-<dt><a class="anchor" id="_todo000030"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a47dbb3efa1768ac484ede37515ac3235">network::irc::IrcConnection::error_stop</a>  ()</dt>
-<dd>is this the right thing to do?  </dd>
-<dt><a class="anchor" id="_todo000031"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436">network::irc::IrcConnection::handle_message</a>  (Message line)</dt>
-<dd><p class="startdd">Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING </p>
-<p>maybe it would be useful to store operator/voiced status </p>
-<p>check nick max length </p>
-<p>system to try to get the best nick possible </p>
-<p>read PING timeout in settings </p>
-<p>set timer to the latest server message and call PING when too old </p>
-<p class="enddd">print a message for all ERR_ responses (verbosity &gt; 2)  </p>
-</dd>
-<dt><a class="anchor" id="_todo000029"></a>Member <a class="el" href="classnetwork_1_1irc_1_1IrcConnection.html#aa97e91c931f8c4c18754a9722a8c3b7f">network::irc::IrcConnection::read_settings</a>  (const <a class="el" href="classSettings.html" title="Class containing hierarchical settings. ">Settings</a> &amp;settings)</dt>
-<dd>if called from somewhere that is not the constructor, lock data  </dd>
-<dt><a class="anchor" id="_todo000043"></a>Member <a class="el" href="namespacenetwork_1_1irc.html#a0b4f56807f296da0bc67966429d83ca7">network::irc::strtolower</a>  (std::string string)</dt>
-<dd>locale stuff if it's worth the effort  </dd>
 <dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="string_8hpp.html#a2eba6f24965fdfc500ed6307a7c962f7">REGISTER_FORMATTER</a>  (Args &amp;&amp;...args)</dt>
 <dd>namespace?  </dd>
 <dt><a class="anchor" id="_todo000002"></a>File <a class="el" href="string_8cpp.html">string.cpp</a>  </dt>
@@ -168,7 +167,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Mar 15 2015 18:05:51 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 22:51:54 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

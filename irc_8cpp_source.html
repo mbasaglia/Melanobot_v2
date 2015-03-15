@@ -123,40 +123,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="comment">/**</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">     * \todo Turn more REGISTER_ macros into templates</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">     * \todo wrap irc stuff in the irc namespace (as a top-level namespace)</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">     * \todo Extract more stuff from src/ into modules/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    REGISTER_CONNECTION(irc,&amp;network::irc::IrcConnection::create);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    REGISTER_LOG_TYPE(irc,color::dark_magenta);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    REGISTER_FORMATTER&lt;string::FormatterIrc&gt;();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    REGISTER_HANDLER(handler::CtcpVersion,CtcpVersion);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    REGISTER_HANDLER(handler::CtcpSource,CtcpSource);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    REGISTER_HANDLER(handler::CtcpUserInfo,CtcpUserInfo);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    REGISTER_HANDLER(handler::CtcpPing,CtcpPing);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    REGISTER_HANDLER(handler::CtcpTime,CtcpTime);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    REGISTER_HANDLER(handler::CtcpClientInfo,CtcpClientInfo);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    REGISTER_HANDLER(handler::IrcJoinMessage,IrcJoinMessage);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    REGISTER_HANDLER(handler::IrcKickMessage,IrcKickMessage);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    REGISTER_HANDLER(handler::IrcKickRejoin,IrcKickRejoin);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    REGISTER_HANDLER(handler::AdminNick,Nick);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    REGISTER_HANDLER(handler::AdminJoin,Join);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    REGISTER_HANDLER(handler::AdminPart,Part);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    REGISTER_HANDLER(handler::AcceptInvite,AcceptInvite);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    REGISTER_HANDLER(handler::AdminRaw,Raw);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    REGISTER_HANDLER(handler::Whois330,Whois330);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    REGISTER_HANDLER(handler::QSendWhois,QSendWhois);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    REGISTER_HANDLER(handler::QGetWhois,QGetWhois);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    REGISTER_HANDLER(handler::WhoisCheckMe,WhoisCheckMe);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">     * \todo Extract more stuff from src/ into modules/</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    REGISTER_CONNECTION(irc,&amp;irc::IrcConnection::create);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    REGISTER_LOG_TYPE(irc,color::dark_magenta);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    REGISTER_FORMATTER&lt;irc::FormatterIrc&gt;();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    REGISTER_HANDLER(irc::handler::CtcpVersion,CtcpVersion);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    REGISTER_HANDLER(irc::handler::CtcpSource,CtcpSource);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    REGISTER_HANDLER(irc::handler::CtcpUserInfo,CtcpUserInfo);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    REGISTER_HANDLER(irc::handler::CtcpPing,CtcpPing);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    REGISTER_HANDLER(irc::handler::CtcpTime,CtcpTime);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    REGISTER_HANDLER(irc::handler::CtcpClientInfo,CtcpClientInfo);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    REGISTER_HANDLER(irc::handler::IrcJoinMessage,IrcJoinMessage);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    REGISTER_HANDLER(irc::handler::IrcKickMessage,IrcKickMessage);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    REGISTER_HANDLER(irc::handler::IrcKickRejoin,IrcKickRejoin);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    REGISTER_HANDLER(irc::handler::AdminNick,Nick);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    REGISTER_HANDLER(irc::handler::AdminJoin,Join);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    REGISTER_HANDLER(irc::handler::AdminPart,Part);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    REGISTER_HANDLER(irc::handler::AcceptInvite,AcceptInvite);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    REGISTER_HANDLER(irc::handler::AdminRaw,Raw);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    REGISTER_HANDLER(irc::handler::Whois330,Whois330);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    REGISTER_HANDLER(irc::handler::QSendWhois,QSendWhois);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    REGISTER_HANDLER(irc::handler::QGetWhois,QGetWhois);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    REGISTER_HANDLER(irc::handler::WhoisCheckMe,WhoisCheckMe);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
 <div class="ttc" id="irc_8cpp_html_ad36b50a455f2dad75512c34ef770e45a"><div class="ttname"><a href="irc_8cpp.html#ad36b50a455f2dad75512c34ef770e45a">melanomodule_irc</a></div><div class="ttdeci">void melanomodule_irc()</div><div class="ttdoc">Initializes the IRC module. </div><div class="ttdef"><b>Definition:</b> <a href="irc_8cpp_source.html#l00029">irc.cpp:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Mar 15 2015 18:05:04 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 22:51:06 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

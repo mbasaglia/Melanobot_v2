@@ -1,0 +1,10 @@
+<map id="irc::handler::CtcpBase" name="irc::handler::CtcpBase">
+<area shape="rect" id="node4" href="$classirc_1_1handler_1_1CtcpClientInfo.html" title="Shows help about other CTCP handlers. " alt="" coords="592,5,771,32"/>
+<area shape="rect" id="node5" href="$classirc_1_1handler_1_1CtcpPing.html" title="CTCP PING reply, Used to measure round&#45;trip message delays. " alt="" coords="607,56,755,83"/>
+<area shape="rect" id="node6" href="$classirc_1_1handler_1_1CtcpSource.html" title="CTCP SOURCE reply, shows a URL with the sources. " alt="" coords="600,107,763,133"/>
+<area shape="rect" id="node7" href="$classirc_1_1handler_1_1CtcpTime.html" title="CTCP TIME reply, Shows the local time. " alt="" coords="606,157,757,184"/>
+<area shape="rect" id="node8" href="$classirc_1_1handler_1_1CtcpUserInfo.html" title="CTCP USERINFO reply, shows a user&#45;defined string. " alt="" coords="595,208,767,235"/>
+<area shape="rect" id="node9" href="$classirc_1_1handler_1_1CtcpVersion.html" title="CTCP VERSION reply, shows a pre&#45;formatted version string. " alt="" coords="598,259,765,285"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,132,344,159"/>
+<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,132,179,159"/>
+</map>

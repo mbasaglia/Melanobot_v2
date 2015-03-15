@@ -1,6 +1,6 @@
 <map id="string::FormatterUtf8" name="string::FormatterUtf8">
-<area shape="rect" id="node3" href="$classstring_1_1FormatterAnsi.html" title="ANSI&#45;formatted UTF&#45;8 or ASCII. " alt="" coords="5,155,149,181"/>
-<area shape="rect" id="node4" href="$classstring_1_1FormatterAscii.html" title="Plain ASCII. " alt="" coords="173,155,320,181"/>
-<area shape="rect" id="node5" href="$classstring_1_1FormatterIrc.html" title="UTF&#45;8 with IRC colors. " alt="" coords="344,155,477,181"/>
-<area shape="rect" id="node2" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="187,5,306,32"/>
+<area shape="rect" id="node3" href="$classirc_1_1FormatterIrc.html" title="UTF&#45;8 with IRC colors. " alt="" coords="5,155,120,181"/>
+<area shape="rect" id="node4" href="$classstring_1_1FormatterAnsi.html" title="ANSI&#45;formatted UTF&#45;8 or ASCII. " alt="" coords="144,155,288,181"/>
+<area shape="rect" id="node5" href="$classstring_1_1FormatterAscii.html" title="Plain ASCII. " alt="" coords="312,155,459,181"/>
+<area shape="rect" id="node2" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="157,5,275,32"/>
 </map>

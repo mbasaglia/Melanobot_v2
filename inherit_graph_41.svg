@@ -44,9 +44,9 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="classstring_1_1FormatterAnsi.html" target="_top" xlink:title="ANSI&#45;formatted UTF&#45;8 or ASCII. ">
-<polygon fill="none" stroke="black" points="269,-76.5 269,-95.5 377,-95.5 377,-76.5 269,-76.5"/>
-<text text-anchor="middle" x="323" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">string::FormatterAnsi</text>
+<g id="a_node3"><a xlink:href="classirc_1_1FormatterIrc.html" target="_top" xlink:title="UTF&#45;8 with IRC colors. ">
+<polygon fill="none" stroke="black" points="280,-76.5 280,-95.5 366,-95.5 366,-76.5 280,-76.5"/>
+<text text-anchor="middle" x="323" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">irc::FormatterIrc</text>
 </a>
 </g>
 </g>
@@ -57,22 +57,22 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="classstring_1_1FormatterAscii.html" target="_top" xlink:title="Plain ASCII. ">
-<polygon fill="none" stroke="black" points="268,-38.5 268,-57.5 378,-57.5 378,-38.5 268,-38.5"/>
-<text text-anchor="middle" x="323" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">string::FormatterAscii</text>
+<g id="a_node4"><a xlink:href="classstring_1_1FormatterAnsi.html" target="_top" xlink:title="ANSI&#45;formatted UTF&#45;8 or ASCII. ">
+<polygon fill="none" stroke="black" points="269,-38.5 269,-57.5 377,-57.5 377,-38.5 269,-38.5"/>
+<text text-anchor="middle" x="323" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">string::FormatterAnsi</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node4 -->
 <g id="edge3" class="edge"><title>Node2&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M242.339,-48C250.778,-48 259.376,-48 267.652,-48"/>
+<path fill="none" stroke="midnightblue" d="M242.335,-48C251.1,-48 260.038,-48 268.607,-48"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="242.157,-44.5001 232.157,-48 242.157,-51.5001 242.157,-44.5001"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="classstring_1_1FormatterIrc.html" target="_top" xlink:title="UTF&#45;8 with IRC colors. ">
-<polygon fill="none" stroke="black" points="273,-0.5 273,-19.5 373,-19.5 373,-0.5 273,-0.5"/>
-<text text-anchor="middle" x="323" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">string::FormatterIrc</text>
+<g id="a_node5"><a xlink:href="classstring_1_1FormatterAscii.html" target="_top" xlink:title="Plain ASCII. ">
+<polygon fill="none" stroke="black" points="268,-0.5 268,-19.5 378,-19.5 378,-0.5 268,-0.5"/>
+<text text-anchor="middle" x="323" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">string::FormatterAscii</text>
 </a>
 </g>
 </g>

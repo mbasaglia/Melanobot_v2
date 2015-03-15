@@ -8,6 +8,6 @@ var searchData=
   ['locatableexception',['LocatableException',['../structLocatableException.html#adb8f3861622704d0f65f6265437eaebf',1,'LocatableException']]],
   ['log',['log',['../classLogger.html#abb439d1e9453722f4c145e9c9c46c697',1,'Logger::log()'],['../classLog.html#ae768eabd5b8cc3d38727cd17c4e9a9ad',1,'Log::Log(std::string type, char direction, int verbosity=2)'],['../classLog.html#aa3e83f6ca5a5586f2943c3f5e5b7634d',1,'Log::Log(const std::string &amp;type, char direction, const std::string &amp;message, int verbosity=2)'],['../classLog.html#ae1f217486548f0c7921ff95316f56883',1,'Log::Log(const Log &amp;)=delete']]],
   ['logger',['Logger',['../classLogger.html#abc41bfb031d896170c7675fa96a6b30c',1,'Logger::Logger()'],['../classLogger.html#add0f34d4c753c86af8074840a72366b3',1,'Logger::Logger(const Logger &amp;)=delete']]],
-  ['login',['login',['../classnetwork_1_1irc_1_1IrcConnection.html#a5f18f67bb47fe29af7a980644579f2dc',1,'network::irc::IrcConnection']]],
-  ['logininfo',['LoginInfo',['../structnetwork_1_1irc_1_1LoginInfo.html#a957eba61f32d4f7e430d9b3692936de3',1,'network::irc::LoginInfo::LoginInfo()'],['../structnetwork_1_1irc_1_1LoginInfo.html#affdc520b5ed0da991a45d4a0c35b329e',1,'network::irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)']]]
+  ['login',['login',['../classirc_1_1IrcConnection.html#a310d54b755ad92c346559adf16087a5a',1,'irc::IrcConnection']]],
+  ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html#ab312e157e21944aae0428fb43a978c13',1,'irc::LoginInfo::LoginInfo()'],['../structirc_1_1LoginInfo.html#a0a9ceceaccad4998b71c6c5391a4148c',1,'irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)']]]
 ];

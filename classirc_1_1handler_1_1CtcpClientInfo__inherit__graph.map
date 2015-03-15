@@ -1,0 +1,5 @@
+<map id="irc::handler::CtcpClientInfo" name="irc::handler::CtcpClientInfo">
+<area shape="rect" id="node2" href="$classirc_1_1handler_1_1CtcpBase.html" title="Base class for handling CTCP requests. " alt="" coords="19,155,171,181"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="36,80,153,107"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="8,5,181,32"/>
+</map>

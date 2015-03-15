@@ -6,10 +6,10 @@ var searchData=
   ['red',['red',['../namespacecolor.html#af2212255fdd2c573f76f1db99e629c7b',1,'color']]],
   ['regex',['regex',['../classhandler_1_1Reply.html#a66b776879793665fdaf6b09989ef5b54',1,'handler::Reply']]],
   ['regex_5fchanhax',['regex_chanhax',['../classhandler_1_1Chanhax.html#ad32c4c50dfdf30ac1741265631ff5f81',1,'handler::Chanhax']]],
-  ['reply',['reply',['../classhandler_1_1Reply.html#a147d34ece7185ba995ffef2ca5059685',1,'handler::Reply::reply()'],['../classhandler_1_1CtcpUserInfo.html#a8f11206e8d2f319d1ac9974acbafe94f',1,'handler::CtcpUserInfo::reply()']]],
+  ['reply',['reply',['../classhandler_1_1Reply.html#a147d34ece7185ba995ffef2ca5059685',1,'handler::Reply::reply()'],['../classirc_1_1handler_1_1CtcpUserInfo.html#ab3f8ff425767af99cde0b2de59f22321',1,'irc::handler::CtcpUserInfo::reply()']]],
   ['request',['request',['../structnetwork_1_1ThreadedAsyncService_1_1Item.html#a3d14046f81fd658a6c08fce496c92dfd',1,'network::ThreadedAsyncService::Item']]],
   ['requests',['requests',['../classnetwork_1_1ThreadedAsyncService.html#a0652e767ff782c0daf578f71ed4e46c7',1,'network::ThreadedAsyncService']]],
-  ['resolver',['resolver',['../classnetwork_1_1irc_1_1Buffer.html#a4a46571c6f51e77f5e4cc7c57c8d5f7a',1,'network::irc::Buffer']]],
+  ['resolver',['resolver',['../classirc_1_1Buffer.html#a31b5c99dd1440d11923bab25b4085dad',1,'irc::Buffer']]],
   ['reverse_5fascii',['reverse_ascii',['../classhandler_1_1ReverseText.html#a8e04ad3f5849ab6ca60a644ea3fd9980',1,'handler::ReverseText']]],
   ['run',['run',['../classConcurrentContainer.html#af5aaef13ce8efc377a1ad8d06402f7a9',1,'ConcurrentContainer']]]
 ];

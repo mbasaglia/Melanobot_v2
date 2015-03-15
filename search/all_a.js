@@ -25,9 +25,9 @@ var searchData=
   ['logger',['Logger',['../classLogger.html',1,'Logger'],['../classLogger.html#abc41bfb031d896170c7675fa96a6b30c',1,'Logger::Logger()'],['../classLogger.html#add0f34d4c753c86af8074840a72366b3',1,'Logger::Logger(const Logger &amp;)=delete']]],
   ['logger_2ecpp',['logger.cpp',['../logger_8cpp.html',1,'']]],
   ['logger_2ehpp',['logger.hpp',['../logger_8hpp.html',1,'']]],
-  ['login',['login',['../classnetwork_1_1irc_1_1IrcConnection.html#a5f18f67bb47fe29af7a980644579f2dc',1,'network::irc::IrcConnection']]],
-  ['login_5finfo',['login_info',['../classnetwork_1_1irc_1_1IrcConnection.html#a26843ae05b4ef3746076f98019193722',1,'network::irc::IrcConnection']]],
-  ['logininfo',['LoginInfo',['../structnetwork_1_1irc_1_1LoginInfo.html',1,'network::irc']]],
-  ['logininfo',['LoginInfo',['../structnetwork_1_1irc_1_1LoginInfo.html#a957eba61f32d4f7e430d9b3692936de3',1,'network::irc::LoginInfo::LoginInfo()'],['../structnetwork_1_1irc_1_1LoginInfo.html#affdc520b5ed0da991a45d4a0c35b329e',1,'network::irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)']]],
+  ['login',['login',['../classirc_1_1IrcConnection.html#a310d54b755ad92c346559adf16087a5a',1,'irc::IrcConnection']]],
+  ['login_5finfo',['login_info',['../classirc_1_1IrcConnection.html#aebf63e1c085be4219320a3723e517b88',1,'irc::IrcConnection']]],
+  ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html',1,'irc']]],
+  ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html#ab312e157e21944aae0428fb43a978c13',1,'irc::LoginInfo::LoginInfo()'],['../structirc_1_1LoginInfo.html#a0a9ceceaccad4998b71c6c5391a4148c',1,'irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)']]],
   ['logtype',['LogType',['../structLogger_1_1LogType.html',1,'Logger']]]
 ];

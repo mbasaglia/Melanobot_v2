@@ -7,6 +7,6 @@ var searchData=
   ['locatableexception',['LocatableException',['../structLocatableException.html',1,'']]],
   ['log',['Log',['../classLog.html',1,'']]],
   ['logger',['Logger',['../classLogger.html',1,'']]],
-  ['logininfo',['LoginInfo',['../structnetwork_1_1irc_1_1LoginInfo.html',1,'network::irc']]],
+  ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html',1,'irc']]],
   ['logtype',['LogType',['../structLogger_1_1LogType.html',1,'Logger']]]
 ];

@@ -2,8 +2,8 @@ var searchData=
 [
   ['target',['target',['../structnetwork_1_1OutputMessage.html#ac4d0e635cb406b1fcd018385df525f2c',1,'network::OutputMessage']]],
   ['thread',['thread',['../classnetwork_1_1ThreadedAsyncService.html#a844b34eb05506a115c009238b7b5452b',1,'network::ThreadedAsyncService']]],
-  ['thread_5finput',['thread_input',['../classnetwork_1_1irc_1_1Buffer.html#a645dc9e46d8326317442ca946ae5200b',1,'network::irc::Buffer']]],
-  ['thread_5foutput',['thread_output',['../classnetwork_1_1irc_1_1Buffer.html#a3e5da4a83dc728df80191da00eda7649',1,'network::irc::Buffer']]],
+  ['thread_5finput',['thread_input',['../classirc_1_1Buffer.html#a8a20e4cb1b463b6cc884eb97e97e7c8d',1,'irc::Buffer']]],
+  ['thread_5foutput',['thread_output',['../classirc_1_1Buffer.html#a8dfb44a9539c827f7f9166cf784381d4',1,'irc::Buffer']]],
   ['threadedasyncservice',['ThreadedAsyncService',['../classnetwork_1_1ThreadedAsyncService.html',1,'network']]],
   ['threads',['Threads',['../threads.html',1,'']]],
   ['threads_2edox',['threads.dox',['../threads_8dox.html',1,'']]],

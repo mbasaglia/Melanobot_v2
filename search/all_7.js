@@ -1,7 +1,7 @@
 var searchData=
 [
   ['handle',['handle',['../classhandler_1_1Handler.html#a105124a15fba64cbfae4aebe9581f243',1,'handler::Handler::handle()'],['../classhandler_1_1SimpleAction.html#ac6b37c745d5a22c5ef606259864852c5',1,'handler::SimpleAction::handle()']]],
-  ['handle_5fmessage',['handle_message',['../classnetwork_1_1irc_1_1IrcConnection.html#a4b94d8e85ac9e4235daea580da2ea436',1,'network::irc::IrcConnection']]],
+  ['handle_5fmessage',['handle_message',['../classirc_1_1IrcConnection.html#ae22ce0da5da885daf1ac66c1b64a3f53',1,'irc::IrcConnection']]],
   ['handler',['Handler',['../classhandler_1_1Handler.html',1,'handler']]],
   ['handler',['handler',['../namespacehandler.html',1,'handler'],['../classhandler_1_1Handler.html#ae0fffddf35a0e5b33ecaa56f501c1f86',1,'handler::Handler::Handler(const Settings &amp;settings, Melanobot *bot)'],['../classhandler_1_1Handler.html#a773303bb11280b65e695d7bd7ea306c0',1,'handler::Handler::Handler(const Handler &amp;)=delete']]],
   ['handler_2ecpp',['handler.cpp',['../handler_8cpp.html',1,'']]],
@@ -14,7 +14,7 @@ var searchData=
   ['has_5fchild',['has_child',['../classSettings.html#a9d8cb2957fa6787b34a9d747d426f503',1,'Settings']]],
   ['help',['Help',['../classhandler_1_1Help.html',1,'handler']]],
   ['help',['help',['../classhandler_1_1SimpleAction.html#a5a3a545b40591427f5dbd82a8feec418',1,'handler::SimpleAction::help()'],['../classhandler_1_1Help.html#a4221bb57781cc9f0163815f8ce36fe8d',1,'handler::Help::Help()']]],
-  ['help_5fgroup',['help_group',['../classhandler_1_1SimpleGroup.html#ac158e2d8026647ae9b1c2c24d75ed537',1,'handler::SimpleGroup::help_group()'],['../classhandler_1_1Help.html#ac9d787c1b66dec911f84d62478964230',1,'handler::Help::help_group()'],['../classhandler_1_1CtcpClientInfo.html#aea06ef44494b735d5f81bf1669bd795c',1,'handler::CtcpClientInfo::help_group()']]],
+  ['help_5fgroup',['help_group',['../classhandler_1_1SimpleGroup.html#ac158e2d8026647ae9b1c2c24d75ed537',1,'handler::SimpleGroup::help_group()'],['../classhandler_1_1Help.html#ac9d787c1b66dec911f84d62478964230',1,'handler::Help::help_group()'],['../classirc_1_1handler_1_1CtcpClientInfo.html#a03bfc9522c2e2bf682dd74bea4874b9e',1,'irc::handler::CtcpClientInfo::help_group()']]],
   ['hex_5fblue',['hex_blue',['../classcolor_1_1Color12.html#aad9a4b13978569fc982cc32fe722989b',1,'color::Color12']]],
   ['hex_5fgreen',['hex_green',['../classcolor_1_1Color12.html#ad26c0ea0e0ec4c9d1cb34e7cf0b00ef0',1,'color::Color12']]],
   ['hex_5fred',['hex_red',['../classcolor_1_1Color12.html#a0a01d589f2c9ed775d4cd34fda865fe6',1,'color::Color12']]],

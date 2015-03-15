@@ -24,7 +24,7 @@
 <area shape="rect" id="node15" href="$bridge_8hpp.html" title="src/handler/bridge.hpp" alt="" coords="333,490,484,517"/>
 <area shape="rect" id="node17" href="$admin_8cpp.html" title="This file defines handlers which allows admin to administrate the bot. " alt="" coords="159,490,309,517"/>
 <area shape="rect" id="node18" href="$handler_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="509,490,666,517"/>
-<area shape="rect" id="node19" href="$irc__actions_8hpp.html" title="modules/irc/handler\l/irc_actions.hpp" alt="" coords="1333,483,1468,524"/>
+<area shape="rect" id="node19" href="$irc__actions_8hpp.html" title="File containing Handlers which manage responses to various IRC commands. " alt="" coords="1333,483,1468,524"/>
 <area shape="rect" id="node21" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="1175,483,1309,524"/>
 <area shape="rect" id="node22" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="691,483,825,524"/>
 <area shape="rect" id="node23" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="849,483,984,524"/>
