@@ -19,10 +19,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef IRC_HANDLER_ADMIN
+#define IRC_HANDLER_ADMIN
+
 #include "handler/handler.hpp"
 
 namespace handler {
-
 
 /**
  * \brief Changes the bot nick (IRC)
@@ -48,7 +50,6 @@ protected:
         return false;
     }
 };
-REGISTER_HANDLER(AdminNick,Nick);
 
 /**
  * \brief Makes the bot join channels (IRC)
@@ -77,7 +78,6 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(AdminJoin,Join);
 
 /**
  * \brief Makes the bot part channels (IRC)
@@ -106,7 +106,6 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(AdminPart,Part);
 
 
 /**
@@ -131,7 +130,6 @@ protected:
         return false;
     }
 };
-REGISTER_HANDLER(AcceptInvite,AcceptInvite);
 
 /**
  * \brief Makes the bot execute a raw command (IRC)
@@ -176,6 +174,7 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(AdminRaw,Raw);
 
 } // namespace handler
+
+#endif // IRC_HANDLER_ADMIN

@@ -17,9 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "network/irc/buffer.hpp"
+#include "irc/network/buffer.hpp"
 
-#include "network/irc/connection.hpp"
+#include "irc/network/connection.hpp"
 
 namespace network {
 namespace irc {

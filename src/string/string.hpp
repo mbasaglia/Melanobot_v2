@@ -25,6 +25,7 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -196,6 +197,8 @@ private:
             return factory;
         }
 
+        FormatterFactory();
+
         ~FormatterFactory()
         {
             for ( const auto& f : formatters )
@@ -216,29 +219,8 @@ private:
         std::unordered_map<std::string,Formatter*> formatters;
         Formatter* default_formatter = nullptr;
     };
+
 public:
-    /**
-     * \brief Quick way to register a formatter automatically (via static objects)
-     */
-    struct RegisterFormatter
-    {
-        RegisterFormatter(Formatter* formatter)
-        {
-            Formatter::FormatterFactory::instance().add_formatter(formatter);
-        }
-    };
-    /**
-     * \brief Same as RegisterFormatter but it also sets it as default
-     * \note There should be exactly one of these
-     */
-    struct RegisterDefaultFormatter : public RegisterFormatter
-    {
-        RegisterDefaultFormatter(Formatter* formatter)
-            : RegisterFormatter(formatter)
-        {
-            Formatter::FormatterFactory::instance().default_formatter = formatter;
-        }
-    };
 
     virtual ~Formatter() {}
     /**
@@ -537,6 +519,12 @@ public:
     /**
      * \brief Append an element
      */
+    template<class ElementType, class... Args>
+        void append ( Args&&... args )
+        {
+            elements.push_back(std::make_shared<ElementType>(std::forward<Args>(args)...));
+        }
+
     void append ( std::shared_ptr<Element> element )
     {
         elements.push_back(element);
@@ -699,52 +687,21 @@ private:
     bool utf8;
 };
 
-/**
- * \brief UTF-8 with IRC colors
- */
-class FormatterIrc : public FormatterUtf8
-{
-public:
-    std::string color(const color::Color12& color) const override;
-    std::string format_flags(FormatFlags flags) const override;
-    std::string clear() const override;
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-    /**
-     * \brief Creates a color from an IRC color string \3..
-     */
-    static color::Color12 color_from_string(const std::string& color);
-};
-
-/**
- * \brief Darkplaces UTF-8
- */
-class FormatterDarkplaces : public Formatter
-{
-public:
-    std::string ascii(char c) const override;
-    std::string ascii(const std::string& s) const override;
-    std::string color(const color::Color12& color) const override;
-    std::string format_flags(FormatFlags flags) const override;
-    std::string clear() const override;
-    std::string unicode(const Unicode& c) const override;
-    std::string qfont(const QFont& c) const override;
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-    /**
-     * \brief Creates a color from a DP color string ^. or ^x...
-     */
-    static color::Color12 color_from_string(const std::string& color);
-};
+} // namespace string
 
 
 /**
  * \brief Registers a formatter
- * \param classname Formatter class
- * \param name      Unique identifier (used only as registration token)
+ * \tparam Class        Formatter class
+ * \tparam Args         Constructor parameters
+ * \todo namespace?
  */
-#define REGISTER_FORMATTER(classname,name) \
-    static Formatter::RegisterFormatter RegisterFormatter_##name = new classname
+template <class Class, class... Args>
+    void REGISTER_FORMATTER(Args&&... args)
+    {
+        static_assert(std::is_base_of<string::Formatter,Class>::value, "Wrong class to REGISTER_FORMATTER");
+        string::Formatter::FormatterFactory::instance()
+            .add_formatter(new Class(std::forward<Args>(args)...));
+    }
 
-} // namespace string
 #endif // STRING_HPP

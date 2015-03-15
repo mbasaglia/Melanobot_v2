@@ -20,6 +20,7 @@
 #include "string/logger.hpp"
 #include "settings.hpp"
 #include "network/async_service.hpp"
+#include "melanomodules.hpp"
 
 int main(int argc, char **argv)
 {
@@ -27,8 +28,8 @@ int main(int argc, char **argv)
     Logger::instance().register_direction('>',color::dark_yellow);
     Logger::instance().register_direction('!',color::dark_blue);
 
-    /// \todo register these in the proper classes
-    REGISTER_LOG_TYPE(dp,color::dark_cyan);
+    MELANOMODULES_INIT
+
     REGISTER_LOG_TYPE(sys,color::dark_red);
 
     try {

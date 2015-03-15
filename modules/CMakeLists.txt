@@ -13,24 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB_RECURSE SOURCES *.cpp)
+include_directories("${CMAKE_SOURCE_DIR}/modules")
 
-set(EXECUTABLE_NAME melanobot) # repeated otherwise kdevelop messes up
-
-add_executable(${EXECUTABLE_NAME} ${SOURCES})
-install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
-
-# Boost
-find_package (Boost COMPONENTS system chrono thread filesystem program_options REQUIRED)
-target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
-include_directories (${Boost_INCLUDE_DIRS})
-
-# cURLpp
-find_package (cURLpp REQUIRED)
-target_link_libraries(${EXECUTABLE_NAME} ${cURLpp_LIBRARIES})
-include_directories (${cURLpp_INCLUDE_DIRS})
-
-
-if (MELANOMODULES)
-    target_link_libraries(${EXECUTABLE_NAME} ${MELANOMODULES})
-endif()
+melanomodule(irc "Internet Relay Chat support" ON)
+melanomodule(xonotic "Xonotic integration" ON)

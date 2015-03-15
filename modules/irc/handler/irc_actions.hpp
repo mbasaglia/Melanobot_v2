@@ -16,6 +16,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef IRC_HANDLER_IRC_ACTIONS
+#define IRC_HANDLER_IRC_ACTIONS
 
 #include "handler/handler.hpp"
 
@@ -63,7 +65,6 @@ private:
     bool        on_self = false;
     bool        on_others = true;
 };
-REGISTER_HANDLER(IrcJoinMessage,IrcJoinMessage);
 
 /**
  * \brief Prints a message when a user is kicked from a channel
@@ -107,7 +108,6 @@ private:
     bool        on_self = false;
     bool        on_others = true;
 };
-REGISTER_HANDLER(IrcKickMessage,IrcKickMessage);
 
 /**
  * \brief Joins again once kicked
@@ -144,6 +144,7 @@ protected:
 private:
     std::string message;
 };
-REGISTER_HANDLER(IrcKickRejoin,IrcKickRejoin);
 
 } // namespace handler
+
+#endif // IRC_HANDLER_IRC_ACTIONS

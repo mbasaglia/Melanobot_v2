@@ -16,14 +16,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "network/irc/connection.hpp"
+#include "irc/network/connection.hpp"
 
 #include "string/logger.hpp"
 #include "string/string_functions.hpp"
-#include "network/irc/functions.hpp"
-
-REGISTER_CONNECTION(irc,&network::irc::IrcConnection::create);
-REGISTER_LOG_TYPE(irc,color::dark_magenta);
+#include "irc/network/functions.hpp"
 
 namespace network {
 namespace irc {

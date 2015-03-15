@@ -27,7 +27,7 @@
 #include <unordered_map>
 
 #include "network/connection.hpp"
-#include "network/irc/buffer.hpp"
+#include "irc/network/buffer.hpp"
 
 #include "melanobot.hpp"
 

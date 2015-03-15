@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef IRC_HANDLER_WHOIS
+#define IRC_HANDLER_WHOIS
+
 #include "handler/handler.hpp"
 
 namespace handler {
@@ -45,7 +48,6 @@ protected:
     }
 
 };
-REGISTER_HANDLER(Whois330,Whois330);
 
 /**
  * \brief Asks Q for WHOIS or USERS information when a user joins a channel (IRC)
@@ -87,7 +89,6 @@ protected:
 private:
     std::string q_bot = "Q@CServe.quakenet.org";
 };
-REGISTER_HANDLER(QSendWhois,QSendWhois);
 
 /**
  * \brief Parses responses from Q WHOIS and USER (IRC)
@@ -151,7 +152,6 @@ private:
     std::string q_bot = "Q";
     bool expects_users = false; ///< Whether it's parsing the output of USERS
 };
-REGISTER_HANDLER(QGetWhois,QGetWhois);
 
 /**
  * \brief Sends a WHOIS about the message sender
@@ -179,7 +179,7 @@ protected:
 private:
     std::string sources_url;
 };
-REGISTER_HANDLER(WhoisCheckMe,WhoisCheckMe);
 
 
 } // namespace handler
+#endif // IRC_HANDLER_WHOIS

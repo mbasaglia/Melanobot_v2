@@ -407,10 +407,10 @@ protected:
  * \param public_name Name to be used in the configuration, as a C++ symbol
  */
 #define REGISTER_HANDLER(class_name,public_name) \
-    static HandlerFactory::RegisterHandler<class_name> \
+    static handler::HandlerFactory::RegisterHandler<class_name> \
         RegisterHandler_##public_name(#public_name, \
             [] ( const Settings& settings, Melanobot* bot )  \
-                -> std::unique_ptr<Handler> { \
+                -> std::unique_ptr<handler::Handler> { \
                 return std::make_unique<class_name>(settings,bot); \
         })
 

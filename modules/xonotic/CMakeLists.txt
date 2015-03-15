@@ -12,25 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+set(MODULE_NAME melanomodule_xonotic)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-set(EXECUTABLE_NAME melanobot) # repeated otherwise kdevelop messes up
-
-add_executable(${EXECUTABLE_NAME} ${SOURCES})
-install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
-
-# Boost
-find_package (Boost COMPONENTS system chrono thread filesystem program_options REQUIRED)
-target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
-include_directories (${Boost_INCLUDE_DIRS})
-
-# cURLpp
-find_package (cURLpp REQUIRED)
-target_link_libraries(${EXECUTABLE_NAME} ${cURLpp_LIBRARIES})
-include_directories (${cURLpp_INCLUDE_DIRS})
+add_library(${MODULE_NAME} ${SOURCES})
 
 
-if (MELANOMODULES)
-    target_link_libraries(${EXECUTABLE_NAME} ${MELANOMODULES})
-endif()

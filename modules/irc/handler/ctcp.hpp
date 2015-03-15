@@ -18,9 +18,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef IRC_HANDLER_CTCP
+#define IRC_HANDLER_CTCP
+
 #include "handler/handler.hpp"
 #include "config.hpp"
-#include "network/irc/functions.hpp"
+#include "irc/network/functions.hpp"
 
 namespace handler {
 
@@ -106,7 +109,6 @@ protected:
 private:
     std::string version; ///< Version string to be displayed
 };
-REGISTER_HANDLER(CtcpVersion,CtcpVersion);
 
 /**
  * \brief CTCP SOURCE reply, shows a URL with the sources
@@ -134,7 +136,6 @@ protected:
 private:
     std::string sources_url; ///< URL with the sources
 };
-REGISTER_HANDLER(CtcpSource,CtcpSource);
 
 
 /**
@@ -161,7 +162,6 @@ protected:
 private:
     std::string reply; ///< Fixed reply
 };
-REGISTER_HANDLER(CtcpUserInfo,CtcpUserInfo);
 
 /**
  * \brief CTCP PING reply, Used to measure round-trip message delays
@@ -185,7 +185,6 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(CtcpPing,CtcpPing);
 
 /**
  * \brief CTCP TIME reply, Shows the local time
@@ -216,7 +215,6 @@ protected:
 private:
     std::string format; ///< Timestamp format
 };
-REGISTER_HANDLER(CtcpTime,CtcpTime);
 
 /**
  * \brief Shows help about other CTCP handlers
@@ -284,6 +282,7 @@ private:
         }
     }
 };
-REGISTER_HANDLER(CtcpClientInfo,CtcpClientInfo);
 
 } // namespace handler
+
+#endif // IRC_HANDLER_CTCP
