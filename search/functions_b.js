@@ -3,6 +3,8 @@ var searchData=
   ['main',['main',['../main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main.cpp']]],
   ['matches',['matches',['../structuser_1_1User.html#ab08549a2a6eadc70a03cc87c31359704',1,'user::User']]],
   ['melanobot',['Melanobot',['../classMelanobot.html#a39d5829e17baa0d5d87671be56370902',1,'Melanobot']]],
+  ['melanomodule_5firc',['melanomodule_irc',['../irc_8cpp.html#ad36b50a455f2dad75512c34ef770e45a',1,'irc.cpp']]],
+  ['melanomodule_5fxonotic',['melanomodule_xonotic',['../xonotic_8cpp.html#ab76f34b066712f6245ed4278d6aa09c1',1,'xonotic.cpp']]],
   ['merge',['merge',['../classSettings.html#a85d64e32baf5ffdd626ae005fe54a0d5',1,'Settings']]],
   ['message',['message',['../classMelanobot.html#af594bbfddf10609f945dddfbc4214896',1,'Melanobot']]],
   ['morse',['Morse',['../classhandler_1_1Morse.html#a221ed8da06157170ef99a8a7ca570c36',1,'handler::Morse']]],

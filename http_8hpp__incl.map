@@ -1,9 +1,9 @@
 <map id="src/network/http.hpp" name="src/network/http.hpp">
-<area shape="rect" id="node2" href="$async__service_8hpp.html" title="async_service.hpp" alt="" coords="860,80,991,107"/>
-<area shape="rect" id="node6" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="529,155,648,181"/>
-<area shape="rect" id="node25" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1287,237,1455,263"/>
-<area shape="rect" id="node13" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="542,237,635,263"/>
-<area shape="rect" id="node16" href="$string_8hpp.html" title="string.hpp" alt="" coords="861,237,940,263"/>
-<area shape="rect" id="node23" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="182,237,275,263"/>
-<area shape="rect" id="node20" href="$color_8hpp.html" title="color.hpp" alt="" coords="1135,326,1210,353"/>
+<area shape="rect" id="node2" href="$async__service_8hpp.html" title="async_service.hpp" alt="" coords="1283,80,1413,107"/>
+<area shape="rect" id="node6" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1289,155,1407,181"/>
+<area shape="rect" id="node26" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="233,237,401,263"/>
+<area shape="rect" id="node13" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1519,237,1612,263"/>
+<area shape="rect" id="node16" href="$string_8hpp.html" title="string.hpp" alt="" coords="847,237,926,263"/>
+<area shape="rect" id="node24" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1259,237,1352,263"/>
+<area shape="rect" id="node21" href="$color_8hpp.html" title="color.hpp" alt="" coords="812,326,887,353"/>
 </map>

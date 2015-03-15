@@ -8,7 +8,7 @@ var searchData=
   ['pony_5fpath',['pony_path',['../classhandler_1_1RenderPony.html#a429e9fe3ef0bdc642a9e15cf552ce7a0',1,'handler::RenderPony']]],
   ['port',['port',['../structnetwork_1_1Server.html#ac34927b725f2692679ff19f29094f8a4',1,'network::Server']]],
   ['preferred_5fnick',['preferred_nick',['../classnetwork_1_1irc_1_1IrcConnection.html#a824a9a71ef4e2b28eae2d1d01a68c692',1,'network::irc::IrcConnection']]],
-  ['prefix',['prefix',['../structnetwork_1_1OutputMessage.html#a5e887fd479d863ea8695b0c7f037d086',1,'network::OutputMessage']]],
+  ['prefix',['prefix',['../structnetwork_1_1OutputMessage.html#a5e887fd479d863ea8695b0c7f037d086',1,'network::OutputMessage::prefix()'],['../classhandler_1_1BridgeChat.html#a9b2f8ae44274adf7c311d07c5fda0b39',1,'handler::BridgeChat::prefix()']]],
   ['priority',['priority',['../structnetwork_1_1Command.html#a84f66014fba36c2ac21068629bcd26f2',1,'network::Command::priority()'],['../structnetwork_1_1OutputMessage.html#ac09c4bca9fd2eeb6f52dba3bff13a97d',1,'network::OutputMessage::priority()'],['../classhandler_1_1Handler.html#adae0c95540147cb22da4a57f45d9f0ae',1,'handler::Handler::priority()']]],
   ['private_5fnotice',['private_notice',['../classnetwork_1_1irc_1_1IrcConnection.html#a685879baf121c0cb99be5551c708c2a1',1,'network::irc::IrcConnection']]],
   ['properties',['properties',['../structuser_1_1User.html#a6a73ccfc9a84ca46f1326b0e0dfbe639',1,'user::User']]],

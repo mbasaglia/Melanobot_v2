@@ -6,7 +6,7 @@ var searchData=
   ['red',['red',['../namespacecolor.html#af2212255fdd2c573f76f1db99e629c7b',1,'color']]],
   ['regex',['regex',['../classhandler_1_1Reply.html#a66b776879793665fdaf6b09989ef5b54',1,'handler::Reply']]],
   ['regex_5fchanhax',['regex_chanhax',['../classhandler_1_1Chanhax.html#ad32c4c50dfdf30ac1741265631ff5f81',1,'handler::Chanhax']]],
-  ['reply',['reply',['../classhandler_1_1CtcpUserInfo.html#a8f11206e8d2f319d1ac9974acbafe94f',1,'handler::CtcpUserInfo::reply()'],['../classhandler_1_1Reply.html#a147d34ece7185ba995ffef2ca5059685',1,'handler::Reply::reply()']]],
+  ['reply',['reply',['../classhandler_1_1Reply.html#a147d34ece7185ba995ffef2ca5059685',1,'handler::Reply::reply()'],['../classhandler_1_1CtcpUserInfo.html#a8f11206e8d2f319d1ac9974acbafe94f',1,'handler::CtcpUserInfo::reply()']]],
   ['request',['request',['../structnetwork_1_1ThreadedAsyncService_1_1Item.html#a3d14046f81fd658a6c08fce496c92dfd',1,'network::ThreadedAsyncService::Item']]],
   ['requests',['requests',['../classnetwork_1_1ThreadedAsyncService.html#a0652e767ff782c0daf578f71ed4e46c7',1,'network::ThreadedAsyncService']]],
   ['resolver',['resolver',['../classnetwork_1_1irc_1_1Buffer.html#a4a46571c6f51e77f5e4cc7c57c8d5f7a',1,'network::irc::Buffer']]],

@@ -96,11 +96,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
-<code>#include &quot;<a class="el" href="connection_8hpp_source.html">network/connection.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="src_2network_2connection_8hpp_source.html">network/connection.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="settings_8hpp_source.html">settings.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="logger_8hpp_source.html">string/logger.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="string__functions_8hpp_source.html">string/string_functions.hpp</a>&quot;</code><br />
@@ -113,8 +114,7 @@ Include dependency graph for handler.hpp:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="handler_8hpp__dep__incl.svg" width="100%" height="440"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="handler_8hpp__dep__incl.svg" width="100%" height="451"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="handler_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -186,12 +186,14 @@ License</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> HandlerFactory::RegisterHandler&lt;class_name&gt; \</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="structhandler_1_1HandlerFactory_1_1RegisterHandler.html">handler::HandlerFactory::RegisterHandler&lt;class_name&gt;</a> \</div>
 <div class="line">        RegisterHandler_##public_name(#public_name, \</div>
-<div class="line">            [] ( <span class="keyword">const</span> <a class="code" href="classSettings.html">Settings</a>&amp; settings, <a class="code" href="classMelanobot.html">Melanobot</a>* bot ) -&gt; Handler* { \</div>
-<div class="line">                return <span class="keyword">new</span> class_name(settings,bot); \</div>
+<div class="line">            [] ( <span class="keyword">const</span> <a class="code" href="classSettings.html">Settings</a>&amp; settings, <a class="code" href="classMelanobot.html">Melanobot</a>* bot )  \</div>
+<div class="line">                -&gt; std::unique_ptr&lt;handler::Handler&gt; { \</div>
+<div class="line">                return std::make_unique&lt;class_name&gt;(settings,bot); \</div>
 <div class="line">        })</div>
 <div class="ttc" id="classMelanobot_html"><div class="ttname"><a href="classMelanobot.html">Melanobot</a></div><div class="ttdoc">Main bot class. </div><div class="ttdef"><b>Definition:</b> <a href="melanobot_8hpp_source.html#l00037">melanobot.hpp:37</a></div></div>
+<div class="ttc" id="structhandler_1_1HandlerFactory_1_1RegisterHandler_html"><div class="ttname"><a href="structhandler_1_1HandlerFactory_1_1RegisterHandler.html">handler::HandlerFactory::RegisterHandler</a></div><div class="ttdoc">Dummy class for auto-registration. </div><div class="ttdef"><b>Definition:</b> <a href="handler_8hpp_source.html#l00432">handler.hpp:432</a></div></div>
 <div class="ttc" id="classSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Class containing hierarchical settings. </div><div class="ttdef"><b>Definition:</b> <a href="settings_8hpp_source.html#l00034">settings.hpp:34</a></div></div>
 </div><!-- fragment -->
 <p>Registers a Handler to the HandlerFactory. </p>
@@ -203,14 +205,14 @@ License</h1>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00408">408</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
+<p>Definition at line <a class="el" href="handler_8hpp_source.html#l00409">409</a> of file <a class="el" href="handler_8hpp_source.html">handler.hpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:30 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:51 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

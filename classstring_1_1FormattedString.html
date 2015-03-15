@@ -174,9 +174,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a08b1ecb5cd66b201b574f0675d3f42c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b95cc8589254f54e94123b610e190e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedString.html#a0b95cc8589254f54e94123b610e190e0">assign</a> (const std::initializer_list&lt; <a class="el" href="classstring_1_1FormattedString.html#a7bad6b8dbbe0fd5511afdca2b7fc3ec9">value_type</a> &gt; &amp;il)</td></tr>
 <tr class="separator:a0b95cc8589254f54e94123b610e190e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b6d52251ecfb38d07581d0982450b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedString.html#a9b6d52251ecfb38d07581d0982450b6f">append</a> (<a class="el" href="classstring_1_1Element.html">Element</a> *element)</td></tr>
-<tr class="memdesc:a9b6d52251ecfb38d07581d0982450b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append an element (takes ownership)  <a href="#a9b6d52251ecfb38d07581d0982450b6f">More...</a><br /></td></tr>
-<tr class="separator:a9b6d52251ecfb38d07581d0982450b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d3e79f89ba9717bd61fb2e17ccbba0b"><td class="memTemplParams" colspan="2">template&lt;class ElementType , class... Args&gt; </td></tr>
+<tr class="memitem:a7d3e79f89ba9717bd61fb2e17ccbba0b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedString.html#a7d3e79f89ba9717bd61fb2e17ccbba0b">append</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a7d3e79f89ba9717bd61fb2e17ccbba0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append an element.  <a href="#a7d3e79f89ba9717bd61fb2e17ccbba0b">More...</a><br /></td></tr>
+<tr class="separator:a7d3e79f89ba9717bd61fb2e17ccbba0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb62569752407cedf09c48731148d063"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedString.html#aeb62569752407cedf09c48731148d063">append</a> (std::shared_ptr&lt; <a class="el" href="classstring_1_1Element.html">Element</a> &gt; element)</td></tr>
+<tr class="separator:aeb62569752407cedf09c48731148d063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9cbc41ccb994b5e956df49825155009"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedString.html#ae9cbc41ccb994b5e956df49825155009">append</a> (const <a class="el" href="classstring_1_1FormattedString.html">FormattedString</a> &amp;string)</td></tr>
 <tr class="separator:ae9cbc41ccb994b5e956df49825155009"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d6e2b64be8a9f0c9a9b35f9133f4597"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormattedString.html#a8d6e2b64be8a9f0c9a9b35f9133f4597">encode</a> (const std::string &amp;format) const </td></tr>
@@ -193,9 +196,9 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A formatted string. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Might be worth mergin this class with <code><a class="el" href="classstring_1_1FormattedStream.html" title="Simple way to create FormattedString objects. ">FormattedStream</a></code> to simplify its us. (Right now <code><a class="el" href="classstring_1_1FormattedString.html" title="A formatted string. ">FormattedString</a></code> is pretty unusable directly) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Might be worth mergin this class with <code><a class="el" href="classstring_1_1FormattedStream.html" title="Simple way to create FormattedString objects. ">FormattedStream</a></code> to simplify its us. (Right now <code><a class="el" href="classstring_1_1FormattedString.html" title="A formatted string. ">FormattedString</a></code> is pretty unusable directly) </dd></dl>
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00459">459</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00441">441</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a39a939013cff685603481105634bd498"></a>
 <div class="memitem">
@@ -207,7 +210,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00467">467</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00449">449</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -221,7 +224,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00465">465</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00447">447</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -235,7 +238,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00462">462</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00444">444</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -249,7 +252,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00468">468</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00450">450</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -263,7 +266,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00466">466</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00448">448</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -277,7 +280,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00464">464</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00446">446</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -291,7 +294,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00469">469</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00451">451</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -305,7 +308,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00463">463</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00445">445</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -344,7 +347,7 @@ template&lt;class Iterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00472">472</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00454">454</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -369,12 +372,44 @@ template&lt;class Iterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="connection_8hpp_source.html#l00137">network::OutputMessage::OutputMessage()</a>.</p>
+<p>Referenced by <a class="el" href="src_2network_2connection_8hpp_source.html#l00141">network::OutputMessage::OutputMessage()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a9b6d52251ecfb38d07581d0982450b6f"></a>
+<a class="anchor" id="a7d3e79f89ba9717bd61fb2e17ccbba0b"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ElementType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void string::FormattedString::append </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append an element. </p>
+
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00523">523</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="formatter_8cpp_source.html#l00067">xonotic::Formatter::decode()</a>, <a class="el" href="string_8cpp_source.html#l00217">string::FormatterUtf8::decode()</a>, <a class="el" href="string_8cpp_source.html#l00260">string::FormatterAscii::decode()</a>, and <a class="el" href="string_8cpp_source.html#l00303">string::FormatterAnsi::decode()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aeb62569752407cedf09c48731148d063"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -384,7 +419,7 @@ template&lt;class Iterator &gt; </div>
         <tr>
           <td class="memname">void string::FormattedString::append </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classstring_1_1Element.html">Element</a> *&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classstring_1_1Element.html">Element</a> &gt;&#160;</td>
           <td class="paramname"><em>element</em></td><td>)</td>
           <td></td>
         </tr>
@@ -396,11 +431,9 @@ template&lt;class Iterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Append an element (takes ownership) </p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00528">528</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00540">540</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="string_8cpp_source.html#l00211">string::FormatterUtf8::decode()</a>, <a class="el" href="string_8cpp_source.html#l00256">string::FormatterAscii::decode()</a>, <a class="el" href="string_8cpp_source.html#l00303">string::FormatterAnsi::decode()</a>, <a class="el" href="string_8cpp_source.html#l00462">string::FormatterIrc::decode()</a>, <a class="el" href="string_8cpp_source.html#l00615">string::FormatterDarkplaces::decode()</a>, and <a class="el" href="string_8hpp_source.html#l00583">string::FormattedStream::operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="irc__formatter_8cpp_source.html#l00072">string::FormatterIrc::decode()</a>, and <a class="el" href="string_8hpp_source.html#l00572">string::FormattedStream::operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -426,9 +459,9 @@ template&lt;class Iterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00545">545</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00534">534</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00583">string::FormattedStream::operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00572">string::FormattedStream::operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -464,7 +497,7 @@ template&lt;class Iterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00521">521</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00503">503</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -502,7 +535,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00526">526</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00508">508</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -528,7 +561,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00530">530</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00512">512</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -553,7 +586,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00476">476</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00458">458</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -578,9 +611,9 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00478">478</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00460">460</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00545">append()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00534">append()</a>.</p>
 
 </div>
 </div>
@@ -605,7 +638,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00480">480</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00462">462</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -630,7 +663,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00481">481</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00463">463</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -655,9 +688,9 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00487">487</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00469">469</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00647">string::FormattedStream::empty()</a>, <a class="el" href="string_8hpp_source.html#l00623">string::FormattedStream::operator&lt;&lt;()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00871">network::irc::IrcConnection::say()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00636">string::FormattedStream::empty()</a>, and <a class="el" href="string_8hpp_source.html#l00612">string::FormattedStream::operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -691,9 +724,9 @@ template&lt;class InputIterator &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00554">554</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00543">543</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00637">string::FormattedStream::encode()</a>, and <a class="el" href="fun_8cpp_source.html#l00169">handler::ReverseText::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00626">string::FormattedStream::encode()</a>, and <a class="el" href="fun_8cpp_source.html#l00181">handler::ReverseText::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -721,7 +754,7 @@ template&lt;class InputIterator &gt; </div>
 
 <p>Definition at line <a class="el" href="string_8cpp_source.html#l00149">149</a> of file <a class="el" href="string_8cpp_source.html">string.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00554">encode()</a>, <a class="el" href="string_8hpp_source.html#l00642">string::FormattedStream::encode()</a>, <a class="el" href="logger_8cpp_source.html#l00022">Logger::log()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00064">handler::CtcpBase::reply_to()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00543">encode()</a>, <a class="el" href="string_8hpp_source.html#l00631">string::FormattedStream::encode()</a>, <a class="el" href="logger_8cpp_source.html#l00022">Logger::log()</a>, and <a class="el" href="ctcp_8hpp_source.html#l00067">handler::CtcpBase::reply_to()</a>.</p>
 
 </div>
 </div>
@@ -746,7 +779,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00477">477</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00459">459</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -771,9 +804,9 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00479">479</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00461">461</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00545">append()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00534">append()</a>.</p>
 
 </div>
 </div>
@@ -799,7 +832,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00512">512</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00494">494</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -835,7 +868,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00516">516</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00498">498</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -871,7 +904,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00494">494</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00476">476</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -913,7 +946,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00498">498</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00480">480</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -957,7 +990,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00503">503</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00485">485</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -993,7 +1026,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00507">507</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00489">489</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1052,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00483">483</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00465">465</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -1045,7 +1078,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00484">484</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00466">466</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1104,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00489">489</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00471">471</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -1096,7 +1129,7 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00486">486</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00468">468</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -1119,9 +1152,9 @@ template&lt;class InputIterator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00566">566</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00555">555</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00540">append()</a>, <a class="el" href="string_8hpp_source.html#l00521">assign()</a>, <a class="el" href="string_8hpp_source.html#l00476">begin()</a>, <a class="el" href="string_8hpp_source.html#l00480">cbegin()</a>, <a class="el" href="string_8hpp_source.html#l00481">cend()</a>, <a class="el" href="string_8hpp_source.html#l00487">empty()</a>, <a class="el" href="string_8hpp_source.html#l00477">end()</a>, <a class="el" href="string_8hpp_source.html#l00512">erase()</a>, <a class="el" href="string_8hpp_source.html#l00472">FormattedString()</a>, <a class="el" href="string_8hpp_source.html#l00494">insert()</a>, <a class="el" href="string_8hpp_source.html#l00483">operator[]()</a>, <a class="el" href="string_8hpp_source.html#l00489">push_back()</a>, and <a class="el" href="string_8hpp_source.html#l00486">size()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00523">append()</a>, <a class="el" href="string_8hpp_source.html#l00503">assign()</a>, <a class="el" href="string_8hpp_source.html#l00458">begin()</a>, <a class="el" href="string_8hpp_source.html#l00462">cbegin()</a>, <a class="el" href="string_8hpp_source.html#l00463">cend()</a>, <a class="el" href="string_8hpp_source.html#l00469">empty()</a>, <a class="el" href="string_8hpp_source.html#l00459">end()</a>, <a class="el" href="string_8hpp_source.html#l00494">erase()</a>, <a class="el" href="string_8hpp_source.html#l00454">FormattedString()</a>, <a class="el" href="string_8hpp_source.html#l00476">insert()</a>, <a class="el" href="string_8hpp_source.html#l00465">operator[]()</a>, <a class="el" href="string_8hpp_source.html#l00471">push_back()</a>, and <a class="el" href="string_8hpp_source.html#l00468">size()</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1165,7 @@ template&lt;class InputIterator &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

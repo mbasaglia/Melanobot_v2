@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lock',['LOCK',['../irc__connection_8cpp.html#a2984326c10511da5d26433f94ffec2a6',1,'irc_connection.cpp']]]
+  ['melanomodules_5finit',['MELANOMODULES_INIT',['../melanomodules_8hpp.html#ad9186a41761c62ea7e2685aaa51b6226',1,'melanomodules.hpp']]]
 ];

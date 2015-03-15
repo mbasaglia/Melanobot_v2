@@ -101,7 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>IRC log-in system.  
  <a href="structnetwork_1_1irc_1_1LoginInfo.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -135,7 +135,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>IRC log-in system. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00043">43</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00043">43</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a957eba61f32d4f7e430d9b3692936de3"></a>
 <div class="memitem">
@@ -158,7 +158,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00050">50</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00050">50</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -196,9 +196,7 @@ Public Attributes</h2></td></tr>
 
 <p>Read from settings. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8cpp_source.html#l00033">33</a> of file <a class="el" href="irc__connection_8cpp_source.html">irc_connection.cpp</a>.</p>
-
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00074">network::irc::IrcConnection::read_settings()</a>.</p>
+<p>Definition at line <a class="el" href="connection_8cpp_source.html#l00028">28</a> of file <a class="el" href="connection_8cpp_source.html">connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -226,9 +224,7 @@ Public Attributes</h2></td></tr>
 
 <p>Whether it has all the required information to auth. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00059">59</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00941">network::irc::IrcConnection::auth()</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00059">59</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -257,9 +253,7 @@ Public Attributes</h2></td></tr>
 <p>Builds the auth command. </p>
 <p>PRIVMSG <code>service</code> :<code>command</code> <code>nick</code> <code>password</code> </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00070">70</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00941">network::irc::IrcConnection::auth()</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00070">70</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -276,9 +270,9 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="structnetwork_1_1Command.html" title="A command to send to a connection. ">Command</a> used to log in. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00048">48</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00048">48</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8hpp_source.html#l00059">can_auth()</a>, <a class="el" href="irc__connection_8hpp_source.html#l00070">irc_command()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00033">LoginInfo()</a>.</p>
+<p>Referenced by <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00059">can_auth()</a>, and <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00070">irc_command()</a>.</p>
 
 </div>
 </div>
@@ -294,9 +288,9 @@ Public Attributes</h2></td></tr>
 
 <p>Nick used to log in. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00045">45</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00045">45</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8hpp_source.html#l00059">can_auth()</a>, <a class="el" href="irc__connection_8hpp_source.html#l00070">irc_command()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00033">LoginInfo()</a>.</p>
+<p>Referenced by <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00059">can_auth()</a>, and <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00070">irc_command()</a>.</p>
 
 </div>
 </div>
@@ -312,9 +306,9 @@ Public Attributes</h2></td></tr>
 
 <p>Password used to log in. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00046">46</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00046">46</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8hpp_source.html#l00059">can_auth()</a>, <a class="el" href="irc__connection_8hpp_source.html#l00070">irc_command()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00033">LoginInfo()</a>.</p>
+<p>Referenced by <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00059">can_auth()</a>, and <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00070">irc_command()</a>.</p>
 
 </div>
 </div>
@@ -330,20 +324,20 @@ Public Attributes</h2></td></tr>
 
 <p>Service used to log in. </p>
 
-<p>Definition at line <a class="el" href="irc__connection_8hpp_source.html#l00047">47</a> of file <a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00047">47</a> of file <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8hpp_source.html#l00059">can_auth()</a>, <a class="el" href="irc__connection_8hpp_source.html#l00070">irc_command()</a>, and <a class="el" href="irc__connection_8cpp_source.html#l00033">LoginInfo()</a>.</p>
+<p>Referenced by <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00059">can_auth()</a>, and <a class="el" href="modules_2irc_2network_2connection_8hpp_source.html#l00070">irc_command()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>src/network/<a class="el" href="irc__connection_8hpp_source.html">irc_connection.hpp</a></li>
-<li>src/network/<a class="el" href="irc__connection_8cpp_source.html">irc_connection.cpp</a></li>
+<li>modules/irc/network/<a class="el" href="modules_2irc_2network_2connection_8hpp_source.html">connection.hpp</a></li>
+<li>modules/irc/network/<a class="el" href="connection_8cpp_source.html">connection.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

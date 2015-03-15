@@ -17,16 +17,17 @@
 <area shape="rect" id="node19" href="$classhandler_1_1ReverseText.html" title="Turns ASCII characters upside&#45;down. " alt="" coords="602,765,749,792"/>
 <area shape="rect" id="node20" href="$classhandler_1_1ServerHost.html" title="Shows the server the bot is connected to. " alt="" coords="606,816,745,843"/>
 <area shape="rect" id="node21" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="602,867,749,893"/>
-<area shape="rect" id="node24" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="596,917,755,944"/>
-<area shape="rect" id="node31" href="$classhandler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="593,968,758,995"/>
+<area shape="rect" id="node25" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="596,917,755,944"/>
+<area shape="rect" id="node32" href="$classhandler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="593,968,758,995"/>
 <area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,487,344,513"/>
 <area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,487,179,513"/>
-<area shape="rect" id="node22" href="$classhandler_1_1AbstractList.html" title="Handles a list of elements (base class) " alt="" coords="809,867,952,893"/>
-<area shape="rect" id="node23" href="$classhandler_1_1AdminGroup.html" title="Manages a user group. " alt="" coords="1025,841,1169,868"/>
-<area shape="rect" id="node25" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="811,968,951,995"/>
-<area shape="rect" id="node26" href="$classhandler_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1025,892,1170,919"/>
-<area shape="rect" id="node27" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="1002,943,1193,969"/>
-<area shape="rect" id="node28" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="1000,993,1195,1020"/>
-<area shape="rect" id="node29" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="1010,1044,1185,1071"/>
-<area shape="rect" id="node30" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="1014,1095,1181,1121"/>
+<area shape="rect" id="node22" href="$classhandler_1_1AbstractList.html" title="Handles a list of elements (base class) " alt="" coords="809,804,952,831"/>
+<area shape="rect" id="node24" href="$classhandler_1_1Bridge.html" title="Acts as bridge across connections. " alt="" coords="826,867,935,893"/>
+<area shape="rect" id="node23" href="$classhandler_1_1AdminGroup.html" title="Manages a user group. " alt="" coords="1025,797,1169,824"/>
+<area shape="rect" id="node26" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="811,943,951,969"/>
+<area shape="rect" id="node27" href="$classhandler_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1025,848,1170,875"/>
+<area shape="rect" id="node28" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="1002,899,1193,925"/>
+<area shape="rect" id="node29" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="1000,949,1195,976"/>
+<area shape="rect" id="node30" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="1010,1000,1185,1027"/>
+<area shape="rect" id="node31" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="1014,1051,1181,1077"/>
 </map>

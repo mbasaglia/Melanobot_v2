@@ -11,6 +11,5 @@ var searchData=
   ['_7eircconnection',['~IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html#a24a13b9520ceb8e3e5388418ec7d043b',1,'network::irc::IrcConnection']]],
   ['_7elog',['~Log',['../classLog.html#a0fbfda88fbee5027c89f6eb121059360',1,'Log']]],
   ['_7emelanobot',['~Melanobot',['../classMelanobot.html#aca74a36de6cd9a8d141a98f60f4ee127',1,'Melanobot']]],
-  ['_7emultibuf',['~Multibuf',['../classMultibuf.html#ab97a601671d3cd7bfb04e2b4b9ceab65',1,'Multibuf']]],
-  ['_7esimplegroup',['~SimpleGroup',['../classhandler_1_1SimpleGroup.html#a3b9b04eec51c4935b659c1c639ca9a98',1,'handler::SimpleGroup']]]
+  ['_7emultibuf',['~Multibuf',['../classMultibuf.html#ab97a601671d3cd7bfb04e2b4b9ceab65',1,'Multibuf']]]
 ];

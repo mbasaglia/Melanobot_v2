@@ -1,12 +1,16 @@
 <map id="src/handler/handler.hpp" name="src/handler/handler.hpp">
-<area shape="rect" id="node2" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="5,80,135,107"/>
-<area shape="rect" id="node3" href="$ctcp_8cpp.html" title="This files has handlers for CTCP messages. " alt="" coords="159,80,299,107"/>
-<area shape="rect" id="node4" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="323,80,483,107"/>
-<area shape="rect" id="node7" href="$misc_8cpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="508,80,651,107"/>
-<area shape="rect" id="node8" href="$irc__actions_8cpp.html" title="src/handler/irc_actions.cpp" alt="" coords="675,80,854,107"/>
-<area shape="rect" id="node9" href="$irc__whois_8cpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="878,80,1049,107"/>
-<area shape="rect" id="node10" href="$admin_8cpp.html" title="This file defines handlers which allows admin to administrate the bot (Mostly IRC&#45;specific action) ..." alt="" coords="1073,80,1224,107"/>
-<area shape="rect" id="node11" href="$handler_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="1249,80,1406,107"/>
-<area shape="rect" id="node5" href="$web-api_8cpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="238,155,398,181"/>
-<area shape="rect" id="node6" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="422,155,555,181"/>
+<area shape="rect" id="node2" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="5,87,135,114"/>
+<area shape="rect" id="node3" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="158,87,318,114"/>
+<area shape="rect" id="node6" href="$misc_8cpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="343,87,485,114"/>
+<area shape="rect" id="node7" href="$bridge_8hpp.html" title="src/handler/bridge.hpp" alt="" coords="509,87,660,114"/>
+<area shape="rect" id="node9" href="$admin_8cpp.html" title="This file defines handlers which allows admin to administrate the bot. " alt="" coords="684,87,835,114"/>
+<area shape="rect" id="node10" href="$handler_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="859,87,1017,114"/>
+<area shape="rect" id="node11" href="$irc__actions_8hpp.html" title="modules/irc/handler\l/irc_actions.hpp" alt="" coords="1041,80,1176,121"/>
+<area shape="rect" id="node13" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="1200,80,1335,121"/>
+<area shape="rect" id="node14" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="1359,80,1493,121"/>
+<area shape="rect" id="node15" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="1517,80,1652,121"/>
+<area shape="rect" id="node4" href="$web-api_8cpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="73,169,233,196"/>
+<area shape="rect" id="node5" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="257,169,390,196"/>
+<area shape="rect" id="node8" href="$bridge_8cpp.html" title="src/handler/bridge.cpp" alt="" coords="509,169,660,196"/>
+<area shape="rect" id="node12" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="1280,169,1412,196"/>
 </map>

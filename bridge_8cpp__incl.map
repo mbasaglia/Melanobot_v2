@@ -1,0 +1,18 @@
+<map id="src/handler/bridge.cpp" name="src/handler/bridge.cpp">
+<area shape="rect" id="node2" href="$bridge_8hpp.html" title="bridge.hpp" alt="" coords="963,80,1046,107"/>
+<area shape="rect" id="node3" href="$handler_8hpp.html" title="handler.hpp" alt="" coords="960,155,1049,181"/>
+<area shape="rect" id="node10" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="924,304,1084,331"/>
+<area shape="rect" id="node20" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="480,453,598,480"/>
+<area shape="rect" id="node27" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1448,617,1542,644"/>
+<area shape="rect" id="node29" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="1729,535,1904,562"/>
+<area shape="rect" id="node38" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1443,229,1550,256"/>
+<area shape="rect" id="node15" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="802,535,916,562"/>
+<area shape="rect" id="node33" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="994,379,1145,405"/>
+<area shape="rect" id="node36" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="725,379,884,405"/>
+<area shape="rect" id="node17" href="$color_8hpp.html" title="color.hpp" alt="" coords="602,617,676,644"/>
+<area shape="rect" id="node25" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="124,535,218,562"/>
+<area shape="rect" id="node34" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="949,453,1060,480"/>
+<area shape="rect" id="node35" href="$user_8hpp.html" title="user.hpp" alt="" coords="1042,535,1114,562"/>
+<area shape="rect" id="node42" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1534,304,1702,331"/>
+<area shape="rect" id="node43" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1524,453,1719,480"/>
+</map>

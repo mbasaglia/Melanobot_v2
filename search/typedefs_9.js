@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['time',['Time',['../namespacenetwork.html#a7175c549b2e3e4be5dd29b0fa3e7691f',1,'network']]]
+  ['size_5ftype',['size_type',['../classstring_1_1FormattedString.html#a75a38a66a44eef0860cd66da93f09043',1,'string::FormattedString']]]
 ];

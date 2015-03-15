@@ -144,7 +144,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A user visible from a connection. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd><p class="startdd">Maybe keep a pointer to the <a class="el" href="structuser_1_1User.html" title="A user visible from a connection. ">User</a> manager and notify when <code>local_id</code> or <code>channels</code> change. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd><p class="startdd">Maybe keep a pointer to the <a class="el" href="structuser_1_1User.html" title="A user visible from a connection. ">User</a> manager and notify when <code>local_id</code> or <code>channels</code> change. </p>
 <p class="enddd">don't know if it might be worth avoiding direct member access things like <code>name</code>, <code>host</code>, <code>global_id</code> and <code>properties</code> can be modified without any issue, changing <code>local_id</code> might cause issues with the user manager but let's assume the Connection is able to keep them unique via protocol restrictions. Adding values to <code>channels</code> should be done using <code><a class="el" href="structuser_1_1User.html#a21b297854675750c36c16b6c48083d3b" title="Add a channel (if not already in channels) ">add_channel()</a></code>.</p>
 </dd></dl>
 
@@ -175,8 +175,6 @@ Public Attributes</h2></td></tr>
 <p>Add a channel (if not already in <code>channels</code>) </p>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00078">78</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -267,8 +265,6 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00088">88</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="adb5418a0a1fc6a86d13900da29d2c1f8"></a>
@@ -297,8 +293,6 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00101">101</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00985">network::irc::IrcConnection::update_user()</a>.</p>
-
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -316,7 +310,7 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00143">143</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user_8hpp_source.html#l00078">add_channel()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00652">network::irc::IrcConnection::command()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>, and <a class="el" href="user_8hpp_source.html#l00088">remove_channel()</a>.</p>
+<p>Referenced by <a class="el" href="user_8hpp_source.html#l00078">add_channel()</a>, and <a class="el" href="user_8hpp_source.html#l00088">remove_channel()</a>.</p>
 
 </div>
 </div>
@@ -334,7 +328,7 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00138">138</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l01031">network::irc::IrcConnection::build_user()</a>, <a class="el" href="admin_8cpp_source.html#l00249">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8cpp_source.html#l00049">handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__whois_8cpp_source.html#l00072">handler::QSendWhois::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00093">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00051">handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__whois_8hpp_source.html#l00073">handler::QSendWhois::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
 
 </div>
 </div>
@@ -352,7 +346,7 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00128">128</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l01031">network::irc::IrcConnection::build_user()</a>, <a class="el" href="admin_8cpp_source.html#l00249">handler::AdminGroup::elements()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8cpp_source.html#l00049">handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00951">network::irc::IrcConnection::parse_prefix()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00093">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00051">handler::IrcJoinMessage::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
 
 </div>
 </div>
@@ -370,7 +364,7 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00133">133</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">user::UserManager::add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">user::UserManager::change_id()</a>, <a class="el" href="admin_8cpp_source.html#l00249">handler::AdminGroup::elements()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00951">network::irc::IrcConnection::parse_prefix()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">user::UserManager::remove_user()</a>, <a class="el" href="user_8hpp_source.html#l00101">update()</a>, <a class="el" href="user__manager_8cpp_source.html#l00128">user::UserManager::update_user()</a>, and <a class="el" href="user__manager_8cpp_source.html#l00037">user::UserManager::user()</a>.</p>
+<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">user::UserManager::add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">user::UserManager::change_id()</a>, <a class="el" href="admin_8cpp_source.html#l00093">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">user::UserManager::remove_user()</a>, <a class="el" href="user_8hpp_source.html#l00101">update()</a>, <a class="el" href="user__manager_8cpp_source.html#l00128">user::UserManager::update_user()</a>, and <a class="el" href="user__manager_8cpp_source.html#l00037">user::UserManager::user()</a>.</p>
 
 </div>
 </div>
@@ -389,7 +383,7 @@ Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user_8hpp_source.html#l00123">123</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l01031">network::irc::IrcConnection::build_user()</a>, <a class="el" href="admin_8cpp_source.html#l00249">handler::AdminGroup::elements()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8cpp_source.html#l00049">handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="misc_8cpp_source.html#l00340">handler::Reply::on_handle()</a>, <a class="el" href="fun_8cpp_source.html#l00448">handler::AnswerQuestions::on_handle()</a>, <a class="el" href="irc__connection_8cpp_source.html#l00951">network::irc::IrcConnection::parse_prefix()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00093">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00051">handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="misc_8cpp_source.html#l00340">handler::Reply::on_handle()</a>, <a class="el" href="fun_8cpp_source.html#l00460">handler::AnswerQuestions::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
 
 </div>
 </div>
@@ -417,7 +411,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

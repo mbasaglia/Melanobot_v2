@@ -1,7 +1,7 @@
 <map id="string::Formatter" name="string::Formatter">
-<area shape="rect" id="node2" href="$classstring_1_1FormatterDarkplaces.html" title="Darkplaces UTF&#45;8. " alt="" coords="5,80,189,107"/>
-<area shape="rect" id="node3" href="$classstring_1_1FormatterUtf8.html" title="Plain UTF&#45;8. " alt="" coords="214,80,357,107"/>
-<area shape="rect" id="node4" href="$classstring_1_1FormatterAnsi.html" title="ANSI&#45;formatted UTF&#45;8 or ASCII. " alt="" coords="44,155,188,181"/>
-<area shape="rect" id="node5" href="$classstring_1_1FormatterAscii.html" title="Plain ASCII. " alt="" coords="212,155,359,181"/>
-<area shape="rect" id="node6" href="$classstring_1_1FormatterIrc.html" title="UTF&#45;8 with IRC colors. " alt="" coords="383,155,516,181"/>
+<area shape="rect" id="node2" href="$classstring_1_1FormatterUtf8.html" title="Plain UTF&#45;8. " alt="" coords="175,80,318,107"/>
+<area shape="rect" id="node6" href="$classxonotic_1_1Formatter.html" title="Darkplaces UTF&#45;8. " alt="" coords="343,80,471,107"/>
+<area shape="rect" id="node3" href="$classstring_1_1FormatterAnsi.html" title="ANSI&#45;formatted UTF&#45;8 or ASCII. " alt="" coords="5,155,149,181"/>
+<area shape="rect" id="node4" href="$classstring_1_1FormatterAscii.html" title="Plain ASCII. " alt="" coords="173,155,320,181"/>
+<area shape="rect" id="node5" href="$classstring_1_1FormatterIrc.html" title="UTF&#45;8 with IRC colors. " alt="" coords="344,155,477,181"/>
 </map>

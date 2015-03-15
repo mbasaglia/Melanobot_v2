@@ -10,7 +10,7 @@ var searchData=
   ['throws',['throws',['../structJsonParser.html#a45991629e32b21fa0a3ba79540167ddf',1,'JsonParser::throws() const '],['../structJsonParser.html#a202ee8e3db16886108b95f53e83aed06',1,'JsonParser::throws(bool throws)']]],
   ['time',['Time',['../namespacenetwork.html#a7175c549b2e3e4be5dd29b0fa3e7691f',1,'network']]],
   ['timein',['timein',['../structnetwork_1_1Command.html#a487ae245cbdb90ec63acea7e06afe635',1,'network::Command']]],
-  ['timeout',['timeout',['../structnetwork_1_1Command.html#abadd68cf21d1943cea9e55e732d65ddb',1,'network::Command::timeout()'],['../structnetwork_1_1OutputMessage.html#af7e3e7259d0c05afc095980e7a5e36da',1,'network::OutputMessage::timeout()']]],
+  ['timeout',['timeout',['../structnetwork_1_1Command.html#abadd68cf21d1943cea9e55e732d65ddb',1,'network::Command::timeout()'],['../structnetwork_1_1OutputMessage.html#af7e3e7259d0c05afc095980e7a5e36da',1,'network::OutputMessage::timeout()'],['../classhandler_1_1BridgeChat.html#afba3f5bda7fbcd33890dc07a205269f6',1,'handler::BridgeChat::timeout()']]],
   ['timestamp',['timestamp',['../classLogger.html#a17d51aec7003331eb0e9d660681b89df',1,'Logger']]],
   ['to_5f4bit',['to_4bit',['../classcolor_1_1Color12.html#a9a8ae5cd7a2a710c946b1cc907285603',1,'color::Color12']]],
   ['to_5fbit_5fmask',['to_bit_mask',['../classcolor_1_1Color12.html#ad0cd7d532b022eb5139c7af188f76b08',1,'color::Color12']]],

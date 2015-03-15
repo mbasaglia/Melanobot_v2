@@ -109,6 +109,8 @@ Collaboration diagram for string::Formatter::FormatterFactory:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a6843b167aba143862e395da637240954"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Formatter_1_1FormatterFactory.html#a6843b167aba143862e395da637240954">FormatterFactory</a> ()</td></tr>
+<tr class="separator:a6843b167aba143862e395da637240954"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52130a3066b6275f9d731551183aed64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Formatter_1_1FormatterFactory.html#a52130a3066b6275f9d731551183aed64">~FormatterFactory</a> ()</td></tr>
 <tr class="separator:a52130a3066b6275f9d731551183aed64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b2bc2aa2978651cec38037d6d0203c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstring_1_1Formatter.html">Formatter</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Formatter_1_1FormatterFactory.html#a50b2bc2aa2978651cec38037d6d0203c">formatter</a> (const std::string &amp;<a class="el" href="classstring_1_1Formatter.html#aa1efbf9d40a7a339f11474b00361253e">name</a>)</td></tr>
@@ -136,8 +138,25 @@ Public Attributes</h2></td></tr>
 <p>Factory needs a singleton, <a class="el" href="classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) ">Formatter</a> is abstract so it needs a different class, but <a class="el" href="classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) ">Formatter</a> is the place to go to access the factory.</p>
 <p>Also note that this doesn't really create objects since they don't need any data, so the objects are created only once. </p>
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00190">190</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00191">191</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a6843b167aba143862e395da637240954"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string::Formatter::FormatterFactory::FormatterFactory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="string_8cpp_source.html#l00159">159</a> of file <a class="el" href="string_8cpp_source.html">string.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a52130a3066b6275f9d731551183aed64"></a>
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +178,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00199">199</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00202">202</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
 </div>
 </div>
@@ -180,9 +199,9 @@ Public Attributes</h2></td></tr>
 
 <p>Register a formatter. </p>
 
-<p>Definition at line <a class="el" href="string_8cpp_source.html#l00172">172</a> of file <a class="el" href="string_8cpp_source.html">string.cpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8cpp_source.html#l00180">180</a> of file <a class="el" href="string_8cpp_source.html">string.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00225">string::Formatter::RegisterFormatter::RegisterFormatter()</a>.</p>
+<p>Referenced by <a class="el" href="string_8cpp_source.html#l00159">FormatterFactory()</a>, and <a class="el" href="string_8hpp_source.html#l00700">REGISTER_FORMATTER()</a>.</p>
 
 </div>
 </div>
@@ -208,9 +227,9 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="string_8cpp_source.html#l00159">159</a> of file <a class="el" href="string_8cpp_source.html">string.cpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8cpp_source.html#l00167">167</a> of file <a class="el" href="string_8cpp_source.html">string.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00288">string::Formatter::formatter()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00270">string::Formatter::formatter()</a>.</p>
 
 </div>
 </div>
@@ -235,9 +254,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00193">193</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00194">194</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8hpp_source.html#l00288">string::Formatter::formatter()</a>, <a class="el" href="string_8hpp_source.html#l00236">string::Formatter::RegisterDefaultFormatter::RegisterDefaultFormatter()</a>, and <a class="el" href="string_8hpp_source.html#l00225">string::Formatter::RegisterFormatter::RegisterFormatter()</a>.</p>
+<p>Referenced by <a class="el" href="string_8hpp_source.html#l00270">string::Formatter::formatter()</a>, and <a class="el" href="string_8hpp_source.html#l00700">REGISTER_FORMATTER()</a>.</p>
 
 </div>
 </div>
@@ -252,9 +271,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00217">217</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00220">220</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8cpp_source.html#l00172">add_formatter()</a>, <a class="el" href="string_8cpp_source.html#l00159">formatter()</a>, and <a class="el" href="string_8hpp_source.html#l00236">string::Formatter::RegisterDefaultFormatter::RegisterDefaultFormatter()</a>.</p>
+<p>Referenced by <a class="el" href="string_8cpp_source.html#l00180">add_formatter()</a>, <a class="el" href="string_8cpp_source.html#l00167">formatter()</a>, and <a class="el" href="string_8cpp_source.html#l00159">FormatterFactory()</a>.</p>
 
 </div>
 </div>
@@ -268,9 +287,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00216">216</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00219">219</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string_8cpp_source.html#l00172">add_formatter()</a>, and <a class="el" href="string_8cpp_source.html#l00159">formatter()</a>.</p>
+<p>Referenced by <a class="el" href="string_8cpp_source.html#l00180">add_formatter()</a>, and <a class="el" href="string_8cpp_source.html#l00167">formatter()</a>.</p>
 
 </div>
 </div>
@@ -281,7 +300,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

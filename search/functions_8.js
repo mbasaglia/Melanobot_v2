@@ -9,6 +9,8 @@ var searchData=
   ['irc_5fcommand',['irc_command',['../structnetwork_1_1irc_1_1LoginInfo.html#a146f1451e218f648e0f9f08c234c2188',1,'network::irc::LoginInfo']]],
   ['ircconnection',['IrcConnection',['../classnetwork_1_1irc_1_1IrcConnection.html#aecd79ba17a920bd35d258a78ad003b9d',1,'network::irc::IrcConnection']]],
   ['ircjoinmessage',['IrcJoinMessage',['../classhandler_1_1IrcJoinMessage.html#a35002dbe68ad1b18d057180820f1739a',1,'handler::IrcJoinMessage']]],
+  ['irckickmessage',['IrcKickMessage',['../classhandler_1_1IrcKickMessage.html#aa150c3ea25ecfc70aa3b6cc39910722b',1,'handler::IrcKickMessage']]],
+  ['irckickrejoin',['IrcKickRejoin',['../classhandler_1_1IrcKickRejoin.html#a12e026f127c084d5960f25c734063be3',1,'handler::IrcKickRejoin']]],
   ['is_5fascii',['is_ascii',['../classstring_1_1Utf8Parser.html#a90edabbcd0130d37688741131a3c5ce1',1,'string::Utf8Parser']]],
   ['is_5fnickchar',['is_nickchar',['../namespacenetwork_1_1irc.html#ac15c863971041cf2b22071e32f36e009',1,'network::irc']]],
   ['is_5fvalid',['is_valid',['../classcolor_1_1Color12.html#a28fde841316fecfdfe17cabcdceb2fdf',1,'color::Color12']]]

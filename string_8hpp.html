@@ -90,7 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">string.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -101,6 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="color_8hpp_source.html">color.hpp</a>&quot;</code><br />
@@ -112,8 +113,7 @@ Include dependency graph for string.hpp:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="string_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="string_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="string_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -131,12 +131,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Formatter_1_1FormatterFactory.html">string::Formatter::FormatterFactory</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal factory.  <a href="classstring_1_1Formatter_1_1FormatterFactory.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstring_1_1Formatter_1_1RegisterFormatter.html">string::Formatter::RegisterFormatter</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quick way to register a formatter automatically (via static objects)  <a href="structstring_1_1Formatter_1_1RegisterFormatter.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstring_1_1Formatter_1_1RegisterDefaultFormatter.html">string::Formatter::RegisterDefaultFormatter</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as <a class="el" href="structstring_1_1Formatter_1_1RegisterFormatter.html" title="Quick way to register a formatter automatically (via static objects) ">RegisterFormatter</a> but it also sets it as default.  <a href="structstring_1_1Formatter_1_1RegisterDefaultFormatter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Element.html">string::Element</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic element of a string.  <a href="classstring_1_1Element.html#details">More...</a><br /></td></tr>
@@ -177,12 +171,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormatterAnsi.html">string::FormatterAnsi</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANSI-formatted UTF-8 or ASCII.  <a href="classstring_1_1FormatterAnsi.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormatterIrc.html">string::FormatterIrc</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">UTF-8 with IRC colors.  <a href="classstring_1_1FormatterIrc.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormatterDarkplaces.html">string::FormatterDarkplaces</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Darkplaces UTF-8.  <a href="classstring_1_1FormatterDarkplaces.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -190,11 +178,12 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespacestring"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace for string formatting. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a441bf5439d7c9c588e73ad838bb215d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="string_8hpp.html#a441bf5439d7c9c588e73ad838bb215d7">REGISTER_FORMATTER</a>(classname, name)&#160;&#160;&#160;static Formatter::RegisterFormatter RegisterFormatter_##name = new classname</td></tr>
-<tr class="memdesc:a441bf5439d7c9c588e73ad838bb215d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a formatter.  <a href="#a441bf5439d7c9c588e73ad838bb215d7">More...</a><br /></td></tr>
-<tr class="separator:a441bf5439d7c9c588e73ad838bb215d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a2eba6f24965fdfc500ed6307a7c962f7"><td class="memTemplParams" colspan="2">template&lt;class Class , class... Args&gt; </td></tr>
+<tr class="memitem:a2eba6f24965fdfc500ed6307a7c962f7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="string_8hpp.html#a2eba6f24965fdfc500ed6307a7c962f7">REGISTER_FORMATTER</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a2eba6f24965fdfc500ed6307a7c962f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a formatter.  <a href="#a2eba6f24965fdfc500ed6307a7c962f7">More...</a><br /></td></tr>
+<tr class="separator:a2eba6f24965fdfc500ed6307a7c962f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Mattia Basaglia </dd></dl>
@@ -206,48 +195,43 @@ License</h1>
 <p>You should have received a copy of the GNU Affero General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. </p>
 
 <p>Definition in file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a441bf5439d7c9c588e73ad838bb215d7"></a>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a2eba6f24965fdfc500ed6307a7c962f7"></a>
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class Class , class... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">#define REGISTER_FORMATTER</td>
+          <td class="memname">void REGISTER_FORMATTER </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">classname, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">name&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;static Formatter::RegisterFormatter RegisterFormatter_##name = new classname</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Registers a formatter. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">classname</td><td>Formatter class </td></tr>
-    <tr><td class="paramname">name</td><td>Unique identifier (used only as registration token) </td></tr>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Class</td><td>Formatter class </td></tr>
+    <tr><td class="paramname">Args</td><td>Constructor parameters </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>namespace? </dd></dl>
 
-<p>Definition at line <a class="el" href="string_8hpp_source.html#l00745">745</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string_8hpp_source.html#l00700">700</a> of file <a class="el" href="string_8hpp_source.html">string.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="xonotic_8cpp_source.html#l00026">melanomodule_xonotic()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:30 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:51 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -105,7 +105,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Creates connections from settings.  
  <a href="classnetwork_1_1ConnectionFactory.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="connection_8hpp_source.html">connection.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -115,19 +115,19 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a885e0a6429b3353dd244a3efb2d67641"><td class="memItemLeft" align="right" valign="top">typedef std::function<br class="typebreak" />
-&lt; <a class="el" href="classnetwork_1_1Connection.html">Connection</a> *(<a class="el" href="classMelanobot.html">Melanobot</a> *bot, <br class="typebreak" />
-const <a class="el" href="classSettings.html">Settings</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#a885e0a6429b3353dd244a3efb2d67641">Contructor</a></td></tr>
-<tr class="separator:a885e0a6429b3353dd244a3efb2d67641"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d9c038be72393693910515d8ddf277"><td class="memItemLeft" align="right" valign="top">typedef std::function<br class="typebreak" />
+&lt; std::unique_ptr&lt; <a class="el" href="classnetwork_1_1Connection.html">Connection</a> &gt;<br class="typebreak" />
+<a class="el" href="classMelanobot.html">Melanobot</a> *bot, const <a class="el" href="classSettings.html">Settings</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#ac8d9c038be72393693910515d8ddf277">Contructor</a></td></tr>
+<tr class="separator:ac8d9c038be72393693910515d8ddf277"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae7211c6ade4399ca2b4bdc18facfe593"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#ae7211c6ade4399ca2b4bdc18facfe593">register_connection</a> (const std::string &amp;protocol_name, const <a class="el" href="classnetwork_1_1ConnectionFactory.html#a885e0a6429b3353dd244a3efb2d67641">Contructor</a> &amp;function)</td></tr>
+<tr class="memitem:ae7211c6ade4399ca2b4bdc18facfe593"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#ae7211c6ade4399ca2b4bdc18facfe593">register_connection</a> (const std::string &amp;protocol_name, const <a class="el" href="classnetwork_1_1ConnectionFactory.html#ac8d9c038be72393693910515d8ddf277">Contructor</a> &amp;function)</td></tr>
 <tr class="memdesc:ae7211c6ade4399ca2b4bdc18facfe593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a connection type.  <a href="#ae7211c6ade4399ca2b4bdc18facfe593">More...</a><br /></td></tr>
 <tr class="separator:ae7211c6ade4399ca2b4bdc18facfe593"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab67dc1cb47b02b0bfa3ce3002558d852"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classnetwork_1_1Connection.html">Connection</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#ab67dc1cb47b02b0bfa3ce3002558d852">create</a> (<a class="el" href="classMelanobot.html">Melanobot</a> *bot, const <a class="el" href="classSettings.html">Settings</a> &amp;settings)</td></tr>
-<tr class="memdesc:ab67dc1cb47b02b0bfa3ce3002558d852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a connection from its settings.  <a href="#ab67dc1cb47b02b0bfa3ce3002558d852">More...</a><br /></td></tr>
-<tr class="separator:ab67dc1cb47b02b0bfa3ce3002558d852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adedd685f2371cbb59a8dbce45f304804"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classnetwork_1_1Connection.html">Connection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#adedd685f2371cbb59a8dbce45f304804">create</a> (<a class="el" href="classMelanobot.html">Melanobot</a> *bot, const <a class="el" href="classSettings.html">Settings</a> &amp;settings)</td></tr>
+<tr class="memdesc:adedd685f2371cbb59a8dbce45f304804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a connection from its settings.  <a href="#adedd685f2371cbb59a8dbce45f304804">More...</a><br /></td></tr>
+<tr class="separator:adedd685f2371cbb59a8dbce45f304804"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -145,25 +145,25 @@ Private Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:abd3f991d376a19dcfe774a19f3214699"><td class="memItemLeft" align="right" valign="top">std::unordered_map<br class="typebreak" />
-&lt; std::string, <a class="el" href="classnetwork_1_1ConnectionFactory.html#a885e0a6429b3353dd244a3efb2d67641">Contructor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#abd3f991d376a19dcfe774a19f3214699">factory</a></td></tr>
+&lt; std::string, <a class="el" href="classnetwork_1_1ConnectionFactory.html#ac8d9c038be72393693910515d8ddf277">Contructor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ConnectionFactory.html#abd3f991d376a19dcfe774a19f3214699">factory</a></td></tr>
 <tr class="separator:abd3f991d376a19dcfe774a19f3214699"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Creates connections from settings. </p>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00350">350</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00356">356</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a class="anchor" id="a885e0a6429b3353dd244a3efb2d67641"></a>
+<a class="anchor" id="ac8d9c038be72393693910515d8ddf277"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::function&lt;<a class="el" href="classnetwork_1_1Connection.html">Connection</a>*(<a class="el" href="classMelanobot.html">Melanobot</a>* bot, const <a class="el" href="classSettings.html">Settings</a>&amp;)&gt; <a class="el" href="classnetwork_1_1ConnectionFactory.html#a885e0a6429b3353dd244a3efb2d67641">network::ConnectionFactory::Contructor</a></td>
+          <td class="memname">typedef std::function&lt;std::unique_ptr&lt;<a class="el" href="classnetwork_1_1Connection.html">Connection</a>&gt;<a class="el" href="classMelanobot.html">Melanobot</a>* bot, const <a class="el" href="classSettings.html">Settings</a>&amp;)&gt; <a class="el" href="classnetwork_1_1ConnectionFactory.html#ac8d9c038be72393693910515d8ddf277">network::ConnectionFactory::Contructor</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00353">353</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00359">359</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00404">404</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00419">419</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
 </div>
 </div>
@@ -218,7 +218,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="ab67dc1cb47b02b0bfa3ce3002558d852"></a>
+<a class="anchor" id="adedd685f2371cbb59a8dbce45f304804"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -226,7 +226,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classnetwork_1_1Connection.html">Connection</a>* network::ConnectionFactory::create </td>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classnetwork_1_1Connection.html">Connection</a>&gt; network::ConnectionFactory::create </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classMelanobot.html">Melanobot</a> *&#160;</td>
           <td class="paramname"><em>bot</em>, </td>
@@ -252,7 +252,7 @@ Private Attributes</h2></td></tr>
 
 <p>Creates a connection from its settings. </p>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00391">391</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00397">397</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot::Melanobot()</a>.</p>
 
@@ -281,9 +281,9 @@ Private Attributes</h2></td></tr>
 
 <p>Singleton instance. </p>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00371">371</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00377">377</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot::Melanobot()</a>, and <a class="el" href="connection_8hpp_source.html#l00362">network::ConnectionFactory::RegisterConnection::RegisterConnection()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot::Melanobot()</a>, and <a class="el" href="src_2network_2connection_8hpp_source.html#l00368">network::ConnectionFactory::RegisterConnection::RegisterConnection()</a>.</p>
 
 </div>
 </div>
@@ -303,7 +303,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classnetwork_1_1ConnectionFactory.html#a885e0a6429b3353dd244a3efb2d67641">Contructor</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classnetwork_1_1ConnectionFactory.html#ac8d9c038be72393693910515d8ddf277">Contructor</a> &amp;&#160;</td>
           <td class="paramname"><em>function</em>&#160;</td>
         </tr>
         <tr>
@@ -327,9 +327,9 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00381">381</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00387">387</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="connection_8hpp_source.html#l00362">network::ConnectionFactory::RegisterConnection::RegisterConnection()</a>.</p>
+<p>Referenced by <a class="el" href="src_2network_2connection_8hpp_source.html#l00368">network::ConnectionFactory::RegisterConnection::RegisterConnection()</a>.</p>
 
 </div>
 </div>
@@ -342,7 +342,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;std::string,<a class="el" href="classnetwork_1_1ConnectionFactory.html#a885e0a6429b3353dd244a3efb2d67641">Contructor</a>&gt; network::ConnectionFactory::factory</td>
+          <td class="memname">std::unordered_map&lt;std::string,<a class="el" href="classnetwork_1_1ConnectionFactory.html#ac8d9c038be72393693910515d8ddf277">Contructor</a>&gt; network::ConnectionFactory::factory</td>
         </tr>
       </table>
   </td>
@@ -352,19 +352,19 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="connection_8hpp_source.html#l00407">407</a> of file <a class="el" href="connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00422">422</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="connection_8hpp_source.html#l00391">create()</a>, and <a class="el" href="connection_8hpp_source.html#l00381">register_connection()</a>.</p>
+<p>Referenced by <a class="el" href="src_2network_2connection_8hpp_source.html#l00397">create()</a>, and <a class="el" href="src_2network_2connection_8hpp_source.html#l00387">register_connection()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/network/<a class="el" href="connection_8hpp_source.html">connection.hpp</a></li>
+<li>src/network/<a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:31 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:52 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

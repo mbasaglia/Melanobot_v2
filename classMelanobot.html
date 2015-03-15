@@ -136,12 +136,13 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ac0892a693c056c33129e7867f7511180"><td class="memItemLeft" align="right" valign="top">std::unordered_map<br class="typebreak" />
-&lt; std::string, <br class="typebreak" />
-<a class="el" href="classnetwork_1_1Connection.html">network::Connection</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMelanobot.html#ac0892a693c056c33129e7867f7511180">connections</a></td></tr>
-<tr class="separator:ac0892a693c056c33129e7867f7511180"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a728c27c48bbb6f029204653354b23bf9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMelanobot.html#a728c27c48bbb6f029204653354b23bf9">handlers</a></td></tr>
-<tr class="separator:a728c27c48bbb6f029204653354b23bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20ed5fb96f4aa9a639dc8afcb2667564"><td class="memItemLeft" align="right" valign="top">std::unordered_map<br class="typebreak" />
+&lt; std::string, std::unique_ptr<br class="typebreak" />
+&lt; <a class="el" href="classnetwork_1_1Connection.html">network::Connection</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMelanobot.html#a20ed5fb96f4aa9a639dc8afcb2667564">connections</a></td></tr>
+<tr class="separator:a20ed5fb96f4aa9a639dc8afcb2667564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c675d8e0f0b5fa90dcae5446b8fde3d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::unique_ptr<br class="typebreak" />
+&lt; <a class="el" href="classhandler_1_1Handler.html">handler::Handler</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMelanobot.html#a7c675d8e0f0b5fa90dcae5446b8fde3d">handlers</a></td></tr>
+<tr class="separator:a7c675d8e0f0b5fa90dcae5446b8fde3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98b3ea20bb87f7e58cdc7b3c4f6e13c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentQueue.html">ConcurrentQueue</a>&lt; <a class="el" href="structnetwork_1_1Message.html">network::Message</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMelanobot.html#a98b3ea20bb87f7e58cdc7b3c4f6e13c9">messages</a></td></tr>
 <tr class="separator:a98b3ea20bb87f7e58cdc7b3c4f6e13c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -174,7 +175,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00023">23</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00024">main()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00025">main()</a>.</p>
 
 </div>
 </div>
@@ -211,11 +212,12 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get connection by name. </p>
-<dl class="section return"><dt>Returns</dt><dd>NULL if not found </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><b>nullptr</b> if not found </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The returned pointer will become invalid afther the <a class="el" href="classMelanobot.html" title="Main bot class. ">Melanobot</a> object is destructed </dd></dl>
 
-<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00106">106</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00104">104</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8cpp_source.html#l00028">handler::SimpleGroup::SimpleGroup()</a>.</p>
+<p>Referenced by <a class="el" href="bridge_8cpp_source.html#l00025">handler::Bridge::Bridge()</a>, and <a class="el" href="handler_8cpp_source.html#l00028">handler::SimpleGroup::SimpleGroup()</a>.</p>
 
 </div>
 </div>
@@ -239,9 +241,7 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> messages </li>
 </ul>
 
-<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00101">101</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
-
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00185">network::irc::IrcConnection::handle_message()</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00099">99</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
 
 </div>
 </div>
@@ -281,9 +281,9 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classhandler_1_1HandlerContainer.html#a27eaed76908da7889b0c95bf0723d195">handler::HandlerContainer</a>.</p>
 
-<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00114">114</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00112">112</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00070">handler::Help::on_handle()</a>, and <a class="el" href="ctcp_8cpp_source.html#l00237">handler::CtcpClientInfo::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8cpp_source.html#l00070">handler::Help::on_handle()</a>, and <a class="el" href="ctcp_8hpp_source.html#l00235">handler::CtcpClientInfo::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -306,9 +306,9 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> messages(not continuous) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00068">68</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00064">64</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00024">main()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00025">main()</a>.</p>
 
 </div>
 </div>
@@ -331,14 +331,14 @@ Private Attributes</h2></td></tr>
 <li><b>Locks:</b> none </li>
 </ul>
 
-<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00062">62</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8cpp_source.html#l00058">58</a> of file <a class="el" href="melanobot_8cpp_source.html">melanobot.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__connection_8cpp_source.html#l00172">network::irc::IrcConnection::error_stop()</a>, <a class="el" href="admin_8cpp_source.html#l00041">handler::AdminQuit::on_handle()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00054">~Melanobot()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8cpp_source.html#l00040">handler::AdminQuit::on_handle()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00054">~Melanobot()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="ac0892a693c056c33129e7867f7511180"></a>
+<a class="anchor" id="a20ed5fb96f4aa9a639dc8afcb2667564"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -346,7 +346,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;std::string,<a class="el" href="classnetwork_1_1Connection.html">network::Connection</a>*&gt; Melanobot::connections</td>
+          <td class="memname">std::unordered_map&lt;std::string,std::unique_ptr&lt;<a class="el" href="classnetwork_1_1Connection.html">network::Connection</a>&gt; &gt; Melanobot::connections</td>
         </tr>
       </table>
   </td>
@@ -355,15 +355,15 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>allow dynamic connection/handler creation (requires locking) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>allow dynamic connection/handler creation (requires locking) </dd></dl>
 
-<p>Definition at line <a class="el" href="melanobot_8hpp_source.html#l00071">71</a> of file <a class="el" href="melanobot_8hpp_source.html">melanobot.hpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8hpp_source.html#l00073">73</a> of file <a class="el" href="melanobot_8hpp_source.html">melanobot.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00106">connection()</a>, <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00068">run()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00104">connection()</a>, <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00064">run()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a728c27c48bbb6f029204653354b23bf9"></a>
+<a class="anchor" id="a7c675d8e0f0b5fa90dcae5446b8fde3d"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -371,7 +371,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="classhandler_1_1Handler.html">handler::Handler</a>*&gt; Melanobot::handlers</td>
+          <td class="memname">std::vector&lt;std::unique_ptr&lt;<a class="el" href="classhandler_1_1Handler.html">handler::Handler</a>&gt; &gt; Melanobot::handlers</td>
         </tr>
       </table>
   </td>
@@ -381,9 +381,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="melanobot_8hpp_source.html#l00072">72</a> of file <a class="el" href="melanobot_8hpp_source.html">melanobot.hpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8hpp_source.html#l00074">74</a> of file <a class="el" href="melanobot_8hpp_source.html">melanobot.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00114">populate_properties()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00023">Melanobot()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00112">populate_properties()</a>.</p>
 
 </div>
 </div>
@@ -405,9 +405,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="melanobot_8hpp_source.html#l00074">74</a> of file <a class="el" href="melanobot_8hpp_source.html">melanobot.hpp</a>.</p>
+<p>Definition at line <a class="el" href="melanobot_8hpp_source.html#l00076">76</a> of file <a class="el" href="melanobot_8hpp_source.html">melanobot.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00101">message()</a>, <a class="el" href="melanobot_8cpp_source.html#l00068">run()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00062">stop()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00099">message()</a>, <a class="el" href="melanobot_8cpp_source.html#l00064">run()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00058">stop()</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 12 2015 19:01:30 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 15 2015 18:05:51 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
