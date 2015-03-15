@@ -20,6 +20,9 @@
 #include "formatter.hpp"
 #include "string/logger.hpp"
 
+/**
+ * \brief Initializes the Xonotic module
+ */
 void melanomodule_xonotic()
 {
     REGISTER_FORMATTER<xonotic::Formatter>();

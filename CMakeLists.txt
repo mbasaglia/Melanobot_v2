@@ -84,8 +84,8 @@ else()
     message(STATUS "Loaded Modules: ${MELANOMODULES}")
 endif()
 
-set(CONFIG_HEADER "${PROJECT_BINARY_DIR}/src/melanomodules.hpp")
-configure_file ("${PROJECT_SOURCE_DIR}/src/melanomodules.hpp.in" ${CONFIG_HEADER})
+set(MELANOMODULE_HEADER "${PROJECT_BINARY_DIR}/src/melanomodules.hpp")
+configure_file ("${PROJECT_SOURCE_DIR}/src/melanomodules.hpp.in" ${MELANOMODULE_HEADER})
 
 # Binary
 add_subdirectory(src bin)
@@ -100,7 +100,7 @@ if(DOXYGEN_FOUND)
         set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/doc)
     endif()
 
-    set(DOXYGEN_INPUT "${CONFIG_HEADER}")
+    set(DOXYGEN_INPUT "${CONFIG_HEADER} ${MELANOMODULE_HEADER}")
 
     file(GLOB_RECURSE DOXYGEN_INPUT_FILES "doc/*.dox" "src/*.cpp" "src/*.hpp" "modules/*.cpp" "modules/*.hpp" )
     foreach(source ${DOXYGEN_INPUT_FILES})

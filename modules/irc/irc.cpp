@@ -23,6 +23,9 @@
 #include "irc/handler/irc_admin.hpp"
 #include "irc/handler/irc_whois.hpp"
 
+/**
+ * \brief Initializes the IRC module
+ */
 void melanomodule_irc()
 {
     /**
