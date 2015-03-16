@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xonotic',['xonotic',['../namespacexonotic.html',1,'']]]
+  ['user',['user',['../namespaceuser.html',1,'']]]
 ];

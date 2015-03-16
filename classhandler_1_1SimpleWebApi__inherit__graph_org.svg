@@ -67,15 +67,15 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="classhandler_1_1ChuckNorris.html" target="_top" xlink:title="Searches for a Chuck Norris joke. ">
-<polygon fill="none" stroke="black" points="752.5,-152.5 752.5,-171.5 861.5,-171.5 861.5,-152.5 752.5,-152.5"/>
-<text text-anchor="middle" x="807" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ChuckNorris</text>
+<g id="a_node6"><a xlink:href="classfun_1_1ChuckNorris.html" target="_top" xlink:title="Searches for a Chuck Norris joke. ">
+<polygon fill="none" stroke="black" points="761.5,-152.5 761.5,-171.5 852.5,-171.5 852.5,-152.5 761.5,-152.5"/>
+<text text-anchor="middle" x="807" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">fun::ChuckNorris</text>
 </a>
 </g>
 </g>
 <!-- Node5&#45;&gt;Node6 -->
 <g id="edge5" class="edge"><title>Node5&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M666.631,-101.8C683.71,-114.525 709.305,-132.04 734,-143 742.39,-146.723 751.664,-149.843 760.687,-152.407"/>
+<path fill="none" stroke="midnightblue" d="M666.631,-101.8C683.71,-114.525 709.305,-132.04 734,-143 742.626,-146.828 752.187,-150.018 761.449,-152.623"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="668.607,-98.9052 658.527,-95.6428 664.372,-104.479 668.607,-98.9052"/>
 </g>
 <!-- Node7 -->

@@ -1,5 +1,7 @@
 <map id="src/math.hpp" name="src/math.hpp">
 <area shape="rect" id="node2" href="$math_8cpp.html" title="src/math.cpp" alt="" coords="5,80,104,107"/>
 <area shape="rect" id="node3" href="$misc_8cpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="129,80,271,107"/>
-<area shape="rect" id="node4" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="296,80,429,107"/>
+<area shape="rect" id="node4" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="295,80,489,107"/>
+<area shape="rect" id="node5" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="199,155,393,181"/>
+<area shape="rect" id="node6" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="417,155,557,181"/>
 </map>

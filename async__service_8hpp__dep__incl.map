@@ -1,8 +1,11 @@
 <map id="src/network/async_service.hpp" name="src/network/async_service.hpp">
-<area shape="rect" id="node2" href="$http_8hpp.html" title="src/network/http.hpp" alt="" coords="187,80,328,107"/>
-<area shape="rect" id="node7" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="353,80,450,107"/>
-<area shape="rect" id="node3" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="91,155,251,181"/>
-<area shape="rect" id="node6" href="$http_8cpp.html" title="src/network/http.cpp" alt="" coords="275,155,416,181"/>
-<area shape="rect" id="node4" href="$web-api_8cpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="5,229,165,256"/>
-<area shape="rect" id="node5" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="189,229,323,256"/>
+<area shape="rect" id="node2" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="363,80,460,107"/>
+<area shape="rect" id="node3" href="$http_8hpp.html" title="modules/web/http.hpp" alt="" coords="484,80,635,107"/>
+<area shape="rect" id="node4" href="$web-api_8hpp.html" title="modules/web/web&#45;api.hpp" alt="" coords="349,155,522,181"/>
+<area shape="rect" id="node9" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="427,319,579,345"/>
+<area shape="rect" id="node10" href="$http_8cpp.html" title="modules/web/http.cpp" alt="" coords="597,155,748,181"/>
+<area shape="rect" id="node5" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="156,237,349,263"/>
+<area shape="rect" id="node8" href="$web-api-concrete_8hpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="373,229,521,271"/>
+<area shape="rect" id="node6" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="5,319,199,345"/>
+<area shape="rect" id="node7" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="223,319,363,345"/>
 </map>

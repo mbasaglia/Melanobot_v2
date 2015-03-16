@@ -108,14 +108,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for irc::IrcConnection:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classirc_1_1IrcConnection__inherit__graph.svg" width="154" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classirc_1_1IrcConnection__inherit__graph.svg" width="154" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for irc::IrcConnection:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classirc_1_1IrcConnection__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classirc_1_1IrcConnection__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -548,10 +546,10 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Locks:</b> data(sometimes) buffer(indirect) </li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>NICK validation is very basic, the spec is more precise</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>sanitaze the mode string </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd>allow channel mode </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd>sanitaze the mode string </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>allow channel mode </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>incoming JOIN is treated differently from how the IRC specification says: each parameter is handled like a separate channel</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a> </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000040">Todo:</a></b></dt><dd>keep track of too many channels, check that channel names are ok <a href="http://tools.ietf.org/html/rfc2812#section-3.2.1">http://tools.ietf.org/html/rfc2812#section-3.2.1</a> </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#af3d237aadf48cd582abfc1fd88bc2247">network::Connection</a>.</p>
 
@@ -682,7 +680,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Stop caused by an error. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000029">Todo:</a></b></dt><dd>is this the right thing to do? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000030">Todo:</a></b></dt><dd>is this the right thing to do? </dd></dl>
 
 <p>Definition at line <a class="el" href="connection_8cpp_source.html#l00168">168</a> of file <a class="el" href="connection_8cpp_source.html">connection.cpp</a>.</p>
 
@@ -838,14 +836,14 @@ Additional Inherited Members</h2></td></tr>
 <li><b>Threads:</b> irc_in </li>
 <li><b>Locks:</b> data(sometimes) buffer(indirect, sometimes) </li>
 </ul>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000030">Todo:</a></b></dt><dd>Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000031">Todo:</a></b></dt><dd>maybe it would be useful to store operator/voiced status </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000032">Todo:</a></b></dt><dd>check nick max length </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000033">Todo:</a></b></dt><dd>system to try to get the best nick possible </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000034">Todo:</a></b></dt><dd>read PING timeout in settings </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000035">Todo:</a></b></dt><dd>set timer to the latest server message and call PING when too old </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000031">Todo:</a></b></dt><dd>Use MAXCHANNELS/CHANLIMIT NICKLEN CHANNELLEN CHANTYPES PREFIX CASEMAPPING </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000032">Todo:</a></b></dt><dd>maybe it would be useful to store operator/voiced status </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000033">Todo:</a></b></dt><dd>check nick max length </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000034">Todo:</a></b></dt><dd>system to try to get the best nick possible </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000035">Todo:</a></b></dt><dd>read PING timeout in settings </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>set timer to the latest server message and call PING when too old </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Assumes a single victim</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>print a message for all ERR_ responses (verbosity &gt; 2) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>print a message for all ERR_ responses (verbosity &gt; 2) </dd></dl>
 
 <p>Definition at line <a class="el" href="connection_8cpp_source.html#l00235">235</a> of file <a class="el" href="connection_8cpp_source.html">connection.cpp</a>.</p>
 
@@ -998,7 +996,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Read members from the given settings. </p>
 <dl class="section note"><dt>Note</dt><dd>doesn't read buffer settings </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd>if called from somewhere that is not the constructor, lock data </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000029">Todo:</a></b></dt><dd>if called from somewhere that is not the constructor, lock data </dd></dl>
 
 <p>Definition at line <a class="el" href="connection_8cpp_source.html#l00070">70</a> of file <a class="el" href="connection_8cpp_source.html">connection.cpp</a>.</p>
 
@@ -1927,7 +1925,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Mar 15 2015 22:51:54 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 16 2015 13:20:34 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

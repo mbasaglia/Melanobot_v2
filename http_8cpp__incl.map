@@ -1,8 +1,8 @@
-<map id="src/network/http.cpp" name="src/network/http.cpp">
-<area shape="rect" id="node2" href="$http_8hpp.html" title="http.hpp" alt="" coords="1430,80,1499,107"/>
+<map id="modules/web/http.cpp" name="modules/web/http.cpp">
+<area shape="rect" id="node2" href="$http_8hpp.html" title="http.hpp" alt="" coords="1416,80,1486,107"/>
 <area shape="rect" id="node7" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="934,229,1053,256"/>
 <area shape="rect" id="node36" href="$config_8hpp.html" title="config.hpp" alt="" coords="2355,80,2438,107"/>
-<area shape="rect" id="node3" href="$async__service_8hpp.html" title="async_service.hpp" alt="" coords="1399,155,1530,181"/>
+<area shape="rect" id="node3" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="1360,155,1542,181"/>
 <area shape="rect" id="node27" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1527,311,1695,338"/>
 <area shape="rect" id="node14" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1084,311,1178,338"/>
 <area shape="rect" id="node17" href="$string_8hpp.html" title="string.hpp" alt="" coords="714,311,793,338"/>

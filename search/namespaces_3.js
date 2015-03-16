@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['math',['math',['../namespacemath.html',1,'']]]
+  ['handler',['handler',['../namespaceirc_1_1handler.html',1,'irc']]],
+  ['irc',['irc',['../namespaceirc.html',1,'']]]
 ];

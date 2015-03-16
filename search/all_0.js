@@ -31,9 +31,9 @@ var searchData=
   ['adminreconnect',['AdminReconnect',['../classhandler_1_1AdminReconnect.html',1,'handler']]],
   ['all_5fusers',['all_users',['../classuser_1_1UserGroup.html#a6616e328001e26953ccefe2328968798',1,'user::UserGroup']]],
   ['alternative',['alternative',['../classstring_1_1QFont.html#a560d5bafa5db49e473613614ebb2b621',1,'string::QFont']]],
-  ['answerquestions',['AnswerQuestions',['../classhandler_1_1AnswerQuestions.html#a6d80c5f7d5617d7c3b6e079d84f3971e',1,'handler::AnswerQuestions']]],
-  ['answerquestions',['AnswerQuestions',['../classhandler_1_1AnswerQuestions.html',1,'handler']]],
-  ['api_5furl',['api_url',['../classhandler_1_1SearchVideoYoutube.html#a54362c3fad0df0fd9243398e6ce091c5',1,'handler::SearchVideoYoutube::api_url()'],['../classhandler_1_1SearchWebSearx.html#a0e593b0c84fb10ea05c18cc9d9b3247c',1,'handler::SearchWebSearx::api_url()'],['../classhandler_1_1ChuckNorris.html#a677ebabd4accf492a5c93606f1829dbc',1,'handler::ChuckNorris::api_url()']]],
+  ['answerquestions',['AnswerQuestions',['../classfun_1_1AnswerQuestions.html',1,'fun']]],
+  ['answerquestions',['AnswerQuestions',['../classfun_1_1AnswerQuestions.html#a52d63bd13dca069a0a635924e1be7c7d',1,'fun::AnswerQuestions']]],
+  ['api_5furl',['api_url',['../classfun_1_1ChuckNorris.html#acf3f3cb73b5e1b39e6b60cd73e65db10',1,'fun::ChuckNorris::api_url()'],['../classhandler_1_1SearchVideoYoutube.html#a54362c3fad0df0fd9243398e6ce091c5',1,'handler::SearchVideoYoutube::api_url()'],['../classhandler_1_1SearchWebSearx.html#a0e593b0c84fb10ea05c18cc9d9b3247c',1,'handler::SearchWebSearx::api_url()']]],
   ['append',['append',['../classstring_1_1FormattedString.html#a7d3e79f89ba9717bd61fb2e17ccbba0b',1,'string::FormattedString::append(Args &amp;&amp;...args)'],['../classstring_1_1FormattedString.html#aeb62569752407cedf09c48731148d063',1,'string::FormattedString::append(std::shared_ptr&lt; Element &gt; element)'],['../classstring_1_1FormattedString.html#ae9cbc41ccb994b5e956df49825155009',1,'string::FormattedString::append(const FormattedString &amp;string)']]],
   ['array_5findex',['array_index',['../structJsonParser_1_1Context.html#a312147d96e2248b35ff4eb25821c33a6',1,'JsonParser::Context']]],
   ['ascii',['ascii',['../classstring_1_1Formatter.html#a8d66f333c3e9614df23b4bbd8c835cbb',1,'string::Formatter::ascii(char c) const =0'],['../classstring_1_1Formatter.html#aa15c173746faf821a23fe3624272f461',1,'string::Formatter::ascii(const std::string &amp;s) const =0'],['../classstring_1_1FormatterUtf8.html#a366b8baf4dcaf5342d7430936e5121c2',1,'string::FormatterUtf8::ascii(char c) const override'],['../classstring_1_1FormatterUtf8.html#a245581fc7dccb0c0e7355e57145f720e',1,'string::FormatterUtf8::ascii(const std::string &amp;s) const override'],['../classxonotic_1_1Formatter.html#ab8c257c1a41c7cfa7e14ec471815b63c',1,'xonotic::Formatter::ascii(char c) const override'],['../classxonotic_1_1Formatter.html#a21d2d46b18e1be166778de54da630d23',1,'xonotic::Formatter::ascii(const std::string &amp;s) const override']]],
@@ -53,5 +53,5 @@ var searchData=
   ['authorized',['authorized',['../classhandler_1_1Handler.html#a7e8c64588c72b6b4f560dea050fcb4b1',1,'handler::Handler']]],
   ['authsystem',['AuthSystem',['../classuser_1_1AuthSystem.html',1,'user']]],
   ['auto',['AUTO',['../classSettings.html#ad16df62d407753259389b3c440125be3ae1f2d5134ed2543d38a0de9751cf75d9',1,'Settings']]],
-  ['auto_5fload',['auto_load',['../classnetwork_1_1http_1_1HttpService.html#a6dc9b811ba747b27f70c5d9817806e2a',1,'network::http::HttpService::auto_load()'],['../classnetwork_1_1AsyncService.html#ad5db666733ad2915be6a6f953d5d0274',1,'network::AsyncService::auto_load()']]]
+  ['auto_5fload',['auto_load',['../classnetwork_1_1AsyncService.html#ad5db666733ad2915be6a6f953d5d0274',1,'network::AsyncService::auto_load()'],['../classnetwork_1_1http_1_1HttpService.html#a6dc9b811ba747b27f70c5d9817806e2a',1,'network::http::HttpService::auto_load()']]]
 ];

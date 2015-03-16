@@ -2,7 +2,7 @@ var searchData=
 [
   ['chanhax',['Chanhax',['../classhandler_1_1Chanhax.html',1,'handler']]],
   ['character',['Character',['../classstring_1_1Character.html',1,'string']]],
-  ['chucknorris',['ChuckNorris',['../classhandler_1_1ChuckNorris.html',1,'handler']]],
+  ['chucknorris',['ChuckNorris',['../classfun_1_1ChuckNorris.html',1,'fun']]],
   ['clearformatting',['ClearFormatting',['../classstring_1_1ClearFormatting.html',1,'string']]],
   ['cointoss',['Cointoss',['../classhandler_1_1Cointoss.html',1,'handler']]],
   ['color',['Color',['../classstring_1_1Color.html',1,'string']]],

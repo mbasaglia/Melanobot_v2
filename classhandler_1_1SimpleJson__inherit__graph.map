@@ -1,5 +1,5 @@
 <map id="handler::SimpleJson" name="handler::SimpleJson">
-<area shape="rect" id="node6" href="$classhandler_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1009,5,1154,32"/>
+<area shape="rect" id="node6" href="$classfun_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1021,5,1142,32"/>
 <area shape="rect" id="node7" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="986,56,1177,83"/>
 <area shape="rect" id="node8" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="984,107,1179,133"/>
 <area shape="rect" id="node9" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="994,157,1169,184"/>

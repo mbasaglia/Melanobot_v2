@@ -9,7 +9,7 @@ var searchData=
   ['adminquit',['AdminQuit',['../classhandler_1_1AdminQuit.html',1,'handler']]],
   ['adminraw',['AdminRaw',['../classirc_1_1handler_1_1AdminRaw.html',1,'irc::handler']]],
   ['adminreconnect',['AdminReconnect',['../classhandler_1_1AdminReconnect.html',1,'handler']]],
-  ['answerquestions',['AnswerQuestions',['../classhandler_1_1AnswerQuestions.html',1,'handler']]],
+  ['answerquestions',['AnswerQuestions',['../classfun_1_1AnswerQuestions.html',1,'fun']]],
   ['asciisubstring',['AsciiSubstring',['../classstring_1_1AsciiSubstring.html',1,'string']]],
   ['asyncservice',['AsyncService',['../classnetwork_1_1AsyncService.html',1,'network']]],
   ['authsystem',['AuthSystem',['../classuser_1_1AuthSystem.html',1,'user']]]

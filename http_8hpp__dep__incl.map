@@ -1,6 +1,9 @@
-<map id="src/network/http.hpp" name="src/network/http.hpp">
-<area shape="rect" id="node2" href="$web-api_8hpp.html" title="src/handler/web&#45;api.hpp" alt="" coords="91,80,251,107"/>
-<area shape="rect" id="node5" href="$http_8cpp.html" title="src/network/http.cpp" alt="" coords="275,80,416,107"/>
-<area shape="rect" id="node3" href="$web-api_8cpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="5,155,165,181"/>
-<area shape="rect" id="node4" href="$fun_8cpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="189,155,323,181"/>
+<map id="modules/web/http.hpp" name="modules/web/http.hpp">
+<area shape="rect" id="node2" href="$web-api_8hpp.html" title="modules/web/web&#45;api.hpp" alt="" coords="349,80,522,107"/>
+<area shape="rect" id="node7" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="427,244,579,271"/>
+<area shape="rect" id="node8" href="$http_8cpp.html" title="modules/web/http.cpp" alt="" coords="597,80,748,107"/>
+<area shape="rect" id="node3" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="156,162,349,189"/>
+<area shape="rect" id="node6" href="$web-api-concrete_8hpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="373,155,521,196"/>
+<area shape="rect" id="node4" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="5,244,199,271"/>
+<area shape="rect" id="node5" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="223,244,363,271"/>
 </map>

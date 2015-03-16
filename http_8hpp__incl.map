@@ -1,5 +1,5 @@
-<map id="src/network/http.hpp" name="src/network/http.hpp">
-<area shape="rect" id="node2" href="$async__service_8hpp.html" title="async_service.hpp" alt="" coords="1283,80,1413,107"/>
+<map id="modules/web/http.hpp" name="modules/web/http.hpp">
+<area shape="rect" id="node2" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="1257,80,1439,107"/>
 <area shape="rect" id="node6" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1289,155,1407,181"/>
 <area shape="rect" id="node26" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="233,237,401,263"/>
 <area shape="rect" id="node13" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1519,237,1612,263"/>

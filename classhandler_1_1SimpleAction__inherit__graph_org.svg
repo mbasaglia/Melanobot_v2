@@ -15,113 +15,113 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="classhandler_1_1AdminQuit.html" target="_top" xlink:title="Quits the bot. ">
-<polygon fill="none" stroke="black" points="458,-722.5 458,-741.5 558,-741.5 558,-722.5 458,-722.5"/>
-<text text-anchor="middle" x="508" y="-729.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::AdminQuit</text>
+<g id="a_node4"><a xlink:href="classfun_1_1Morse.html" target="_top" xlink:title="Handler translating between morse and latin. ">
+<polygon fill="none" stroke="black" points="476.5,-722.5 476.5,-741.5 539.5,-741.5 539.5,-722.5 476.5,-722.5"/>
+<text text-anchor="middle" x="508" y="-729.5" font-family="Helvetica,sans-Serif" font-size="10.00">fun::Morse</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node4 -->
 <g id="edge3" class="edge"><title>Node1&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M349.665,-390.819C358.893,-456.583 391.48,-666.076 438,-713 443.511,-718.559 450.488,-722.533 457.877,-725.364"/>
+<path fill="none" stroke="midnightblue" d="M349.665,-390.819C358.893,-456.583 391.48,-666.076 438,-713 448.06,-723.147 463.006,-728.012 476.418,-730.293"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="353.089,-390.023 348.258,-380.594 346.154,-390.978 353.089,-390.023"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="classhandler_1_1AdminReconnect.html" target="_top" xlink:title="Makes the bot reconnect. ">
-<polygon fill="none" stroke="black" points="443.5,-684.5 443.5,-703.5 572.5,-703.5 572.5,-684.5 443.5,-684.5"/>
-<text text-anchor="middle" x="508" y="-691.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::AdminReconnect</text>
+<g id="a_node5"><a xlink:href="classfun_1_1RenderPony.html" target="_top" xlink:title="Draws a pretty My Little Pony ASCII art. ">
+<polygon fill="none" stroke="black" points="463,-684.5 463,-703.5 553,-703.5 553,-684.5 463,-684.5"/>
+<text text-anchor="middle" x="508" y="-691.5" font-family="Helvetica,sans-Serif" font-size="10.00">fun::RenderPony</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node5 -->
 <g id="edge4" class="edge"><title>Node1&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M346.76,-390.793C347.227,-444.619 356.176,-594.969 438,-675 441.908,-678.823 446.512,-681.893 451.455,-684.356"/>
+<path fill="none" stroke="midnightblue" d="M346.76,-390.793C347.227,-444.619 356.176,-594.969 438,-675 444.751,-681.603 453.575,-685.96 462.646,-688.822"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="350.26,-390.573 346.768,-380.57 343.26,-390.567 350.26,-390.573"/>
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="classhandler_1_1Cointoss.html" target="_top" xlink:title="Shows one of the given items, at random. ">
-<polygon fill="none" stroke="black" points="461.5,-646.5 461.5,-665.5 554.5,-665.5 554.5,-646.5 461.5,-646.5"/>
-<text text-anchor="middle" x="508" y="-653.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Cointoss</text>
+<g id="a_node6"><a xlink:href="classfun_1_1ReverseText.html" target="_top" xlink:title="Turns ASCII characters upside&#45;down. ">
+<polygon fill="none" stroke="black" points="462,-646.5 462,-665.5 554,-665.5 554,-646.5 462,-646.5"/>
+<text text-anchor="middle" x="508" y="-653.5" font-family="Helvetica,sans-Serif" font-size="10.00">fun::ReverseText</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node6 -->
 <g id="edge5" class="edge"><title>Node1&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M347.757,-390.924C350.735,-440.2 365.435,-568.726 438,-637 444.516,-643.13 452.824,-647.315 461.402,-650.164"/>
+<path fill="none" stroke="midnightblue" d="M347.757,-390.924C350.735,-440.2 365.435,-568.726 438,-637 444.606,-643.215 453.055,-647.431 461.759,-650.282"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="351.239,-390.485 347.243,-380.672 344.248,-390.835 351.239,-390.485"/>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="classhandler_1_1Echo.html" target="_top" xlink:title="Just repeat what it has been told. ">
-<polygon fill="none" stroke="black" points="469.5,-608.5 469.5,-627.5 546.5,-627.5 546.5,-608.5 469.5,-608.5"/>
-<text text-anchor="middle" x="508" y="-615.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Echo</text>
+<g id="a_node7"><a xlink:href="classhandler_1_1AdminQuit.html" target="_top" xlink:title="Quits the bot. ">
+<polygon fill="none" stroke="black" points="458,-608.5 458,-627.5 558,-627.5 558,-608.5 458,-608.5"/>
+<text text-anchor="middle" x="508" y="-615.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::AdminQuit</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node7 -->
 <g id="edge6" class="edge"><title>Node1&#45;&gt;Node7</title>
-<path fill="none" stroke="midnightblue" d="M349.071,-391.049C354.741,-435.378 374.594,-542.272 438,-599 446.612,-606.705 458.073,-611.319 469.176,-614.071"/>
+<path fill="none" stroke="midnightblue" d="M349.071,-391.049C354.741,-435.378 374.594,-542.272 438,-599 443.649,-604.054 450.523,-607.778 457.718,-610.519"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="352.53,-390.495 347.893,-380.969 345.578,-391.307 352.53,-390.495"/>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="classhandler_1_1Help.html" target="_top" xlink:title="Handler showing help on the available handlers. ">
-<polygon fill="none" stroke="black" points="471,-570.5 471,-589.5 545,-589.5 545,-570.5 471,-570.5"/>
-<text text-anchor="middle" x="508" y="-577.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Help</text>
+<g id="a_node8"><a xlink:href="classhandler_1_1AdminReconnect.html" target="_top" xlink:title="Makes the bot reconnect. ">
+<polygon fill="none" stroke="black" points="443.5,-570.5 443.5,-589.5 572.5,-589.5 572.5,-570.5 443.5,-570.5"/>
+<text text-anchor="middle" x="508" y="-577.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::AdminReconnect</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node8 -->
 <g id="edge7" class="edge"><title>Node1&#45;&gt;Node8</title>
-<path fill="none" stroke="midnightblue" d="M350.748,-390.564C359.183,-429.157 383.351,-515.303 438,-561 447.246,-568.731 459.391,-573.331 470.912,-576.063"/>
+<path fill="none" stroke="midnightblue" d="M350.748,-390.564C359.183,-429.157 383.351,-515.303 438,-561 442.671,-564.905 448.081,-568.012 453.777,-570.482"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="354.143,-389.697 348.696,-380.61 347.287,-391.111 354.143,-389.697"/>
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="classhandler_1_1License.html" target="_top" xlink:title="Handler showing licensing information. ">
-<polygon fill="none" stroke="black" points="464,-532.5 464,-551.5 552,-551.5 552,-532.5 464,-532.5"/>
-<text text-anchor="middle" x="508" y="-539.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::License</text>
+<g id="a_node9"><a xlink:href="classhandler_1_1Cointoss.html" target="_top" xlink:title="Shows one of the given items, at random. ">
+<polygon fill="none" stroke="black" points="461.5,-532.5 461.5,-551.5 554.5,-551.5 554.5,-532.5 461.5,-532.5"/>
+<text text-anchor="middle" x="508" y="-539.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Cointoss</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node9 -->
 <g id="edge8" class="edge"><title>Node1&#45;&gt;Node9</title>
-<path fill="none" stroke="midnightblue" d="M353.149,-390.186C364.536,-422.593 392.025,-488.048 438,-523 445.517,-528.715 454.652,-532.711 463.782,-535.506"/>
+<path fill="none" stroke="midnightblue" d="M353.149,-390.186C364.536,-422.593 392.025,-488.048 438,-523 444.825,-528.189 452.983,-531.96 461.261,-534.702"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="356.413,-388.912 349.901,-380.555 349.78,-391.149 356.413,-388.912"/>
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="classhandler_1_1ListClear.html" target="_top" xlink:title="Used by AbstractList to remove all elements. ">
-<polygon fill="none" stroke="black" points="461.5,-494.5 461.5,-513.5 554.5,-513.5 554.5,-494.5 461.5,-494.5"/>
-<text text-anchor="middle" x="508" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ListClear</text>
+<g id="a_node10"><a xlink:href="classhandler_1_1Echo.html" target="_top" xlink:title="Just repeat what it has been told. ">
+<polygon fill="none" stroke="black" points="469.5,-494.5 469.5,-513.5 546.5,-513.5 546.5,-494.5 469.5,-494.5"/>
+<text text-anchor="middle" x="508" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Echo</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node10 -->
 <g id="edge9" class="edge"><title>Node1&#45;&gt;Node10</title>
-<path fill="none" stroke="midnightblue" d="M356.85,-389.628C371.255,-415.048 400.484,-460.264 438,-485 445.054,-489.651 453.229,-493.172 461.431,-495.834"/>
+<path fill="none" stroke="midnightblue" d="M356.85,-389.628C371.255,-415.048 400.484,-460.264 438,-485 447.336,-491.156 458.636,-495.331 469.364,-498.158"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="359.796,-387.722 351.912,-380.645 353.662,-391.094 359.796,-387.722"/>
 </g>
 <!-- Node11 -->
 <g id="node11" class="node"><title>Node11</title>
-<g id="a_node11"><a xlink:href="classhandler_1_1ListInsert.html" target="_top" xlink:title="Used by AbstractList to add elements. ">
-<polygon fill="none" stroke="black" points="460.5,-456.5 460.5,-475.5 555.5,-475.5 555.5,-456.5 460.5,-456.5"/>
-<text text-anchor="middle" x="508" y="-463.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ListInsert</text>
+<g id="a_node11"><a xlink:href="classhandler_1_1Help.html" target="_top" xlink:title="Handler showing help on the available handlers. ">
+<polygon fill="none" stroke="black" points="471,-456.5 471,-475.5 545,-475.5 545,-456.5 471,-456.5"/>
+<text text-anchor="middle" x="508" y="-463.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Help</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node11 -->
 <g id="edge10" class="edge"><title>Node1&#45;&gt;Node11</title>
-<path fill="none" stroke="midnightblue" d="M362.796,-387.908C379.806,-405.155 408.428,-431.519 438,-447 445.265,-450.803 453.371,-453.908 461.4,-456.422"/>
+<path fill="none" stroke="midnightblue" d="M362.796,-387.908C379.806,-405.155 408.428,-431.519 438,-447 448.127,-452.302 459.887,-456.246 470.798,-459.125"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="365.3,-385.462 355.837,-380.697 360.263,-390.323 365.3,-385.462"/>
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="classhandler_1_1ListRemove.html" target="_top" xlink:title="Used by AbstractList to remove elements. ">
-<polygon fill="none" stroke="black" points="454.5,-418.5 454.5,-437.5 561.5,-437.5 561.5,-418.5 454.5,-418.5"/>
-<text text-anchor="middle" x="508" y="-425.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ListRemove</text>
+<g id="a_node12"><a xlink:href="classhandler_1_1License.html" target="_top" xlink:title="Handler showing licensing information. ">
+<polygon fill="none" stroke="black" points="464,-418.5 464,-437.5 552,-437.5 552,-418.5 464,-418.5"/>
+<text text-anchor="middle" x="508" y="-425.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::License</text>
 </a>
 </g>
 </g>
@@ -132,35 +132,35 @@
 </g>
 <!-- Node13 -->
 <g id="node13" class="node"><title>Node13</title>
-<g id="a_node13"><a xlink:href="classhandler_1_1Morse.html" target="_top" xlink:title="Handler translating between morse and latin. ">
-<polygon fill="none" stroke="black" points="467.5,-380.5 467.5,-399.5 548.5,-399.5 548.5,-380.5 467.5,-380.5"/>
-<text text-anchor="middle" x="508" y="-387.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::Morse</text>
+<g id="a_node13"><a xlink:href="classhandler_1_1ListClear.html" target="_top" xlink:title="Used by AbstractList to remove all elements. ">
+<polygon fill="none" stroke="black" points="461.5,-380.5 461.5,-399.5 554.5,-399.5 554.5,-380.5 461.5,-380.5"/>
+<text text-anchor="middle" x="508" y="-387.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ListClear</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node13 -->
 <g id="edge12" class="edge"><title>Node1&#45;&gt;Node13</title>
-<path fill="none" stroke="midnightblue" d="M412.056,-378.725C430.843,-380.956 450.77,-383.323 467.491,-385.308"/>
+<path fill="none" stroke="midnightblue" d="M412.203,-378.743C428.711,-380.703 446.09,-382.767 461.395,-384.584"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="412.406,-375.242 402.063,-377.539 411.58,-382.194 412.406,-375.242"/>
 </g>
 <!-- Node14 -->
 <g id="node14" class="node"><title>Node14</title>
-<g id="a_node14"><a xlink:href="classhandler_1_1RenderPony.html" target="_top" xlink:title="Draws a pretty My Little Pony ASCII art. ">
-<polygon fill="none" stroke="black" points="454,-342.5 454,-361.5 562,-361.5 562,-342.5 454,-342.5"/>
-<text text-anchor="middle" x="508" y="-349.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::RenderPony</text>
+<g id="a_node14"><a xlink:href="classhandler_1_1ListInsert.html" target="_top" xlink:title="Used by AbstractList to add elements. ">
+<polygon fill="none" stroke="black" points="460.5,-342.5 460.5,-361.5 555.5,-361.5 555.5,-342.5 460.5,-342.5"/>
+<text text-anchor="middle" x="508" y="-349.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ListInsert</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node14 -->
 <g id="edge13" class="edge"><title>Node1&#45;&gt;Node14</title>
-<path fill="none" stroke="midnightblue" d="M412.076,-363.272C426.014,-361.617 440.579,-359.887 453.997,-358.294"/>
+<path fill="none" stroke="midnightblue" d="M412.011,-363.28C428.203,-361.357 445.246,-359.333 460.355,-357.539"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="411.58,-359.806 402.063,-364.461 412.406,-366.758 411.58,-359.806"/>
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="classhandler_1_1ReverseText.html" target="_top" xlink:title="Turns ASCII characters upside&#45;down. ">
-<polygon fill="none" stroke="black" points="453,-304.5 453,-323.5 563,-323.5 563,-304.5 453,-304.5"/>
-<text text-anchor="middle" x="508" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ReverseText</text>
+<g id="a_node15"><a xlink:href="classhandler_1_1ListRemove.html" target="_top" xlink:title="Used by AbstractList to remove elements. ">
+<polygon fill="none" stroke="black" points="454.5,-304.5 454.5,-323.5 561.5,-323.5 561.5,-304.5 454.5,-304.5"/>
+<text text-anchor="middle" x="508" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ListRemove</text>
 </a>
 </g>
 </g>
@@ -353,9 +353,9 @@
 </g>
 <!-- Node23 -->
 <g id="node23" class="node"><title>Node23</title>
-<g id="a_node23"><a xlink:href="classhandler_1_1ChuckNorris.html" target="_top" xlink:title="Searches for a Chuck Norris joke. ">
-<polygon fill="none" stroke="black" points="775.5,-242.5 775.5,-261.5 884.5,-261.5 884.5,-242.5 775.5,-242.5"/>
-<text text-anchor="middle" x="830" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">handler::ChuckNorris</text>
+<g id="a_node23"><a xlink:href="classfun_1_1ChuckNorris.html" target="_top" xlink:title="Searches for a Chuck Norris joke. ">
+<polygon fill="none" stroke="black" points="784.5,-242.5 784.5,-261.5 875.5,-261.5 875.5,-242.5 784.5,-242.5"/>
+<text text-anchor="middle" x="830" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">fun::ChuckNorris</text>
 </a>
 </g>
 </g>
