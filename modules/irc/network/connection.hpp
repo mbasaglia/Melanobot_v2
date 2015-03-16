@@ -95,16 +95,6 @@ public:
     ~IrcConnection() override;
 
     /**
-     * \thread external \lock none
-     */
-    void start() override;
-
-    /**
-     * \thread external \lock buffer(indirect)
-     */
-    void stop() override;
-
-    /**
      * \thread ? \lock data
      */
     network::Server server() const override;

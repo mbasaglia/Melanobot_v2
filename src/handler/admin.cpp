@@ -174,9 +174,61 @@ private:
 };
 REGISTER_HANDLER(AdminReconnect,Reconnect);
 
+/**
+ * \brief Makes the bot Connect
+ */
+class AdminConnect: public SimpleAction
+{
+public:
+    AdminConnect(const Settings& settings, Melanobot* bot)
+        : SimpleAction("connect",settings,bot)
+    {
+        help = "Connects bot";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        msg.destination->connect();
+        return true;
+    }
+};
+REGISTER_HANDLER(AdminConnect,Connect);
 
 /**
- * \brief Makes the bot reconnect
+ * \brief Makes the bot disconnect
+ */
+class AdminDisconnect: public SimpleAction
+{
+public:
+    AdminDisconnect(const Settings& settings, Melanobot* bot)
+        : SimpleAction("disconnect",settings,bot)
+    {
+        message = settings.get("message",message);
+        synopsis += " [message]";
+        help = "Disconnects bot";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string quit_msg;
+        if ( !msg.message.empty() )
+            quit_msg = msg.message;
+        else
+            quit_msg = message;
+
+        msg.destination->disconnect(quit_msg);
+        return true;
+    }
+
+private:
+    std::string message = "Disconnecting...";
+};
+REGISTER_HANDLER(AdminDisconnect,Disconnect);
+
+/**
+ * \brief Changes the channel of a message
  */
 class Chanhax: public Handler
 {

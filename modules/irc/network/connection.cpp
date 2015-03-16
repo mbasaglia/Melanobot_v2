@@ -118,6 +118,7 @@ void IrcConnection::connect()
         lock.unlock();
         connection_status = CONNECTING;
         login();
+        buffer.start();
     }
 }
 
@@ -133,6 +134,7 @@ void IrcConnection::disconnect(const std::string& message)
     current_server = main_server;
     server_features.clear();
     user_manager.clear();
+    buffer.stop();
 }
 
 void IrcConnection::reconnect(const std::string& quit_message)
@@ -147,27 +149,12 @@ void IrcConnection::reconnect(const std::string& quit_message)
     lock.unlock();
 
     disconnect(quit_message);
-    buffer.stop();
     connect();
-    buffer.start();
 }
-
-void IrcConnection::start()
-{
-    connect();
-    buffer.start();
-}
-
-void IrcConnection::stop()
-{
-    disconnect();
-    buffer.stop();
-}
-
 
 void IrcConnection::error_stop()
 {
-    stop();
+    disconnect();
     Settings::global_settings.put("exit_code",1);
     bot->stop(); /// \todo is this the right thing to do?
 }

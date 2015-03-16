@@ -260,12 +260,12 @@ public:
     /**
      * \brief Disconnect and stop all processing
      */
-    virtual void stop() = 0;
+    virtual void stop() { disconnect(); }
 
     /**
      * \brief Start processing messages
      */
-    virtual void start() = 0;
+    virtual void start() { connect(); }
 
     /**
      * \brief Get the string formatter
