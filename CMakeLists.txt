@@ -62,7 +62,6 @@ include_directories("${CMAKE_BINARY_DIR}/src")
 #Melano modules
 set(MELANOMODULES "")
 set(MELANOMODULES_INIT "")
-option (FOOPTION "hello" ON)
 macro(melanomodule name description default)
     string(TOUPPER "MODULE_${name}" OPTION_NAME)
     option (${OPTION_NAME} ${description} ${default})

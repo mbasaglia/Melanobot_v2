@@ -234,13 +234,14 @@ class Chanhax: public Handler
 {
 public:
     Chanhax(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
-    {
-        trigger = settings.get("trigger",trigger);
-        regex_chanhax = std::regex(
+        : Handler(settings,bot),
+        trigger(settings.get("trigger","chanhax")),
+        regex_chanhax (
             "(.+)\\s*"+string::regex_escape(trigger)+"\\s+(\\S+)",
             std::regex::ECMAScript|std::regex::optimize
-        );
+        )
+    {
+
     }
 
     bool can_handle(const network::Message& msg) const
@@ -272,7 +273,7 @@ protected:
     }
 
 private:
-    std::string trigger = "chanhax";
+    std::string trigger;
     std::regex  regex_chanhax;
 };
 REGISTER_HANDLER(Chanhax,Chanhax);

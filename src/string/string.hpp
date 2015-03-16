@@ -32,6 +32,13 @@
 #include "color.hpp"
 
 /**
+ * \todo If changed remove here and in friend declaration
+ * \todo Don't take the "if" above as an excuse not to make this less ugly
+ */
+template <class Class, class... Args>
+    void REGISTER_FORMATTER(Args&&... args);
+
+/**
  * \brief Namespace for string formatting
  */
 namespace string {
@@ -219,6 +226,8 @@ private:
         std::unordered_map<std::string,Formatter*> formatters;
         Formatter* default_formatter = nullptr;
     };
+    template <class Class, class... Args>
+        friend void ::REGISTER_FORMATTER(Args&&... args);
 
 public:
 
