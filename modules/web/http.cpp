@@ -27,12 +27,9 @@
 #include <curlpp/Options.hpp>
 #include <curlpp/Exception.hpp>
 
-#include "../string/logger.hpp"
+#include "string/logger.hpp"
 #include "config.hpp"
 
-
-REGISTER_LOG_TYPE(web,color::dark_blue);
-REGISTER_SERVICE(network::http::HttpService,web);
 
 namespace network {
 

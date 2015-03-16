@@ -33,7 +33,7 @@ void melanomodule_irc()
      * \todo Extract more stuff from src/ into modules/
      */
     REGISTER_CONNECTION(irc,&irc::IrcConnection::create);
-    REGISTER_LOG_TYPE(irc,color::dark_magenta);
+    REGISTER_LOG_TYPE("irc",color::dark_magenta);
     REGISTER_FORMATTER<irc::FormatterIrc>();
 
     REGISTER_HANDLER(irc::handler::CtcpVersion,CtcpVersion);

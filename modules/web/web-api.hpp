@@ -19,8 +19,8 @@
 #ifndef HANDLER_WEB_API_HPP
 #define HANDLER_WEB_API_HPP
 
-#include "handler.hpp"
-#include "network/http.hpp"
+#include "handler/handler.hpp"
+#include "http.hpp"
 #include "string/json.hpp"
 
 namespace handler {

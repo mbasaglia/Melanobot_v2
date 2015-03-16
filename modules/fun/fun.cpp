@@ -16,15 +16,16 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "formatter.hpp"
-#include "string/logger.hpp"
+#include "fun-handlers.hpp"
 
 /**
- * \brief Initializes the Xonotic module
+ * \brief Registers the fun handlers
  */
-void melanomodule_xonotic()
+void melanomodule_fun()
 {
-    REGISTER_FORMATTER<xonotic::Formatter>();
-    REGISTER_LOG_TYPE("xon",color::dark_cyan);
+    REGISTER_HANDLER(fun::AnswerQuestions,AnswerQuestions);
+    REGISTER_HANDLER(fun::RenderPony,RenderPony);
+    REGISTER_HANDLER(fun::ChuckNorris,ChuckNorris);
+    REGISTER_HANDLER(fun::ReverseText,ReverseText);
+    REGISTER_HANDLER(fun::Morse,Morse);
 }

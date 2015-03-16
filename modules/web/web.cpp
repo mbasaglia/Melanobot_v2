@@ -16,15 +16,19 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "formatter.hpp"
-#include "string/logger.hpp"
+#include "web-api-concrete.hpp"
+#include "http.hpp"
 
 /**
- * \brief Initializes the Xonotic module
+ * \brief Initializes the web module
  */
-void melanomodule_xonotic()
+void melanomodule_web()
 {
-    REGISTER_FORMATTER<xonotic::Formatter>();
-    REGISTER_LOG_TYPE("xon",color::dark_cyan);
+    REGISTER_LOG_TYPE("web",color::dark_blue);
+    REGISTER_SERVICE(network::http::HttpService,web);
+
+    REGISTER_HANDLER(handler::SearchVideoYoutube,SearchVideoYoutube);
+    REGISTER_HANDLER(handler::SearchImageGoogle,SearchImageGoogle);
+    REGISTER_HANDLER(handler::UrbanDictionary,UrbanDictionary);
+    REGISTER_HANDLER(handler::SearchWebSearx,SearchWebSearx);
 }

@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
     MELANOMODULES_INIT
 
-    REGISTER_LOG_TYPE(sys,color::dark_red);
+    REGISTER_LOG_TYPE("sys",color::dark_red);
 
     try {
         Settings settings = Settings::initialize(argc,argv);

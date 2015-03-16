@@ -33,30 +33,12 @@
 #include "settings.hpp"
 
 /**
- * \brief Registers a log type
- * \note Use in implementation files, not headers
- * \param name  Log type name as a C++ token
- * \param color Color used to identify the log type (color::Color12 object)
- */
-#define REGISTER_LOG_TYPE(name,color) static Logger::RegisterLogType RegisterLogType_##name(#name,color)
-
-/**
  * \brief Singleton class handling logs
  * \see Log for a nicer interface
  */
 class Logger
 {
 public:
-    /**
-     * \brief Dummy class which registers log types
-     */
-    struct RegisterLogType
-    {
-        RegisterLogType(const std::string& name, color::Color12 color)
-        {
-            Logger::instance().register_log_type(name,color);
-        }
-    };
 
     /**
      * \brief Singleton instance
@@ -136,6 +118,19 @@ private:
     std::string timestamp = "%Y-%m-%d %T";
     std::mutex mutex;
 };
+
+
+/**
+ * \brief Registers a log type
+ * \param name  Log type name
+ * \param color Color used to identify the log type
+ * \todo Either remove complete or add a static version in Logger
+ */
+inline void REGISTER_LOG_TYPE(const std::string& name, color::Color12 color)
+{
+    Logger::instance().register_log_type(name,color);
+}
+
 
 /**
  * \brief Simple log stream-like interface

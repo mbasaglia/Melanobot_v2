@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef WEB_API_CONCRETE
+#define WEB_API_CONCRETE
+
 #include "web-api.hpp"
 
 namespace handler {
@@ -53,8 +56,6 @@ private:
     std::string api_url;
     std::string not_found_reply;
 };
-REGISTER_HANDLER(SearchVideoYoutube,SearchVideoYoutube);
-
 
 /**
  * \brief Handler searching images with Google
@@ -80,7 +81,6 @@ protected:
         reply_to(msg,parsed.get("responseData.results.0.unescapedUrl",not_found_reply));
     }
 };
-REGISTER_HANDLER(SearchImageGoogle,SearchImageGoogle);
 
 
 
@@ -110,7 +110,6 @@ protected:
         reply_to(msg,result);
     }
 };
-REGISTER_HANDLER(UrbanDictionary,UrbanDictionary);
 
 
 /**
@@ -156,7 +155,8 @@ private:
 
     std::string api_url;
 };
-REGISTER_HANDLER(SearchWebSearx,SearchWebSearx);
 
 
 } // namespace handler
+
+#endif // WEB_API_CONCRETE

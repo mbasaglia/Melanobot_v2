@@ -15,6 +15,9 @@
 
 include_directories("${CMAKE_SOURCE_DIR}/modules")
 
-melanomodule(irc "Internet Relay Chat support" ON)
-melanomodule(xonotic "Xonotic integration" ON)
-melanomodule(posix "Extra features for POSIX systems" OFF)
+#modules     ID         Desctiption                             Default
+melanomodule(irc        "Internet Relay Chat support"           ON)
+melanomodule(xonotic    "Xonotic integration"                   ON)
+melanomodule(posix      "Extra features for POSIX systems"      OFF)
+melanomodule(web        "Web stuff (HTTP and friends)"          ON)
+melanomodule(fun        "Possibly useless yet silly stuff"      ON)
