@@ -261,7 +261,7 @@ std::unordered_map<char,std::string> ReverseText::reverse_ascii {
 
 bool ChuckNorris::on_handle(network::Message& msg)
 {
-    static std::regex regex_name("(?:([^ ]+) )\\s*(.*)",
+    static std::regex regex_name("(?:([^ ]+)\\s+)?(.*)",
             std::regex_constants::syntax_option_type::optimize |
             std::regex_constants::syntax_option_type::ECMAScript);
 
