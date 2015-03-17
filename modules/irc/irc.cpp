@@ -38,27 +38,27 @@ Melanomodule melanomodule_irc()
     module.register_log_type("irc",color::dark_magenta);
     module.register_formatter<irc::FormatterIrc>();
 
-    REGISTER_HANDLER(irc::handler::CtcpVersion,CtcpVersion);
-    REGISTER_HANDLER(irc::handler::CtcpSource,CtcpSource);
-    REGISTER_HANDLER(irc::handler::CtcpUserInfo,CtcpUserInfo);
-    REGISTER_HANDLER(irc::handler::CtcpPing,CtcpPing);
-    REGISTER_HANDLER(irc::handler::CtcpTime,CtcpTime);
-    REGISTER_HANDLER(irc::handler::CtcpClientInfo,CtcpClientInfo);
+    module.register_handler<irc::handler::CtcpVersion>("CtcpVersion");
+    module.register_handler<irc::handler::CtcpSource>("CtcpSource");
+    module.register_handler<irc::handler::CtcpUserInfo>("CtcpUserInfo");
+    module.register_handler<irc::handler::CtcpPing>("CtcpPing");
+    module.register_handler<irc::handler::CtcpTime>("CtcpTime");
+    module.register_handler<irc::handler::CtcpClientInfo>("CtcpClientInfo");
 
-    REGISTER_HANDLER(irc::handler::IrcJoinMessage,IrcJoinMessage);
-    REGISTER_HANDLER(irc::handler::IrcKickMessage,IrcKickMessage);
-    REGISTER_HANDLER(irc::handler::IrcKickRejoin,IrcKickRejoin);
+    module.register_handler<irc::handler::IrcJoinMessage>("IrcJoinMessage");
+    module.register_handler<irc::handler::IrcKickMessage>("IrcKickMessage");
+    module.register_handler<irc::handler::IrcKickRejoin>("IrcKickRejoin");
 
-    REGISTER_HANDLER(irc::handler::AdminNick,Nick);
-    REGISTER_HANDLER(irc::handler::AdminJoin,Join);
-    REGISTER_HANDLER(irc::handler::AdminPart,Part);
-    REGISTER_HANDLER(irc::handler::AcceptInvite,AcceptInvite);
-    REGISTER_HANDLER(irc::handler::AdminRaw,Raw);
+    module.register_handler<irc::handler::AdminNick>("Nick");
+    module.register_handler<irc::handler::AdminJoin>("Join");
+    module.register_handler<irc::handler::AdminPart>("Part");
+    module.register_handler<irc::handler::AcceptInvite>("AcceptInvite");
+    module.register_handler<irc::handler::AdminRaw>("Raw");
 
-    REGISTER_HANDLER(irc::handler::Whois330,Whois330);
-    REGISTER_HANDLER(irc::handler::QSendWhois,QSendWhois);
-    REGISTER_HANDLER(irc::handler::QGetWhois,QGetWhois);
-    REGISTER_HANDLER(irc::handler::WhoisCheckMe,WhoisCheckMe);
+    module.register_handler<irc::handler::Whois330>("Whois330");
+    module.register_handler<irc::handler::QSendWhois>("QSendWhois");
+    module.register_handler<irc::handler::QGetWhois>("QGetWhois");
+    module.register_handler<irc::handler::WhoisCheckMe>("WhoisCheckMe");
 
     return module;
 }

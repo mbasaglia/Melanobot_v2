@@ -29,10 +29,10 @@ Melanomodule melanomodule_web()
     module.register_log_type("web",color::dark_blue);
     module.register_service<network::http::HttpService>("web");
 
-    REGISTER_HANDLER(handler::SearchVideoYoutube,SearchVideoYoutube);
-    REGISTER_HANDLER(handler::SearchImageGoogle,SearchImageGoogle);
-    REGISTER_HANDLER(handler::UrbanDictionary,UrbanDictionary);
-    REGISTER_HANDLER(handler::SearchWebSearx,SearchWebSearx);
+    module.register_handler<handler::SearchVideoYoutube>("SearchVideoYoutube");
+    module.register_handler<handler::SearchImageGoogle>("SearchImageGoogle");
+    module.register_handler<handler::UrbanDictionary>("UrbanDictionary");
+    module.register_handler<handler::SearchWebSearx>("SearchWebSearx");
 
     return module;
 }

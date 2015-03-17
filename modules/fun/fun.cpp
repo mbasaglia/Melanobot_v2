@@ -25,10 +25,10 @@
 Melanomodule melanomodule_fun()
 {
     Melanomodule module{"fun","Fun handlers"};
-    REGISTER_HANDLER(fun::AnswerQuestions,AnswerQuestions);
-    REGISTER_HANDLER(fun::RenderPony,RenderPony);
-    REGISTER_HANDLER(fun::ChuckNorris,ChuckNorris);
-    REGISTER_HANDLER(fun::ReverseText,ReverseText);
-    REGISTER_HANDLER(fun::Morse,Morse);
+    module.register_handler<fun::AnswerQuestions>("AnswerQuestions");
+    module.register_handler<fun::RenderPony>("RenderPony");
+    module.register_handler<fun::ChuckNorris>("ChuckNorris");
+    module.register_handler<fun::ReverseText>("ReverseText");
+    module.register_handler<fun::Morse>("Morse");
     return module;
 }

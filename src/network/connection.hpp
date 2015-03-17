@@ -189,18 +189,18 @@ struct OutputMessage
  * \c Command or \c OutputMessage objects.
  *
  * To create your own class, inherith this one and override the pure virtual
- * methods. Then use REGISTER_CONNECTION() to register the class to the
- * \c ConnectionFactory.
+ * methods. Then use Melanomodule::register_connection() to register
+ * the class to the \c ConnectionFactory.
  *
  * It is recommended that you add a static method called \c create in the
  * derived class with the following signature:
  * \code{.cpp}
  *      YourClass* create(Melanobot* bot, const Settings& settings);
  * \endcode
- * to be used with REGISTER_CONNECTION.
+ * to be used with Melanomodule::register_connection().
  *
  * You should also have a corresponding log type to use for the connection,
- * registered with REGISTER_LOG_TYPE().
+ * registered with Melanomodule::register_connection().
  */
 class Connection
 {

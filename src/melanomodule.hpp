@@ -24,14 +24,13 @@
 #include "string/logger.hpp"
 #include "network/connection.hpp"
 #include "network/async_service.hpp"
+#include "handler/handler.hpp"
 
 /**
  * \brief Module descriptor
  *
  * This class is used to add a module description and to register
  * module-specific classes to their factory.
- *
- * \todo register_handler
  */
 struct Melanomodule
 {
@@ -88,6 +87,25 @@ struct Melanomodule
                           "Expected network::AsyncService type");
             network::ServiceRegistry::instance()
                 .register_service(name,&ServiceT::instance());
+        }
+
+
+
+    /**
+    * \brief Registers a Handler to the HandlerFactory
+    * \tparam HandlerT  Handler to be registered
+    * \param  name      Name to be used in the configuration
+    */
+    template<class HandlerT>
+        void register_handler(const std::string& name)
+        {
+            static_assert(std::is_base_of<handler::Handler,HandlerT>::value,
+                          "Expected handler::Handler type");
+            handler::HandlerFactory::instance().register_handler( name,
+                [] ( const Settings& settings, Melanobot* bot )
+                        -> std::unique_ptr<handler::Handler> {
+                    return std::make_unique<HandlerT>(settings,bot);
+            });
         }
 };
 

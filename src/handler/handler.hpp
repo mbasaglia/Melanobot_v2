@@ -23,7 +23,6 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
-#include <type_traits>
 #include <unordered_map>
 
 #include "network/connection.hpp"
@@ -42,7 +41,7 @@ namespace handler {
  *
  * For simple cases, inherit \c SimpleAction and specialize on_handle().
  *
- * To make a handler visible to \c HandlerFactory, use REGISTER_HANDLER(class_name,public_name) .
+ * To make a handler visible to \c HandlerFactory, use Melanomodule::register_handler.
  *
  * The constructor of a handler class must have the same signature as the
  * one used here to work properly.
@@ -216,7 +215,7 @@ protected:
 private:
     std::string some_setting = "Default value";
 };
-REGISTER_HANDLER(MyAction,MyAction);
+module.register_handler<MyAction,MyAction);
  * \endcode
  */
 class SimpleAction : public Handler
@@ -326,20 +325,6 @@ private:
     }
 };
 
-
-/**
- * \brief Registers a Handler to the HandlerFactory
- * \param class_name  Class to be registered
- * \param public_name Name to be used in the configuration, as a C++ symbol
- */
-#define REGISTER_HANDLER(class_name,public_name) \
-    static handler::HandlerFactory::RegisterHandler<class_name> \
-        RegisterHandler_##public_name(#public_name, \
-            [] ( const Settings& settings, Melanobot* bot )  \
-                -> std::unique_ptr<handler::Handler> { \
-                return std::make_unique<class_name>(settings,bot); \
-        })
-
 /**
  * \brief Handler Factory
  */
@@ -351,21 +336,6 @@ public:
      */
     typedef std::function<std::unique_ptr<Handler>(const Settings&,Melanobot*)> CreateFunction;
 
-    /**
-     * \brief Dummy class for auto-registration
-     */
-    template <class HandlerClass>
-    struct RegisterHandler
-    {
-        static_assert(std::is_base_of<Handler,HandlerClass>::value, "Wrong class for HandlerFactory");
-        RegisterHandler(const std::string& name, const CreateFunction& func)
-        {
-            std::string lcname = string::strtolower(name);
-            if ( HandlerFactory().instance().factory.count(lcname) )
-                ErrorLog("sys") << "Overwriting handler " << name;
-            HandlerFactory().instance().factory[lcname] = func;
-        }
-    };
 
     static HandlerFactory& instance()
     {
@@ -394,6 +364,19 @@ public:
         }
         ErrorLog("sys") << "Unknown handler type: " << handler_name;
         return nullptr;
+    }
+
+    /**
+     * \brief Register a handler type
+     * \param name Public name
+     * \param fun  Function creating an object and returning a unique_ptr
+     */
+    void register_handler(const std::string& name, const CreateFunction& func)
+    {
+        std::string lcname = string::strtolower(name);
+        if ( handler::HandlerFactory().instance().factory.count(lcname) )
+            ErrorLog("sys") << "Overwriting handler " << name;
+        handler::HandlerFactory().instance().factory[lcname] = func;
     }
 
 private:

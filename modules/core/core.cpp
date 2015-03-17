@@ -24,32 +24,34 @@
 #include "handler/misc.hpp"
 #include "handler/simple-group.hpp"
 
-
+/**
+ * \brief Defines the core module
+ */
 Melanomodule melanomodule_core()
 {
     Melanomodule module {"core", "Core module"};
 
     module.register_log_type("sys",color::dark_red);
 
-    REGISTER_HANDLER(handler::AdminQuit,Quit);
-    REGISTER_HANDLER(handler::AdminGroup,AdminGroup);
-    REGISTER_HANDLER(handler::FilterGroup,FilterGroup);
-    REGISTER_HANDLER(handler::AdminReconnect,Reconnect);
-    REGISTER_HANDLER(handler::AdminConnect,Connect);
-    REGISTER_HANDLER(handler::AdminDisconnect,Disconnect);
-    REGISTER_HANDLER(handler::Chanhax,Chanhax);
+    module.register_handler<handler::AdminQuit>("Quit");
+    module.register_handler<handler::AdminGroup>("AdminGroup");
+    module.register_handler<handler::FilterGroup>("FilterGroup");
+    module.register_handler<handler::AdminReconnect>("Reconnect");
+    module.register_handler<handler::AdminConnect>("Connect");
+    module.register_handler<handler::AdminDisconnect>("Disconnect");
+    module.register_handler<handler::Chanhax>("Chanhax");
 
-    REGISTER_HANDLER(handler::Bridge,Bridge);
-    REGISTER_HANDLER(handler::BridgeChat,BridgeChat);
+    module.register_handler<handler::Bridge>("Bridge");
+    module.register_handler<handler::BridgeChat>("BridgeChat");
 
-    REGISTER_HANDLER(handler::License,License);
-    REGISTER_HANDLER(handler::Help,Help);
-    REGISTER_HANDLER(handler::Echo,Echo);
-    REGISTER_HANDLER(handler::ServerHost,ServerHost);
-    REGISTER_HANDLER(handler::Cointoss,Cointoss);
-    REGISTER_HANDLER(handler::Reply,Reply);
+    module.register_handler<handler::License>("License");
+    module.register_handler<handler::Help>("Help");
+    module.register_handler<handler::Echo>("Echo");
+    module.register_handler<handler::ServerHost>("ServerHost");
+    module.register_handler<handler::Cointoss>("Cointoss");
+    module.register_handler<handler::Reply>("Reply");
 
-    REGISTER_HANDLER(handler::SimpleGroup, Group);
+    module.register_handler<handler::SimpleGroup>("Group");
 
     return module;
 }

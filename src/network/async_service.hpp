@@ -62,10 +62,10 @@ typedef std::function<void(const Response&)> AsyncCallback;
  * \brief Base class for external services that might take some time to execute.
  *
  * To specialize, inherit this class and register to ServiceRegistry
- * using REGISTER_SERVICE(). The derived classes should act as singletons.
+ * using Melanomodule::register_service(). The derived classes should act as singletons.
  *
  * You should also have a corresponding log type to use for the service,
- * registered with REGISTER_LOG_TYPE().
+ * registered with Melanomodule::register_log_type().
  */
 class AsyncService
 {
