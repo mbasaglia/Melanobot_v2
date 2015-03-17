@@ -150,7 +150,7 @@ private:
  */
 void melanomodule_posix()
 {
-    REGISTER_CONNECTION(stdin,&StdinConnection::create);
+    REGISTER_CONNECTION<StdinConnection>("stdin");
     REGISTER_LOG_TYPE("std",color::white);
 }
 #endif // BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR

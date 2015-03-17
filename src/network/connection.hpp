@@ -343,14 +343,6 @@ public:
 };
 
 /**
- * \brief Registers a Connection class to ConnectionFactory
- * \note Use in implementation files, not headers
- * \param name          Connection protocol name as a C++ token
- * \param function      Function used to create an object for the connection
- */
-#define REGISTER_CONNECTION(name,function) \
-    static network::ConnectionFactory::RegisterConnection RegisterConnection_##name(#name,function)
-/**
  * \brief Creates connections from settings
  */
 class ConnectionFactory
@@ -358,18 +350,6 @@ class ConnectionFactory
 public:
     typedef std::function<std::unique_ptr<Connection>(Melanobot* bot, const Settings&)> Contructor;
 
-    /**
-     * \brief Dummy class used for automatic registration
-     * \see REGISTER_CONNECTION()
-     */
-    class RegisterConnection
-    {
-    public:
-        RegisterConnection(const std::string& protocol_name, const Contructor& function)
-        {
-            ConnectionFactory::instance().register_connection(protocol_name, function);
-        }
-    };
 
     /**
      * \brief Singleton instance
@@ -424,4 +404,20 @@ private:
 
 
 } // namespace network
+
+
+
+/**
+ * \brief Registers a Connection class to ConnectionFactory
+ * \param name          Connection protocol name
+ */
+template<class ConnectionT>
+    void REGISTER_CONNECTION(const std::string& name)
+    {
+        static_assert(std::is_base_of<network::Connection,ConnectionT>::value,
+                      "Wrong class for ConnectionFactory");
+        network::ConnectionFactory::instance()
+            .register_connection(name, &ConnectionT::create);
+    }
+
 #endif // CONNECTION_HPP

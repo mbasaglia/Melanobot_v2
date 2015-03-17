@@ -32,7 +32,7 @@ void melanomodule_irc()
      * \todo Turn more REGISTER_ macros into templates
      * \todo Extract more stuff from src/ into modules/
      */
-    REGISTER_CONNECTION(irc,&irc::IrcConnection::create);
+    REGISTER_CONNECTION<irc::IrcConnection>("irc");
     REGISTER_LOG_TYPE("irc",color::dark_magenta);
     REGISTER_FORMATTER<irc::FormatterIrc>();
 
