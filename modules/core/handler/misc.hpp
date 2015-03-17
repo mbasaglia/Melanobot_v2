@@ -19,7 +19,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "handler.hpp"
+#ifndef HANDLER_MISC
+#define HANDLER_MISC
+
+#include "handler/handler.hpp"
 #include "math.hpp"
 
 namespace handler {
@@ -48,7 +51,6 @@ protected:
 private:
     std::string sources_url;
 };
-REGISTER_HANDLER(License,License);
 
 /**
  * \brief Handler showing help on the available handlers
@@ -213,7 +215,6 @@ private:
         return {};
     }
 };
-REGISTER_HANDLER(Help,Help);
 
 /**
  * \brief Just repeat what it has been told
@@ -235,7 +236,6 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(Echo,Echo);
 
 /**
  * \brief Shows the server the bot is connected to
@@ -257,7 +257,6 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(ServerHost,ServerHost);
 
 /**
  * \brief Shows one of the given items, at random
@@ -308,8 +307,6 @@ private:
     std::vector<std::string> default_items = { "Heads", "Tails" };
     bool                     customizable = true;
 };
-REGISTER_HANDLER(Cointoss,Cointoss);
-
 
 /**
  * \brief Fixed reply
@@ -382,6 +379,7 @@ private:
     bool        case_sensitive = true;
     bool        direct = true;
 };
-REGISTER_HANDLER(Reply,Reply);
 
 } // namespace handler
+
+#endif // HANDLER_MISC

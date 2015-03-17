@@ -30,6 +30,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 # Flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Werror")
 include_directories("${CMAKE_SOURCE_DIR}/src")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-vexing-parse")
+endif()
 
 # Check C++14
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
@@ -69,7 +72,9 @@ macro(melanomodule name description default)
         add_subdirectory(${name})
         set(MELANOMODULES_ ${MELANOMODULES_} "melanomodule_${name}")
         set(MELANOMODULES ${MELANOMODULES_} PARENT_SCOPE)
-        set(MELANOMODULES_INIT_ "${MELANOMODULES_INIT_} void melanomodule_${name}()\; melanomodule_${name}()\;")
+        set(MELANOMODULES_INIT_ "${MELANOMODULES_INIT_} \\
+            Melanomodule melanomodule_${name}()\; \\
+            modules.push_back(melanomodule_${name}())\;")
         set(MELANOMODULES_INIT ${MELANOMODULES_INIT_} PARENT_SCOPE)
         message(STATUS "Enabled module ${name}: ${description}")
     endif()

@@ -18,11 +18,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "handler.hpp"
+#include "simple-group.hpp"
 
 namespace handler {
-
-REGISTER_HANDLER(SimpleGroup, Group);
 
 /// \todo option to copy settings from another group
 SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)

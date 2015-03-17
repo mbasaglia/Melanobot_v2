@@ -18,7 +18,9 @@
  */
 #include <boost/asio.hpp>
 
-#ifdef BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR
+#ifndef BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR
+#       error "The posix module requires a POSIX-conformant system"
+#endif
 
 #include <cstdio>
 #include <memory>
@@ -145,12 +147,17 @@ private:
     }
 
 };
+
+
+#include "melanomodule.hpp"
 /**
  * \brief POSIX module initialization
+ * \todo split file
  */
-void melanomodule_posix()
+Melanomodule melanomodule_posix()
 {
-    REGISTER_CONNECTION<StdinConnection>("stdin");
-    REGISTER_LOG_TYPE("std",color::white);
+    Melanomodule module{"posix","POSIX extensions"};
+    module.register_connection<StdinConnection>("stdin");
+    module.register_log_type("std",color::white);
+    return module;
 }
-#endif // BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR

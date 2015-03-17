@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright  Mattia Basaglia
+ * \copyright Copyright 2015 Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,28 +16,30 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef HANDLER_BRIDGE_HPP
-#define HANDLER_BRIDGE_HPP
 
-#include "handler.hpp"
+#include "bridge.hpp"
 
 namespace handler {
 
-/**
- * \brief Acts as bridge across connections
- * \todo attachable to other connections (maybe limiting the protocol)
- */
-class Bridge : public SimpleGroup
+Bridge::Bridge(const Settings& settings, Melanobot* bot)
+    : SimpleGroup(settings,bot)
 {
-public:
-    Bridge(const Settings& settings, Melanobot* bot);
 
-protected:
-    bool on_handle(network::Message& msg) override;
+    std::string destination_name = settings.get("destination","");
+    if ( destination_name.empty() )
+        throw ConfigurationError();
 
-    network::Connection*         destination = nullptr; ///< Message destination
-    boost::optional<std::string> dst_channel;            ///< Message destination channel
-};
+    destination = bot->connection(destination_name);
+    dst_channel = settings.get_optional<std::string>("dst_channel");
+}
+
+bool Bridge::on_handle(network::Message& msg)
+{
+    network::Message& targeted = msg;
+    targeted.destination = destination;
+    if ( dst_channel )
+        targeted.dst_channel = dst_channel;
+    return SimpleGroup::on_handle(targeted);
+}
 
 } // namespace handler
-#endif // HANDLER_BRIDGE_HPP

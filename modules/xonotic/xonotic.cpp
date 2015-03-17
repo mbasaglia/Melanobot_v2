@@ -18,13 +18,15 @@
  */
 
 #include "formatter.hpp"
-#include "string/logger.hpp"
+#include "melanomodule.hpp"
 
 /**
  * \brief Initializes the Xonotic module
  */
-void melanomodule_xonotic()
+Melanomodule melanomodule_xonotic()
 {
-    REGISTER_FORMATTER<xonotic::Formatter>();
-    REGISTER_LOG_TYPE("xon",color::dark_cyan);
+    Melanomodule module{"xonotic","Xonotic integration"};
+    module.register_formatter<xonotic::Formatter>();
+    module.register_log_type("xon",color::dark_cyan);
+    return module;
 }

@@ -405,19 +405,4 @@ private:
 
 } // namespace network
 
-
-
-/**
- * \brief Registers a Connection class to ConnectionFactory
- * \param name          Connection protocol name
- */
-template<class ConnectionT>
-    void REGISTER_CONNECTION(const std::string& name)
-    {
-        static_assert(std::is_base_of<network::Connection,ConnectionT>::value,
-                      "Wrong class for ConnectionFactory");
-        network::ConnectionFactory::instance()
-            .register_connection(name, &ConnectionT::create);
-    }
-
 #endif // CONNECTION_HPP

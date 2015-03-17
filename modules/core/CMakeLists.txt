@@ -12,13 +12,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+set(MODULE_NAME melanomodule_core)
 
-include_directories("${CMAKE_SOURCE_DIR}/modules")
+file(GLOB_RECURSE SOURCES *.cpp)
 
-#modules     ID         Desctiption                             Default
-melanomodule(core       "Core module, should always be enabled" ON)
-melanomodule(irc        "Internet Relay Chat support"           ON)
-melanomodule(xonotic    "Xonotic integration"                   ON)
-melanomodule(posix      "Extra features for POSIX systems"      OFF)
-melanomodule(web        "Web stuff (HTTP and friends)"          ON)
-melanomodule(fun        "Possibly useless yet silly stuff"      ON)
+add_library(${MODULE_NAME} ${SOURCES})
+

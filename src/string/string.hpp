@@ -25,18 +25,10 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
-#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
 #include "color.hpp"
-
-/**
- * \todo If changed remove here and in friend declaration
- * \todo Don't take the "if" above as an excuse not to make this less ugly
- */
-template <class Class, class... Args>
-    void REGISTER_FORMATTER(Args&&... args);
 
 /**
  * \brief Namespace for string formatting
@@ -185,7 +177,7 @@ class FormattedString;
  */
 class Formatter
 {
-private:
+public:
     /**
      * \brief Internal factory
      *
@@ -195,18 +187,18 @@ private:
      * Also note that this doesn't really create objects since they don't need
      * any data, so the objects are created only once.
      */
-    class FormatterFactory
+    class Registry
     {
     public:
-        static FormatterFactory& instance()
+        static Registry& instance()
         {
-            static FormatterFactory factory;
+            static Registry factory;
             return factory;
         }
 
-        FormatterFactory();
+        Registry();
 
-        ~FormatterFactory()
+        ~Registry()
         {
             for ( const auto& f : formatters )
                 delete f.second;
@@ -226,10 +218,6 @@ private:
         std::unordered_map<std::string,Formatter*> formatters;
         Formatter* default_formatter = nullptr;
     };
-    template <class Class, class... Args>
-        friend void ::REGISTER_FORMATTER(Args&&... args);
-
-public:
 
     virtual ~Formatter() {}
     /**
@@ -278,8 +266,13 @@ public:
      */
     static Formatter* formatter(const std::string& name)
     {
-        return FormatterFactory::instance().formatter(name);
+        return Registry::instance().formatter(name);
     }
+
+    /**
+     * \brief Get the formatter registry singleton
+     */
+    static Registry& registry() { return Registry::instance(); }
 };
 
 /**
@@ -697,20 +690,5 @@ private:
 };
 
 } // namespace string
-
-
-/**
- * \brief Registers a formatter
- * \tparam Class        Formatter class
- * \tparam Args         Constructor parameters
- * \todo namespace?
- */
-template <class Class, class... Args>
-    void REGISTER_FORMATTER(Args&&... args)
-    {
-        static_assert(std::is_base_of<string::Formatter,Class>::value, "Wrong class to REGISTER_FORMATTER");
-        string::Formatter::FormatterFactory::instance()
-            .add_formatter(new Class(std::forward<Args>(args)...));
-    }
 
 #endif // STRING_HPP

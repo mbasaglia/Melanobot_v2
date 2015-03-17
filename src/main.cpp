@@ -20,6 +20,7 @@
 #include "string/logger.hpp"
 #include "settings.hpp"
 #include "network/async_service.hpp"
+#include "melanomodule.hpp"
 #include "melanomodules.hpp"
 
 int main(int argc, char **argv)
@@ -28,9 +29,10 @@ int main(int argc, char **argv)
     Logger::instance().register_direction('>',color::dark_yellow);
     Logger::instance().register_direction('!',color::dark_blue);
 
-    MELANOMODULES_INIT
+    std::vector<Melanomodule> modules;
+    string::Formatter::registry(); // ensures the default formatters get loaded
 
-    REGISTER_LOG_TYPE("sys",color::dark_red);
+    MELANOMODULES_INIT
 
     try {
         Settings settings = Settings::initialize(argc,argv);

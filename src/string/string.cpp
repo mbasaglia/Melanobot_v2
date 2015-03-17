@@ -156,7 +156,7 @@ std::string FormattedString::encode(Formatter* formatter) const
     return s;
 }
 
-Formatter::FormatterFactory::FormatterFactory()
+Formatter::Registry::Registry()
 {
     add_formatter(default_formatter = new FormatterUtf8);
     add_formatter(new FormatterAscii);
@@ -164,7 +164,7 @@ Formatter::FormatterFactory::FormatterFactory()
     add_formatter(new FormatterAnsi(false));
 }
 
-Formatter* Formatter::FormatterFactory::formatter(const std::string& name)
+Formatter* Formatter::Registry::formatter(const std::string& name)
 {
     auto it = formatters.find(name);
     if ( it == formatters.end() )
@@ -177,7 +177,7 @@ Formatter* Formatter::FormatterFactory::formatter(const std::string& name)
     return it->second;
 }
 
-void Formatter::FormatterFactory::add_formatter(Formatter* instance)
+void Formatter::Registry::add_formatter(Formatter* instance)
 {
     if ( formatters.count(instance->name()) )
         ErrorLog("sys") << "Overwriting formatter: " << instance->name();

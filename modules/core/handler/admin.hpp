@@ -18,7 +18,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "handler.hpp"
+#include "simple-group.hpp"
+
+#ifndef HANDLER_ADMIN_HPP
+#define HANDLER_ADMIN_HPP
 
 namespace handler {
 
@@ -53,7 +56,6 @@ protected:
 private:
     std::string message = "Bye!";
 };
-REGISTER_HANDLER(AdminQuit,Quit);
 
 /**
  * \brief Manages a user group
@@ -119,7 +121,6 @@ private:
     std::string description; ///< Used as list_name property
     std::string ignore;      ///< Group to be ignored on add/remove
 };
-REGISTER_HANDLER(AdminGroup,AdminGroup);
 
 /**
  * \brief Discards messages coming from certain users
@@ -140,7 +141,6 @@ private:
         return true;
     }
 };
-REGISTER_HANDLER(FilterGroup,FilterGroup);
 
 /**
  * \brief Makes the bot reconnect
@@ -172,7 +172,6 @@ protected:
 private:
     std::string message = "Reconnecting...";
 };
-REGISTER_HANDLER(AdminReconnect,Reconnect);
 
 /**
  * \brief Makes the bot Connect
@@ -193,7 +192,6 @@ protected:
         return true;
     }
 };
-REGISTER_HANDLER(AdminConnect,Connect);
 
 /**
  * \brief Makes the bot disconnect
@@ -225,7 +223,6 @@ protected:
 private:
     std::string message = "Disconnecting...";
 };
-REGISTER_HANDLER(AdminDisconnect,Disconnect);
 
 /**
  * \brief Changes the channel of a message
@@ -276,6 +273,6 @@ private:
     std::string trigger;
     std::regex  regex_chanhax;
 };
-REGISTER_HANDLER(Chanhax,Chanhax);
 
 } // namespace handler
+#endif // HANDLER_ADMIN_HPP

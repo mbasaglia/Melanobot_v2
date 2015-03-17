@@ -18,17 +18,21 @@
  */
 #include "web-api-concrete.hpp"
 #include "http.hpp"
+#include "melanomodule.hpp"
 
 /**
  * \brief Initializes the web module
  */
-void melanomodule_web()
+Melanomodule melanomodule_web()
 {
-    REGISTER_LOG_TYPE("web",color::dark_blue);
-    REGISTER_SERVICE(network::http::HttpService,web);
+    Melanomodule module{"web","Web services"};
+    module.register_log_type("web",color::dark_blue);
+    module.register_service<network::http::HttpService>("web");
 
     REGISTER_HANDLER(handler::SearchVideoYoutube,SearchVideoYoutube);
     REGISTER_HANDLER(handler::SearchImageGoogle,SearchImageGoogle);
     REGISTER_HANDLER(handler::UrbanDictionary,UrbanDictionary);
     REGISTER_HANDLER(handler::SearchWebSearx,SearchWebSearx);
+
+    return module;
 }

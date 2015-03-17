@@ -119,19 +119,6 @@ private:
     std::mutex mutex;
 };
 
-
-/**
- * \brief Registers a log type
- * \param name  Log type name
- * \param color Color used to identify the log type
- * \todo Either remove complete or add a static version in Logger
- */
-inline void REGISTER_LOG_TYPE(const std::string& name, color::Color12 color)
-{
-    Logger::instance().register_log_type(name,color);
-}
-
-
 /**
  * \brief Simple log stream-like interface
  */

@@ -17,15 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "fun-handlers.hpp"
+#include "melanomodule.hpp"
 
 /**
  * \brief Registers the fun handlers
  */
-void melanomodule_fun()
+Melanomodule melanomodule_fun()
 {
+    Melanomodule module{"fun","Fun handlers"};
     REGISTER_HANDLER(fun::AnswerQuestions,AnswerQuestions);
     REGISTER_HANDLER(fun::RenderPony,RenderPony);
     REGISTER_HANDLER(fun::ChuckNorris,ChuckNorris);
     REGISTER_HANDLER(fun::ReverseText,ReverseText);
     REGISTER_HANDLER(fun::Morse,Morse);
+    return module;
 }

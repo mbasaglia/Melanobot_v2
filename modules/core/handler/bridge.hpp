@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright 2015 Mattia Basaglia
+ * \copyright Copyright  Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,33 +16,28 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef HANDLER_BRIDGE_HPP
+#define HANDLER_BRIDGE_HPP
 
-#include "bridge.hpp"
+#include "simple-group.hpp"
 
 namespace handler {
 
-REGISTER_HANDLER(Bridge,Bridge);
-Bridge::Bridge(const Settings& settings, Melanobot* bot)
-    : SimpleGroup(settings,bot)
+/**
+ * \brief Acts as bridge across connections
+ * \todo attachable to other connections (maybe limiting the protocol)
+ */
+class Bridge : public SimpleGroup
 {
+public:
+    Bridge(const Settings& settings, Melanobot* bot);
 
-    std::string destination_name = settings.get("destination","");
-    if ( destination_name.empty() )
-        throw ConfigurationError();
+protected:
+    bool on_handle(network::Message& msg) override;
 
-    destination = bot->connection(destination_name);
-    dst_channel = settings.get_optional<std::string>("dst_channel");
-}
-
-bool Bridge::on_handle(network::Message& msg)
-{
-    network::Message& targeted = msg;
-    targeted.destination = destination;
-    if ( dst_channel )
-        targeted.dst_channel = dst_channel;
-    return SimpleGroup::on_handle(targeted);
-}
-
+    network::Connection*         destination = nullptr; ///< Message destination
+    boost::optional<std::string> dst_channel;            ///< Message destination channel
+};
 
 /**
  * \brief Simply echoes chat messages (to be used in a Bridge group)
@@ -91,7 +86,6 @@ protected:
     network::Duration timeout = network::Duration::zero();
     bool              ignore_self = true;
 };
-REGISTER_HANDLER(BridgeChat,BridgeChat);
-
 
 } // namespace handler
+#endif // HANDLER_BRIDGE_HPP

@@ -187,24 +187,22 @@ private:
 
 /**
  * \brief Class storing the service objects
- * \note It is assumed that the registered objects will clean up after themselves
  */
 class ServiceRegistry
 {
 public:
+
     /**
-     * \brief Dummy class used to auto-register services
+     * \brief Registers a service object
+     * \note It is assumed that the registered objects will clean up after themselves
      */
-    struct RegisterService
+    void register_service(const std::string& name, AsyncService* object)
     {
-        RegisterService(const std::string& name, AsyncService* object)
-        {
-            if ( ServiceRegistry().instance().services.count(name) )
-                ErrorLog("sys") << "Overwriting service " << name;
-            ServiceRegistry().instance().services[name] =
-                {object, object->auto_load()};
-        }
-    };
+        if ( ServiceRegistry().instance().services.count(name) )
+            ErrorLog("sys") << "Overwriting service " << name;
+        ServiceRegistry().instance().services[name] =
+            {object, object->auto_load()};
+    }
 
     static ServiceRegistry& instance()
     {
@@ -289,15 +287,6 @@ private:
     ServiceRegistry(){}
     ServiceRegistry(const ServiceRegistry&) = delete;
 };
-/**
- * \brief Register a service to ServiceRegistry
- * \pre \c classname is a singleton with a static method called \c instance()
- * \param classname     Name of the service class
- * \param servicename   Service identifier as a C++ token
- */
-#define REGISTER_SERVICE(classname,servicename) \
-    static network::ServiceRegistry::RegisterService \
-        RegisterService_##servicename(#servicename,&classname::instance())
 
 /**
  * \brief Get service by name (less verbose than through ServiceRegistry)

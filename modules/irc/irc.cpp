@@ -22,19 +22,21 @@
 #include "irc/handler/irc_actions.hpp"
 #include "irc/handler/irc_admin.hpp"
 #include "irc/handler/irc_whois.hpp"
+#include "melanomodule.hpp"
 
 /**
  * \brief Initializes the IRC module
  */
-void melanomodule_irc()
+Melanomodule melanomodule_irc()
 {
     /**
-     * \todo Turn more REGISTER_ macros into templates
      * \todo Extract more stuff from src/ into modules/
      */
-    REGISTER_CONNECTION<irc::IrcConnection>("irc");
-    REGISTER_LOG_TYPE("irc",color::dark_magenta);
-    REGISTER_FORMATTER<irc::FormatterIrc>();
+
+    Melanomodule module{"irc","IRC integration"};
+    module.register_connection<irc::IrcConnection>("irc");
+    module.register_log_type("irc",color::dark_magenta);
+    module.register_formatter<irc::FormatterIrc>();
 
     REGISTER_HANDLER(irc::handler::CtcpVersion,CtcpVersion);
     REGISTER_HANDLER(irc::handler::CtcpSource,CtcpSource);
@@ -57,4 +59,6 @@ void melanomodule_irc()
     REGISTER_HANDLER(irc::handler::QSendWhois,QSendWhois);
     REGISTER_HANDLER(irc::handler::QGetWhois,QGetWhois);
     REGISTER_HANDLER(irc::handler::WhoisCheckMe,WhoisCheckMe);
+
+    return module;
 }
