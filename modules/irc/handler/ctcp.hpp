@@ -69,10 +69,10 @@ protected:
      * \brief Sends a properly formatted reply corresponding to \c ctctp
      */
     void reply_to(const network::Message& msg,
-                  const string::FormattedString& text) const override
+                  network::OutputMessage output) const override
     {
         string::FormattedStream s;
-        s << '\1' << ctcp << ' ' << text << '\1';
+        s << '\1' << ctcp << ' ' << output.message << '\1';
         msg.destination->command({"NOTICE",
             {msg.from,s.str().encode(msg.destination->formatter())}, priority});
     }

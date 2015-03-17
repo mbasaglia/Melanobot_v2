@@ -147,23 +147,38 @@ protected:
     virtual bool on_handle(network::Message& msg) = 0;
 
     /**
-     * \brief Send a reply to a message
+     * \brief Returns the preferred output channel for the given message
      *
      * If \c msg comes from multiple channels, the first one is used
      */
-    virtual void reply_to(const network::Message& msg, const string::FormattedString& text) const
+    virtual std::string reply_channel(const network::Message& msg) const
     {
         std::string channel;
         if ( msg.dst_channel )
             channel = *msg.dst_channel;
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
-        msg.destination->say(network::OutputMessage(channel,text,priority));
+        return channel;
     }
 
+
+    /**
+     * \brief Send a reply to a message
+     * \note \c output priority and channel will be overwritten
+     */
+    virtual void reply_to(const network::Message& input, network::OutputMessage output) const
+    {
+        output.target = reply_channel(input);
+        output.priority = priority;
+        input.destination->say(output);
+    }
+    void reply_to(const network::Message& msg, const string::FormattedString& text) const
+    {
+        msg.destination->say(network::OutputMessage(text,false,reply_channel(msg),priority));
+    }
     void reply_to(const network::Message& msg, const std::string& text) const
     {
-        reply_to(msg, (string::FormattedStream("utf8") << text).str());
+        reply_to(msg, network::OutputMessage((string::FormattedStream("utf8") << text).str()));
     }
 
     /**
@@ -279,8 +294,7 @@ protected:
     std::string          help="Undocumented";///< Help string
     bool                 public_reply = true;///< Whether to reply publicly or just to the sender of the message
 
-    using Handler::reply_to;
-    void reply_to(const network::Message& msg, const string::FormattedString& text) const override
+    std::string reply_channel(const network::Message& msg) const override
     {
         std::string channel;
         if ( msg.dst_channel )
@@ -289,7 +303,7 @@ protected:
             channel = msg.from;
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
-        msg.destination->say(network::OutputMessage(channel,text,priority));
+        return channel;
     }
 
 private:

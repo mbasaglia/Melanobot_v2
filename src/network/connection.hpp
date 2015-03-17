@@ -138,12 +138,12 @@ struct Message
  */
 struct OutputMessage
 {
-    OutputMessage(std::string target,
-                  string::FormattedString  message,
+    OutputMessage(string::FormattedString  message,
+                  bool action = false,
+                  std::string target = {},
                   int priority = 0,
                   string::FormattedString  from = {},
                   string::FormattedString  prefix = {},
-                  bool action = false,
                   Time  timeout = Clock::time_point::max()
     ) : target(std::move(target)), message(std::move(message)), priority(priority),
         from(std::move(from)), prefix(std::move(prefix)),

@@ -74,12 +74,12 @@ protected:
     {
         std::string channel = *msg.dst_channel;
         msg.destination->say(network::OutputMessage(
-            channel,
             msg.source->formatter()->decode(msg.message),
+            msg.action,
+            channel,
             priority,
             msg.source->formatter()->decode(msg.from),
             (string::FormattedStream() << prefix).str(),
-            msg.action,
             timeout == network::Duration::zero() ?
                 network::Time::max() :
                 network::Clock::now() + timeout

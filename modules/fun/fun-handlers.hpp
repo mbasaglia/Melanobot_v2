@@ -162,5 +162,30 @@ private:
                        const std::vector<std::vector<std::string>*>& categories) const;
 };
 
+
+/**
+ * \brief Slaps someone
+ */
+class Slap : public handler::SimpleAction
+{
+public:
+    Slap(const Settings& settings, Melanobot* bot)
+        : SimpleAction("slap",settings,bot)
+    {
+        synopsis += " victim";
+        help = "Slap the victim";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        reply_to(msg,network::OutputMessage(
+            (string::FormattedStream() << "slaps " << msg.message),
+            true
+        ));
+        return true;
+    }
+};
+
 } // namespace fun
 #endif // FUN_HANDLERS_HPP
