@@ -147,17 +147,3 @@ private:
     }
 
 };
-
-
-#include "melanomodule.hpp"
-/**
- * \brief POSIX module initialization
- * \todo split file
- */
-Melanomodule melanomodule_posix()
-{
-    Melanomodule module{"posix","POSIX extensions"};
-    module.register_connection<StdinConnection>("stdin");
-    module.register_log_type("std",color::white);
-    return module;
-}

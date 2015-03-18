@@ -96,14 +96,16 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        std::string channel;
-        if ( !msg.message.empty() )
-            channel = msg.message; /// \todo gather part message
+        static std::regex regex_part ( "(\\S+)\\s*(.*)",
+            std::regex::ECMAScript | std::regex::optimize );
+        std::smatch match;
+
+        if ( std::regex_match(msg.message,match,regex_part) )
+            msg.destination->command({"PART",{match[1], match[2]}});
         else if ( msg.channels.size() == 1 )
-            channel = msg.channels[0];
+            msg.destination->command({"PART",{msg.channels[0]}});
         else
             return false;
-        msg.destination->command({"PART",{channel}});
         return true;
     }
 };

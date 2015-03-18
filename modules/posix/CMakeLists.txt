@@ -14,6 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 set(MODULE_NAME melanomodule_posix)
 
-set(SOURCES stdin.cpp)
+file(GLOB_RECURSE SOURCES *.cpp)
 
 add_library(${MODULE_NAME} ${SOURCES})

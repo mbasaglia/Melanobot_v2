@@ -29,10 +29,6 @@
  */
 Melanomodule melanomodule_irc()
 {
-    /**
-     * \todo Extract more stuff from src/ into modules/
-     */
-
     Melanomodule module{"irc","IRC integration"};
     module.register_connection<irc::IrcConnection>("irc");
     module.register_log_type("irc",color::dark_magenta);
