@@ -19,6 +19,7 @@
 
 #include "formatter.hpp"
 #include "melanomodule.hpp"
+#include "xonotic-connection.hpp"
 
 /**
  * \brief Initializes the Xonotic module
@@ -28,5 +29,6 @@ Melanomodule melanomodule_xonotic()
     Melanomodule module{"xonotic","Xonotic integration"};
     module.register_formatter<xonotic::Formatter>();
     module.register_log_type("xon",color::dark_cyan);
+    module.register_connection<xonotic::XonoticConnection>("xonotic");
     return module;
 }

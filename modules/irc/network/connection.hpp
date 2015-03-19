@@ -102,7 +102,7 @@ public:
     /**
      * \thread external \lock data(sometimes) buffer(indirect)
      */
-    void command ( const network::Command& cmd ) override;
+    void command ( network::Command c ) override;
 
     /**
      * \thread external \lock data(sometimes) buffer(indirect)

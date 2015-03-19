@@ -120,7 +120,7 @@ string::FormattedString Formatter::decode(const std::string& source) const
 }
 std::string Formatter::name() const
 {
-    return "xon";
+    return "xonotic";
 }
 
 color::Color12 Formatter::color_from_string(const std::string& color)

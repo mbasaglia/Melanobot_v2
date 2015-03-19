@@ -93,7 +93,7 @@ public:
     // maybe could be given some actual functionality:
     std::string get_property(const std::string&) const override { return {}; }
     bool set_property(const std::string& , const std::string& ) override { return false; }
-    void command ( const network::Command&) override {}
+    void command (network::Command) override {}
     void say ( const network::OutputMessage& ) override {}
 
 private:

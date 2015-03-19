@@ -665,11 +665,10 @@ void IrcConnection::handle_message(network::Message msg)
     bot->message(msg);
 }
 
-void IrcConnection::command ( const network::Command& c )
+void IrcConnection::command ( network::Command cmd )
 {
-    if ( c.command.empty() ) return;
+    if ( cmd.command.empty() ) return;
 
-    network::Command cmd = c;
     cmd.command = strtoupper(cmd.command);
 
 
