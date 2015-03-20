@@ -18,4 +18,6 @@ file(GLOB_RECURSE SOURCES *.cpp)
 
 add_library(${MODULE_NAME} ${SOURCES})
 
-
+find_package(OpenSSL REQUIRED)
+target_link_libraries(${MODULE_NAME} ${OPENSSL_CRYPTO_LIBRARY})
+include_directories (${OpenSSL_INCLUDE_DIRS})

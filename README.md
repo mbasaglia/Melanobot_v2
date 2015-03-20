@@ -32,7 +32,8 @@ Dependencies
     * filesystem
     * program_options
     * property_tree
-* [cURLpp](http://jpbarrette.github.io/curlpp/)
+* [cURLpp](http://jpbarrette.github.io/curlpp/) (MODULE_WEB)
+* [OpenSSL](http://openssl.org/) (MODULE_XONOTIC)
 
 Building
 --------

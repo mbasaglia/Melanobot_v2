@@ -43,6 +43,11 @@ inline std::string quote_string(const std::string& text)
 }
 
 /**
+ * \brief Compute the MD4 HMAC of the given input with the given key
+ */
+std::string hmac_md4(const std::string& input, const std::string& key);
+
+/**
  * \brief Creates a connection to a Xonotic server
  */
 class XonoticConnection : public network::Connection {

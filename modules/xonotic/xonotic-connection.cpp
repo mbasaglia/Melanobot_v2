@@ -18,7 +18,34 @@
  */
 #include "xonotic-connection.hpp"
 
+#include <ctime>
+
+#include <boost/format.hpp>
+
+#include <openssl/hmac.h>
+
+#include "math.hpp"
+
 namespace xonotic {
+
+
+std::string hmac_md4(const std::string& input, const std::string& key)
+{
+    HMAC_CTX ctx;
+    HMAC_CTX_init(&ctx);
+
+    HMAC_Init_ex(&ctx, key.data(), key.size(), EVP_md4(), nullptr);
+
+    HMAC_Update(&ctx, reinterpret_cast<const unsigned char*>(input.data()), input.size());
+
+    unsigned char out[16];
+    unsigned int out_size = 0;
+    HMAC_Final(&ctx, out, &out_size);
+
+    HMAC_CTX_cleanup(&ctx);
+
+    return std::string(out,out+out_size);
+}
 
 std::unique_ptr<XonoticConnection> XonoticConnection::create(Melanobot* bot, const Settings& settings)
 {
@@ -86,12 +113,35 @@ void XonoticConnection::command ( network::Command cmd )
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
 
-        /// \todo rcon_secure
-        cmd.command += ' '+rcon_password;
-    }
 
-    write(cmd.command +
-        (cmd.parameters.empty() ? "" : ' '+string::implode(" ",cmd.parameters)));
+
+        std::string rcon_command = string::implode(" ",cmd.parameters);
+        if ( rcon_command.empty() )
+        {
+            ErrorLog("xon") << "Empty rcon command";
+            return;
+        }
+
+        Log("xon",'<',2) << formatter()->decode(rcon_command);
+        if ( rcon_secure <= 0 )
+        {
+            write("rcon "+rcon_password+' '+rcon_command);
+        }
+        else if ( rcon_secure == 1 )
+        {
+            std::string argbuf = (boost::format("%ld.%06d %s")
+                % std::time(nullptr) % math::random(1000000)
+                % rcon_command).str();
+            std::string key = hmac_md4(argbuf,rcon_password);
+            write("srcon HMAC-MD4 TIME "+key+' '+argbuf);
+        }
+        /// \todo rcon_secure 2
+    }
+    else
+    {
+        Log("xon",'<',1) << cmd.command;
+        write(cmd.command);
+    }
 }
 
 void XonoticConnection::connect()
@@ -183,8 +233,6 @@ void XonoticConnection::write(std::string line)
     line.erase(std::remove_if(line.begin(), line.end(),
         [](char c){return c == '\n' || c == '\0' || c == '\xff';}),
         line.end());
-
-    Log("xon",'<',1) << formatter()->decode(line);
 
     io.write(header+line);
 }
