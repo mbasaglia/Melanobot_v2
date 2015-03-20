@@ -91,11 +91,7 @@ public:
     /**
      * \thread external \lock none
      */
-    void say ( const network::OutputMessage& message ) override
-    {
-        (void)message;
-        /// \todo
-    }
+    void say ( const network::OutputMessage& message ) override;
 
     /**
      * \thread external \lock none
@@ -175,13 +171,26 @@ public:
     }
 
 private:
+    /**
+     * \brief A command to be used with rcon_secure >= 2
+     */
+    struct SecureRconCommand
+    {
+        std::string     command;        ///< Raw command string
+        bool            challenged;     ///< Whether a challenge has been sent
+        network::Time   timeout;        ///< Challenge timeout
+        SecureRconCommand(std::string command)
+            : command(std::move(command)), challenged(false) {}
+    };
+
     std::string         line_buffer;                    ///< Buffer used for truncated lines
     string::Formatter*  formatter_ = nullptr;           ///< String formatter
 
     std::string         header = "\xff\xff\xff\xff";    ///< Connection message header
     std::string         rcon_password;                  ///< Rcon Password
     int                 rcon_secure = 0;                ///< Rcon secure protocol
-    std::list<std::string> rcon_buffer;                ///< Buffer for rcon secure commands
+    std::list<SecureRconCommand>         rcon_buffer;   ///< Buffer for rcon secure commands
+    std::vector<std::vector<std::string>>conn_commands; ///< Rcon commands needed to keep the connection going
 
 
     network::Server     server_;                        ///< Connection server
@@ -209,10 +218,27 @@ private:
 
     /**
      * \brief Interprets a message and sends it to the bot
+     * \thread xon_input \lock data
      */
     void handle_message(network::Message& msg);
 
+    /**
+     * \brief Sends commands needed to keep the connection going
+     * \thread any \lock data
+     */
+    void update_connection();
 
+    /**
+     * \brief Cleanup what update_connection() does
+     * \thread external (disconnect) \lock data
+     */
+    void cleanup_connection();
+
+    /**
+     * \brief If there are commands needing a challenge, ask for it
+     * \thread any \lock data
+     */
+    void request_challenge();
 
 };
 

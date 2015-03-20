@@ -93,6 +93,12 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
 
     rcon_secure = settings.get("rcon_secure",rcon_secure);
     rcon_password = settings.get("rcon_password",rcon_password);
+
+    conn_commands = {
+        {"alias", "Melanobot_restore_sv_adminnick", "set sv_adminnick $Melanobot_sv_adminnick"},
+        {"alias", "Melanobot_set_sv_adminnick", "set Melanobot_sv_adminnick $sv_adminnick; set sv_adminnick \"${1 q}\";"},
+        {"alias", "Melanobot_say", "Melanobot_set_sv_adminnick \"${1 q}\"; say \"${2- q}\"; Melanobot_restore_sv_adminnick"}
+    };
 }
 
 void XonoticConnection::connect()
@@ -109,9 +115,7 @@ void XonoticConnection::connect()
         {
             if ( !thread_input.joinable() )
                 thread_input = std::move(std::thread([this]{io.run_input();}));
-            /// \todo the host name for log_dest_udp needs to be read from settings
-            /// (and if settings don't provide it, fallback to what local_endpoint() gives)
-            command({"rcon",{"set", "log_dest_udp", io.local_endpoint().name()}});
+            update_connection();
         }
     }
 
@@ -121,7 +125,7 @@ void XonoticConnection::disconnect(const std::string& message)
 {
     if ( io.connected() )
     {
-        command({"rcon",{"set", "log_dest_udp", ""}});
+        cleanup_connection();
         if ( !message.empty() && status_ > CONNECTING )
             say((string::FormattedStream() << message).str());
         status_ = DISCONNECTED;
@@ -184,6 +188,22 @@ bool XonoticConnection::set_property(const std::string& property,
     return false;
 }
 
+void XonoticConnection::say ( const network::OutputMessage& message )
+{
+    string::FormattedStream str;
+    if ( !message.prefix.empty() )
+        str << message.prefix << ' ' << color::nocolor;
+    if ( !message.from.empty() )
+    {
+        if ( message.action )
+            str << "* " << message.from << ' ';
+    }
+    str << message.message;
+    std::string text = str.encode(formatter_);
+
+    command({"rcon", {"Melanobot_say", text}, message.priority, message.timeout});
+}
+
 void XonoticConnection::command ( network::Command cmd )
 {
     if ( cmd.command == "rcon" )
@@ -191,18 +211,16 @@ void XonoticConnection::command ( network::Command cmd )
         if ( cmd.parameters.empty() )
             return;
 
-        if ( cmd.parameters[0] == "set" )
+        if ( cmd.parameters[0] == "set" || cmd.parameters[0] == "alias" )
         {
             if ( cmd.parameters.size() != 3 )
             {
-                ErrorLog("xon") << "Wrong parameters for \"set\"";
+                ErrorLog("xon") << "Wrong parameters for \""+cmd.parameters[0]+"\"";
                 return;
             }
             /// \todo validate cmd.parameters[1] as a proper cvar name
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
-
-
 
         std::string rcon_command = string::implode(" ",cmd.parameters);
         if ( rcon_command.empty() )
@@ -227,18 +245,29 @@ void XonoticConnection::command ( network::Command cmd )
         }
         else
         {
-            Log("xon",'<',5) << "getchallenge";
             Lock lock(mutex);
             rcon_buffer.push_back(rcon_command);
             lock.unlock();
-            write("getchallenge");
-            read(io.read());
+            request_challenge();
         }
     }
     else
     {
         Log("xon",'<',1) << cmd.command;
         write(cmd.command);
+    }
+}
+
+void XonoticConnection::request_challenge()
+{
+    Lock lock(mutex);
+    if ( !rcon_buffer.empty() && !rcon_buffer.front().challenged )
+    {
+        rcon_buffer.front().challenged = true;
+        /// \todo timeout from settings
+        rcon_buffer.front().timeout = network::Clock::now() + std::chrono::seconds(5);
+        Log("xon",'<',5) << "getchallenge";
+        write("getchallenge");
     }
 }
 
@@ -271,6 +300,7 @@ void XonoticConnection::read(const std::string& datagram)
         std::getline(socket_stream,msg.params.back());
         Log("xon",'>',4) << formatter_->decode(msg.raw);
         handle_message(msg);
+        return;
     }
 
     Lock lock(mutex);
@@ -321,26 +351,71 @@ void XonoticConnection::handle_message(network::Message& msg)
     }
     else if ( msg.command == "challenge" )
     {
-        /// \todo challenge timeout
         Lock lock(mutex);
         if ( msg.params.size() != 1 || rcon_buffer.empty() )
         {
             ErrorLog("xon") << "Got an odd challenge from the server";
             return;
         }
-        std::string rcon_command = rcon_buffer.front();
+
+        auto rcon_command = rcon_buffer.front();
+        if ( !rcon_command.challenged || rcon_command.timeout < network::Clock::now() )
+        {
+            lock.unlock();
+            rcon_command.challenged = false;
+            request_challenge();
+            return;
+        }
+
         rcon_buffer.pop_front();
         lock.unlock();
-        Log("xon",'<',2) << formatter()->decode(rcon_command);
+
+        Log("xon",'<',2) << formatter()->decode(rcon_command.command);
         std::string challenge = msg.params[0].substr(0,11);
-        std::string challenge_command = challenge+' '+rcon_command;
+        std::string challenge_command = challenge+' '+rcon_command.command;
         std::string key = hmac_md4(challenge_command, rcon_password);
         write("srcon HMAC-MD4 CHALLENGE "+key+' '+challenge_command);
+
+        request_challenge();
+
         return; // don't propagate challenge messages
     }
 
     msg.source = msg.destination = this;
     bot->message(msg);
+}
+
+void XonoticConnection::update_connection()
+{
+    /// \todo the host name for log_dest_udp needs to be read from settings
+    /// (and if settings don't provide it, fallback to what local_endpoint() gives)
+    command({"rcon",{"set", "log_dest_udp", io.local_endpoint().name()}});
+
+    for ( const auto& v : conn_commands )
+        command({"rcon",v});
+}
+
+void XonoticConnection::cleanup_connection()
+{
+    Lock lock(mutex);
+    rcon_buffer.clear();
+    lock.unlock();
+
+    command({"rcon",{"set", "log_dest_udp", ""}});
+    // always ensure at least this is performed (even on rcon_secure 2)
+    read(io.read());
+
+
+    for ( const auto& v : conn_commands )
+    {
+        if ( v.size() < 2 )
+            continue;
+
+        if ( v[0] == "set" )
+            command({"rcon", {"unset", v[1]}});
+        else if ( v[0] == "alias" )
+            command({"rcon", {"unalias", v[1]}});
+    }
 }
 
 } // namespace xonotic
