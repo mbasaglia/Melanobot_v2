@@ -95,60 +95,15 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     rcon_password = settings.get("rcon_password",rcon_password);
 }
 
-void XonoticConnection::command ( network::Command cmd )
-{
-    if ( cmd.command == "rcon" )
-    {
-        if ( cmd.parameters.empty() )
-            return;
-
-        if ( cmd.parameters[0] == "set" )
-        {
-            if ( cmd.parameters.size() != 3 )
-            {
-                ErrorLog("xon") << "Wrong parameters for \"set\"";
-                return;
-            }
-            /// \todo validate cmd.parameters[1] as a proper cvar name
-            cmd.parameters[2] = quote_string(cmd.parameters[2]);
-        }
-
-
-
-        std::string rcon_command = string::implode(" ",cmd.parameters);
-        if ( rcon_command.empty() )
-        {
-            ErrorLog("xon") << "Empty rcon command";
-            return;
-        }
-
-        Log("xon",'<',2) << formatter()->decode(rcon_command);
-        if ( rcon_secure <= 0 )
-        {
-            write("rcon "+rcon_password+' '+rcon_command);
-        }
-        else if ( rcon_secure == 1 )
-        {
-            std::string argbuf = (boost::format("%ld.%06d %s")
-                % std::time(nullptr) % math::random(1000000)
-                % rcon_command).str();
-            std::string key = hmac_md4(argbuf,rcon_password);
-            write("srcon HMAC-MD4 TIME "+key+' '+argbuf);
-        }
-        /// \todo rcon_secure 2
-    }
-    else
-    {
-        Log("xon",'<',1) << cmd.command;
-        write(cmd.command);
-    }
-}
-
 void XonoticConnection::connect()
 {
     if ( !io.connected() )
     {
         status_ = CONNECTING;
+
+        Lock lock(mutex);
+        rcon_buffer.clear();
+        lock.unlock();
 
         if ( io.connect(server_) )
         {
@@ -173,6 +128,8 @@ void XonoticConnection::disconnect(const std::string& message)
         io.disconnect();
         if ( thread_input.joinable() )
             thread_input.join();
+        Lock lock(mutex);
+        rcon_buffer.clear();
     }
 }
 void XonoticConnection::update_user(const std::string& local_id,
@@ -227,6 +184,63 @@ bool XonoticConnection::set_property(const std::string& property,
     return false;
 }
 
+void XonoticConnection::command ( network::Command cmd )
+{
+    if ( cmd.command == "rcon" )
+    {
+        if ( cmd.parameters.empty() )
+            return;
+
+        if ( cmd.parameters[0] == "set" )
+        {
+            if ( cmd.parameters.size() != 3 )
+            {
+                ErrorLog("xon") << "Wrong parameters for \"set\"";
+                return;
+            }
+            /// \todo validate cmd.parameters[1] as a proper cvar name
+            cmd.parameters[2] = quote_string(cmd.parameters[2]);
+        }
+
+
+
+        std::string rcon_command = string::implode(" ",cmd.parameters);
+        if ( rcon_command.empty() )
+        {
+            ErrorLog("xon") << "Empty rcon command";
+            return;
+        }
+
+        if ( rcon_secure <= 0 )
+        {
+            Log("xon",'<',2) << formatter()->decode(rcon_command);
+            write("rcon "+rcon_password+' '+rcon_command);
+        }
+        else if ( rcon_secure == 1 )
+        {
+            Log("xon",'<',2) << formatter()->decode(rcon_command);
+            std::string argbuf = (boost::format("%ld.%06d %s")
+                % std::time(nullptr) % math::random(1000000)
+                % rcon_command).str();
+            std::string key = hmac_md4(argbuf,rcon_password);
+            write("srcon HMAC-MD4 TIME "+key+' '+argbuf);
+        }
+        else
+        {
+            Log("xon",'<',5) << "getchallenge";
+            Lock lock(mutex);
+            rcon_buffer.push_back(rcon_command);
+            lock.unlock();
+            write("getchallenge");
+            read(io.read());
+        }
+    }
+    else
+    {
+        Log("xon",'<',1) << cmd.command;
+        write(cmd.command);
+    }
+}
 
 void XonoticConnection::write(std::string line)
 {
@@ -251,6 +265,10 @@ void XonoticConnection::read(const std::string& datagram)
         std::istringstream socket_stream(datagram.substr(4));
         socket_stream >> msg.command; // info, status et all
         msg.raw = datagram;
+        if ( socket_stream.peek() == ' ' )
+            socket_stream.ignore(1);
+        msg.params.emplace_back();
+        std::getline(socket_stream,msg.params.back());
         Log("xon",'>',4) << formatter_->decode(msg.raw);
         handle_message(msg);
     }
@@ -300,6 +318,25 @@ void XonoticConnection::handle_message(network::Message& msg)
                 msg.message = match[2];
             }
         }
+    }
+    else if ( msg.command == "challenge" )
+    {
+        /// \todo challenge timeout
+        Lock lock(mutex);
+        if ( msg.params.size() != 1 || rcon_buffer.empty() )
+        {
+            ErrorLog("xon") << "Got an odd challenge from the server";
+            return;
+        }
+        std::string rcon_command = rcon_buffer.front();
+        rcon_buffer.pop_front();
+        lock.unlock();
+        Log("xon",'<',2) << formatter()->decode(rcon_command);
+        std::string challenge = msg.params[0].substr(0,11);
+        std::string challenge_command = challenge+' '+rcon_command;
+        std::string key = hmac_md4(challenge_command, rcon_password);
+        write("srcon HMAC-MD4 CHALLENGE "+key+' '+challenge_command);
+        return; // don't propagate challenge messages
     }
 
     msg.source = msg.destination = this;

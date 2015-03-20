@@ -181,6 +181,7 @@ private:
     std::string         header = "\xff\xff\xff\xff";    ///< Connection message header
     std::string         rcon_password;                  ///< Rcon Password
     int                 rcon_secure = 0;                ///< Rcon secure protocol
+    std::list<std::string> rcon_buffer;                ///< Buffer for rcon secure commands
 
 
     network::Server     server_;                        ///< Connection server
