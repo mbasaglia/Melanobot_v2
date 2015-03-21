@@ -108,6 +108,9 @@ private:
         log_buffer.push_buffer(std::cout.rdbuf());
     }
     Logger(const Logger&) = delete;
+    Logger(Logger&&) = delete;
+    Logger& operator=(const Logger&) = delete;
+    Logger& operator=(Logger&&) = delete;
 
     Multibuf     log_buffer;
     std::ostream log_destination {&log_buffer};
@@ -134,9 +137,10 @@ public:
     {
         stream << message;
     }
-
     Log(const Log&) = delete;
-    Log& operator= (const Log&) = delete;
+    Log(Log&&) = delete;
+    Log& operator=(const Log&) = delete;
+    Log& operator=(Log&&) = delete;
 
     ~Log()
     {

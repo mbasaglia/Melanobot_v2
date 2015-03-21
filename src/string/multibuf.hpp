@@ -32,7 +32,9 @@ class Multibuf : public std::streambuf
 public:
     Multibuf() {}
     Multibuf(const Multibuf&) = delete;
+    Multibuf(Multibuf&&) = delete;
     Multibuf& operator=(const Multibuf&) = delete;
+    Multibuf& operator=(Multibuf&&) = delete;
 
     ~Multibuf()
     {

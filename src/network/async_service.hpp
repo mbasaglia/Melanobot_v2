@@ -70,6 +70,7 @@ using AsyncCallback = std::function<void(const Response&)>;
 class AsyncService
 {
 public:
+
     virtual ~AsyncService() {}
 
     /**
@@ -104,8 +105,11 @@ public:
     virtual bool auto_load() const = 0;
 
 protected:
-    AsyncService(){}
+    AsyncService() = default;
     AsyncService(const AsyncService&) = delete;
+    AsyncService(AsyncService&&) = delete;
+    AsyncService& operator=(const AsyncService&) = delete;
+    AsyncService& operator=(AsyncService&&) = delete;
 
     /**
      * \brief Quick way to create a successful response
@@ -286,6 +290,9 @@ private:
 
     ServiceRegistry(){}
     ServiceRegistry(const ServiceRegistry&) = delete;
+    ServiceRegistry(ServiceRegistry&&) = delete;
+    ServiceRegistry& operator=(const ServiceRegistry&) = delete;
+    ServiceRegistry& operator=(ServiceRegistry&&) = delete;
 };
 
 /**

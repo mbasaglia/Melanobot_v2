@@ -52,6 +52,11 @@ struct LoginInfo
      */
     explicit LoginInfo(const Settings& settings, const std::string& nick="");
 
+    LoginInfo(const LoginInfo&) = default;
+    LoginInfo(LoginInfo&&) = default;
+    LoginInfo& operator=(const LoginInfo&) = default;
+    LoginInfo& operator=(LoginInfo&&) = default;
+
     /**
      * \brief Whether it has all the required information to auth
      */

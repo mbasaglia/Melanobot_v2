@@ -65,6 +65,11 @@ struct Command
         timeout(Clock::now()+duration)
     {}
 
+    Command(const Command&) = default;
+    Command(Command&&) = default;
+    Command& operator=(const Command&) = default;
+    Command& operator=(Command&&) = default;
+
     bool operator< ( const Command& other ) const
     {
         return priority < other.priority ||
@@ -112,6 +117,11 @@ struct OutputMessage
         from(std::move(from)), prefix(std::move(prefix)),
         action(action), timeout(std::move(timeout))
     {}
+
+    OutputMessage(const OutputMessage&) = default;
+    OutputMessage(OutputMessage&&) = default;
+    OutputMessage& operator=(const OutputMessage&) = default;
+    OutputMessage& operator=(OutputMessage&&) = default;
 
 
     /**
@@ -177,6 +187,12 @@ public:
         CONNECTED,      ///< All set
     };
     using AtomicStatus = std::atomic<Status>;
+
+    Connection() = default;
+    Connection(const Connection&) = delete;
+    Connection(Connection&&) = delete;
+    Connection& operator=(const Connection&) = delete;
+    Connection& operator=(Connection&&) = delete;
 
     virtual ~Connection() {}
 
@@ -361,6 +377,9 @@ public:
 private:
     ConnectionFactory(){}
     ConnectionFactory(const ConnectionFactory&) = delete;
+    ConnectionFactory(ConnectionFactory&&) = delete;
+    ConnectionFactory& operator=(const ConnectionFactory&) = delete;
+    ConnectionFactory& operator=(ConnectionFactory&&) = delete;
 
     std::unordered_map<std::string,Contructor> factory;
 };

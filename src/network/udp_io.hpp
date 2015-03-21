@@ -49,6 +49,12 @@ public:
      */
     std::function<void(const std::string& datagram)> on_async_receive;
 
+    UdpIo() = default;
+    UdpIo(const UdpIo&) = delete;
+    UdpIo(UdpIo&&) = delete;
+    UdpIo& operator=(const UdpIo&) = delete;
+    UdpIo& operator=(UdpIo&&) = delete;
+
     /**
      * \brief Maximum size of a datagram in bytes
      */

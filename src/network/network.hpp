@@ -60,6 +60,11 @@ struct Server
      */
     Server() : host(""), port(0) {}
 
+    Server(const Server&) = default;
+    Server(Server&&) = default;
+    Server& operator=(const Server&) = default;
+    Server& operator=(Server&&) = default;
+
     /**
      * \brief Name as host:port
      */

@@ -81,6 +81,9 @@ private:
      */
     void check_valid();
 
+    /**
+     * \todo move as its own function (see also UdpIo::callback() for a better implementation
+     */
     template<class... FuncArgs, class... PassedArgs>
         void call_back(const std::function<void(FuncArgs...)>& function, PassedArgs... args)
         {
@@ -196,8 +199,6 @@ public:
             return factory;
         }
 
-        Registry();
-
         ~Registry()
         {
             for ( const auto& f : formatters )
@@ -217,7 +218,19 @@ public:
 
         std::unordered_map<std::string,Formatter*> formatters;
         Formatter* default_formatter = nullptr;
+    private:
+        Registry();
+        Registry(const Registry&) = delete;
+        Registry(Registry&&) = delete;
+        Registry& operator=(const Registry&) = delete;
+        Registry& operator=(Registry&&) = delete;
     };
+
+    Formatter() = default;
+    Formatter(const Formatter&) = delete;
+    Formatter(Formatter&&) = delete;
+    Formatter& operator=(const Formatter&) = delete;
+    Formatter& operator=(Formatter&&) = delete;
 
     virtual ~Formatter() {}
     /**
@@ -456,6 +469,10 @@ public:
         FormattedString( const Iterator& i, const Iterator& j )
             : elements(i,j) {}
     FormattedString() = default;
+    FormattedString(const FormattedString&) = default;
+    FormattedString(FormattedString&&) = default;
+    FormattedString& operator=(const FormattedString&) = default;
+    FormattedString& operator=(FormattedString&&) = default;
 
     iterator        begin()       { return elements.begin();}
     iterator        end()         { return elements.end();  }
@@ -567,6 +584,10 @@ public:
         : formatter(Formatter::formatter(input_formatter)) {}
     FormattedStream()
         : formatter(nullptr) {}
+    FormattedStream(const FormattedStream&) = default;
+    FormattedStream(FormattedStream&&) = default;
+    FormattedStream& operator=(const FormattedStream&) = default;
+    FormattedStream& operator=(FormattedStream&&) = default;
 
     operator FormattedString() const { return str(); }
     FormattedString str() const { return buffer; }

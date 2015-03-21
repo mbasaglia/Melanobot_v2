@@ -38,6 +38,10 @@ class Melanobot : public handler::HandlerContainer
 {
 public:
     explicit Melanobot(const Settings& settings);
+    Melanobot(const Melanobot&) = delete;
+    Melanobot(Melanobot&&) = delete;
+    Melanobot& operator=(const Melanobot&) = delete;
+    Melanobot& operator=(Melanobot&&) = delete;
     ~Melanobot();
 
     /**

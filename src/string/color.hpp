@@ -46,6 +46,10 @@ public:
 
 
     Color12() = default;
+    Color12(const Color12&) = default;
+    Color12(Color12&&) = default;
+    Color12& operator=(const Color12&) = default;
+    Color12& operator=(Color12&&) = default;
 
     Color12(BitMask mask)
         : valid(true), r((mask>>4)&0xf), g((mask>>4)&0xf), b(mask&0xf) {}

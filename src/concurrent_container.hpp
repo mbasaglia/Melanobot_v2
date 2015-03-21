@@ -48,6 +48,10 @@ public:
                         method_get  container_get
     ) : container_push(container_push), container_pop(container_pop), container_get(container_get)
     {}
+    ConcurrentContainer(const ConcurrentContainer&) = delete;
+    ConcurrentContainer(ConcurrentContainer&&) = delete;
+    ConcurrentContainer& operator=(const ConcurrentContainer&) = delete;
+    ConcurrentContainer& operator=(ConcurrentContainer&&) = delete;
 
     /**
      * \brief Add an element to the container

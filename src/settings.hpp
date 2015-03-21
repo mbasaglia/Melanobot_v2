@@ -65,6 +65,10 @@ public:
 
     Settings() {}
     Settings(const PropertyTree& p) : PropertyTree(p) {}
+    Settings(const Settings&) = default;
+    Settings(Settings&&) = default;
+    Settings& operator=(const Settings&) = default;
+    Settings& operator=(Settings&&) = default;
 
     /**
      * \brief Load settings from file

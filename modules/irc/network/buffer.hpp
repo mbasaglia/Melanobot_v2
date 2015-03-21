@@ -42,6 +42,10 @@ class Buffer
 public:
     explicit Buffer(IrcConnection& irc, const Settings& settings = {});
     ~Buffer();
+    Buffer(const Buffer&) = delete;
+    Buffer(Buffer&&) = delete;
+    Buffer& operator=(const Buffer&) = delete;
+    Buffer& operator=(Buffer&&) = delete;
 
     /**
      * \brief Inserts a command to the buffer
