@@ -94,10 +94,11 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     rcon_secure = settings.get("rcon_secure",rcon_secure);
     rcon_password = settings.get("rcon_password",rcon_password);
 
+    /// \todo resend on Unknown command "Melanobot_.*"
     conn_commands = {
-        {"alias", "Melanobot_restore_sv_adminnick", "set sv_adminnick $Melanobot_sv_adminnick"},
-        {"alias", "Melanobot_set_sv_adminnick", "set Melanobot_sv_adminnick $sv_adminnick; set sv_adminnick \"${1 q}\";"},
-        {"alias", "Melanobot_say", "Melanobot_set_sv_adminnick \"${1 q}\"; say \"${2- q}\"; Melanobot_restore_sv_adminnick"}
+        {"alias", "Melanobot_restore_sv_adminnick", "set sv_adminnick \"$Melanobot_sv_adminnick\""},
+        {"alias", "Melanobot_set_sv_adminnick", "set Melanobot_sv_adminnick \"$sv_adminnick\"; set sv_adminnick \"^3${1 q}^3\";"},
+        {"alias", "Melanobot_say_as", "Melanobot_set_sv_adminnick \"${1 q}\"; say \"${2 asis}\"; Melanobot_restore_sv_adminnick"}
     };
 }
 
@@ -196,12 +197,23 @@ void XonoticConnection::say ( const network::OutputMessage& message )
     if ( !message.from.empty() )
     {
         if ( message.action )
-            str << "* " << message.from << ' ';
+            str << "* ";
+        str << message.from;
     }
-    str << message.message;
-    std::string text = str.encode(formatter_);
+    std::vector<std::string> cmd;
 
-    command({"rcon", {"Melanobot_say", text}, message.priority, message.timeout});
+    std::string from = str.encode(formatter_);
+    if ( !from.empty() )
+    {
+        cmd = { "Melanobot_say_as", quote_string(from),
+            quote_string(message.message.encode(formatter_)) };
+    }
+    else
+    {
+        cmd = { "say", quote_string(message.message.encode(formatter_)) };
+    }
+
+    command({"rcon", cmd, message.priority, message.timeout});
 }
 
 void XonoticConnection::command ( network::Command cmd )

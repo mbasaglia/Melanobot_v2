@@ -35,8 +35,8 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    network::Connection*         destination = nullptr; ///< Message destination
-    boost::optional<std::string> dst_channel;            ///< Message destination channel
+    network::Connection*         destination{nullptr};  ///< Message destination
+    boost::optional<std::string> dst_channel;           ///< Message destination channel
 };
 
 /**
@@ -45,46 +45,15 @@ protected:
 class BridgeChat : public Handler
 {
 public:
-    BridgeChat(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
-    {
-        prefix = settings.get("prefix",prefix);
-
-        int timeout_seconds = settings.get("timeout",0);
-        if ( timeout_seconds > 0 )
-            timeout = std::chrono::duration_cast<network::Duration>(
-                std::chrono::seconds(timeout_seconds) );
-
-        ignore_self = settings.get("ignore_self",ignore_self);
-    }
-
-    bool can_handle(const network::Message& msg) const
-    {
-        return Handler::can_handle(msg) && !msg.message.empty() &&
-            msg.dst_channel && (!ignore_self || msg.from != msg.source->name());
-    }
+    BridgeChat(const Settings& settings, Melanobot* bot);
+    bool can_handle(const network::Message& msg) const override;
 
 protected:
-    bool on_handle(network::Message& msg) override
-    {
-        std::string channel = *msg.dst_channel;
-        msg.destination->say(network::OutputMessage(
-            msg.source->formatter()->decode(msg.message),
-            msg.action,
-            channel,
-            priority,
-            msg.source->formatter()->decode(msg.from),
-            (string::FormattedStream() << prefix).str(),
-            timeout == network::Duration::zero() ?
-                network::Time::max() :
-                network::Clock::now() + timeout
-        ));
-        return true;
-    }
+    bool on_handle(network::Message& msg) override;
 
     std::string       prefix;
-    network::Duration timeout = network::Duration::zero();
-    bool              ignore_self = true;
+    network::Duration timeout{network::Duration::zero()};
+    bool              ignore_self{true};
 };
 
 } // namespace handler

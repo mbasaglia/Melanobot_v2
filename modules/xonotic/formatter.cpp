@@ -33,6 +33,9 @@ std::string Formatter::ascii(const std::string& s) const
 }
 std::string Formatter::color(const color::Color12& color) const
 {
+    if ( !color.is_valid() )
+        return "^7";
+    
     switch ( color.to_bit_mask() )
     {
         case 0x000: return "^0";

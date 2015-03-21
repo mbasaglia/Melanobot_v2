@@ -42,4 +42,40 @@ bool Bridge::on_handle(network::Message& msg)
     return SimpleGroup::on_handle(targeted);
 }
 
+
+BridgeChat::BridgeChat(const Settings& settings, Melanobot* bot)
+    : Handler(settings,bot)
+{
+    prefix = settings.get("prefix",prefix);
+
+    int timeout_seconds = settings.get("timeout",0);
+    if ( timeout_seconds > 0 )
+        timeout = std::chrono::duration_cast<network::Duration>(
+            std::chrono::seconds(timeout_seconds) );
+
+    ignore_self = settings.get("ignore_self",ignore_self);
+}
+
+bool BridgeChat::can_handle(const network::Message& msg) const
+{
+    return Handler::can_handle(msg) && !msg.message.empty() && !msg.direct &&
+        (!ignore_self || msg.from != msg.source->name());
+}
+
+bool BridgeChat::on_handle(network::Message& msg)
+{
+    msg.destination->say(network::OutputMessage(
+        msg.source->formatter()->decode(msg.message),
+        msg.action,
+        msg.dst_channel ? *msg.dst_channel : "",
+        priority,
+        msg.source->formatter()->decode(msg.from),
+        (string::FormattedStream() << prefix).str(),
+        timeout == network::Duration::zero() ?
+            network::Time::max() :
+            network::Clock::now() + timeout
+    ));
+    return true;
+}
+
 } // namespace handler
