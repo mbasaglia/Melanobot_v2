@@ -109,7 +109,7 @@ std::string::size_type similarity(const std::string& s1, const std::string& s2)
      *
      */
 
-    typedef std::string::size_type int_;
+    using int_ = std::string::size_type;
     int_ result = 0;
 
     int_ i1 = 0; // Current position on s1

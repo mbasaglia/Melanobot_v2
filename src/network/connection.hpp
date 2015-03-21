@@ -176,7 +176,7 @@ public:
         CHECKING,       ///< Connected, making sure the connection is alive
         CONNECTED,      ///< All set
     };
-    typedef std::atomic<Status> AtomicStatus;
+    using AtomicStatus = std::atomic<Status>;
 
     virtual ~Connection() {}
 
@@ -311,7 +311,7 @@ public:
 class ConnectionFactory
 {
 public:
-    typedef std::function<std::unique_ptr<Connection>(Melanobot* bot, const Settings&)> Contructor;
+    using Contructor = std::function<std::unique_ptr<Connection>(Melanobot* bot, const Settings&)>;
 
 
     /**

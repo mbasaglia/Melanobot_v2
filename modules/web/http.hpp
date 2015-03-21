@@ -33,7 +33,7 @@ namespace http {
 /**
  * \brief Request parameters
  */
-typedef std::map<std::string,std::string> Parameters;
+using Parameters = std::map<std::string,std::string>;
 
 /**
  * \brief Encode a string to make it fit to be used in a url

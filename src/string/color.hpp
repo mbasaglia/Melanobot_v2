@@ -35,14 +35,14 @@ public:
     /**
      * \brief Component type, will use 4 bits
      */
-    typedef uint8_t  Component;
+    using Component = uint8_t;
 
     /**
      * \brief 12 bit integer containing all 3 components
      *
      * 0xfff = white, 0xf00 = red, 0x0f0 = green, 0x00f = blue
      */
-    typedef uint16_t BitMask;
+    using BitMask = uint16_t;
 
 
     Color12() = default;

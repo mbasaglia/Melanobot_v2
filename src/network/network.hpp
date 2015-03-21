@@ -26,9 +26,9 @@
 
 namespace network {
 
-typedef std::chrono::steady_clock Clock;
-typedef Clock::time_point         Time;
-typedef Clock::duration           Duration;
+using Clock     = std::chrono::steady_clock;
+using Time      = Clock::time_point;
+using Duration  = Clock::duration;
 
 /**
  * \brief Identifies a network server

@@ -35,13 +35,13 @@ template <class Container>
 class ConcurrentContainer
 {
 public:
-    typedef Container                           container_type;
-    typedef typename Container::value_type      value_type;
-    typedef typename Container::reference       reference;
-    typedef typename Container::const_reference const_reference;
-    typedef void(Container::*method_push)(const_reference);
-    typedef void(Container::*method_pop)();
-    typedef const_reference(Container::*method_get)() const;
+    using container_type = Container;
+    using value_type     = typename Container::value_type;
+    using reference      = typename Container::reference;
+    using const_reference= typename Container::const_reference;
+    using method_push    = void(Container::*)(const_reference);
+    using method_pop     = void(Container::*)();
+    using method_get     = const_reference(Container::*)() const;
 
     ConcurrentContainer(method_push container_push,
                         method_pop  container_pop,
@@ -131,10 +131,10 @@ private:
 template<class T, class Container = std::deque<T>>
 class ConcurrentQueue : public ConcurrentContainer<std::queue<T,Container>>
 {
-    typedef ConcurrentContainer<std::queue<T,Container>> parent_type;
+    using parent_type = ConcurrentContainer<std::queue<T,Container>>;
 
 public:
-    typedef typename parent_type::container_type container_type;
+    using container_type = typename parent_type::container_type;
 
     ConcurrentQueue() : parent_type( &container_type::push, &container_type::pop, &container_type::front )
     {}
@@ -148,15 +148,15 @@ template<class T,
          class Compare = std::less<typename Container::value_type> >
 class ConcurrentPriorityQueue : public ConcurrentContainer<std::priority_queue<T,Container,Compare>>
 {
-    typedef ConcurrentContainer<std::priority_queue<T,Container,Compare>> parent_type;
+    using parent_type = ConcurrentContainer<std::priority_queue<T,Container,Compare>>;
 
 public:
-    typedef typename parent_type::container_type container_type;
+    using container_type = typename parent_type::container_type;
 
     ConcurrentPriorityQueue() : parent_type( &container_type::push, &container_type::pop, &container_type::top )
     {}
 };
 
-typedef std::unique_lock<std::mutex> Lock;
+using Lock = std::unique_lock<std::mutex>;
 
 #endif // CONCURRENT_CONTAINER_HPP

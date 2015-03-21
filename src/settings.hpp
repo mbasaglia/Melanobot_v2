@@ -26,7 +26,7 @@
 #include <boost/property_tree/ptree.hpp>
 
 
-typedef boost::property_tree::ptree PropertyTree;
+using PropertyTree = boost::property_tree::ptree;
 
 /**
  * \brief Class containing hierarchical settings
@@ -114,7 +114,7 @@ std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
 /**
  * \brief Key-value map used to store object properties
  */
-typedef std::unordered_map<std::string,std::string> Properties;
+using Properties = std::unordered_map<std::string,std::string>;
 
 /**
  * \brief Class representing an error occurring during configuration

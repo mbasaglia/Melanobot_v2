@@ -334,7 +334,7 @@ public:
     /**
      * \brief Function object type used to create instances
      */
-    typedef std::function<std::unique_ptr<Handler>(const Settings&,Melanobot*)> CreateFunction;
+    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,Melanobot*)>;
 
 
     static HandlerFactory& instance()

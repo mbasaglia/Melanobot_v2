@@ -41,7 +41,7 @@ namespace string {
 class Utf8Parser
 {
 public:
-    typedef uint8_t Byte;
+    using Byte = uint8_t;
 
     std::function<void(uint8_t)>                     callback_ascii;
     std::function<void(uint32_t,const std::string&)> callback_utf8;
@@ -443,14 +443,14 @@ private:
 class FormattedString
 {
 public:
-    typedef std::vector<std::shared_ptr<const Element>> container;
-    typedef container::value_type      value_type;
-    typedef container::reference       reference;
-    typedef container::const_reference const_reference;
-    typedef container::iterator        iterator;
-    typedef container::const_iterator  const_iterator;
-    typedef container::difference_type difference_type;
-    typedef container::size_type       size_type;
+    using container      = std::vector<std::shared_ptr<const Element>>;
+    using value_type     =  container::value_type;
+    using reference      = container::reference;
+    using const_reference= container::const_reference;
+    using iterator       = container::iterator;
+    using const_iterator = container::const_iterator;
+    using difference_type= container::difference_type;
+    using size_type      = container::size_type;
 
     template<class Iterator>
         FormattedString( const Iterator& i, const Iterator& j )

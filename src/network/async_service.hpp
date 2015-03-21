@@ -56,7 +56,7 @@ struct Response
 /**
  * \brief Callback used by asyncronous calls
  */
-typedef std::function<void(const Response&)> AsyncCallback;
+using AsyncCallback = std::function<void(const Response&)>;
 
 /**
  * \brief Base class for external services that might take some time to execute.
