@@ -70,6 +70,15 @@ public:
      */
     static bool is_ascii(Byte b) { return b < 128; }
 
+    /**
+     * \brief Transliterate a single character to ascii
+     */
+    static char to_ascii(uint32_t unicode);
+    /**
+     * \brief Transliterate a single character to ascii
+     */
+    static char to_ascii(const std::string& utf8_char);
+
 
 private:
     std::string           utf8;         ///< Multibyte string

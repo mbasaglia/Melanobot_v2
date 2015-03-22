@@ -59,7 +59,6 @@ endif()
 # Config header
 set(CONFIG_HEADER "${PROJECT_BINARY_DIR}/src/config.hpp")
 configure_file ("${PROJECT_SOURCE_DIR}/src/config.hpp.in" ${CONFIG_HEADER})
-set(ALL_SOURCES ${ALL_SOURCES} ${CONFIG_HEADER})
 include_directories("${CMAKE_BINARY_DIR}/src")
 
 #Melano modules

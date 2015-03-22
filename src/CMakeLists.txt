@@ -25,6 +25,11 @@ find_package (Boost COMPONENTS system chrono thread filesystem program_options R
 target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 
+find_package(Iconv)
+if(Iconv_FOUND)
+    add_definitions(-DHAS_ICONV)
+endif()
+
 if (MELANOMODULES)
     target_link_libraries(${EXECUTABLE_NAME} ${MELANOMODULES})
 endif()

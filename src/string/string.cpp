@@ -31,8 +31,41 @@
 #include "logger.hpp"
 #include "string_functions.hpp"
 #include "functional.hpp"
+#include "config.hpp"
+
+#ifdef HAS_ICONV
+#       include <iconv.h>
+#endif
 
 namespace string {
+
+char Utf8Parser::to_ascii(uint32_t unicode)
+{
+    if ( unicode < 128 )
+        return char(unicode);
+    return to_ascii(encode(unicode));
+}
+
+char Utf8Parser::to_ascii(const std::string& utf8)
+{
+#ifdef HAS_ICONV
+    // With the C locale, //TRANSLIT won't work properly
+    static auto only_once = setlocale (LC_ALL, ""); (void)only_once;
+
+    char ascii = '?';
+    char * cutf8 = (char*)utf8.data();
+    size_t cutf8size = utf8.size();
+    char * cascii = &ascii;
+    size_t casciisize = 1;
+
+    iconv_t iconvobj  = iconv_open("ASCII//TRANSLIT", "UTF-8");
+    iconv(iconvobj, &cutf8, &cutf8size, &cascii, &casciisize);
+    iconv_close(iconvobj);
+    return ascii;
+#else
+    return '?';
+#endif
+}
 
 void Utf8Parser::parse(const std::string& string)
 {
@@ -255,8 +288,7 @@ std::string FormatterUtf8::name() const
 
 std::string FormatterAscii::unicode(const Unicode& c) const
 {
-    /// \todo Transliterate (eg: è -> e)
-    return "?";
+    return std::string(1,Utf8Parser::to_ascii(c.utf8()));
 }
 FormattedString FormatterAscii::decode(const std::string& source) const
 {
@@ -298,8 +330,7 @@ std::string FormatterAnsi::unicode(const Unicode& c) const
 {
     if ( utf8 )
         return c.utf8();
-    /// \todo Transliterate
-    return "?";
+    return std::string(1,Utf8Parser::to_ascii(c.utf8()));
 }
 FormattedString FormatterAnsi::decode(const std::string& source) const
 {
