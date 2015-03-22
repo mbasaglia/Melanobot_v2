@@ -30,6 +30,7 @@
 
 #include "logger.hpp"
 #include "string_functions.hpp"
+#include "functional.hpp"
 
 namespace string {
 
@@ -48,7 +49,7 @@ void Utf8Parser::parse(const std::string& string)
         if ( byte < 0b1000'0000 )
         {
             check_valid();
-            call_back(callback_ascii,byte);
+            callback(callback_ascii,byte);
         }
         // 11.. .... => Begin multibyte
         else if ( (byte & 0b1100'0000) == 0b1100'0000 )
@@ -75,7 +76,7 @@ void Utf8Parser::parse(const std::string& string)
             unicode |= byte&0b0011'1111; //'
             if ( utf8.size() == length )
             {
-                call_back(callback_utf8,unicode,utf8);
+                callback(callback_utf8,unicode,utf8);
                 unicode = 0;
                 length = 0;
                 utf8.clear();
@@ -83,7 +84,7 @@ void Utf8Parser::parse(const std::string& string)
         }
     }
     check_valid();
-    call_back(callback_end);
+    callback(callback_end);
 }
 
 std::string Utf8Parser::encode(uint32_t value)
@@ -119,7 +120,7 @@ void Utf8Parser::check_valid()
     if ( length != 0 )
     {
         // premature end of a multi-byte character
-        call_back(callback_invalid,utf8);
+        callback(callback_invalid,utf8);
         length = 0;
         utf8.clear();
         unicode = 0;

@@ -80,16 +80,6 @@ private:
      * \brief Handles an invalid/incomplete sequence
      */
     void check_valid();
-
-    /**
-     * \todo move as its own function (see also UdpIo::callback() for a better implementation
-     */
-    template<class... FuncArgs, class... PassedArgs>
-        void call_back(const std::function<void(FuncArgs...)>& function, PassedArgs... args)
-        {
-            if ( function )
-                function(args...);
-        }
 };
 
 

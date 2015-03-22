@@ -19,12 +19,11 @@
 #ifndef UDP_IO_HPP
 #define UDP_IO_HPP
 
-#include <functional>
-
 #include <boost/asio.hpp>
 
 #include "network.hpp"
 #include "string/logger.hpp"
+#include "functional.hpp"
 
 namespace network {
 
@@ -222,21 +221,6 @@ private:
         callback(on_async_receive,receive_buffer.substr(0,nbytes));
         schedule_read();
     }
-
-    /**
-     * \brief Call a std::function when it is properly initialized
-     * \tparam Functor  Callable which can be converted to bool
-     * \tparam CallArgs Argument types used at the call point
-     * \param  function Function object
-     * \param  args     Function arguments
-     * \todo This function can be extracted from this class if needed
-     */
-    template<class Functor, class... CallArgs>
-        void callback(const Functor& function, CallArgs&&... args)
-        {
-            if ( function )
-                function(std::forward<CallArgs>(args)...);
-        }
 
 };
 } // namespace network
