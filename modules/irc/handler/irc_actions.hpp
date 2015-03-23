@@ -59,7 +59,7 @@ protected:
             {"nick", user.name},
             {"host", user.host},
             {"name", user.global_id}
-        },'%'));
+        },"%"));
         return true;
     }
 
@@ -102,7 +102,7 @@ protected:
             {"kicker", msg.from},
             {"kicked", msg.params[0]},
             {"message", msg.params.size() > 1 ? msg.params.back() : "" }
-        },'%'));
+        },"%"));
         return true;
     }
 
@@ -140,7 +140,7 @@ protected:
                 {"channel", msg.channels[0]},
                 {"kicker", msg.from},
                 {"message", msg.params.size() > 1 ? msg.params.back() : "" }
-            },'%'));
+            },"%"));
         return true;
     }
 

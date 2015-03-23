@@ -93,6 +93,9 @@ configure_file ("${PROJECT_SOURCE_DIR}/src/melanomodules.hpp.in" ${MELANOMODULE_
 # Binary
 add_subdirectory(src bin)
 
+# Tests 
+add_subdirectory(test)
+
 # Doxygen target
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

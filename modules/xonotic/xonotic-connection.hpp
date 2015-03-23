@@ -184,13 +184,15 @@ private:
     };
 
     std::string         line_buffer;                    ///< Buffer used for truncated lines
-    string::Formatter*  formatter_ = nullptr;           ///< String formatter
+    string::Formatter*  formatter_{nullptr};            ///< String formatter
 
-    std::string         header = "\xff\xff\xff\xff";    ///< Connection message header
+    std::string         header{"\xff\xff\xff\xff"};     ///< Connection message header
     std::string         rcon_password;                  ///< Rcon Password
-    int                 rcon_secure = 0;                ///< Rcon secure protocol
-    std::list<SecureRconCommand>         rcon_buffer;   ///< Buffer for rcon secure commands
-    std::vector<std::vector<std::string>>conn_commands; ///< Rcon commands needed to keep the connection going
+    int                 rcon_secure{0};                 ///< Rcon secure protocol
+    std::string         cmd_say;                        ///< Command used to say messages
+    std::string         cmd_say_as;                     ///< Command used to say messages as another user
+    Properties          cvars;                          ///< Cvar values
+    std::list<SecureRconCommand>rcon_buffer;            ///< Buffer for rcon secure commands
 
 
     network::Server     server_;                        ///< Connection server

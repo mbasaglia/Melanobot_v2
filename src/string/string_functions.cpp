@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "string_functions.hpp"
+#include "trie.hpp"
 
 namespace string {
 
@@ -58,6 +59,9 @@ std::string add_slashes ( const std::string& input, const std::string& character
 
 std::string replace(const std::string& input, const std::string& from, const std::string& to)
 {
+    if ( from.empty() )
+        return input;
+    
     std::string out;
     out.reserve(input.size());
     std::string::size_type it = 0;
@@ -166,33 +170,59 @@ try {
 }
 
 
-std::string replace(const std::string& subject, const Properties& map, char prefix)
+std::string replace(const std::string& subject, const Properties& map, const std::string& prefix)
 {
-    /// \todo could use a better algorithm, maybe build a trie from \c map
     std::string output;
 
-    std::string::size_type start = 0;
-    std::string::size_type pos = 0;
-    for ( ; pos < subject.size(); pos++ )
+    /// \todo could add a failure function to the trie data for less backtracking
+    StringTrie trie = make_trie(map);
+    trie.prepend(prefix);
+    if ( trie.empty() )
+        return subject;
+
+
+    for ( std::string::size_type pos = 0; pos < subject.size(); pos++ )
     {
-        if ( subject[pos] == prefix )
+        auto iter = trie.root();
+        StringTrie::iterator last_valid;
+
+        for ( ; pos < subject.size(); pos++ )
         {
-            output += subject.substr(start,pos-start);
-            start = pos;
-            for ( pos++; pos < subject.size() && subject[pos] != prefix; pos++ )
+            char c = subject[pos];
+            if ( iter.can_move_down(c) )
             {
-                auto it = map.find(subject.substr(start+1,pos-start));
-                if ( it != map.end() )
+                iter.move_down(c);
+                if ( iter.accepts() )
+                    last_valid = iter;
+            }
+            else
+            {
+                if ( last_valid.valid() )
                 {
-                    output += it->second;
-                    start = pos+1;
-                    break;
+                    pos -= iter.depth() - last_valid.depth() + 1;
+                    output += last_valid.data();
                 }
+                else
+                {
+                    pos -= iter.depth();
+                    output += subject[pos];
+                }
+                iter = trie.root();
+                last_valid = {};
             }
         }
+
+        if ( last_valid.valid() )
+        {
+            pos -= iter.depth() - last_valid.depth() + 1;
+            output += last_valid.data();
+        }
+        else if ( iter.depth() )
+        {
+            pos -= iter.depth();
+            output += subject[pos];
+        }
     }
-    if ( start < pos )
-        output += subject.substr(start,pos-start);
 
     return output;
 }

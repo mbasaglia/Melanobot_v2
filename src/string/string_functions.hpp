@@ -140,8 +140,11 @@ std::string replace(const std::string& input, const std::string& from, const std
 
 /**
  * \brief Replaces the keys of \c map to the respective values in \c subject
+ * \param subject The string to be searched in
+ * \param map     Term/replacement map
+ * \param prefix  (Optional) prefix to prepend to all terms
  */
-std::string replace(const std::string& subject, const Properties& map, char prefix);
+std::string replace(const std::string& subject, const Properties& map, const std::string& prefix = {});
 
 /**
  * \brief Checks if \c text matches the wildcard \c pattern

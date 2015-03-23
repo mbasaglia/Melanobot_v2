@@ -351,7 +351,7 @@ protected:
                     map["sender"] = msg.source->get_user(msg.from).name;
                     for ( unsigned i = 0; i < match.size(); i++ )
                         map[std::to_string(i)] = match[i];
-                    myreply = string::replace(myreply,map,'\\');
+                    myreply = string::replace(myreply,map,"\\");
                 }
                 reply_to(msg,myreply);
                 return true;
