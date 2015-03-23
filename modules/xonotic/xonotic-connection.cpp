@@ -94,8 +94,21 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     rcon_secure = settings.get("rcon_secure",rcon_secure);
     rcon_password = settings.get("rcon_password",rcon_password);
 
-    cmd_say = "say %message";
-    cmd_say_as = "say \"%from_unquoted: %message_unquoted\"";
+    cmd_say = settings.get("say","say %message");
+    cmd_say_as = settings.get("say_as", "say \"%prefix%from^7: %message\"");
+
+    // Preset templates
+    if ( cmd_say_as == "modpack" )
+    {
+        cmd_say_as = "sv_cmd ircmsg %prefix%from^7: %message";
+    }
+    else if ( cmd_say_as == "sv_adminnick" )
+    {
+        cmd_say_as ="set Melanobot_sv_adminnick \"$sv_adminnick\";"
+                    "set sv_adminnick \"^3%prefix^3%from^3\";"
+                    "say \"^7%message\";"
+                    "set sv_adminnick \"Melanobot_sv_adminnick\"";
+    }
 }
 
 void XonoticConnection::connect()
@@ -208,29 +221,33 @@ bool XonoticConnection::set_property(const std::string& property,
 
 void XonoticConnection::say ( const network::OutputMessage& message )
 {
-    string::FormattedStream str;
+    string::FormattedStream prefix_stream;
     if ( !message.prefix.empty() )
-        str << message.prefix << ' ' << color::nocolor;
+        prefix_stream << message.prefix << ' ';
+
+    string::FormattedStream from_stream;
     if ( !message.from.empty() )
     {
         if ( message.action )
-            str << "* ";
-        str << message.from;
+            from_stream << "* ";
+        from_stream << message.from;
     }
 
-    std::string from = str.encode(formatter_);
+    std::string prefix   = prefix_stream.encode(formatter_);
+    std::string from     = from_stream.encode(formatter_);
     std::string contents = message.message.encode(formatter_);
     Properties message_properties = {
-        {"from",                quote_string(from)},
-        {"from_unquoted",       from},
-        {"message",             quote_string(contents)},
-        {"message_unquoted",    contents}
+        {"prefix",              prefix},
+        {"from",                from},
+        {"message",             contents},
+        //{"from_quoted",         quote_string(from)},
+        //{"message_quoted",      quote_string(contents)},
     };
 
-    command({"rcon", {
-            string::replace(message.from.empty() ?
-                cmd_say : cmd_say_as ,message_properties,"%")
-        }, message.priority, message.timeout});
+    auto expl = string::regex_split(message.from.empty() ? cmd_say : cmd_say_as,";\\s*");
+    for ( const auto & cmd : expl )
+        command({"rcon", { string::replace(cmd,message_properties,"%")},
+                message.priority, message.timeout});
 }
 
 void XonoticConnection::command ( network::Command cmd )

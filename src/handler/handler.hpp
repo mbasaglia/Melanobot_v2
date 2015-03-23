@@ -215,7 +215,7 @@ protected:
 private:
     std::string some_setting = "Default value";
 };
-module.register_handler<MyAction,MyAction);
+module.register_handler<MyAction>("MyAction");
  * \endcode
  */
 class SimpleAction : public Handler
@@ -227,6 +227,7 @@ public:
      * \param settings        Settings
      * \param bot             Pointer to the bot instance (cannot be null)
      * \throws ConfigurationError If the requirements stated above are not met
+     * \todo flag saying whether there must be a space after the trigger (default true)
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
         : SimpleAction ( default_trigger, settings, bot, false ) {}

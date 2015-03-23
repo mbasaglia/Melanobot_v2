@@ -360,9 +360,12 @@ public:
             auto it = factory.find(protocol);
             if ( it != factory.end() )
                 return it->second(bot, settings);
-            Log("sys",'!',0) << color::red << "Error" << color::nocolor
-                << ": Uknown connection protocol "+protocol;
-        } catch ( const LocatableException& exc ) {
+            ErrorLog ("sys","Connection Error")
+                << ": Unknown connection protocol "+protocol;
+        } catch ( const CriticalException& ) {
+            throw;
+        }
+        catch ( const LocatableException& exc ) {
             ErrorLog errlog("sys","Connection Error");
             if ( Settings::global_settings.get("debug",0) )
                 errlog << exc.file << ':' << exc.line << ": ";
