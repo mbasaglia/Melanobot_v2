@@ -30,7 +30,7 @@ namespace handler {
 class Bridge : public SimpleGroup
 {
 public:
-    Bridge(const Settings& settings, Melanobot* bot);
+    Bridge(const Settings& settings, handler::HandlerContainer* parent);
 
 protected:
     bool on_handle(network::Message& msg) override;
@@ -45,7 +45,7 @@ protected:
 class BridgeChat : public Handler
 {
 public:
-    BridgeChat(const Settings& settings, Melanobot* bot);
+    BridgeChat(const Settings& settings, handler::HandlerContainer* parent);
     bool can_handle(const network::Message& msg) const override;
 
 protected:

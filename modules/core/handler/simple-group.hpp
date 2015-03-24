@@ -36,7 +36,7 @@ namespace handler {
 class SimpleGroup : public SimpleAction
 {
 public:
-    SimpleGroup(const Settings& settings, Melanobot* bot);
+    SimpleGroup(const Settings& settings, handler::HandlerContainer* parent);
 
     bool can_handle(const network::Message& msg) const override;
 
@@ -78,7 +78,7 @@ public:
      * \param bot               Main bot
      */
     AbstractList(const std::string& default_trigger, bool clear,
-                 const Settings& settings, Melanobot* bot);
+                 const Settings& settings, handler::HandlerContainer* parent);
 
     /**
      * \brief Adds \c element to the list

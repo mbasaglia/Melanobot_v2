@@ -49,7 +49,8 @@ namespace handler {
 class Handler : public handler::HandlerContainer
 {
 public:
-    Handler( const Settings& settings, Melanobot* bot ) : bot ( bot )
+    Handler( const Settings& settings, HandlerContainer* parent )
+        : bot ( parent->melanobot() )
     {
         auth = settings.get("auth",auth);
         priority = settings.get("priority",priority);
@@ -59,6 +60,8 @@ public:
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
     virtual ~Handler() {}
+
+    Melanobot* melanobot() const final { return bot; }
 
     /**
      * \brief Attempt to handle the message
@@ -194,11 +197,11 @@ protected:
  *
  * Follows the most basic example to define a SimpleAction handler:
  * \code{.cpp}
-class MyAction : public SimpleAction
+class MyAction : public handler::SimpleAction
 {
 public:
-    MyAction(const Settings& settings, Melanobot* bot)
-        : SimpleAction("default_handler",settings,bot)
+    MyAction(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("default_handler",settings,parent)
     {
         some_setting = settings.get("some_setting",some_setting);
         synopsis += " text...";
@@ -230,8 +233,8 @@ public:
      * \todo flag saying whether there must be a space after the trigger (default true)
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
-                 Melanobot* bot)
-        : Handler(settings,bot)
+                 handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         trigger      = settings.get("trigger",default_trigger);
         synopsis     = trigger;
@@ -318,7 +321,7 @@ public:
     /**
      * \brief Function object type used to create instances
      */
-    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,Melanobot*)>;
+    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,handler::HandlerContainer*)>;
 
 
     static HandlerFactory& instance()
@@ -332,13 +335,13 @@ public:
      * \return \c nullptr if it could not be created
      */
     std::unique_ptr<Handler> build(const std::string& handler_name,
-                   const Settings& settings, Melanobot* bot) const
+                   const Settings& settings, handler::HandlerContainer* parent) const
     {
         auto it = factory.find(settings.get("type",string::strtolower(handler_name)));
         if ( it != factory.end() )
         {
             try {
-                return it->second(settings, bot);
+                return it->second(settings, parent);
             } catch ( const ConfigurationError& error )
             {
                 ErrorLog("sys") << "Error creating " << handler_name << ": "

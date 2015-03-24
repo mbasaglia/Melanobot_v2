@@ -32,8 +32,8 @@ namespace handler {
 class Whois330 : public ::handler::Handler
 {
 public:
-    Whois330(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot) {}
+    Whois330(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent) {}
 
     bool can_handle(const network::Message& msg) const override
     {
@@ -58,8 +58,8 @@ protected:
 class QSendWhois : public ::handler::Handler
 {
 public:
-    QSendWhois(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    QSendWhois(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         q_bot = settings.get("q_to",q_bot);
     }
@@ -97,8 +97,8 @@ private:
 class QGetWhois : public ::handler::Handler
 {
 public:
-    QGetWhois(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    QGetWhois(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         q_bot = settings.get("q_from",q_bot);
     }
@@ -160,8 +160,8 @@ private:
 class WhoisCheckMe : public ::handler::SimpleAction
 {
 public:
-    WhoisCheckMe(const Settings& settings, Melanobot* bot)
-        : SimpleAction("checkme",settings,bot)
+    WhoisCheckMe(const Settings& settings, ::handler::HandlerContainer* parent)
+        : SimpleAction("checkme",settings,parent)
     {}
 
     bool can_handle(const network::Message& msg) const override

@@ -31,8 +31,8 @@ namespace handler {
 class SearchVideoYoutube : public SimpleJson
 {
 public:
-    SearchVideoYoutube(const Settings& settings, Melanobot* bot)
-        : SimpleJson("video",settings,bot)
+    SearchVideoYoutube(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("video",settings,parent)
     {
         api_url = settings.get("url",
             "https://gdata.youtube.com/feeds/api/videos?alt=json&max-results=1");
@@ -63,8 +63,8 @@ private:
 class SearchImageGoogle : public SimpleJson
 {
 public:
-    SearchImageGoogle(const Settings& settings, Melanobot* bot)
-        : SimpleJson("image",settings,bot)
+    SearchImageGoogle(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("image",settings,parent)
     {}
 
 protected:
@@ -90,8 +90,8 @@ protected:
 class UrbanDictionary : public SimpleJson
 {
 public:
-    UrbanDictionary(const Settings& settings, Melanobot* bot)
-        : SimpleJson("define",settings,bot)
+    UrbanDictionary(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("define",settings,parent)
     {}
 
 protected:
@@ -118,8 +118,8 @@ protected:
 class SearchWebSearx : public SimpleJson
 {
 public:
-    SearchWebSearx(const Settings& settings, Melanobot* bot)
-        : SimpleJson("search",settings,bot)
+    SearchWebSearx(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("search",settings,parent)
     {
         api_url = settings.get("url","https://searx.me/");
     }

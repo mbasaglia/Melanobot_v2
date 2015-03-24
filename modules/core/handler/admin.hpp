@@ -31,8 +31,8 @@ namespace handler {
 class AdminQuit: public SimpleAction
 {
 public:
-    AdminQuit(const Settings& settings, Melanobot* bot)
-        : SimpleAction("quit",settings,bot)
+    AdminQuit(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("quit",settings,parent)
     {
         message = settings.get("message",message);
         synopsis += " [message]";
@@ -63,8 +63,8 @@ private:
 class AdminGroup: public AbstractList
 {
 public:
-    AdminGroup(const Settings& settings, Melanobot* bot)
-        : AbstractList(settings.get("group",""),false,settings,bot)
+    AdminGroup(const Settings& settings, handler::HandlerContainer* parent)
+        : AbstractList(settings.get("group",""),false,settings,parent)
     {
         if ( !source )
             throw ConfigurationError();
@@ -128,8 +128,8 @@ private:
 class FilterGroup: public Handler
 {
 public:
-    FilterGroup(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    FilterGroup(const Settings& settings, handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         if ( auth.empty() )
             throw ConfigurationError();
@@ -148,8 +148,8 @@ private:
 class AdminReconnect: public SimpleAction
 {
 public:
-    AdminReconnect(const Settings& settings, Melanobot* bot)
-        : SimpleAction("reconnect",settings,bot)
+    AdminReconnect(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("reconnect",settings,parent)
     {
         message = settings.get("message",message);
         synopsis += " [message]";
@@ -179,8 +179,8 @@ private:
 class AdminConnect: public SimpleAction
 {
 public:
-    AdminConnect(const Settings& settings, Melanobot* bot)
-        : SimpleAction("connect",settings,bot)
+    AdminConnect(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("connect",settings,parent)
     {
         help = "Connects bot";
     }
@@ -199,8 +199,8 @@ protected:
 class AdminDisconnect: public SimpleAction
 {
 public:
-    AdminDisconnect(const Settings& settings, Melanobot* bot)
-        : SimpleAction("disconnect",settings,bot)
+    AdminDisconnect(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("disconnect",settings,parent)
     {
         message = settings.get("message",message);
         synopsis += " [message]";
@@ -230,8 +230,8 @@ private:
 class Chanhax: public Handler
 {
 public:
-    Chanhax(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot),
+    Chanhax(const Settings& settings, handler::HandlerContainer* parent)
+        : Handler(settings,parent),
         trigger(settings.get("trigger","chanhax")),
         regex_chanhax (
             "(.+)\\s*"+string::regex_escape(trigger)+"\\s+(\\S+)",

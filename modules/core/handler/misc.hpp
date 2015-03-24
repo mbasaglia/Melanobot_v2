@@ -34,8 +34,8 @@ namespace handler {
 class License : public SimpleAction
 {
 public:
-    License(const Settings& settings, Melanobot* bot)
-        : SimpleAction("license",settings,bot)
+    License(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("license",settings,parent)
     {
         sources_url = settings.get("url",Settings::global_settings.get("website",""));
         help = "Shows licensing information";
@@ -60,8 +60,8 @@ private:
 class Help : public SimpleAction
 {
 public:
-    Help(const Settings& settings, Melanobot* bot)
-        : SimpleAction("help",settings,bot)
+    Help(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("help",settings,parent)
     {
         help = "Shows available commands";
         synopsis += " [command|group]";
@@ -222,8 +222,8 @@ private:
 class Echo : public SimpleAction
 {
 public:
-    Echo(const Settings& settings, Melanobot* bot)
-        : SimpleAction("echo",settings,bot)
+    Echo(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("echo",settings,parent)
     {
         help = "Repeats \"Text...\"";
         synopsis += " Text...";
@@ -243,8 +243,8 @@ protected:
 class ServerHost : public SimpleAction
 {
 public:
-    ServerHost(const Settings& settings, Melanobot* bot)
-        : SimpleAction("server",settings,bot)
+    ServerHost(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("server",settings,parent)
     {}
 
 protected:
@@ -264,8 +264,8 @@ protected:
 class Cointoss : public SimpleAction
 {
 public:
-    Cointoss(const Settings& settings, Melanobot* bot)
-        : SimpleAction("cointoss",settings,bot)
+    Cointoss(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("cointoss",settings,parent)
     {
         auto items = settings.get_optional<std::string>("items");
         if ( items )
@@ -314,8 +314,8 @@ private:
 class Reply : public Handler
 {
 public:
-    Reply(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    Reply(const Settings& settings, handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         trigger         = settings.get("trigger","");
         reply           = settings.get("reply","");

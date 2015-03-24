@@ -21,6 +21,8 @@
 
 #include "settings.hpp"
 
+class Melanobot;
+
 namespace handler {
 
 class Handler;
@@ -37,6 +39,11 @@ public:
      * \brief Populates \c output from properties of its children
      */
     virtual void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const = 0;
+
+    /**
+     * \brief Get the top-level bot for this HandlerContainer
+     */
+    virtual Melanobot* melanobot() const = 0;
 
 };
 

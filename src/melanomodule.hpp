@@ -102,9 +102,9 @@ struct Melanomodule
             static_assert(std::is_base_of<handler::Handler,HandlerT>::value,
                           "Expected handler::Handler type");
             handler::HandlerFactory::instance().register_handler( name,
-                [] ( const Settings& settings, Melanobot* bot )
+                [] ( const Settings& settings, handler::HandlerContainer* parent )
                         -> std::unique_ptr<handler::Handler> {
-                    return std::make_unique<HandlerT>(settings,bot);
+                    return std::make_unique<HandlerT>(settings,parent);
             });
         }
 };

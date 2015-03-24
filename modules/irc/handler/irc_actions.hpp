@@ -32,8 +32,8 @@ namespace handler {
 class IrcJoinMessage: public ::handler::Handler
 {
 public:
-    IrcJoinMessage(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    IrcJoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         message = settings.get("message",message);
         on_self = settings.get("on_self",on_self);
@@ -75,8 +75,8 @@ private:
 class IrcKickMessage: public ::handler::Handler
 {
 public:
-    IrcKickMessage(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    IrcKickMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         message = settings.get("message",message);
         on_self = settings.get("on_self",on_self);
@@ -118,8 +118,8 @@ private:
 class IrcKickRejoin: public ::handler::Handler
 {
 public:
-    IrcKickRejoin(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    IrcKickRejoin(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {
         message = settings.get("message",message);
     }

@@ -39,8 +39,8 @@ class CtcpBase : public ::handler::Handler
 {
 public:
 
-    CtcpBase(const std::string& ctcp, const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot), ctcp(irc::strtoupper(ctcp))
+    CtcpBase(const std::string& ctcp, const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent), ctcp(irc::strtoupper(ctcp))
     {
         if ( ctcp.empty() )
             throw ConfigurationError();
@@ -92,8 +92,8 @@ class CtcpVersion: public CtcpBase
 {
 
 public:
-    CtcpVersion ( const Settings& settings, Melanobot* bot )
-        : CtcpBase("VERSION", settings, bot)
+    CtcpVersion ( const Settings& settings, ::handler::HandlerContainer* parent )
+        : CtcpBase("VERSION", settings, parent)
     {
         version = settings.get("version","");
         clientinfo = ": Shows the bot's version";
@@ -123,8 +123,8 @@ class CtcpSource: public CtcpBase
 {
 
 public:
-    CtcpSource ( const Settings& settings, Melanobot* bot )
-        : CtcpBase("SOURCE", settings, bot)
+    CtcpSource ( const Settings& settings, ::handler::HandlerContainer* parent )
+        : CtcpBase("SOURCE", settings, parent)
     {
         sources_url = settings.get("url",Settings::global_settings.get("website",""));
         clientinfo = ": Shows the bot's source URL";
@@ -149,8 +149,8 @@ class CtcpUserInfo: public CtcpBase
 {
 
 public:
-    CtcpUserInfo ( const Settings& settings, Melanobot* bot )
-        : CtcpBase(settings.get("ctcp","USERINFO"), settings, bot)
+    CtcpUserInfo ( const Settings& settings, ::handler::HandlerContainer* parent )
+        : CtcpBase(settings.get("ctcp","USERINFO"), settings, parent)
     {
         reply = settings.get("reply","");
         clientinfo = settings.get("clientinfo","");
@@ -174,8 +174,8 @@ class CtcpPing: public CtcpBase
 {
 
 public:
-    CtcpPing ( const Settings& settings, Melanobot* bot )
-        : CtcpBase("PING", settings, bot)
+    CtcpPing ( const Settings& settings, ::handler::HandlerContainer* parent )
+        : CtcpBase("PING", settings, parent)
     {
         clientinfo = "time_string : Replies the same as the input";
     }
@@ -197,8 +197,8 @@ class CtcpTime: public CtcpBase
 {
 
 public:
-    CtcpTime ( const Settings& settings, Melanobot* bot )
-        : CtcpBase("TIME", settings, bot)
+    CtcpTime ( const Settings& settings, ::handler::HandlerContainer* parent )
+        : CtcpBase("TIME", settings, parent)
     {
         format = settings.get("format","%c %Z");
         clientinfo = ": Shows local time";
@@ -228,8 +228,8 @@ class CtcpClientInfo: public CtcpBase
 {
 
 public:
-    CtcpClientInfo ( const Settings& settings, Melanobot* bot )
-        : CtcpBase("CLIENTINFO", settings, bot)
+    CtcpClientInfo ( const Settings& settings, ::handler::HandlerContainer* parent )
+        : CtcpBase("CLIENTINFO", settings, parent)
     {
         clientinfo = "[command] : Shows help on CTCP commands";
         help_group = settings.get("help_group",help_group);

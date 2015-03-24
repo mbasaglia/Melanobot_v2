@@ -31,8 +31,9 @@ namespace handler {
 class SimpleWebApi : public SimpleAction
 {
 public:
-    SimpleWebApi(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
-        : SimpleAction ( default_trigger, settings, bot )
+    SimpleWebApi(const std::string& default_trigger, const Settings& settings,
+                 handler::HandlerContainer* parent)
+        : SimpleAction(default_trigger, settings, parent)
     {
         network::require_service("web");
     }

@@ -23,8 +23,8 @@
 namespace handler {
 
 /// \todo option to copy settings from another group
-SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
-    : SimpleAction("",settings,bot)
+SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleAction("",settings,parent)
 {
     channels = settings.get("channels","");
     name = settings.get("name",trigger);
@@ -51,7 +51,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
             auto hand = handler::HandlerFactory::instance().build(
                 p.first,
                 p.second,
-                bot
+                this
             );
             if ( hand )
                 children.push_back(std::move(hand));
@@ -98,8 +98,9 @@ void SimpleGroup::populate_properties(const std::vector<std::string>& properties
 class ListInsert : public SimpleAction
 {
 public:
-    ListInsert(std::string trigger, AbstractList* parent, const Settings& settings, Melanobot* bot)
-    : SimpleAction(trigger,settings,bot), parent(parent)
+    ListInsert(std::string trigger, const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleAction(trigger,settings,parent),
+        parent(dynamic_cast<AbstractList*>(parent))
     {
         if ( !parent )
             throw ConfigurationError();
@@ -142,8 +143,9 @@ protected:
 class ListRemove : public SimpleAction
 {
 public:
-    ListRemove(std::string trigger, AbstractList* parent, const Settings& settings, Melanobot* bot)
-    : SimpleAction(trigger,settings,bot), parent(parent)
+    ListRemove(std::string trigger, const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleAction(trigger,settings,parent),
+        parent(dynamic_cast<AbstractList*>(parent))
     {
         if ( !parent )
             throw ConfigurationError();
@@ -187,8 +189,9 @@ private:
 class ListClear : public SimpleAction
 {
 public:
-    ListClear(AbstractList* parent, const Settings& settings, Melanobot* bot)
-    : SimpleAction("clear",settings,bot), parent(parent)
+    ListClear(const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleAction("clear",settings,parent),
+        parent(dynamic_cast<AbstractList*>(parent))
     {
         if ( !parent )
             throw ConfigurationError();
@@ -210,8 +213,8 @@ protected:
 };
 
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
-                           const Settings& settings, Melanobot* bot)
-    : SimpleGroup(settings, bot)
+                           const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleGroup(settings, parent)
 {
     if ( trigger.empty() )
         trigger = name = default_trigger;
@@ -228,12 +231,12 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
-    children.push_back(std::make_unique<ListInsert>("+",this,child_settings,bot));
-    children.push_back(std::make_unique<ListInsert>("add",this,child_settings,bot));
-    children.push_back(std::make_unique<ListRemove>("-",this,child_settings,bot));
-    children.push_back(std::make_unique<ListRemove>("rm",this,child_settings,bot));
+    children.push_back(std::make_unique<ListInsert>("+",child_settings,this));
+    children.push_back(std::make_unique<ListInsert>("add",child_settings,this));
+    children.push_back(std::make_unique<ListRemove>("-",child_settings,this));
+    children.push_back(std::make_unique<ListRemove>("rm",child_settings,this));
     if ( clear )
-        children.push_back(std::make_unique<ListClear>(this,child_settings,bot));
+        children.push_back(std::make_unique<ListClear>(child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)

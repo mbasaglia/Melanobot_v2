@@ -44,6 +44,11 @@ public:
     Melanobot& operator=(Melanobot&&) = delete;
     ~Melanobot();
 
+    Melanobot* melanobot() const override
+    {
+        return const_cast<Melanobot*>(this);
+    }
+
     /**
      * \brief Runs the bot
      * \thread main \lock messages(not continuous)

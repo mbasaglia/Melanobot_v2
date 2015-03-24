@@ -33,8 +33,8 @@ namespace handler {
 class AdminNick: public ::handler::SimpleAction
 {
 public:
-    AdminNick(const Settings& settings, Melanobot* bot)
-        : SimpleAction("nick",settings,bot)
+    AdminNick(const Settings& settings, ::handler::HandlerContainer* parent)
+        : SimpleAction("nick",settings,parent)
     {
         synopsis += " nickname";
         help = "Changes the bot nickname";
@@ -58,8 +58,8 @@ protected:
 class AdminJoin: public ::handler::SimpleAction
 {
 public:
-    AdminJoin(const Settings& settings, Melanobot* bot)
-        : SimpleAction("join",settings,bot)
+    AdminJoin(const Settings& settings, ::handler::HandlerContainer* parent)
+        : SimpleAction("join",settings,parent)
     {
         synopsis += " channel...";
         help = "Makes the bot join one or more channels";
@@ -86,8 +86,8 @@ protected:
 class AdminPart: public ::handler::SimpleAction
 {
 public:
-    AdminPart(const Settings& settings, Melanobot* bot)
-        : SimpleAction("part",settings,bot)
+    AdminPart(const Settings& settings, ::handler::HandlerContainer* parent)
+        : SimpleAction("part",settings,parent)
     {
         synopsis += " [channel]";
         help = "Makes the bot part a channel";
@@ -118,8 +118,8 @@ protected:
 class AcceptInvite: public ::handler::Handler
 {
 public:
-    AcceptInvite(const Settings& settings, Melanobot* bot)
-        : Handler(settings,bot)
+    AcceptInvite(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
     {}
 
 protected:
@@ -140,8 +140,8 @@ protected:
 class AdminRaw: public ::handler::SimpleAction
 {
 public:
-    AdminRaw(const Settings& settings, Melanobot* bot)
-        : SimpleAction("raw",settings,bot)
+    AdminRaw(const Settings& settings, ::handler::HandlerContainer* parent)
+        : SimpleAction("raw",settings,parent)
     {
         synopsis += " command";
         help = "Sends raw IRC commands";

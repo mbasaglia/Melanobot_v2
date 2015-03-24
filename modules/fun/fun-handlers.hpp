@@ -36,8 +36,8 @@ namespace fun {
 class Morse : public handler::SimpleAction
 {
 public:
-    Morse(const Settings& settings, Melanobot* bot)
-        : SimpleAction("morse",settings,bot)
+    Morse(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("morse",settings,parent)
     {
         synopsis += " text|morse";
         help = "Converts between ASCII and Morse code";
@@ -56,8 +56,8 @@ private:
 class ReverseText : public handler::SimpleAction
 {
 public:
-    ReverseText(const Settings& settings, Melanobot* bot)
-        : SimpleAction("reverse",settings,bot)
+    ReverseText(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("reverse",settings,parent)
     {
         synopsis += " text";
         help = "Turns ASCII upside-down";
@@ -76,8 +76,8 @@ private:
 class ChuckNorris : public handler::SimpleJson
 {
 public:
-    ChuckNorris(const Settings& settings, Melanobot* bot)
-        : SimpleJson("norris",settings,bot)
+    ChuckNorris(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("norris",settings,parent)
     {
         synopsis += " [name]";
         help = "Shows a Chuck Norris joke from http://icndb.com";
@@ -105,8 +105,8 @@ private:
 class RenderPony : public handler::SimpleAction
 {
 public:
-    RenderPony(const Settings& settings, Melanobot* bot)
-        : SimpleAction("render_pony",settings,bot)
+    RenderPony(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("render_pony",settings,parent)
     {
         synopsis += " pony";
         help = "Draws a pretty pony /)^3^(\\";
@@ -126,8 +126,8 @@ private:
 class AnswerQuestions : public handler::Handler
 {
 public:
-    AnswerQuestions(const Settings& settings, Melanobot* bot)
-        : Handler(settings, bot)
+    AnswerQuestions(const Settings& settings, handler::HandlerContainer* parent)
+        : Handler(settings, parent)
     {
         direct    = settings.get("direct",direct);
     }
@@ -169,8 +169,8 @@ private:
 class Slap : public handler::SimpleAction
 {
 public:
-    Slap(const Settings& settings, Melanobot* bot)
-        : SimpleAction("slap",settings,bot)
+    Slap(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("slap",settings,parent)
     {
         synopsis += " victim";
         help = "Slap the victim";

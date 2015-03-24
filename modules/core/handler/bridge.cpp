@@ -21,8 +21,8 @@
 
 namespace handler {
 
-Bridge::Bridge(const Settings& settings, Melanobot* bot)
-    : SimpleGroup(settings,bot)
+Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleGroup(settings,parent)
 {
 
     std::string destination_name = settings.get("destination","");
@@ -43,8 +43,8 @@ bool Bridge::on_handle(network::Message& msg)
 }
 
 
-BridgeChat::BridgeChat(const Settings& settings, Melanobot* bot)
-    : Handler(settings,bot)
+BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* parent)
+    : Handler(settings,parent)
 {
     prefix = settings.get("prefix",prefix);
 
