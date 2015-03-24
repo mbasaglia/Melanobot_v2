@@ -58,6 +58,17 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
         }
     }
 }
+void SimpleGroup::initialize()
+{
+    for ( const auto& h : children )
+        h->initialize();
+}
+
+void SimpleGroup::finalize()
+{
+    for ( const auto& h : children )
+        h->finalize();
+}
 
 bool SimpleGroup::on_handle(network::Message& msg)
 {

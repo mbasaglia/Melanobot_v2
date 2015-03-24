@@ -32,6 +32,11 @@ class Bridge : public SimpleGroup
 public:
     Bridge(const Settings& settings, handler::HandlerContainer* parent);
 
+    /**
+     * \brief Attach to the given connection
+     */
+    void attach(network::Connection* connection);
+
 protected:
     bool on_handle(network::Message& msg) override;
 
@@ -51,9 +56,26 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    std::string       prefix;
-    network::Duration timeout{network::Duration::zero()};
-    bool              ignore_self{true};
+    std::string       prefix;                            ///< Output message prefix
+    network::Duration timeout{network::Duration::zero()};///< Output message timeout
+    bool              ignore_self{true};                 ///< Ignore bot messages
+};
+
+/**
+ * \brief Attach the parent bridge to the provided connection
+ */
+class BridgeAttach : public SimpleAction
+{
+public:
+    BridgeAttach(const Settings& settings, handler::HandlerContainer* parent);
+    void initialize() override;
+
+protected:
+    bool on_handle(network::Message& msg) override;
+
+    std::string protocol;    ///< Limit only to connections with this protocol
+    bool    detach{true};    ///< Allow using this to detach the bridge
+    Bridge* parent{nullptr}; ///< Bridge object to apply the attachment to
 };
 
 } // namespace handler

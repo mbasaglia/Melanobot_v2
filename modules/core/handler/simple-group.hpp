@@ -51,6 +51,9 @@ public:
         return SimpleAction::get_property(name);
     }
 
+    void initialize() override;
+    void finalize() override;
+
 protected:
     bool on_handle(network::Message& msg) override;
 

@@ -36,12 +36,21 @@ Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
 bool Bridge::on_handle(network::Message& msg)
 {
     network::Message& targeted = msg;
-    targeted.destination = destination;
+    if ( destination )
+        targeted.destination = destination;
     if ( dst_channel )
         targeted.dst_channel = dst_channel;
     return SimpleGroup::on_handle(targeted);
 }
 
+void Bridge::attach(network::Connection* connection)
+{
+    destination = connection;
+    if ( connection )
+        Log("sys",'!',3) << "Bridge attached to "  << connection->name();
+    else
+        Log("sys",'!',3) << "Bridge detached";
+}
 
 BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* parent)
     : Handler(settings,parent)
@@ -78,5 +87,28 @@ bool BridgeChat::on_handle(network::Message& msg)
     return true;
 }
 
+BridgeAttach::BridgeAttach(const Settings& settings, handler::HandlerContainer* parent)
+    : SimpleAction("attach",settings,parent)
+{
+    protocol = settings.get("prefix",protocol);
+    detach = settings.get("prefix",detach);
+}
+
+void BridgeAttach::initialize()
+{
+    // this ensures we arent in SimpleGroup constructor when called
+    if ( !(this->parent = get_parent<Bridge>()) )
+        throw ConfigurationError{};
+}
+
+bool BridgeAttach::on_handle(network::Message& msg)
+{
+    auto conn = bot->connection(msg.message);
+    if ( conn || detach )
+        parent->attach(conn);
+    else
+        ErrorLog("sys") << "Trying to detach a bridge";
+    return true;
+}
 
 } // namespace handler

@@ -50,7 +50,8 @@ class Handler : public handler::HandlerContainer
 {
 public:
     Handler( const Settings& settings, HandlerContainer* parent )
-        : bot ( parent->melanobot() )
+        : bot ( parent->melanobot() ),
+          parent_handler(dynamic_cast<Handler*>(parent))
     {
         auth = settings.get("auth",auth);
         priority = settings.get("priority",priority);
@@ -179,17 +180,40 @@ protected:
     }
 
     /**
+     * \brief Find the parent handler with the given type
+     * \tparam HandlerT Handler type
+     *
+     * Walks up the handler tree to find a parent with the given type
+     * \return The found parent or \b nullptr if not found
+     */
+    template<class HandlerT>
+        HandlerT* get_parent() const
+        {
+            static_assert(std::is_base_of<handler::Handler,HandlerT>::value,
+                          "Expected handler::Handler type");
+            if ( !parent_handler )
+                return nullptr;
+            if ( auto p = dynamic_cast<HandlerT*>(parent_handler) )
+                return p;
+            return parent_handler->get_parent<HandlerT>();
+        }
+
+    /**
      * \brief Authorization group required for a user message to be handled
      */
     std::string auth;
     /**
      * \brief Message priority
      */
-    int priority = 0;
+    int priority{0};
     /**
      * \brief Pointer to the main bot
      */
-    Melanobot*  bot = nullptr;
+    Melanobot*  bot{nullptr};
+    /**
+     * \brief Pointer to a handler containing this one
+     */
+    Handler* parent_handler{nullptr};
 };
 
 /**
