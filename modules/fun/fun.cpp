@@ -30,5 +30,6 @@ Melanomodule melanomodule_fun()
     module.register_handler<fun::ChuckNorris>("ChuckNorris");
     module.register_handler<fun::ReverseText>("ReverseText");
     module.register_handler<fun::Morse>("Morse");
+    module.register_handler<fun::RainbowBridgeChat>("RainbowBridgeChat");
     return module;
 }

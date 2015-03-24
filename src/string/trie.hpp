@@ -478,7 +478,7 @@ private:
  * \brief Specialize for void data
  */
 template<>
-struct BasicTrie<void>::TrieNodeData
+class BasicTrie<void>::TrieNodeData
 {
 public:
     void get_data() {}

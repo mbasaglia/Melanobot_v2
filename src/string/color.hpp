@@ -19,10 +19,17 @@
 #ifndef COLOR12_HPP
 #define COLOR12_HPP
 
-#include <cctype>
 #include <cstdint>
-#include <cstdlib>
 #include <string>
+
+#include "math.hpp"
+
+#if defined(__cpp_constexpr) && __cpp_constexpr >= 201304
+#  define SUPER_CONSTEXPR constexpr
+#else
+#  define SUPER_CONSTEXPR
+#endif
+
 /**
  * \brief Namespace for color operations
  */
@@ -51,13 +58,13 @@ public:
     Color12& operator=(const Color12&) = default;
     Color12& operator=(Color12&&) = default;
 
-    Color12(BitMask mask)
+    SUPER_CONSTEXPR Color12(BitMask mask)
         : valid(true), r((mask>>4)&0xf), g((mask>>4)&0xf), b(mask&0xf) {}
 
     /**
      * \brief Creates a color from its rgb components
      */
-    Color12(Component r, Component g, Component b)
+    SUPER_CONSTEXPR Color12(Component r, Component g, Component b)
         : valid(true), r(validate(r)), g(validate(g)), b(validate(b)) {}
     /**
      * \brief Creates a color from a hex string
@@ -76,12 +83,12 @@ public:
     /**
      * \brief Whether the color is an actual color or invalid
      */
-    bool is_valid() const { return valid; }
+    SUPER_CONSTEXPR bool is_valid() const { return valid; }
 
     /**
      * \brief Get the 12 bit mask
      */
-    BitMask to_bit_mask() const
+    SUPER_CONSTEXPR BitMask to_bit_mask() const
     {
         return (r << 8) | (g << 4) | b;
     }
@@ -106,17 +113,45 @@ public:
     std::string to_html() const;
 
 
-    Component red()      const { return r; };
-    Component green()    const { return g; };
-    Component blue()     const { return b; };
-    char      hex_red()  const { return component_to_hex(r); };
-    char      hex_green()const { return component_to_hex(g); };
-    char      hex_blue() const { return component_to_hex(b); };
+    SUPER_CONSTEXPR Component red()      const { return r; };
+    SUPER_CONSTEXPR Component green()    const { return g; };
+    SUPER_CONSTEXPR Component blue()     const { return b; };
+    SUPER_CONSTEXPR char      hex_red()  const { return component_to_hex(r); };
+    SUPER_CONSTEXPR char      hex_green()const { return component_to_hex(g); };
+    SUPER_CONSTEXPR char      hex_blue() const { return component_to_hex(b); };
+
+
+    /**
+        * \brief Blend two colors together
+        * \param c1 First color
+        * \param c2 Second color
+        * \param factor Blend factor 0 => \c c1, 1 => \c c2
+        */
+    static SUPER_CONSTEXPR Color12 blend(Color12 c1, Color12 c2, double factor)
+    {
+        return Color12(math::round(c1.r*(1-factor) + c2.r*factor),
+                       math::round(c1.g*(1-factor) + c2.g*factor),
+                       math::round(c1.b*(1-factor) + c2.b*factor));
+    }
+
+    /**
+     * \brief Get a color from HSV components in [0,1]
+     */
+    static Color12 hsv(double h, double s, double v);
 
 private:
-    static Component validate(Component c) { return c > 0xf ? 0xf : c; }
-    static Component component_from_hex(char c) { return std::strtol(&c, nullptr, 16); }
-    static char component_to_hex(Component c) { return c < 0xa ? c+'0' : c-0xa+'a'; }
+    static SUPER_CONSTEXPR Component validate(Component c) { return c > 0xf ? 0xf : c; }
+    static SUPER_CONSTEXPR Component component_from_hex(char c)
+    {
+        if ( c <= '9' && c >= '0' )
+            return c - '0';
+        if ( c <= 'f' && c >= 'a' )
+            return c - 'a' + 0xa;
+        if ( c <= 'F' && c >= 'A' )
+            return c - 'A' + 0xa;
+        return 0;
+    }
+    static SUPER_CONSTEXPR char component_to_hex(Component c) { return c < 0xa ? c+'0' : c-0xa+'a'; }
 
     bool valid  = false;
     Component r = 0;

@@ -125,4 +125,42 @@ std::string Color12::to_html() const
     return std::string()+'#'+component_to_hex(r)+component_to_hex(g)+component_to_hex(b);
 }
 
+
+Color12 Color12::hsv(double h, double s, double v)
+{
+    if ( h < 0 )
+        h = 0;
+    else if ( h > 1 )
+        h = math::fractional(h);
+    s = math::bound(0,s,1);
+    v = math::bound(0,v,1);
+
+    h *= 6;
+    auto c = v*s;
+    auto m = v-c;
+
+    int h1 = std::floor(h);
+    auto f = h - h1;
+
+    auto n = v - c * f;
+    auto k = v - c * (1 - f);
+
+    v = math::round(v*0xf);
+    m = math::round(m*0xf);
+    n = math::round(n*0xf);
+    k = math::round(k*0xf);
+
+    switch (h1)
+    {
+        case 0: return Color12(v,k,m);
+        case 1: return Color12(n,v,m);
+        case 2: return Color12(m,v,k);
+        case 3: return Color12(m,n,v);
+        case 4: return Color12(k,m,v);
+        case 6:
+        case 5: return Color12(v,m,n);
+    }
+    return Color12();
+}
+
 } // namespace color

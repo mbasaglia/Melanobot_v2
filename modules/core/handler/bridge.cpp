@@ -78,4 +78,5 @@ bool BridgeChat::on_handle(network::Message& msg)
     return true;
 }
 
+
 } // namespace handler

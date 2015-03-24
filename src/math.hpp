@@ -19,6 +19,8 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+#include <algorithm>
+
 /**
  * \brief Namespace for math utilities
  */
@@ -39,6 +41,55 @@ long random(long max);
  */
 long random(long min, long max);
 
+/**
+ * \brief Get a uniform random number between 0 and 1
+ */
+double random_real();
+
+/**
+ * \brief Truncates a number
+ * \tparam Return   Return type (Must be an integral type)
+ * \tparam Argument Argument type (Must be a floating point type)
+ */
+template<class Return=int, class Argument=double>
+    constexpr Return truncate(Argument x)
+    {
+        return Return(x);
+    }
+
+/**
+ * \brief Round a number (constexpr-friendly)
+ * \tparam Return   Return type (Must be an integral type)
+ * \tparam Argument Argument type (Must be a floating point type)
+ */
+template<class Return=int, class Argument=double>
+    constexpr Return round(Argument x)
+    {
+        return truncate<Return>(x+Argument(0.5));
+    }
+
+/**
+ * \brief Get the fractional part of a floating-point number
+ * \tparam Argument Argument type (Must be a floating point type)
+ */
+template<class Argument>
+    constexpr auto fractional(Argument x)
+    {
+        return x - truncate<long long>(x);
+    }
+
+/**
+ * \brief Clamp a value inside a range
+ * \tparam Argument Argument type (Must be a floating point type)
+ * \param min Minimum allowed value
+ * \param x   Variable to be bounded
+ * \param max Maximum allowed value
+ */
+template<class Argument, class Arg2=Argument>
+    constexpr auto bound(Arg2 min, Argument x, Arg2 max)
+{
+    return x < max ?  std::max<Argument>(x,min) : max;
+}
 
 } // namespace math
 #endif // MATH_HPP

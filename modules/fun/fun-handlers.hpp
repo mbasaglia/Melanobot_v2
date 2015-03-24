@@ -24,7 +24,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "handler/handler.hpp"
+#include "core/handler/bridge.hpp"
 #include "web/web-api.hpp"
 #include "math.hpp"
 
@@ -185,6 +185,18 @@ protected:
         ));
         return true;
     }
+};
+
+/**
+ * \brief Like BridgeChat but more colorful
+ */
+class RainbowBridgeChat : public handler::BridgeChat
+{
+public:
+    using handler::BridgeChat::BridgeChat;
+
+protected:
+    bool on_handle(network::Message& msg) override;
 };
 
 } // namespace fun

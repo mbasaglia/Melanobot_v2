@@ -39,4 +39,10 @@ long random(long min, long max)
     return std::uniform_int_distribution<long>(min,max)(random_device);
 }
 
+double random_real()
+{
+    static std::uniform_real_distribution<double> dist;
+    return dist(random_device);
+}
+
 } // namespace math

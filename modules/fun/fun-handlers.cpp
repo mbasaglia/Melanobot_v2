@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "fun-handlers.hpp"
+#include "rainbow.hpp"
 
 namespace fun {
 
@@ -484,5 +485,29 @@ std::vector<std::string> AnswerQuestions::category_when_will {
     "Tomorrow",
     "42 years from now",
 };
+
+bool RainbowBridgeChat::on_handle(network::Message& msg)
+{
+    FormatterRainbow formatter(math::random_real(),0.6,1);
+
+    auto from = formatter.decode(
+        msg.source->formatter()->decode(msg.from).encode(&formatter));
+
+    auto message = formatter.decode(
+        msg.source->formatter()->decode(msg.message).encode(&formatter));
+
+    msg.destination->say(network::OutputMessage(
+        message,
+        msg.action,
+        msg.dst_channel ? *msg.dst_channel : "",
+        priority,
+        from,
+        (string::FormattedStream() << prefix).str(),
+        timeout == network::Duration::zero() ?
+            network::Time::max() :
+            network::Clock::now() + timeout
+    ));
+    return true;
+}
 
 } // namespace fun
