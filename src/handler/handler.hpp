@@ -229,8 +229,15 @@ public:
      * \throws ConfigurationError If the requirements stated above are not met
      * \todo flag saying whether there must be a space after the trigger (default true)
      */
-    SimpleAction(const std::string& default_trigger, const Settings& settings, Melanobot* bot)
-        : SimpleAction ( default_trigger, settings, bot, false ) {}
+    SimpleAction(const std::string& default_trigger, const Settings& settings,
+                 Melanobot* bot)
+        : Handler(settings,bot)
+    {
+        trigger      = settings.get("trigger",default_trigger);
+        synopsis     = trigger;
+        direct       = settings.get("direct",direct);
+        public_reply = settings.get("public",public_reply);
+    }
 
     /**
      * Checks authorization, \c direct, \c trigger and available reply channels.
@@ -299,30 +306,6 @@ protected:
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
         return channel;
-    }
-
-private:
-
-    friend class SimpleGroup;
-
-    /**
-     * \brief Sets up the trigger
-     * \param default_trigger Default value for \c trigger
-     * \param settings        Settings
-     * \param bot             Pointer to the bot instance (cannot be null)
-     * \param allow_notrigger Whether \c default_trigger can be empty
-     * \throws ConfigurationError If the requirements stated above are not met
-     */
-    SimpleAction(const std::string& default_trigger, const Settings& settings,
-                 Melanobot* bot, bool allow_notrigger)
-        : Handler(settings,bot)
-    {
-        trigger      = settings.get("trigger",default_trigger);
-        synopsis     = trigger;
-        direct       = settings.get("direct",direct);
-        public_reply = settings.get("public",public_reply);
-        if ( !allow_notrigger && trigger.empty() )
-            throw ConfigurationError();
     }
 };
 

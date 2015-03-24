@@ -24,7 +24,7 @@ namespace handler {
 
 /// \todo option to copy settings from another group
 SimpleGroup::SimpleGroup(const Settings& settings, Melanobot* bot)
-    : SimpleAction("",settings,bot,true)
+    : SimpleAction("",settings,bot)
 {
     channels = settings.get("channels","");
     name = settings.get("name",trigger);

@@ -87,9 +87,9 @@ template<class Argument>
  */
 template<class Argument, class Arg2=Argument>
     constexpr auto bound(Arg2 min, Argument x, Arg2 max)
-{
-    return x < max ?  std::max<Argument>(x,min) : max;
-}
+    {
+        return x < max ?  std::max<Argument>(x,min) : max;
+    }
 
 } // namespace math
 #endif // MATH_HPP
