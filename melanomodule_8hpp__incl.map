@@ -1,0 +1,20 @@
+<map id="src/melanomodule.hpp" name="src/melanomodule.hpp">
+<area shape="rect" id="node3" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="464,304,583,331"/>
+<area shape="rect" id="node24" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="1400,229,1560,256"/>
+<area shape="rect" id="node36" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="302,155,484,181"/>
+<area shape="rect" id="node41" href="$handler_8hpp.html" title="handler/handler.hpp" alt="" coords="768,80,903,107"/>
+<area shape="rect" id="node11" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="589,386,682,413"/>
+<area shape="rect" id="node14" href="$string_8hpp.html" title="string.hpp" alt="" coords="707,386,786,413"/>
+<area shape="rect" id="node22" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1341,543,1434,569"/>
+<area shape="rect" id="node19" href="$color_8hpp.html" title="color.hpp" alt="" coords="610,468,685,495"/>
+<area shape="rect" id="node20" href="$math_8hpp.html" title="math.hpp" alt="" coords="760,543,836,569"/>
+<area shape="rect" id="node26" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="1596,386,1771,413"/>
+<area shape="rect" id="node29" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1466,304,1616,331"/>
+<area shape="rect" id="node32" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1283,304,1442,331"/>
+<area shape="rect" id="node34" href="$network_8hpp.html" title="network.hpp" alt="" coords="1641,304,1734,331"/>
+<area shape="rect" id="node30" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1046,386,1156,413"/>
+<area shape="rect" id="node31" href="$user_8hpp.html" title="user.hpp" alt="" coords="1076,468,1148,495"/>
+<area shape="rect" id="node38" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="780,229,948,256"/>
+<area shape="rect" id="node42" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="982,155,1089,181"/>
+<area shape="rect" id="node43" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1181,229,1376,256"/>
+</map>

@@ -94,10 +94,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">math.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for math.hpp:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="math_8hpp__incl.svg" width="110" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="math_8hpp__dep__incl.svg" width="563" height="187"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="math_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -120,6 +127,25 @@ Functions</h2></td></tr>
 <tr class="memitem:aa24b03949f95989b6d9c27f750033f4c"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemath.html#aa24b03949f95989b6d9c27f750033f4c">math::random</a> (long min, long max)</td></tr>
 <tr class="memdesc:aa24b03949f95989b6d9c27f750033f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a uniform random integer between <code>min</code> and <code>max</code> (inclusive)  <a href="#aa24b03949f95989b6d9c27f750033f4c">More...</a><br /></td></tr>
 <tr class="separator:aa24b03949f95989b6d9c27f750033f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6682df0a230e6653e81c042188d2732"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemath.html#ad6682df0a230e6653e81c042188d2732">math::random_real</a> ()</td></tr>
+<tr class="memdesc:ad6682df0a230e6653e81c042188d2732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a uniform random number between 0 and 1.  <a href="#ad6682df0a230e6653e81c042188d2732">More...</a><br /></td></tr>
+<tr class="separator:ad6682df0a230e6653e81c042188d2732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad02d08bc43b510ad9795019135efa03f"><td class="memTemplParams" colspan="2">template&lt;class Return  = int, class Argument  = double&gt; </td></tr>
+<tr class="memitem:ad02d08bc43b510ad9795019135efa03f"><td class="memTemplItemLeft" align="right" valign="top">constexpr Return&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemath.html#ad02d08bc43b510ad9795019135efa03f">math::truncate</a> (Argument x)</td></tr>
+<tr class="memdesc:ad02d08bc43b510ad9795019135efa03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncates a number.  <a href="#ad02d08bc43b510ad9795019135efa03f">More...</a><br /></td></tr>
+<tr class="separator:ad02d08bc43b510ad9795019135efa03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2da0a898b3fd16c756540e53a17a9cc4"><td class="memTemplParams" colspan="2">template&lt;class Return  = int, class Argument  = double&gt; </td></tr>
+<tr class="memitem:a2da0a898b3fd16c756540e53a17a9cc4"><td class="memTemplItemLeft" align="right" valign="top">constexpr Return&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemath.html#a2da0a898b3fd16c756540e53a17a9cc4">math::round</a> (Argument x)</td></tr>
+<tr class="memdesc:a2da0a898b3fd16c756540e53a17a9cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round a number (constexpr-friendly)  <a href="#a2da0a898b3fd16c756540e53a17a9cc4">More...</a><br /></td></tr>
+<tr class="separator:a2da0a898b3fd16c756540e53a17a9cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcba0913d4e6cf2e36bdb161c8510e8e"><td class="memTemplParams" colspan="2">template&lt;class Argument &gt; </td></tr>
+<tr class="memitem:afcba0913d4e6cf2e36bdb161c8510e8e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemath.html#afcba0913d4e6cf2e36bdb161c8510e8e">math::fractional</a> (Argument x)</td></tr>
+<tr class="memdesc:afcba0913d4e6cf2e36bdb161c8510e8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the fractional part of a floating-point number.  <a href="#afcba0913d4e6cf2e36bdb161c8510e8e">More...</a><br /></td></tr>
+<tr class="separator:afcba0913d4e6cf2e36bdb161c8510e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c77352913efe6f6a1e04de9e09397bf"><td class="memTemplParams" colspan="2">template&lt;class Argument , class Arg2  = Argument&gt; </td></tr>
+<tr class="memitem:a9c77352913efe6f6a1e04de9e09397bf"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemath.html#a9c77352913efe6f6a1e04de9e09397bf">math::bound</a> (Arg2 min, Argument x, Arg2 max)</td></tr>
+<tr class="memdesc:a9c77352913efe6f6a1e04de9e09397bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp a value inside a range.  <a href="#a9c77352913efe6f6a1e04de9e09397bf">More...</a><br /></td></tr>
+<tr class="separator:a9c77352913efe6f6a1e04de9e09397bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Mattia Basaglia </dd></dl>
@@ -134,7 +160,7 @@ License</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:20:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:50:59 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

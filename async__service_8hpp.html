@@ -90,7 +90,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -105,7 +104,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for async_service.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="async__service_8hpp__incl.svg" width="100%" height="574"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="async__service_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -136,9 +136,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html">network::ServiceRegistry</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class storing the service objects.  <a href="classnetwork_1_1ServiceRegistry.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1ServiceRegistry_1_1RegisterService.html">network::ServiceRegistry::RegisterService</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy class used to auto-register services.  <a href="structnetwork_1_1ServiceRegistry_1_1RegisterService.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1ServiceRegistry_1_1Entry.html">network::ServiceRegistry::Entry</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registry entry, keeping track of loaded services.  <a href="structnetwork_1_1ServiceRegistry_1_1Entry.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,18 +146,11 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespacenetwork"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace for network operations. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:aa36753e152eb34953498aa9c40e8b8d4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="async__service_8hpp.html#aa36753e152eb34953498aa9c40e8b8d4">REGISTER_SERVICE</a>(classname, servicename)</td></tr>
-<tr class="memdesc:aa36753e152eb34953498aa9c40e8b8d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a service to ServiceRegistry.  <a href="#aa36753e152eb34953498aa9c40e8b8d4">More...</a><br /></td></tr>
-<tr class="separator:aa36753e152eb34953498aa9c40e8b8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a65b042b7c853abc20ce4d7026ccb62a3"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; void(const <br class="typebreak" />
-Response &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a65b042b7c853abc20ce4d7026ccb62a3">network::AsyncCallback</a></td></tr>
-<tr class="memdesc:a65b042b7c853abc20ce4d7026ccb62a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback used by asyncronous calls.  <a href="#a65b042b7c853abc20ce4d7026ccb62a3">More...</a><br /></td></tr>
-<tr class="separator:a65b042b7c853abc20ce4d7026ccb62a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7b222ff0fd4ee2456af0cd543390697"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#ab7b222ff0fd4ee2456af0cd543390697">network::AsyncCallback</a> = std::function&lt; void(const Response &amp;)&gt;</td></tr>
+<tr class="memdesc:ab7b222ff0fd4ee2456af0cd543390697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback used by asyncronous calls.  <a href="#ab7b222ff0fd4ee2456af0cd543390697">More...</a><br /></td></tr>
+<tr class="separator:ab7b222ff0fd4ee2456af0cd543390697"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -181,51 +171,10 @@ License</h1>
 <p>You should have received a copy of the GNU Affero General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. </p>
 
 <p>Definition in file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="aa36753e152eb34953498aa9c40e8b8d4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define REGISTER_SERVICE</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">classname, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">servicename&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> network::ServiceRegistry::RegisterService \</div>
-<div class="line">        RegisterService_##servicename(#servicename,&amp;classname::instance())</div>
-</div><!-- fragment -->
-<p>Register a service to ServiceRegistry. </p>
-<dl class="section pre"><dt>Precondition</dt><dd><code>classname</code> is a singleton with a static method called <code>instance()</code> </dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">classname</td><td>Name of the service class </td></tr>
-    <tr><td class="paramname">servicename</td><td>Service identifier as a C++ token </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00298">298</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:20:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:50:59 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

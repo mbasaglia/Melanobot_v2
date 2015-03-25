@@ -112,37 +112,93 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">ifndef</span> <span class="preprocessor">MATH_HPP</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">define</span> <span class="preprocessor">MATH_HPP</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> * \brief Namespace for math utilities</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace</span> <a class="code" href="namespacemath.html">math</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"> * \brief Get a uniform random integer</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">long</span> <a class="code" href="namespacemath.html#a30a8ba6624e1fd6a37481a24e35e5299">random</a>();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> * \brief Get a uniform random integer between 0 and \c max (inclusive)</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">long</span> <a class="code" href="namespacemath.html#a5ab5c4d180ab76da0b288c48e64715e9">random</a>(<span class="keywordtype">long</span> max);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> * \brief Get a uniform random integer between \c min and \c max (inclusive)</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">long</span> <a class="code" href="namespacemath.html#aa24b03949f95989b6d9c27f750033f4c">random</a>(<span class="keywordtype">long</span> min, <span class="keywordtype">long</span> max);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;} <span class="comment">// namespace math</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">endif</span> <span class="comment">// MATH_HPP</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">algorithm</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * \brief Namespace for math utilities</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="namespacemath.html">   27</a></span>&#160;<span class="keyword">namespace</span> <a class="code" href="namespacemath.html">math</a> {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * \brief Get a uniform random integer</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">long</span> <a class="code" href="namespacemath.html#a30a8ba6624e1fd6a37481a24e35e5299">random</a>();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> * \brief Get a uniform random integer between 0 and \c max (inclusive)</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">long</span> <a class="code" href="namespacemath.html#a5ab5c4d180ab76da0b288c48e64715e9">random</a>(<span class="keywordtype">long</span> max);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment"> * \brief Get a uniform random integer between \c min and \c max (inclusive)</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">long</span> <a class="code" href="namespacemath.html#aa24b03949f95989b6d9c27f750033f4c">random</a>(<span class="keywordtype">long</span> min, <span class="keywordtype">long</span> max);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment"> * \brief Get a uniform random number between 0 and 1</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespacemath.html#ad6682df0a230e6653e81c042188d2732">random_real</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"> * \brief Truncates a number</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment"> * \tparam Return   Return type (Must be an integral type)</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment"> * \tparam Argument Argument type (Must be a floating point type)</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Return=<span class="keywordtype">int</span>, <span class="keyword">class</span> Argument=<span class="keywordtype">double</span>&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="namespacemath.html#ad02d08bc43b510ad9795019135efa03f">   55</a></span>&#160;    <span class="keyword">constexpr</span> Return <a class="code" href="namespacemath.html#ad02d08bc43b510ad9795019135efa03f">truncate</a>(Argument x)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">return</span> Return(x);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment"> * \brief Round a number (constexpr-friendly)</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> * \tparam Return   Return type (Must be an integral type)</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> * \tparam Argument Argument type (Must be a floating point type)</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Return=<span class="keywordtype">int</span>, <span class="keyword">class</span> Argument=<span class="keywordtype">double</span>&gt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="namespacemath.html#a2da0a898b3fd16c756540e53a17a9cc4">   66</a></span>&#160;    <span class="keyword">constexpr</span> Return <a class="code" href="namespacemath.html#a2da0a898b3fd16c756540e53a17a9cc4">round</a>(Argument x)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> truncate&lt;Return&gt;(x+Argument(0.5));</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"> * \brief Get the fractional part of a floating-point number</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment"> * \tparam Argument Argument type (Must be a floating point type)</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Argument&gt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="namespacemath.html#afcba0913d4e6cf2e36bdb161c8510e8e">   76</a></span>&#160;    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code" href="namespacemath.html#afcba0913d4e6cf2e36bdb161c8510e8e">fractional</a>(Argument x)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span> x - truncate&lt;<span class="keywordtype">long</span> <span class="keywordtype">long</span>&gt;(x);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"> * \brief Clamp a value inside a range</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"> * \tparam Argument Argument type (Must be a floating point type)</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment"> * \param min Minimum allowed value</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment"> * \param x   Variable to be bounded</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment"> * \param max Maximum allowed value</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> Argument, <span class="keyword">class</span> Arg2=Argument&gt;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="namespacemath.html#a9c77352913efe6f6a1e04de9e09397bf">   89</a></span>&#160;    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code" href="namespacemath.html#a9c77352913efe6f6a1e04de9e09397bf">bound</a>(Arg2 min, Argument x, Arg2 max)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">return</span> x &lt; max ?  std::max&lt;Argument&gt;(x,min) : max;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;} <span class="comment">// namespace math</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">endif</span> <span class="comment">// MATH_HPP</span></div>
 <div class="ttc" id="namespacemath_html_aa24b03949f95989b6d9c27f750033f4c"><div class="ttname"><a href="namespacemath.html#aa24b03949f95989b6d9c27f750033f4c">math::random</a></div><div class="ttdeci">long random(long min, long max)</div><div class="ttdoc">Get a uniform random integer between min and max (inclusive) </div><div class="ttdef"><b>Definition:</b> <a href="math_8cpp_source.html#l00037">math.cpp:37</a></div></div>
+<div class="ttc" id="namespacemath_html_afcba0913d4e6cf2e36bdb161c8510e8e"><div class="ttname"><a href="namespacemath.html#afcba0913d4e6cf2e36bdb161c8510e8e">math::fractional</a></div><div class="ttdeci">constexpr auto fractional(Argument x)</div><div class="ttdoc">Get the fractional part of a floating-point number. </div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00076">math.hpp:76</a></div></div>
 <div class="ttc" id="namespacemath_html_a30a8ba6624e1fd6a37481a24e35e5299"><div class="ttname"><a href="namespacemath.html#a30a8ba6624e1fd6a37481a24e35e5299">math::random</a></div><div class="ttdeci">long random()</div><div class="ttdoc">Get a uniform random integer. </div><div class="ttdef"><b>Definition:</b> <a href="math_8cpp_source.html#l00027">math.cpp:27</a></div></div>
-<div class="ttc" id="namespacemath_html"><div class="ttname"><a href="namespacemath.html">math</a></div><div class="ttdoc">Namespace for math utilities. </div><div class="ttdef"><b>Definition:</b> <a href="math_8cpp_source.html#l00023">math.cpp:23</a></div></div>
+<div class="ttc" id="namespacemath_html"><div class="ttname"><a href="namespacemath.html">math</a></div><div class="ttdoc">Namespace for math utilities. </div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00027">math.hpp:27</a></div></div>
 <div class="ttc" id="namespacemath_html_a5ab5c4d180ab76da0b288c48e64715e9"><div class="ttname"><a href="namespacemath.html#a5ab5c4d180ab76da0b288c48e64715e9">math::random</a></div><div class="ttdeci">long random(long max)</div><div class="ttdoc">Get a uniform random integer between 0 and max (inclusive) </div><div class="ttdef"><b>Definition:</b> <a href="math_8cpp_source.html#l00032">math.cpp:32</a></div></div>
+<div class="ttc" id="namespacemath_html_a9c77352913efe6f6a1e04de9e09397bf"><div class="ttname"><a href="namespacemath.html#a9c77352913efe6f6a1e04de9e09397bf">math::bound</a></div><div class="ttdeci">constexpr auto bound(Arg2 min, Argument x, Arg2 max)</div><div class="ttdoc">Clamp a value inside a range. </div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00089">math.hpp:89</a></div></div>
+<div class="ttc" id="namespacemath_html_a2da0a898b3fd16c756540e53a17a9cc4"><div class="ttname"><a href="namespacemath.html#a2da0a898b3fd16c756540e53a17a9cc4">math::round</a></div><div class="ttdeci">constexpr Return round(Argument x)</div><div class="ttdoc">Round a number (constexpr-friendly) </div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00066">math.hpp:66</a></div></div>
+<div class="ttc" id="namespacemath_html_ad02d08bc43b510ad9795019135efa03f"><div class="ttname"><a href="namespacemath.html#ad02d08bc43b510ad9795019135efa03f">math::truncate</a></div><div class="ttdeci">constexpr Return truncate(Argument x)</div><div class="ttdoc">Truncates a number. </div><div class="ttdef"><b>Definition:</b> <a href="math_8hpp_source.html#l00055">math.hpp:55</a></div></div>
+<div class="ttc" id="namespacemath_html_ad6682df0a230e6653e81c042188d2732"><div class="ttname"><a href="namespacemath.html#ad6682df0a230e6653e81c042188d2732">math::random_real</a></div><div class="ttdeci">double random_real()</div><div class="ttdoc">Get a uniform random number between 0 and 1. </div><div class="ttdef"><b>Definition:</b> <a href="math_8cpp_source.html#l00042">math.cpp:42</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:19:44 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:50:05 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

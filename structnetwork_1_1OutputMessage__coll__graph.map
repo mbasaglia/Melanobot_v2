@@ -1,3 +1,4 @@
 <map id="network::OutputMessage" name="network::OutputMessage">
-<area shape="rect" id="node2" href="$classstring_1_1FormattedString.html" title="A formatted string. " alt="" coords="12,5,167,32"/>
+<area shape="rect" id="node2" href="$classstring_1_1FormattedString.html" title="A formatted string. " alt="" coords="12,95,167,121"/>
+<area shape="rect" id="node3" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="30,5,149,32"/>
 </map>

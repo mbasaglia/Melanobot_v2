@@ -1,6 +1,7 @@
 <map id="src/string/logger.hpp" name="src/string/logger.hpp">
 <area shape="rect" id="node9" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="229,87,323,114"/>
-<area shape="rect" id="node12" href="$string_8hpp.html" title="string.hpp" alt="" coords="745,87,823,114"/>
-<area shape="rect" id="node21" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1271,87,1364,114"/>
-<area shape="rect" id="node18" href="$color_8hpp.html" title="color.hpp" alt="" coords="821,177,896,203"/>
+<area shape="rect" id="node12" href="$string_8hpp.html" title="string.hpp" alt="" coords="633,87,711,114"/>
+<area shape="rect" id="node20" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1095,87,1188,114"/>
+<area shape="rect" id="node17" href="$color_8hpp.html" title="color.hpp" alt="" coords="552,177,627,203"/>
+<area shape="rect" id="node18" href="$math_8hpp.html" title="math.hpp" alt="" coords="558,259,634,285"/>
 </map>

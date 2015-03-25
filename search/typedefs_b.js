@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['value_5ftype',['value_type',['../classstring_1_1FormattedString.html#a7bad6b8dbbe0fd5511afdca2b7fc3ec9',1,'string::FormattedString::value_type()'],['../classConcurrentContainer.html#acbaecf9e5d8afcaf6ecb122aaa99d5e8',1,'ConcurrentContainer::value_type()']]]
+  ['time',['Time',['../namespacenetwork.html#ae8371761df5f318774fd8a1e9549ca53',1,'network']]],
+  ['trie',['Trie',['../namespacestring.html#ae7941d8c5715c29bd0c848c286b3ef56',1,'string']]]
 ];

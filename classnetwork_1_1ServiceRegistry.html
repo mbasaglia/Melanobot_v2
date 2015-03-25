@@ -111,12 +111,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1ServiceRegistry_1_1Entry.html">Entry</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registry entry, keeping track of loaded services.  <a href="structnetwork_1_1ServiceRegistry_1_1Entry.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1ServiceRegistry_1_1RegisterService.html">RegisterService</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy class used to auto-register services.  <a href="structnetwork_1_1ServiceRegistry_1_1RegisterService.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a5c7100a910f48b3e4f6edd328450fd5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html#a5c7100a910f48b3e4f6edd328450fd5a">register_service</a> (const std::string &amp;name, <a class="el" href="classnetwork_1_1AsyncService.html">AsyncService</a> *object)</td></tr>
+<tr class="memdesc:a5c7100a910f48b3e4f6edd328450fd5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a service object.  <a href="#a5c7100a910f48b3e4f6edd328450fd5a">More...</a><br /></td></tr>
+<tr class="separator:a5c7100a910f48b3e4f6edd328450fd5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ad3c3cf8cfaed57707f68bf9ac02748"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html#a1ad3c3cf8cfaed57707f68bf9ac02748">initialize</a> (const <a class="el" href="classSettings.html">Settings</a> &amp;settings)</td></tr>
 <tr class="memdesc:a1ad3c3cf8cfaed57707f68bf9ac02748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the service settings.  <a href="#a1ad3c3cf8cfaed57707f68bf9ac02748">More...</a><br /></td></tr>
 <tr class="separator:a1ad3c3cf8cfaed57707f68bf9ac02748"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +141,12 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a441837eb4baceaa10a469fe0e71bbece"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5079a0c2705df9b48686c036894bf02"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html#ae5079a0c2705df9b48686c036894bf02">ServiceRegistry</a> (const <a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;)=delete</td></tr>
 <tr class="separator:ae5079a0c2705df9b48686c036894bf02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88583dffbdd8866dd570676a972358fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html#a88583dffbdd8866dd570676a972358fd">ServiceRegistry</a> (<a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:a88583dffbdd8866dd570676a972358fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08ebe70f139f123ef83ef9c226acc500"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html#a08ebe70f139f123ef83ef9c226acc500">operator=</a> (const <a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;)=delete</td></tr>
+<tr class="separator:a08ebe70f139f123ef83ef9c226acc500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbdf8332a5d10750b5e2215f9923e6e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ServiceRegistry.html#acbdf8332a5d10750b5e2215f9923e6e7">operator=</a> (<a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:acbdf8332a5d10750b5e2215f9923e6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -150,9 +156,8 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class storing the service objects. </p>
-<dl class="section note"><dt>Note</dt><dd>It is assumed that the registered objects will clean up after themselves </dd></dl>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00192">192</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00195">195</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a441837eb4baceaa10a469fe0e71bbece"></a>
 <div class="memitem">
@@ -175,9 +180,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00289">289</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00291">291</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00200">network::ServiceRegistry::RegisterService::RegisterService()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00203">register_service()</a>.</p>
 
 </div>
 </div>
@@ -192,6 +197,30 @@ Private Attributes</h2></td></tr>
           <td class="memname">network::ServiceRegistry::ServiceRegistry </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a88583dffbdd8866dd570676a972358fd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">network::ServiceRegistry::ServiceRegistry </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -230,9 +259,9 @@ Private Attributes</h2></td></tr>
 
 <p>Loads the service settings. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00218">218</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00220">220</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00025">main()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>.</p>
 
 </div>
 </div>
@@ -257,9 +286,98 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00209">209</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00211">211</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00025">main()</a>, <a class="el" href="async__service_8hpp_source.html#l00200">network::ServiceRegistry::RegisterService::RegisterService()</a>, <a class="el" href="async__service_8hpp_source.html#l00314">network::require_service()</a>, and <a class="el" href="async__service_8hpp_source.html#l00305">network::service()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>, <a class="el" href="melanomodule_8hpp_source.html#l00084">Melanomodule::register_service()</a>, <a class="el" href="async__service_8hpp_source.html#l00203">register_service()</a>, <a class="el" href="async__service_8hpp_source.html#l00310">network::require_service()</a>, and <a class="el" href="async__service_8hpp_source.html#l00301">network::service()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a08ebe70f139f123ef83ef9c226acc500"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a>&amp; network::ServiceRegistry::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="acbdf8332a5d10750b5e2215f9923e6e7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a>&amp; network::ServiceRegistry::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classnetwork_1_1ServiceRegistry.html">ServiceRegistry</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5c7100a910f48b3e4f6edd328450fd5a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void network::ServiceRegistry::register_service </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classnetwork_1_1AsyncService.html">AsyncService</a> *&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Registers a service object. </p>
+<dl class="section note"><dt>Note</dt><dd>It is assumed that the registered objects will clean up after themselves </dd></dl>
+
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00203">203</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="melanomodule_8hpp_source.html#l00084">Melanomodule::register_service()</a>.</p>
 
 </div>
 </div>
@@ -287,9 +405,9 @@ Private Attributes</h2></td></tr>
 
 <p>Get service by name. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00259">259</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00261">261</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00314">network::require_service()</a>, and <a class="el" href="async__service_8hpp_source.html#l00305">network::service()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00310">network::require_service()</a>, and <a class="el" href="async__service_8hpp_source.html#l00301">network::service()</a>.</p>
 
 </div>
 </div>
@@ -316,9 +434,9 @@ Private Attributes</h2></td></tr>
 
 <p>Starts all services. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00239">239</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00241">241</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00025">main()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>.</p>
 
 </div>
 </div>
@@ -345,9 +463,9 @@ Private Attributes</h2></td></tr>
 
 <p>Stops all services. </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00249">249</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00251">251</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00025">main()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>.</p>
 
 </div>
 </div>
@@ -370,9 +488,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00287">287</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00289">289</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00218">initialize()</a>, <a class="el" href="async__service_8hpp_source.html#l00200">network::ServiceRegistry::RegisterService::RegisterService()</a>, and <a class="el" href="async__service_8hpp_source.html#l00259">service()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00220">initialize()</a>, <a class="el" href="async__service_8hpp_source.html#l00203">register_service()</a>, and <a class="el" href="async__service_8hpp_source.html#l00261">service()</a>.</p>
 
 </div>
 </div>
@@ -382,7 +500,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:20:34 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:51:01 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

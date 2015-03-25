@@ -108,29 +108,37 @@ Collaboration diagram for ConcurrentContainer&lt; Container &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a25665d273a8bd64c84d61cd83cee218e"><td class="memItemLeft" align="right" valign="top">typedef Container&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a25665d273a8bd64c84d61cd83cee218e">container_type</a></td></tr>
-<tr class="separator:a25665d273a8bd64c84d61cd83cee218e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbaecf9e5d8afcaf6ecb122aaa99d5e8"><td class="memItemLeft" align="right" valign="top">typedef Container::value_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#acbaecf9e5d8afcaf6ecb122aaa99d5e8">value_type</a></td></tr>
-<tr class="separator:acbaecf9e5d8afcaf6ecb122aaa99d5e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16db53947f94143ae3bf0967d72280dd"><td class="memItemLeft" align="right" valign="top">typedef Container::reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a16db53947f94143ae3bf0967d72280dd">reference</a></td></tr>
-<tr class="separator:a16db53947f94143ae3bf0967d72280dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad24083752fce87ff63b9de8a729fedb9"><td class="memItemLeft" align="right" valign="top">typedef Container::const_reference&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a></td></tr>
-<tr class="separator:ad24083752fce87ff63b9de8a729fedb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0954c29dcf9e504cc3f989383afbfa87"><td class="memItemLeft" align="right" valign="top">typedef void(Container::*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a0954c29dcf9e504cc3f989383afbfa87">method_push</a> )(<a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a>)</td></tr>
-<tr class="separator:a0954c29dcf9e504cc3f989383afbfa87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cee4e33cca879c6722f9d80ec34d545"><td class="memItemLeft" align="right" valign="top">typedef void(Container::*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a4cee4e33cca879c6722f9d80ec34d545">method_pop</a> )()</td></tr>
-<tr class="separator:a4cee4e33cca879c6722f9d80ec34d545"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebd629ca77cd946d84b017bead73cacb"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a>(Container::*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#aebd629ca77cd946d84b017bead73cacb">method_get</a> )() const </td></tr>
-<tr class="separator:aebd629ca77cd946d84b017bead73cacb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95c2c9512d12f31511ac6f497ba2c29c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a95c2c9512d12f31511ac6f497ba2c29c">container_type</a> = Container</td></tr>
+<tr class="separator:a95c2c9512d12f31511ac6f497ba2c29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab0702ceba1cae2fa6d73692a1a49d07"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#aab0702ceba1cae2fa6d73692a1a49d07">value_type</a> = typename Container::value_type</td></tr>
+<tr class="separator:aab0702ceba1cae2fa6d73692a1a49d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0d1a0af1cca3802ed9daf641d461de9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#aa0d1a0af1cca3802ed9daf641d461de9">reference</a> = typename Container::reference</td></tr>
+<tr class="separator:aa0d1a0af1cca3802ed9daf641d461de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d8a8030f9f5374b79185384e9412653"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a> = typename Container::const_reference</td></tr>
+<tr class="separator:a4d8a8030f9f5374b79185384e9412653"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0344bc4f8bbb70acd3ed131973b7d32b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a0344bc4f8bbb70acd3ed131973b7d32b">method_push</a> = void(Container::*)(<a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a>)</td></tr>
+<tr class="separator:a0344bc4f8bbb70acd3ed131973b7d32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22f6745f83537ab89437f7a078d29c39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a22f6745f83537ab89437f7a078d29c39">method_pop</a> ) = void(Container::*)(</td></tr>
+<tr class="separator:a22f6745f83537ab89437f7a078d29c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad31b0ecdc362541255d4c50ef400a590"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ad31b0ecdc362541255d4c50ef400a590">method_get</a> = <a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a>(Container::*)() const</td></tr>
+<tr class="separator:ad31b0ecdc362541255d4c50ef400a590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae357607fb2a0e91ead16a4ec02f713cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ae357607fb2a0e91ead16a4ec02f713cb">ConcurrentContainer</a> (<a class="el" href="classConcurrentContainer.html#a0954c29dcf9e504cc3f989383afbfa87">method_push</a> <a class="el" href="classConcurrentContainer.html#a9572b32e963133ca9903910657f02d7e">container_push</a>, <a class="el" href="classConcurrentContainer.html#a4cee4e33cca879c6722f9d80ec34d545">method_pop</a> <a class="el" href="classConcurrentContainer.html#aaa0d65da4116be9c255ae0390076f3b0">container_pop</a>, <a class="el" href="classConcurrentContainer.html#aebd629ca77cd946d84b017bead73cacb">method_get</a> <a class="el" href="classConcurrentContainer.html#ad0f75d4677a50f2007ff0dcb76470646">container_get</a>)</td></tr>
+<tr class="memitem:ae357607fb2a0e91ead16a4ec02f713cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ae357607fb2a0e91ead16a4ec02f713cb">ConcurrentContainer</a> (<a class="el" href="classConcurrentContainer.html#a0344bc4f8bbb70acd3ed131973b7d32b">method_push</a> <a class="el" href="classConcurrentContainer.html#a9572b32e963133ca9903910657f02d7e">container_push</a>, <a class="el" href="classConcurrentContainer.html#a22f6745f83537ab89437f7a078d29c39">method_pop</a> <a class="el" href="classConcurrentContainer.html#aaa0d65da4116be9c255ae0390076f3b0">container_pop</a>, <a class="el" href="classConcurrentContainer.html#ad31b0ecdc362541255d4c50ef400a590">method_get</a> <a class="el" href="classConcurrentContainer.html#ad0f75d4677a50f2007ff0dcb76470646">container_get</a>)</td></tr>
 <tr class="separator:ae357607fb2a0e91ead16a4ec02f713cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ef8523c2c0c16b2fcb36925904d2b64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a5ef8523c2c0c16b2fcb36925904d2b64">push</a> (<a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a> item)</td></tr>
+<tr class="memitem:aa38c26d15bba841ddd4396e70cffad08"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#aa38c26d15bba841ddd4396e70cffad08">ConcurrentContainer</a> (const <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> &amp;)=delete</td></tr>
+<tr class="separator:aa38c26d15bba841ddd4396e70cffad08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af57fbc9f3c8739a8b0cbe4e3133700ff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#af57fbc9f3c8739a8b0cbe4e3133700ff">ConcurrentContainer</a> (<a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:af57fbc9f3c8739a8b0cbe4e3133700ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58c010d8f83c27c8ee92fbefed10dd48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a58c010d8f83c27c8ee92fbefed10dd48">operator=</a> (const <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> &amp;)=delete</td></tr>
+<tr class="separator:a58c010d8f83c27c8ee92fbefed10dd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4e430d2f337f71dc6935c91ab6b215e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ad4e430d2f337f71dc6935c91ab6b215e">operator=</a> (<a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:ad4e430d2f337f71dc6935c91ab6b215e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ef8523c2c0c16b2fcb36925904d2b64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a5ef8523c2c0c16b2fcb36925904d2b64">push</a> (<a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a> item)</td></tr>
 <tr class="memdesc:a5ef8523c2c0c16b2fcb36925904d2b64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an element to the container.  <a href="#a5ef8523c2c0c16b2fcb36925904d2b64">More...</a><br /></td></tr>
 <tr class="separator:a5ef8523c2c0c16b2fcb36925904d2b64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5afc648554ebfde28864414b78b3363d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a5afc648554ebfde28864414b78b3363d">pop</a> (<a class="el" href="classConcurrentContainer.html#a16db53947f94143ae3bf0967d72280dd">reference</a> item)</td></tr>
+<tr class="memitem:a5afc648554ebfde28864414b78b3363d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a5afc648554ebfde28864414b78b3363d">pop</a> (<a class="el" href="classConcurrentContainer.html#aa0d1a0af1cca3802ed9daf641d461de9">reference</a> item)</td></tr>
 <tr class="memdesc:a5afc648554ebfde28864414b78b3363d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve an element from the container.  <a href="#a5afc648554ebfde28864414b78b3363d">More...</a><br /></td></tr>
 <tr class="separator:a5afc648554ebfde28864414b78b3363d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acde322ea4bc6a0f703291f024e30b2bf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#acde322ea4bc6a0f703291f024e30b2bf">active</a> () const </td></tr>
@@ -153,11 +161,11 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a9572b32e963133ca9903910657f02d7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html#a0954c29dcf9e504cc3f989383afbfa87">method_push</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a9572b32e963133ca9903910657f02d7e">container_push</a></td></tr>
+<tr class="memitem:a9572b32e963133ca9903910657f02d7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html#a0344bc4f8bbb70acd3ed131973b7d32b">method_push</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a9572b32e963133ca9903910657f02d7e">container_push</a></td></tr>
 <tr class="separator:a9572b32e963133ca9903910657f02d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa0d65da4116be9c255ae0390076f3b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html#a4cee4e33cca879c6722f9d80ec34d545">method_pop</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#aaa0d65da4116be9c255ae0390076f3b0">container_pop</a></td></tr>
+<tr class="memitem:aaa0d65da4116be9c255ae0390076f3b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html#a22f6745f83537ab89437f7a078d29c39">method_pop</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#aaa0d65da4116be9c255ae0390076f3b0">container_pop</a></td></tr>
 <tr class="separator:aaa0d65da4116be9c255ae0390076f3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0f75d4677a50f2007ff0dcb76470646"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html#aebd629ca77cd946d84b017bead73cacb">method_get</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ad0f75d4677a50f2007ff0dcb76470646">container_get</a></td></tr>
+<tr class="memitem:ad0f75d4677a50f2007ff0dcb76470646"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConcurrentContainer.html#ad31b0ecdc362541255d4c50ef400a590">method_get</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#ad0f75d4677a50f2007ff0dcb76470646">container_get</a></td></tr>
 <tr class="separator:ad0f75d4677a50f2007ff0dcb76470646"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71f60ddbb88a5d308194c6ab532b9cc0"><td class="memItemLeft" align="right" valign="top">Container&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConcurrentContainer.html#a71f60ddbb88a5d308194c6ab532b9cc0">container</a></td></tr>
 <tr class="separator:a71f60ddbb88a5d308194c6ab532b9cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,14 +185,14 @@ class ConcurrentContainer&lt; Container &gt;</h3>
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00035">35</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a class="anchor" id="ad24083752fce87ff63b9de8a729fedb9"></a>
+<a class="anchor" id="a4d8a8030f9f5374b79185384e9412653"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef Container::const_reference <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a></td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a> =  typename Container::const_reference</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -193,14 +201,14 @@ template&lt;class Container&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a25665d273a8bd64c84d61cd83cee218e"></a>
+<a class="anchor" id="a95c2c9512d12f31511ac6f497ba2c29c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef Container <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#a25665d273a8bd64c84d61cd83cee218e">container_type</a></td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#a95c2c9512d12f31511ac6f497ba2c29c">container_type</a> =  Container</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -209,14 +217,14 @@ template&lt;class Container&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aebd629ca77cd946d84b017bead73cacb"></a>
+<a class="anchor" id="ad31b0ecdc362541255d4c50ef400a590"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a>(Container::* <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::method_get)() const </td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#ad31b0ecdc362541255d4c50ef400a590">method_get</a> =  <a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a>(Container::*)() const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -225,14 +233,14 @@ template&lt;class Container&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a4cee4e33cca879c6722f9d80ec34d545"></a>
+<a class="anchor" id="a22f6745f83537ab89437f7a078d29c39"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(Container::* <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::method_pop)()</td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::method_pop =  void(Container::*)(</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -241,14 +249,14 @@ template&lt;class Container&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a0954c29dcf9e504cc3f989383afbfa87"></a>
+<a class="anchor" id="a0344bc4f8bbb70acd3ed131973b7d32b"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(Container::* <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::method_push)(<a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a>)</td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#a0344bc4f8bbb70acd3ed131973b7d32b">method_push</a> =  void(Container::*)(<a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -257,14 +265,14 @@ template&lt;class Container&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a16db53947f94143ae3bf0967d72280dd"></a>
+<a class="anchor" id="aa0d1a0af1cca3802ed9daf641d461de9"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef Container::reference <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#a16db53947f94143ae3bf0967d72280dd">reference</a></td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#aa0d1a0af1cca3802ed9daf641d461de9">reference</a> =  typename Container::reference</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -273,14 +281,14 @@ template&lt;class Container&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="acbaecf9e5d8afcaf6ecb122aaa99d5e8"></a>
+<a class="anchor" id="aab0702ceba1cae2fa6d73692a1a49d07"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Container&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef Container::value_type <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#acbaecf9e5d8afcaf6ecb122aaa99d5e8">value_type</a></td>
+          <td class="memname">using <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html#aab0702ceba1cae2fa6d73692a1a49d07">value_type</a> =  typename Container::value_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -302,19 +310,19 @@ template&lt;class Container&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#a0954c29dcf9e504cc3f989383afbfa87">method_push</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#a0344bc4f8bbb70acd3ed131973b7d32b">method_push</a>&#160;</td>
           <td class="paramname"><em>container_push</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#a4cee4e33cca879c6722f9d80ec34d545">method_pop</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#a22f6745f83537ab89437f7a078d29c39">method_pop</a>&#160;</td>
           <td class="paramname"><em>container_pop</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#aebd629ca77cd946d84b017bead73cacb">method_get</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#ad31b0ecdc362541255d4c50ef400a590">method_get</a>&#160;</td>
           <td class="paramname"><em>container_get</em>&#160;</td>
         </tr>
         <tr>
@@ -331,6 +339,58 @@ template&lt;class Container&gt; </div>
 </div><div class="memdoc">
 
 <p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00046">46</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa38c26d15bba841ddd4396e70cffad08"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt; &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af57fbc9f3c8739a8b0cbe4e3133700ff"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::<a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -360,9 +420,9 @@ template&lt;class Container&gt; </div>
 
 <p>Whether the container is allowed to process data. </p>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00085">85</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00089">89</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, and <a class="el" href="async__service_8hpp_source.html#l00175">network::ThreadedAsyncService::run()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, and <a class="el" href="async__service_8hpp_source.html#l00179">network::ThreadedAsyncService::run()</a>.</p>
 
 </div>
 </div>
@@ -391,7 +451,59 @@ template&lt;class Container&gt; </div>
 
 <p>Returns a reference to the container without any locks. </p>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00110">110</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00114">114</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a58c010d8f83c27c8ee92fbefed10dd48"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&amp; <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt; &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad4e430d2f337f71dc6935c91ab6b215e"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&amp; <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -407,7 +519,7 @@ template&lt;class Container&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::pop </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#a16db53947f94143ae3bf0967d72280dd">reference</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#aa0d1a0af1cca3802ed9daf641d461de9">reference</a>&#160;</td>
           <td class="paramname"><em>item</em></td><td>)</td>
           <td></td>
         </tr>
@@ -422,9 +534,9 @@ template&lt;class Container&gt; </div>
 <p>Retrieve an element from the container. </p>
 <p>Waits until there are elements to get or <a class="el" href="classConcurrentContainer.html#acde322ea4bc6a0f703291f024e30b2bf" title="Whether the container is allowed to process data. ">active()</a> is false </p>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00072">72</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00076">76</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, and <a class="el" href="async__service_8hpp_source.html#l00175">network::ThreadedAsyncService::run()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00064">Melanobot::run()</a>, and <a class="el" href="async__service_8hpp_source.html#l00179">network::ThreadedAsyncService::run()</a>.</p>
 
 </div>
 </div>
@@ -440,7 +552,7 @@ template&lt;class Container&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::push </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#ad24083752fce87ff63b9de8a729fedb9">const_reference</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classConcurrentContainer.html#a4d8a8030f9f5374b79185384e9412653">const_reference</a>&#160;</td>
           <td class="paramname"><em>item</em></td><td>)</td>
           <td></td>
         </tr>
@@ -456,9 +568,9 @@ template&lt;class Container&gt; </div>
 <p>Acquires a lock, inserts the item and notifies the consumer.</p>
 <p>If <a class="el" href="classConcurrentContainer.html#acde322ea4bc6a0f703291f024e30b2bf" title="Whether the container is allowed to process data. ">active()</a> is not true, it will discard any input </p>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00059">59</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00063">63</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00157">network::ThreadedAsyncService::async_query()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00099">Melanobot::message()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00161">network::ThreadedAsyncService::async_query()</a>, and <a class="el" href="melanobot_8cpp_source.html#l00099">Melanobot::message()</a>.</p>
 
 </div>
 </div>
@@ -489,9 +601,9 @@ template&lt;class Container&gt; </div>
 <dl class="section note"><dt>Note</dt><dd>This is the state after construction </dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd><a class="el" href="classConcurrentContainer.html#acde322ea4bc6a0f703291f024e30b2bf" title="Whether the container is allowed to process data. ">active()</a> is true </dd></dl>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00092">92</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00096">96</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00143">network::ThreadedAsyncService::start()</a>.</p>
+<p>Referenced by <a class="el" href="async__service_8hpp_source.html#l00147">network::ThreadedAsyncService::start()</a>.</p>
 
 </div>
 </div>
@@ -521,9 +633,9 @@ template&lt;class Container&gt; </div>
 <p>Stops the container. </p>
 <dl class="section post"><dt>Postcondition</dt><dd><a class="el" href="classConcurrentContainer.html#acde322ea4bc6a0f703291f024e30b2bf" title="Whether the container is allowed to process data. ">active()</a> is false </dd></dl>
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00101">101</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00105">105</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00058">Melanobot::stop()</a>, and <a class="el" href="async__service_8hpp_source.html#l00150">network::ThreadedAsyncService::stop()</a>.</p>
+<p>Referenced by <a class="el" href="melanobot_8cpp_source.html#l00058">Melanobot::stop()</a>, and <a class="el" href="async__service_8hpp_source.html#l00154">network::ThreadedAsyncService::stop()</a>.</p>
 
 </div>
 </div>
@@ -550,9 +662,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00122">122</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00126">126</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00076">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
 
 </div>
 </div>
@@ -577,9 +689,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00120">120</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00124">124</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00101">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00076">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00063">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00105">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>.</p>
 
 </div>
 </div>
@@ -603,9 +715,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00116">116</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00120">120</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00110">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::get_container()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00122">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::wait_condition()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00114">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::get_container()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00076">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00063">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00126">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::wait_condition()</a>.</p>
 
 </div>
 </div>
@@ -619,7 +731,7 @@ template&lt;class Container&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classConcurrentContainer.html#aebd629ca77cd946d84b017bead73cacb">method_get</a> <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::container_get</td>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html#ad31b0ecdc362541255d4c50ef400a590">method_get</a> <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::container_get</td>
         </tr>
       </table>
   </td>
@@ -629,9 +741,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00115">115</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00119">119</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00076">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
 
 </div>
 </div>
@@ -645,7 +757,7 @@ template&lt;class Container&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classConcurrentContainer.html#a4cee4e33cca879c6722f9d80ec34d545">method_pop</a> <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::container_pop</td>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html#a22f6745f83537ab89437f7a078d29c39">method_pop</a> <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::container_pop</td>
         </tr>
       </table>
   </td>
@@ -655,9 +767,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00114">114</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00118">118</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00076">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>.</p>
 
 </div>
 </div>
@@ -671,7 +783,7 @@ template&lt;class Container&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classConcurrentContainer.html#a0954c29dcf9e504cc3f989383afbfa87">method_push</a> <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::container_push</td>
+          <td class="memname"><a class="el" href="classConcurrentContainer.html#a0344bc4f8bbb70acd3ed131973b7d32b">method_push</a> <a class="el" href="classConcurrentContainer.html">ConcurrentContainer</a>&lt; Container &gt;::container_push</td>
         </tr>
       </table>
   </td>
@@ -681,9 +793,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00113">113</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00117">117</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00046">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::ConcurrentContainer()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00063">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>.</p>
 
 </div>
 </div>
@@ -707,7 +819,7 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00119">119</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00123">123</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
 </div>
 </div>
@@ -731,9 +843,9 @@ template&lt;class Container&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00118">118</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
+<p>Definition at line <a class="el" href="concurrent__container_8hpp_source.html#l00122">122</a> of file <a class="el" href="concurrent__container_8hpp_source.html">concurrent_container.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00085">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::active()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00072">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00059">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00092">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::start()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00101">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00122">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::wait_condition()</a>.</p>
+<p>Referenced by <a class="el" href="concurrent__container_8hpp_source.html#l00089">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::active()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00076">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::pop()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00063">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::push()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00096">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::start()</a>, <a class="el" href="concurrent__container_8hpp_source.html#l00105">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::stop()</a>, and <a class="el" href="concurrent__container_8hpp_source.html#l00126">ConcurrentContainer&lt; std::queue&lt; T, Container &gt; &gt;::wait_condition()</a>.</p>
 
 </div>
 </div>
@@ -743,7 +855,7 @@ template&lt;class Container&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:20:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:51:00 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -1,0 +1,8 @@
+<map id="StdinConnection" name="StdinConnection">
+<area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="5,215,148,241"/>
+<area shape="rect" id="node3" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="172,215,291,241"/>
+<area shape="rect" id="node4" href="$classMelanobot.html" title="Main bot class. " alt="" coords="314,215,397,241"/>
+<area shape="rect" id="node5" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="207,118,381,145"/>
+<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="405,111,588,152"/>
+<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="411,5,582,61"/>
+</map>

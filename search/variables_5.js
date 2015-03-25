@@ -10,9 +10,9 @@ var searchData=
   ['flood_5ftimer_5fmax',['flood_timer_max',['../classirc_1_1Buffer.html#a5bf44c53dfd5472b9428725991f76e90',1,'irc::Buffer']]],
   ['format',['format',['../classirc_1_1handler_1_1CtcpTime.html#aaddf566be0cdbc8dad8a7bd8ca1c8397',1,'irc::handler::CtcpTime']]],
   ['format_5fextension',['format_extension',['../classSettings.html#ad778b233a8942b545434f1417e6ecb79',1,'Settings']]],
-  ['formatter',['formatter',['../classstring_1_1FormattedStream.html#a0d8e90a8c0d72bb54e5d9dc4c98c1074',1,'string::FormattedStream::formatter()'],['../classLogger.html#ab4713f4aad41013b0106280f3b402211',1,'Logger::formatter()']]],
-  ['formatter_5f',['formatter_',['../classirc_1_1IrcConnection.html#a553859941afc7d7ff17d41c644bc1f0f',1,'irc::IrcConnection']]],
-  ['formatters',['formatters',['../classstring_1_1Formatter_1_1FormatterFactory.html#a8bf02ed99d47d65baf0a20010fb4169d',1,'string::Formatter::FormatterFactory']]],
-  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message::from()'],['../structnetwork_1_1OutputMessage.html#afab075920835fba8198b34a99950e27b',1,'network::OutputMessage::from()']]],
+  ['formatter',['formatter',['../classLogger.html#ab4713f4aad41013b0106280f3b402211',1,'Logger']]],
+  ['formatter_5f',['formatter_',['../classStdinConnection.html#a025ec10fb44506b729edec9799966666',1,'StdinConnection::formatter_()'],['../classxonotic_1_1XonoticConnection.html#ab4b8f12134982f59d0d2a9ac890b0970',1,'xonotic::XonoticConnection::formatter_()'],['../classirc_1_1IrcConnection.html#a553859941afc7d7ff17d41c644bc1f0f',1,'irc::IrcConnection::formatter_()']]],
+  ['formatters',['formatters',['../classstring_1_1Formatter_1_1Registry.html#a86283330950a646432cf35007e56566f',1,'string::Formatter::Registry']]],
+  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message::from()'],['../structnetwork_1_1OutputMessage.html#afab075920835fba8198b34a99950e27b',1,'network::OutputMessage::from()'],['../classhandler_1_1BridgeChat.html#a19a47f2a2907befca30bb8d91fc6492b',1,'handler::BridgeChat::from()']]],
   ['function',['function',['../structCriticalException.html#a119f0b2e123396ec2489eb5b894fec7c',1,'CriticalException']]]
 ];

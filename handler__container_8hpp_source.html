@@ -114,38 +114,46 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="settings_8hpp.html">&quot;settings.hpp&quot;</a></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="namespacehandler.html">   24</a></span>&#160;<span class="keyword">namespace</span> <a class="code" href="namespacehandler.html">handler</a> {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">class</span> <a class="code" href="classMelanobot.html">Melanobot</a>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">class</span> <a class="code" href="classhandler_1_1Handler.html">Handler</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="namespacehandler.html">   26</a></span>&#160;<span class="keyword">namespace</span> <a class="code" href="namespacehandler.html">handler</a> {</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"> * \brief Base class for classes which may contain handlers</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classhandler_1_1HandlerContainer.html">   31</a></span>&#160;<span class="keyword">class</span> <a class="code" href="classhandler_1_1HandlerContainer.html">HandlerContainer</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">   34</a></span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">HandlerContainer</a>() {}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">/**</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">     * \brief Populates \c output from properties of its children</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhandler_1_1HandlerContainer.html#a27eaed76908da7889b0c95bf0723d195">populate_properties</a>(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; properties, <a class="code" href="settings_8hpp.html#a15ece709c6b6e61496f543f62e8ba439">PropertyTree</a>&amp; output) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">class</span> <a class="code" href="classhandler_1_1Handler.html">Handler</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> * \brief Base class for classes which may contain handlers</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classhandler_1_1HandlerContainer.html">   33</a></span>&#160;<span class="keyword">class</span> <a class="code" href="classhandler_1_1HandlerContainer.html">HandlerContainer</a></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">   36</a></span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">HandlerContainer</a>() {}</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">/**</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">     * \brief Populates \c output from properties of its children</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhandler_1_1HandlerContainer.html#a27eaed76908da7889b0c95bf0723d195">populate_properties</a>(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; properties, PropertyTree&amp; output) <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <span class="comment">// namespace handler</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">endif</span> <span class="comment">// HANDLER_CONTAINER_HPP</span></div>
-<div class="ttc" id="namespacehandler_html"><div class="ttname"><a href="namespacehandler.html">handler</a></div><div class="ttdoc">Namespace for classes that handle connection messages. </div><div class="ttdef"><b>Definition:</b> <a href="handler__container_8hpp_source.html#l00024">handler_container.hpp:24</a></div></div>
-<div class="ttc" id="settings_8hpp_html_a15ece709c6b6e61496f543f62e8ba439"><div class="ttname"><a href="settings_8hpp.html#a15ece709c6b6e61496f543f62e8ba439">PropertyTree</a></div><div class="ttdeci">boost::property_tree::ptree PropertyTree</div><div class="ttdef"><b>Definition:</b> <a href="settings_8hpp_source.html#l00029">settings.hpp:29</a></div></div>
-<div class="ttc" id="classhandler_1_1Handler_html"><div class="ttname"><a href="classhandler_1_1Handler.html">handler::Handler</a></div><div class="ttdoc">Message handler abstract base class. </div><div class="ttdef"><b>Definition:</b> <a href="handler_8hpp_source.html#l00055">handler.hpp:55</a></div></div>
-<div class="ttc" id="classhandler_1_1HandlerContainer_html"><div class="ttname"><a href="classhandler_1_1HandlerContainer.html">handler::HandlerContainer</a></div><div class="ttdoc">Base class for classes which may contain handlers. </div><div class="ttdef"><b>Definition:</b> <a href="handler__container_8hpp_source.html#l00031">handler_container.hpp:31</a></div></div>
-<div class="ttc" id="classhandler_1_1HandlerContainer_html_a2b7d5775701f30750cde74ebd4dc711e"><div class="ttname"><a href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">handler::HandlerContainer::~HandlerContainer</a></div><div class="ttdeci">virtual ~HandlerContainer()</div><div class="ttdef"><b>Definition:</b> <a href="handler__container_8hpp_source.html#l00034">handler_container.hpp:34</a></div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">/**</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">     * \brief Get the top-level bot for this HandlerContainer</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classMelanobot.html">Melanobot</a>* <a class="code" href="classhandler_1_1HandlerContainer.html#a515db77d66fa30e86538028eeecf13fb">melanobot</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;};</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} <span class="comment">// namespace handler</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">endif</span> <span class="comment">// HANDLER_CONTAINER_HPP</span></div>
+<div class="ttc" id="namespacehandler_html"><div class="ttname"><a href="namespacehandler.html">handler</a></div><div class="ttdoc">Namespace for classes that handle connection messages. </div><div class="ttdef"><b>Definition:</b> <a href="handler__container_8hpp_source.html#l00026">handler_container.hpp:26</a></div></div>
+<div class="ttc" id="classMelanobot_html"><div class="ttname"><a href="classMelanobot.html">Melanobot</a></div><div class="ttdoc">Main bot class. </div><div class="ttdef"><b>Definition:</b> <a href="melanobot_8hpp_source.html#l00037">melanobot.hpp:37</a></div></div>
+<div class="ttc" id="classhandler_1_1Handler_html"><div class="ttname"><a href="classhandler_1_1Handler.html">handler::Handler</a></div><div class="ttdoc">Message handler abstract base class. </div><div class="ttdef"><b>Definition:</b> <a href="handler_8hpp_source.html#l00049">handler.hpp:49</a></div></div>
+<div class="ttc" id="classhandler_1_1HandlerContainer_html_a515db77d66fa30e86538028eeecf13fb"><div class="ttname"><a href="classhandler_1_1HandlerContainer.html#a515db77d66fa30e86538028eeecf13fb">handler::HandlerContainer::melanobot</a></div><div class="ttdeci">virtual Melanobot * melanobot() const =0</div><div class="ttdoc">Get the top-level bot for this HandlerContainer. </div></div>
+<div class="ttc" id="classhandler_1_1HandlerContainer_html"><div class="ttname"><a href="classhandler_1_1HandlerContainer.html">handler::HandlerContainer</a></div><div class="ttdoc">Base class for classes which may contain handlers. </div><div class="ttdef"><b>Definition:</b> <a href="handler__container_8hpp_source.html#l00033">handler_container.hpp:33</a></div></div>
+<div class="ttc" id="classhandler_1_1HandlerContainer_html_a2b7d5775701f30750cde74ebd4dc711e"><div class="ttname"><a href="classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e">handler::HandlerContainer::~HandlerContainer</a></div><div class="ttdeci">virtual ~HandlerContainer()</div><div class="ttdef"><b>Definition:</b> <a href="handler__container_8hpp_source.html#l00036">handler_container.hpp:36</a></div></div>
 <div class="ttc" id="classhandler_1_1HandlerContainer_html_a27eaed76908da7889b0c95bf0723d195"><div class="ttname"><a href="classhandler_1_1HandlerContainer.html#a27eaed76908da7889b0c95bf0723d195">handler::HandlerContainer::populate_properties</a></div><div class="ttdeci">virtual void populate_properties(const std::vector&lt; std::string &gt; &amp;properties, PropertyTree &amp;output) const =0</div><div class="ttdoc">Populates output from properties of its children. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:19:44 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:50:05 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

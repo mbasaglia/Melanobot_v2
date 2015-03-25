@@ -1,12 +1,12 @@
 <map id="modules/irc/handler" name="modules/irc/handler">
 <area shape="rect" id="node1" href="dir_5b520b66998a4c3fc46fab0e43a97d22.html" title="handler" alt="" coords="79,52,151,100"/>
 <area shape="rect" id="node2" href="dir_d77d4e6a822feeb5b7a3add971761cb0.html" title="network" alt="" coords="5,148,77,196"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000005_000006.html" title="1" alt="" coords="73,131,81,146"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000007_000008.html" title="1" alt="" coords="73,131,81,146"/>
 <area shape="rect" id="node3" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html" title="src" alt="" coords="56,244,128,292"/>
-<area shape="rect" id="edge4-headlabel" href="dir_000005_000010.html" title="4" alt="" coords="101,219,109,234"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000007_000013.html" title="4" alt="" coords="101,219,109,234"/>
 <area shape="rect" id="node4" href="dir_4fef79e7177ba769987a8da36c892c5f.html" title="build" alt="" coords="92,340,164,388"/>
-<area shape="rect" id="edge5-headlabel" href="dir_000005_000000.html" title="1" alt="" coords="140,316,148,331"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000006_000010.html" title="7" alt="" coords="74,217,82,231"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000010_000000.html" title="2" alt="" coords="117,313,125,327"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000007_000000.html" title="1" alt="" coords="140,316,148,331"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000008_000013.html" title="7" alt="" coords="74,217,82,231"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000013_000000.html" title="3" alt="" coords="117,313,125,327"/>
 <area shape="rect" id="clust1" href="dir_5f76f6d623a73983c49c448b949abeec.html" title="irc" alt="" coords="68,16,161,111"/>
 </map>

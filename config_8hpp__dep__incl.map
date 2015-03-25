@@ -1,6 +1,7 @@
 <map id="build/src/config.hpp" name="build/src/config.hpp">
-<area shape="rect" id="node2" href="$settings_8cpp.html" title="src/settings.cpp" alt="" coords="5,87,120,114"/>
-<area shape="rect" id="node3" href="$http_8cpp.html" title="modules/web/http.cpp" alt="" coords="145,87,295,114"/>
-<area shape="rect" id="node4" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="319,80,454,121"/>
-<area shape="rect" id="node5" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="321,169,453,196"/>
+<area shape="rect" id="node2" href="$string_8cpp.html" title="src/string/string.cpp" alt="" coords="5,87,143,114"/>
+<area shape="rect" id="node3" href="$settings_8cpp.html" title="src/settings.cpp" alt="" coords="167,87,282,114"/>
+<area shape="rect" id="node4" href="$http_8cpp.html" title="modules/web/http.cpp" alt="" coords="307,87,457,114"/>
+<area shape="rect" id="node5" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="481,80,616,121"/>
+<area shape="rect" id="node6" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="483,169,615,196"/>
 </map>

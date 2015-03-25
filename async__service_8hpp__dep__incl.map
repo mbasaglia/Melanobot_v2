@@ -1,11 +1,16 @@
 <map id="src/network/async_service.hpp" name="src/network/async_service.hpp">
-<area shape="rect" id="node2" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="363,80,460,107"/>
-<area shape="rect" id="node3" href="$http_8hpp.html" title="modules/web/http.hpp" alt="" coords="484,80,635,107"/>
-<area shape="rect" id="node4" href="$web-api_8hpp.html" title="modules/web/web&#45;api.hpp" alt="" coords="349,155,522,181"/>
-<area shape="rect" id="node9" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="427,319,579,345"/>
-<area shape="rect" id="node10" href="$http_8cpp.html" title="modules/web/http.cpp" alt="" coords="597,155,748,181"/>
-<area shape="rect" id="node5" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="156,237,349,263"/>
-<area shape="rect" id="node8" href="$web-api-concrete_8hpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="373,229,521,271"/>
-<area shape="rect" id="node6" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="5,319,199,345"/>
-<area shape="rect" id="node7" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="223,319,363,345"/>
+<area shape="rect" id="node2" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="5,155,103,181"/>
+<area shape="rect" id="node3" href="$melanomodule_8hpp.html" title="src/melanomodule.hpp" alt="" coords="347,80,500,107"/>
+<area shape="rect" id="node10" href="$http_8hpp.html" title="modules/web/http.hpp" alt="" coords="1040,80,1191,107"/>
+<area shape="rect" id="node4" href="$posix_8cpp.html" title="modules/posix/posix.cpp" alt="" coords="725,155,892,181"/>
+<area shape="rect" id="node5" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="392,319,532,345"/>
+<area shape="rect" id="node6" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="978,319,1130,345"/>
+<area shape="rect" id="node7" href="$core_8cpp.html" title="modules/core/core.cpp" alt="" coords="127,155,282,181"/>
+<area shape="rect" id="node8" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="357,155,489,181"/>
+<area shape="rect" id="node9" href="$xonotic_8cpp.html" title="modules/xonotic/xonotic.cpp" alt="" coords="513,155,701,181"/>
+<area shape="rect" id="node11" href="$web-api_8hpp.html" title="modules/web/web&#45;api.hpp" alt="" coords="967,155,1141,181"/>
+<area shape="rect" id="node15" href="$http_8cpp.html" title="modules/web/http.cpp" alt="" coords="1216,155,1367,181"/>
+<area shape="rect" id="node12" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="627,237,820,263"/>
+<area shape="rect" id="node14" href="$web-api-concrete_8hpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="980,229,1128,271"/>
+<area shape="rect" id="node13" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="627,319,820,345"/>
 </map>

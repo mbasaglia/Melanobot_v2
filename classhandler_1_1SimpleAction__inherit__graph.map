@@ -1,33 +1,38 @@
 <map id="handler::SimpleAction" name="handler::SimpleAction">
-<area shape="rect" id="node4" href="$classfun_1_1Morse.html" title="Handler translating between morse and latin. " alt="" coords="641,5,725,32"/>
-<area shape="rect" id="node5" href="$classfun_1_1RenderPony.html" title="Draws a pretty My Little Pony ASCII art. " alt="" coords="623,56,743,83"/>
-<area shape="rect" id="node6" href="$classfun_1_1ReverseText.html" title="Turns ASCII characters upside&#45;down. " alt="" coords="621,107,744,133"/>
-<area shape="rect" id="node7" href="$classhandler_1_1AdminQuit.html" title="Quits the bot. " alt="" coords="616,157,749,184"/>
-<area shape="rect" id="node8" href="$classhandler_1_1AdminReconnect.html" title="Makes the bot reconnect. " alt="" coords="597,208,769,235"/>
-<area shape="rect" id="node9" href="$classhandler_1_1Cointoss.html" title="Shows one of the given items, at random. " alt="" coords="621,259,745,285"/>
-<area shape="rect" id="node10" href="$classhandler_1_1Echo.html" title="Just repeat what it has been told. " alt="" coords="631,309,734,336"/>
-<area shape="rect" id="node11" href="$classhandler_1_1Help.html" title="Handler showing help on the available handlers. " alt="" coords="633,360,732,387"/>
-<area shape="rect" id="node12" href="$classhandler_1_1License.html" title="Handler showing licensing information. " alt="" coords="624,411,741,437"/>
-<area shape="rect" id="node13" href="$classhandler_1_1ListClear.html" title="Used by AbstractList to remove all elements. " alt="" coords="621,461,745,488"/>
-<area shape="rect" id="node14" href="$classhandler_1_1ListInsert.html" title="Used by AbstractList to add elements. " alt="" coords="619,512,746,539"/>
-<area shape="rect" id="node15" href="$classhandler_1_1ListRemove.html" title="Used by AbstractList to remove elements. " alt="" coords="611,563,754,589"/>
-<area shape="rect" id="node16" href="$classhandler_1_1ServerHost.html" title="Shows the server the bot is connected to. " alt="" coords="613,613,752,640"/>
-<area shape="rect" id="node17" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="609,664,756,691"/>
-<area shape="rect" id="node21" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="603,715,762,741"/>
-<area shape="rect" id="node28" href="$classirc_1_1handler_1_1AdminJoin.html" title="Makes the bot join channels (IRC) " alt="" coords="605,765,760,792"/>
-<area shape="rect" id="node29" href="$classirc_1_1handler_1_1AdminNick.html" title="Changes the bot nick (IRC) " alt="" coords="603,816,762,843"/>
-<area shape="rect" id="node30" href="$classirc_1_1handler_1_1AdminPart.html" title="Makes the bot part channels (IRC) " alt="" coords="605,867,760,893"/>
-<area shape="rect" id="node31" href="$classirc_1_1handler_1_1AdminRaw.html" title="Makes the bot execute a raw command (IRC) " alt="" coords="603,917,762,944"/>
-<area shape="rect" id="node32" href="$classirc_1_1handler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="589,968,776,995"/>
-<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,487,344,513"/>
-<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,487,179,513"/>
-<area shape="rect" id="node18" href="$classhandler_1_1AbstractList.html" title="Handles a list of elements (base class) " alt="" coords="824,601,967,628"/>
-<area shape="rect" id="node20" href="$classhandler_1_1Bridge.html" title="Acts as bridge across connections. " alt="" coords="841,664,950,691"/>
-<area shape="rect" id="node19" href="$classhandler_1_1AdminGroup.html" title="Manages a user group. " alt="" coords="1040,595,1184,621"/>
-<area shape="rect" id="node22" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="825,740,965,767"/>
-<area shape="rect" id="node23" href="$classfun_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1051,645,1173,672"/>
-<area shape="rect" id="node24" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="1017,696,1207,723"/>
-<area shape="rect" id="node25" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="1015,747,1209,773"/>
-<area shape="rect" id="node26" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="1025,797,1199,824"/>
-<area shape="rect" id="node27" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="1029,848,1195,875"/>
+<area shape="rect" id="node4" href="$classfun_1_1Morse.html" title="Handler translating between morse and latin. " alt="" coords="645,5,729,32"/>
+<area shape="rect" id="node5" href="$classfun_1_1RenderPony.html" title="Draws a pretty My Little Pony ASCII art. " alt="" coords="627,56,747,83"/>
+<area shape="rect" id="node6" href="$classfun_1_1ReverseText.html" title="Turns ASCII characters upside&#45;down. " alt="" coords="625,107,748,133"/>
+<area shape="rect" id="node7" href="$classfun_1_1Slap.html" title="Slaps someone. " alt="" coords="649,157,724,184"/>
+<area shape="rect" id="node8" href="$classhandler_1_1AdminConnect.html" title="Makes the bot Connect. " alt="" coords="607,208,766,235"/>
+<area shape="rect" id="node9" href="$classhandler_1_1AdminDisconnect.html" title="Makes the bot disconnect. " alt="" coords="599,259,774,285"/>
+<area shape="rect" id="node10" href="$classhandler_1_1AdminQuit.html" title="Quits the bot. " alt="" coords="620,309,753,336"/>
+<area shape="rect" id="node11" href="$classhandler_1_1AdminReconnect.html" title="Makes the bot reconnect. " alt="" coords="601,360,773,387"/>
+<area shape="rect" id="node12" href="$classhandler_1_1BridgeAttach.html" title="Attach the parent bridge to the provided connection. " alt="" coords="613,411,760,437"/>
+<area shape="rect" id="node13" href="$classhandler_1_1BridgeAttachChannel.html" title="Attach the parent bridge to the provided channel. " alt="" coords="589,461,784,488"/>
+<area shape="rect" id="node14" href="$classhandler_1_1Cointoss.html" title="Shows one of the given items, at random. " alt="" coords="625,512,749,539"/>
+<area shape="rect" id="node15" href="$classhandler_1_1Echo.html" title="Just repeat what it has been told. " alt="" coords="635,563,738,589"/>
+<area shape="rect" id="node16" href="$classhandler_1_1Help.html" title="Handler showing help on the available handlers. " alt="" coords="637,613,736,640"/>
+<area shape="rect" id="node17" href="$classhandler_1_1License.html" title="Handler showing licensing information. " alt="" coords="628,664,745,691"/>
+<area shape="rect" id="node18" href="$classhandler_1_1ListClear.html" title="Used by AbstractList to remove all elements. " alt="" coords="625,715,749,741"/>
+<area shape="rect" id="node19" href="$classhandler_1_1ListInsert.html" title="Used by AbstractList to add elements. " alt="" coords="623,765,750,792"/>
+<area shape="rect" id="node20" href="$classhandler_1_1ListRemove.html" title="Used by AbstractList to remove elements. " alt="" coords="615,816,758,843"/>
+<area shape="rect" id="node21" href="$classhandler_1_1ServerHost.html" title="Shows the server the bot is connected to. " alt="" coords="617,867,756,893"/>
+<area shape="rect" id="node22" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="613,917,760,944"/>
+<area shape="rect" id="node26" href="$classhandler_1_1SimpleWebApi.html" title="Simple base class for handlers calling web resources. " alt="" coords="607,968,766,995"/>
+<area shape="rect" id="node33" href="$classirc_1_1handler_1_1AdminJoin.html" title="Makes the bot join channels (IRC) " alt="" coords="609,1019,764,1045"/>
+<area shape="rect" id="node34" href="$classirc_1_1handler_1_1AdminNick.html" title="Changes the bot nick (IRC) " alt="" coords="607,1069,766,1096"/>
+<area shape="rect" id="node35" href="$classirc_1_1handler_1_1AdminPart.html" title="Makes the bot part channels (IRC) " alt="" coords="609,1120,764,1147"/>
+<area shape="rect" id="node36" href="$classirc_1_1handler_1_1AdminRaw.html" title="Makes the bot execute a raw command (IRC) " alt="" coords="607,1171,766,1197"/>
+<area shape="rect" id="node37" href="$classirc_1_1handler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="593,1221,780,1248"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,613,344,640"/>
+<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,613,179,640"/>
+<area shape="rect" id="node23" href="$classhandler_1_1AbstractList.html" title="Handles a list of elements (base class) " alt="" coords="832,855,975,881"/>
+<area shape="rect" id="node25" href="$classhandler_1_1Bridge.html" title="Acts as bridge across connections. " alt="" coords="849,917,958,944"/>
+<area shape="rect" id="node24" href="$classhandler_1_1AdminGroup.html" title="Manages a user group. " alt="" coords="1048,848,1192,875"/>
+<area shape="rect" id="node27" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="833,993,973,1020"/>
+<area shape="rect" id="node28" href="$classfun_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1059,899,1181,925"/>
+<area shape="rect" id="node29" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="1025,949,1215,976"/>
+<area shape="rect" id="node30" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="1023,1000,1217,1027"/>
+<area shape="rect" id="node31" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="1033,1051,1207,1077"/>
+<area shape="rect" id="node32" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="1037,1101,1203,1128"/>
 </map>

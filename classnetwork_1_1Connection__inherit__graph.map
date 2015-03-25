@@ -1,3 +1,5 @@
 <map id="network::Connection" name="network::Connection">
-<area shape="rect" id="node2" href="$classirc_1_1IrcConnection.html" title="IRC connection. " alt="" coords="14,80,139,107"/>
+<area shape="rect" id="node2" href="$classirc_1_1IrcConnection.html" title="IRC connection. " alt="" coords="5,80,131,107"/>
+<area shape="rect" id="node3" href="$classStdinConnection.html" title="Acts as a network connection to handle standard input. " alt="" coords="155,80,274,107"/>
+<area shape="rect" id="node4" href="$classxonotic_1_1XonoticConnection.html" title="Creates a connection to a Xonotic server. " alt="" coords="298,80,481,107"/>
 </map>

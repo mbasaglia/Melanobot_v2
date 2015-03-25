@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classstring_1_1Formatter_1_1FormatterFactory.html" title="Internal factory. " alt="" coords="5,5,132,47"/>
+<area shape="rect" id="node1" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="5,107,124,133"/>
+<area shape="rect" id="node2" href="$classstring_1_1FormatterUtf8.html" title="Plain UTF&#45;8. " alt="" coords="172,81,315,108"/>
+<area shape="rect" id="node7" href="$classxonotic_1_1Formatter.html" title="Darkplaces UTF&#45;8. " alt="" coords="179,132,307,159"/>
+<area shape="rect" id="node3" href="$classfun_1_1FormatterRainbow.html" title="Rainbow UTF&#45;8. " alt="" coords="363,5,517,32"/>
+<area shape="rect" id="node4" href="$classirc_1_1FormatterIrc.html" title="UTF&#45;8 with IRC colors. " alt="" coords="383,56,497,83"/>
+<area shape="rect" id="node5" href="$classstring_1_1FormatterAnsi.html" title="ANSI&#45;formatted UTF&#45;8 or ASCII. " alt="" coords="368,107,512,133"/>
+<area shape="rect" id="node6" href="$classstring_1_1FormatterAscii.html" title="Plain ASCII. " alt="" coords="367,157,513,184"/>
 </map>

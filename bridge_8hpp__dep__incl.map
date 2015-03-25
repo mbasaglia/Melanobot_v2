@@ -1,3 +1,7 @@
-<map id="src/handler/bridge.hpp" name="src/handler/bridge.hpp">
-<area shape="rect" id="node2" href="$bridge_8cpp.html" title="src/handler/bridge.cpp" alt="" coords="5,80,156,107"/>
+<map id="modules/core/handler/bridge.hpp" name="modules/core/handler/bridge.hpp">
+<area shape="rect" id="node2" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="100,102,293,129"/>
+<area shape="rect" id="node5" href="$bridge_8cpp.html" title="modules/core/handler\l/bridge.cpp" alt="" coords="318,95,465,136"/>
+<area shape="rect" id="node6" href="$core_8cpp.html" title="modules/core/core.cpp" alt="" coords="489,102,643,129"/>
+<area shape="rect" id="node3" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="5,184,199,211"/>
+<area shape="rect" id="node4" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="223,184,363,211"/>
 </map>

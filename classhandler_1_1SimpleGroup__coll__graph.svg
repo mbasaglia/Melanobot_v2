@@ -39,6 +39,12 @@
 <path fill="none" stroke="midnightblue" d="M81,-114.117C81,-104.817 81,-94.0557 81,-86.7149"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="77.5001,-114.406 81,-124.406 84.5001,-114.406 77.5001,-114.406"/>
 </g>
+<!-- Node3&#45;&gt;Node3 -->
+<g id="edge8" class="edge"><title>Node3&#45;&gt;Node3</title>
+<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M135.258,-138.125C140.019,-137.255 143,-135.88 143,-134 143,-130.992 135.369,-129.277 125.024,-128.854"/>
+<polygon fill="#9a32cd" stroke="#9a32cd" points="134.627,-134.671 125.024,-139.146 135.323,-141.636 134.627,-134.671"/>
+<text text-anchor="middle" x="176.5" y="-131.5" font-family="Helvetica,sans-Serif" font-size="10.00"> parent_handler</text>
+</g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
 <g id="a_node4"><a xlink:href="classhandler_1_1HandlerContainer.html" target="_top" xlink:title="Base class for classes which may contain handlers. ">
@@ -110,7 +116,7 @@
 </g>
 </g>
 <!-- Node8&#45;&gt;Node1 -->
-<g id="edge8" class="edge"><title>Node8&#45;&gt;Node1</title>
+<g id="edge9" class="edge"><title>Node8&#45;&gt;Node1</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M199.219,-58.1635C193.048,-45.6281 185.064,-29.4104 180.247,-19.6273"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="196.127,-59.808 203.684,-67.2338 202.408,-56.7162 196.127,-59.808"/>
 <text text-anchor="middle" x="210.5" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00"> source</text>

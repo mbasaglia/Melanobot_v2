@@ -1,0 +1,5 @@
+<map id="fun::RainbowBridgeChat" name="fun::RainbowBridgeChat">
+<area shape="rect" id="node2" href="$classhandler_1_1BridgeChat.html" title="Simply echoes chat messages (to be used in a Bridge group) " alt="" coords="23,155,161,181"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="33,80,151,107"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,5,179,32"/>
+</map>

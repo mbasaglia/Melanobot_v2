@@ -1,0 +1,11 @@
+<map id="xonotic::XonoticConnection" name="xonotic::XonoticConnection">
+<area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="521,5,664,32"/>
+<area shape="rect" id="node3" href="$classuser_1_1UserManager.html" title="A class to keep track of users. " alt="" coords="526,56,659,83"/>
+<area shape="rect" id="node4" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="533,107,652,133"/>
+<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="551,157,634,184"/>
+<area shape="rect" id="node6" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="230,140,403,167"/>
+<area shape="rect" id="node7" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="225,191,408,233"/>
+<area shape="rect" id="node8" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="5,184,176,240"/>
+<area shape="rect" id="node9" href="$classnetwork_1_1UdpIo.html" title="Class providing a simple interface for UDP connections. " alt="" coords="537,208,648,235"/>
+<area shape="rect" id="node10" href="$structnetwork_1_1Server.html" title="Identifies a network server. " alt="" coords="535,259,650,285"/>
+</map>

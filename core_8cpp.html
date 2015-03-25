@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>MelanoBot: src/handler/core.cpp File Reference</title>
+<title>MelanoBot: modules/core/core.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -83,80 +83,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1d1769d006da3fe19c8ee5fe16b8d503.html">handler</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_e05d7e2b1ecd646af5bb94391405f3b5.html">modules</a></li><li class="navelem"><a class="el" href="dir_6d4da112a1331882b0b6514a341190a0.html">core</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">core.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>This file defines handlers which are essential for proper usage of the bot.  
-<a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="handler_8hpp_source.html">handler.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="melanomodule_8hpp_source.html">melanomodule.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="admin_8hpp_source.html">handler/admin.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="bridge_8hpp_source.html">handler/bridge.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="misc_8hpp_source.html">handler/misc.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="simple-group_8hpp_source.html">handler/simple-group.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for core.cpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="core_8cpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="core_8cpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </div>
 <p><a href="core_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1License.html">handler::License</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classhandler_1_1Handler.html" title="Message handler abstract base class. ">Handler</a> showing licensing information.  <a href="classhandler_1_1License.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1AdminQuit.html">handler::AdminQuit</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quits the bot.  <a href="classhandler_1_1AdminQuit.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1AdminNick.html">handler::AdminNick</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the bot nick (IRC)  <a href="classhandler_1_1AdminNick.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1AdminJoin.html">handler::AdminJoin</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the bot join channels (IRC)  <a href="classhandler_1_1AdminJoin.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1AdminPart.html">handler::AdminPart</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the bot part channels (IRC)  <a href="classhandler_1_1AdminPart.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1AcceptInvite.html">handler::AcceptInvite</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the bot join channels (IRC)  <a href="classhandler_1_1AcceptInvite.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1AdminRaw.html">handler::AdminRaw</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the bot execute a raw command (IRC)  <a href="classhandler_1_1AdminRaw.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespacehandler"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html">handler</a></td></tr>
-<tr class="memdesc:namespacehandler"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace for classes that handle connection messages. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7e58cff81960fb5ab5cdc414a18d9553"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a7e58cff81960fb5ab5cdc414a18d9553">handler::REGISTER_HANDLER</a> (License, License)</td></tr>
-<tr class="separator:a7e58cff81960fb5ab5cdc414a18d9553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01c39e2d9024791253f2ddb6ee3564cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a01c39e2d9024791253f2ddb6ee3564cc">handler::REGISTER_HANDLER</a> (AdminQuit, Quit)</td></tr>
-<tr class="separator:a01c39e2d9024791253f2ddb6ee3564cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e8aced2f6274184f8534cb800a212d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a1e8aced2f6274184f8534cb800a212d4">handler::REGISTER_HANDLER</a> (AdminNick, Nick)</td></tr>
-<tr class="separator:a1e8aced2f6274184f8534cb800a212d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a997329d0c4fe46901feb53385ca84703"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a997329d0c4fe46901feb53385ca84703">handler::REGISTER_HANDLER</a> (AdminJoin, Join)</td></tr>
-<tr class="separator:a997329d0c4fe46901feb53385ca84703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a575c0af07ca25303eb9ef59b14e9ac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a0a575c0af07ca25303eb9ef59b14e9ac">handler::REGISTER_HANDLER</a> (AdminPart, Part)</td></tr>
-<tr class="separator:a0a575c0af07ca25303eb9ef59b14e9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9147ad04c0662fe560df0303480483d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#a9147ad04c0662fe560df0303480483d4">handler::REGISTER_HANDLER</a> (AcceptInvite, AcceptInvite)</td></tr>
-<tr class="separator:a9147ad04c0662fe560df0303480483d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adff4f8d3ae67f232deedaa47cce605f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehandler.html#adff4f8d3ae67f232deedaa47cce605f1">handler::REGISTER_HANDLER</a> (AdminRaw, Raw)</td></tr>
-<tr class="separator:adff4f8d3ae67f232deedaa47cce605f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3083a62dc0d6fa96e94eae707a7e939f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structMelanomodule.html">Melanomodule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="core_8cpp.html#a3083a62dc0d6fa96e94eae707a7e939f">melanomodule_core</a> ()</td></tr>
+<tr class="memdesc:a3083a62dc0d6fa96e94eae707a7e939f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the core module.  <a href="#a3083a62dc0d6fa96e94eae707a7e939f">More...</a><br /></td></tr>
+<tr class="separator:a3083a62dc0d6fa96e94eae707a7e939f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file defines handlers which are essential for proper usage of the bot. </p>
-<dl class="section author"><dt>Author</dt><dd>Mattia Basaglia </dd></dl>
+<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Mattia Basaglia </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2015 Mattia Basaglia </dd></dl>
 <h1><a class="anchor" id="License"></a>
 License</h1>
@@ -165,10 +123,30 @@ License</h1>
 <p>You should have received a copy of the GNU Affero General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. </p>
 
 <p>Definition in file <a class="el" href="core_8cpp_source.html">core.cpp</a>.</p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a3083a62dc0d6fa96e94eae707a7e939f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structMelanomodule.html">Melanomodule</a> melanomodule_core </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the core module. </p>
+
+<p>Definition at line <a class="el" href="core_8cpp_source.html#l00030">30</a> of file <a class="el" href="core_8cpp_source.html">core.cpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 7 2015 18:45:32 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:50:57 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

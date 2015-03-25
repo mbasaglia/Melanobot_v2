@@ -137,19 +137,21 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1ThreadedAsyncService.html">ThreadedAsyncService</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <a class="el" href="classnetwork_1_1AsyncService.html" title="Base class for external services that might take some time to execute. ">AsyncService</a> implemented with a separate thread.  <a href="classnetwork_1_1ThreadedAsyncService.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1UdpIo.html">UdpIo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class providing a simple interface for UDP connections.  <a href="classnetwork_1_1UdpIo.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:afb24234b5d39e3f89fe5248c9c943fa2"><td class="memItemLeft" align="right" valign="top">typedef std::chrono::steady_clock&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#afb24234b5d39e3f89fe5248c9c943fa2">Clock</a></td></tr>
-<tr class="separator:afb24234b5d39e3f89fe5248c9c943fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7175c549b2e3e4be5dd29b0fa3e7691f"><td class="memItemLeft" align="right" valign="top">typedef Clock::time_point&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a7175c549b2e3e4be5dd29b0fa3e7691f">Time</a></td></tr>
-<tr class="separator:a7175c549b2e3e4be5dd29b0fa3e7691f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add9d4ffb1b9bfec79726c39be807775e"><td class="memItemLeft" align="right" valign="top">typedef Clock::duration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">Duration</a></td></tr>
-<tr class="separator:add9d4ffb1b9bfec79726c39be807775e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65b042b7c853abc20ce4d7026ccb62a3"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; void(const <br class="typebreak" />
-<a class="el" href="structnetwork_1_1Response.html">Response</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a65b042b7c853abc20ce4d7026ccb62a3">AsyncCallback</a></td></tr>
-<tr class="memdesc:a65b042b7c853abc20ce4d7026ccb62a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback used by asyncronous calls.  <a href="#a65b042b7c853abc20ce4d7026ccb62a3">More...</a><br /></td></tr>
-<tr class="separator:a65b042b7c853abc20ce4d7026ccb62a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37724502b52200970574ada0da6fc540"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a37724502b52200970574ada0da6fc540">Clock</a> = std::chrono::steady_clock</td></tr>
+<tr class="separator:a37724502b52200970574ada0da6fc540"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8371761df5f318774fd8a1e9549ca53"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#ae8371761df5f318774fd8a1e9549ca53">Time</a> = Clock::time_point</td></tr>
+<tr class="separator:ae8371761df5f318774fd8a1e9549ca53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c8e3ae9e2caa565ce71c176af384c62"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62">Duration</a> = Clock::duration</td></tr>
+<tr class="separator:a5c8e3ae9e2caa565ce71c176af384c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7b222ff0fd4ee2456af0cd543390697"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#ab7b222ff0fd4ee2456af0cd543390697">AsyncCallback</a> = std::function&lt; void(const <a class="el" href="structnetwork_1_1Response.html">Response</a> &amp;)&gt;</td></tr>
+<tr class="memdesc:ab7b222ff0fd4ee2456af0cd543390697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback used by asyncronous calls.  <a href="#ab7b222ff0fd4ee2456af0cd543390697">More...</a><br /></td></tr>
+<tr class="separator:ab7b222ff0fd4ee2456af0cd543390697"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -164,12 +166,12 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Namespace for network operations. </p>
 <p>This includes asyncronous calls and network protocol operations </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="a65b042b7c853abc20ce4d7026ccb62a3"></a>
+<a class="anchor" id="ab7b222ff0fd4ee2456af0cd543390697"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::function&lt;void(const <a class="el" href="structnetwork_1_1Response.html">Response</a>&amp;)&gt; <a class="el" href="namespacenetwork.html#a65b042b7c853abc20ce4d7026ccb62a3">network::AsyncCallback</a></td>
+          <td class="memname">using <a class="el" href="namespacenetwork.html#ab7b222ff0fd4ee2456af0cd543390697">network::AsyncCallback</a> = typedef std::function&lt;void(const <a class="el" href="structnetwork_1_1Response.html">Response</a>&amp;)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -180,45 +182,45 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="afb24234b5d39e3f89fe5248c9c943fa2"></a>
+<a class="anchor" id="a37724502b52200970574ada0da6fc540"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::chrono::steady_clock <a class="el" href="namespacenetwork.html#afb24234b5d39e3f89fe5248c9c943fa2">network::Clock</a></td>
+          <td class="memname">using <a class="el" href="namespacenetwork.html#a37724502b52200970574ada0da6fc540">network::Clock</a> = typedef std::chrono::steady_clock</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00037">37</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="network_8hpp_source.html#l00029">29</a> of file <a class="el" href="network_8hpp_source.html">network.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="add9d4ffb1b9bfec79726c39be807775e"></a>
+<a class="anchor" id="a5c8e3ae9e2caa565ce71c176af384c62"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef Clock::duration <a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">network::Duration</a></td>
+          <td class="memname">using <a class="el" href="namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62">network::Duration</a> = typedef Clock::duration</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00039">39</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="network_8hpp_source.html#l00031">31</a> of file <a class="el" href="network_8hpp_source.html">network.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7175c549b2e3e4be5dd29b0fa3e7691f"></a>
+<a class="anchor" id="ae8371761df5f318774fd8a1e9549ca53"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef Clock::time_point <a class="el" href="namespacenetwork.html#a7175c549b2e3e4be5dd29b0fa3e7691f">network::Time</a></td>
+          <td class="memname">using <a class="el" href="namespacenetwork.html#ae8371761df5f318774fd8a1e9549ca53">network::Time</a> = typedef Clock::time_point</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="src_2network_2connection_8hpp_source.html#l00038">38</a> of file <a class="el" href="src_2network_2connection_8hpp_source.html">connection.hpp</a>.</p>
+<p>Definition at line <a class="el" href="network_8hpp_source.html#l00030">30</a> of file <a class="el" href="network_8hpp_source.html">network.hpp</a>.</p>
 
 </div>
 </div>
@@ -253,7 +255,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00314">314</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00310">310</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="web-api_8hpp_source.html#l00034">handler::SimpleWebApi::SimpleWebApi()</a>.</p>
 
@@ -283,16 +285,16 @@ Functions</h2></td></tr>
 
 <p>Get service by name (less verbose than through <a class="el" href="classnetwork_1_1ServiceRegistry.html" title="Class storing the service objects. ">ServiceRegistry</a>) </p>
 
-<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00305">305</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
+<p>Definition at line <a class="el" href="async__service_8hpp_source.html#l00301">301</a> of file <a class="el" href="async__service_8hpp_source.html">async_service.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="web-api_8hpp_source.html#l00045">handler::SimpleWebApi::request_http()</a>.</p>
+<p>Referenced by <a class="el" href="web-api_8hpp_source.html#l00046">handler::SimpleWebApi::request_http()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:20:34 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:51:01 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

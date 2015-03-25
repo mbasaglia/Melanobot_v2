@@ -111,6 +111,12 @@ var sectionId = 'dynsection-1';
 <path fill="none" stroke="midnightblue" d="M81,-228.117C81,-218.817 81,-208.056 81,-200.715"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="77.5001,-228.406 81,-238.406 84.5001,-228.406 77.5001,-228.406"/>
 </g>
+<!-- Node5&#45;&gt;Node5 -->
+<g id="edge10" class="edge"><title>Node5&#45;&gt;Node5</title>
+<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M135.258,-252.125C140.019,-251.255 143,-249.88 143,-248 143,-244.992 135.369,-243.277 125.024,-242.854"/>
+<polygon fill="#9a32cd" stroke="#9a32cd" points="134.627,-248.671 125.024,-253.146 135.323,-255.636 134.627,-248.671"/>
+<text text-anchor="middle" x="176.5" y="-245.5" font-family="Helvetica,sans-Serif" font-size="10.00"> parent_handler</text>
+</g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
 <g id="a_node6"><a xlink:href="classhandler_1_1HandlerContainer.html" target="_top" xlink:title="Base class for classes which may contain handlers. ">
@@ -182,7 +188,7 @@ var sectionId = 'dynsection-1';
 </g>
 </g>
 <!-- Node10&#45;&gt;Node3 -->
-<g id="edge10" class="edge"><title>Node10&#45;&gt;Node3</title>
+<g id="edge11" class="edge"><title>Node10&#45;&gt;Node3</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M199.219,-172.163C193.048,-159.628 185.064,-143.41 180.247,-133.627"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="196.127,-173.808 203.684,-181.234 202.408,-170.716 196.127,-173.808"/>
 <text text-anchor="middle" x="210.5" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00"> source</text>

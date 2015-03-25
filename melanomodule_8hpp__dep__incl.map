@@ -1,0 +1,9 @@
+<map id="src/melanomodule.hpp" name="src/melanomodule.hpp">
+<area shape="rect" id="node2" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="5,80,103,107"/>
+<area shape="rect" id="node3" href="$posix_8cpp.html" title="modules/posix/posix.cpp" alt="" coords="127,80,293,107"/>
+<area shape="rect" id="node4" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="317,80,457,107"/>
+<area shape="rect" id="node5" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="482,80,634,107"/>
+<area shape="rect" id="node6" href="$core_8cpp.html" title="modules/core/core.cpp" alt="" coords="658,80,813,107"/>
+<area shape="rect" id="node7" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="837,80,969,107"/>
+<area shape="rect" id="node8" href="$xonotic_8cpp.html" title="modules/xonotic/xonotic.cpp" alt="" coords="993,80,1181,107"/>
+</map>

@@ -1,15 +1,9 @@
 var searchData=
 [
-  ['wait_5fcondition',['wait_condition',['../classConcurrentContainer.html#ad279147a8fba67deef7ced59d2718499',1,'ConcurrentContainer']]],
-  ['waiting',['WAITING',['../classnetwork_1_1Connection.html#a60c9aae50344fc51b4b9770f30dfeda5a05d0b8877acdda3ac267b839728e9c64',1,'network::Connection']]],
-  ['web_2dapi_2dconcrete_2ehpp',['web-api-concrete.hpp',['../web-api-concrete_8hpp.html',1,'']]],
-  ['web_2dapi_2ehpp',['web-api.hpp',['../web-api_8hpp.html',1,'']]],
-  ['web_2ecpp',['web.cpp',['../web_8cpp.html',1,'']]],
-  ['white',['white',['../namespacecolor.html#ad754fcc66aaeb3d8a71640df0729a746',1,'color']]],
-  ['whois330',['Whois330',['../classirc_1_1handler_1_1Whois330.html#ae835d326386f2a0ab2946ebb2c7cbf89',1,'irc::handler::Whois330']]],
-  ['whois330',['Whois330',['../classirc_1_1handler_1_1Whois330.html',1,'irc::handler']]],
-  ['whoischeckme',['WhoisCheckMe',['../classirc_1_1handler_1_1WhoisCheckMe.html',1,'irc::handler']]],
-  ['whoischeckme',['WhoisCheckMe',['../classirc_1_1handler_1_1WhoisCheckMe.html#a107947a7cff6fdf0429883e0286204cb',1,'irc::handler::WhoisCheckMe']]],
-  ['write',['write',['../classirc_1_1Buffer.html#a34df30248cc07a2ff5e6358628c76eca',1,'irc::Buffer']]],
-  ['write_5fline',['write_line',['../classirc_1_1Buffer.html#a648251a94f3d8d711fa8cdce3e09cf85',1,'irc::Buffer']]]
+  ['valid',['valid',['../classcolor_1_1Color12.html#a903d86f7ae138f15ca80b7dfbfb0c8b6',1,'color::Color12::valid()'],['../classstring_1_1BasicTrie_1_1iterator.html#aed70fb15dce396ed9b7391ae15be7792',1,'string::BasicTrie::iterator::valid()']]],
+  ['validate',['validate',['../classcolor_1_1Color12.html#aaf5a83dff5cc2d4795d64f4b9a71e756',1,'color::Color12']]],
+  ['value',['value',['../classfun_1_1FormatterRainbow.html#a74de01a84c01f50dc8e0c36343b14b19',1,'fun::FormatterRainbow']]],
+  ['value_5ftype',['value_type',['../classstring_1_1BasicTrie.html#a033b72ea553bc5091fdeae8d0240ff09',1,'string::BasicTrie::value_type()'],['../classstring_1_1FormattedString.html#a621a307b371838db3eebdbd25815e508',1,'string::FormattedString::value_type()'],['../classConcurrentContainer.html#aab0702ceba1cae2fa6d73692a1a49d07',1,'ConcurrentContainer::value_type()']]],
+  ['verbosity',['verbosity',['../structLogger_1_1LogType.html#a14fa8e6a6b5afbc4bfbf7ea604989576',1,'Logger::LogType::verbosity()'],['../classLog.html#a2109f6d45f9cb2dbb7b937195356bab5',1,'Log::verbosity()']]],
+  ['version',['version',['../classirc_1_1handler_1_1CtcpVersion.html#a4dbbf095ef6313506c4d7d03bce9c642',1,'irc::handler::CtcpVersion']]]
 ];

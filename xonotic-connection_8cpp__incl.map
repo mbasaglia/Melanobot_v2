@@ -1,0 +1,21 @@
+<map id="modules/xonotic/xonotic&#45;connection.cpp" name="modules/xonotic/xonotic&#45;connection.cpp">
+<area shape="rect" id="node2" href="$xonotic-connection_8hpp.html" title="xonotic&#45;connection.hpp" alt="" coords="901,95,1057,121"/>
+<area shape="rect" id="node24" href="$math_8hpp.html" title="math.hpp" alt="" coords="1157,639,1233,666"/>
+<area shape="rect" id="node5" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="728,244,888,271"/>
+<area shape="rect" id="node35" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="561,319,719,345"/>
+<area shape="rect" id="node39" href="$udp__io_8hpp.html" title="network/udp_io.hpp" alt="" coords="373,319,507,345"/>
+<area shape="rect" id="node42" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1067,244,1235,271"/>
+<area shape="rect" id="node45" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1269,169,1376,196"/>
+<area shape="rect" id="node8" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="809,393,927,420"/>
+<area shape="rect" id="node28" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="14,475,189,502"/>
+<area shape="rect" id="node32" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="982,319,1133,345"/>
+<area shape="rect" id="node37" href="$network_8hpp.html" title="network.hpp" alt="" coords="271,393,364,420"/>
+<area shape="rect" id="node16" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="579,475,672,502"/>
+<area shape="rect" id="node19" href="$string_8hpp.html" title="string.hpp" alt="" coords="697,475,775,502"/>
+<area shape="rect" id="node26" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1427,557,1520,584"/>
+<area shape="rect" id="node23" href="$color_8hpp.html" title="color.hpp" alt="" coords="989,557,1064,584"/>
+<area shape="rect" id="node33" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1353,393,1463,420"/>
+<area shape="rect" id="node34" href="$user_8hpp.html" title="user.hpp" alt="" coords="1341,475,1413,502"/>
+<area shape="rect" id="node40" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="389,393,491,420"/>
+<area shape="rect" id="node46" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1411,244,1605,271"/>
+</map>

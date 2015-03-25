@@ -12,11 +12,14 @@ var searchData=
   ['category_5fwhen_5fdid',['category_when_did',['../classfun_1_1AnswerQuestions.html#a83c87c19169aaeb427426c57daf88fd6',1,'fun::AnswerQuestions']]],
   ['category_5fwhen_5fwill',['category_when_will',['../classfun_1_1AnswerQuestions.html#a2df6436c6cfba05f18a1ec5d7ecf7a67',1,'fun::AnswerQuestions']]],
   ['category_5fyesno',['category_yesno',['../classfun_1_1AnswerQuestions.html#a8c5fb0f832f0e17d1bf969be1e841bc3',1,'fun::AnswerQuestions']]],
+  ['challenged',['challenged',['../structxonotic_1_1XonoticConnection_1_1SecureRconCommand.html#a08c4337a4c1eac137c8991321513d387',1,'xonotic::XonoticConnection::SecureRconCommand']]],
   ['channels',['channels',['../structuser_1_1User.html#a65795b86a87de5efa91f3100533b80b4',1,'user::User::channels()'],['../structnetwork_1_1Message.html#a1eb42bbedbcb33506aaba643d8ba8a9f',1,'network::Message::channels()'],['../classhandler_1_1SimpleGroup.html#a2e2e4f58378e76fc3d9619aad1044500',1,'handler::SimpleGroup::channels()']]],
-  ['children',['children',['../classuser_1_1UserGroup.html#a070f88fedc71e4f99d47e6b7d9d2a831',1,'user::UserGroup::children()'],['../classhandler_1_1SimpleGroup.html#a527a5028ee4787c9b4b1bb6a00f4a168',1,'handler::SimpleGroup::children()']]],
+  ['children',['children',['../structstring_1_1BasicTrie_1_1TrieNode.html#abff40a42acdf2ab9b11ee6a7b9a77904',1,'string::BasicTrie::TrieNode::children()'],['../classuser_1_1UserGroup.html#a070f88fedc71e4f99d47e6b7d9d2a831',1,'user::UserGroup::children()'],['../classhandler_1_1SimpleGroup.html#a527a5028ee4787c9b4b1bb6a00f4a168',1,'handler::SimpleGroup::children()']]],
   ['clientinfo',['clientinfo',['../classirc_1_1handler_1_1CtcpBase.html#ae62cea6a583c47fdf3dc7b35188f646d',1,'irc::handler::CtcpBase']]],
+  ['cmd_5fsay',['cmd_say',['../classxonotic_1_1XonoticConnection.html#a5d381bedc727da1b42078a6e3d3b97e8',1,'xonotic::XonoticConnection']]],
+  ['cmd_5fsay_5fas',['cmd_say_as',['../classxonotic_1_1XonoticConnection.html#a6e73cac411455f49d7b91bb671c527a5',1,'xonotic::XonoticConnection']]],
   ['color',['color',['../classstring_1_1Color.html#aa1bfa98b672e3accfaf7e15c703c30fe',1,'string::Color::color()'],['../structLogger_1_1LogType.html#a77be4676ddb1b0922089804628eb7ba0',1,'Logger::LogType::color()']]],
-  ['command',['command',['../structnetwork_1_1Command.html#a90197de213f5f266a6554e9b2f95a4c2',1,'network::Command::command()'],['../structnetwork_1_1Message.html#a26cd151eb505f80814bfe01acb5245bc',1,'network::Message::command()'],['../structnetwork_1_1Request.html#a9dfb3b379ff8e7ccef6205a75aadfa78',1,'network::Request::command()'],['../structirc_1_1LoginInfo.html#aa8beb8bee40b4cebbd385cb58b267be4',1,'irc::LoginInfo::command()']]],
+  ['command',['command',['../structnetwork_1_1Command.html#a90197de213f5f266a6554e9b2f95a4c2',1,'network::Command::command()'],['../structnetwork_1_1Message.html#a26cd151eb505f80814bfe01acb5245bc',1,'network::Message::command()'],['../structnetwork_1_1Request.html#a9dfb3b379ff8e7ccef6205a75aadfa78',1,'network::Request::command()'],['../structxonotic_1_1XonoticConnection_1_1SecureRconCommand.html#a986ad8874f6eea4b89839649cccf2364',1,'xonotic::XonoticConnection::SecureRconCommand::command()'],['../structirc_1_1LoginInfo.html#aa8beb8bee40b4cebbd385cb58b267be4',1,'irc::LoginInfo::command()']]],
   ['condition',['condition',['../classConcurrentContainer.html#a002a134e08adbe46d3fe871bf1c8b548',1,'ConcurrentContainer']]],
   ['connection_5fstatus',['connection_status',['../classirc_1_1IrcConnection.html#a9206a0e3847b27f28cc0240dd111f2ef',1,'irc::IrcConnection']]],
   ['connections',['connections',['../classMelanobot.html#a20ed5fb96f4aa9a639dc8afcb2667564',1,'Melanobot']]],
@@ -31,5 +34,6 @@ var searchData=
   ['current_5fnick_5flowecase',['current_nick_lowecase',['../classirc_1_1IrcConnection.html#aa7ededd9af821cdea0f743a621ca4ee7',1,'irc::IrcConnection']]],
   ['current_5fserver',['current_server',['../classirc_1_1IrcConnection.html#a70ad7df8f63f3babfd7e39b79c7d72d8',1,'irc::IrcConnection']]],
   ['customizable',['customizable',['../classhandler_1_1Cointoss.html#a77cb2cdbcaa737e9d7efbb7501938a68',1,'handler::Cointoss']]],
+  ['cvars',['cvars',['../classxonotic_1_1XonoticConnection.html#acf6d6785a29841f9911dbadb184210e5',1,'xonotic::XonoticConnection']]],
   ['cyan',['cyan',['../namespacecolor.html#a41bcae5e90716a2ad6ca78d484edade6',1,'color']]]
 ];

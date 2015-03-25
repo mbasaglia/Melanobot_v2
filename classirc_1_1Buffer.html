@@ -115,6 +115,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a780c46109b1d430f1f420ccb5d01ce98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6eeef1f19ea07d8af3f3e8587424243"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#ac6eeef1f19ea07d8af3f3e8587424243">~Buffer</a> ()</td></tr>
 <tr class="separator:ac6eeef1f19ea07d8af3f3e8587424243"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34b332683b32e8c3354b2ffa11aae564"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a34b332683b32e8c3354b2ffa11aae564">Buffer</a> (const <a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;)=delete</td></tr>
+<tr class="separator:a34b332683b32e8c3354b2ffa11aae564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a158af87c23d0c94c581eb658be89108f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a158af87c23d0c94c581eb658be89108f">Buffer</a> (<a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:a158af87c23d0c94c581eb658be89108f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28a29fda1b55e68600d8686c3a7cc926"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a28a29fda1b55e68600d8686c3a7cc926">operator=</a> (const <a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;)=delete</td></tr>
+<tr class="separator:a28a29fda1b55e68600d8686c3a7cc926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12cd0c78b9790e52cd532375c8f1cc65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a12cd0c78b9790e52cd532375c8f1cc65">operator=</a> (<a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:a12cd0c78b9790e52cd532375c8f1cc65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ac9d7b61f6fbd7005bdf54da62a9208"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a0ac9d7b61f6fbd7005bdf54da62a9208">insert</a> (const <a class="el" href="structnetwork_1_1Command.html">network::Command</a> &amp;cmd)</td></tr>
 <tr class="memdesc:a0ac9d7b61f6fbd7005bdf54da62a9208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a command to the buffer.  <a href="#a0ac9d7b61f6fbd7005bdf54da62a9208">More...</a><br /></td></tr>
 <tr class="separator:a0ac9d7b61f6fbd7005bdf54da62a9208"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,13 +183,13 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a673037ed901027a06057c3454cbc325e"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a673037ed901027a06057c3454cbc325e">flood_max_length</a> = 510</td></tr>
 <tr class="memdesc:a673037ed901027a06057c3454cbc325e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum nuber of bytes in a message (longer messages will be truncated)  <a href="#a673037ed901027a06057c3454cbc325e">More...</a><br /></td></tr>
 <tr class="separator:a673037ed901027a06057c3454cbc325e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad51dc7471bf9bec3da337d147c1970c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#a7175c549b2e3e4be5dd29b0fa3e7691f">network::Time</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#ad51dc7471bf9bec3da337d147c1970c8">flood_timer</a></td></tr>
+<tr class="memitem:ad51dc7471bf9bec3da337d147c1970c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#ae8371761df5f318774fd8a1e9549ca53">network::Time</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#ad51dc7471bf9bec3da337d147c1970c8">flood_timer</a></td></tr>
 <tr class="memdesc:ad51dc7471bf9bec3da337d147c1970c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message timer.  <a href="#ad51dc7471bf9bec3da337d147c1970c8">More...</a><br /></td></tr>
 <tr class="separator:ad51dc7471bf9bec3da337d147c1970c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bf44c53dfd5472b9428725991f76e90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">network::Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a5bf44c53dfd5472b9428725991f76e90">flood_timer_max</a></td></tr>
+<tr class="memitem:a5bf44c53dfd5472b9428725991f76e90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62">network::Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a5bf44c53dfd5472b9428725991f76e90">flood_timer_max</a></td></tr>
 <tr class="memdesc:a5bf44c53dfd5472b9428725991f76e90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum duration the flood timer can be ahead of now.  <a href="#a5bf44c53dfd5472b9428725991f76e90">More...</a><br /></td></tr>
 <tr class="separator:a5bf44c53dfd5472b9428725991f76e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5792fd70a122ddce18bc66d1a902ae71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">network::Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a5792fd70a122ddce18bc66d1a902ae71">flood_message_penalty</a></td></tr>
+<tr class="memitem:a5792fd70a122ddce18bc66d1a902ae71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62">network::Duration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#a5792fd70a122ddce18bc66d1a902ae71">flood_message_penalty</a></td></tr>
 <tr class="memdesc:a5792fd70a122ddce18bc66d1a902ae71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message penalty.  <a href="#a5792fd70a122ddce18bc66d1a902ae71">More...</a><br /></td></tr>
 <tr class="separator:a5792fd70a122ddce18bc66d1a902ae71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1558d4ec9af3d74e0ed853234564c70"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classirc_1_1Buffer.html#ab1558d4ec9af3d74e0ed853234564c70">flood_bytes_penalty</a> = 0</td></tr>
@@ -254,6 +262,54 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00035">35</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a34b332683b32e8c3354b2ffa11aae564"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">irc::Buffer::Buffer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a158af87c23d0c94c581eb658be89108f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">irc::Buffer::Buffer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -381,6 +437,54 @@ Private Attributes</h2></td></tr>
 </ul>
 
 <p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00190">190</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a28a29fda1b55e68600d8686c3a7cc926"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classirc_1_1Buffer.html">Buffer</a>&amp; irc::Buffer::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a12cd0c78b9790e52cd532375c8f1cc65"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classirc_1_1Buffer.html">Buffer</a>&amp; irc::Buffer::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classirc_1_1Buffer.html">Buffer</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -613,7 +717,7 @@ Private Attributes</h2></td></tr>
 
 <p>Store messages when it isn't possible to send them. </p>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00102">102</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00106">106</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -635,7 +739,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00145">145</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00149">149</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -657,7 +761,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00146">146</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00150">150</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -682,7 +786,7 @@ Private Attributes</h2></td></tr>
 <p>Message size penalty. </p>
 <p>Number of bytes which will cause an extra second to be added <code>flood_timer</code> when a message is sent to the server </p>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00142">142</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00146">146</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -707,7 +811,7 @@ Private Attributes</h2></td></tr>
 <p>Maximum nuber of bytes in a message (longer messages will be truncated) </p>
 <dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2812#section-2.3">http://tools.ietf.org/html/rfc2812#section-2.3</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00115">115</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00119">119</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -719,7 +823,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">network::Duration</a> irc::Buffer::flood_message_penalty</td>
+          <td class="memname"><a class="el" href="namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62">network::Duration</a> irc::Buffer::flood_message_penalty</td>
         </tr>
       </table>
   </td>
@@ -733,7 +837,7 @@ Private Attributes</h2></td></tr>
 <dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a></dd></dl>
 <p>Fixed amount added to <code>flood_timer</code> with each message. </p>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00135">135</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00139">139</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -745,7 +849,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacenetwork.html#a7175c549b2e3e4be5dd29b0fa3e7691f">network::Time</a> irc::Buffer::flood_timer</td>
+          <td class="memname"><a class="el" href="namespacenetwork.html#ae8371761df5f318774fd8a1e9549ca53">network::Time</a> irc::Buffer::flood_timer</td>
         </tr>
       </table>
   </td>
@@ -758,7 +862,7 @@ Private Attributes</h2></td></tr>
 <p>Message timer. </p>
 <dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00120">120</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00124">124</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -770,7 +874,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacenetwork.html#add9d4ffb1b9bfec79726c39be807775e">network::Duration</a> irc::Buffer::flood_timer_max</td>
+          <td class="memname"><a class="el" href="namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62">network::Duration</a> irc::Buffer::flood_timer_max</td>
         </tr>
       </table>
   </td>
@@ -784,7 +888,7 @@ Private Attributes</h2></td></tr>
 <dl class="section see"><dt>See also</dt><dd><a href="http://tools.ietf.org/html/rfc2813#section-5.8">http://tools.ietf.org/html/rfc2813#section-5.8</a></dd></dl>
 <p>When <code>flood_timer</code> reaches <code>flood_timer_max</code>, the buffer will have to wait a while before sending a new message to the server </p>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00128">128</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00132">132</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -806,7 +910,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00147">147</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00151">151</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -828,7 +932,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00096">96</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00100">100</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -850,7 +954,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00148">148</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00152">152</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -872,7 +976,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00149">149</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00153">153</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -896,7 +1000,7 @@ Private Attributes</h2></td></tr>
 
 <p>Thread running the input. </p>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00110">110</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00114">114</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -920,7 +1024,7 @@ Private Attributes</h2></td></tr>
 
 <p>Thread running the output. </p>
 
-<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00106">106</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8hpp_source.html#l00110">110</a> of file <a class="el" href="buffer_8hpp_source.html">buffer.hpp</a>.</p>
 
 </div>
 </div>
@@ -931,7 +1035,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 16 2015 13:20:34 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 25 2015 18:51:01 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

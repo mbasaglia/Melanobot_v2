@@ -1,4 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="5,5,148,32"/>
-<area shape="rect" id="node2" href="$classirc_1_1IrcConnection.html" title="IRC connection. " alt="" coords="196,5,321,32"/>
+<area shape="rect" id="node1" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="5,56,148,83"/>
+<area shape="rect" id="node2" href="$classirc_1_1IrcConnection.html" title="IRC connection. " alt="" coords="225,5,350,32"/>
+<area shape="rect" id="node3" href="$classStdinConnection.html" title="Acts as a network connection to handle standard input. " alt="" coords="228,56,347,83"/>
+<area shape="rect" id="node4" href="$classxonotic_1_1XonoticConnection.html" title="Creates a connection to a Xonotic server. " alt="" coords="196,107,379,133"/>
 </map>

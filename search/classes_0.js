@@ -2,6 +2,8 @@ var searchData=
 [
   ['abstractlist',['AbstractList',['../classhandler_1_1AbstractList.html',1,'handler']]],
   ['acceptinvite',['AcceptInvite',['../classirc_1_1handler_1_1AcceptInvite.html',1,'irc::handler']]],
+  ['adminconnect',['AdminConnect',['../classhandler_1_1AdminConnect.html',1,'handler']]],
+  ['admindisconnect',['AdminDisconnect',['../classhandler_1_1AdminDisconnect.html',1,'handler']]],
   ['admingroup',['AdminGroup',['../classhandler_1_1AdminGroup.html',1,'handler']]],
   ['adminjoin',['AdminJoin',['../classirc_1_1handler_1_1AdminJoin.html',1,'irc::handler']]],
   ['adminnick',['AdminNick',['../classirc_1_1handler_1_1AdminNick.html',1,'irc::handler']]],
