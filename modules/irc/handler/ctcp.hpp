@@ -71,10 +71,10 @@ protected:
     void reply_to(const network::Message& msg,
                   network::OutputMessage output) const override
     {
-        string::FormattedStream s;
+        string::FormattedString s;
         s << '\1' << ctcp << ' ' << output.message << '\1';
         msg.destination->command({"NOTICE",
-            {msg.from,s.str().encode(msg.destination->formatter())}, priority});
+            {msg.from,s.encode(msg.destination->formatter())}, priority});
     }
     using Handler::reply_to;
 

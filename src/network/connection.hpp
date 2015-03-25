@@ -106,7 +106,7 @@ struct Message
  */
 struct OutputMessage
 {
-    OutputMessage(string::FormattedString  message,
+    OutputMessage(string::FormattedString message,
                   bool action = false,
                   std::string target = {},
                   int priority = 0,

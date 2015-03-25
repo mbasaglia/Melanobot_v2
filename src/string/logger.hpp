@@ -145,11 +145,11 @@ public:
     ~Log()
     {
         stream << string::ClearFormatting();
-        Logger::instance().log(type, direction, stream.str(), verbosity);
+        Logger::instance().log(type, direction, stream, verbosity);
     }
 
     template<class T>
-        const Log& operator<< ( const T& t ) const
+        Log& operator<< ( const T& t )
         {
             stream << t;
             return *this;
@@ -159,7 +159,7 @@ public:
     std::string type;
     char direction;
     int verbosity;
-    string::FormattedStream stream;
+    string::FormattedString stream;
 };
 
 /**

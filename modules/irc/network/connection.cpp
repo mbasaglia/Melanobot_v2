@@ -894,7 +894,7 @@ void IrcConnection::command ( network::Command cmd )
 
 void IrcConnection::say ( const network::OutputMessage& message )
 {
-    string::FormattedStream str;
+    string::FormattedString str;
     if ( !message.prefix.empty() )
         str << message.prefix << ' ' << color::nocolor;
     if ( !message.from.empty() )

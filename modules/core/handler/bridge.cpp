@@ -95,7 +95,7 @@ bool BridgeChat::on_handle(network::Message& msg)
         msg.dst_channel ? *msg.dst_channel : "",
         priority,
         msg.source->formatter()->decode(from ? *from : msg.from),
-        (string::FormattedStream() << prefix).str(),
+        prefix,
         timeout == network::Duration::zero() ?
             network::Time::max() :
             network::Clock::now() + timeout

@@ -83,7 +83,7 @@ protected:
             auto queried = find(result,msg.message);
             if ( queried )
             {
-                string::FormattedStream synopsis;
+                string::FormattedString synopsis;
                 std::string name = queried->get("name","");
 
                 if ( !name.empty() )
@@ -107,20 +107,20 @@ protected:
                     synopsis << color::gray << synopsis_string;
                 }
 
-                reply_to(msg,synopsis.str());
+                reply_to(msg,synopsis);
 
                 std::string help = queried->get("help","");
                 if ( !help.empty() )
                 {
-                    reply_to(msg,(string::FormattedStream()
-                        << color::dark_blue << help).str());
+                    reply_to(msg,string::FormattedString()
+                        << color::dark_blue << help);
                 }
             }
         }
         else
         {
-            reply_to(msg,(string::FormattedStream() << "Not found: " <<
-                string::FormatFlags::BOLD << msg.message).str());
+            reply_to(msg,string::FormattedString() << "Not found: " <<
+                string::FormatFlags::BOLD << msg.message);
         }
 
         return true;

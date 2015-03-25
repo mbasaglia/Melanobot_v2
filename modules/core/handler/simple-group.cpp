@@ -129,7 +129,7 @@ protected:
             ( parent->add(s) ? ok : ko ).push_back(s);
 
         if ( !ok.empty() )
-            reply_to(msg,string::FormattedStream() <<
+            reply_to(msg,string::FormattedString() <<
                 "Added to "+parent->get_property("list_name")
                 +": " << color::green << string::implode(" ",ok));
         else if ( ko.empty() )
@@ -137,7 +137,7 @@ protected:
                 +parent->get_property("list_name"));
 
         if ( !ko.empty() )
-            reply_to(msg,string::FormattedStream() <<
+            reply_to(msg,string::FormattedString() <<
                 string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
                 " added to "+parent->get_property("list_name")
                     +": " << color::dark_yellow << string::implode(" ",ko));
@@ -174,7 +174,7 @@ protected:
             ( parent->remove(s) ? ok : ko ).push_back(s);
 
         if ( !ok.empty() )
-            reply_to(msg,string::FormattedStream() <<
+            reply_to(msg,string::FormattedString() <<
                 "Removed from "+parent->get_property("list_name")
                 +": " << color::red << string::implode(" ",ok));
         else if ( ko.empty() )
@@ -182,7 +182,7 @@ protected:
                 +parent->get_property("list_name"));
 
         if ( !ko.empty() )
-            reply_to(msg,string::FormattedStream() <<
+            reply_to(msg,string::FormattedString() <<
                 string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
                 " removed from "+parent->get_property("list_name")
                     +": " << color::dark_yellow << string::implode(" ",ko));

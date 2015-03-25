@@ -180,7 +180,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         reply_to(msg,network::OutputMessage(
-            (string::FormattedStream() << "slaps " << msg.message),
+            string::FormattedString() << "slaps " << msg.message,
             true
         ));
         return true;

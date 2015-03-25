@@ -135,11 +135,11 @@ protected:
     {
         if ( parsed.has_child("results.0.title") )
         {
-            string::FormattedStream title("utf8");
+            string::FormattedString title("utf8");
             title << string::FormatFlags::BOLD << parsed.get("results.0.title","")
                   << string::FormatFlags::NO_FORMAT << ": "
                   << parsed.get("results.0.url","");
-            reply_to(msg,title.str());
+            reply_to(msg,title);
 
             std::string result = parsed.get("results.0.content","");
             result = string::elide( string::collapse_spaces(result), 400 );

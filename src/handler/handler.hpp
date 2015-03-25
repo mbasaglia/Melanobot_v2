@@ -176,7 +176,8 @@ protected:
     }
     void reply_to(const network::Message& msg, const std::string& text) const
     {
-        reply_to(msg, network::OutputMessage((string::FormattedStream("utf8") << text).str()));
+        reply_to(msg, network::OutputMessage(
+            string::FormattedString(string::Formatter::formatter("utf8")) << text));
     }
 
     /**

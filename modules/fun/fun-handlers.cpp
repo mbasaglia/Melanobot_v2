@@ -502,7 +502,7 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
         msg.dst_channel ? *msg.dst_channel : "",
         priority,
         from,
-        (string::FormattedStream() << prefix).str(),
+        prefix,
         timeout == network::Duration::zero() ?
             network::Time::max() :
             network::Clock::now() + timeout

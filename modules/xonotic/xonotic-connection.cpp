@@ -133,7 +133,7 @@ void XonoticConnection::disconnect(const std::string& message)
     {
         cleanup_connection();
         if ( !message.empty() && status_ > CONNECTING )
-            say((string::FormattedStream() << message).str());
+            say({message});
         status_ = DISCONNECTED;
         io.disconnect();
         if ( thread_input.joinable() )
@@ -221,11 +221,11 @@ bool XonoticConnection::set_property(const std::string& property,
 
 void XonoticConnection::say ( const network::OutputMessage& message )
 {
-    string::FormattedStream prefix_stream;
+    string::FormattedString prefix_stream;
     if ( !message.prefix.empty() )
         prefix_stream << message.prefix << ' ';
 
-    string::FormattedStream from_stream;
+    string::FormattedString from_stream;
     if ( !message.from.empty() )
     {
         if ( message.action )

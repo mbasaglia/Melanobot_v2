@@ -448,9 +448,6 @@ private:
 
 /**
  * \brief A formatted string
- * \todo Might be worth mergin this class with \c FormattedStream
- *       to simplify its us.
- *       (Right now \c FormattedString is pretty unusable directly)
  */
 class FormattedString
 {
@@ -467,6 +464,12 @@ public:
     template<class Iterator>
         FormattedString( const Iterator& i, const Iterator& j )
             : elements(i,j) {}
+    explicit FormattedString(Formatter* formatter)
+        : input_formatter(formatter) {}
+    FormattedString(std::string ascii_string)
+    {
+        append<AsciiSubstring>(std::move(ascii_string));
+    }
     FormattedString() = default;
     FormattedString(const FormattedString&) = default;
     FormattedString(FormattedString&&) = default;
@@ -569,98 +572,72 @@ public:
      */
     std::string encode(Formatter* formatter) const;
 
-private:
-    container elements;
-};
+    // stream-like operations
 
-/**
- * \brief Simple way to create FormattedString objects
- */
-class FormattedStream
-{
-public:
-    explicit FormattedStream(const std::string& input_formatter)
-        : formatter(Formatter::formatter(input_formatter)) {}
-    FormattedStream()
-        : formatter(nullptr) {}
-    FormattedStream(const FormattedStream&) = default;
-    FormattedStream(FormattedStream&&) = default;
-    FormattedStream& operator=(const FormattedStream&) = default;
-    FormattedStream& operator=(FormattedStream&&) = default;
-
-    operator FormattedString() const { return str(); }
-    FormattedString str() const { return buffer; }
-
-    const FormattedStream& operator<< ( const std::string& text ) const
+    FormattedString& operator<< ( const std::string& text )
     {
         if ( !text.empty() )
         {
-            if ( formatter )
-                buffer.append(formatter->decode(text));
+            if ( input_formatter )
+                append(input_formatter->decode(text));
             else
-                buffer.append(std::make_shared<AsciiSubstring>(text));
+                append(std::make_shared<AsciiSubstring>(text));
         }
         return *this;
     }
-    const FormattedStream& operator<< ( const char* text ) const
+    FormattedString& operator<< ( const char* text )
     {
         return *this << std::string(text);
     }
-    const FormattedStream& operator<< ( const color::Color12& color ) const
+    FormattedString& operator<< ( const color::Color12& color )
     {
-        buffer.append(std::make_shared<Color>(color));
+        append(std::make_shared<Color>(color));
         return *this;
     }
-    const FormattedStream& operator<< ( const FormatFlags& format_flags ) const
+    FormattedString& operator<< ( const FormatFlags& format_flags )
     {
-        buffer.append(std::make_shared<Format>(format_flags));
+        append(std::make_shared<Format>(format_flags));
         return *this;
     }
-    const FormattedStream& operator<< ( FormatFlags::FormatFlagsEnum format_flags ) const
+    FormattedString& operator<< ( FormatFlags::FormatFlagsEnum format_flags )
     {
-        buffer.append(std::make_shared<Format>(format_flags));
+        append(std::make_shared<Format>(format_flags));
         return *this;
     }
-    const FormattedStream& operator<< ( ClearFormatting ) const
+    FormattedString& operator<< ( ClearFormatting )
     {
-        buffer.append(std::make_shared<ClearFormatting>());
+        append(std::make_shared<ClearFormatting>());
         return *this;
     }
-    const FormattedStream& operator<< ( char c ) const
+    FormattedString& operator<< ( char c )
     {
-        buffer.append(std::make_shared<Character>(c));
+        append(std::make_shared<Character>(c));
         return *this;
     }
-    const FormattedStream& operator<< ( const FormattedString& string ) const
+    FormattedString& operator<< ( const FormattedString& string )
     {
         if ( !string.empty() )
-            buffer.append(string);
+            append(string);
         return *this;
     }
     template <class T>
-        const FormattedStream& operator<< ( const T& obj ) const
+        FormattedString& operator<< ( const T& obj )
         {
             std::ostringstream ss;
             ss << obj;
             return *this << ss.str();
         }
 
-    std::string encode(const std::string& output_formatter) const
-    {
-        return buffer.encode(output_formatter);
-    }
-
-    std::string encode(Formatter* output_formatter) const
-    {
-        return buffer.encode(output_formatter);
-    }
-
-    bool empty() const { return buffer.empty(); }
-
 private:
-    mutable FormattedString buffer;
-    Formatter* formatter;
+    container elements;
+    /**
+     * \brief Formatter used to decode std::string input using stream oprations
+     *
+     * If it's \b nullptr, it will be interpreted as an ASCII string
+     */
+    Formatter *input_formatter{nullptr};
 };
+
 
 /**
  * \brief Plain UTF-8
