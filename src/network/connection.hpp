@@ -202,6 +202,11 @@ public:
     virtual Server server() const = 0;
 
     /**
+     * \brief Returns a 1-line description of the connection (including server info)
+     */
+    virtual std::string description() const = 0;
+
+    /**
      * \brief Schedules a command for execution
      */
     virtual void command ( Command cmd ) = 0;

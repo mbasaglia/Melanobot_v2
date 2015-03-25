@@ -250,10 +250,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        std::string irc_network = msg.source->get_property("NETWORK");
-        if ( !irc_network.empty() )
-            irc_network = '('+irc_network+") ";
-        reply_to(msg,irc_network+msg.source->server().name());
+        reply_to(msg,msg.source->description());
         return true;
     }
 };

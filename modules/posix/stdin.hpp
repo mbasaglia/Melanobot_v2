@@ -76,6 +76,12 @@ public:
     std::string protocol() const override { return "stdin"; }
     std::string name() const override { return "stdin"; }
     network::Server server() const override { return {"stdin",0}; }
+    std::string description() const override { return  "stdin"; }
+
+    void say ( const network::OutputMessage& msg ) override
+    {
+        Log("std",'<',1) << msg.message;
+    }
 
     // dummy overrides:
     Status status() const override { return CONNECTED; }
@@ -94,7 +100,6 @@ public:
     std::string get_property(const std::string&) const override { return {}; }
     bool set_property(const std::string& , const std::string& ) override { return false; }
     void command (network::Command) override {}
-    void say ( const network::OutputMessage& ) override {}
 
 private:
     Melanobot*                            bot;

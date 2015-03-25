@@ -103,6 +103,11 @@ public:
      * \thread ? \lock data
      */
     network::Server server() const override;
+    
+    /**
+     * \thread external \lock data
+     */
+    std::string description() const override;
 
     /**
      * \thread external \lock data(sometimes) buffer(indirect)

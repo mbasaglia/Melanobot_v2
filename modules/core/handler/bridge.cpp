@@ -47,9 +47,23 @@ void Bridge::attach(network::Connection* connection)
 {
     destination = connection;
     if ( connection )
-        Log("sys",'!',3) << "Bridge attached to "  << connection->name();
+        Log("sys",'!',3) << "Bridge attached to "
+            << color::green << connection->description()
+            << color::nocolor << " using protocol "
+            << color::white << connection->protocol();
     else
         Log("sys",'!',3) << "Bridge detached";
+}
+
+void Bridge::attach_channel(boost::optional<std::string> channel)
+{
+    dst_channel = channel;
+    if ( channel )
+        Log("sys",'!',3) << "Bridge attached to channel "
+            << color::dark_green << *channel;
+    else
+        Log("sys",'!',3) << "Bridge detached from channel";
+
 }
 
 BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* parent)
@@ -63,6 +77,8 @@ BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* pare
             std::chrono::seconds(timeout_seconds) );
 
     ignore_self = settings.get("ignore_self",ignore_self);
+
+    from = settings.get_optional<std::string>("from");
 }
 
 bool BridgeChat::can_handle(const network::Message& msg) const
@@ -78,7 +94,7 @@ bool BridgeChat::on_handle(network::Message& msg)
         msg.action,
         msg.dst_channel ? *msg.dst_channel : "",
         priority,
-        msg.source->formatter()->decode(msg.from),
+        msg.source->formatter()->decode(from ? *from : msg.from),
         (string::FormattedStream() << prefix).str(),
         timeout == network::Duration::zero() ?
             network::Time::max() :
@@ -108,6 +124,28 @@ bool BridgeAttach::on_handle(network::Message& msg)
         parent->attach(conn);
     else
         ErrorLog("sys") << "Trying to detach a bridge";
+    return true;
+}
+
+BridgeAttachChannel::BridgeAttachChannel(const Settings& settings,
+                                         handler::HandlerContainer* parent)
+    : SimpleAction("channel",settings,parent)
+{}
+
+void BridgeAttachChannel::initialize()
+{
+    // this ensures we arent in SimpleGroup constructor when called
+    if ( !(this->parent = get_parent<Bridge>()) )
+        throw ConfigurationError{};
+}
+
+bool BridgeAttachChannel::on_handle(network::Message& msg)
+{
+    if ( msg.message.empty() )
+        parent->attach_channel({});
+    else
+        parent->attach_channel(msg.message);
+
     return true;
 }
 

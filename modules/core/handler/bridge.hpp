@@ -37,6 +37,11 @@ public:
      */
     void attach(network::Connection* connection);
 
+    /**
+     * \brief Attach to the given channel
+     */
+    void attach_channel(boost::optional<std::string> channel);
+
 protected:
     bool on_handle(network::Message& msg) override;
 
@@ -59,6 +64,7 @@ protected:
     std::string       prefix;                            ///< Output message prefix
     network::Duration timeout{network::Duration::zero()};///< Output message timeout
     bool              ignore_self{true};                 ///< Ignore bot messages
+    boost::optional<std::string> from;                   ///< Override from
 };
 
 /**
@@ -75,6 +81,20 @@ protected:
 
     std::string protocol;    ///< Limit only to connections with this protocol
     bool    detach{true};    ///< Allow using this to detach the bridge
+    Bridge* parent{nullptr}; ///< Bridge object to apply the attachment to
+};
+/**
+ * \brief Attach the parent bridge to the provided channel
+ */
+class BridgeAttachChannel : public SimpleAction
+{
+public:
+    BridgeAttachChannel(const Settings& settings, handler::HandlerContainer* parent);
+    void initialize() override;
+
+protected:
+    bool on_handle(network::Message& msg) override;
+
     Bridge* parent{nullptr}; ///< Bridge object to apply the attachment to
 };
 

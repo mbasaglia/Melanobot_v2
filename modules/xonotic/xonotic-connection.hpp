@@ -84,6 +84,15 @@ public:
     }
 
     /**
+     * \thread external \lock none (reading a constant value)
+     * \todo connection server might differ from the publicly visible one (eg localhost)
+     */
+    std::string description() const override
+    {
+        return server_.name();
+    }
+
+    /**
      * \thread any \lock none
      */
     void command ( network::Command cmd ) override;

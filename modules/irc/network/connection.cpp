@@ -165,6 +165,14 @@ network::Server IrcConnection::server() const
     return current_server;
 }
 
+std::string IrcConnection::description() const
+{
+    std::string irc_network = get_property("NETWORK");
+    if ( !irc_network.empty() )
+        irc_network = '('+irc_network+") ";
+    Lock lock(mutex);
+    return irc_network+current_server.name();
+}
 
 void IrcConnection::remove_from_channel(const std::string& user_id,
                                         const std::vector<std::string>& channels)
