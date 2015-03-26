@@ -26,6 +26,7 @@ namespace handler {
 SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* parent)
     : SimpleAction("",settings,parent)
 {
+    // Gather settings
     channels = settings.get("channels","");
     name = settings.get("name",trigger);
     help_group = settings.get("help_group",help_group);
@@ -35,17 +36,20 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
         source = bot->connection(source_name);
     synopsis = help = "";
 
+    // Copy relevant defaults to show the children
     Settings default_settings;
     for ( const auto& p : settings )
         if ( !p.second.data().empty() && p.first != "trigger" &&
                 p.first != "auth" && p.first != "name" )
             default_settings.put(p.first,p.second.data());
 
+    // Initialize children
     Settings child_settings = settings;
-
     for ( auto& p : child_settings )
     {
-        if ( p.second.data().empty() )
+        /// \note children are recognized by the fact that they
+        // start with an uppercase name
+        if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
             Settings::merge(p.second,default_settings,false);
             auto hand = handler::HandlerFactory::instance().build(
