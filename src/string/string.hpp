@@ -472,9 +472,9 @@ public:
     }
     FormattedString() = default;
     FormattedString(const FormattedString&) = default;
-    FormattedString(FormattedString&&) = default;
+    FormattedString(FormattedString&&) noexcept = default;
     FormattedString& operator=(const FormattedString&) = default;
-    FormattedString& operator=(FormattedString&&) = default;
+    FormattedString& operator=(FormattedString&&) noexcept = default;
 
     iterator        begin()       { return elements.begin();}
     iterator        end()         { return elements.end();  }

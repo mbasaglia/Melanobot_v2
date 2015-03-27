@@ -214,6 +214,7 @@ private:
 
     std::thread         thread_input;   ///< Thread handling input
     mutable std::mutex  mutex;          ///< Guard data races
+    network::Timer      status_polling; ///< Timer used to gether the connection status
 
 
     /**
@@ -250,6 +251,11 @@ private:
      * \thread any \lock data
      */
     void request_challenge();
+
+    /**
+     * \brief Sends the commands needed to determine the connection status
+     */
+    void request_status();
 
 };
 

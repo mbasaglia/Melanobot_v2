@@ -53,9 +53,9 @@ struct LoginInfo
     explicit LoginInfo(const Settings& settings, const std::string& nick="");
 
     LoginInfo(const LoginInfo&) = default;
-    LoginInfo(LoginInfo&&) = default;
+    LoginInfo(LoginInfo&&) noexcept = default;
     LoginInfo& operator=(const LoginInfo&) = default;
-    LoginInfo& operator=(LoginInfo&&) = default;
+    LoginInfo& operator=(LoginInfo&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) = default;
 
     /**
      * \brief Whether it has all the required information to auth

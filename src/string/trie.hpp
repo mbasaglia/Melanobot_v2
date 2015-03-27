@@ -50,6 +50,12 @@ private:
     public:
         TrieNodeData() {}
 
+        TrieNodeData(TrieNodeData&&)
+            noexcept(std::is_nothrow_move_constructible<MappedType>::value) = default;
+
+        TrieNodeData& operator=(TrieNodeData&&)
+            noexcept(std::is_nothrow_move_assignable<MappedType>::value) = default;
+
         template<class... Data>
             TrieNodeData(Data&&... data) : data(std::forward<Data>(data)...) {}
 
@@ -80,9 +86,16 @@ private:
         TrieNode() : parent(nullptr), depth(0) {}
         TrieNode(TrieNode* parent, int depth) : parent(parent), depth(depth) {}
         TrieNode(const TrieNode&) = delete;
-        TrieNode(TrieNode&&) = default;
+        TrieNode(TrieNode&&)
+            noexcept(std::is_nothrow_move_constructible<TrieNodeData>::value &&
+                std::is_nothrow_move_constructible<std::remove_reference_t<decltype(children)>>::value
+            )
+            = default;
         TrieNode& operator=(const TrieNode&) = delete;
-        TrieNode& operator=(TrieNode&&) = default;
+        TrieNode& operator=(TrieNode&&)
+            noexcept(std::is_nothrow_move_assignable<TrieNodeData>::value &&
+                std::is_nothrow_move_constructible<std::remove_reference_t<decltype(children)>>::value
+            ) = default;
         ~TrieNode()
         {
             for ( auto child : children )
@@ -282,12 +295,12 @@ public:
         return *this;
     }
 
-    BasicTrie(BasicTrie&& other) : root_(other.root_)
+    BasicTrie(BasicTrie&& other) noexcept : root_(other.root_)
     {
         other.root_ = nullptr;
     }
 
-    BasicTrie& operator= (BasicTrie&& other)
+    BasicTrie& operator= (BasicTrie&& other) noexcept
     {
         std::swap(root_,other.root_);
         return *this;

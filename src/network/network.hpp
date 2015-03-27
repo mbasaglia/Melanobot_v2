@@ -19,16 +19,12 @@
 #ifndef NETWORK_HPP
 #define NETWORK_HPP
 
-#include <chrono>
 #include <sstream>
 
 #include "string/string_functions.hpp"
+#include "time.hpp"
 
 namespace network {
-
-using Clock     = std::chrono::steady_clock;
-using Time      = Clock::time_point;
-using Duration  = Clock::duration;
 
 /**
  * \brief Identifies a network server
@@ -61,9 +57,9 @@ struct Server
     Server() : host(""), port(0) {}
 
     Server(const Server&) = default;
-    Server(Server&&) = default;
+    Server(Server&&) noexcept = default;
     Server& operator=(const Server&) = default;
-    Server& operator=(Server&&) = default;
+    Server& operator=(Server&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) = default;
 
     /**
      * \brief Name as host:port

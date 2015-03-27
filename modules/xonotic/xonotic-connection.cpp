@@ -73,7 +73,7 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(Melanobot* bot, con
 XonoticConnection::XonoticConnection ( Melanobot* bot,
                                        const network::Server& server,
                                        const Settings& settings )
-    : server_(server), bot(bot)
+    : server_(server), status_(DISCONNECTED), bot(bot)
 {
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));
@@ -109,6 +109,9 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
                     "say \"^7%message\";"
                     "set sv_adminnick \"Melanobot_sv_adminnick\"";
     }
+
+    status_polling = network::Timer{[this]{request_status();},
+        timer::seconds(settings.get("status_delay",60))};
 }
 
 void XonoticConnection::connect()
@@ -131,6 +134,7 @@ void XonoticConnection::disconnect(const std::string& message)
 {
     if ( io.connected() )
     {
+        status_polling.stop();
         cleanup_connection();
         if ( !message.empty() && status_ > CONNECTING )
             say({message});
@@ -439,6 +443,8 @@ void XonoticConnection::update_connection()
 
     command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
+    status_ = CONNECTED;
+
     // Generate a fake message
     network::Message msg;
     msg.source = msg.destination = this;
@@ -448,6 +454,11 @@ void XonoticConnection::update_connection()
     Lock lock(mutex);
     rcon_buffer.clear();
     cvars.clear();
+    lock.unlock();
+
+    if ( !status_polling.running() )
+        status_polling.start();
+    request_status();
 }
 
 void XonoticConnection::cleanup_connection()
@@ -462,6 +473,16 @@ void XonoticConnection::cleanup_connection()
     Lock lock(mutex);
     rcon_buffer.clear();
     cvars.clear();
+}
+
+void XonoticConnection::request_status()
+{
+    if ( status_ > CONNECTING )
+    {
+        /// \todo attribute holding these commands, check timeouts etc.
+        command({"rcon",{"log_dest_udp"},1024});
+        command({"rcon",{"status 1"},1024});
+    }
 }
 
 } // namespace xonotic

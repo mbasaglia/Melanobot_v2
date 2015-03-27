@@ -19,8 +19,7 @@
 #ifndef CONCURRENT_CONTAINER_HPP
 #define CONCURRENT_CONTAINER_HPP
 
-#include <atomic>
-#include <condition_variable>
+#include "concurrency.hpp"
 #include <functional>
 #include <queue>
 #include <vector>
@@ -160,7 +159,5 @@ public:
     ConcurrentPriorityQueue() : parent_type( &container_type::push, &container_type::pop, &container_type::top )
     {}
 };
-
-using Lock = std::unique_lock<std::mutex>;
 
 #endif // CONCURRENT_CONTAINER_HPP
