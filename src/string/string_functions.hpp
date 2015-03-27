@@ -153,7 +153,13 @@ std::string replace(const std::string& subject, const Properties& map, const std
  */
 bool simple_wildcard(const std::string& text, const std::string& pattern);
 
-template <class Container>
+/**
+ * \brief Checks if any of the elements in \c input matches the wildcard \c pattern
+ *
+ * \c * matches any sequence of characters, all other characters match themselves
+ * \tparam Container A container of \c std::string
+ */
+template <class Container, class = std::enable_if_t<!std::is_convertible<Container,std::string>::value>>
     bool simple_wildcard(const Container& input, const std::string& pattern)
     {
         static_assert(std::is_convertible<typename Container::value_type,std::string>::value,
@@ -187,7 +193,7 @@ inline std::vector<std::string> comma_split(const std::string& input,bool skip_e
     static std::regex regex_commaspace ( "(,\\s*)|(\\s+)",
         std::regex_constants::syntax_option_type::optimize |
         std::regex_constants::syntax_option_type::ECMAScript );
-    return string::regex_split(input,regex_commaspace);
+    return string::regex_split(input,regex_commaspace,skip_empty);
 }
 
 /**

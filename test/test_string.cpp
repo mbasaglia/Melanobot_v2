@@ -207,3 +207,55 @@ BOOST_AUTO_TEST_CASE( test_replace )
 
 }
 
+BOOST_AUTO_TEST_CASE( test_wildcard )
+{
+    BOOST_CHECK( !string::simple_wildcard("foobar","fu*") );
+    BOOST_CHECK( string::simple_wildcard("foobar","foobar") );
+    BOOST_CHECK( string::simple_wildcard("foobar","foo*") );
+    BOOST_CHECK( string::simple_wildcard("foobar","*") );
+    BOOST_CHECK( string::simple_wildcard("foobar","*bar") );
+    BOOST_CHECK( string::simple_wildcard("foobar","f*r") );
+    BOOST_CHECK( !string::simple_wildcard("foo*","foobar") );
+
+    std::vector<std::string> c;
+    BOOST_CHECK( !string::simple_wildcard(c,"m*y") );
+    c.push_back("pony");
+    BOOST_CHECK( !string::simple_wildcard(c,"m*y") );
+    c.push_back("money");
+    BOOST_CHECK( string::simple_wildcard(c,"m*y") );
+}
+
+BOOST_AUTO_TEST_CASE( test_split )
+{
+    using v = std::vector<std::string>;
+    v hw {"hello","world"};
+    v h_w {"hello","","world"};
+    v hwb {"hello","world!"};
+    BOOST_CHECK( string::regex_split("hello, world!","[, !]") == hw );
+    BOOST_CHECK( string::regex_split("hello, world!",std::regex("[, !]")) == hw );
+    BOOST_CHECK( string::regex_split("hello, world!","[, !]",false) == h_w );
+    BOOST_CHECK( string::comma_split("hello, world!") == hwb );
+    BOOST_CHECK( string::comma_split("hello,,  world",false) == h_w );
+}
+
+BOOST_AUTO_TEST_CASE( test_similarity )
+{
+    BOOST_CHECK( string::similarity("foo","bar") == 0 );
+    BOOST_CHECK( string::similarity("hello","hello") != 0 );
+    BOOST_CHECK( string::similarity("hello","he") != 0 );
+    BOOST_CHECK( string::similarity("hello","hello") > string::similarity("hello","he") );
+    BOOST_CHECK( string::similarity("princess","priceless") == string::similarity("priceless","princess") );
+    BOOST_CHECK( string::similarity("foo","foobar") > string::similarity("foo","fboaor") );
+}
+
+BOOST_AUTO_TEST_CASE( test_to_uint )
+{
+    BOOST_CHECK( string::to_uint("f00bar") == 0 );
+    BOOST_CHECK( string::to_uint("f00bar",16) == 0xF00BA );
+    BOOST_CHECK( string::to_uint("f00bar",10,123) == 123 );
+    BOOST_CHECK( string::to_uint("10",8) == 8 );
+    BOOST_CHECK( string::to_uint("10",9) == 9 );
+    BOOST_CHECK( string::to_uint("10",10) == 10 );
+    BOOST_CHECK( string::to_uint("10",11) == 11 );
+    BOOST_CHECK( string::to_uint("10",12) == 12 );
+}
