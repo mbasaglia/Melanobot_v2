@@ -253,7 +253,7 @@ public:
 // ctors
     DateTime() : DateTime(Clock::now()) {}
 
-    SUPER_CONSTEXPR DateTime(const Time& time)
+    DateTime(const Time& time)
         : DateTime(1970,Month::JANUARY,days(1),hours(0),minutes(0))
     {
         *this += time.time_since_epoch();
@@ -507,7 +507,7 @@ public:
      * \brief Add a duration
      */
     template<class Rep, class Period>
-        SUPER_CONSTEXPR DateTime& operator+= (const std::chrono::duration<Rep,Period>& dur) noexcept
+        DateTime& operator+= (const std::chrono::duration<Rep,Period>& dur) noexcept
         {
             if ( dur < std::chrono::duration<Rep,Period>::zero() )
                 return *this -= -dur;
@@ -577,7 +577,7 @@ public:
      * \tparam Duration a chrono duration
      */
     template<class Rep, class Period>
-        SUPER_CONSTEXPR DateTime& operator-= (const std::chrono::duration<Rep,Period>& dur) noexcept
+        DateTime& operator-= (const std::chrono::duration<Rep,Period>& dur) noexcept
         {
             if ( dur < std::chrono::duration<Rep,Period>::zero() )
                 return *this += -dur;
@@ -725,7 +725,7 @@ private:
      * \brief Helper function for operator-=()
      */
     template<class T1, class T2>
-        static SUPER_CONSTEXPR void subtract_helper(int nextunit, T1& mask, T1& ms, T2& member) noexcept
+        static void subtract_helper(int nextunit, T1& mask, T1& ms, T2& member) noexcept
         {
             mask *= nextunit;
             if ( ms % mask )
@@ -745,7 +745,7 @@ private:
         }
 
     template<class T1, class T2>
-        static SUPER_CONSTEXPR void add_helper(int nextunit, T1& mask, T1& ms, T2& member) noexcept
+        static void add_helper(int nextunit, T1& mask, T1& ms, T2& member) noexcept
         {
             const auto next_mask = mask * nextunit;
             if ( ms % next_mask )
