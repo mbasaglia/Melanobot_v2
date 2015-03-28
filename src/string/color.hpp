@@ -23,12 +23,7 @@
 #include <string>
 
 #include "math.hpp"
-
-#if defined(__cpp_constexpr) && __cpp_constexpr >= 201304
-#  define SUPER_CONSTEXPR constexpr
-#else
-#  define SUPER_CONSTEXPR
-#endif
+#include "c++-compat.hpp"
 
 /**
  * \brief Namespace for color operations

@@ -30,3 +30,7 @@ endfunction(melanotest)
 
 add_executable(test_string test_string.cpp ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp)
 melanotest(test_string)
+
+
+add_executable(test_time test_time.cpp)
+melanotest(test_time)
