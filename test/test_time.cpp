@@ -155,10 +155,69 @@ BOOST_AUTO_TEST_CASE( test_DateTime )
     BOOST_CHECK( time == DateTime(1974,Month::JULY,days(25),hours(12),minutes(34),seconds(56),milliseconds(78)) );
 
 
-    // \todo -=
-    // \todo comparison (== not needed)
-    // \todo year_day
+    time = DateTime(2015,Month::JANUARY,days(1),hours(0),minutes(0));
+    // - milliseconds (full overflow)
+    time -= milliseconds(500);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(59),seconds(59),milliseconds(500)) );
+    // - milliseconds (no overflow)
+    time -= milliseconds(500);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(59),seconds(59),milliseconds(0)) );
+    // - seconds (no overflow)
+    time -= seconds(50);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(59),seconds(9)) );
+    // - seconds (overflow)
+    time -= seconds(69);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(58)) );
+    // - minutes (no overflow)
+    time -= minutes(50);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(8)) );
+    // - minutes (overflow)
+    time -= minutes(8+60*2);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(21),minutes(0)) );
+    // - hours (no overflow)
+    time -= hours(11);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(10),minutes(0)) );
+    // - hours (overflow)
+    time -= hours(34);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(30),hours(0),minutes(0)) );
+    // - days (no overflow)
+    time -= days(20);
+    BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(10),hours(0),minutes(0)) );
+    // - days (overflow)
+    time -= days(20);
+    BOOST_CHECK( time == DateTime(2014,Month::NOVEMBER,days(20),hours(0),minutes(0)) );
+    // - months (no overflow)
+    time -= days(30+31+30);
+    BOOST_CHECK( time == DateTime(2014,Month::AUGUST,days(20),hours(0),minutes(0)) );
+    // - days (overflow)
+    time -= days(time.year_day());
+    BOOST_CHECK( time == DateTime(2014,Month::JANUARY,days(1),hours(0),minutes(0)) );
+    // - year
+    time -= days(365);
+    BOOST_CHECK( time == DateTime(2013,Month::JANUARY,days(1),hours(0),minutes(0)) );
 
+    // comparison
+    BOOST_CHECK( time+seconds(1) < time+milliseconds(1001) );
+    BOOST_CHECK( time < time+milliseconds(1) );
+    BOOST_CHECK( !(time+milliseconds(1) < time) );
+    BOOST_CHECK( time <= time+milliseconds(1) );
+    BOOST_CHECK( !(time+milliseconds(1) <= time) );
+
+    BOOST_CHECK( !(time > time+milliseconds(1)) );
+    BOOST_CHECK( time+milliseconds(1) > time );
+    BOOST_CHECK( !(time >= time+milliseconds(1)) );
+    BOOST_CHECK( time+milliseconds(1) >= time );
+
+    BOOST_CHECK( time != time+milliseconds(1) );
+    BOOST_CHECK( time+milliseconds(1) != time );
+    BOOST_CHECK( !(time != time) );
+
+    // year_day
+    for ( int i = 0; i < 31; i++ )
+        BOOST_CHECK( DateTime(2013,Month::JANUARY,days(1+i),hours(0),minutes(0)).year_day() == i );
+
+    for ( int i = 0; i < 30; i++ )
+        BOOST_CHECK( DateTime(2013,Month::MARCH,days(1+i),hours(0),minutes(0)).year_day() == i+28+31 );
 
     // unix
     DateTime unix(1970,Month::JANUARY,days(1),hours(0),minutes(0));

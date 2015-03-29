@@ -263,7 +263,7 @@ public:
              seconds second = seconds(0), milliseconds millisecond = milliseconds(0))
     : year_(year),
       month_(math::bound(Month::JANUARY,month,Month::DECEMBER)),
-      day_(math::bound(uint8_t(1),day.count(),month_days(year,math::bound(Month::JANUARY,month,Month::DECEMBER)))),
+      day_(math::bound(1,day.count(),month_days(year,math::bound(Month::JANUARY,month,Month::DECEMBER)))),
       hour_(hour.count() % 24),
       minute_(minute.count() % 60),
       second_(second.count() % 60),
@@ -309,24 +309,24 @@ public:
     /**
      * \brief Milliseconds
      */
-    constexpr uint16_t millisecond() const noexcept { return milliseconds_; }
+    constexpr auto millisecond() const noexcept { return milliseconds_; }
     /**
      * \brief Seconds
      * \note No leap seconds
      */
-    constexpr uint8_t second() const noexcept { return second_; }
+    constexpr auto second() const noexcept { return second_; }
     /**
      * \brief Minutes
      */
-    constexpr uint8_t minute() const noexcept { return minute_; }
+    constexpr auto minute() const noexcept { return minute_; }
     /**
      * \brief Hour of the day [0,23]
      */
-    constexpr uint8_t hour() const noexcept { return hour_; }
+    constexpr auto hour() const noexcept { return hour_; }
     /**
      * \brief Hour of the day [1,12]
      */
-    constexpr uint8_t hour12() const noexcept { return hour_ % 12 ? hour_ % 12 : 12; }
+    constexpr auto hour12() const noexcept { return hour_ % 12 ? hour_ % 12 : 12; }
     /**
      * \brief Whether it's a.m. (12:00 am = midnight, 12:00pm = noon)
      */
@@ -338,13 +338,14 @@ public:
     /**
      * \brief Day of the month [1,31]
      */
-    constexpr uint8_t day() const noexcept { return day_; }
+    constexpr auto day() const noexcept { return day_; }
     /**
      * \brief Day of the year [0,365]
+     * \note Zero based
      */
-    SUPER_CONSTEXPR uint16_t year_day() const noexcept
+    SUPER_CONSTEXPR int year_day() const noexcept
     {
-        uint16_t r = 0;
+        int r = 0;
         for ( Month m = Month::JANUARY; m < month_; m++ )
             r += month_days(m);
         return r + day() - 1 ;
@@ -352,7 +353,7 @@ public:
     /**
      * \brief Number of days in a year
      */
-    static constexpr uint16_t year_days(int32_t year) noexcept
+    static constexpr int year_days(int32_t year) noexcept
     {
         return leap_year(year) ? 366 : 365;
     }
@@ -367,7 +368,7 @@ public:
     /**
      * \brief Year
      */
-    constexpr int32_t year() const noexcept { return year_; }
+    constexpr auto year() const noexcept { return year_; }
     /**
      * \brief Whether the year is leap
      * \note This is true for the Gregorian calendar and disregards oddities
@@ -392,14 +393,14 @@ public:
     /**
      * \brief Number of days in the given month
      */
-    constexpr uint8_t month_days(Month m) const noexcept
+    constexpr int month_days(Month m) const noexcept
     {
         return month_days(year_,m);
     }
     /**
      * \brief Number of days in the given month
      */
-    static constexpr uint8_t month_days(int32_t year, Month m) noexcept
+    static constexpr int month_days(int32_t year, Month m) noexcept
     {
 #if !defined(__cpp_constexpr) || __cpp_constexpr >= 201304
         if ( m == Month::FEBRUARY )
@@ -467,9 +468,9 @@ public:
     /**
      * \brief Sets the day of the month
      */
-    SUPER_CONSTEXPR void set_day(uint8_t day) noexcept
+    SUPER_CONSTEXPR void set_day(int day) noexcept
     {
-        day_ = math::bound(uint8_t(1), day, month_days(month_));
+        day_ = math::bound(1, day, month_days(month_));
     }
     /**
      * \brief Sets the hour of the day [0,23]
@@ -601,7 +602,7 @@ public:
             // move to dec 12 of the previous year
             if ( d > year_day() )
             {
-                d -= year_day() - 1;
+                d -= year_day() + 1;
                 set_date(year_-1,Month::DECEMBER,days(31));
             }
 
@@ -621,6 +622,15 @@ public:
 
             // advance whole days
             day_ -= d;
+
+            // handle day underflow
+            if ( day_ <= 0 )
+            {
+                if ( month_ == Month::JANUARY )
+                    year_--;
+                month_--;
+                day_ += month_days(month_);
+            }
 
             return *this;
         }
@@ -713,13 +723,13 @@ public:
 
 
 private:
-    int32_t     year_;  ///< Year
-    Month       month_; ///< Month
-    uint8_t     day_;   ///< Day of the month [1,31]
-    uint8_t     hour_;  ///< Hour [0,23]
-    uint8_t     minute_;///< Minute [0,59]
-    uint8_t     second_;///< Second [0,59] \todo (allow leap seconds?)
-    uint16_t    milliseconds_;///< Milli seconds [0,10^3)
+    int32_t     year_;          ///< Year
+    Month       month_;         ///< Month
+    int8_t     day_;            ///< Day of the month [1,31]
+    int8_t     hour_;           ///< Hour [0,23]
+    int8_t     minute_;         ///< Minute [0,59]
+    int8_t     second_;         ///< Second [0,59] \todo (allow leap seconds?)
+    int16_t    milliseconds_;   ///< Milli seconds [0,10^3)
 
     /**
      * \brief Helper function for operator-=()
@@ -727,21 +737,19 @@ private:
     template<class T1, class T2>
         static void subtract_helper(int nextunit, T1& mask, T1& ms, T2& member) noexcept
         {
-            mask *= nextunit;
-            if ( ms % mask )
+            const auto next_mask = mask * nextunit;
+            if ( ms % next_mask )
             {
-                auto delta = (ms % mask) / (mask/nextunit);
-                ms -= delta;
-                if ( delta <= member )
+                auto delta = (ms % next_mask) / mask;
+                member -= delta;
+                ms -= delta * mask;
+                if ( member < 0 )
                 {
-                    member -= delta;
-                }
-                else
-                {
-                    member = nextunit - delta + member;
-                    ms += mask;
+                    member += nextunit;
+                    ms += next_mask;
                 }
             }
+            mask = next_mask;
         }
 
     template<class T1, class T2>
