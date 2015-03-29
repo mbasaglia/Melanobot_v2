@@ -50,6 +50,32 @@ BOOST_AUTO_TEST_CASE( test_Month )
 
 }
 
+BOOST_AUTO_TEST_CASE( test_WeekDay )
+{
+    WeekDay m = WeekDay::MONDAY;
+    BOOST_CHECK( int(m) == 1 );
+    ++m;
+    BOOST_CHECK( int(m) == 2 );
+    m++;
+    BOOST_CHECK( int(m) == 3 );
+    m += 2;
+    BOOST_CHECK( int(m) == 5 );
+    m += 8;
+    BOOST_CHECK( int(m) == 6 );
+    --m;
+    BOOST_CHECK( int(m) == 5 );
+    m--;
+    BOOST_CHECK( int(m) == 4 );
+    m -= 2;
+    BOOST_CHECK( int(m) == 2 );
+    m -= 8;
+    BOOST_CHECK( int(m) == 1 );
+
+    BOOST_CHECK( WeekDay::WEDNESDAY - -2 == WeekDay::FRIDAY );
+    BOOST_CHECK( WeekDay::WEDNESDAY + -2 ==  WeekDay::MONDAY );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_DateTime )
 {
     // explicit ctor
@@ -266,5 +292,22 @@ BOOST_AUTO_TEST_CASE( test_DateTime )
 
     // default ctor (calls Clock::time_point ctor)
     BOOST_CHECK( std::abs( DateTime().unix() - std::time(nullptr) ) < 1);
+
+    // week_day
+    auto week_day_check = [](int y, Month m, days day, WeekDay wday)
+    {
+        return DateTime(y,m,day,hours(0),minutes(0)).week_day() == wday;
+    };
+    BOOST_CHECK( week_day_check(2015,Month::MARCH,days(29),WeekDay::SUNDAY) );
+    BOOST_CHECK( week_day_check(2015,Month::MARCH,days(1),WeekDay::SUNDAY) );
+    BOOST_CHECK( week_day_check(2000,Month::MARCH,days(1),WeekDay::WEDNESDAY) );
+    BOOST_CHECK( week_day_check(1582,Month::OCTOBER,days(15),WeekDay::FRIDAY) );
+    // Still gregorian before 1582-10-15
+    BOOST_CHECK( week_day_check(1582,Month::OCTOBER,days(1),WeekDay::FRIDAY) );
+    BOOST_CHECK( week_day_check(1,Month::DECEMBER,days(25),WeekDay::TUESDAY) );
+    BOOST_CHECK( week_day_check(0,Month::DECEMBER,days(31),WeekDay::SUNDAY) );
+    BOOST_CHECK( week_day_check(-1,Month::DECEMBER,days(31),WeekDay::SUNDAY) );
+    BOOST_CHECK( week_day_check(-10,Month::JANUARY,days(1),WeekDay::TUESDAY) );
+    BOOST_CHECK( week_day_check(-44,Month::MARCH,days(15),WeekDay::FRIDAY) );
 
 }

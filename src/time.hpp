@@ -241,6 +241,64 @@ inline SUPER_CONSTEXPR Month operator-- (Month& m, int) noexcept
 }
 
 /**
+ * \brief Week day enum
+ */
+enum class WeekDay : uint8_t {
+    MONDAY      = 1,
+    TUESDAY     = 2,
+    WEDNESDAY   = 3,
+    THURSDAY    = 4,
+    FRIDAY      = 5,
+    SATURDAY    = 6,
+    SUNDAY      = 7
+};
+
+constexpr WeekDay operator- (WeekDay m, int i) noexcept;
+inline constexpr WeekDay operator+ (WeekDay m, int i) noexcept
+{
+    return i > 0 ? WeekDay((((int(m)-1)+i)%7)+1) : m - -i;
+}
+
+inline SUPER_CONSTEXPR WeekDay& operator+= (WeekDay& m, int i) noexcept
+{
+    m = m + i;
+    return m;
+}
+inline constexpr WeekDay operator- (WeekDay m, int i) noexcept
+{
+    return i < 0 ? m + -i : ( i < int(m) ? WeekDay(int(m)-i) : m - (i-7) );
+}
+
+inline SUPER_CONSTEXPR WeekDay& operator-= (WeekDay& m, int i) noexcept
+{
+    m = m - i;
+    return m;
+}
+
+inline SUPER_CONSTEXPR WeekDay& operator++ (WeekDay& m) noexcept
+{
+    return m += 1;
+}
+
+inline SUPER_CONSTEXPR WeekDay operator++ (WeekDay& m, int) noexcept
+{
+    auto c = m;
+    ++m;
+    return c;
+}
+
+inline SUPER_CONSTEXPR WeekDay& operator-- (WeekDay& m) noexcept
+{
+    return m -= 1;
+}
+
+inline SUPER_CONSTEXPR WeekDay operator-- (WeekDay& m, int) noexcept
+{
+    auto c = m;
+    --m;
+    return c;
+}
+/**
  * \brief A class representing a date and time
  * \note Some functions assume std::chrono::system_clock starts on the unix epoch
  */
@@ -416,6 +474,28 @@ public:
                 ( int(m) % 2 ? 30 : 31 )
             );
 #endif
+    }
+
+    /**
+     * \brief Evaluates the week day
+     */
+    SUPER_CONSTEXPR WeekDay week_day() const noexcept
+    {
+        int month2 = int(month_);
+        int year2 = year_;
+        if ( month2 < 3 )
+        {
+            year2--;
+            month2+=12;
+        }
+
+        // converts negative years into positive ones and add 1
+        // (-1 BC becomes 0 AD, which is equivalent to 400 AD)
+        if ( year2 < 0 )
+            year2 += 400*std::ceil(-year2/400.0)+1;
+
+        int d = ( day_ + (month2+1)*26/10 + year2 + year2/4 + 6*(year2/100) + year2/400 ) % 7;
+        return WeekDay((d+5) % 7 + 1);
     }
 
 // setters
