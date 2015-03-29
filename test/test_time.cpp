@@ -219,6 +219,26 @@ BOOST_AUTO_TEST_CASE( test_DateTime )
     for ( int i = 0; i < 30; i++ )
         BOOST_CHECK( DateTime(2013,Month::MARCH,days(1+i),hours(0),minutes(0)).year_day() == i+28+31 );
 
+    // difference
+    BOOST_CHECK( time-time == DateTime::Clock::duration::zero() );
+    auto cmp1 = [&time](auto duration) {
+        return (time+duration) - time == duration;
+    };
+    auto cmp2 = [&time](auto duration) {
+        return time - (time+duration) ==
+            -std::chrono::duration_cast<DateTime::Clock::duration>(duration);
+    };
+    BOOST_CHECK( cmp1(milliseconds(45)) );
+    BOOST_CHECK( cmp2(milliseconds(45)) );
+    BOOST_CHECK( cmp1(seconds(45)) );
+    BOOST_CHECK( cmp2(seconds(45)) );
+    BOOST_CHECK( cmp1(minutes(45)) );
+    BOOST_CHECK( cmp2(minutes(45)) );
+    BOOST_CHECK( cmp1(hours(45)) );
+    BOOST_CHECK( cmp2(hours(45)) );
+    BOOST_CHECK( cmp1(days(45)) );
+    BOOST_CHECK( cmp2(days(45)) );
+
     // unix
     DateTime unix(1970,Month::JANUARY,days(1),hours(0),minutes(0));
     BOOST_CHECK( unix.unix() == 0 );

@@ -644,7 +644,8 @@ public:
 
     SUPER_CONSTEXPR Clock::duration operator- (const DateTime& rhs) const noexcept
     {
-        return {}; /// \todo
+        return std::chrono::duration_cast<Clock::duration>(milliseconds(unix()*1000+milliseconds_)) -
+            std::chrono::duration_cast<Clock::duration>(milliseconds(rhs.unix()*1000+rhs.milliseconds_));
     }
 
     SUPER_CONSTEXPR bool operator< (const DateTime& rhs) const noexcept
