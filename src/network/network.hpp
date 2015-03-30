@@ -22,7 +22,7 @@
 #include <sstream>
 
 #include "string/string_functions.hpp"
-#include "time.hpp"
+#include "time/time.hpp"
 
 namespace network {
 

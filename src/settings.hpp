@@ -25,6 +25,8 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include "c++-compat.hpp"
+
 
 using PropertyTree = boost::property_tree::ptree;
 
@@ -98,6 +100,18 @@ public:
             if ( overwrite || !target.get_child_optional(prop.first) )
                 target.put(prop.first,prop.second.data());
         }
+    }
+
+    /**
+     * \brief Possibly convert between std::optional and boost::optional
+     */
+    template<class T, class S/*,
+        class = std::enable_if_t<!std::is_same<Optional<T>,boost::optional<T>>::value>,
+        class = std::enable_if_t<std::is_convertible<S,std::string>::value>*/>
+    Optional<T> get_optional(S&& path) const
+    {
+        auto opt = PropertyTree::get_optional<T>(std::forward<S>(path));
+        return opt ? Optional<T>() : *opt;
     }
 
 private:

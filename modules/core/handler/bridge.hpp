@@ -40,13 +40,13 @@ public:
     /**
      * \brief Attach to the given channel
      */
-    void attach_channel(boost::optional<std::string> channel);
+    void attach_channel(Optional<std::string> channel);
 
 protected:
     bool on_handle(network::Message& msg) override;
 
     network::Connection*         destination{nullptr};  ///< Message destination
-    boost::optional<std::string> dst_channel;           ///< Message destination channel
+    Optional<std::string> dst_channel;           ///< Message destination channel
 };
 
 /**
@@ -64,7 +64,7 @@ protected:
     std::string       prefix;                            ///< Output message prefix
     network::Duration timeout{network::Duration::zero()};///< Output message timeout
     bool              ignore_self{true};                 ///< Ignore bot messages
-    boost::optional<std::string> from;                   ///< Override from
+    Optional<std::string> from;                   ///< Override from
 };
 
 /**

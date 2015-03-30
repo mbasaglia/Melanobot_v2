@@ -28,4 +28,22 @@
 #  define SUPER_CONSTEXPR
 #endif
 
+#ifdef __has_include
+#if __has_include(<optional>)
+#    include<optional>
+    template<class T>
+        using Optional = std::optional<T>;
+#  elif __has_include(<experimental/optional>)
+#    include <experimental/optional>
+    template<class T>
+        using Optional = std::experimental::optional<T>;
+#  elif __has_include(<boost/optional.hpp>)
+    template<class T>
+        using Optional = boost::optional<T>;
+#    include <boost/optional.hpp>
+#  else
+#     error "Missing <optional>"
+#  endif
+#endif
+
 #endif // CXX_COMPAT_HPP

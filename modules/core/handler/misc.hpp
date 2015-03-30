@@ -153,9 +153,9 @@ private:
     /**
      * \brief removes all internal nodes which don't have a name key
      */
-    boost::optional<PropertyTree> restructure ( const PropertyTree& input, PropertyTree* parent ) const
+    Optional<PropertyTree> restructure ( const PropertyTree& input, PropertyTree* parent ) const
     {
-        boost::optional<PropertyTree> ret;
+        Optional<PropertyTree> ret;
 
         if ( input.get_optional<std::string>("name") )
         {
@@ -197,22 +197,22 @@ private:
     /**
      * \brief Searches for a help item with the given name
      */
-    boost::optional<const PropertyTree&> find ( const PropertyTree& tree,
-                                                const std::string& name ) const
+    const PropertyTree* find ( const PropertyTree& tree,
+                               const std::string& name ) const
     {
         auto opt = tree.get_child_optional(name);
 
         if ( opt && !opt->empty() )
-            return opt;
+            return &*opt;
 
         for ( const auto& p : tree )
         {
-            opt = find(p.second,name);
-            if ( opt && !opt->empty() )
-                return opt;
+            auto ptr = find(p.second,name);
+            if ( ptr && !ptr->empty() )
+                return ptr;
         }
 
-        return {};
+        return nullptr;
     }
 };
 

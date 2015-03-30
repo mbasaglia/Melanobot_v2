@@ -85,7 +85,7 @@ struct Message
     class Connection*        source {nullptr};     ///< Connection originating this message
 
     class Connection*        destination {nullptr};///< Connection which should receive replies
-    boost::optional<std::string> dst_channel;      ///< Channel which should receive replies
+    Optional<std::string>    dst_channel;          ///< Channel which should receive replies
 
     std::string              raw;     ///< Raw contents
     std::string              command; ///< Protocol command name
