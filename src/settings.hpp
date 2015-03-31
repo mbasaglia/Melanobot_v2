@@ -111,7 +111,7 @@ public:
     Optional<T> get_optional(S&& path) const
     {
         auto opt = PropertyTree::get_optional<T>(std::forward<S>(path));
-        return opt ? Optional<T>() : *opt;
+        return opt ? *opt : Optional<T>();
     }
 
 private:

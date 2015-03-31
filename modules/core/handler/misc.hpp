@@ -322,6 +322,14 @@ public:
 
         if ( trigger.empty() || reply.empty() )
             throw ConfigurationError();
+
+        if ( regex )
+        {
+            auto flags = std::regex::ECMAScript|std::regex::optimize;
+            if ( !case_sensitive )
+                flags |= std::regex::icase;
+            trigger_regex = std::regex(trigger,flags);
+        }
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -336,21 +344,13 @@ protected:
         if ( regex )
         {
             std::smatch match;
-            auto flags = std::regex::ECMAScript;
-            if ( !case_sensitive )
-                flags |= std::regex::icase;
-            if ( std::regex_match(msg.message,match,std::regex(trigger,flags)) )
+            if ( std::regex_match(msg.message,match,trigger_regex) )
             {
-                std::string myreply = reply;
-                if ( !match.empty() )
-                {
-                    Properties map;
-                    map["sender"] = msg.source->get_user(msg.from).name;
-                    for ( unsigned i = 0; i < match.size(); i++ )
-                        map[std::to_string(i)] = match[i];
-                    myreply = string::replace(myreply,map,"\\");
-                }
-                reply_to(msg,myreply);
+                Properties map;
+                map["sender"] = msg.source->get_user(msg.from).name;
+                for ( unsigned i = 0; i < match.size(); i++ )
+                    map[std::to_string(i)] = match[i];
+                reply_to(msg,string::replace(reply,map,"%"));
                 return true;
             }
         }
@@ -370,11 +370,12 @@ protected:
     }
 
 private:
-    std::string trigger;
-    std::string reply;
-    bool        regex = false;
-    bool        case_sensitive = true;
-    bool        direct = true;
+    std::string trigger;                ///< Trigger pattern
+    std::string reply;                  ///< Reply string
+    bool        regex{false};           ///< Whether the trigger is a regex
+    bool        case_sensitive{true};   ///< Whether matches are case sensitive
+    bool        direct{true};           ///< Whether the input message must be direct
+    std::regex  trigger_regex;          ///< Regex for the trigger
 };
 
 } // namespace handler
