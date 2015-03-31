@@ -78,9 +78,11 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));
     io.max_datagram_size(settings.get("datagram_size",1400));
-    io.on_error = [](const std::string& msg)
+    io.on_error = [this](const std::string& msg)
     {
         ErrorLog("xon","Network Error") << msg;
+        status_ = DISCONNECTED;
+        /// \todo issue a message
     };
     io.on_async_receive = [this](const std::string& datagram)
     {
@@ -437,28 +439,31 @@ void XonoticConnection::handle_message(network::Message& msg)
 
 void XonoticConnection::update_connection()
 {
-    /// \todo the host name for log_dest_udp needs to be read from settings
-    /// (and if settings don't provide it, fallback to what local_endpoint() gives)
-    command({"rcon",{"set", "log_dest_udp", io.local_endpoint().name()},1024});
+    if ( status_ > DISCONNECTED )
+    {
+        /// \todo the host name for log_dest_udp needs to be read from settings
+        /// (and if settings don't provide it, fallback to what local_endpoint() gives)
+        command({"rcon",{"set", "log_dest_udp", io.local_endpoint().name()},1024});
 
-    command({"rcon",{"set", "sv_eventlog", "1"},1024});
+        command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
-    status_ = CONNECTED;
+        status_ = CONNECTED;
 
-    // Generate a fake message
-    network::Message msg;
-    msg.source = msg.destination = this;
-    msg.command = "CONNECTED";
-    bot->message(msg);
+        // Generate a fake message
+        network::Message msg;
+        msg.source = msg.destination = this;
+        msg.command = "CONNECTED";
+        bot->message(msg);
 
-    Lock lock(mutex);
-    rcon_buffer.clear();
-    cvars.clear();
-    lock.unlock();
+        Lock lock(mutex);
+        rcon_buffer.clear();
+        cvars.clear();
+        lock.unlock();
 
-    if ( !status_polling.running() )
-        status_polling.start();
-    request_status();
+        if ( !status_polling.running() )
+            status_polling.start();
+        request_status();
+    }
 }
 
 void XonoticConnection::cleanup_connection()
