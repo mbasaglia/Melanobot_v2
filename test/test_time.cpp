@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "time.hpp"
+#include "time/time.hpp"
 
 using namespace timer;
 

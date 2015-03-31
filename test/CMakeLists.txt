@@ -32,5 +32,5 @@ add_executable(test_string test_string.cpp ${CMAKE_SOURCE_DIR}/src/string/string
 melanotest(test_string)
 
 
-add_executable(test_time test_time.cpp)
+add_executable(test_time test_time.cpp ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp ${CMAKE_SOURCE_DIR}/src/string/language.cpp)
 melanotest(test_time)

@@ -38,9 +38,9 @@
     template<class T>
         using Optional = std::experimental::optional<T>;
 #  elif __has_include(<boost/optional.hpp>)
+#    include <boost/optional.hpp>
     template<class T>
         using Optional = boost::optional<T>;
-#    include <boost/optional.hpp>
 #  else
 #     error "Missing <optional>"
 #  endif

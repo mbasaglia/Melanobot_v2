@@ -209,5 +209,35 @@ unsigned long to_uint(const std::string& string,
                      unsigned long base = 10,
                      unsigned long default_value = 0);
 
+/**
+ * \brief Check if a string is one of a given set
+ */
+inline bool is_one_of(const std::string& string, const std::initializer_list<std::string>& il )
+{
+    return std::find(il.begin(),il.end(),string) != il.end();
+}
+
+/**
+ * \brief Case-insensitive string comparison
+ */
+inline bool icase_equal(const std::string& a, const std::string& b) noexcept
+{
+    return std::equal(a.begin(), a.end(), b.begin(), b.end(),
+                      [](char l, char r) { return std::tolower(l) == std::tolower(r); });
+}
+
+/**
+ * \brief Converts a number to string padding with zeros to have at least
+ *      \c digits digits
+ */
+template<class T>
+    std::string to_string(T number,int digits=-1)
+    {
+        auto s = std::to_string(number);
+        if ( int(s.size()) < digits )
+            s = std::string(digits-s.size(),'0');
+        return s;
+    }
+
 } // namespace string
 #endif // STRING_FUNCTIONS_HPP

@@ -488,11 +488,7 @@ public:
             year2--;
             month2+=12;
         }
-
-        // converts negative years into positive ones and add 1
-        // (-1 BC becomes 0 AD, which is equivalent to 400 AD)
-        if ( year2 < 0 )
-            year2 += 400*std::ceil(-year2/400.0)+1;
+        year2 = positive_year(year2);
 
         int d = ( day_ + (month2+1)*26/10 + year2 + year2/4 + 6*(year2/100) + year2/400 ) % 7;
         return WeekDay((d+5) % 7 + 1);
@@ -851,6 +847,13 @@ private:
             }
             mask = next_mask;
         }
+
+    // converts negative years into positive ones and add 1
+    // (-1 BC becomes 0 AD, which is equivalent to 400 AD)
+    static constexpr int32_t positive_year(int32_t year) noexcept
+    {
+        return year < 0 ? year+400*std::ceil(-year/400.0)+1 : year;
+    }
 };
 
 /**
