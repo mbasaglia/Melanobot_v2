@@ -65,5 +65,13 @@ std::string format_char(const DateTime& date_time, char c);
  */
 std::string format(const DateTime& date_time, const std::string& fmt);
 
+/**
+ * \brief Equivalent to format(DateTime(),fmt)
+ */
+inline std::string format(const std::string& fmt)
+{
+    return format(DateTime(),fmt);
+}
+
 } // namespace timer
 #endif // TIME_STRING_HPP

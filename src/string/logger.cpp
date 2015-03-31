@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "logger.hpp"
-
+#include "time/time_string.hpp"
 
 void Logger::log (const std::string& type, char direction,
     const string::FormattedString& message, int verbosity)
@@ -32,10 +32,8 @@ void Logger::log (const std::string& type, char direction,
     std::lock_guard<std::mutex> lock(mutex);
     if ( !timestamp.empty() )
     {
-        log_destination <<  formatter->color(color::yellow) << '['
-            << boost::chrono::time_fmt(boost::chrono::timezone::local, timestamp)
-            << boost::chrono::system_clock::now()
-            << ']' << formatter->clear();
+        log_destination <<  formatter->color(color::yellow) <<
+            timer::format(timestamp) << formatter->clear();
     }
 
     if ( type_it != log_types.end() )

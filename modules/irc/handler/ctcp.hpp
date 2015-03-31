@@ -24,6 +24,7 @@
 #include "handler/handler.hpp"
 #include "config.hpp"
 #include "irc/network/functions.hpp"
+#include "time/time_string.hpp"
 
 namespace irc {
 /**
@@ -200,19 +201,14 @@ public:
     CtcpTime ( const Settings& settings, ::handler::HandlerContainer* parent )
         : CtcpBase("TIME", settings, parent)
     {
-        format = settings.get("format","%c %Z");
+        format = settings.get("format","r");
         clientinfo = ": Shows local time";
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        /// \note should return a timestamp in the same format as the one
-        /// provided by \c msg, but that's kinda hard to detect...
-        std::ostringstream ss;
-        ss << boost::chrono::time_fmt(boost::chrono::timezone::local, format)
-           << boost::chrono::system_clock::now();
-        reply_to(msg,ss.str());
+        reply_to(msg,timer::format(format));
         return true;
     }
 

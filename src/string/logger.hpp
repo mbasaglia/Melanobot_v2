@@ -26,8 +26,6 @@
 #include <string>
 #include <unordered_map>
 
-#include <boost/chrono/io/time_point_io.hpp>
-
 #include "multibuf.hpp"
 #include "string.hpp"
 #include "settings.hpp"
@@ -118,7 +116,7 @@ private:
     std::unordered_map<char, color::Color12> log_directions;
     unsigned log_type_length = 0;
     string::Formatter* formatter = nullptr;
-    std::string timestamp = "%Y-%m-%d %T";
+    std::string timestamp = "[Y-m-d H:i:s]";
     std::mutex mutex;
 };
 
