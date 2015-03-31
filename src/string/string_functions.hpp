@@ -235,7 +235,7 @@ template<class T>
     {
         auto s = std::to_string(number);
         if ( int(s.size()) < digits )
-            s = std::string(digits-s.size(),'0');
+            s = std::string(digits-s.size(),'0')+s;
         return s;
     }
 

@@ -21,6 +21,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "time/time.hpp"
+#include "time/time_string.hpp"
 
 using namespace timer;
 
@@ -310,4 +311,80 @@ BOOST_AUTO_TEST_CASE( test_DateTime )
     BOOST_CHECK( week_day_check(-10,Month::JANUARY,days(1),WeekDay::TUESDAY) );
     BOOST_CHECK( week_day_check(-44,Month::MARCH,days(15),WeekDay::FRIDAY) );
 
+}
+
+
+BOOST_AUTO_TEST_CASE( test_MonthWeek_string )
+{
+    BOOST_CHECK( month_name(Month::APRIL) == "April" );
+    BOOST_CHECK( month_name(Month(13)) == "" );
+
+    BOOST_CHECK( month_shortname(Month::APRIL) == "Apr" );
+    BOOST_CHECK( month_shortname(Month(13)) == "" );
+
+    BOOST_CHECK( *month_from_name("Apr") == Month::APRIL );
+    BOOST_CHECK( *month_from_name("April") == Month::APRIL );
+    BOOST_CHECK( *month_from_name("APRIL") == Month::APRIL );
+    BOOST_CHECK( !month_from_name("APRUL") );
+
+
+    BOOST_CHECK( weekday_name(WeekDay::FRIDAY) == "Friday" );
+    BOOST_CHECK( weekday_name(WeekDay(13)) == "" );
+
+    BOOST_CHECK( weekday_shortname(WeekDay::FRIDAY) == "Fri" );
+    BOOST_CHECK( weekday_shortname(WeekDay(13)) == "" );
+
+    BOOST_CHECK( *weekday_from_name("Fri") == WeekDay::FRIDAY );
+    BOOST_CHECK( *weekday_from_name("Friday") == WeekDay::FRIDAY );
+    BOOST_CHECK( *weekday_from_name("FRIDAY") == WeekDay::FRIDAY );
+    BOOST_CHECK( !weekday_from_name("FREEDAY") );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_format )
+{
+    DateTime time(2015,Month::APRIL,days(4),hours(15),minutes(0),seconds(0),milliseconds(5));
+    // day
+    BOOST_CHECK( format_char(time,'d') == "04" );
+    BOOST_CHECK( format_char(time,'D') == "Sat" );
+    BOOST_CHECK( format_char(time,'j') == "4" );
+    BOOST_CHECK( format_char(time,'l') == "Saturday" );
+    BOOST_CHECK( format_char(time,'N') == "6" );  /// \todo test with sunday
+    BOOST_CHECK( format_char(time,'S') == "th" );
+    BOOST_CHECK( format_char(time,'w') == "6" ); /// \todo test with sunday
+    BOOST_CHECK( format_char(time,'z') == "93" );
+    // week
+    //BOOST_CHECK( format_char(time,'W') == "14" );
+    // month
+    BOOST_CHECK( format_char(time,'F') == "April" );
+    BOOST_CHECK( format_char(time,'m') == "04" );
+    BOOST_CHECK( format_char(time,'M') == "Apr" );
+    BOOST_CHECK( format_char(time,'n') == "4" );
+    BOOST_CHECK( format_char(time,'t') == "30" );
+    // year
+    BOOST_CHECK( format_char(time,'L') == "0" );
+    //BOOST_CHECK( format_char(time,'o') == "2015" );
+    BOOST_CHECK( format_char(time,'Y') == "2015" );
+    BOOST_CHECK( format_char(time,'y') == "15" );
+    // time
+    BOOST_CHECK( format_char(time,'a') == "pm" );
+    BOOST_CHECK( format_char(time,'A') == "PM" );
+    //BOOST_CHECK( format_char(time,'B') == "625" );
+    BOOST_CHECK( format_char(time,'g') == "3" );
+    BOOST_CHECK( format_char(time,'G') == "15" ); /// \todo test with hour < 10
+    BOOST_CHECK( format_char(time,'h') == "03" );
+    BOOST_CHECK( format_char(time,'H') == "15" ); /// \todo test with hour < 10
+    BOOST_CHECK( format_char(time,'i') == "00" );
+    BOOST_CHECK( format_char(time,'s') == "00" );
+    BOOST_CHECK( format_char(time,'u') == "005000" );
+    // todo timezone
+    // full date time
+    BOOST_CHECK( format_char(time,'c') == "2015-04-04T15:00:00" );
+    BOOST_CHECK( format_char(time,'r') == "Sat, 04 Apr 2015 15:00:00" );
+    BOOST_CHECK( format_char(time,'U') == "1428159600" );
+
+
+    // Custom formats
+    BOOST_CHECK( format(time, "Y-m-d H:i:s.u") == "2015-04-04 15:00:00.005000" );
+    BOOST_CHECK( format(time, "l, F \\t\\h\\e jS, g:i a") == "Saturday, April the 4th, 3:00 pm" );
 }

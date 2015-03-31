@@ -138,7 +138,9 @@ Optional<WeekDay> weekday_from_name(const std::string& name)
 
     return {};
 }
-
+/**
+ * \todo a varsion with the same format as POSIX date command
+ */
 std::string format_char(const DateTime& date_time, char c)
 {
     switch (c)
@@ -203,7 +205,7 @@ std::string format_char(const DateTime& date_time, char c)
         case 's':
             return string::to_string(date_time.second(),2);
         case 'u':
-            return string::to_string(date_time.second(),3)+"000";
+            return string::to_string(date_time.millisecond(),3)+"000";
     // Timezone
         /// \todo Timezone(?)
         case 'e':
@@ -232,8 +234,8 @@ std::string format(const DateTime& date_time, const std::string& fmt)
 
     for ( std::string::size_type i = 0; i < fmt.size(); i++ )
     {
-        if ( fmt[i] == '\\' )
-            i++;
+        if ( fmt[i] == '\\' && i+1 < fmt.size() )
+            result += fmt[++i];
         else
             result += format_char(date_time,fmt[i]);
     }
