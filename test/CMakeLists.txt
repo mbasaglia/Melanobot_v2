@@ -12,8 +12,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+include(CTest)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0")
 
 # Boost
 find_package (Boost COMPONENTS unit_test_framework REQUIRED)
@@ -34,3 +35,15 @@ melanotest(test_string)
 
 add_executable(test_time test_time.cpp ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp ${CMAKE_SOURCE_DIR}/src/string/language.cpp)
 melanotest(test_time)
+
+
+# Coverage
+set(TRACEFILE "${CMAKE_BINARY_DIR}/test/coverage.info")
+add_custom_target(coverage
+    COMMAND cd "${CMAKE_BINARY_DIR}/test"
+    COMMAND ctest
+    COMMAND lcov -c -d "${CMAKE_BINARY_DIR}/test" -b "${CMAKE_SOURCE_DIR}" -o ${TRACEFILE}
+    COMMAND lcov -e ${TRACEFILE} "\"${CMAKE_SOURCE_DIR}/*\"" -o ${TRACEFILE}
+    COMMAND genhtml ${TRACEFILE} -o "${CMAKE_BINARY_DIR}/lconv" -p "${CMAKE_SOURCE_DIR}"
+    COMMAND xdg-open "${CMAKE_BINARY_DIR}/lconv/index.html"
+)
