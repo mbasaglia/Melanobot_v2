@@ -32,8 +32,6 @@ namespace user {
 
 /**
  * \brief A user visible from a connection
- * \todo Maybe keep a pointer to the User manager and notify when \c local_id
- *       or \c channels change.
  * \todo don't know if it might be worth avoiding direct member access
  *      things like \c name, \c host, \c global_id and \c properties can be
  *      modified without any issue, changing \c local_id might cause issues with

@@ -115,7 +115,6 @@ bool UserManager::remove_user(const std::string& local_id)
 
 bool UserManager::change_id(const std::string& old_local_id, const std::string& new_local_id)
 {
-    /// \todo maybe check if there is some other user with new_local_id
     for ( auto iter = users_.begin(); iter != users_.end(); ++iter )
         if ( iter->local_id == old_local_id )
         {

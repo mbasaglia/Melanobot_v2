@@ -25,7 +25,6 @@ namespace handler {
 
 /**
  * \brief Acts as bridge across connections
- * \todo attachable to other connections (maybe limiting the protocol)
  */
 class Bridge : public SimpleGroup
 {

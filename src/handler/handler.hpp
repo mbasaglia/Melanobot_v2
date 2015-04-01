@@ -89,12 +89,11 @@ public:
 
     /**
      * \brief Called at startup in case it needs to perform some initialization
-     * \todo Run after the connection has been established? (needs to know what connections this class handles)
      */
     virtual void initialize() {}
     /**
      * \brief Called when the connection ends
-     * \todo see todo in initialize(), also is this needed?
+     * \todo is this needed?
      */
     virtual void finalize() {}
 

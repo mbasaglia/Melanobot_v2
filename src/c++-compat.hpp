@@ -1,7 +1,6 @@
 /**
  * \file
  * \brief This file defined some compatibility for features of C++14 and beyond
- * \todo any and optional
  * \author Mattia Basaglia
  * \copyright Copyright  Mattia Basaglia
  * \section License
@@ -29,6 +28,7 @@
 #endif
 
 #ifdef __has_include
+// optional
 #if __has_include(<optional>)
 #    include<optional>
     template<class T>
@@ -44,6 +44,19 @@
 #  else
 #     error "Missing <optional>"
 #  endif
-#endif
+// any
+#if __has_include(<optional>)
+#    include<any>
+     using Any = std::any;
+#  elif __has_include(<experimental/any>)
+#    include <experimental/any>
+    using Any = std::experimental::any;
+#  elif __has_include(<boost/any.hpp>)
+#    include <boost/any.hpp>
+    using Any = boost::any;
+#  else
+#     error "Missing <any>"
+#  endif
+#endif // __has_include
 
 #endif // CXX_COMPAT_HPP

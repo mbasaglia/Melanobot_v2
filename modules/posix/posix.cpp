@@ -21,7 +21,6 @@
 #include "melanomodule.hpp"
 /**
  * \brief POSIX module initialization
- * \todo split file
  */
 Melanomodule melanomodule_posix()
 {

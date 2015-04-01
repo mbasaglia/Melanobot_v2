@@ -89,6 +89,7 @@ public:
     /**
      * \brief Change user id
      * \return \b true on success
+     * \note This doesn't check if a different user with the same id already exists
      */
     bool change_id(const std::string& old_local_id, const std::string& new_local_id);
 
