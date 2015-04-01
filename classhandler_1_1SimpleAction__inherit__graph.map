@@ -24,8 +24,9 @@
 <area shape="rect" id="node35" href="$classirc_1_1handler_1_1AdminPart.html" title="Makes the bot part channels (IRC) " alt="" coords="609,1120,764,1147"/>
 <area shape="rect" id="node36" href="$classirc_1_1handler_1_1AdminRaw.html" title="Makes the bot execute a raw command (IRC) " alt="" coords="607,1171,766,1197"/>
 <area shape="rect" id="node37" href="$classirc_1_1handler_1_1WhoisCheckMe.html" title="Sends a WHOIS about the message sender. " alt="" coords="593,1221,780,1248"/>
-<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,613,344,640"/>
-<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,613,179,640"/>
+<area shape="rect" id="node38" href="$classxonotic_1_1RconCommand.html" title="Send a fixed rcon command to a Xonotic connection. " alt="" coords="605,1272,768,1299"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,639,344,665"/>
+<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,639,179,665"/>
 <area shape="rect" id="node23" href="$classhandler_1_1AbstractList.html" title="Handles a list of elements (base class) " alt="" coords="832,855,975,881"/>
 <area shape="rect" id="node25" href="$classhandler_1_1Bridge.html" title="Acts as bridge across connections. " alt="" coords="849,917,958,944"/>
 <area shape="rect" id="node24" href="$classhandler_1_1AdminGroup.html" title="Manages a user group. " alt="" coords="1048,848,1192,875"/>

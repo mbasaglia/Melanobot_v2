@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['handler',['Handler',['../classhandler_1_1Handler.html',1,'handler']]],
-  ['handler2rcon',['Handler2Rcon',['../classxonotic_1_1Handler2Rcon.html',1,'xonotic']]],
-  ['handlercontainer',['HandlerContainer',['../classhandler_1_1HandlerContainer.html',1,'handler']]],
-  ['handlerfactory',['HandlerFactory',['../classhandler_1_1HandlerFactory.html',1,'handler']]],
-  ['help',['Help',['../classhandler_1_1Help.html',1,'handler']]],
-  ['httpservice',['HttpService',['../classnetwork_1_1http_1_1HttpService.html',1,'network::http']]]
+  ['filtergroup',['FilterGroup',['../classhandler_1_1FilterGroup.html',1,'handler']]],
+  ['format',['Format',['../classstring_1_1Format.html',1,'string']]],
+  ['formatflags',['FormatFlags',['../classstring_1_1FormatFlags.html',1,'string']]],
+  ['formattedstring',['FormattedString',['../classstring_1_1FormattedString.html',1,'string']]],
+  ['formatter',['Formatter',['../classxonotic_1_1Formatter.html',1,'xonotic']]],
+  ['formatter',['Formatter',['../classstring_1_1Formatter.html',1,'string']]],
+  ['formatteransi',['FormatterAnsi',['../classstring_1_1FormatterAnsi.html',1,'string']]],
+  ['formatterascii',['FormatterAscii',['../classstring_1_1FormatterAscii.html',1,'string']]],
+  ['formatterirc',['FormatterIrc',['../classirc_1_1FormatterIrc.html',1,'irc']]],
+  ['formatterrainbow',['FormatterRainbow',['../classfun_1_1FormatterRainbow.html',1,'fun']]],
+  ['formatterutf8',['FormatterUtf8',['../classstring_1_1FormatterUtf8.html',1,'string']]]
 ];

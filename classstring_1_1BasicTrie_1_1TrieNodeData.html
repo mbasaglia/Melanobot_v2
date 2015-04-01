@@ -105,14 +105,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for string::BasicTrie&lt; MappedType &gt;::TrieNodeData:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classstring_1_1BasicTrie_1_1TrieNodeData__inherit__graph.svg" width="214" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classstring_1_1BasicTrie_1_1TrieNodeData__inherit__graph.svg" width="214" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa4fec1b085fd71f67b73b09f48a4a341"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html#aa4fec1b085fd71f67b73b09f48a4a341">TrieNodeData</a> ()</td></tr>
 <tr class="separator:aa4fec1b085fd71f67b73b09f48a4a341"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec1cb412dfd79818ffad21e072493b89"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html#aec1cb412dfd79818ffad21e072493b89">TrieNodeData</a> (<a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html">TrieNodeData</a> &amp;&amp;) noexcept(std::is_nothrow_move_constructible&lt; MappedType &gt;::value)=default</td></tr>
+<tr class="separator:aec1cb412dfd79818ffad21e072493b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a915346de31229a5ec11669cf9248fefd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html">TrieNodeData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html#a915346de31229a5ec11669cf9248fefd">operator=</a> (<a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html">TrieNodeData</a> &amp;&amp;) noexcept(std::is_nothrow_move_assignable&lt; MappedType &gt;::value)=default</td></tr>
+<tr class="separator:a915346de31229a5ec11669cf9248fefd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace2436ccc86461d51d47e8c02e5b72ec"><td class="memTemplParams" colspan="2">template&lt;class... Data&gt; </td></tr>
 <tr class="memitem:ace2436ccc86461d51d47e8c02e5b72ec"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html#ace2436ccc86461d51d47e8c02e5b72ec">TrieNodeData</a> (Data &amp;&amp;...<a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html#aac921a220c41d232cc2f318fbede7811">data</a>)</td></tr>
 <tr class="separator:ace2436ccc86461d51d47e8c02e5b72ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,6 +172,32 @@ template&lt;class MappedType &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="aec1cb412dfd79818ffad21e072493b89"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MappedType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classstring_1_1BasicTrie.html">string::BasicTrie</a>&lt; MappedType &gt;::TrieNodeData::TrieNodeData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html">TrieNodeData</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ace2436ccc86461d51d47e8c02e5b72ec"></a>
 <div class="memitem">
 <div class="memproto">
@@ -195,7 +224,7 @@ template&lt;class... Data&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00054">54</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00060">60</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -226,7 +255,7 @@ template&lt;class MappedType &gt; </div>
 
 <p>Copy assigns <code>data</code>. </p>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00059">59</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00065">65</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -254,7 +283,7 @@ template&lt;class MappedType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00485">485</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00498">498</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -283,7 +312,7 @@ template&lt;class MappedType &gt; </div>
 
 <p>Returns <code>data</code>. </p>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00064">64</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00070">70</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -310,7 +339,33 @@ template&lt;class MappedType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00484">484</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00497">497</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a915346de31229a5ec11669cf9248fefd"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MappedType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html">TrieNodeData</a>&amp; <a class="el" href="classstring_1_1BasicTrie.html">string::BasicTrie</a>&lt; MappedType &gt;::TrieNodeData::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classstring_1_1BasicTrie_1_1TrieNodeData.html">TrieNodeData</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -337,9 +392,9 @@ template&lt;class MappedType &gt; </div>
 
 <p>Associated data. </p>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00067">67</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00073">73</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="trie_8hpp_source.html#l00059">string::BasicTrie&lt; MappedType &gt;::TrieNodeData::copy_data()</a>, <a class="el" href="trie_8hpp_source.html#l00064">string::BasicTrie&lt; MappedType &gt;::TrieNodeData::get_data()</a>, and <a class="el" href="trie_8hpp_source.html#l00054">string::BasicTrie&lt; MappedType &gt;::TrieNodeData::TrieNodeData()</a>.</p>
+<p>Referenced by <a class="el" href="trie_8hpp_source.html#l00065">string::BasicTrie&lt; MappedType &gt;::TrieNodeData::copy_data()</a>, <a class="el" href="trie_8hpp_source.html#l00070">string::BasicTrie&lt; MappedType &gt;::TrieNodeData::get_data()</a>, and <a class="el" href="trie_8hpp_source.html#l00060">string::BasicTrie&lt; MappedType &gt;::TrieNodeData::TrieNodeData()</a>.</p>
 
 </div>
 </div>
@@ -349,7 +404,7 @@ template&lt;class MappedType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:02 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:14 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

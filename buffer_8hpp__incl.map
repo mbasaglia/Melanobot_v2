@@ -1,16 +1,20 @@
 <map id="modules/irc/network/buffer.hpp" name="modules/irc/network/buffer.hpp">
-<area shape="rect" id="node5" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="995,95,1155,121"/>
-<area shape="rect" id="node8" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="561,244,679,271"/>
-<area shape="rect" id="node38" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1200,95,1368,121"/>
-<area shape="rect" id="node27" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="1423,326,1598,353"/>
-<area shape="rect" id="node31" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="989,169,1139,196"/>
-<area shape="rect" id="node34" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="754,169,913,196"/>
-<area shape="rect" id="node36" href="$network_8hpp.html" title="network.hpp" alt="" coords="1299,244,1392,271"/>
-<area shape="rect" id="node15" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="308,326,401,353"/>
-<area shape="rect" id="node18" href="$string_8hpp.html" title="string.hpp" alt="" coords="477,326,555,353"/>
-<area shape="rect" id="node25" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1017,408,1111,435"/>
-<area shape="rect" id="node22" href="$color_8hpp.html" title="color.hpp" alt="" coords="281,408,356,435"/>
-<area shape="rect" id="node23" href="$math_8hpp.html" title="math.hpp" alt="" coords="381,490,457,517"/>
-<area shape="rect" id="node32" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1039,244,1150,271"/>
-<area shape="rect" id="node33" href="$user_8hpp.html" title="user.hpp" alt="" coords="1089,326,1161,353"/>
+<area shape="rect" id="node5" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="1055,95,1215,121"/>
+<area shape="rect" id="node8" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1797,244,1915,271"/>
+<area shape="rect" id="node43" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="85,244,253,271"/>
+<area shape="rect" id="node27" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="846,319,1021,345"/>
+<area shape="rect" id="node31" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1381,169,1531,196"/>
+<area shape="rect" id="node34" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1198,169,1357,196"/>
+<area shape="rect" id="node36" href="$network_8hpp.html" title="network.hpp" alt="" coords="933,169,1027,196"/>
+<area shape="rect" id="node14" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1893,319,1987,345"/>
+<area shape="rect" id="node17" href="$string_8hpp.html" title="string.hpp" alt="" coords="1525,319,1603,345"/>
+<area shape="rect" id="node25" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1347,393,1440,420"/>
+<area shape="rect" id="node21" href="$color_8hpp.html" title="color.hpp" alt="" coords="1197,393,1272,420"/>
+<area shape="rect" id="node22" href="$math_8hpp.html" title="math.hpp" alt="" coords="781,475,857,502"/>
+<area shape="rect" id="node24" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1117,475,1235,502"/>
+<area shape="rect" id="node32" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1401,244,1511,271"/>
+<area shape="rect" id="node33" href="$user_8hpp.html" title="user.hpp" alt="" coords="1628,319,1700,345"/>
+<area shape="rect" id="node37" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="621,244,723,271"/>
+<area shape="rect" id="node39" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="531,319,634,345"/>
+<area shape="rect" id="node41" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="134,319,253,345"/>
 </map>

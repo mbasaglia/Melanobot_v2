@@ -1,4 +1,9 @@
 <map id="src/network/network.hpp" name="src/network/network.hpp">
-<area shape="rect" id="node4" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="183,80,358,107"/>
-<area shape="rect" id="node10" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="521,155,615,181"/>
+<area shape="rect" id="node3" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="215,80,390,107"/>
+<area shape="rect" id="node14" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="723,80,824,107"/>
+<area shape="rect" id="node9" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="256,155,349,181"/>
+<area shape="rect" id="node13" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="501,237,619,263"/>
+<area shape="rect" id="node17" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="879,155,982,181"/>
+<area shape="rect" id="node19" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="1071,155,1190,181"/>
+<area shape="rect" id="node24" href="$math_8hpp.html" title="math.hpp" alt="" coords="642,155,718,181"/>
 </map>

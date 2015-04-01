@@ -1,12 +1,16 @@
 var searchData=
 [
+  ['language',['Language',['../classstring_1_1Language.html',1,'string']]],
+  ['language_2ecpp',['language.cpp',['../language_8cpp.html',1,'']]],
+  ['language_2ehpp',['language.hpp',['../language_8hpp.html',1,'']]],
+  ['leap_5fyear',['leap_year',['../classtimer_1_1DateTime.html#a85e76b9236cc4e5260c15d7bed3a111a',1,'timer::DateTime::leap_year() const noexcept'],['../classtimer_1_1DateTime.html#ad46e7d15b287bdda38b42c6a458a9cb6',1,'timer::DateTime::leap_year(int32_t year) noexcept']]],
   ['length',['length',['../classstring_1_1Utf8Parser.html#a48938a51f332c5d90f7efaaf2d646172',1,'string::Utf8Parser']]],
-  ['license',['License',['../classhandler_1_1License.html',1,'handler']]],
   ['license',['License',['../classhandler_1_1License.html#a6a580cac2419cbe9f342e0fc6938f5c8',1,'handler::License']]],
+  ['license',['License',['../classhandler_1_1License.html',1,'handler']]],
   ['line',['line',['../structLocatableException.html#a3449b836ca46413f3e67fb488f813619',1,'LocatableException::line()'],['../structJsonParser.html#ac6e325599a463554347559962ab25785',1,'JsonParser::line()']]],
   ['line_5fbuffer',['line_buffer',['../classxonotic_1_1XonoticConnection.html#a1ce649f5ffc8a039ed623942c14af041',1,'xonotic::XonoticConnection']]],
-  ['listclear',['ListClear',['../classhandler_1_1ListClear.html',1,'handler']]],
   ['listclear',['ListClear',['../classhandler_1_1ListClear.html#af88b3fc82e74a7f36093eb94976a4127',1,'handler::ListClear']]],
+  ['listclear',['ListClear',['../classhandler_1_1ListClear.html',1,'handler']]],
   ['listinsert',['ListInsert',['../classhandler_1_1ListInsert.html#ab75b6c6a16d84030127ae6dc5bea2b86',1,'handler::ListInsert']]],
   ['listinsert',['ListInsert',['../classhandler_1_1ListInsert.html',1,'handler']]],
   ['listremove',['ListRemove',['../classhandler_1_1ListRemove.html',1,'handler']]],
@@ -17,7 +21,7 @@ var searchData=
   ['local_5fid',['local_id',['../structuser_1_1User.html#a95e2ef7e4b0ea27ce634f6e046bd61fb',1,'user::User']]],
   ['locatableexception',['LocatableException',['../structLocatableException.html',1,'LocatableException'],['../structLocatableException.html#adb8f3861622704d0f65f6265437eaebf',1,'LocatableException::LocatableException()']]],
   ['location',['location',['../structnetwork_1_1Request.html#abff71891e22624c9997b4d40bea5c6df',1,'network::Request']]],
-  ['lock',['Lock',['../concurrent__container_8hpp.html#ae4c22673eda68e7623b56bcdcc7f7f3e',1,'concurrent_container.hpp']]],
+  ['lock',['Lock',['../concurrency_8hpp.html#ae4c22673eda68e7623b56bcdcc7f7f3e',1,'concurrency.hpp']]],
   ['log',['Log',['../classLog.html',1,'Log'],['../classLogger.html#abb439d1e9453722f4c145e9c9c46c697',1,'Logger::log()'],['../classLog.html#ae768eabd5b8cc3d38727cd17c4e9a9ad',1,'Log::Log(std::string type, char direction, int verbosity=2)'],['../classLog.html#aa3e83f6ca5a5586f2943c3f5e5b7634d',1,'Log::Log(const std::string &amp;type, char direction, const std::string &amp;message, int verbosity=2)'],['../classLog.html#ae1f217486548f0c7921ff95316f56883',1,'Log::Log(const Log &amp;)=delete'],['../classLog.html#a7e23ad189250d8c51b34bb5b4b1fef4a',1,'Log::Log(Log &amp;&amp;)=delete']]],
   ['log_5fbuffer',['log_buffer',['../classLogger.html#a7a4c8597a2ceacbaaf24ea97d3e4db4a',1,'Logger']]],
   ['log_5fdestination',['log_destination',['../classLogger.html#ad898800bf670f13d7d6277b60e92848a',1,'Logger']]],
@@ -29,7 +33,7 @@ var searchData=
   ['logger_2ehpp',['logger.hpp',['../logger_8hpp.html',1,'']]],
   ['login',['login',['../classirc_1_1IrcConnection.html#a310d54b755ad92c346559adf16087a5a',1,'irc::IrcConnection']]],
   ['login_5finfo',['login_info',['../classirc_1_1IrcConnection.html#aebf63e1c085be4219320a3723e517b88',1,'irc::IrcConnection']]],
+  ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html#ab312e157e21944aae0428fb43a978c13',1,'irc::LoginInfo::LoginInfo()'],['../structirc_1_1LoginInfo.html#a0a9ceceaccad4998b71c6c5391a4148c',1,'irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)'],['../structirc_1_1LoginInfo.html#a453cbb92e9870667c519e972e215ac93',1,'irc::LoginInfo::LoginInfo(const LoginInfo &amp;)=default'],['../structirc_1_1LoginInfo.html#a4f252e023acde92801c9b75f9e19cb78',1,'irc::LoginInfo::LoginInfo(LoginInfo &amp;&amp;) noexcept=default']]],
   ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html',1,'irc']]],
-  ['logininfo',['LoginInfo',['../structirc_1_1LoginInfo.html#ab312e157e21944aae0428fb43a978c13',1,'irc::LoginInfo::LoginInfo()'],['../structirc_1_1LoginInfo.html#a0a9ceceaccad4998b71c6c5391a4148c',1,'irc::LoginInfo::LoginInfo(const Settings &amp;settings, const std::string &amp;nick=&quot;&quot;)'],['../structirc_1_1LoginInfo.html#a453cbb92e9870667c519e972e215ac93',1,'irc::LoginInfo::LoginInfo(const LoginInfo &amp;)=default'],['../structirc_1_1LoginInfo.html#a1c9db60d4075d67f526e1134567856b8',1,'irc::LoginInfo::LoginInfo(LoginInfo &amp;&amp;)=default']]],
   ['logtype',['LogType',['../structLogger_1_1LogType.html',1,'Logger']]]
 ];

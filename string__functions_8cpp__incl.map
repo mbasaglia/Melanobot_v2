@@ -1,5 +1,6 @@
 <map id="src/string/string_functions.cpp" name="src/string/string_functions.cpp">
-<area shape="rect" id="node2" href="$string__functions_8hpp.html" title="string_functions.hpp" alt="" coords="301,80,439,107"/>
-<area shape="rect" id="node13" href="$trie_8hpp.html" title="trie.hpp" alt="" coords="580,80,645,107"/>
-<area shape="rect" id="node9" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="95,155,189,181"/>
+<area shape="rect" id="node2" href="$string__functions_8hpp.html" title="string_functions.hpp" alt="" coords="275,80,414,107"/>
+<area shape="rect" id="node14" href="$trie_8hpp.html" title="trie.hpp" alt="" coords="555,80,620,107"/>
+<area shape="rect" id="node9" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="70,155,163,181"/>
+<area shape="rect" id="node13" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="330,237,447,263"/>
 </map>

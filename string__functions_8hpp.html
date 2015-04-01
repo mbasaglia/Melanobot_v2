@@ -104,7 +104,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for string_functions.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="string__functions_8hpp__incl.svg" width="100%" height="451"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="string__functions_8hpp__incl.svg" width="100%" height="451"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -160,9 +161,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a1226acedc8394cd05c6199fcf84530a4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a1226acedc8394cd05c6199fcf84530a4">string::simple_wildcard</a> (const std::string &amp;text, const std::string &amp;pattern)</td></tr>
 <tr class="memdesc:a1226acedc8394cd05c6199fcf84530a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if <code>text</code> matches the wildcard <code>pattern</code>.  <a href="#a1226acedc8394cd05c6199fcf84530a4">More...</a><br /></td></tr>
 <tr class="separator:a1226acedc8394cd05c6199fcf84530a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memTemplParams" colspan="2">template&lt;class Container &gt; </td></tr>
-<tr class="memitem:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a8fba2d530c961c266781ab8eda1c4b6c">string::simple_wildcard</a> (const Container &amp;input, const std::string &amp;pattern)</td></tr>
-<tr class="separator:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d49f4764e588d78e1088a9eee4e32b6"><td class="memTemplParams" colspan="2">template&lt;class Container , class  = std::enable_if_t&lt;!std::is_convertible&lt;Container,std::string&gt;::value&gt;&gt; </td></tr>
+<tr class="memitem:a0d49f4764e588d78e1088a9eee4e32b6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a0d49f4764e588d78e1088a9eee4e32b6">string::simple_wildcard</a> (const Container &amp;input, const std::string &amp;pattern)</td></tr>
+<tr class="memdesc:a0d49f4764e588d78e1088a9eee4e32b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if any of the elements in <code>input</code> matches the wildcard <code>pattern</code>.  <a href="#a0d49f4764e588d78e1088a9eee4e32b6">More...</a><br /></td></tr>
+<tr class="separator:a0d49f4764e588d78e1088a9eee4e32b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03c867df3e49b3a3a6e86132c6fed145"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a03c867df3e49b3a3a6e86132c6fed145">string::regex_split</a> (const std::string &amp;input, const std::regex &amp;pattern, bool skip_empty=true)</td></tr>
 <tr class="memdesc:a03c867df3e49b3a3a6e86132c6fed145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Separate the string into components separated by <code>pattern</code>.  <a href="#a03c867df3e49b3a3a6e86132c6fed145">More...</a><br /></td></tr>
 <tr class="separator:a03c867df3e49b3a3a6e86132c6fed145"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +179,16 @@ Functions</h2></td></tr>
 <tr class="memitem:a89f65e2090f404d89f8868d62a7438b0"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a89f65e2090f404d89f8868d62a7438b0">string::to_uint</a> (const std::string &amp;string, unsigned long base=10, unsigned long default_value=0)</td></tr>
 <tr class="memdesc:a89f65e2090f404d89f8868d62a7438b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts <code>string</code> to an unsigned integer.  <a href="#a89f65e2090f404d89f8868d62a7438b0">More...</a><br /></td></tr>
 <tr class="separator:a89f65e2090f404d89f8868d62a7438b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a769018f0cd228be2d2db0adeab940726"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a769018f0cd228be2d2db0adeab940726">string::is_one_of</a> (const std::string &amp;string, const std::initializer_list&lt; std::string &gt; &amp;il)</td></tr>
+<tr class="memdesc:a769018f0cd228be2d2db0adeab940726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a string is one of a given set.  <a href="#a769018f0cd228be2d2db0adeab940726">More...</a><br /></td></tr>
+<tr class="separator:a769018f0cd228be2d2db0adeab940726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae5e9506691d0ba6de7c9e68f6f285e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#aae5e9506691d0ba6de7c9e68f6f285e0">string::icase_equal</a> (const std::string &amp;a, const std::string &amp;b) noexcept</td></tr>
+<tr class="memdesc:aae5e9506691d0ba6de7c9e68f6f285e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Case-insensitive string comparison.  <a href="#aae5e9506691d0ba6de7c9e68f6f285e0">More...</a><br /></td></tr>
+<tr class="separator:aae5e9506691d0ba6de7c9e68f6f285e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46e1fb4289316384cc8ac61583cf64e2"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a46e1fb4289316384cc8ac61583cf64e2"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a46e1fb4289316384cc8ac61583cf64e2">string::to_string</a> (T number, int digits=-1)</td></tr>
+<tr class="memdesc:a46e1fb4289316384cc8ac61583cf64e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a number to string padding with zeros to have at least <code>digits</code> digits.  <a href="#a46e1fb4289316384cc8ac61583cf64e2">More...</a><br /></td></tr>
+<tr class="separator:a46e1fb4289316384cc8ac61583cf64e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Mattia Basaglia </dd></dl>
@@ -191,7 +203,7 @@ License</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:00 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:10 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

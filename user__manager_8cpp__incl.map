@@ -1,5 +1,6 @@
 <map id="src/user/user_manager.cpp" name="src/user/user_manager.cpp">
-<area shape="rect" id="node2" href="$user__manager_8hpp.html" title="user_manager.hpp" alt="" coords="141,80,271,107"/>
-<area shape="rect" id="node3" href="$user_8hpp.html" title="user.hpp" alt="" coords="130,155,202,181"/>
-<area shape="rect" id="node7" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="162,229,255,256"/>
+<area shape="rect" id="node2" href="$user__manager_8hpp.html" title="user_manager.hpp" alt="" coords="156,80,285,107"/>
+<area shape="rect" id="node3" href="$user_8hpp.html" title="user.hpp" alt="" coords="145,155,217,181"/>
+<area shape="rect" id="node7" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="177,229,270,256"/>
+<area shape="rect" id="node10" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="465,311,582,338"/>
 </map>

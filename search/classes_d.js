@@ -1,17 +1,12 @@
 var searchData=
 [
-  ['searchimagegoogle',['SearchImageGoogle',['../classhandler_1_1SearchImageGoogle.html',1,'handler']]],
-  ['searchvideoyoutube',['SearchVideoYoutube',['../classhandler_1_1SearchVideoYoutube.html',1,'handler']]],
-  ['searchwebsearx',['SearchWebSearx',['../classhandler_1_1SearchWebSearx.html',1,'handler']]],
-  ['securerconcommand',['SecureRconCommand',['../structxonotic_1_1XonoticConnection_1_1SecureRconCommand.html',1,'xonotic::XonoticConnection']]],
-  ['server',['Server',['../structnetwork_1_1Server.html',1,'network']]],
-  ['serverhost',['ServerHost',['../classhandler_1_1ServerHost.html',1,'handler']]],
-  ['serviceregistry',['ServiceRegistry',['../classnetwork_1_1ServiceRegistry.html',1,'network']]],
-  ['settings',['Settings',['../classSettings.html',1,'']]],
-  ['simpleaction',['SimpleAction',['../classhandler_1_1SimpleAction.html',1,'handler']]],
-  ['simplegroup',['SimpleGroup',['../classhandler_1_1SimpleGroup.html',1,'handler']]],
-  ['simplejson',['SimpleJson',['../classhandler_1_1SimpleJson.html',1,'handler']]],
-  ['simplewebapi',['SimpleWebApi',['../classhandler_1_1SimpleWebApi.html',1,'handler']]],
-  ['slap',['Slap',['../classfun_1_1Slap.html',1,'fun']]],
-  ['stdinconnection',['StdinConnection',['../classStdinConnection.html',1,'']]]
+  ['rainbowbridgechat',['RainbowBridgeChat',['../classfun_1_1RainbowBridgeChat.html',1,'fun']]],
+  ['rconcommand',['RconCommand',['../classxonotic_1_1RconCommand.html',1,'xonotic']]],
+  ['registry',['Registry',['../classstring_1_1Formatter_1_1Registry.html',1,'string::Formatter']]],
+  ['renderpony',['RenderPony',['../classfun_1_1RenderPony.html',1,'fun']]],
+  ['reply',['Reply',['../classhandler_1_1Reply.html',1,'handler']]],
+  ['request',['Request',['../structnetwork_1_1Request.html',1,'network']]],
+  ['response',['Response',['../structnetwork_1_1Response.html',1,'network']]],
+  ['reversetext',['ReverseText',['../classfun_1_1ReverseText.html',1,'fun']]],
+  ['rule',['Rule',['../structstring_1_1Inflector_1_1Rule.html',1,'string::Inflector']]]
 ];

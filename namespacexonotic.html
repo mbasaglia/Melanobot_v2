@@ -99,8 +99,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1Formatter.html">Formatter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Darkplaces UTF-8.  <a href="classxonotic_1_1Formatter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1Handler2Rcon.html">Handler2Rcon</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler sending rcon messages.  <a href="classxonotic_1_1Handler2Rcon.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1RconCommand.html">RconCommand</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a fixed rcon command to a Xonotic connection.  <a href="classxonotic_1_1RconCommand.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1XonoticConnection.html">XonoticConnection</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a connection to a Xonotic server.  <a href="classxonotic_1_1XonoticConnection.html#details">More...</a><br /></td></tr>
@@ -114,6 +114,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a0d6dba78d2c74e1d86b72af0082eb9f1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexonotic.html#a0d6dba78d2c74e1d86b72af0082eb9f1">quote_string</a> (const std::string &amp;text)</td></tr>
 <tr class="memdesc:a0d6dba78d2c74e1d86b72af0082eb9f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escapes characters and puts the string in double quotes.  <a href="#a0d6dba78d2c74e1d86b72af0082eb9f1">More...</a><br /></td></tr>
 <tr class="separator:a0d6dba78d2c74e1d86b72af0082eb9f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28db60549a80b6c8da63c3930e91cba3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexonotic.html#a28db60549a80b6c8da63c3930e91cba3">rcon</a> (<a class="el" href="classnetwork_1_1Connection.html">network::Connection</a> *destination, std::vector&lt; std::string &gt; command, int priority=0)</td></tr>
+<tr class="memdesc:a28db60549a80b6c8da63c3930e91cba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a rcon command.  <a href="#a28db60549a80b6c8da63c3930e91cba3">More...</a><br /></td></tr>
+<tr class="separator:a28db60549a80b6c8da63c3930e91cba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace for Xonotic integration. </p>
@@ -146,7 +149,7 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00032">32</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">xonotic::XonoticConnection::command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00378">xonotic::XonoticConnection::handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">xonotic::XonoticConnection::command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00384">xonotic::XonoticConnection::handle_message()</a>.</p>
 
 </div>
 </div>
@@ -176,14 +179,59 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00037">37</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">xonotic::XonoticConnection::command()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">xonotic::XonoticConnection::command()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a28db60549a80b6c8da63c3930e91cba3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void xonotic::rcon </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classnetwork_1_1Connection.html">network::Connection</a> *&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt;&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>priority</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends a rcon command. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">destination</td><td>Xonotic connection </td></tr>
+    <tr><td class="paramname">command</td><td>Rcon command and arguments </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="rcon_8hpp_source.html#l00031">31</a> of file <a class="el" href="rcon_8hpp_source.html">rcon.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="rcon_8hpp_source.html#l00061">xonotic::RconCommand::on_handle()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:02 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:14 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

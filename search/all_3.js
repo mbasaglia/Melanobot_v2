@@ -7,6 +7,12 @@ var searchData=
   ['dark_5fred',['dark_red',['../namespacecolor.html#ad9ed37d086492840df7b92a2363a9fd2',1,'color']]],
   ['dark_5fyellow',['dark_yellow',['../namespacecolor.html#af1b7ac51586032f214565e1229cc2121',1,'color']]],
   ['data',['data',['../classstring_1_1BasicTrie_1_1TrieNodeData.html#aac921a220c41d232cc2f318fbede7811',1,'string::BasicTrie::TrieNodeData::data()'],['../classstring_1_1BasicTrie_1_1iterator.html#a2257645f41b70cd7a42c3685d0c545cb',1,'string::BasicTrie::iterator::data()']]],
+  ['datetime',['DateTime',['../classtimer_1_1DateTime.html',1,'timer']]],
+  ['datetime',['DateTime',['../classtimer_1_1DateTime.html#aa845a34213f31757933d2c2497455bd0',1,'timer::DateTime::DateTime()'],['../classtimer_1_1DateTime.html#acbfd26c5985b7b517b2eb4e948493571',1,'timer::DateTime::DateTime(const Time &amp;time)'],['../classtimer_1_1DateTime.html#a432252734e717ec80d4f6a6d643ad48b',1,'timer::DateTime::DateTime(int32_t year, Month month, days day, hours hour, minutes minute, seconds second=seconds(0), milliseconds millisecond=milliseconds(0))']]],
+  ['day',['day',['../classtimer_1_1DateTime.html#a88be80a5f9ff3569f07cfb3e8e44ed88',1,'timer::DateTime']]],
+  ['day_5f',['day_',['../classtimer_1_1DateTime.html#aa674e957d7a211759d283fb74444a3a2',1,'timer::DateTime']]],
+  ['days',['days',['../namespacetimer.html#adddc29b0491182d96f0e247c97833c86',1,'timer']]],
+  ['december',['DECEMBER',['../namespacetimer.html#a1da9faa7e2cafb4bbb05c0e91e38b66ca3b09593007851186f5112664ce81feb0',1,'timer']]],
   ['decode',['decode',['../classstring_1_1Formatter.html#ae65b93dd062827250992335b1e153a2d',1,'string::Formatter::decode()'],['../classstring_1_1FormatterUtf8.html#a682594762861e11c605c43ff6fc5b742',1,'string::FormatterUtf8::decode()'],['../classstring_1_1FormatterAscii.html#add541cffd10742aaa3385eb56b8f0ad5',1,'string::FormatterAscii::decode()'],['../classstring_1_1FormatterAnsi.html#aeaccdcdc68afca5a03905f4fb5561cf2',1,'string::FormatterAnsi::decode()'],['../classfun_1_1FormatterRainbow.html#ad09965f358a3a68dd41c8b613dd97d01',1,'fun::FormatterRainbow::decode()'],['../classirc_1_1FormatterIrc.html#a47bebf8c9c87cc15f5d54640a76cf8f3',1,'irc::FormatterIrc::decode()'],['../classxonotic_1_1Formatter.html#a5892e5c99a7894e3fa9c6da4a49aea11',1,'xonotic::Formatter::decode()']]],
   ['deep_5fcopy',['deep_copy',['../structstring_1_1BasicTrie_1_1TrieNode.html#ae2dda7995902781c77f1e5a965711ace',1,'string::BasicTrie::TrieNode']]],
   ['deepen',['deepen',['../structstring_1_1BasicTrie_1_1TrieNode.html#aac6c6bc97ea9d09e3a4961e57b5c000b',1,'string::BasicTrie::TrieNode']]],
@@ -22,6 +28,7 @@ var searchData=
   ['direction',['direction',['../classLog.html#a739b327769436d99cffcc13d11eaaa50',1,'Log']]],
   ['disconnect',['disconnect',['../classnetwork_1_1Connection.html#ae25738db9722cda300f2649a0e7bff4b',1,'network::Connection::disconnect()'],['../classStdinConnection.html#ac25e46166da8a8e1340f934c5dbb97dc',1,'StdinConnection::disconnect()'],['../classxonotic_1_1XonoticConnection.html#a32ead3e76303ab7dfdd2c4cb87d9b95e',1,'xonotic::XonoticConnection::disconnect()'],['../classnetwork_1_1UdpIo.html#aa0a7dc1cc6cf66ef8f50f7dfab22773f',1,'network::UdpIo::disconnect()'],['../classirc_1_1Buffer.html#a38f358ca9c9f0eef2441e18cb7e3ae91',1,'irc::Buffer::disconnect()'],['../classirc_1_1IrcConnection.html#a3109d9a3f3853ad1c49e3edf1775dd77',1,'irc::IrcConnection::disconnect()']]],
   ['disconnected',['DISCONNECTED',['../classnetwork_1_1Connection.html#a60c9aae50344fc51b4b9770f30dfeda5ad189538304f94dde038f3b2e6f0dc180',1,'network::Connection']]],
-  ['dst_5fchannel',['dst_channel',['../structnetwork_1_1Message.html#a7c235c4b9c066bb14535f6a73d79845f',1,'network::Message::dst_channel()'],['../classhandler_1_1Bridge.html#a3bae4097164e5097824faec17e4b1845',1,'handler::Bridge::dst_channel()']]],
-  ['duration',['Duration',['../namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62',1,'network']]]
+  ['dst_5fchannel',['dst_channel',['../structnetwork_1_1Message.html#adae32bc2a3f78ec1a4ff2eabaa967644',1,'network::Message::dst_channel()'],['../classhandler_1_1Bridge.html#a055145bc43b92c2641b5f75b520718cb',1,'handler::Bridge::dst_channel()']]],
+  ['duration',['Duration',['../namespacenetwork.html#a5c8e3ae9e2caa565ce71c176af384c62',1,'network']]],
+  ['duration_5ftype',['duration_type',['../classtimer_1_1basic__timer.html#a55a42a80a9a165f4d8f0d2386317673f',1,'timer::basic_timer']]]
 ];

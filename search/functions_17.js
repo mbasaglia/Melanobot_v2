@@ -1,19 +1,6 @@
 var searchData=
 [
-  ['_7easyncservice',['~AsyncService',['../classnetwork_1_1AsyncService.html#a713c3cab38f2aed1cd977bb7d6dbf9ec',1,'network::AsyncService']]],
-  ['_7ebasictrie',['~BasicTrie',['../classstring_1_1BasicTrie.html#a823960e26f36f387917a3184a38919fd',1,'string::BasicTrie']]],
-  ['_7ebuffer',['~Buffer',['../classirc_1_1Buffer.html#ac6eeef1f19ea07d8af3f3e8587424243',1,'irc::Buffer']]],
-  ['_7econnection',['~Connection',['../classnetwork_1_1Connection.html#a96bc48f575aac87571f40a991505148f',1,'network::Connection']]],
-  ['_7eelement',['~Element',['../classstring_1_1Element.html#add2b0478eede48818614a911d90bf463',1,'string::Element']]],
-  ['_7eformatter',['~Formatter',['../classstring_1_1Formatter.html#a91d0a7edfd8ec1a320f0e700cdb07ef4',1,'string::Formatter']]],
-  ['_7ehandler',['~Handler',['../classhandler_1_1Handler.html#ab570c2d7db0eee3b4cd62630902f0de4',1,'handler::Handler']]],
-  ['_7ehandlercontainer',['~HandlerContainer',['../classhandler_1_1HandlerContainer.html#a2b7d5775701f30750cde74ebd4dc711e',1,'handler::HandlerContainer']]],
-  ['_7eircconnection',['~IrcConnection',['../classirc_1_1IrcConnection.html#a5a681c4e3967400074cad1596f6feb6f',1,'irc::IrcConnection']]],
-  ['_7elog',['~Log',['../classLog.html#a0fbfda88fbee5027c89f6eb121059360',1,'Log']]],
-  ['_7emelanobot',['~Melanobot',['../classMelanobot.html#aca74a36de6cd9a8d141a98f60f4ee127',1,'Melanobot']]],
-  ['_7emultibuf',['~Multibuf',['../classMultibuf.html#ab97a601671d3cd7bfb04e2b4b9ceab65',1,'Multibuf']]],
-  ['_7eregistry',['~Registry',['../classstring_1_1Formatter_1_1Registry.html#a653a5737152a0de2e0c1671175695ad5',1,'string::Formatter::Registry']]],
-  ['_7estdinconnection',['~StdinConnection',['../classStdinConnection.html#aef96c05c1be0db5c57d15655b37ee9fd',1,'StdinConnection']]],
-  ['_7etrienode',['~TrieNode',['../structstring_1_1BasicTrie_1_1TrieNode.html#afe37ebe109469c2f72ba66150fdd505c',1,'string::BasicTrie::TrieNode']]],
-  ['_7exonoticconnection',['~XonoticConnection',['../classxonotic_1_1XonoticConnection.html#abfd7c597a800b966bb4fcdca6ddf261d',1,'xonotic::XonoticConnection']]]
+  ['year',['year',['../classtimer_1_1DateTime.html#ad79586e0156b17c995a7fdc678450ca5',1,'timer::DateTime']]],
+  ['year_5fday',['year_day',['../classtimer_1_1DateTime.html#a7fc5c481cbcbb82407514b5aa906ff2c',1,'timer::DateTime']]],
+  ['year_5fdays',['year_days',['../classtimer_1_1DateTime.html#a4385e404606df12b91292f4b89c4ce49',1,'timer::DateTime']]]
 ];

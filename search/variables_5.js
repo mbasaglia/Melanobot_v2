@@ -13,6 +13,6 @@ var searchData=
   ['formatter',['formatter',['../classLogger.html#ab4713f4aad41013b0106280f3b402211',1,'Logger']]],
   ['formatter_5f',['formatter_',['../classStdinConnection.html#a025ec10fb44506b729edec9799966666',1,'StdinConnection::formatter_()'],['../classxonotic_1_1XonoticConnection.html#ab4b8f12134982f59d0d2a9ac890b0970',1,'xonotic::XonoticConnection::formatter_()'],['../classirc_1_1IrcConnection.html#a553859941afc7d7ff17d41c644bc1f0f',1,'irc::IrcConnection::formatter_()']]],
   ['formatters',['formatters',['../classstring_1_1Formatter_1_1Registry.html#a86283330950a646432cf35007e56566f',1,'string::Formatter::Registry']]],
-  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message::from()'],['../structnetwork_1_1OutputMessage.html#afab075920835fba8198b34a99950e27b',1,'network::OutputMessage::from()'],['../classhandler_1_1BridgeChat.html#a19a47f2a2907befca30bb8d91fc6492b',1,'handler::BridgeChat::from()']]],
+  ['from',['from',['../structnetwork_1_1Message.html#a5e6e50d01a28c32f5ede2c3f75762588',1,'network::Message::from()'],['../structnetwork_1_1OutputMessage.html#afab075920835fba8198b34a99950e27b',1,'network::OutputMessage::from()'],['../classhandler_1_1BridgeChat.html#a5fda979e5ae1c0eb0c3706ee0221da0b',1,'handler::BridgeChat::from()']]],
   ['function',['function',['../structCriticalException.html#a119f0b2e123396ec2489eb5b894fec7c',1,'CriticalException']]]
 ];

@@ -144,11 +144,9 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A user visible from a connection. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd><p class="startdd">Maybe keep a pointer to the <a class="el" href="structuser_1_1User.html" title="A user visible from a connection. ">User</a> manager and notify when <code>local_id</code> or <code>channels</code> change. </p>
-<p class="enddd">don't know if it might be worth avoiding direct member access things like <code>name</code>, <code>host</code>, <code>global_id</code> and <code>properties</code> can be modified without any issue, changing <code>local_id</code> might cause issues with the user manager but let's assume the Connection is able to keep them unique via protocol restrictions. Adding values to <code>channels</code> should be done using <code><a class="el" href="structuser_1_1User.html#a21b297854675750c36c16b6c48083d3b" title="Add a channel (if not already in channels) ">add_channel()</a></code>.</p>
-</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>don't know if it might be worth avoiding direct member access things like <code>name</code>, <code>host</code>, <code>global_id</code> and <code>properties</code> can be modified without any issue, changing <code>local_id</code> might cause issues with the user manager but let's assume the Connection is able to keep them unique via protocol restrictions. Adding values to <code>channels</code> should be done using <code><a class="el" href="structuser_1_1User.html#a21b297854675750c36c16b6c48083d3b" title="Add a channel (if not already in channels) ">add_channel()</a></code>.</dd></dl>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00045">45</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00043">43</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a21b297854675750c36c16b6c48083d3b"></a>
 <div class="memitem">
@@ -174,7 +172,7 @@ Public Attributes</h2></td></tr>
 
 <p>Add a channel (if not already in <code>channels</code>) </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00078">78</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00076">76</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
 </div>
 </div>
@@ -203,7 +201,7 @@ Public Attributes</h2></td></tr>
 <p>Checks if a user matches this one. </p>
 <p>In order of priority, it will look for: <code>global_id</code>, <code>host</code>, <code>local_id</code> <code>name</code>. The first of those to be non-empty on <b>this</b>, will be used to check the match </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00053">53</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00051">51</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="user__group_8cpp_source.html#l00024">user::UserGroup::add_user()</a>, <a class="el" href="user__group_8cpp_source.html#l00044">user::UserGroup::contains()</a>, and <a class="el" href="user__group_8cpp_source.html#l00032">user::UserGroup::remove_user()</a>.</p>
 
@@ -233,7 +231,7 @@ Public Attributes</h2></td></tr>
 
 <p>Returns the value of that property or an empty string if not found. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00067">67</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00065">65</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00053">user::UserManager::user_by_property()</a>.</p>
 
@@ -263,7 +261,7 @@ Public Attributes</h2></td></tr>
 
 <p>Remove a channel. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00088">88</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00086">86</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
 </div>
 </div>
@@ -291,9 +289,9 @@ Public Attributes</h2></td></tr>
 
 <p>Update attributes and properties from <code>props</code>. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00101">101</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00099">99</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00145">xonotic::XonoticConnection::update_user()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00151">xonotic::XonoticConnection::update_user()</a>.</p>
 
 </div>
 </div>
@@ -310,9 +308,9 @@ Public Attributes</h2></td></tr>
 
 <p>List of channels this user is connected to. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00143">143</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00141">141</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user_8hpp_source.html#l00078">add_channel()</a>, and <a class="el" href="user_8hpp_source.html#l00088">remove_channel()</a>.</p>
+<p>Referenced by <a class="el" href="user_8hpp_source.html#l00076">add_channel()</a>, and <a class="el" href="user_8hpp_source.html#l00086">remove_channel()</a>.</p>
 
 </div>
 </div>
@@ -328,9 +326,9 @@ Public Attributes</h2></td></tr>
 
 <p>Global id, if present can be used to uniquely identify a user. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00138">138</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00136">136</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__whois_8hpp_source.html#l00074">irc::handler::QSendWhois::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00051">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__whois_8hpp_source.html#l00074">irc::handler::QSendWhois::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00099">update()</a>.</p>
 
 </div>
 </div>
@@ -346,9 +344,9 @@ Public Attributes</h2></td></tr>
 
 <p>Host name / IP address. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00128">128</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00126">126</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00051">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00099">update()</a>.</p>
 
 </div>
 </div>
@@ -364,9 +362,9 @@ Public Attributes</h2></td></tr>
 
 <p>Unique id on the current connection. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00133">133</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00131">131</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">user::UserManager::add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">user::UserManager::change_id()</a>, <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">user::UserManager::remove_user()</a>, <a class="el" href="user_8hpp_source.html#l00101">update()</a>, <a class="el" href="user__manager_8cpp_source.html#l00128">user::UserManager::update_user()</a>, and <a class="el" href="user__manager_8cpp_source.html#l00037">user::UserManager::user()</a>.</p>
+<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">user::UserManager::add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">user::UserManager::change_id()</a>, <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00051">matches()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">user::UserManager::remove_user()</a>, <a class="el" href="user_8hpp_source.html#l00099">update()</a>, <a class="el" href="user__manager_8cpp_source.html#l00127">user::UserManager::update_user()</a>, and <a class="el" href="user__manager_8cpp_source.html#l00037">user::UserManager::user()</a>.</p>
 
 </div>
 </div>
@@ -383,9 +381,9 @@ Public Attributes</h2></td></tr>
 <p><a class="el" href="structuser_1_1User.html" title="A user visible from a connection. ">User</a> name. </p>
 <p>It might have some custom formatting, use the owner connection to get a formatted string </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00123">123</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00121">121</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00053">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="misc_8hpp_source.html#l00334">handler::Reply::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="user_8hpp_source.html#l00051">matches()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="misc_8hpp_source.html#l00342">handler::Reply::on_handle()</a>, and <a class="el" href="user_8hpp_source.html#l00099">update()</a>.</p>
 
 </div>
 </div>
@@ -401,9 +399,9 @@ Public Attributes</h2></td></tr>
 
 <p>Custom properties associated to the user. </p>
 
-<p>Definition at line <a class="el" href="user_8hpp_source.html#l00148">148</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user_8hpp_source.html#l00146">146</a> of file <a class="el" href="user_8hpp_source.html">user.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user_8hpp_source.html#l00067">property()</a>, and <a class="el" href="user_8hpp_source.html#l00101">update()</a>.</p>
+<p>Referenced by <a class="el" href="user_8hpp_source.html#l00065">property()</a>, and <a class="el" href="user_8hpp_source.html#l00099">update()</a>.</p>
 
 </div>
 </div>
@@ -413,7 +411,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:02 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:14 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

@@ -3,6 +3,8 @@ var searchData=
   ['s',['s',['../classstring_1_1AsciiSubstring.html#aab05e7b3c77f315b9f75c803ab0a7658',1,'string::AsciiSubstring']]],
   ['saturation',['saturation',['../classfun_1_1FormatterRainbow.html#aff738cea16a45888c0284bead217ebc3',1,'fun::FormatterRainbow']]],
   ['scheduled_5fcommands',['scheduled_commands',['../classirc_1_1IrcConnection.html#a608e951561d7dc34a1ec0ed6e6cd3ca9',1,'irc::IrcConnection']]],
+  ['search',['search',['../structstring_1_1Inflector_1_1Rule.html#a9fc35cb6d29dca6734bc831c169ce861',1,'string::Inflector::Rule']]],
+  ['second_5f',['second_',['../classtimer_1_1DateTime.html#ac674914e53b525e837855267b9bfc560',1,'timer::DateTime']]],
   ['server_5f',['server_',['../classxonotic_1_1XonoticConnection.html#a9e47d4791dc8588e956b29f827ade8b9',1,'xonotic::XonoticConnection']]],
   ['server_5ffeatures',['server_features',['../classirc_1_1IrcConnection.html#a8f37987dd05b7cb2e571c3f8bd04fc4b',1,'irc::IrcConnection']]],
   ['server_5fpassword',['server_password',['../classirc_1_1IrcConnection.html#a8e0f4f6adcd4d5bfb56e15bbcacf23d0',1,'irc::IrcConnection']]],
@@ -13,6 +15,7 @@ var searchData=
   ['source',['source',['../structnetwork_1_1Message.html#a71ff2f2ce96e69b0a85a7725eafdcf21',1,'network::Message::source()'],['../classhandler_1_1SimpleGroup.html#ad1481a8c03ca909cc1ebbbac715e6567',1,'handler::SimpleGroup::source()']]],
   ['sources_5furl',['sources_url',['../classhandler_1_1License.html#a435b3926aee12da1a07c24fd00bd60bd',1,'handler::License::sources_url()'],['../classirc_1_1handler_1_1CtcpSource.html#af352c95f4eb0ac4d2b427d78f618b85c',1,'irc::handler::CtcpSource::sources_url()'],['../classirc_1_1handler_1_1WhoisCheckMe.html#a85c2cb03511812ff079d8dc3f7320c80',1,'irc::handler::WhoisCheckMe::sources_url()']]],
   ['status_5f',['status_',['../classxonotic_1_1XonoticConnection.html#a6b920f0377177796ac094f76f66aeafb',1,'xonotic::XonoticConnection']]],
+  ['status_5fpolling',['status_polling',['../classxonotic_1_1XonoticConnection.html#af7f608344763b19f5870db2a87b0e226',1,'xonotic::XonoticConnection']]],
   ['stream',['stream',['../classLog.html#afb16b786b64b8c80274ee60012ea8501',1,'Log::stream()'],['../structJsonParser.html#a35b62e7b3530938faa98b69011efb30a',1,'JsonParser::stream()']]],
   ['stream_5fname',['stream_name',['../structJsonParser.html#ad0980adc4306bc99d810cb9138304a53',1,'JsonParser']]],
   ['synopsis',['synopsis',['../classhandler_1_1SimpleAction.html#a362db8a8835c31529cd076c15161223c',1,'handler::SimpleAction']]]

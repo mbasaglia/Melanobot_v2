@@ -10,11 +10,14 @@ var searchData=
   ['red',['red',['../namespacecolor.html#af2212255fdd2c573f76f1db99e629c7b',1,'color']]],
   ['regex',['regex',['../classhandler_1_1Reply.html#a66b776879793665fdaf6b09989ef5b54',1,'handler::Reply']]],
   ['regex_5fchanhax',['regex_chanhax',['../classhandler_1_1Chanhax.html#ad32c4c50dfdf30ac1741265631ff5f81',1,'handler::Chanhax']]],
+  ['repeating',['repeating',['../classtimer_1_1basic__timer.html#a3871ae853d68a067583bae86aaa7cc56',1,'timer::basic_timer']]],
+  ['replace',['replace',['../structstring_1_1Inflector_1_1Rule.html#a57b44d8e88f4bd69d9a3a0a3e9f984af',1,'string::Inflector::Rule']]],
   ['reply',['reply',['../classhandler_1_1Reply.html#a147d34ece7185ba995ffef2ca5059685',1,'handler::Reply::reply()'],['../classirc_1_1handler_1_1CtcpUserInfo.html#ab3f8ff425767af99cde0b2de59f22321',1,'irc::handler::CtcpUserInfo::reply()']]],
   ['request',['request',['../structnetwork_1_1ThreadedAsyncService_1_1Item.html#a3d14046f81fd658a6c08fce496c92dfd',1,'network::ThreadedAsyncService::Item']]],
   ['requests',['requests',['../classnetwork_1_1ThreadedAsyncService.html#a0652e767ff782c0daf578f71ed4e46c7',1,'network::ThreadedAsyncService']]],
   ['resolver',['resolver',['../classnetwork_1_1UdpIo.html#a410f19a4af138445c24c7ba302b42bb3',1,'network::UdpIo::resolver()'],['../classirc_1_1Buffer.html#a31b5c99dd1440d11923bab25b4085dad',1,'irc::Buffer::resolver()']]],
   ['reverse_5fascii',['reverse_ascii',['../classfun_1_1ReverseText.html#adf686f33f365de0178ba5fa0fc58d2fa',1,'fun::ReverseText']]],
   ['root_5f',['root_',['../classstring_1_1BasicTrie.html#a2e1365431f7cb0640356173f0da0a668',1,'string::BasicTrie']]],
+  ['rules',['rules',['../classstring_1_1Inflector.html#abd0a70ccc8af612ff3e6b7e17be03745',1,'string::Inflector']]],
   ['run',['run',['../classConcurrentContainer.html#af5aaef13ce8efc377a1ad8d06402f7a9',1,'ConcurrentContainer']]]
 ];

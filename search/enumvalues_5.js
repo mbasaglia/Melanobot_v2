@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['json',['JSON',['../classSettings.html#ad16df62d407753259389b3c440125be3a0ecd11c1d7a287401d148a23bbd7a2f8',1,'Settings']]]
+  ['info',['INFO',['../classSettings.html#ad16df62d407753259389b3c440125be3a551b723eafd6a31d444fcb2f5920fbd3',1,'Settings']]],
+  ['ini',['INI',['../classSettings.html#ad16df62d407753259389b3c440125be3a19cf3bd8d7d38ff28b25e78c190c6262',1,'Settings']]]
 ];

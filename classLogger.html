@@ -165,7 +165,7 @@ Private Attributes</h2></td></tr>
 <tr class="separator:aeb84e55757ef3d6a54ab6cb3ec4523ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4713f4aad41013b0106280f3b402211"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classstring_1_1Formatter.html">string::Formatter</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLogger.html#ab4713f4aad41013b0106280f3b402211">formatter</a> = nullptr</td></tr>
 <tr class="separator:ab4713f4aad41013b0106280f3b402211"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17d51aec7003331eb0e9d660681b89df"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLogger.html#a17d51aec7003331eb0e9d660681b89df">timestamp</a> = &quot;%Y-%m-%d %T&quot;</td></tr>
+<tr class="memitem:a17d51aec7003331eb0e9d660681b89df"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLogger.html#a17d51aec7003331eb0e9d660681b89df">timestamp</a> = &quot;[Y-m-d H:i:s]&quot;</td></tr>
 <tr class="separator:a17d51aec7003331eb0e9d660681b89df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29fcd05e7f8fe4dee6be30c51de5b20c"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLogger.html#a29fcd05e7f8fe4dee6be30c51de5b20c">mutex</a></td></tr>
 <tr class="separator:a29fcd05e7f8fe4dee6be30c51de5b20c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,7 +174,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Singleton class handling logs. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classLog.html" title="Simple log stream-like interface. ">Log</a> for a nicer interface </dd></dl>
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00039">39</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00037">37</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="abc41bfb031d896170c7675fa96a6b30c"></a>
 <div class="memitem">
@@ -197,7 +197,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00106">106</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00104">104</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -273,9 +273,9 @@ Private Attributes</h2></td></tr>
 
 <p>Singleton instance. </p>
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00046">46</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00044">44</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>, <a class="el" href="melanomodule_8hpp_source.html#l00058">Melanomodule::register_log_type()</a>, and <a class="el" href="logger_8hpp_source.html#l00145">Log::~Log()</a>.</p>
+<p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>, <a class="el" href="melanomodule_8hpp_source.html#l00058">Melanomodule::register_log_type()</a>, and <a class="el" href="logger_8hpp_source.html#l00143">Log::~Log()</a>.</p>
 
 </div>
 </div>
@@ -294,7 +294,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>maybe should use different a formatter (ie: plain utf8) for log files </dd></dl>
 
-<p>Definition at line <a class="el" href="logger_8cpp_source.html#l00051">51</a> of file <a class="el" href="logger_8cpp_source.html">logger.cpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8cpp_source.html#l00049">49</a> of file <a class="el" href="logger_8cpp_source.html">logger.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -344,7 +344,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="logger_8cpp_source.html#l00022">22</a> of file <a class="el" href="logger_8cpp_source.html">logger.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8hpp_source.html#l00145">Log::~Log()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8hpp_source.html#l00143">Log::~Log()</a>.</p>
 
 </div>
 </div>
@@ -431,7 +431,7 @@ Private Attributes</h2></td></tr>
 <p>Register a log "direction". </p>
 <p>A direction is a simple identifier showing what kind of message has been logged </p>
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00058">58</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00056">56</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="main_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -472,7 +472,7 @@ Private Attributes</h2></td></tr>
 <p>Register a log type. </p>
 <p>A log type is the name of the component which generates the log. Better to keep it short, 3 letters should do. The default verbosity is 2 </p>
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00070">70</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00068">68</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="melanomodule_8hpp_source.html#l00058">Melanomodule::register_log_type()</a>.</p>
 
@@ -513,7 +513,7 @@ Private Attributes</h2></td></tr>
 <p>Change verbosity level for a given log type. </p>
 <p>Messages of that type with higher verbisity will be discarded </p>
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00082">82</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00080">80</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -536,9 +536,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00120">120</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00118">118</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00051">load_settings()</a>, and <a class="el" href="logger_8cpp_source.html#l00022">log()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00049">load_settings()</a>, and <a class="el" href="logger_8cpp_source.html#l00022">log()</a>.</p>
 
 </div>
 </div>
@@ -560,9 +560,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00115">115</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00113">113</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00051">load_settings()</a>, and <a class="el" href="logger_8hpp_source.html#l00106">Logger()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00049">load_settings()</a>, and <a class="el" href="logger_8hpp_source.html#l00104">Logger()</a>.</p>
 
 </div>
 </div>
@@ -584,7 +584,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00116">116</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00114">114</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="logger_8cpp_source.html#l00022">log()</a>.</p>
 
@@ -608,9 +608,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00118">118</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00116">116</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00022">log()</a>, and <a class="el" href="logger_8hpp_source.html#l00058">register_direction()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00022">log()</a>, and <a class="el" href="logger_8hpp_source.html#l00056">register_direction()</a>.</p>
 
 </div>
 </div>
@@ -632,9 +632,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00119">119</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00117">117</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00022">log()</a>, and <a class="el" href="logger_8hpp_source.html#l00070">register_log_type()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00022">log()</a>, and <a class="el" href="logger_8hpp_source.html#l00068">register_log_type()</a>.</p>
 
 </div>
 </div>
@@ -656,9 +656,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00117">117</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00115">115</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00051">load_settings()</a>, <a class="el" href="logger_8cpp_source.html#l00022">log()</a>, <a class="el" href="logger_8hpp_source.html#l00070">register_log_type()</a>, and <a class="el" href="logger_8hpp_source.html#l00082">set_log_verbosity()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00049">load_settings()</a>, <a class="el" href="logger_8cpp_source.html#l00022">log()</a>, <a class="el" href="logger_8hpp_source.html#l00068">register_log_type()</a>, and <a class="el" href="logger_8hpp_source.html#l00080">set_log_verbosity()</a>.</p>
 
 </div>
 </div>
@@ -680,7 +680,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00122">122</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00120">120</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -692,7 +692,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string Logger::timestamp = &quot;%Y-%m-%d %T&quot;</td>
+          <td class="memname">std::string Logger::timestamp = &quot;[Y-m-d H:i:s]&quot;</td>
         </tr>
       </table>
   </td>
@@ -702,9 +702,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00121">121</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p>Definition at line <a class="el" href="logger_8hpp_source.html#l00119">119</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00051">load_settings()</a>, and <a class="el" href="logger_8cpp_source.html#l00022">log()</a>.</p>
+<p>Referenced by <a class="el" href="logger_8cpp_source.html#l00049">load_settings()</a>, and <a class="el" href="logger_8cpp_source.html#l00022">log()</a>.</p>
 
 </div>
 </div>
@@ -715,7 +715,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:00 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:11 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

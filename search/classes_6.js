@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['ircconnection',['IrcConnection',['../classirc_1_1IrcConnection.html',1,'irc']]],
-  ['ircjoinmessage',['IrcJoinMessage',['../classirc_1_1handler_1_1IrcJoinMessage.html',1,'irc::handler']]],
-  ['irckickmessage',['IrcKickMessage',['../classirc_1_1handler_1_1IrcKickMessage.html',1,'irc::handler']]],
-  ['irckickrejoin',['IrcKickRejoin',['../classirc_1_1handler_1_1IrcKickRejoin.html',1,'irc::handler']]],
-  ['item',['Item',['../structnetwork_1_1ThreadedAsyncService_1_1Item.html',1,'network::ThreadedAsyncService']]],
-  ['iterator',['iterator',['../classstring_1_1BasicTrie_1_1iterator.html',1,'string::BasicTrie']]]
+  ['handler',['Handler',['../classhandler_1_1Handler.html',1,'handler']]],
+  ['handlercontainer',['HandlerContainer',['../classhandler_1_1HandlerContainer.html',1,'handler']]],
+  ['handlerfactory',['HandlerFactory',['../classhandler_1_1HandlerFactory.html',1,'handler']]],
+  ['help',['Help',['../classhandler_1_1Help.html',1,'handler']]],
+  ['httpservice',['HttpService',['../classnetwork_1_1http_1_1HttpService.html',1,'network::http']]]
 ];

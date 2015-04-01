@@ -201,7 +201,7 @@ Private Attributes</h2></td></tr>
 
 <p>Change user id. </p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> on success </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>maybe check if there is some other user with new_local_id </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This doesn't check if a different user with the same id already exists </dd></dl>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00116">116</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
@@ -270,7 +270,7 @@ Private Attributes</h2></td></tr>
 
 <p>Removes all users. </p>
 
-<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00105">105</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00106">106</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +322,7 @@ Private Attributes</h2></td></tr>
 <p>Update a user. </p>
 <p>If there's no user matching <code>local_id</code>, <code>user</code> is inserted </p>
 
-<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00128">128</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00127">127</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -345,7 +345,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00037">37</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00145">xonotic::XonoticConnection::update_user()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00151">xonotic::XonoticConnection::update_user()</a>.</p>
 
 </div>
 </div>
@@ -365,7 +365,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8cpp_source.html#l00045">45</a> of file <a class="el" href="user__manager_8cpp_source.html">user_manager.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00162">xonotic::XonoticConnection::get_user()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00168">xonotic::XonoticConnection::get_user()</a>.</p>
 
 </div>
 </div>
@@ -453,7 +453,7 @@ Private Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00058">58</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00171">xonotic::XonoticConnection::get_users()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00177">xonotic::XonoticConnection::get_users()</a>.</p>
 
 </div>
 </div>
@@ -506,9 +506,9 @@ template&lt;class UnaryPredicate &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00108">108</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
+<p>Definition at line <a class="el" href="user__manager_8hpp_source.html#l00109">109</a> of file <a class="el" href="user__manager_8hpp_source.html">user_manager.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">change_id()</a>, <a class="el" href="user__manager_8hpp_source.html#l00105">clear()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">remove_user()</a>, and <a class="el" href="user__manager_8hpp_source.html#l00058">users()</a>.</p>
+<p>Referenced by <a class="el" href="user__manager_8cpp_source.html#l00024">add_user()</a>, <a class="el" href="user__manager_8cpp_source.html#l00116">change_id()</a>, <a class="el" href="user__manager_8hpp_source.html#l00106">clear()</a>, <a class="el" href="user__manager_8cpp_source.html#l00105">remove_user()</a>, and <a class="el" href="user__manager_8hpp_source.html#l00058">users()</a>.</p>
 
 </div>
 </div>
@@ -519,7 +519,7 @@ template&lt;class UnaryPredicate &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:02 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:14 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

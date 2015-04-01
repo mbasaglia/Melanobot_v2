@@ -1,37 +1,37 @@
 <map id="src/user/user_manager.hpp" name="src/user/user_manager.hpp">
-<area shape="rect" id="node2" href="$user__manager_8cpp.html" title="src/user/user_manager.cpp" alt="" coords="1563,80,1743,107"/>
-<area shape="rect" id="node3" href="$src_2network_2connection_8hpp.html" title="src/network/connection.hpp" alt="" coords="1767,80,1950,107"/>
-<area shape="rect" id="node31" href="$xonotic-connection_8hpp.html" title="modules/xonotic/xonotic\l&#45;connection.hpp" alt="" coords="2127,244,2289,285"/>
-<area shape="rect" id="node4" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="1666,162,1795,189"/>
-<area shape="rect" id="node6" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="965,251,1123,278"/>
-<area shape="rect" id="node7" href="$melanomodule_8hpp.html" title="src/melanomodule.hpp" alt="" coords="1374,341,1527,367"/>
-<area shape="rect" id="node30" href="$stdin_8hpp.html" title="modules/posix/stdin.hpp" alt="" coords="1727,251,1889,278"/>
-<area shape="rect" id="node33" href="$modules_2irc_2network_2connection_8hpp.html" title="modules/irc/network\l/connection.hpp" alt="" coords="1913,244,2052,285"/>
-<area shape="rect" id="node36" href="$buffer_8hpp.html" title="modules/irc/network\l/buffer.hpp" alt="" coords="1921,155,2060,196"/>
-<area shape="rect" id="node5" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="1551,341,1681,367"/>
-<area shape="rect" id="node8" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="1442,430,1539,457"/>
-<area shape="rect" id="node15" href="$web-api_8hpp.html" title="modules/web/web&#45;api.hpp" alt="" coords="491,341,664,367"/>
-<area shape="rect" id="node19" href="$simple-group_8hpp.html" title="modules/core/handler\l/simple&#45;group.hpp" alt="" coords="133,333,280,375"/>
-<area shape="rect" id="node24" href="$misc_8hpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="621,423,768,464"/>
-<area shape="rect" id="node25" href="$irc__actions_8hpp.html" title="File containing Handlers which manage responses to various IRC commands. " alt="" coords="1057,333,1191,375"/>
-<area shape="rect" id="node26" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="1215,333,1350,375"/>
-<area shape="rect" id="node27" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="739,333,874,375"/>
-<area shape="rect" id="node28" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="898,333,1033,375"/>
-<area shape="rect" id="node29" href="$chat_8hpp.html" title="modules/xonotic/handler\l/chat.hpp" alt="" coords="304,333,467,375"/>
-<area shape="rect" id="node9" href="$posix_8cpp.html" title="modules/posix/posix.cpp" alt="" coords="1645,430,1811,457"/>
-<area shape="rect" id="node10" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="933,601,1073,628"/>
-<area shape="rect" id="node11" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="1037,519,1189,546"/>
-<area shape="rect" id="node12" href="$core_8cpp.html" title="modules/core/core.cpp" alt="" coords="535,519,689,546"/>
-<area shape="rect" id="node13" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="1101,430,1233,457"/>
-<area shape="rect" id="node14" href="$xonotic_8cpp.html" title="modules/xonotic/xonotic.cpp" alt="" coords="2082,430,2270,457"/>
-<area shape="rect" id="node16" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="317,519,510,546"/>
-<area shape="rect" id="node18" href="$web-api-concrete_8hpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="865,423,1013,464"/>
-<area shape="rect" id="node17" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="317,601,510,628"/>
+<area shape="rect" id="node2" href="$user__manager_8cpp.html" title="src/user/user_manager.cpp" alt="" coords="1725,80,1905,107"/>
+<area shape="rect" id="node3" href="$src_2network_2connection_8hpp.html" title="src/network/connection.hpp" alt="" coords="1929,80,2111,107"/>
+<area shape="rect" id="node31" href="$xonotic-connection_8hpp.html" title="modules/xonotic/xonotic\l&#45;connection.hpp" alt="" coords="2140,244,2303,285"/>
+<area shape="rect" id="node4" href="$melanobot_8hpp.html" title="src/melanobot.hpp" alt="" coords="1799,162,1929,189"/>
+<area shape="rect" id="node6" href="$handler_8hpp.html" title="src/handler/handler.hpp" alt="" coords="1029,251,1187,278"/>
+<area shape="rect" id="node7" href="$melanomodule_8hpp.html" title="src/melanomodule.hpp" alt="" coords="1671,341,1825,367"/>
+<area shape="rect" id="node30" href="$stdin_8hpp.html" title="modules/posix/stdin.hpp" alt="" coords="2327,251,2489,278"/>
+<area shape="rect" id="node33" href="$modules_2irc_2network_2connection_8hpp.html" title="modules/irc/network\l/connection.hpp" alt="" coords="1900,244,2039,285"/>
+<area shape="rect" id="node36" href="$buffer_8hpp.html" title="modules/irc/network\l/buffer.hpp" alt="" coords="2004,155,2143,196"/>
+<area shape="rect" id="node5" href="$melanobot_8cpp.html" title="src/melanobot.cpp" alt="" coords="1466,341,1595,367"/>
+<area shape="rect" id="node8" href="$main_8cpp.html" title="src/main.cpp" alt="" coords="1814,430,1911,457"/>
+<area shape="rect" id="node15" href="$web-api_8hpp.html" title="modules/web/web&#45;api.hpp" alt="" coords="445,341,619,367"/>
+<area shape="rect" id="node19" href="$simple-group_8hpp.html" title="modules/core/handler\l/simple&#45;group.hpp" alt="" coords="224,333,371,375"/>
+<area shape="rect" id="node24" href="$misc_8hpp.html" title="This file defines handlers which perform miscellaneous tasks. " alt="" coords="619,423,765,464"/>
+<area shape="rect" id="node25" href="$rcon_8hpp.html" title="modules/xonotic/handler\l/rcon.hpp" alt="" coords="1279,333,1441,375"/>
+<area shape="rect" id="node26" href="$irc__actions_8hpp.html" title="File containing Handlers which manage responses to various IRC commands. " alt="" coords="802,333,937,375"/>
+<area shape="rect" id="node27" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="961,333,1095,375"/>
+<area shape="rect" id="node28" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="1119,333,1254,375"/>
+<area shape="rect" id="node29" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="643,333,778,375"/>
+<area shape="rect" id="node9" href="$posix_8cpp.html" title="modules/posix/posix.cpp" alt="" coords="2163,430,2330,457"/>
+<area shape="rect" id="node10" href="$fun_8cpp.html" title="modules/fun/fun.cpp" alt="" coords="977,601,1117,628"/>
+<area shape="rect" id="node11" href="$web_8cpp.html" title="modules/web/web.cpp" alt="" coords="1072,519,1224,546"/>
+<area shape="rect" id="node12" href="$core_8cpp.html" title="modules/core/core.cpp" alt="" coords="533,519,688,546"/>
+<area shape="rect" id="node13" href="$irc_8cpp.html" title="modules/irc/irc.cpp" alt="" coords="1045,430,1177,457"/>
+<area shape="rect" id="node14" href="$xonotic_8cpp.html" title="modules/xonotic/xonotic.cpp" alt="" coords="1602,430,1790,457"/>
+<area shape="rect" id="node16" href="$fun-handlers_8hpp.html" title="This file contains definitions for handlers which are pretty useless. " alt="" coords="315,519,509,546"/>
+<area shape="rect" id="node18" href="$web-api-concrete_8hpp.html" title="This files defines some simple Handlers using web APIs. " alt="" coords="845,423,993,464"/>
+<area shape="rect" id="node17" href="$fun-handlers_8cpp.html" title="modules/fun/fun&#45;handlers.cpp" alt="" coords="315,601,509,628"/>
 <area shape="rect" id="node20" href="$bridge_8hpp.html" title="modules/core/handler\l/bridge.hpp" alt="" coords="5,423,152,464"/>
-<area shape="rect" id="node22" href="$simple-group_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="347,423,493,464"/>
-<area shape="rect" id="node23" href="$admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot. " alt="" coords="176,423,323,464"/>
+<area shape="rect" id="node22" href="$simple-group_8cpp.html" title="This file contains the definitions for the most basic and reusable handlers. " alt="" coords="176,423,323,464"/>
+<area shape="rect" id="node23" href="$admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot. " alt="" coords="347,423,493,464"/>
 <area shape="rect" id="node21" href="$bridge_8cpp.html" title="modules/core/handler\l/bridge.cpp" alt="" coords="5,512,152,553"/>
-<area shape="rect" id="node32" href="$xonotic-connection_8cpp.html" title="modules/xonotic/xonotic\l&#45;connection.cpp" alt="" coords="2183,333,2345,375"/>
-<area shape="rect" id="node34" href="$buffer_8cpp.html" title="modules/irc/network\l/buffer.cpp" alt="" coords="2020,333,2159,375"/>
-<area shape="rect" id="node35" href="$connection_8cpp.html" title="modules/irc/network\l/connection.cpp" alt="" coords="1857,333,1996,375"/>
+<area shape="rect" id="node32" href="$xonotic-connection_8cpp.html" title="modules/xonotic/xonotic\l&#45;connection.cpp" alt="" coords="2276,333,2439,375"/>
+<area shape="rect" id="node34" href="$buffer_8cpp.html" title="modules/irc/network\l/buffer.cpp" alt="" coords="2063,333,2201,375"/>
+<area shape="rect" id="node35" href="$connection_8cpp.html" title="modules/irc/network\l/connection.cpp" alt="" coords="1900,333,2039,375"/>
 </map>

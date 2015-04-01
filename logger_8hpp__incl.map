@@ -1,7 +1,8 @@
 <map id="src/string/logger.hpp" name="src/string/logger.hpp">
-<area shape="rect" id="node9" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="229,87,323,114"/>
-<area shape="rect" id="node12" href="$string_8hpp.html" title="string.hpp" alt="" coords="633,87,711,114"/>
-<area shape="rect" id="node20" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1095,87,1188,114"/>
-<area shape="rect" id="node17" href="$color_8hpp.html" title="color.hpp" alt="" coords="552,177,627,203"/>
-<area shape="rect" id="node18" href="$math_8hpp.html" title="math.hpp" alt="" coords="558,259,634,285"/>
+<area shape="rect" id="node8" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="229,80,323,107"/>
+<area shape="rect" id="node11" href="$string_8hpp.html" title="string.hpp" alt="" coords="602,80,681,107"/>
+<area shape="rect" id="node20" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1099,80,1192,107"/>
+<area shape="rect" id="node16" href="$color_8hpp.html" title="color.hpp" alt="" coords="893,162,968,189"/>
+<area shape="rect" id="node17" href="$math_8hpp.html" title="math.hpp" alt="" coords="883,244,959,271"/>
+<area shape="rect" id="node19" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1211,244,1328,271"/>
 </map>

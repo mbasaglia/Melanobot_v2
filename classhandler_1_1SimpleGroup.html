@@ -111,8 +111,7 @@ Inheritance diagram for handler::SimpleGroup:</div>
 <div class="dynheader">
 Collaboration diagram for handler::SimpleGroup:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1SimpleGroup__coll__graph.svg" width="392" height="502"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classhandler_1_1SimpleGroup__coll__graph.svg" width="392" height="502"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -227,7 +226,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A simple group of actions which share settings. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000020">Todo:</a></b></dt><dd>Add a simple way to create pre-defined group classes which will have a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>Add a simple way to create pre-defined group classes which will have a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration) </dd></dl>
 
 <p>Definition at line <a class="el" href="simple-group_8hpp_source.html#l00036">36</a> of file <a class="el" href="simple-group_8hpp_source.html">simple-group.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -254,11 +253,12 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000022">Todo:</a></b></dt><dd>option to copy settings from another group </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd>option to copy settings from another group </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>children are recognized by the fact that they </dd></dl>
 
 <p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00026">26</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00226">handler::AbstractList::AbstractList()</a>, and <a class="el" href="bridge_8cpp_source.html#l00024">handler::Bridge::Bridge()</a>.</p>
+<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00230">handler::AbstractList::AbstractList()</a>, and <a class="el" href="bridge_8cpp_source.html#l00024">handler::Bridge::Bridge()</a>.</p>
 
 </div>
 </div>
@@ -288,7 +288,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classhandler_1_1SimpleAction.html#a5f83bbb444e512f040fbb16fb569bc4d">handler::SimpleAction</a>.</p>
 
-<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00081">81</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00085">85</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
 
 </div>
 </div>
@@ -314,11 +314,11 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called when the connection ends. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>see todo in <a class="el" href="classhandler_1_1SimpleGroup.html#aedc290178bdffeaf7ff1f38c56e7da9b" title="Called at startup in case it needs to perform some initialization. ">initialize()</a>, also is this needed? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>is this needed? </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classhandler_1_1Handler.html#af722963ee48de2ff1cd2055b9fb94972">handler::Handler</a>.</p>
 
-<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00067">67</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00071">71</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
 
 </div>
 </div>
@@ -383,11 +383,10 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called at startup in case it needs to perform some initialization. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>Run after the connection has been established? (needs to know what connections this class handles) </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classhandler_1_1Handler.html#a2c6b00c624bfba80346fb2d4257c8042">handler::Handler</a>.</p>
 
-<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00061">61</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00065">65</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
 
 </div>
 </div>
@@ -420,9 +419,9 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classhandler_1_1AbstractList.html#a4437b8fc92b1de6e8530e785440b028f">handler::AbstractList</a>.</p>
 
-<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00073">73</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00077">77</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="bridge_8cpp_source.html#l00036">handler::Bridge::on_handle()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00253">handler::AbstractList::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="bridge_8cpp_source.html#l00036">handler::Bridge::on_handle()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00257">handler::AbstractList::on_handle()</a>.</p>
 
 </div>
 </div>
@@ -462,7 +461,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classhandler_1_1Handler.html#af6d68fc235c6126a1b7c4181ee276e04">handler::Handler</a>.</p>
 
-<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00087">87</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
+<p>Definition at line <a class="el" href="simple-group_8cpp_source.html#l00091">91</a> of file <a class="el" href="simple-group_8cpp_source.html">simple-group.cpp</a>.</p>
 
 </div>
 </div>
@@ -488,7 +487,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="simple-group_8hpp_source.html#l00061">61</a> of file <a class="el" href="simple-group_8hpp_source.html">simple-group.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00081">can_handle()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
+<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00085">can_handle()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
 
 </div>
 </div>
@@ -514,7 +513,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="simple-group_8hpp_source.html#l00060">60</a> of file <a class="el" href="simple-group_8hpp_source.html">simple-group.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00226">handler::AbstractList::AbstractList()</a>, <a class="el" href="simple-group_8cpp_source.html#l00087">populate_properties()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
+<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00230">handler::AbstractList::AbstractList()</a>, <a class="el" href="simple-group_8cpp_source.html#l00091">populate_properties()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
 
 </div>
 </div>
@@ -563,11 +562,11 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Name to show in help. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000021">Todo:</a></b></dt><dd>if posible, merge name and help_group </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd>if posible, merge name and help_group </dd></dl>
 
 <p>Definition at line <a class="el" href="simple-group_8hpp_source.html#l00063">63</a> of file <a class="el" href="simple-group_8hpp_source.html">simple-group.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00226">handler::AbstractList::AbstractList()</a>, <a class="el" href="simple-group_8hpp_source.html#l00045">get_property()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
+<p>Referenced by <a class="el" href="simple-group_8cpp_source.html#l00230">handler::AbstractList::AbstractList()</a>, <a class="el" href="simple-group_8hpp_source.html#l00045">get_property()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
 
 </div>
 </div>
@@ -593,7 +592,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="simple-group_8hpp_source.html#l00065">65</a> of file <a class="el" href="simple-group_8hpp_source.html">simple-group.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00076">handler::AdminGroup::add()</a>, <a class="el" href="admin_8hpp_source.html#l00066">handler::AdminGroup::AdminGroup()</a>, <a class="el" href="simple-group_8cpp_source.html#l00081">can_handle()</a>, <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="admin_8hpp_source.html#l00083">handler::AdminGroup::remove()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
+<p>Referenced by <a class="el" href="admin_8hpp_source.html#l00076">handler::AdminGroup::add()</a>, <a class="el" href="admin_8hpp_source.html#l00066">handler::AdminGroup::AdminGroup()</a>, <a class="el" href="simple-group_8cpp_source.html#l00085">can_handle()</a>, <a class="el" href="admin_8hpp_source.html#l00095">handler::AdminGroup::elements()</a>, <a class="el" href="admin_8hpp_source.html#l00083">handler::AdminGroup::remove()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00026">SimpleGroup()</a>.</p>
 
 </div>
 </div>
@@ -604,7 +603,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:01 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:13 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

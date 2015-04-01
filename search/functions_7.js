@@ -10,6 +10,8 @@ var searchData=
   ['hex_5fgreen',['hex_green',['../classcolor_1_1Color12.html#ac0dd8fb1aec73ad00031092710209572',1,'color::Color12']]],
   ['hex_5fred',['hex_red',['../classcolor_1_1Color12.html#a9b10721d7c697227c5f680a74ad2d504',1,'color::Color12']]],
   ['hmac_5fmd4',['hmac_md4',['../namespacexonotic.html#a9269e87fc1ca6c4787f2e592cba4ecc4',1,'xonotic']]],
+  ['hour',['hour',['../classtimer_1_1DateTime.html#ac310925f45cb76c74f6a44961cf79622',1,'timer::DateTime']]],
+  ['hour12',['hour12',['../classtimer_1_1DateTime.html#a871a8b1158f11141fb0965bdd4fe00df',1,'timer::DateTime']]],
   ['hsv',['hsv',['../classcolor_1_1Color12.html#a77855109e3621a84fecf15239e758c70',1,'color::Color12']]],
   ['http_5ffailure',['http_failure',['../classhandler_1_1SimpleWebApi.html#aa59847ac74735bdaa7e78f13ff6e9d0f',1,'handler::SimpleWebApi::http_failure()'],['../classhandler_1_1SimpleJson.html#abf183112c823b175788a21148b13d42f',1,'handler::SimpleJson::http_failure()']]],
   ['http_5fsuccess',['http_success',['../classhandler_1_1SimpleWebApi.html#a3290cb06fc52805f598d76689cd8059f',1,'handler::SimpleWebApi::http_success()'],['../classhandler_1_1SimpleJson.html#aaadb6b843470161efc29078f01aec195',1,'handler::SimpleJson::http_success()']]]

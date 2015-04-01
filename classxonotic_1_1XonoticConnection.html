@@ -108,14 +108,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for xonotic::XonoticConnection:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classxonotic_1_1XonoticConnection__inherit__graph.svg" width="194" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classxonotic_1_1XonoticConnection__inherit__graph.svg" width="194" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for xonotic::XonoticConnection:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classxonotic_1_1XonoticConnection__coll__graph.svg" width="100%" height="518"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classxonotic_1_1XonoticConnection__coll__graph.svg" width="100%" height="518"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -230,6 +228,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a451d663b75eb0710edd205e2642d75bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1XonoticConnection.html#a451d663b75eb0710edd205e2642d75bb">request_challenge</a> ()</td></tr>
 <tr class="memdesc:a451d663b75eb0710edd205e2642d75bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">If there are commands needing a challenge, ask for it  any  data.  <a href="#a451d663b75eb0710edd205e2642d75bb">More...</a><br /></td></tr>
 <tr class="separator:a451d663b75eb0710edd205e2642d75bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d352c29a4aa85be33e0519ce7965fdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1XonoticConnection.html#a1d352c29a4aa85be33e0519ce7965fdc">request_status</a> ()</td></tr>
+<tr class="memdesc:a1d352c29a4aa85be33e0519ce7965fdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends the commands needed to determine the connection status.  <a href="#a1d352c29a4aa85be33e0519ce7965fdc">More...</a><br /></td></tr>
+<tr class="separator:a1d352c29a4aa85be33e0519ce7965fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -281,6 +282,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:abd83f90b34aabce765d5b7fb94bcaef5"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1XonoticConnection.html#abd83f90b34aabce765d5b7fb94bcaef5">mutex</a></td></tr>
 <tr class="memdesc:abd83f90b34aabce765d5b7fb94bcaef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guard data races.  <a href="#abd83f90b34aabce765d5b7fb94bcaef5">More...</a><br /></td></tr>
 <tr class="separator:abd83f90b34aabce765d5b7fb94bcaef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7f608344763b19f5870db2a87b0e226"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacenetwork.html#a6b87847009bbe74b6c465538e76d12f7">network::Timer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxonotic_1_1XonoticConnection.html#af7f608344763b19f5870db2a87b0e226">status_polling</a></td></tr>
+<tr class="memdesc:af7f608344763b19f5870db2a87b0e226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer used to gether the connection status.  <a href="#af7f608344763b19f5870db2a87b0e226">More...</a><br /></td></tr>
+<tr class="separator:af7f608344763b19f5870db2a87b0e226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -333,6 +337,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>main  none </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000042">Todo:</a></b></dt><dd>issue a message </dd></dl>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00073">73</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
@@ -475,9 +480,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Cleanup what <a class="el" href="classxonotic_1_1XonoticConnection.html#aabab1e1f3c30825a35a8ca16a7a5a6a1" title="Sends commands needed to keep the connection going  any  data. ">update_connection()</a> does  external (disconnect)  data. </p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00453">453</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00469">469</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00130">disconnect()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>.</p>
 
 </div>
 </div>
@@ -503,13 +508,13 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>any  none </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd>validate cmd.parameters[1] as a proper cvar name </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000044">Todo:</a></b></dt><dd>validate cmd.parameters[1] as a proper cvar name </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#af11d85d891c49668ee715b0a5a8b62c3">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00253">253</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00259">259</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00453">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00222">say()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00434">update_connection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00469">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00483">request_status()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00228">say()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>.</p>
 
 </div>
 </div>
@@ -537,7 +542,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#acbf3a85faf33744a86c58ee1649eb0c5">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00114">114</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00119">119</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -574,8 +579,8 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create from settings. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000041">Todo:</a></b></dt><dd>remove these functions and add a ctor overload w/o server object (which might throw) </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>accept similar protocols? eg: nexuiz </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000048">Todo:</a></b></dt><dd>remove these functions and add a ctor overload w/o server object (which might throw) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000041">Todo:</a></b></dt><dd>accept similar protocols? eg: nexuiz </dd></dl>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00050">50</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
@@ -601,7 +606,7 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>external  none (reading a constant value) </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000043">Todo:</a></b></dt><dd>connection server might differ from the publicly visible one (eg localhost) </dd></dl>
+<p>external  none (reading a constant value) </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000050">Todo:</a></b></dt><dd>connection server might differ from the publicly visible one (eg localhost) </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a6d8f3b3c130ce639f2d0d5efe0ac0ac6">network::Connection</a>.</p>
 
@@ -634,7 +639,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#ae25738db9722cda300f2649a0e7bff4b">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00130">130</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00135">135</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -664,7 +669,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00143">143</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00378">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00384">handle_message()</a>.</p>
 
 </div>
 </div>
@@ -694,7 +699,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a029af0ae7355ce9c8a1eace85be8a27c">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00183">183</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00189">189</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -725,7 +730,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a4102f0253adc1fea04b84ff8f8e5652f">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00162">162</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00168">168</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -755,7 +760,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a7410ca4dd4fdee613cf0df8df4666bbf">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00171">171</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00177">177</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -783,9 +788,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Interprets a message and sends it to the bot  xon_input  data. </p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00378">378</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00384">384</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00329">read()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00335">read()</a>.</p>
 
 </div>
 </div>
@@ -814,7 +819,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#ace37e26fc2244cb32a71b9f432929c51">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00178">178</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00184">184</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -870,9 +875,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Async hook on network input  xon_input  none. </p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00329">329</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00335">335</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00453">cleanup_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00469">cleanup_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -974,11 +979,41 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>If there are commands needing a challenge, ask for it  any  data. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>timeout from settings </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000045">Todo:</a></b></dt><dd>timeout from settings </dd></dl>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00307">307</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00313">313</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00378">handle_message()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00384">handle_message()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1d352c29a4aa85be33e0519ce7965fdc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void xonotic::XonoticConnection::request_status </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sends the commands needed to determine the connection status. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000047">Todo:</a></b></dt><dd>attribute holding these commands, check timeouts etc. </dd></dl>
+
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00483">483</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1007,9 +1042,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a380528411afcb01109512030dd7dcd37">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00222">222</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00228">228</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00130">disconnect()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>.</p>
 
 </div>
 </div>
@@ -1033,7 +1068,7 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>external  none (reading a constant value) </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000042">Todo:</a></b></dt><dd>return io.local_endpoint() ? </dd></dl>
+<p>external  none (reading a constant value) </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000049">Todo:</a></b></dt><dd>return io.local_endpoint() ? </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a00b0f12230d5edce406f59645b561193">network::Connection</a>.</p>
 
@@ -1078,7 +1113,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a040befa8bc8b293edd721a95a7959149">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00201">201</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00207">207</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -1132,11 +1167,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sends commands needed to keep the connection going  any  data. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000040">Todo:</a></b></dt><dd>the host name for log_dest_udp needs to be read from settings (and if settings don't provide it, fallback to what local_endpoint() gives) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000046">Todo:</a></b></dt><dd>the host name for log_dest_udp needs to be read from settings (and if settings don't provide it, fallback to what local_endpoint() gives) </dd></dl>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00434">434</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00440">440</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00114">connect()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00119">connect()</a>.</p>
 
 </div>
 </div>
@@ -1173,11 +1208,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update the properties of a user by local_id. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>this might not be needed if crypto_id isn't good enough </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000043">Todo:</a></b></dt><dd>this might not be needed if crypto_id isn't good enough </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#a4b4b4784fbd07b0364c4b8682b35e826">network::Connection</a>.</p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00145">145</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00151">151</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
 </div>
 </div>
@@ -1214,7 +1249,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get whether a user has the given authorization level. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000044">Todo:</a></b></dt><dd>(?) </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000051">Todo:</a></b></dt><dd>(?) </dd></dl>
 
 <p>Implements <a class="el" href="classnetwork_1_1Connection.html#ad634a6ca4f9c1fef61d2bef85c2b9beb">network::Connection</a>.</p>
 
@@ -1276,9 +1311,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Writes a raw line to the socket  any  none. </p>
 
-<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00320">320</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
+<p>Definition at line <a class="el" href="xonotic-connection_8cpp_source.html#l00326">326</a> of file <a class="el" href="xonotic-connection_8cpp_source.html">xonotic-connection.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">command()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00378">handle_message()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00307">request_challenge()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">command()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00384">handle_message()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00313">request_challenge()</a>.</p>
 
 </div>
 </div>
@@ -1305,7 +1340,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00211">211</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00378">handle_message()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00434">update_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00384">handle_message()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1331,7 +1366,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00201">201</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00183">get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00222">say()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00201">set_property()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00189">get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00228">say()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00207">set_property()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1357,7 +1392,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00202">202</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00183">get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00222">say()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00201">set_property()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00189">get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00228">say()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00207">set_property()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1383,7 +1418,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00203">203</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00453">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00183">get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00201">set_property()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00434">update_connection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00469">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00189">get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00207">set_property()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>.</p>
 
 </div>
 </div>
@@ -1409,7 +1444,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00196">196</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8hpp_source.html#l00143">formatter()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00329">read()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00222">say()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8hpp_source.html#l00143">formatter()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00335">read()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00228">say()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1435,7 +1470,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00198">198</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00320">write()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00326">write()</a>.</p>
 
 </div>
 </div>
@@ -1461,7 +1496,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00213">213</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00453">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00114">connect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00130">disconnect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00434">update_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00320">write()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00469">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00119">connect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00326">write()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1487,7 +1522,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00195">195</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00329">read()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00335">read()</a>.</p>
 
 </div>
 </div>
@@ -1537,7 +1572,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00204">204</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00453">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00253">command()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00130">disconnect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00378">handle_message()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00307">request_challenge()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00434">update_connection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00469">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00259">command()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00384">handle_message()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00313">request_challenge()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>.</p>
 
 </div>
 </div>
@@ -1563,7 +1598,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00199">199</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">command()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00378">handle_message()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">command()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00384">handle_message()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1589,7 +1624,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00200">200</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00453">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00253">command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00469">cleanup_connection()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00259">command()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1615,7 +1650,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00207">207</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00114">connect()</a>, <a class="el" href="xonotic-connection_8hpp_source.html#l00090">description()</a>, <a class="el" href="xonotic-connection_8hpp_source.html#l00081">server()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00119">connect()</a>, <a class="el" href="xonotic-connection_8hpp_source.html#l00090">description()</a>, <a class="el" href="xonotic-connection_8hpp_source.html#l00081">server()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1641,7 +1676,33 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00208">208</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00114">connect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00130">disconnect()</a>, and <a class="el" href="xonotic-connection_8hpp_source.html#l00108">status()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00119">connect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00483">request_status()</a>, <a class="el" href="xonotic-connection_8hpp_source.html#l00108">status()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af7f608344763b19f5870db2a87b0e226"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacenetwork.html#a6b87847009bbe74b6c465538e76d12f7">network::Timer</a> xonotic::XonoticConnection::status_polling</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Timer used to gether the connection status. </p>
+
+<p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00217">217</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00440">update_connection()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00073">XonoticConnection()</a>.</p>
 
 </div>
 </div>
@@ -1667,7 +1728,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00215">215</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00114">connect()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00130">disconnect()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00119">connect()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00135">disconnect()</a>.</p>
 
 </div>
 </div>
@@ -1693,7 +1754,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Definition at line <a class="el" href="xonotic-connection_8hpp_source.html#l00210">210</a> of file <a class="el" href="xonotic-connection_8hpp_source.html">xonotic-connection.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00162">get_user()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00171">get_users()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00145">update_user()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00168">get_user()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00177">get_users()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00151">update_user()</a>.</p>
 
 </div>
 </div>
@@ -1704,7 +1765,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:02 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:14 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

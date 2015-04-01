@@ -115,6 +115,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Element.html">Element</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic element of a string.  <a href="classstring_1_1Element.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1English.html">English</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classstring_1_1English.html" title="English language. ">English</a> language.  <a href="classstring_1_1English.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Format.html">Format</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formatting flag.  <a href="classstring_1_1Format.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,6 +138,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1FormatterUtf8.html">FormatterUtf8</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plain UTF-8.  <a href="classstring_1_1FormatterUtf8.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Inflector.html">Inflector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to perform simple pattern-based transformations.  <a href="classstring_1_1Inflector.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1Language.html">Language</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inflects words to be used in a natural language.  <a href="classstring_1_1Language.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstring_1_1QFont.html">QFont</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">qfont character  <a href="classstring_1_1QFont.html#details">More...</a><br /></td></tr>
@@ -203,14 +212,25 @@ Functions</h2></td></tr>
 <tr class="memitem:a1bb25e7040e65d09cec830c16dac4d6e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a1bb25e7040e65d09cec830c16dac4d6e">regex_escape</a> (const std::string &amp;input)</td></tr>
 <tr class="memdesc:a1bb25e7040e65d09cec830c16dac4d6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escapes <code>input</code> to be inserted in a regex.  <a href="#a1bb25e7040e65d09cec830c16dac4d6e">More...</a><br /></td></tr>
 <tr class="separator:a1bb25e7040e65d09cec830c16dac4d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memTemplParams" colspan="2">template&lt;class Container &gt; </td></tr>
-<tr class="memitem:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a8fba2d530c961c266781ab8eda1c4b6c">simple_wildcard</a> (const Container &amp;input, const std::string &amp;pattern)</td></tr>
-<tr class="separator:a8fba2d530c961c266781ab8eda1c4b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d49f4764e588d78e1088a9eee4e32b6"><td class="memTemplParams" colspan="2">template&lt;class Container , class  = std::enable_if_t&lt;!std::is_convertible&lt;Container,std::string&gt;::value&gt;&gt; </td></tr>
+<tr class="memitem:a0d49f4764e588d78e1088a9eee4e32b6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a0d49f4764e588d78e1088a9eee4e32b6">simple_wildcard</a> (const Container &amp;input, const std::string &amp;pattern)</td></tr>
+<tr class="memdesc:a0d49f4764e588d78e1088a9eee4e32b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if any of the elements in <code>input</code> matches the wildcard <code>pattern</code>.  <a href="#a0d49f4764e588d78e1088a9eee4e32b6">More...</a><br /></td></tr>
+<tr class="separator:a0d49f4764e588d78e1088a9eee4e32b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31c16fd95eaa6525d95edf2ec91e7e4d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a31c16fd95eaa6525d95edf2ec91e7e4d">regex_split</a> (const std::string &amp;input, const std::string &amp;pattern, bool skip_empty=true)</td></tr>
 <tr class="separator:a31c16fd95eaa6525d95edf2ec91e7e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69a8802894bb133b762d1034f1326ac2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a69a8802894bb133b762d1034f1326ac2">comma_split</a> (const std::string &amp;input, bool skip_empty=true)</td></tr>
 <tr class="memdesc:a69a8802894bb133b762d1034f1326ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split a string of element separated by commas and spaces.  <a href="#a69a8802894bb133b762d1034f1326ac2">More...</a><br /></td></tr>
 <tr class="separator:a69a8802894bb133b762d1034f1326ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a769018f0cd228be2d2db0adeab940726"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#a769018f0cd228be2d2db0adeab940726">is_one_of</a> (const std::string &amp;string, const std::initializer_list&lt; std::string &gt; &amp;il)</td></tr>
+<tr class="memdesc:a769018f0cd228be2d2db0adeab940726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a string is one of a given set.  <a href="#a769018f0cd228be2d2db0adeab940726">More...</a><br /></td></tr>
+<tr class="separator:a769018f0cd228be2d2db0adeab940726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae5e9506691d0ba6de7c9e68f6f285e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestring.html#aae5e9506691d0ba6de7c9e68f6f285e0">icase_equal</a> (const std::string &amp;a, const std::string &amp;b) noexcept</td></tr>
+<tr class="memdesc:aae5e9506691d0ba6de7c9e68f6f285e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Case-insensitive string comparison.  <a href="#aae5e9506691d0ba6de7c9e68f6f285e0">More...</a><br /></td></tr>
+<tr class="separator:aae5e9506691d0ba6de7c9e68f6f285e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46e1fb4289316384cc8ac61583cf64e2"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a46e1fb4289316384cc8ac61583cf64e2"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#a46e1fb4289316384cc8ac61583cf64e2">to_string</a> (T number, int digits=-1)</td></tr>
+<tr class="memdesc:a46e1fb4289316384cc8ac61583cf64e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a number to string padding with zeros to have at least <code>digits</code> digits.  <a href="#a46e1fb4289316384cc8ac61583cf64e2">More...</a><br /></td></tr>
+<tr class="separator:a46e1fb4289316384cc8ac61583cf64e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af933f28026e3ede636779dea54c2f572"><td class="memTemplParams" colspan="2">template&lt;class AssocContainer , class  = std::enable_if_t&lt;std::is_convertible&lt;typename AssocContainer::key_type, std::string&gt;::value&gt;&gt; </td></tr>
 <tr class="memitem:af933f28026e3ede636779dea54c2f572"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacestring.html#af933f28026e3ede636779dea54c2f572">make_trie</a> (const AssocContainer &amp;container)</td></tr>
 <tr class="memdesc:af933f28026e3ede636779dea54c2f572"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds a trie from an associative container.  <a href="#af933f28026e3ede636779dea54c2f572">More...</a><br /></td></tr>
@@ -235,7 +255,7 @@ Functions</h2></td></tr>
 
 <p>A trie with string data. </p>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00496">496</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00509">509</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -251,7 +271,7 @@ Functions</h2></td></tr>
 
 <p>A trie with no associated data. </p>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00491">491</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00504">504</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -352,7 +372,7 @@ Functions</h2></td></tr>
 
 <p>Split a string of element separated by commas and spaces. </p>
 
-<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00185">185</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00191">191</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="irc__admin_8hpp_source.html#l00069">irc::handler::AdminJoin::on_handle()</a>, and <a class="el" href="misc_8hpp_source.html#l00285">handler::Cointoss::on_handle()</a>.</p>
 
@@ -428,6 +448,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aae5e9506691d0ba6de7c9e68f6f285e0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool string::icase_equal </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Case-insensitive string comparison. </p>
+
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00223">223</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="time__string_8cpp_source.html#l00096">timer::month_from_name()</a>, and <a class="el" href="time__string_8cpp_source.html#l00129">timer::weekday_from_name()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a18ed1b936ff7e3ce99f3177c762638c9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -460,7 +520,45 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00040">40</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00253">xonotic::XonoticConnection::command()</a>, <a class="el" href="string_8cpp_source.html#l00318">string::FormatterAnsi::format_flags()</a>, <a class="el" href="misc_8hpp_source.html#l00072">handler::Help::on_handle()</a>, <a class="el" href="simple-group_8cpp_source.html#l00253">handler::AbstractList::on_handle()</a>, <a class="el" href="simple-group_8cpp_source.html#l00123">handler::ListInsert::on_handle()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00168">handler::ListRemove::on_handle()</a>.</p>
+<p>Referenced by <a class="el" href="xonotic-connection_8cpp_source.html#l00259">xonotic::XonoticConnection::command()</a>, <a class="el" href="string_8cpp_source.html#l00318">string::FormatterAnsi::format_flags()</a>, <a class="el" href="misc_8hpp_source.html#l00072">handler::Help::on_handle()</a>, <a class="el" href="simple-group_8cpp_source.html#l00257">handler::AbstractList::on_handle()</a>, <a class="el" href="simple-group_8cpp_source.html#l00127">handler::ListInsert::on_handle()</a>, and <a class="el" href="simple-group_8cpp_source.html#l00172">handler::ListRemove::on_handle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a769018f0cd228be2d2db0adeab940726"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool string::is_one_of </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>string</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::initializer_list&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>il</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if a string is one of a given set. </p>
+
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00215">215</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -488,7 +586,7 @@ template&lt;class AssocContainer , class  = std::enable_if_t&lt;std::is_converti
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00505">505</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00518">518</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="string__functions_8cpp_source.html#l00173">replace()</a>.</p>
 
@@ -518,7 +616,7 @@ template&lt;class Container , class  = void, class  = std::enable_if_t&lt;std::i
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00520">520</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
+<p>Definition at line <a class="el" href="trie_8hpp_source.html#l00533">533</a> of file <a class="el" href="trie_8hpp_source.html">trie.hpp</a>.</p>
 
 </div>
 </div>
@@ -586,7 +684,7 @@ template&lt;class Container , class  = void, class  = std::enable_if_t&lt;std::i
 
 <p>Definition at line <a class="el" href="string__functions_8cpp_source.html#l00091">91</a> of file <a class="el" href="string__functions_8cpp_source.html">string_functions.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string__functions_8hpp_source.html#l00185">comma_split()</a>, and <a class="el" href="string__functions_8hpp_source.html#l00174">regex_split()</a>.</p>
+<p>Referenced by <a class="el" href="string__functions_8hpp_source.html#l00191">comma_split()</a>, and <a class="el" href="string__functions_8hpp_source.html#l00180">regex_split()</a>.</p>
 
 </div>
 </div>
@@ -628,9 +726,9 @@ template&lt;class Container , class  = void, class  = std::enable_if_t&lt;std::i
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00174">174</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00180">180</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="misc_8hpp_source.html#l00264">handler::Cointoss::Cointoss()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00222">xonotic::XonoticConnection::say()</a>.</p>
+<p>Referenced by <a class="el" href="misc_8hpp_source.html#l00264">handler::Cointoss::Cointoss()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00228">xonotic::XonoticConnection::say()</a>.</p>
 
 </div>
 </div>
@@ -715,7 +813,7 @@ template&lt;class Container , class  = void, class  = std::enable_if_t&lt;std::i
 
 <p>Definition at line <a class="el" href="string__functions_8cpp_source.html#l00173">173</a> of file <a class="el" href="string__functions_8cpp_source.html">string_functions.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00098">irc::handler::IrcKickMessage::on_handle()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00135">irc::handler::IrcKickRejoin::on_handle()</a>, <a class="el" href="misc_8hpp_source.html#l00334">handler::Reply::on_handle()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00222">xonotic::XonoticConnection::say()</a>.</p>
+<p>Referenced by <a class="el" href="irc__actions_8hpp_source.html#l00054">irc::handler::IrcJoinMessage::on_handle()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00098">irc::handler::IrcKickMessage::on_handle()</a>, <a class="el" href="irc__actions_8hpp_source.html#l00135">irc::handler::IrcKickRejoin::on_handle()</a>, <a class="el" href="misc_8hpp_source.html#l00342">handler::Reply::on_handle()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00228">xonotic::XonoticConnection::say()</a>.</p>
 
 </div>
 </div>
@@ -779,15 +877,15 @@ template&lt;class Container , class  = void, class  = std::enable_if_t&lt;std::i
 
 <p>Definition at line <a class="el" href="string__functions_8cpp_source.html#l00083">83</a> of file <a class="el" href="string__functions_8cpp_source.html">string_functions.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="string__functions_8hpp_source.html#l00157">simple_wildcard()</a>.</p>
+<p>Referenced by <a class="el" href="string__functions_8hpp_source.html#l00163">simple_wildcard()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8fba2d530c961c266781ab8eda1c4b6c"></a>
+<a class="anchor" id="a0d49f4764e588d78e1088a9eee4e32b6"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Container &gt; </div>
+template&lt;class Container , class  = std::enable_if_t&lt;!std::is_convertible&lt;Container,std::string&gt;::value&gt;&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool string::simple_wildcard </td>
@@ -809,7 +907,15 @@ template&lt;class Container &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00157">157</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+<p>Checks if any of the elements in <code>input</code> matches the wildcard <code>pattern</code>. </p>
+<p><code>*</code> matches any sequence of characters, all other characters match themselves </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Container</td><td>A container of <code>std::string</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00163">163</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -849,7 +955,7 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00064">64</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00273">handler::SimpleAction::can_handle()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00183">xonotic::XonoticConnection::get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00329">xonotic::XonoticConnection::read()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00201">xonotic::XonoticConnection::set_property()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00272">handler::SimpleAction::can_handle()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00189">xonotic::XonoticConnection::get_property()</a>, <a class="el" href="xonotic-connection_8cpp_source.html#l00335">xonotic::XonoticConnection::read()</a>, and <a class="el" href="xonotic-connection_8cpp_source.html#l00207">xonotic::XonoticConnection::set_property()</a>.</p>
 
 </div>
 </div>
@@ -879,7 +985,7 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00094">94</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00362">handler::HandlerFactory::build()</a>, <a class="el" href="misc_8hpp_source.html#l00334">handler::Reply::on_handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00386">handler::HandlerFactory::register_handler()</a>.</p>
+<p>Referenced by <a class="el" href="handler_8hpp_source.html#l00361">handler::HandlerFactory::build()</a>, <a class="el" href="misc_8hpp_source.html#l00342">handler::Reply::on_handle()</a>, and <a class="el" href="handler_8hpp_source.html#l00385">handler::HandlerFactory::register_handler()</a>.</p>
 
 </div>
 </div>
@@ -908,6 +1014,40 @@ template&lt;class Container &gt; </div>
 <p>String to upper case. </p>
 
 <p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00103">103</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a46e1fb4289316384cc8ac61583cf64e2"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string string::to_string </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>digits</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a number to string padding with zeros to have at least <code>digits</code> digits. </p>
+
+<p>Definition at line <a class="el" href="string__functions_8hpp_source.html#l00234">234</a> of file <a class="el" href="string__functions_8hpp_source.html">string_functions.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="time__string_8cpp_source.html#l00144">timer::format_char()</a>.</p>
 
 </div>
 </div>
@@ -946,14 +1086,14 @@ template&lt;class Container &gt; </div>
 
 <p>Definition at line <a class="el" href="string__functions_8cpp_source.html#l00163">163</a> of file <a class="el" href="string__functions_8cpp_source.html">string_functions.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="irc__formatter_8cpp_source.html#l00149">irc::FormatterIrc::color_from_string()</a>, <a class="el" href="json_8hpp_source.html#l00320">JsonParser::parse_json_string()</a>, and <a class="el" href="network_8hpp_source.html#l00049">network::Server::Server()</a>.</p>
+<p>Referenced by <a class="el" href="irc__formatter_8cpp_source.html#l00149">irc::FormatterIrc::color_from_string()</a>, <a class="el" href="json_8hpp_source.html#l00320">JsonParser::parse_json_string()</a>, and <a class="el" href="network_8hpp_source.html#l00045">network::Server::Server()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 25 2015 18:51:02 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 1 2015 20:17:14 for MelanoBot by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

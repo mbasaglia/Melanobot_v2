@@ -1,8 +1,10 @@
 var searchData=
 [
   ['b',['b',['../classcolor_1_1Color12.html#ab7f6df715335a00a6f641f70f3eb425f',1,'color::Color12']]],
+  ['basic_5ftimer',['basic_timer',['../classtimer_1_1basic__timer.html',1,'timer']]],
+  ['basic_5ftimer',['basic_timer',['../classtimer_1_1basic__timer.html#a83a9f7ffc19277245f1fa6d36330138a',1,'timer::basic_timer::basic_timer(function_type action={}, duration_type timeout=duration_type::zero(), bool repeating=true)'],['../classtimer_1_1basic__timer.html#ac3b373956dab1fcdf3118a26219936a7',1,'timer::basic_timer::basic_timer(const basic_timer &amp;rhs)'],['../classtimer_1_1basic__timer.html#a50eb7b7ab69050ea653604b427398277',1,'timer::basic_timer::basic_timer(basic_timer &amp;&amp;rhs)']]],
   ['basictrie',['BasicTrie',['../classstring_1_1BasicTrie.html',1,'string']]],
-  ['basictrie',['BasicTrie',['../classstring_1_1BasicTrie_1_1iterator.html#aaa73379d3d29a35e439123d233129929',1,'string::BasicTrie::iterator::BasicTrie()'],['../classstring_1_1BasicTrie.html#aaff08bbcf7d323edc848cc7ca3762ca5',1,'string::BasicTrie::BasicTrie()'],['../classstring_1_1BasicTrie.html#a52b2a04888d7f286f92a0ddfbd8618bf',1,'string::BasicTrie::BasicTrie(const std::initializer_list&lt; std::string &gt; &amp;il)'],['../classstring_1_1BasicTrie.html#a3b52a82d5f1350e0f5ff6a239453b97e',1,'string::BasicTrie::BasicTrie(const BasicTrie &amp;other)'],['../classstring_1_1BasicTrie.html#a4ed0ae67e77eab7c0fcccb657325d7ac',1,'string::BasicTrie::BasicTrie(BasicTrie &amp;&amp;other)']]],
+  ['basictrie',['BasicTrie',['../classstring_1_1BasicTrie_1_1iterator.html#aaa73379d3d29a35e439123d233129929',1,'string::BasicTrie::iterator::BasicTrie()'],['../classstring_1_1BasicTrie.html#aaff08bbcf7d323edc848cc7ca3762ca5',1,'string::BasicTrie::BasicTrie()'],['../classstring_1_1BasicTrie.html#a52b2a04888d7f286f92a0ddfbd8618bf',1,'string::BasicTrie::BasicTrie(const std::initializer_list&lt; std::string &gt; &amp;il)'],['../classstring_1_1BasicTrie.html#a3b52a82d5f1350e0f5ff6a239453b97e',1,'string::BasicTrie::BasicTrie(const BasicTrie &amp;other)'],['../classstring_1_1BasicTrie.html#ad036e12191e48abd9bff72b4dc29ba4a',1,'string::BasicTrie::BasicTrie(BasicTrie &amp;&amp;other) noexcept']]],
   ['begin',['begin',['../classstring_1_1FormattedString.html#a28191916934905afbcb2fbd92dbb8171',1,'string::FormattedString::begin()'],['../classstring_1_1FormattedString.html#a5eb94212d3c8ca713be982afe073f195',1,'string::FormattedString::begin() const ']]],
   ['bitmask',['BitMask',['../classcolor_1_1Color12.html#aa69e06a7d1177d3e2754c658ae15de22',1,'color::Color12']]],
   ['black',['black',['../namespacecolor.html#ae35a15029bf1bb884a038f0e4bd10620',1,'color']]],
@@ -19,8 +21,8 @@ var searchData=
   ['bridgeattach',['BridgeAttach',['../classhandler_1_1BridgeAttach.html#a4c19b85f25a0bcea6e4daae2074ea898',1,'handler::BridgeAttach']]],
   ['bridgeattachchannel',['BridgeAttachChannel',['../classhandler_1_1BridgeAttachChannel.html#ac46ba601493522b1ab96dafeddc329d6',1,'handler::BridgeAttachChannel']]],
   ['bridgeattachchannel',['BridgeAttachChannel',['../classhandler_1_1BridgeAttachChannel.html',1,'handler']]],
-  ['bridgechat',['BridgeChat',['../classhandler_1_1BridgeChat.html',1,'handler']]],
   ['bridgechat',['BridgeChat',['../classhandler_1_1BridgeChat.html#abf8275c3fd28c790dbd3905240ce38e0',1,'handler::BridgeChat']]],
+  ['bridgechat',['BridgeChat',['../classhandler_1_1BridgeChat.html',1,'handler']]],
   ['buffer',['buffer',['../structMultibuf_1_1MultibufItem.html#a9c3fdc3b379bb0a8d3806536f0885154',1,'Multibuf::MultibufItem::buffer()'],['../classirc_1_1Buffer.html#ae3d2240a751fceb173e838a454f6f6cc',1,'irc::Buffer::buffer()'],['../classirc_1_1IrcConnection.html#aa126431637b8f075161aab804e37c4af',1,'irc::IrcConnection::buffer()'],['../classirc_1_1IrcConnection.html#a5ba04a2bf0ca34a0f845cd759950664d',1,'irc::IrcConnection::Buffer()'],['../classirc_1_1Buffer.html#a780c46109b1d430f1f420ccb5d01ce98',1,'irc::Buffer::Buffer(IrcConnection &amp;irc, const Settings &amp;settings={})'],['../classirc_1_1Buffer.html#a34b332683b32e8c3354b2ffa11aae564',1,'irc::Buffer::Buffer(const Buffer &amp;)=delete'],['../classirc_1_1Buffer.html#a158af87c23d0c94c581eb658be89108f',1,'irc::Buffer::Buffer(Buffer &amp;&amp;)=delete']]],
   ['buffer',['Buffer',['../classirc_1_1Buffer.html',1,'irc']]],
   ['buffer_2ecpp',['buffer.cpp',['../buffer_8cpp.html',1,'']]],

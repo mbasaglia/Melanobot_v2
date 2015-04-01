@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['basic_5ftimer',['basic_timer',['../classtimer_1_1basic__timer.html',1,'timer']]],
   ['basictrie',['BasicTrie',['../classstring_1_1BasicTrie.html',1,'string']]],
   ['bridge',['Bridge',['../classhandler_1_1Bridge.html',1,'handler']]],
   ['bridgeattach',['BridgeAttach',['../classhandler_1_1BridgeAttach.html',1,'handler']]],

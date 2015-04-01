@@ -1,10 +1,12 @@
 <map id="modules/web/http.hpp" name="modules/web/http.hpp">
-<area shape="rect" id="node2" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="840,80,1022,107"/>
-<area shape="rect" id="node6" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="538,155,657,181"/>
-<area shape="rect" id="node25" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1287,237,1455,263"/>
-<area shape="rect" id="node13" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="551,237,644,263"/>
-<area shape="rect" id="node16" href="$string_8hpp.html" title="string.hpp" alt="" coords="861,237,940,263"/>
-<area shape="rect" id="node23" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="191,237,284,263"/>
-<area shape="rect" id="node20" href="$color_8hpp.html" title="color.hpp" alt="" coords="1135,326,1210,353"/>
-<area shape="rect" id="node21" href="$math_8hpp.html" title="math.hpp" alt="" coords="1181,408,1257,435"/>
+<area shape="rect" id="node2" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="484,80,665,107"/>
+<area shape="rect" id="node6" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1129,155,1247,181"/>
+<area shape="rect" id="node25" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="491,155,659,181"/>
+<area shape="rect" id="node12" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1373,229,1467,256"/>
+<area shape="rect" id="node15" href="$string_8hpp.html" title="string.hpp" alt="" coords="835,229,914,256"/>
+<area shape="rect" id="node23" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1217,229,1311,256"/>
+<area shape="rect" id="node19" href="$color_8hpp.html" title="color.hpp" alt="" coords="800,311,875,338"/>
+<area shape="rect" id="node20" href="$math_8hpp.html" title="math.hpp" alt="" coords="809,393,885,420"/>
+<area shape="rect" id="node22" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1072,393,1189,420"/>
+<area shape="rect" id="node26" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="211,229,330,256"/>
 </map>
