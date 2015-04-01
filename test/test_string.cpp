@@ -259,3 +259,31 @@ BOOST_AUTO_TEST_CASE( test_to_uint )
     BOOST_CHECK( string::to_uint("10",11) == 11 );
     BOOST_CHECK( string::to_uint("10",12) == 12 );
 }
+
+BOOST_AUTO_TEST_CASE( test_icase_equal )
+{
+    BOOST_CHECK( string::icase_equal("foo","foo") );
+    BOOST_CHECK( string::icase_equal("foo","FOO") );
+    BOOST_CHECK( !string::icase_equal("foo","fo") );
+    BOOST_CHECK( string::icase_equal("foo_-'","FOO_-'") );
+    BOOST_CHECK( string::icase_equal("","") );
+    BOOST_CHECK( !string::icase_equal("foo","") );
+}
+
+BOOST_AUTO_TEST_CASE( test_to_string )
+{
+    BOOST_CHECK( string::to_string(1) == "1" );
+    BOOST_CHECK( string::to_string(1,2) == "01" );
+    BOOST_CHECK( string::to_string(1,3) == "001" );
+    BOOST_CHECK( string::to_string(1,-1) == "1" );
+    BOOST_CHECK( string::to_string(1l,2) == "01" );
+    BOOST_CHECK( string::to_string(1u) == "1" );
+}
+
+BOOST_AUTO_TEST_CASE( test_is_one_of )
+{
+    BOOST_CHECK( string::is_one_of("foo",{"foo","bar"}) );
+    BOOST_CHECK( !string::is_one_of("foo",{"fu","bar"}) );
+    BOOST_CHECK( !string::is_one_of("",{"foo","bar"}) );
+    BOOST_CHECK( !string::is_one_of("foo",{}) );
+}
