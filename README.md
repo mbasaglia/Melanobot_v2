@@ -28,7 +28,6 @@ Dependencies
 * [CMake](http://www.cmake.org/)
 * [Boost](http://www.boost.org/)
     * asio
-    * chrono
     * filesystem
     * program_options
     * property_tree
