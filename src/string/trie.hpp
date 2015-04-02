@@ -339,6 +339,8 @@ public:
      */
     void prepend(char c)
     {
+        if ( empty() )
+            return;
         TrieNode* new_root = new TrieNode;
         new_root->children[c] = root_;
         root_->deepen(1);
@@ -351,7 +353,7 @@ public:
      */
     void prepend(const std::string& prefix)
     {
-        if ( prefix.empty() )
+        if ( prefix.empty() || empty() )
             return;
 
         TrieNode* new_root = new TrieNode;

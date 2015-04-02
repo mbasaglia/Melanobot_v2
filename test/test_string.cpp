@@ -22,6 +22,7 @@
 
 #include "string/string_functions.hpp"
 #include "string/trie.hpp"
+#include "string/language.hpp"
 
 BOOST_AUTO_TEST_CASE( test_trie_insert )
 {
@@ -133,6 +134,8 @@ BOOST_AUTO_TEST_CASE( test_trie_iterator )
     BOOST_CHECK ( !iter.valid() );
     BOOST_CHECK ( iter.depth() == 0 );
 
+    BOOST_CHECK ( string::StringTrie::iterator().data() == "" );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_implode )
@@ -204,6 +207,10 @@ BOOST_AUTO_TEST_CASE( test_replace )
     std::string template_string = "%animol the quick brown %animal_2 %action over the lazy %animal_";
     Properties replace{{"animal","dog"},{"action","jumps"},{"animal_2","fox"}};
     BOOST_CHECK( string::replace(template_string,replace,"%") == "%animol "+foxy+'_' );
+    template_string += "%anim";
+    BOOST_CHECK( string::replace(template_string,replace,"%") == "%animol "+foxy+"_%anim" );
+
+    BOOST_CHECK( string::replace(foxy,Properties()) == foxy );
 
 }
 
@@ -287,3 +294,67 @@ BOOST_AUTO_TEST_CASE( test_is_one_of )
     BOOST_CHECK( !string::is_one_of("",{"foo","bar"}) );
     BOOST_CHECK( !string::is_one_of("foo",{}) );
 }
+
+BOOST_AUTO_TEST_CASE( test_English )
+{
+    string::English english;
+
+    // genitive
+    BOOST_CHECK( english.genitive("Melano") == "Melano's" );
+    BOOST_CHECK( english.genitive("Melanosuchus") == "Melanosuchus'" );
+
+    // imperate
+    BOOST_CHECK( english.imperate("") == "" );
+    BOOST_CHECK( english.imperate("can") == "can" );
+    BOOST_CHECK( english.imperate("be") == "is" );
+    BOOST_CHECK( english.imperate("don't") == "doesn't" );
+
+    BOOST_CHECK( english.imperate("try") == "tries" );
+    BOOST_CHECK( english.imperate("say") == "says" );
+
+    BOOST_CHECK( english.imperate("go") == "goes" );
+    BOOST_CHECK( english.imperate("push") == "pushes" );
+    BOOST_CHECK( english.imperate("sit") == "sits" );
+
+    // ordinal_suffix
+    BOOST_CHECK( english.ordinal_suffix(0) == "" );
+
+    BOOST_CHECK( english.ordinal_suffix(1) == "st" );
+    BOOST_CHECK( english.ordinal_suffix(21) == "st" );
+    BOOST_CHECK( english.ordinal_suffix(121) == "st" );
+    BOOST_CHECK( english.ordinal_suffix(11) == "th" );
+    BOOST_CHECK( english.ordinal_suffix(111) == "th" );
+
+    BOOST_CHECK( english.ordinal_suffix(2) == "nd" );
+    BOOST_CHECK( english.ordinal_suffix(22) == "nd" );
+    BOOST_CHECK( english.ordinal_suffix(122) == "nd" );
+    BOOST_CHECK( english.ordinal_suffix(12) == "th" );
+    BOOST_CHECK( english.ordinal_suffix(112) == "th" );
+
+    BOOST_CHECK( english.ordinal_suffix(3) == "rd" );
+    BOOST_CHECK( english.ordinal_suffix(23) == "rd" );
+    BOOST_CHECK( english.ordinal_suffix(123) == "rd" );
+    BOOST_CHECK( english.ordinal_suffix(13) == "th" );
+    BOOST_CHECK( english.ordinal_suffix(113) == "th" );
+
+    BOOST_CHECK( english.ordinal_suffix(5) == "th" );
+
+    // pronoun_to3rd
+    std::string you = "Melanobot";
+    std::string me = "Melanosuchus";
+    BOOST_CHECK( english.pronoun_to3rd("I'm here",me,you) == "Melanosuchus is here" );
+    BOOST_CHECK( english.pronoun_to3rd("are you here?",me,you) == "is Melanobot here?" );
+    BOOST_CHECK( english.pronoun_to3rd("my bot",me,you) == "Melanosuchus' bot" );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_Inflector )
+{
+    string::Inflector infl = {
+        {std::regex("foo"), "bar"}
+    };
+    BOOST_CHECK( infl.inflect_all("foobar") == "barbar" );
+    BOOST_CHECK( infl.inflect_all("fubar") == "fubar" );
+    BOOST_CHECK( infl.inflect_all("foobarfooo") == "barbarbaro" );
+}
+

@@ -47,8 +47,6 @@ private:
     };
 
 public:
-    Inflector ( std::vector<Rule> rules = {} )
-        : rules(std::move(rules)) {}
 
     Inflector ( const std::initializer_list<Rule>& il )
         : rules(il) {}
@@ -73,13 +71,30 @@ public:
      * \brief Inflects a phrase
      * \param phrase Phrase to inflect
      *
-     * Runs the rules in order on the phrase
+     * Runs all the rules on the phrase
      */
-    std::string inflect(std::string phrase)
+    std::string inflect_all(std::string phrase)
     {
         for ( const auto& regex : rules )
         {
             phrase = std::regex_replace(phrase,regex.search,regex.replace);
+        }
+
+        return phrase;
+    }
+
+    /**
+     * \brief Inflects a phrase
+     * \param phrase Phrase to inflect
+     *
+     * Runs the rules in order, stops at the first match
+     */
+    std::string inflect_one(std::string phrase)
+    {
+        for ( const auto& regex : rules )
+        {
+            if ( std::regex_match(phrase, regex.search) )
+                return std::regex_replace(phrase,regex.search,regex.replace);
         }
 
         return phrase;

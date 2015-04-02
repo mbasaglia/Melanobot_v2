@@ -40,7 +40,7 @@ std::string English::ordinal_suffix(int i) const
 
 std::string English::genitive(const std::string& noun) const
 {
-    return infl_genitive.inflect(noun);
+    return infl_genitive.inflect_one(noun);
 }
 
 std::string English::pronoun_to3rd(const std::string& sentence,
@@ -50,6 +50,8 @@ std::string English::pronoun_to3rd(const std::string& sentence,
     auto my = genitive(me);
 
     Inflector pronoun_swap ( {
+        {"you\\s+are",  you+" is"},
+        {"are\\s+you",  "is "+you},
         {"you",         you},
         {"your",        "its"},
         {"yours",       "its"},
@@ -62,13 +64,13 @@ std::string English::pronoun_to3rd(const std::string& sentence,
         {"mine",        my},
         {"myself",      me},
     }, true );
-    return pronoun_swap.inflect(sentence);
+    return pronoun_swap.inflect_all(sentence);
 
 }
 
 std::string English::imperate(const std::string& verb) const
 {
-    return infl_imperate.inflect(verb);
+    return infl_imperate.inflect_one(verb);
 }
 
 Inflector English::infl_imperate({
@@ -80,12 +82,12 @@ Inflector English::infl_imperate({
         {"(.*[bcdfghjklmnpqrstvwxyz]o)", "$1es"},
         {"(.*(z|s|ch|sh|j|zh))",         "$1es"},
         {"(.*[bcdfghjklmnpqrstvwxyz])y", "$1ies"},
-        {"(.*)",                         "$1s"},
+        {"(.+)",                         "$1s"},
     }, true);
 
 Inflector English::infl_genitive = {
-    {"(.*s)^", "$1'"},
-    {"(.*)^", "$1's"},
+    {"(.*s)$", "$1'"},
+    {"(.+)$", "$1's"},
 };
 
 

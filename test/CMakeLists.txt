@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include(CTest)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0 -fno-inline -fno-inline-small-functions -fno-default-inline")
 
 # Boost
 find_package (Boost COMPONENTS unit_test_framework REQUIRED)
@@ -29,11 +29,17 @@ function(melanotest test_name)
     add_test (NAME ${test_name} COMMAND ${test_name})
 endfunction(melanotest)
 
-add_executable(test_string test_string.cpp ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp)
+add_executable(test_string test_string.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/language.cpp
+)
 melanotest(test_string)
 
 
-add_executable(test_time test_time.cpp ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp ${CMAKE_SOURCE_DIR}/src/string/language.cpp)
+add_executable(test_time test_time.cpp
+    ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/language.cpp
+)
 melanotest(test_time)
 
 
@@ -42,8 +48,7 @@ set(TRACEFILE "${CMAKE_BINARY_DIR}/test/coverage.info")
 add_custom_target(coverage
     COMMAND cd "${CMAKE_BINARY_DIR}/test"
     COMMAND ctest
-    COMMAND lcov -c -d "${CMAKE_BINARY_DIR}/test" -b "${CMAKE_SOURCE_DIR}" -o ${TRACEFILE}
-    COMMAND lcov -e ${TRACEFILE} "\"${CMAKE_SOURCE_DIR}/*\"" -o ${TRACEFILE}
-    COMMAND genhtml ${TRACEFILE} -o "${CMAKE_BINARY_DIR}/lconv" -p "${CMAKE_SOURCE_DIR}"
+    COMMAND lcov -c -d "${CMAKE_BINARY_DIR}/test" -b "${CMAKE_SOURCE_DIR}" -o ${TRACEFILE} --no-external
+    COMMAND genhtml ${TRACEFILE} -o "${CMAKE_BINARY_DIR}/lconv" -p "${CMAKE_SOURCE_DIR}" --demangle-cpp
     COMMAND xdg-open "${CMAKE_BINARY_DIR}/lconv/index.html"
 )
