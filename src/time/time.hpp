@@ -634,8 +634,6 @@ public:
             if ( day_ > month_days(month_) )
             {
                 day_ -= month_days(month_);
-                if ( month_ == Month::DECEMBER )
-                    year_++;
                 month_++;
             }
 
@@ -702,8 +700,6 @@ public:
             // handle day underflow
             if ( day_ <= 0 )
             {
-                if ( month_ == Month::JANUARY )
-                    year_--;
                 month_--;
                 day_ += month_days(month_);
             }

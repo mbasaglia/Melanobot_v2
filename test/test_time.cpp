@@ -183,45 +183,48 @@ BOOST_AUTO_TEST_CASE( test_DateTime )
 
 
     time = DateTime(2015,Month::JANUARY,days(1),hours(0),minutes(0));
-    // - milliseconds (full overflow)
+    // - milliseconds (full underflow)
     time -= milliseconds(500);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(59),seconds(59),milliseconds(500)) );
-    // - milliseconds (no overflow)
+    // - milliseconds (no underflow)
     time -= milliseconds(500);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(59),seconds(59),milliseconds(0)) );
-    // - seconds (no overflow)
+    // - seconds (no underflow)
     time -= seconds(50);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(59),seconds(9)) );
-    // - seconds (overflow)
+    // - seconds (underflow)
     time -= seconds(69);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(58)) );
-    // - minutes (no overflow)
+    // - minutes (no underflow)
     time -= minutes(50);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(23),minutes(8)) );
-    // - minutes (overflow)
+    // - minutes (underflow)
     time -= minutes(8+60*2);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(21),minutes(0)) );
-    // - hours (no overflow)
+    // - hours (no underflow)
     time -= hours(11);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(31),hours(10),minutes(0)) );
-    // - hours (overflow)
+    // - hours (underflow)
     time -= hours(34);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(30),hours(0),minutes(0)) );
-    // - days (no overflow)
+    // - days (no underflow)
     time -= days(20);
     BOOST_CHECK( time == DateTime(2014,Month::DECEMBER,days(10),hours(0),minutes(0)) );
-    // - days (overflow)
+    // - days (underflow)
     time -= days(20);
     BOOST_CHECK( time == DateTime(2014,Month::NOVEMBER,days(20),hours(0),minutes(0)) );
-    // - months (no overflow)
+    // - months (no underflow)
     time -= days(30+31+30);
     BOOST_CHECK( time == DateTime(2014,Month::AUGUST,days(20),hours(0),minutes(0)) );
-    // - days (overflow)
+    // - days (underflow)
     time -= days(time.year_day());
     BOOST_CHECK( time == DateTime(2014,Month::JANUARY,days(1),hours(0),minutes(0)) );
     // - year
     time -= days(365);
     BOOST_CHECK( time == DateTime(2013,Month::JANUARY,days(1),hours(0),minutes(0)) );
+    // - years
+    time -= days(366+365);
+    BOOST_CHECK( time == DateTime(2011,Month::JANUARY,days(1),hours(0),minutes(0)) );
 
     // comparison
     BOOST_CHECK( time+seconds(1) < time+milliseconds(1001) );
