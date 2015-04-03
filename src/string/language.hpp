@@ -88,6 +88,7 @@ public:
      * \param phrase Phrase to inflect
      *
      * Runs the rules in order, stops at the first match
+     * \note \c phrase must match the regex to apply the rule
      */
     std::string inflect_one(std::string phrase)
     {

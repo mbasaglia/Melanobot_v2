@@ -305,8 +305,9 @@ inline SUPER_CONSTEXPR WeekDay operator-- (WeekDay& m, int) noexcept
 class DateTime
 {
 public:
-    using Clock = std::chrono::system_clock;    ///< Wall clock time
-    using Time  = Clock::time_point;            ///< Time point
+    using Clock    = std::chrono::system_clock; ///< Wall clock time
+    using Time     = Clock::time_point;         ///< Time point
+    using Duration = Clock::duration;
 
 // ctors
     DateTime() : DateTime(Clock::now()) {}
@@ -316,6 +317,9 @@ public:
     {
         *this += time.time_since_epoch();
     }
+
+    constexpr DateTime(int32_t year, Month month, days day)
+    : DateTime(year, month, day, hours(0), minutes(0)) {}
 
     constexpr DateTime(int32_t year, Month month, days day, hours hour, minutes minute,
              seconds second = seconds(0), milliseconds millisecond = milliseconds(0))
@@ -334,7 +338,7 @@ public:
      */
     SUPER_CONSTEXPR Time time_point() const noexcept
     {
-        return std::chrono::time_point_cast<Clock::duration>(
+        return std::chrono::time_point_cast<Duration>(
             std::chrono::time_point<Clock, milliseconds>(
                 milliseconds(unix()*1000+milliseconds_)));
     }
@@ -714,10 +718,10 @@ public:
             return t -= dur;
         }
 
-    SUPER_CONSTEXPR Clock::duration operator- (const DateTime& rhs) const noexcept
+    SUPER_CONSTEXPR Duration operator- (const DateTime& rhs) const noexcept
     {
-        return std::chrono::duration_cast<Clock::duration>(milliseconds(unix()*1000+milliseconds_)) -
-            std::chrono::duration_cast<Clock::duration>(milliseconds(rhs.unix()*1000+rhs.milliseconds_));
+        return std::chrono::duration_cast<Duration>(milliseconds(unix()*1000+milliseconds_)) -
+            std::chrono::duration_cast<Duration>(milliseconds(rhs.unix()*1000+rhs.milliseconds_));
     }
 
     SUPER_CONSTEXPR bool operator< (const DateTime& rhs) const noexcept
@@ -855,11 +859,11 @@ private:
 /**
  * \brief Parses the text description of a time point
  */
-std::chrono::system_clock::time_point parse_time(const std::string& text);
+DateTime parse_time(const std::string& text);
 /**
  * \brief Parses the text description of a duration
  */
-std::chrono::system_clock::duration parse_duration(const std::string& text);
+DateTime::Duration parse_duration(const std::string& text);
 
 } // namespace time
 

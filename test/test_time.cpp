@@ -391,3 +391,51 @@ BOOST_AUTO_TEST_CASE( test_format )
     BOOST_CHECK( format(time, "Y-m-d H:i:s.u") == "2015-04-04 15:00:00.005000" );
     BOOST_CHECK( format(time, "l, F \\t\\h\\e jS, g:i a") == "Saturday, April the 4th, 3:00 pm" );
 }
+
+
+BOOST_AUTO_TEST_CASE( test_TimeParser )
+{
+    // ATOMIC_DURATION
+    BOOST_CHECK( parse_duration("6 ponies") == DateTime::Duration::zero() );
+
+    BOOST_CHECK( parse_duration("123ms") == milliseconds(123) );
+    BOOST_CHECK( parse_duration("123 millisecond") == milliseconds(123) );
+    BOOST_CHECK( parse_duration("123 milliseconds") == milliseconds(123) );
+
+    BOOST_CHECK( parse_duration("123s") == seconds(123) );
+    BOOST_CHECK( parse_duration("123\"") == seconds(123) );
+    BOOST_CHECK( parse_duration("123 second") == seconds(123) );
+    BOOST_CHECK( parse_duration("123 seconds") == seconds(123) );
+
+    BOOST_CHECK( parse_duration("123m") == minutes(123) );
+    BOOST_CHECK( parse_duration("123min") == minutes(123) );
+    BOOST_CHECK( parse_duration("123'") == minutes(123) );
+    BOOST_CHECK( parse_duration("123 minute") == minutes(123) );
+    BOOST_CHECK( parse_duration("123 minutes") == minutes(123) );
+
+    BOOST_CHECK( parse_duration("123h") == hours(123) );
+    BOOST_CHECK( parse_duration("123 hour") == hours(123) );
+    BOOST_CHECK( parse_duration("123 hours") == hours(123) );
+
+    BOOST_CHECK( parse_duration("123d") == days(123) );
+    BOOST_CHECK( parse_duration("123 day") == days(123) );
+    BOOST_CHECK( parse_duration("123 days") == days(123) );
+
+    // HOUR_OPT
+    BOOST_CHECK( parse_duration("43:21") == hours(43)+minutes(21) );
+    BOOST_CHECK( parse_duration("43:21:23") == hours(43)+minutes(21)+seconds(23) );
+    BOOST_CHECK( parse_duration("43:21:23.456") == hours(43)+minutes(21)+seconds(23)+milliseconds(456) );
+
+    BOOST_CHECK( parse_duration("43:21 h") == hours(43)+minutes(21) );
+    BOOST_CHECK( parse_duration("43:21:23 h") == hours(43)+minutes(21)+seconds(23) );
+    BOOST_CHECK( parse_duration("43:21:23.456 h") == hours(43)+minutes(21)+seconds(23)+milliseconds(456) );
+
+    BOOST_CHECK( parse_duration("21:23 m") == minutes(21)+seconds(23) );
+    /// \todo allow "21:23.456", which must be minutes
+
+    // DURATION_SEQ
+    BOOST_CHECK( parse_duration("1 day 2 hours 3 minutes") == days(1)+hours(2)+minutes(3) );
+
+    // DURATION
+    BOOST_CHECK( parse_duration("1:23 hours 56 seconds") == hours(1)+minutes(23)+seconds(56) );
+}

@@ -206,8 +206,8 @@ std::string::size_type similarity(const std::string& s1, const std::string& s2);
  * \returns The corresponding integer or \c default_value on failure
  */
 unsigned long to_uint(const std::string& string,
-                     unsigned long base = 10,
-                     unsigned long default_value = 0);
+                      unsigned long base = 10,
+                      unsigned long default_value = 0);
 
 /**
  * \brief Check if a string is one of a given set
