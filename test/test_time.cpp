@@ -438,4 +438,15 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
 
     // DURATION
     BOOST_CHECK( parse_duration("1:23 hours 56 seconds") == hours(1)+minutes(23)+seconds(56) );
+
+    // NOW_TIME
+    auto nowcheck = [](const DateTime& a, const DateTime& b)
+    {
+        auto delta = std::max(a,b) - std::min(a,b);
+        return delta < seconds(1);
+    };
+    DateTime now;
+    BOOST_CHECK( nowcheck(parse_time("now"),now) );
+    BOOST_CHECK( nowcheck(parse_time("now + 3 hours"),now+hours(3)) );
+    BOOST_CHECK( nowcheck(parse_time("now - 3 hours"),now-hours(3)) );
 }

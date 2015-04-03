@@ -55,10 +55,11 @@ public:
             scan();
             if ( lookahead.type == Token::OPERATOR )
             {
+                char oper = lookahead.lexeme[0];
                 scan();
-                if ( lookahead.lexeme == "+" )
+                if ( oper == '+' )
                     now += parse_duration();
-                else if ( lookahead.lexeme == "-" )
+                else if ( oper == '-' )
                     now -= parse_duration();
             }
             return now;
