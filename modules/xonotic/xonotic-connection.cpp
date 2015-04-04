@@ -82,6 +82,7 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     {
         ErrorLog("xon","Network Error") << msg;
         status_ = DISCONNECTED;
+        //disconnect();
         /// \todo issue a message
     };
     io.on_async_receive = [this](const std::string& datagram)
@@ -441,13 +442,23 @@ void XonoticConnection::update_connection()
 {
     if ( status_ > DISCONNECTED )
     {
+        // dummy command because the first command to be issued
+        // might fail when the server has just been started
+        command({"rcon",{"echo", "connection test"},1024});
+
+        status_ = CONNECTED;
+
         /// \todo the host name for log_dest_udp needs to be read from settings
         /// (and if settings don't provide it, fallback to what local_endpoint() gives)
         command({"rcon",{"set", "log_dest_udp", io.local_endpoint().name()},1024});
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
-        status_ = CONNECTED;
+        if ( !status_polling.running() )
+            status_polling.start();
+
+        if ( status_ != CONNECTED )
+            return;
 
         // Generate a fake message
         network::Message msg;
@@ -460,8 +471,6 @@ void XonoticConnection::update_connection()
         cvars.clear();
         lock.unlock();
 
-        if ( !status_polling.running() )
-            status_polling.start();
         request_status();
     }
 }
@@ -482,7 +491,19 @@ void XonoticConnection::cleanup_connection()
 
 void XonoticConnection::request_status()
 {
-    if ( status_ > CONNECTING )
+    if ( status_ == DISCONNECTED )
+    {
+        if ( io.connected() )
+        {
+            status_ = CONNECTING;
+            update_connection();
+        }
+        else
+        {
+            reconnect();
+        }
+    }
+    else if ( status_ > CONNECTING )
     {
         /// \todo attribute holding these commands, check timeouts etc.
         command({"rcon",{"log_dest_udp"},1024});
