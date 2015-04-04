@@ -21,6 +21,7 @@
 
 #include "string/string_functions.hpp"
 #include "time/time.hpp"
+#include "time/time_string.hpp"
 
 namespace timer {
 /**
@@ -41,7 +42,7 @@ public:
     /**
      * \brief Parses a time point
      * \code
-     *  TIME_POINT      ::= NOW_TIME | DAY_TIME
+     *  TIME_POINT      ::= NOW_TIME | DATE_TIME
      *  NOW_TIME        ::= now
      *                  |   now + DURATION
      *                  |   now - DURATION
@@ -64,7 +65,7 @@ public:
             }
             return now;
         }
-        return DateTime();
+        return parse_date_time();
     }
 
     /**
@@ -130,6 +131,9 @@ private:
             NOW,        ///< Now                now             void
             REL_DAY,    ///< Relative day       yesterday...    int (day offset)
             DATE,       ///< An ISO date        1234-02-27      DateTime
+            MONTH,      ///< Month name         January...      Month
+            WEEK_DAY,   ///< Week day name      Saturday...     WeekDay
+            AMPM,       ///< am/pm              am|pm           bool (pm)
         };
         Type            type{INVALID};  ///< Token type
         std::string     lexeme;         ///< Corresponding string
@@ -139,8 +143,8 @@ private:
         Token(Type type, std::string lexeme)
             : type(type), lexeme(std::move(lexeme)) {}
         template<class T>
-            Token(Type type, std::string lexeme, T val)
-                : type(type), lexeme(std::move(lexeme)), value(std::move(val)) {}
+            Token(Type type, std::string lexeme, T&& val)
+                : type(type), lexeme(std::move(lexeme)), value(std::forward<T>(val)) {}
     };
 
     Token        lookahead;     ///< Last read token
@@ -160,17 +164,31 @@ private:
             c = input.get();
         }
         input.unget();
+
         auto lower = string::strtolower(id);
+
         if ( lower == "now" )
             return {Token::NOW, id};
-        else if ( lower == "today" )
+        if ( lower == "today" )
             return {Token::REL_DAY, id, 0};
-        else if ( lower == "tomorrow" )
+        if ( lower == "tomorrow" )
             return {Token::REL_DAY, id, 1};
-        else if ( lower == "yesterday" )
+        if ( lower == "yesterday" )
             return {Token::REL_DAY, id, -1};
-        else
-            return {Token::IDENTIFIER, id, lower};
+        if ( lower == "am" )
+            return {Token::AMPM, id, false};
+        if ( lower == "pm" )
+            return {Token::AMPM, id, true};
+
+        auto maybe_month = month_from_name(lower);
+        if ( maybe_month )
+            return {Token::MONTH, id, *maybe_month};
+
+        auto maybe_weekday = weekday_from_name(lower);
+        if ( maybe_weekday )
+            return {Token::WEEK_DAY, id, *maybe_weekday};
+
+        return {Token::IDENTIFIER, id, std::move(lower)};
     }
 
     /**
@@ -230,8 +248,6 @@ private:
         part2_lex = lex_raw_number(c);
         int day = string::to_uint(part2_lex);
         lexed += '-'+part2_lex;
-        if ( c != '-' )
-            return {};
 
         if ( month > Month::DECEMBER || month < Month::JANUARY ||
             day < 1 || day > DateTime::month_days(year,month) )
@@ -239,7 +255,9 @@ private:
 
 
         input.unget();
-        return {Token::DATE, lexed, DateTime(year,month,days(day))};
+        DateTime date;
+        date.set_date(year,month,days(day));
+        return {Token::DATE, lexed, std::move(date)};
     }
 
     /**
@@ -265,9 +283,9 @@ private:
     {
         std::string lexed = lex_raw_number(c);
         if ( c == ':' )
-        {
             return lex_time(lexed);
-        }
+        else if ( c == '-' )
+            return lex_date(lexed);
         input.unget();
         return {Token::NUMBER, lexed, uint32_t(string::to_uint(lexed))};
     }
@@ -278,7 +296,7 @@ private:
     Token lex()
     {
         char c = ' ';
-        while ( std::isspace(c) && input )
+        while ( (std::isspace(c) || c == ',') && input )
             c = input.get();
         if ( !input )
             return {};
@@ -387,6 +405,186 @@ private:
         }
         // fail
         return Duration::zero();
+    }
+
+    /**
+     * \brief Parses a date and (optionally) a time
+     * \code
+     *  DATE_TIME       ::= DAY OPT_TIME
+     *  OPT_TIME        ::= (eps) | at TIME | TIME | "T" TIME
+     * \endcode
+     */
+    DateTime parse_date_time()
+    {
+        DateTime day = parse_day();
+        if ( lookahead.type == Token::IDENTIFIER && (
+                token_val<std::string>() == "at" || lookahead.lexeme == "T" ) )
+            scan();
+        parse_time(day);
+        return day;
+    }
+
+    /**
+     * \brief Parses a day
+     * \code
+     *  DAY     ::= rel_date | date | DATE_DESC
+     * \endcode
+     */
+    DateTime parse_day()
+    {
+        if ( lookahead.type == Token::REL_DAY )
+        {
+            auto offset = days(token_val<int>());
+            scan();
+            return DateTime() + offset;
+        }
+        if ( lookahead.type == Token::DATE )
+        {
+            auto date = token_val<DateTime>();
+            scan();
+            return date;
+        }
+
+        return parse_date_desc();
+    }
+
+    /**
+     * \brief Parses a date description
+     * \code
+     *  DATE_DESC       ::= OPT_WEEK_DAY month MONTH_DAY OPT_YEAR
+     *                  | OPT_WEEK_DAY MONTH_DAY month OPT_YEAR
+     *                  | week_day | "next" week_day
+     *  OPT_WEEK_DAY    ::= (eps) | week_day
+     *  ORDINAL_SUFFIX  ::= st | nd | rd | th
+     *  OPT_YEAR        ::= (eps) | number
+     * \endcode
+     */
+    DateTime parse_date_desc()
+    {
+        // skip "next"
+        if ( lookahead.type == Token::IDENTIFIER &&
+             token_val<std::string>() == "next" )
+            scan();
+
+        // skip week day
+        if ( lookahead.type == Token::WEEK_DAY )
+        {
+            WeekDay wd = token_val<WeekDay>();
+            scan();
+            // Match next day with that week day
+            if ( lookahead.type != Token::MONTH && lookahead.type != Token::NUMBER )
+                return next_weekday(wd);
+        }
+
+        DateTime date;
+        Month month = date.month();
+        int day = date.day();
+        int year = date.year();
+
+        // month day
+        if ( lookahead.type == Token::MONTH )
+        {
+            month = token_val<Month>();
+            scan();
+            parse_month_day(day);
+        }
+        // day month
+        else if ( lookahead.type == Token::NUMBER )
+        {
+            parse_month_day(day);
+            if ( lookahead.type == Token::MONTH )
+            {
+                month = token_val<Month>();
+                scan();
+            }
+        }
+
+        // year
+        if ( lookahead.type == Token::NUMBER )
+        {
+            year = token_val<uint32_t>();
+            scan();
+        }
+
+        date.set_date(year,month,days(day));
+        return date;
+    }
+
+    /**
+     * \brief Day matching the given week day
+     */
+    DateTime next_weekday(WeekDay wday)
+    {
+        DateTime day;
+        
+        if ( wday >= WeekDay::MONDAY && wday <= WeekDay::SUNDAY )
+        {
+            do
+                day += days(1);
+            while ( day.week_day() != wday );
+        }
+
+        return day;
+    }
+
+    /**
+     * \brief Parse a day of the month into \c day
+     * \code
+     *  MONTH_DAY       ::= number | number ORDINAL_SUFFIX
+     * \endcode
+     */
+    void parse_month_day(int& day)
+    {
+        if ( lookahead.type == Token::NUMBER )
+        {
+            uint32_t n = token_val<uint32_t>();
+            if ( n < 1 || n > 31 )
+                return;
+            day = n;
+            scan();
+            if ( lookahead.type == Token::IDENTIFIER &&
+                    string::is_one_of(token_val<std::string>(),{"th","st","nd","rd"}) )
+                scan();
+        }
+    }
+
+    /**
+     * \brief Parses a time and writes it to \c out
+     * \code
+     *  TIME    ::= time | time AMPM
+     * \endcode
+     */
+    void parse_time(DateTime& out)
+    {
+        if ( lookahead.type != Token::TIME )
+            return;
+        Duration time = token_val<Duration>();
+
+        hours hour = std::chrono::duration_cast<hours>(time);
+        if ( hour.count() > 24 ) return; // invalid hour
+        time -= hour;
+
+        minutes mins = std::chrono::duration_cast<minutes>(time);
+        if ( mins.count() >= 60 ) return; // invalid minute
+        time -= mins;
+
+        seconds second = std::chrono::duration_cast<seconds>(time);
+        time -= second;
+
+        milliseconds millisecond = std::chrono::duration_cast<milliseconds>(time);
+
+        scan();
+        if ( hour.count() < 13 && lookahead.type == Token::AMPM )
+        {
+            bool pm = token_val<bool>();
+            scan();
+            if ( pm && hour.count() < 12 )
+                hour += hours(12);
+            else if ( !pm && hour.count() == 12 )
+                hour = hours(0); // or 24? O_o
+        }
+
+        out.set_time(hour,mins,second,millisecond);
     }
 };
 } // namespace timer
