@@ -257,6 +257,11 @@ private:
      */
     void request_status();
 
+    /**
+     * \brief Generates a virtual message (not a protocol message)
+     */
+    void virtual_message(std::string command);
+
 };
 
 } // namespace xonotic

@@ -81,9 +81,9 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     io.on_error = [this](const std::string& msg)
     {
         ErrorLog("xon","Network Error") << msg;
+        if ( status_ > CONNECTING )
+            virtual_message("DISCONNECTED");
         status_ = DISCONNECTED;
-        //disconnect();
-        /// \todo issue a message
     };
     io.on_async_receive = [this](const std::string& datagram)
     {
@@ -147,6 +147,7 @@ void XonoticConnection::disconnect(const std::string& message)
             thread_input.join();
         Lock lock(mutex);
         rcon_buffer.clear();
+        virtual_message("DISCONNECTED");
     }
 }
 void XonoticConnection::update_user(const std::string& local_id,
@@ -442,35 +443,38 @@ void XonoticConnection::update_connection()
 {
     if ( status_ > DISCONNECTED )
     {
-        // dummy command because the first command to be issued
+        // Dummy command because the first command to be issued
         // might fail when the server has just been started
         command({"rcon",{"echo", "connection test"},1024});
-
-        status_ = CONNECTED;
+        status_ = CONNECTING;
 
         /// \todo the host name for log_dest_udp needs to be read from settings
         /// (and if settings don't provide it, fallback to what local_endpoint() gives)
-        command({"rcon",{"set", "log_dest_udp", io.local_endpoint().name()},1024});
+        command({"rcon",{"set","log_dest_udp",io.local_endpoint().name()},1024});
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
+        // Make sure the connection is being checked
         if ( !status_polling.running() )
             status_polling.start();
 
-        if ( status_ != CONNECTED )
+        // Commands failed
+        if ( status_ == DISCONNECTED )
             return;
 
-        // Generate a fake message
-        network::Message msg;
-        msg.source = msg.destination = this;
-        msg.command = "CONNECTED";
-        bot->message(msg);
+        // Connection is alright
+        status_ = CONNECTED;
 
+        // Generate a fake message
+        virtual_message("CONNECTED");
+
+        // Just connected, clear all
         Lock lock(mutex);
-        rcon_buffer.clear();
-        cvars.clear();
+        rcon_buffer.clear(); /// \todo Maybe don't clear?
+        cvars.clear(); // cvars might have changed
         lock.unlock();
 
+        // Request status right away (will also be called later by status_polling)
         request_status();
     }
 }
@@ -509,6 +513,15 @@ void XonoticConnection::request_status()
         command({"rcon",{"log_dest_udp"},1024});
         command({"rcon",{"status 1"},1024});
     }
+}
+
+
+void XonoticConnection::virtual_message(std::string command)
+{
+    network::Message msg;
+    msg.source = msg.destination = this;
+    msg.command = std::move(command);
+    bot->message(msg);
 }
 
 } // namespace xonotic

@@ -21,6 +21,7 @@
 #include "melanomodule.hpp"
 #include "xonotic-connection.hpp"
 #include "handler/rcon.hpp"
+#include "handler/status.hpp"
 
 /**
  * \brief Initializes the Xonotic module
@@ -33,6 +34,7 @@ Melanomodule melanomodule_xonotic()
     module.register_connection<xonotic::XonoticConnection>("xonotic");
 
     module.register_handler<xonotic::RconCommand>("RconCommand");
+    module.register_handler<xonotic::ConnectionEvents>("ConnectionEvents");
 
     return module;
 }
