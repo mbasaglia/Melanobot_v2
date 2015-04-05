@@ -401,7 +401,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             std::smatch match;
             if ( std::regex_match(msg.raw,match,regex_chat) )
             {
-                msg.from = match[1];
+                msg.from.name = match[1];
                 msg.message = match[2];
             }
         }

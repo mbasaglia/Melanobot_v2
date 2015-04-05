@@ -206,7 +206,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     if ( socket_stream.peek() == ':' )
     {
         socket_stream.ignore();
-        socket_stream >> msg.from;
+        socket_stream >> msg.from.name;
     }
     socket_stream >> msg.command;
 

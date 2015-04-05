@@ -51,7 +51,7 @@ public:
     {
         return authorized(msg) && !msg.params.empty() &&
             msg.source->protocol() == "irc" && msg.source == msg.destination &&
-            msg.channels.size() == 1 && msg.from == msg.channels[0] &&
+            msg.channels.size() == 1 && msg.from.name == msg.channels[0] &&
             irc::strtoupper(msg.command) == "CTCP" &&
             irc::strtoupper(msg.params[0]) == ctcp;
     }
@@ -75,7 +75,7 @@ protected:
         string::FormattedString s;
         s << '\1' << ctcp << ' ' << output.message << '\1';
         msg.destination->command({"NOTICE",
-            {msg.from,s.encode(msg.destination->formatter())}, priority});
+            {msg.from.name,s.encode(msg.destination->formatter())}, priority});
     }
     using Handler::reply_to;
 

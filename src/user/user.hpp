@@ -42,6 +42,13 @@ namespace user {
  */
 struct User
 {
+    User() = default;
+    User ( std::string name, std::string host = "",
+           std::string local_id = "", std::string global_id = "" )
+        : name(std::move(name)), host(std::move(host)),
+          local_id(std::move(local_id)), global_id(std::move(global_id))
+    {}
+
     /**
      * \brief Checks if a user matches this one
      *

@@ -135,7 +135,7 @@ private:
      */
     bool cleanup(network::Message& msg, PropertyTree& properties ) const
     {
-        if ( msg.source->user_auth(msg.from,properties.get("auth","")) &&
+        if ( msg.source->user_auth(msg.from.local_id,properties.get("auth","")) &&
             properties.get("help_group",help_group) == help_group )
         {
             for ( auto it = properties.begin(); it != properties.end(); )
@@ -347,7 +347,7 @@ protected:
             if ( std::regex_match(msg.message,match,trigger_regex) )
             {
                 Properties map;
-                map["sender"] = msg.source->get_user(msg.from).name;
+                map["sender"] = msg.from.name;
                 for ( unsigned i = 0; i < match.size(); i++ )
                     map[std::to_string(i)] = match[i];
                 reply_to(msg,string::replace(reply,map,"%"));

@@ -231,6 +231,20 @@ void IrcConnection::handle_message(network::Message msg)
 {
     if ( msg.command.empty() ) return;
 
+    msg.from = parse_prefix(msg.from.name);
+    user::User *from_user = nullptr;
+
+    if ( !std::isdigit(msg.command[0]) )
+    {
+        Lock lock(mutex);
+        from_user = user_manager.user(msg.from.local_id);
+        if ( from_user )
+        {
+            from_user->host = msg.from.host;
+            msg.from = *from_user;
+        }
+    }
+
     if ( msg.command == "001" )
     {
         // RPL_WELCOME: prefix 001 target :message
@@ -238,7 +252,7 @@ void IrcConnection::handle_message(network::Message msg)
 
         Lock lock(mutex);
             current_nick = msg.params[0];
-            current_server.host = msg.from;
+            current_server.host = msg.from.name;
             current_nick_lowecase = strtolower(current_nick);
             // copy so we can unlock before command()
             std::list<network::Command> missed_commands;
@@ -330,20 +344,19 @@ void IrcConnection::handle_message(network::Message msg)
 
         {
             Lock lock(mutex);
-            if ( strtolower(msg.from) == current_nick_lowecase )
+            if ( strtolower(msg.from.name) == current_nick_lowecase )
                 return; // received our own message for some reason, disregard
         }
 
         std::string message = msg.params[1];
 
-        user::User userfrom = parse_prefix(msg.from);
         msg.message = message;
 
         {
             Lock lock(mutex);
             if ( strtolower(msg.params[0]) == current_nick_lowecase )
             {
-                msg.channels = { userfrom.local_id };
+                msg.channels = { msg.from.local_id };
                 msg.direct = 1;
             }
             else
@@ -401,66 +414,57 @@ void IrcConnection::handle_message(network::Message msg)
     }
     else if ( msg.command == "JOIN" )
     {
-        if ( msg.params.size() >= 1 )
+        if ( msg.params.empty() )
+            return;
+        msg.channels = msg.params;
         {
-            user::User user = parse_prefix(msg.from);
-            user.channels = msg.params;
+            Lock lock(mutex);
+            if ( !from_user )
             {
-                Lock lock(mutex);
-                user::User *found = user_manager.user(user.local_id);
-                if ( !found )
-                {
-                    user_manager.add_user(user);
-                    Log("irc",'!',2) << "Added user " << color::dark_green << user.name;
-                }
-                else
-                {
-                    // we might not have the host if the user was added via 353
-                    found->host = user.host;
-
-                    for ( const auto& c : user.channels )
-                        found->add_channel(strtolower(c));
-                }
+                msg.from.channels = msg.channels;
+                from_user = user_manager.add_user(msg.from);
+                Log("irc",'!',2) << "Added user " << color::dark_green << msg.from.name;
             }
-            Log("irc",'!',3) << "User " << color::dark_cyan << user.name
-                << color::dark_green << " joined " << color::nocolor
-                << string::implode(", ",user.channels);
-            msg.channels = user.channels;
+            else
+            {
+                // we might not have the host if the user was added via 353
+                from_user->host = msg.from.host;
+
+                for ( const auto& c :  msg.from.channels )
+                    from_user->add_channel(strtolower(c));
+            }
+            msg.from.channels = from_user->channels;
         }
+
+        Log("irc",'!',3) << "User " << color::dark_cyan << msg.from.name
+            << color::dark_green << " joined " << color::nocolor
+            << string::implode(", ",msg.channels);
     }
     else if ( msg.command == "PART" )
     {
         if ( msg.params.size() >= 1 )
         {
-            // needs to be set here because the user might be removed
-            msg.from = parse_prefix(msg.from).local_id;
-
             msg.channels = string::comma_split(msg.params[0]);
-            remove_from_channel(msg.from,msg.channels);
+            remove_from_channel(msg.from.name,msg.channels);
         }
     }
     else if ( msg.command == "QUIT" )
     {
-        user::User user = parse_prefix(msg.from);
         Lock lock(mutex);
-        if ( strtolower(user.local_id) == current_nick_lowecase )
+        if ( strtolower(msg.from.name) == current_nick_lowecase )
         {
             user_manager.clear();
         }
-        else
+        else if ( from_user )
         {
-            user::User *found = user_manager.user(user.local_id);
-            if ( found )
-            {
-                msg.channels = found->channels;
-                user_manager.remove_user(user.local_id);
-                Log("irc",'!',2) << "Removed user " << color::dark_red << user.name;
+            msg.channels = from_user->channels;
+            user_manager.remove_user(msg.from.local_id);
+            Log("irc",'!',2) << "Removed user " << color::dark_red << msg.from.name;
 
-                if ( strtolower(preferred_nick) == strtolower(user.local_id) )
-                {
-                    lock.unlock();
-                    command({"NICK",{preferred_nick}});
-                }
+            if ( strtolower(preferred_nick) == strtolower(msg.from.name) )
+            {
+                lock.unlock();
+                command({"NICK",{preferred_nick}});
             }
         }
     }
@@ -468,21 +472,19 @@ void IrcConnection::handle_message(network::Message msg)
     {
         if ( msg.params.size() == 1 )
         {
-            user::User user = parse_prefix(msg.from);
             {
                 Lock lock(mutex);
-                user::User *found = user_manager.user(user.local_id);
-                if ( found )
+                if ( from_user )
                 {
-                    msg.channels = found->channels;
-                    found->name = found->local_id = msg.params[0];
+                    msg.channels = from_user->channels;
+                    from_user->name = from_user->local_id = msg.params[0];
 
-                    Log("irc",'!',2) << "Renamed user " << color::dark_cyan << user.name
-                        << color::nocolor << " to " << color::dark_cyan << found->name;
+                    Log("irc",'!',2) << "Renamed user " << color::dark_cyan << msg.from.name
+                        << color::nocolor << " to " << color::dark_cyan << from_user->name;
 
-                    if ( strtolower(user.name) == current_nick_lowecase )
+                    if ( strtolower(msg.from.name) == current_nick_lowecase )
                     {
-                        current_nick = found->name;
+                        current_nick = from_user->name;
                         current_nick_lowecase = strtolower(current_nick);
                         attempted_nick.clear();
                     }
@@ -492,16 +494,12 @@ void IrcConnection::handle_message(network::Message msg)
     }
     else if ( msg.command == "KICK" )
     {
-        if ( msg.params.size() >= 2 )
-        {
-            // needs to be set here because the user might be removed
-            msg.from = parse_prefix(msg.from).local_id;
-
-            msg.channels = string::comma_split(msg.params[0]);
-            /// \note Assumes a single victim
-            msg.params.erase(msg.params.begin());
-            remove_from_channel(msg.params[0],msg.channels);
-        }
+        if ( msg.params.size() < 2 )
+            return;
+        msg.channels = string::comma_split(msg.params[0]);
+        /// \note Assumes a single victim
+        msg.params.erase(msg.params.begin());
+        remove_from_channel(msg.params[0],msg.channels);
     }
     // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
     /* Skipped: * = maybe later X = surely later
@@ -657,18 +655,6 @@ void IrcConnection::handle_message(network::Message msg)
      * 501
      * 502
      */
-
-    if ( !std::isdigit(msg.command[0]) )
-    {
-        user::User userfrom = parse_prefix(msg.from);
-        Lock lock(mutex);
-        user::User *user = user_manager.user(userfrom.local_id);
-        if ( user )
-        {
-            user->host = userfrom.host;
-            msg.from = userfrom.local_id;
-        }
-    }
 
     bot->message(msg);
 }
@@ -997,6 +983,7 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
     return user;
 }
 
+/// \todo change this to accept a reference to user::User instead of local_id?
 bool IrcConnection::user_auth(const std::string& local_id,
                               const std::string& auth_group) const
 {

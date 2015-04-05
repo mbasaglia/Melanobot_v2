@@ -73,15 +73,14 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        if ( msg.source->name() == msg.from )
+        if ( msg.source->name() == msg.from.name )
         {
             msg.destination->command({"PRIVMSG",{q_bot,"users "+msg.channels[0]},priority});
         }
         else
         {
-            user::User user = msg.source->get_user(msg.from);
-            if ( user.global_id.empty() )
-                msg.destination->command({"PRIVMSG",{q_bot,"whois "+msg.from},priority});
+            if ( msg.from.global_id.empty() )
+                msg.destination->command({"PRIVMSG",{q_bot,"whois "+msg.from.name},priority});
         }
 
         return false; // reacts to the message but allows to do futher processing
@@ -105,7 +104,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return msg.command == "NOTICE" && msg.from == q_bot &&
+        return msg.command == "NOTICE" && msg.from.name == q_bot &&
             msg.source->protocol() == "irc" &&
             msg.params.size() == 2;
     }
@@ -173,7 +172,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.destination->command({"WHOIS",{msg.from},priority});
+        msg.destination->command({"WHOIS",{msg.from.name},priority});
         return true;
     }
 

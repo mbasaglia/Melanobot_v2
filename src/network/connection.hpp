@@ -90,7 +90,7 @@ struct Message
     std::string              raw;     ///< Raw contents
     std::string              command; ///< Protocol command name
     std::vector<std::string> params;  ///< Tokenized parameters
-    std::string              from;    ///< (optional) Name of the user who created this command
+    user::User               from;    ///< (optional) User who created this command
 
     std::string              message; ///< (optional) Simple message contents
     std::vector<std::string> channels;///< (optional) Simple message origin

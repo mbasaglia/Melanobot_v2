@@ -491,7 +491,7 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
     FormatterRainbow formatter(math::random_real(),0.6,1);
 
     auto from = formatter.decode(
-        msg.source->formatter()->decode(msg.from).encode(&formatter));
+        msg.source->formatter()->decode(msg.from.name).encode(&formatter));
 
     auto message = formatter.decode(
         msg.source->formatter()->decode(msg.message).encode(&formatter));

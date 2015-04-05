@@ -46,19 +46,18 @@ public:
     {
         return Handler::can_handle(msg) && !msg.channels.empty() &&
             msg.command == "JOIN" &&
-            ( ( on_others && msg.from != msg.source->name() ) ||
-              ( on_self && msg.from == msg.source->name() ) );
+            ( ( on_others && msg.from.name != msg.source->name() ) ||
+              ( on_self && msg.from.name == msg.source->name() ) );
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        user::User user = msg.source->get_user(msg.from);
         reply_to(msg,string::replace(message,{
             {"channel",msg.channels[0]},
-            {"nick", user.name},
-            {"host", user.host},
-            {"name", user.global_id}
+            {"nick", msg.from.name},
+            {"host", msg.from.host},
+            {"name", msg.from.global_id}
         },"%"));
         return true;
     }
@@ -90,8 +89,8 @@ public:
         return Handler::can_handle(msg) && !msg.channels.empty() &&
             msg.command == "KICK" && msg.params.size() >= 2 &&
             msg.params[0] != msg.source->name() &&
-            ( ( on_others && msg.from != msg.source->name() ) ||
-              ( on_self && msg.from == msg.source->name() ) );
+            ( ( on_others && msg.from.name != msg.source->name() ) ||
+              ( on_self && msg.from.name == msg.source->name() ) );
     }
 
 protected:
@@ -99,7 +98,7 @@ protected:
     {
         reply_to(msg,string::replace(message,{
             {"channel",msg.channels[0]},
-            {"kicker", msg.from},
+            {"kicker", msg.from.name},
             {"kicked", msg.params[0]},
             {"message", msg.params.size() > 1 ? msg.params.back() : "" }
         },"%"));
@@ -138,7 +137,7 @@ protected:
         if ( !message.empty() )
             reply_to(msg,string::replace(message,{
                 {"channel", msg.channels[0]},
-                {"kicker", msg.from},
+                {"kicker", msg.from.name},
                 {"message", msg.params.size() > 1 ? msg.params.back() : "" }
             },"%"));
         return true;

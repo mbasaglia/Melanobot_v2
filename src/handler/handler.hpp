@@ -102,7 +102,7 @@ public:
      */
     virtual bool authorized(const network::Message& msg) const
     {
-        return auth.empty() || msg.source->user_auth(msg.from,auth);
+        return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
     }
 
     /**
@@ -235,7 +235,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,"I got: \""+msg.message+"\" from "+msg.from);
+        reply_to(msg,"I got: \""+msg.message+"\" from "+msg.from.name);
         return true;
     }
 
@@ -329,7 +329,7 @@ protected:
         if ( msg.dst_channel )
             channel = *msg.dst_channel;
         else if ( !public_reply )
-            channel = msg.from;
+            channel = msg.from.local_id;
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
         return channel;

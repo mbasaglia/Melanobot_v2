@@ -84,7 +84,7 @@ BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* pare
 bool BridgeChat::can_handle(const network::Message& msg) const
 {
     return Handler::can_handle(msg) && !msg.message.empty() && !msg.direct &&
-        (!ignore_self || msg.from != msg.source->name());
+        (!ignore_self || msg.from.name != msg.source->name());
 }
 
 bool BridgeChat::on_handle(network::Message& msg)
@@ -94,7 +94,7 @@ bool BridgeChat::on_handle(network::Message& msg)
         msg.action,
         msg.dst_channel ? *msg.dst_channel : "",
         priority,
-        msg.source->formatter()->decode(from ? *from : msg.from),
+        msg.source->formatter()->decode(from ? *from : msg.from.name),
         prefix,
         timeout == network::Duration::zero() ?
             network::Time::max() :
