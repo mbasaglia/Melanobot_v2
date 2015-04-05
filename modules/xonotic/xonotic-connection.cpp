@@ -425,10 +425,17 @@ void XonoticConnection::handle_message(network::Message& msg)
                 cvars[cvar_name] = cvars[cvar_value];
                 lock.unlock();
                 /// \todo keep in sync when update_connection() is changed
-                if ( cvar_name == "log_dest_udp" &&
-                    cvar_value != io.local_endpoint().name() )
+                if ( cvar_name == "log_dest_udp" )
                 {
-                    update_connection();
+                    if ( cvar_value != io.local_endpoint().name() )
+                    {
+                        update_connection();
+                    }
+                    else if ( status_ == CHECKING )
+                    {
+                        status_ = CONNECTED;
+                        virtual_message("CONNECTED");
+                    }
                 }
             }
         }
@@ -507,14 +514,8 @@ void XonoticConnection::update_connection()
         if ( status_ == DISCONNECTED )
             return;
 
-        // Connection is alright
-        status_ = CONNECTED;
-
-        // Generate a fake message
-        /// \todo this message should be emitted after
-        /// we read from status 1 and log_dest_udp (issued by request_status)
-        /// and that is also the time to move status_ from CHECKING to CONNECTED
-        virtual_message("CONNECTED");
+        // Connection should be alright
+        status_ = CHECKING;
 
         // Just connected, clear all
         Lock lock(mutex);
@@ -543,16 +544,16 @@ void XonoticConnection::cleanup_connection()
 
 void XonoticConnection::request_status()
 {
-    if ( status_ == DISCONNECTED )
+    if ( status_ > CONNECTING )
+    {
+        /// \todo attribute holding these commands, check timeouts etc.
+        command({"rcon",{"status 1"},1024});
+        command({"rcon",{"log_dest_udp"},1024});
+    }
+    else
     {
         close_connection();
         connect();
-    }
-    else if ( status_ > CONNECTING )
-    {
-        /// \todo attribute holding these commands, check timeouts etc.
-        command({"rcon",{"log_dest_udp"},1024});
-        command({"rcon",{"status 1"},1024});
     }
 }
 
