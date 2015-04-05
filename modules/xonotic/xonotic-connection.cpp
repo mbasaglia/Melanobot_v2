@@ -439,9 +439,46 @@ void XonoticConnection::handle_message(network::Message& msg)
                 }
             }
         }
+        // join/part
+        else if ( msg.raw[0] == ':' )
+        {
+            static std::regex regex_join(
+                R"regex(^:join:(\d+):(\d+):((?:[0-9]+(?:\.[0-9]+){3})|(?:[[:xdigit:]](?::[[:xdigit:]]){7})):(.*))regex",
+                std::regex::ECMAScript|std::regex::optimize
+            );
+            static std::regex regex_part(
+                R"regex(^:part:(\d+))regex",
+                std::regex::ECMAScript|std::regex::optimize
+            );
+            std::smatch match;
+            if ( std::regex_match(msg.raw,match,regex_join) )
+            {
+                user::User user;
+                user.local_id = match[1]; // playerid
+                user.properties["entity"] = match[2]; // entity number
+                user.host = match[3]; // ip address or "bot"
+                user.name = match[4];
+                Lock lock(mutex);
+                user_manager.add_user(user);
+                lock.unlock();
+                msg.command = "join";
+                msg.from = user;
+                Log("xon",'!',2) << "Added user " << formatter()->decode(user.name);
+            }
+            else if ( std::regex_match(msg.raw,match,regex_part) )
+            {
+                Lock lock(mutex);
+                if ( user::User *found = user_manager.user(match[1]) )
+                {
+                    Log("xon",'!',2) << "Removed user " << formatter()->decode(found->name);
+                    msg.from = *found;
+                    msg.command = "part";
+                    user_manager.remove_user(found->local_id);
+                }
+            }
+        }
         // status reply
-        /// \todo read all in one go, not line by line
-        else if ( std::isalpha(msg.raw[0]) )
+        else if ( status_ == CHECKING )
         {
             static std::regex regex_status1(
                 "([a-z]+):\\s+(.*)",
