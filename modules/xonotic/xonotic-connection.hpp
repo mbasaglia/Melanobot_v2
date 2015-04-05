@@ -201,6 +201,7 @@ private:
     std::string         cmd_say;                        ///< Command used to say messages
     std::string         cmd_say_as;                     ///< Command used to say messages as another user
     Properties          cvars;                          ///< Cvar values
+    Properties          properties;                     ///< Misc properties (eg: map, gametype)
     std::list<SecureRconCommand>rcon_buffer;            ///< Buffer for rcon secure commands
 
 
@@ -261,6 +262,11 @@ private:
      * \brief Generates a virtual message (not a protocol message)
      */
     void virtual_message(std::string command);
+
+    /**
+     * \brief Closes the connection, allowing it to be re-opened automatically
+     */
+    void close_connection();
 
 };
 

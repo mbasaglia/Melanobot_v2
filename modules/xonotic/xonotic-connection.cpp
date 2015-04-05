@@ -81,9 +81,7 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     io.on_error = [this](const std::string& msg)
     {
         ErrorLog("xon","Network Error") << msg;
-        if ( status_ > CONNECTING )
-            virtual_message("DISCONNECTED");
-        status_ = DISCONNECTED;
+        close_connection();
     };
     io.on_async_receive = [this](const std::string& datagram)
     {
@@ -141,13 +139,10 @@ void XonoticConnection::disconnect(const std::string& message)
         cleanup_connection();
         if ( !message.empty() && status_ > CONNECTING )
             say({message});
-        status_ = DISCONNECTED;
-        io.disconnect();
-        if ( thread_input.joinable() )
-            thread_input.join();
+        close_connection();
         Lock lock(mutex);
         rcon_buffer.clear();
-        virtual_message("DISCONNECTED");
+        lock.unlock();
     }
 }
 void XonoticConnection::update_user(const std::string& local_id,
@@ -190,6 +185,7 @@ std::string XonoticConnection::name() const
 
 std::string XonoticConnection::get_property(const std::string& property) const
 {
+    Lock lock(mutex);
     if ( string::starts_with(property,"cvar.") )
     {
         auto it = cvars.find(property.substr(5));
@@ -203,28 +199,35 @@ std::string XonoticConnection::get_property(const std::string& property) const
     {
         return cmd_say;
     }
-    return "";
+    else if ( property == "host" )
+    {
+        auto it = properties.find(property);
+        if ( it == properties.end() )
+        {
+            it = cvars.find("cvar.hostname");
+            if ( it == cvars.end() )
+                return description();
+        }
+        return it->second;
+    }
+    auto it = properties.find(property);
+    return it != properties.end() ? it->second : "";
 }
 
 bool XonoticConnection::set_property(const std::string& property,
                                      const std::string& value )
 {
+
+    Lock lock(mutex);
     if ( string::starts_with(property,"cvar.") )
-    {
         cvars[property.substr(5)] = value;
-        return true;
-    }
     else if ( property == "say_as" )
-    {
         cmd_say_as = value;
-        return true;
-    }
     else if ( property == "say" )
-    {
         cmd_say = value;
-        return true;
-    }
-    return false;
+    else
+        properties[property] = value;
+    return true;
 }
 
 void XonoticConnection::say ( const network::OutputMessage& message )
@@ -379,7 +382,6 @@ void XonoticConnection::read(const std::string& datagram)
         msg.raw = line;
         Log("xon",'>',4) << formatter_->decode(msg.raw); // 4 'cause spams
         handle_message(msg);
-
     }
 }
 
@@ -388,8 +390,9 @@ void XonoticConnection::handle_message(network::Message& msg)
     if ( msg.raw.empty() )
         return;
 
-    if ( msg.command == "n" )
+    if ( msg.command == "n" && !msg.raw.empty() )
     {
+        // chat
         if ( msg.raw[0] == '\1' )
         {
             static std::regex regex_chat("^\1(.*)\\^7: (.*)",
@@ -400,6 +403,50 @@ void XonoticConnection::handle_message(network::Message& msg)
             {
                 msg.from = match[1];
                 msg.message = match[2];
+            }
+        }
+        // cvars
+        else if ( msg.raw[0] == '"' )
+        {
+            // Note cvars can actually have any characters in their identifier
+            // and values, this regex limits to:
+            //  * The identifier to contain only alphanumeric or + - _
+            //  * The value anything but "
+            static std::regex regex_cvar(
+                R"cvar("([^"]+)" is "([^"]*)".*)cvar",
+                std::regex::ECMAScript|std::regex::optimize
+            );
+            std::smatch match;
+            if ( std::regex_match(msg.raw, match, regex_cvar) )
+            {
+                std::string cvar_name = match[1];
+                std::string cvar_value = match[2];
+                Lock lock(mutex);
+                cvars[cvar_name] = cvars[cvar_value];
+                lock.unlock();
+                /// \todo keep in sync when update_connection() is changed
+                if ( cvar_name == "log_dest_udp" &&
+                    cvar_value != io.local_endpoint().name() )
+                {
+                    update_connection();
+                }
+            }
+        }
+        // status reply
+        /// \todo read all in one go, not line by line
+        else if ( std::isalpha(msg.raw[0]) )
+        {
+            static std::regex regex_status1(
+                "([a-z]+):\\s+(.*)",
+                std::regex::ECMAScript|std::regex::optimize
+            );
+            std::smatch match;
+            if ( std::regex_match(msg.raw, match, regex_status1) )
+            {
+                std::string status_name = match[1];
+                std::string status_value = match[2];
+                Lock lock(mutex);
+                properties[status_name] = status_value;
             }
         }
     }
@@ -443,13 +490,11 @@ void XonoticConnection::update_connection()
 {
     if ( status_ > DISCONNECTED )
     {
-        // Dummy command because the first command to be issued
-        // might fail when the server has just been started
-        command({"rcon",{"echo", "connection test"},1024});
         status_ = CONNECTING;
 
         /// \todo the host name for log_dest_udp needs to be read from settings
         /// (and if settings don't provide it, fallback to what local_endpoint() gives)
+        /// see also in handle_message()
         command({"rcon",{"set","log_dest_udp",io.local_endpoint().name()},1024});
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
@@ -466,6 +511,9 @@ void XonoticConnection::update_connection()
         status_ = CONNECTED;
 
         // Generate a fake message
+        /// \todo this message should be emitted after
+        /// we read from status 1 and log_dest_udp (issued by request_status)
+        /// and that is also the time to move status_ from CHECKING to CONNECTED
         virtual_message("CONNECTED");
 
         // Just connected, clear all
@@ -497,15 +545,8 @@ void XonoticConnection::request_status()
 {
     if ( status_ == DISCONNECTED )
     {
-        if ( io.connected() )
-        {
-            status_ = CONNECTING;
-            update_connection();
-        }
-        else
-        {
-            reconnect();
-        }
+        close_connection();
+        connect();
     }
     else if ( status_ > CONNECTING )
     {
@@ -524,4 +565,15 @@ void XonoticConnection::virtual_message(std::string command)
     bot->message(msg);
 }
 
+void XonoticConnection::close_connection()
+{
+    if ( status_ > CONNECTING )
+        virtual_message("DISCONNECTED");
+    status_ = DISCONNECTED;
+    if ( io.connected() )
+        io.disconnect();
+    if ( thread_input.joinable() &&
+            thread_input.get_id() != std::this_thread::get_id() )
+        thread_input.join();
+}
 } // namespace xonotic

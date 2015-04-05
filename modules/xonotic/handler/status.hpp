@@ -43,15 +43,16 @@ protected:
     {
         /// \todo Make messages configurable
         /// (needs reading formatted strings from config)
+        /// \todo Should the host property be returned from description()?
+        auto host = msg.source->formatter()->decode(msg.source->get_property("host"));
         if ( msg.command == "CONNECTED" )
-            reply_to(msg,string::FormattedString() << "Server " << color::green <<
-                msg.source->description() << color::nocolor << " connected.");
+            reply_to(msg,string::FormattedString() << "Server " <<
+                color::green << host << color::nocolor << " connected.");
         else
             reply_to(msg,string::FormattedString() <<
                 string::FormatFlags::BOLD << "Warning!" <<
                 string::FormatFlags::NO_FORMAT << " Server "
-                << color::red << msg.source->description()
-                << color::nocolor << " disconnected.");
+                << color::red << host << color::nocolor << " disconnected.");
         return true;
     }
 };
