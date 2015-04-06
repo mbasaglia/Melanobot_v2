@@ -20,16 +20,18 @@
 
 #include <regex>
 
+#include "string/string_functions.hpp"
+
 namespace xonotic {
 
 
 std::string Formatter::ascii(char c) const
 {
-    return std::string(1,c);
+    return c == '^' ? "^^" : std::string(1,c);
 }
-std::string Formatter::ascii(const std::string& s) const
+std::string Formatter::ascii(const std::string& input) const
 {
-    return s;
+    return string::replace(input,"^","^^");
 }
 std::string Formatter::color(const color::Color12& color) const
 {

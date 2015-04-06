@@ -478,6 +478,14 @@ std::string FormatterConfig::clear() const
 {
     return "#-";
 }
+std::string FormatterConfig::ascii(char input) const
+{
+    return input == '#' ? "##" : std::string(1,input);
+}
+std::string FormatterConfig::ascii(const std::string& input) const
+{
+    return string::replace(input,"#","##");
+}
 FormattedString FormatterConfig::decode(const std::string& source) const
 {
     FormattedString str;
@@ -500,10 +508,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
         if ( byte == '#' )
         {
             std::string format;
-            for ( char c = parser.input.get(); parser.input && c != '#'; c = parser.input.get() )
-            {
-                format += c;
-            }
+            std::getline(parser.input, format, '#');
 
             if ( format.empty() )
             {

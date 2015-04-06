@@ -31,7 +31,11 @@ class ConnectionEvents : public handler::Handler
 {
 public:
     ConnectionEvents( const Settings& settings, HandlerContainer* parent )
-        : Handler(settings, parent) {}
+        : Handler(settings, parent)
+    {
+        connect = settings.get("connect","Server #2#%host#-# connected.");
+        disconnect = settings.get("connect","#-b#Warning!#-# Server #1#%host#-# disconnected.");
+    }
 
     bool can_handle(const network::Message& msg) const override
     {
@@ -42,20 +46,20 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        /// \todo Make messages configurable
-        /// (needs reading formatted strings from config)
+        string::FormatterConfig fmt;
         /// \todo Should the host property be returned from description()?
-        auto host = msg.source->formatter()->decode(msg.source->get_property("host"));
-        if ( msg.command == "CONNECTED" )
-            reply_to(msg,string::FormattedString() << "Server " <<
-                color::green << host << color::nocolor << " connected.");
-        else
-            reply_to(msg,string::FormattedString() <<
-                string::FormatFlags::BOLD << "Warning!" <<
-                string::FormatFlags::NO_FORMAT << " Server "
-                << color::red << host << color::nocolor << " disconnected.");
+        Properties props = {
+            {"host",msg.source->formatter()->decode(msg.source->get_property("host")).encode(&fmt)},
+            {"server",msg.source->server().name()}
+        };
+        const std::string& str = msg.command == "CONNECTED" ? connect : disconnect;
+        reply_to(msg,fmt.decode(string::replace(str,props,"%")));
         return true;
     }
+
+private:
+    std::string connect;
+    std::string disconnect;
 };
 
 } // namespace xonotic

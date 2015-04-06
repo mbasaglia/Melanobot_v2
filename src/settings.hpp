@@ -26,12 +26,17 @@
 #include <boost/property_tree/ptree.hpp>
 
 #include "c++-compat.hpp"
+#include "string/string.hpp"
 
 
 using PropertyTree = boost::property_tree::ptree;
 
 /**
  * \brief Class containing hierarchical settings
+ * \todo Avoid copies on conversion from PropertyTree:
+ *       store PropertyTree as an optionally-owned pointer and copy relevant
+ *       functions in the interface.
+ *       (This would also allow merge() to be non-static)
  */
 class Settings : public PropertyTree
 {
@@ -112,6 +117,15 @@ public:
     {
         auto opt = PropertyTree::get_optional<T>(std::forward<S>(path));
         return opt ? *opt : Optional<T>();
+    }
+
+    /**
+     * \brief Get a formatted string, decoded using the config formatter
+     */
+    string::FormattedString get_formatted_string(const std::string& path,
+                                                 const std::string& default_value={})
+    {
+        return string::FormatterConfig().decode(get(path,default_value));
     }
 
 private:

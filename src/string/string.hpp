@@ -704,6 +704,8 @@ class FormatterConfig : public FormatterUtf8
 public:
     explicit FormatterConfig() {}
 
+    std::string ascii(char c) const override;
+    std::string ascii(const std::string& s) const override;
     std::string color(const color::Color12& color) const override;
     std::string format_flags(FormatFlags flags) const override;
     std::string clear() const override;
