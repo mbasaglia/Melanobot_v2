@@ -686,6 +686,32 @@ private:
     bool utf8;
 };
 
+/**
+ * \brief Custom string formatting (Utf-8)
+ *
+ * Style formatting:
+ *      * ##            #
+ *      * #-#           clear all formatting
+ *      * #-b#          bold
+ *      * #-u#          underline
+ *      * #1#           red
+ *      * #xf00#        red
+ *      * #red#         red
+ *      * #nocolor#     no color
+ */
+class FormatterConfig : public FormatterUtf8
+{
+public:
+    explicit FormatterConfig() {}
+
+    std::string color(const color::Color12& color) const override;
+    std::string format_flags(FormatFlags flags) const override;
+    std::string clear() const override;
+    FormattedString decode(const std::string& source) const override;
+    std::string name() const override;
+
+};
+
 } // namespace string
 
 #endif // STRING_HPP

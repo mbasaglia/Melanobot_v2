@@ -23,8 +23,9 @@
 #include "string/string_functions.hpp"
 
 namespace xonotic {
+
 /**
- * \brief Show connect/disconnect messages
+ * \brief Show server connect/disconnect messages
  */
 class ConnectionEvents : public handler::Handler
 {

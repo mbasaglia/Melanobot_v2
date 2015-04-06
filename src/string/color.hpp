@@ -103,6 +103,11 @@ public:
     static Color12 from_4bit(Component color);
 
     /**
+     * \brief Get a color from name
+     */
+    static Color12 from_name(const std::string& name);
+
+    /**
      * \brief Convert to a html color string
      */
     std::string to_html() const;

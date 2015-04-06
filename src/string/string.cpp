@@ -196,6 +196,7 @@ Formatter::Registry::Registry()
     add_formatter(new FormatterAscii);
     add_formatter(new FormatterAnsi(true));
     add_formatter(new FormatterAnsi(false));
+    add_formatter(new FormatterConfig);
 }
 
 Formatter* Formatter::Registry::formatter(const std::string& name)
@@ -443,6 +444,121 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
 std::string FormatterAnsi::name() const
 {
     return utf8 ? "ansi-utf8" : "ansi-ascii";
+}
+
+
+std::string FormatterConfig::color(const color::Color12& color) const
+{
+    if ( !color.is_valid() )
+        return "#";
+
+    switch ( color.to_bit_mask() )
+    {
+        case 0x000: return "#0";
+        case 0xf00: return "#1";
+        case 0x0f0: return "#2";
+        case 0xff0: return "#3";
+        case 0x00f: return "#4";
+        case 0xf0f: return "#5";
+        case 0x0ff: return "#6";
+        case 0xfff: return "#7";
+    }
+    return std::string("#x")+color.hex_red()+color.hex_green()+color.hex_blue();
+}
+std::string FormatterConfig::format_flags(FormatFlags flags) const
+{
+    std::string r = "#-";
+    if ( flags & FormatFlags::BOLD )
+        r += "b";
+    if ( flags & FormatFlags::UNDERLINE )
+        r += "u";
+    return r;
+}
+std::string FormatterConfig::clear() const
+{
+    return "#-";
+}
+FormattedString FormatterConfig::decode(const std::string& source) const
+{
+    FormattedString str;
+
+    Utf8Parser parser;
+
+    std::string ascii;
+
+    auto push_ascii = [&ascii,&str]()
+    {
+        if ( !ascii.empty() )
+        {
+            str.append<AsciiSubstring>(ascii);
+            ascii.clear();
+        }
+    };
+
+    parser.callback_ascii = [&parser,&str,&ascii,push_ascii](uint8_t byte)
+    {
+        if ( byte == '#' )
+        {
+            std::string format;
+            for ( char c = parser.input.get(); parser.input && c != '#'; c = parser.input.get() )
+            {
+                format += c;
+            }
+
+            if ( format.empty() )
+            {
+                ascii += '#';
+            }
+            else
+            {
+                push_ascii();
+                if ( format[0] == '-' )
+                {
+                    FormatFlags flag;
+                    for ( std::string::size_type i = 1; i < format.size(); i++ )
+                    {
+                        if ( format[i] == 'b' )
+                            flag |= FormatFlags::BOLD;
+                        else if ( format[i] == 'u' )
+                            flag |= FormatFlags::UNDERLINE;
+                    }
+                    str << flag;
+                }
+                else if ( format[0] == 'x' )
+                {
+                    str << color::Color12(format.substr(1));
+                }
+                else if ( std::isdigit(format[0]) )
+                {
+                    str << color::Color12::from_4bit(0b1000|(format[0]-'0'));
+                }
+                else
+                {
+                    str << color::Color12::from_name(format);
+                }
+            }
+        }
+        else
+        {
+            ascii += byte;
+        }
+    };
+
+    parser.callback_utf8 = [this,&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    {
+        push_ascii();
+        str.append<Unicode>(utf8,unicode);
+    };
+    parser.callback_end = push_ascii;
+
+    parser.parse(source);
+
+    return str;
+
+}
+std::string FormatterConfig::name() const
+{
+    return "config";
 }
 
 } // namespace string

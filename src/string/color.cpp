@@ -120,6 +120,27 @@ Color12 Color12::from_4bit(Component color)
     }
 }
 
+Color12 Color12::from_name(const std::string& name)
+{
+    if ( name == "black" )      return black;
+    if ( name == "dark_red" )   return dark_red;
+    if ( name == "dark_green" ) return dark_green;
+    if (name == "dark_yellow")  return dark_yellow;
+    if ( name == "dark_blue" )  return dark_blue;
+    if (name == "dark_magenta") return dark_magenta;
+    if ( name == "dark_cyan" )  return dark_cyan;
+    if ( name == "silver" )     return silver;
+    if ( name == "gray" )       return gray;
+    if ( name == "red" )        return color::red;
+    if ( name == "green" )      return color::green;
+    if ( name == "yellow" )     return yellow;
+    if ( name == "blue" )       return color::blue;
+    if ( name == "magenta" )    return magenta;
+    if ( name == "cyan" )       return cyan;
+    if ( name == "white" )      return white;
+    return nocolor;
+}
+
 std::string Color12::to_html() const
 {
     return std::string()+'#'+component_to_hex(r)+component_to_hex(g)+component_to_hex(b);
