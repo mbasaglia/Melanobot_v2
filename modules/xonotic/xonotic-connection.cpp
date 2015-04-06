@@ -133,17 +133,17 @@ void XonoticConnection::connect()
 
 void XonoticConnection::disconnect(const std::string& message)
 {
+    status_polling.stop();
     if ( io.connected() )
     {
-        status_polling.stop();
-        cleanup_connection();
         if ( !message.empty() && status_ > CONNECTING )
             say({message});
-        close_connection();
-        Lock lock(mutex);
-        rcon_buffer.clear();
-        lock.unlock();
+        cleanup_connection();
     }
+    close_connection();
+    Lock lock(mutex);
+    rcon_buffer.clear();
+    lock.unlock();
 }
 void XonoticConnection::update_user(const std::string& local_id,
                                     const Properties& properties)
@@ -344,6 +344,9 @@ void XonoticConnection::read(const std::string& datagram)
         ErrorLog("xon","Network Error") << "Invalid datagram: " << datagram;
         return;
     }
+
+    if ( status_ == CONNECTING )
+        status_ = CHECKING;
 
     if ( datagram[4] != 'n' )
     {
@@ -547,12 +550,13 @@ void XonoticConnection::update_connection()
         if ( !status_polling.running() )
             status_polling.start();
 
+        /// \todo should:
+        ///     * wait while status_ == CONNECTING
+        ///     * return if status_ == DISCONNECTED
+        ///     * keep going if status_ >= CHECKING
         // Commands failed
-        if ( status_ == DISCONNECTED )
+        if ( status_ < CHECKING )
             return;
-
-        // Connection should be alright
-        status_ = CHECKING;
 
         // Just connected, clear all
         Lock lock(mutex);
