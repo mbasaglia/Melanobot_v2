@@ -104,7 +104,7 @@ protected:
                 {
                     if ( !synopsis.empty() )
                         synopsis << ": ";
-                    synopsis << color::gray << synopsis_string;
+                    synopsis << string::FormatterConfig().decode(synopsis_string);
                 }
 
                 reply_to(msg,synopsis);
@@ -112,8 +112,8 @@ protected:
                 std::string help = queried->get("help","");
                 if ( !help.empty() )
                 {
-                    reply_to(msg,string::FormattedString()
-                        << color::dark_blue << help);
+                    reply_to(msg,string::FormattedString() << color::dark_blue
+                        << string::FormatterConfig().decode(help));
                 }
             }
         }

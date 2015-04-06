@@ -54,7 +54,7 @@ public:
             synopsis += " argument...";
         /// \todo would be cool to gather help from the server
         ///       or at least from settings
-        help = "Performs the Rcon command \""+command+"\"";
+        help = "Performs the Rcon command \"#dark_cyan#"+command+"#-#\"";
     }
 
 protected:

@@ -261,7 +261,7 @@ public:
         : Handler(settings,parent)
     {
         trigger      = settings.get("trigger",default_trigger);
-        synopsis     = trigger;
+        synopsis     = "#gray##-b#"+trigger+"#-##gray#";
         direct       = settings.get("direct",direct);
         public_reply = settings.get("public",public_reply);
     }
@@ -318,9 +318,8 @@ protected:
 
     std::string          trigger;            ///< String identifying the action
     bool                 direct = false;     ///< Whether the message needs to be direct
-    /// \todo help and synopsis should be formatted strings
-    std::string          synopsis;           ///< Help synopsis
-    std::string          help="Undocumented";///< Help string
+    std::string          synopsis;           ///< Help synopsis (uses FormatterConfig)
+    std::string          help="Undocumented";///< Help string (uses FormatterConfig)
     bool                 public_reply = true;///< Whether to reply publicly or just to the sender of the message
 
     std::string reply_channel(const network::Message& msg) const override
