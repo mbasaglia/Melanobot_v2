@@ -106,8 +106,8 @@ bool BridgeChat::on_handle(network::Message& msg)
 BridgeAttach::BridgeAttach(const Settings& settings, handler::HandlerContainer* parent)
     : SimpleAction("attach",settings,parent)
 {
-    protocol = settings.get("prefix",protocol);
-    detach = settings.get("prefix",detach);
+    protocol = settings.get("protocol",protocol); /// \todo unused?
+    detach = settings.get("detach",detach);
 }
 
 void BridgeAttach::initialize()
