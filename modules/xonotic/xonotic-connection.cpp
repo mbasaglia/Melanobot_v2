@@ -125,6 +125,12 @@ void XonoticConnection::connect()
         {
             if ( !thread_input.joinable() )
                 thread_input = std::move(std::thread([this]{io.run_input();}));
+            // Just connected, clear all
+            Lock lock(mutex);
+                rcon_buffer.clear();    /// \todo Maybe don't clear?
+                cvars.clear();          // cvars might have chan
+                user_manager.clear();   // same with users
+            lock.unlock();
             update_connection();
         }
     }
@@ -143,6 +149,7 @@ void XonoticConnection::disconnect(const std::string& message)
     close_connection();
     Lock lock(mutex);
     rcon_buffer.clear();
+    user_manager.clear();
     lock.unlock();
 }
 void XonoticConnection::update_user(const std::string& local_id,
@@ -557,12 +564,6 @@ void XonoticConnection::update_connection()
         // Commands failed
         if ( status_ < CHECKING )
             return;
-
-        // Just connected, clear all
-        Lock lock(mutex);
-        rcon_buffer.clear(); /// \todo Maybe don't clear?
-        cvars.clear(); // cvars might have changed
-        lock.unlock();
 
         // Request status right away (will also be called later by status_polling)
         request_status();
