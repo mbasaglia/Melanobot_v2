@@ -73,6 +73,21 @@ std::string English::imperate(const std::string& verb) const
     return infl_imperate.inflect_one(verb);
 }
 
+/**
+ * \todo Unit test
+ */
+std::string English::pluralize(int number, const std::string& noun) const
+{
+    if ( number == 1 )
+        return noun;
+    return infl_plural.inflect_one(noun);
+}
+
+std::string English::pluralize_with_number(int number, const std::string& noun) const
+{
+    return std::to_string(number)+" "+pluralize(number,noun);
+}
+
 Inflector English::infl_imperate({
         {"can",                          "can"},
         {"be",                           "is"},
@@ -89,6 +104,15 @@ Inflector English::infl_genitive = {
     {"(.*s)$", "$1'"},
     {"(.+)$", "$1's"},
 };
+
+/// \todo Irregular English plurals
+Inflector English::infl_plural = {
+    {"(.*[bcdfghjklmnpqrstvwxyz]o)", "$1es"},
+    {"(.*(z|s|ch|sh|j|zh))",         "$1es"},
+    {"(.*[bcdfghjklmnpqrstvwxyz])y", "$1ies"},
+    {"(.+)$", "$1s"},
+};
+
 
 
 } // namespace string

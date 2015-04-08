@@ -27,6 +27,7 @@ Melanomodule melanomodule_fun()
     Melanomodule module{"fun","Fun handlers"};
     module.register_handler<fun::AnswerQuestions>("AnswerQuestions");
     module.register_handler<fun::RenderPony>("RenderPony");
+    module.register_handler<fun::PonyCountDown>("PonyCountDown");
     module.register_handler<fun::ChuckNorris>("ChuckNorris");
     module.register_handler<fun::ReverseText>("ReverseText");
     module.register_handler<fun::Morse>("Morse");

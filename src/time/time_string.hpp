@@ -18,7 +18,11 @@
  */
 #ifndef TIME_STRING_HPP
 #define TIME_STRING_HPP
+
 #include "time.hpp"
+#include "string/language.hpp"
+#include "string/string_functions.hpp"
+
 namespace timer {
 
 /**
@@ -71,6 +75,41 @@ std::string format(const DateTime& date_time, const std::string& fmt);
 inline std::string format(const std::string& fmt)
 {
     return format(DateTime(),fmt);
+}
+
+/**
+ * \brief Converts a duration to a string
+ * \todo Unit test
+ */
+template<class Rep, class Period>
+    std::string duration_string(const std::chrono::duration<Rep, Period>& duration)
+{
+    auto dursec = std::chrono::duration_cast<seconds>(duration).count();
+    std::vector<std::string> durtext;
+    durtext.reserve(5);
+    string::English English;
+
+    if ( dursec % 60 )
+        durtext.push_back(English.pluralize_with_number(dursec%60, "second"));
+
+    dursec /= 60;
+    if ( dursec )
+        durtext.push_back(English.pluralize_with_number(dursec%60, "minute"));
+
+    dursec /= 60;
+    if ( dursec )
+        durtext.push_back(English.pluralize_with_number(dursec%24, "hour"));
+
+    dursec /= 24;
+    if ( dursec % 7 )
+        durtext.push_back(English.pluralize_with_number(dursec%7, "day"));
+
+    dursec /= 7;
+    if ( dursec )
+        durtext.push_back(English.pluralize_with_number(dursec, "week"));
+
+    std::reverse(durtext.begin(),durtext.end());
+    return string::implode(" ",durtext);
 }
 
 } // namespace timer

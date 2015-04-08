@@ -139,12 +139,23 @@ public:
      *        to 3rd person singular (present tense)
      */
     virtual std::string imperate(const std::string& verb) const = 0;
+
+    /**
+     * \brief Pluralize a noun according to the given number
+     */
+    virtual std::string pluralize(int number, const std::string& noun) const = 0;
+
+    /**
+     * \brief Pluralize a noun according to the given number
+     *        (The output shall contain the number)
+     */
+    virtual std::string pluralize_with_number(int number, const std::string& noun) const = 0;
 };
 
 /**
  * \brief English language
  */
-class English : public Language
+class English final : public Language
 {
 public:
 
@@ -158,9 +169,14 @@ public:
 
     std::string imperate(const std::string& verb) const override;
 
+    std::string pluralize(int number, const std::string& noun) const override;
+
+    std::string pluralize_with_number(int number, const std::string& noun) const override;
+
 private:
     static Inflector infl_imperate;///< Inflector for imperative to 3rd person
     static Inflector infl_genitive;///< Inflector for the English genitive
+    static Inflector infl_plural;  ///< Inflector for the English plural
 };
 
 } // namespace string

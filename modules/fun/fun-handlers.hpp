@@ -27,6 +27,7 @@
 #include "core/handler/bridge.hpp"
 #include "web/web-api.hpp"
 #include "math.hpp"
+#include "time/time_string.hpp"
 
 namespace fun {
 
@@ -118,6 +119,55 @@ protected:
 
 private:
     std::string pony_path;
+};
+
+/**
+ * \brief Shows a countdown to the next My Little Pony episode
+ */
+class PonyCountDown : public handler::SimpleJson
+{
+public:
+    PonyCountDown(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("nextpony",settings,parent)
+    {
+        api_url = settings.get("url",api_url);
+        reply = settings.get("found",reply);
+        not_found = settings.get("not_found",not_found);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg,network::http::get(api_url));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        if ( parsed.empty() )
+            return json_failure(msg);
+
+        Properties map;
+        map["title"] = parsed.get("name","");
+        map["season"] = string::to_string(parsed.get("season",0),2);
+        map["episode"] = string::to_string(parsed.get("episode",0),2);
+        map["duration"] = parsed.get("duration","");
+        timer::DateTime time = timer::parse_time(parsed.get("time",""));
+        map["time_delta"] = timer::duration_string(time-timer::DateTime());
+
+        string::FormatterConfig fmt;
+        reply_to(msg,fmt.decode(string::replace(reply,map,"%")));
+    }
+
+    void json_failure(const network::Message& msg) override
+    {
+        reply_to(msg,not_found);
+    }
+
+private:
+    std::string api_url = "http://api.ponycountdown.com/next";
+    std::string reply = "%time_delta until #-b#%title#-# (S%seasonE%episode)";
+    std::string not_found = "Next episode: not soon enough D:";
 };
 
 /**
