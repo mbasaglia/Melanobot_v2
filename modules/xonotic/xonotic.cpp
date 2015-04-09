@@ -34,7 +34,37 @@ Melanomodule melanomodule_xonotic()
     module.register_connection<xonotic::XonoticConnection>("xonotic");
 
     module.register_handler<xonotic::RconCommand>("RconCommand");
+
     module.register_handler<xonotic::ConnectionEvents>("ConnectionEvents");
+    module.register_handler<xonotic::XonoticJoinPart>("XonoticJoinPart");
 
     return module;
 }
+
+namespace xonotic {
+static const std::unordered_map<std::string, std::string> gametype_names = {
+    {"as",  "assault"},
+    {"ca",  "clan arena"},
+    {"cq",  "conquest"},
+    {"ctf", "capture the flag"},
+    {"cts", "race cts"},
+    {"dom", "domination"},
+    {"dm",  "deathmatch"},
+    {"ft",  "freezetag"},
+    {"inf", "infection"},
+    {"inv", "invasion"},
+    {"jb",  "jailbreak"},
+    {"ka",  "keepaway"},
+    {"kh",  "key hunt"},
+    {"lms", "last man standing"},
+    {"nb",  "nexball"},
+    {"ons", "onslaught"},
+    {"rc",  "race"},
+    {"tdm", "team deathmatch"},
+};
+std::string gametype_name(const std::string& short_name)
+{
+    auto it = gametype_names.find(short_name);
+    return it == gametype_names.end() ? short_name : it->second;
+}
+} // namespace xonotic

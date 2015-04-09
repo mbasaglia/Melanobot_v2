@@ -454,16 +454,16 @@ std::string FormatterConfig::color(const color::Color12& color) const
 
     switch ( color.to_bit_mask() )
     {
-        case 0x000: return "#0";
-        case 0xf00: return "#1";
-        case 0x0f0: return "#2";
-        case 0xff0: return "#3";
-        case 0x00f: return "#4";
-        case 0xf0f: return "#5";
-        case 0x0ff: return "#6";
-        case 0xfff: return "#7";
+        case 0x000: return "#0#";
+        case 0xf00: return "#1#";
+        case 0x0f0: return "#2#";
+        case 0xff0: return "#3#";
+        case 0x00f: return "#4#";
+        case 0xf0f: return "#5#";
+        case 0x0ff: return "#6#";
+        case 0xfff: return "#7#";
     }
-    return std::string("#x")+color.hex_red()+color.hex_green()+color.hex_blue();
+    return std::string("#x")+color.hex_red()+color.hex_green()+color.hex_blue()+'#';
 }
 std::string FormatterConfig::format_flags(FormatFlags flags) const
 {
@@ -472,11 +472,11 @@ std::string FormatterConfig::format_flags(FormatFlags flags) const
         r += "b";
     if ( flags & FormatFlags::UNDERLINE )
         r += "u";
-    return r;
+    return r+'#';
 }
 std::string FormatterConfig::clear() const
 {
-    return "#-";
+    return "#-#";
 }
 std::string FormatterConfig::ascii(char input) const
 {

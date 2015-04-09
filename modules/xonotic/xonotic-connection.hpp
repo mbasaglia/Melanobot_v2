@@ -28,19 +28,10 @@
 #include "concurrent_container.hpp"
 #include "user/user_manager.hpp"
 #include "melanobot.hpp"
+#include "xonotic.hpp"
 
 namespace xonotic {
 
-/**
- * \brief Escapes characters and puts the string in double quotes
- */
-inline std::string quote_string(const std::string& text)
-{
-    static std::regex regex_xonquote(R"(([\\"]))",
-        std::regex::ECMAScript|std::regex::optimize
-    );
-    return '"'+std::regex_replace(text,regex_xonquote,"\\$&")+'"';
-}
 
 /**
  * \brief Compute the MD4 HMAC of the given input with the given key
