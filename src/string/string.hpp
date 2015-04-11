@@ -103,67 +103,73 @@ public:
         BOLD      = 1,
         UNDERLINE = 2,
     };
-    constexpr FormatFlags(FormatFlagsEnum flags) : flags(flags) {}
+    constexpr FormatFlags(FormatFlagsEnum flags) noexcept : flags(flags) {}
 
-    constexpr FormatFlags() = default;
+    constexpr FormatFlags() noexcept = default;
 
-    explicit constexpr operator bool() const { return flags; }
+    explicit constexpr operator bool() const noexcept { return flags; }
 
-    constexpr FormatFlags operator| ( const FormatFlags& o ) const
+    constexpr FormatFlags operator| ( const FormatFlags& o ) const noexcept
     {
         return flags|o.flags;
     }
 
-    constexpr FormatFlags operator& ( const FormatFlags& o ) const
+    constexpr FormatFlags operator& ( const FormatFlags& o ) const noexcept
     {
         return flags&o.flags;
     }
-    constexpr FormatFlags operator& ( int o ) const
+    constexpr FormatFlags operator& ( int o ) const noexcept
     {
         return flags&o;
     }
 
-    constexpr FormatFlags operator^ ( const FormatFlags& o ) const
+    constexpr FormatFlags operator^ ( const FormatFlags& o ) const noexcept
     {
         return flags^o.flags;
     }
 
-    constexpr FormatFlags operator~ () const
+    constexpr FormatFlags operator~ () const noexcept
     {
         return ~flags;
     }
 
-    constexpr bool operator== ( const FormatFlags& o ) const
+    constexpr bool operator== ( const FormatFlags& o ) const noexcept
     {
         return flags == o.flags;
     }
 
-    FormatFlags& operator|= ( const FormatFlags& o )
+    FormatFlags& operator|= ( const FormatFlags& o ) noexcept
     {
         flags |= o.flags;
         return *this;
     }
 
-    FormatFlags& operator&= ( const FormatFlags& o )
+    FormatFlags& operator&= ( const FormatFlags& o ) noexcept
     {
         flags &= o.flags;
         return *this;
     }
 
-    FormatFlags& operator&= ( int o )
+    FormatFlags& operator&= ( int o ) noexcept
     {
         flags &= o;
         return *this;
     }
 
-    FormatFlags& operator^= ( const FormatFlags& o )
+    FormatFlags& operator^= ( const FormatFlags& o ) noexcept
     {
         flags ^= o.flags;
         return *this;
     }
 
+    friend constexpr FormatFlags operator| (
+        FormatFlags::FormatFlagsEnum a, FormatFlags::FormatFlagsEnum b ) noexcept
+    {
+        return FormatFlags(int(a)|int(b));
+    }
+
 private:
-    constexpr FormatFlags(int flags) : flags(flags) {}
+    constexpr FormatFlags(int flags) noexcept : flags(flags) {}
 
     int flags = 0;
 };
@@ -327,6 +333,11 @@ public:
         return formatter.ascii(c);
     }
 
+    /**
+     * \brief Returns the character
+     */
+    char character() const noexcept { return c; }
+
 private:
     char c;
 };
@@ -344,6 +355,11 @@ public:
         return formatter.ascii(s);
     }
 
+    /**
+     * \brief Returns the string
+     */
+    const std::string& string() const noexcept { return s; }
+
 private:
     std::string s;
 };
@@ -354,15 +370,20 @@ private:
 class Color : public Element
 {
 public:
-    Color ( color::Color12  color ) : color(std::move(color)) {}
+    Color ( color::Color12  color ) : color_(std::move(color)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
-        return formatter.color(color);
+        return formatter.color(color_);
     }
 
+    /**
+     * \brief Returns the color
+     */
+    color::Color12 color() const noexcept { return color_; }
+
 private:
-    color::Color12 color;
+    color::Color12 color_;
 };
 
 /**
@@ -371,15 +392,19 @@ private:
 class Format : public Element
 {
 public:
-    Format ( FormatFlags  flags ) : flags(std::move(flags)) {}
+    Format ( FormatFlags  flags ) : flags_(std::move(flags)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
-        return formatter.format_flags(flags);
+        return formatter.format_flags(flags_);
     }
+    /**
+     * \brief Returns the format flags
+     */
+    FormatFlags flags() const noexcept { return flags_; }
 
 private:
-    FormatFlags flags;
+    FormatFlags flags_;
 };
 
 /**
@@ -396,7 +421,13 @@ public:
         return formatter.unicode(*this);
     }
 
+    /**
+     * \brief Returns the UTF-8 representation
+     */
     const std::string& utf8() const { return utf8_; }
+    /**
+     * \brief Returns the Unicode code point
+     */
     uint32_t point() const { return point_; }
 
 private:
@@ -412,6 +443,9 @@ class QFont : public Element
 public:
     explicit QFont ( unsigned index ) : index_(index) {}
 
+    /**
+     * \brief Returns the qfont index
+     */
     unsigned index() const { return index_; }
 
     std::string to_string(const Formatter& formatter) const override
@@ -571,6 +605,14 @@ public:
      * \throws CriticalException if the formatter is invalid
      */
     std::string encode(Formatter* formatter) const;
+
+    std::string encode(const Formatter& formatter) const
+    {
+        std::string s;
+        for ( const auto& e : elements )
+            s += e->to_string(formatter);
+        return s;
+    }
 
     // stream-like operations
 

@@ -139,6 +139,15 @@ public:
      */
     static Color12 hsv(double h, double s, double v);
 
+    /**
+     * \brief Checks if two colors are equal
+     */
+    constexpr bool operator==(const Color12& rhs) const noexcept
+    {
+        return (valid == rhs.valid) && (
+            (!valid) || (r == rhs.r && g == rhs.g && b == rhs.b) );
+    }
+
 private:
     static SUPER_CONSTEXPR Component validate(Component c) { return c > 0xf ? 0xf : c; }
     static SUPER_CONSTEXPR Component component_from_hex(char c)

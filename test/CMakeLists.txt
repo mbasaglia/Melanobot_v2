@@ -15,6 +15,7 @@
 include(CTest)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0 -fno-inline -fno-inline-small-functions -fno-default-inline")
+include_directories("${CMAKE_SOURCE_DIR}/modules")
 
 # Boost
 find_package (Boost COMPONENTS unit_test_framework REQUIRED)
@@ -35,7 +36,6 @@ add_executable(test_string test_string.cpp
 )
 melanotest(test_string)
 
-
 add_executable(test_time test_time.cpp
     ${CMAKE_SOURCE_DIR}/src/string/language.cpp
     ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
@@ -43,6 +43,20 @@ add_executable(test_time test_time.cpp
     ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp
 )
 melanotest(test_time)
+
+add_executable(test_formatter test_formatter.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/string.cpp
+    ${CMAKE_SOURCE_DIR}/modules/xonotic/formatter.cpp
+    ${CMAKE_SOURCE_DIR}/modules/irc/irc_formatter.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/color.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/logger.cpp
+    ${CMAKE_SOURCE_DIR}/src/time/time.cpp
+    ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/language.cpp
+)
+melanotest(test_formatter)
+
 
 
 # Coverage

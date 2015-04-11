@@ -179,15 +179,11 @@ std::vector<std::string> QFont::qfont_table = {
     "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "{",  "|",  "}",  "~",  "<"   // 15
 };
 
-
 std::string FormattedString::encode(Formatter* formatter) const
 {
     if ( !formatter )
         CRITICAL_ERROR("Trying to encode a string without formatter");
-    std::string s;
-    for ( const auto& e : elements )
-        s += e->to_string(*formatter);
-    return s;
+    return encode(*formatter);
 }
 
 Formatter::Registry::Registry()
@@ -527,7 +523,10 @@ FormattedString FormatterConfig::decode(const std::string& source) const
                         else if ( format[i] == 'u' )
                             flag |= FormatFlags::UNDERLINE;
                     }
-                    str << flag;
+                    if ( !flag )
+                        str << ClearFormatting();
+                    else
+                        str << flag;
                 }
                 else if ( format[0] == 'x' )
                 {
