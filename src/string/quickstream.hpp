@@ -26,6 +26,11 @@ namespace string {
 
 /**
  * \brief Quick and simple unformatted string input stream
+ * \invariant
+ *      * \c pos Points to the next character returned by next()
+ *      * if eof() returns true, next() returns Traits::eof()
+ * \note Part of the interfacte is different from std::istream as it behaves
+ *       differently from it
  */
 template <class CharT, class Traits=std::char_traits<CharT>>
     class BasicQuickStream
@@ -36,7 +41,7 @@ public:
     using pos_type      = typename string_type::size_type;
     using size_type     = typename string_type::size_type;
     using int_type      = typename Traits::int_type;
-    using regex_type    = std::basic_regex<CharT,Traits>;
+    using regex_type    = std::basic_regex<CharT>;
     using match_type    = std::match_results<typename string_type::const_iterator>;
 
     BasicQuickStream() {}
@@ -68,21 +73,31 @@ public:
     }
 
     /**
-     * \brief Whether it reached the end of the string
+     * \brief Whether it reached past the end of the string
      */
     explicit operator bool() const noexcept
     {
-        return eof();
+        return pos <= source.size();
+    }
+
+    /**
+     * \brief Clears errors
+     */
+    void clear() noexcept
+    {
+        if ( pos > source.size() )
+            pos = source.size();
     }
 
     /**
      * \brief Extracts and returns the next character
      * \return A valid character or Traits::eof()
      */
-    int_type get() noexcept
+    int_type next() noexcept
     {
+        int_type c = pos >= source.size() ? Traits::eof() : source[pos];
         pos++;
-        return pos >= source.size() ? Traits::eof() : source[pos];
+        return c;
     }
 
     /**
@@ -90,13 +105,14 @@ public:
      */
     void unget() noexcept
     {
-        pos--;
+        if ( pos > 0 )
+            pos--;
     }
 
     /**
      * \brief Returns the current read position
      */
-    pos_type tellg() const noexcept
+    pos_type tell_pos() const noexcept
     {
         return pos;
     }
@@ -105,7 +121,7 @@ public:
     /**
      * \brief Changes the read position
      */
-    void seekg(pos_type p) const noexcept
+    void set_pos(pos_type p) noexcept
     {
         pos = p;
     }
@@ -116,7 +132,7 @@ public:
      */
     int_type peek() const noexcept
     {
-        return pos+1 < source.size() ? source[pos+1] : Traits::eof();
+        return pos < source.size() ? source[pos] : Traits::eof();
     }
 
     /**
@@ -140,7 +156,10 @@ public:
      */
     void ignore(size_type n, char_type delim) noexcept
     {
-        for ( size_type i = 0; i < n && !eof() && source[pos] != delim; i++ )
+        size_type i = 0;
+        for ( ; i < n && !eof() && source[pos] != delim; i++ )
+            pos++;
+        if ( !eof() && i != n )
             pos++;
     }
 
@@ -149,13 +168,15 @@ public:
      *
      * \c delim is extracted but not inserted in the returned string
      */
-    string_type getline(char_type delim = '\n')
+    string_type get_line(char_type delim = '\n')
     {
-        pos++;
         auto begin = pos;
-        while ( !eof() && source[pos] != delim() )
+        while ( !eof() && source[pos] != delim )
             pos++;
-        return source.substr(begin,pos-begin());
+        auto end = pos-begin;
+        if ( !eof() )
+            pos++;
+        return source.substr(begin,end);
     }
 
     /**
@@ -199,19 +220,27 @@ public:
      */
     bool regex_match(const regex_type& regex, match_type& match,
                      std::regex_constants::match_flag_type match_flags =
-                        std::regex_constants::match_default)
+                        std::regex_constants::match_default) const
     {
         // clear match?
         if ( eof() )
             return false;
         match_flags |= std::regex_constants::match_continuous;
-        return std::regex_search(source.cbegin()+pos(), source.end(), match,
+        return std::regex_search(source.cbegin()+pos, source.cend(), match,
                                 regex, match_flags);
+    }
+
+    bool regex_match(const regex_type& regex,
+                     std::regex_constants::match_flag_type match_flags =
+                        std::regex_constants::match_default) const
+    {
+        match_type m;
+        return regex_match(regex, m, match_flags);
     }
 
 private:
     string_type source; ///< Source string
-    pos_type pos;       ///< Position in the source string
+    pos_type    pos = 0;///< Position in the source string
 };
 
 using QuickStream = BasicQuickStream<char>;

@@ -23,6 +23,7 @@
 #include "string/string_functions.hpp"
 #include "string/trie.hpp"
 #include "string/language.hpp"
+#include "string/quickstream.hpp"
 
 BOOST_AUTO_TEST_CASE( test_trie_insert )
 {
@@ -356,5 +357,99 @@ BOOST_AUTO_TEST_CASE( test_Inflector )
     BOOST_CHECK( infl.inflect_all("foobar") == "barbar" );
     BOOST_CHECK( infl.inflect_all("fubar") == "fubar" );
     BOOST_CHECK( infl.inflect_all("foobarfooo") == "barbarbaro" );
+}
+
+BOOST_AUTO_TEST_CASE( test_QuickStream )
+{
+    using string::QuickStream;
+
+    // eof
+    BOOST_CHECK( QuickStream().eof() );
+    QuickStream qs("foo");
+    BOOST_CHECK( !qs.eof() );
+    BOOST_CHECK( qs );
+    qs.ignore(3);
+    BOOST_CHECK( qs.eof() );
+    BOOST_CHECK( qs );
+    qs.ignore();
+    BOOST_CHECK( !qs );
+    qs.clear();
+    BOOST_CHECK( qs );
+    qs.unget();
+    BOOST_CHECK( !qs.eof() );
+
+    // str
+    BOOST_CHECK( qs.str() == "foo" );
+    qs.str("");
+    qs.ignore();
+    BOOST_CHECK( qs.eof() );
+    qs.str("bar");
+    BOOST_CHECK( !qs.eof() );
+    BOOST_CHECK( qs.str() == "bar" );
+
+    // next
+    BOOST_CHECK( qs.next() == 'b' );
+    BOOST_CHECK( qs.next() == 'a' );
+    BOOST_CHECK( qs.next() == 'r' );
+    BOOST_CHECK( qs.eof() );
+    BOOST_CHECK( qs.next() == std::char_traits<char>::eof() );
+    BOOST_CHECK( qs.eof() );
+
+    // unget/peek
+    qs.unget();
+    BOOST_CHECK( qs.eof() );
+    BOOST_CHECK( qs.peek() == std::char_traits<char>::eof() );
+    qs.unget();
+    BOOST_CHECK( qs.peek() == 'r' );
+    qs.unget();
+    BOOST_CHECK( qs.peek() == 'a' );
+    qs.unget();
+    BOOST_CHECK( qs.peek() == 'b' );
+    qs.unget();
+    BOOST_CHECK( qs.peek() == 'b' );
+
+    // ignore
+    qs.str("The quick brown fox jumps over the lazy dog");
+    qs.ignore();
+    BOOST_CHECK( qs.peek() == 'h' );
+    qs.ignore(5);
+    BOOST_CHECK( qs.peek() == 'i' );
+    qs.ignore(10,' ');
+    BOOST_CHECK( qs.peek() == 'b' );
+    qs.ignore(10,'.');
+    BOOST_CHECK( qs.peek() == 'j' );
+
+    // get_line
+    BOOST_CHECK( qs.get_line(' ') == "jumps" );
+    BOOST_CHECK( qs.get_line() == "over the lazy dog" );
+    BOOST_CHECK( qs.eof() );
+
+    // get_int
+    qs.str("123foo");
+    BOOST_CHECK( qs.get_int() == 123 );
+    BOOST_CHECK( qs.peek() == 'f' );
+    BOOST_CHECK( qs.get_int() == 0 );
+    BOOST_CHECK( qs.peek() == 'f' );
+
+    // tell_pos/set_pos
+    BOOST_CHECK( qs.tell_pos() == 3 );
+    qs.set_pos(1);
+    BOOST_CHECK( qs.tell_pos() == 1 );
+    BOOST_CHECK( qs.peek() == '2' );
+
+    // regex
+    qs.set_pos(0);
+    std::regex re("[0-9]+");
+    BOOST_CHECK( qs.regex_match(re) );
+    BOOST_CHECK( qs.get_regex(re) == "123" );
+    BOOST_CHECK( qs.peek() == 'f' );
+    BOOST_CHECK( !qs.regex_match(re) );
+    BOOST_CHECK( qs.get_regex(re) == "" );
+    qs.ignore(10);
+    BOOST_CHECK( !qs.regex_match(re) );
+    BOOST_CHECK( qs.get_regex(re) == "" );
+    std::smatch match;
+    BOOST_CHECK( !qs.regex_match(re,match) );
+
 }
 
