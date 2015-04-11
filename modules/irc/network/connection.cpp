@@ -762,14 +762,15 @@ void IrcConnection::command ( network::Command cmd )
             cmd.parameters[1] = cmd.parameters[0];
             cmd.parameters[0] = current_nick;
         }
-        else if ( cmd.parameters.size() != 2 ||
+        /*else if ( cmd.parameters.size() != 2 ||
             strtolower(cmd.parameters[0]) != current_nick_lowecase )
         {
             ErrorLog("irc") << "Ill-formed MODE";
             return;
         }
-        /// \todo sanitaze the mode string
         /// \todo allow channel mode
+        */
+        /// \todo sanitaze the mode string
     }
     else if ( cmd.command == "JOIN" )
     {
