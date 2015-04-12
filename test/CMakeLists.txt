@@ -48,6 +48,7 @@ add_executable(test_formatter test_formatter.cpp
     ${CMAKE_SOURCE_DIR}/src/string/string.cpp
     ${CMAKE_SOURCE_DIR}/modules/xonotic/formatter.cpp
     ${CMAKE_SOURCE_DIR}/modules/irc/irc_formatter.cpp
+    ${CMAKE_SOURCE_DIR}/modules/fun/rainbow.cpp
     ${CMAKE_SOURCE_DIR}/src/string/color.cpp
     ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
     ${CMAKE_SOURCE_DIR}/src/string/logger.cpp

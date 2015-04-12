@@ -21,9 +21,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include "string/string.hpp"
-#include <string/logger.hpp>
+#include "string/logger.hpp"
 #include "xonotic/formatter.hpp"
 #include "irc/irc_formatter.hpp"
+#include "fun/rainbow.hpp"
 
 using namespace string;
 
@@ -270,7 +271,6 @@ BOOST_AUTO_TEST_CASE( test_irc )
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§" );
 }
 
-
 BOOST_AUTO_TEST_CASE( test_xonotic )
 {
     xonotic::Formatter fmt;
@@ -310,7 +310,32 @@ BOOST_AUTO_TEST_CASE( test_xonotic )
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello ^1World ^^^2green^4blue^^x00§\ue012" );
 
-    /// \todo test re-encoding with a different formatter (tests qfont to string)
+    BOOST_CHECK( decoded.encode(FormatterAscii()) == "Hello World ^greenblue^x00?:)" );
 }
 
-/// \todo test the rainbow one
+BOOST_AUTO_TEST_CASE( test_rainbow  )
+{
+    fun::FormatterRainbow fmt;
+    std::string utf8 = u8"Hello World§!!";
+    auto decoded = fmt.decode(utf8);
+    BOOST_CHECK( decoded.size() == 28 );
+    for ( int i = 0; i < 11; i++ )
+    {
+        BOOST_CHECK( cast<Color>(decoded[i*2]) );
+        BOOST_CHECK( cast<Character>(decoded[i*2+1]) );
+        BOOST_CHECK( cast<Character>(decoded[i*2+1])->character() == utf8[i] );
+    }
+    BOOST_CHECK( cast<Unicode>(decoded[23]) );
+    BOOST_CHECK( cast<Color>(decoded[0])->color() == color::red );
+    BOOST_CHECK( decoded.encode(fmt) == utf8 );
+
+    fun::FormatterRainbow fmt2(0.5,0.5,0.5);
+    std::string str = "....";
+    decoded = fmt2.decode(str);
+    for ( unsigned i = 0; i < str.size(); i++ )
+    {
+        BOOST_CHECK( cast<Color>(decoded[i*2]) );
+        BOOST_CHECK( cast<Color>(decoded[i*2])->color() == color::Color12::hsv(0.5+i*0.25,0.5,0.5) );
+    }
+
+}
