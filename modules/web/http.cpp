@@ -98,7 +98,7 @@ void HttpService::initialize(const Settings& settings)
         user_agent = PROJECT_NAME "/" PROJECT_VERSION " (" PROJECT_WEBSITE ") "
                      "cURLpp/" LIBCURLPP_VERSION ;
     user_agent = settings.get("user_agent", user_agent );
-    max_redirs = settings.get("user_agent",max_redirs);
+    max_redirs = settings.get("redirects",max_redirs);
 }
 
 Response HttpService::query (const Request& request)

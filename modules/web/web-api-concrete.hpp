@@ -65,7 +65,9 @@ class SearchImageGoogle : public SimpleJson
 public:
     SearchImageGoogle(const Settings& settings, handler::HandlerContainer* parent)
         : SimpleJson("image",settings,parent)
-    {}
+    {
+        not_found_reply = settings.get("not_found", not_found_reply );
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -77,12 +79,18 @@ protected:
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        std::string not_found_reply = "Didn't find any image of "+msg.message;
-        reply_to(msg,parsed.get("responseData.results.0.unescapedUrl",not_found_reply));
+        std::string result = parsed.get("responseData.results.0.unescapedUrl","");
+        if ( result.empty() )
+            result = string::replace(not_found_reply,{
+                {"search", msg.message},
+                {"user", msg.from.name}
+            }, "%");
+        reply_to(msg,result);
     }
+
+private:
+    std::string not_found_reply = "Didn't find any image of %search";
 };
-
-
 
 /**
  * \brief Handler searching a definition on Urban Dictionary
@@ -92,7 +100,9 @@ class UrbanDictionary : public SimpleJson
 public:
     UrbanDictionary(const Settings& settings, handler::HandlerContainer* parent)
         : SimpleJson("define",settings,parent)
-    {}
+    {
+        not_found_reply = settings.get("not_found", not_found_reply );
+    }
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -104,11 +114,20 @@ protected:
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        std::string not_found_reply = "I don't know what "+msg.message+" means";
-        std::string result = parsed.get("list.0.definition",not_found_reply);
-        result = string::elide( string::collapse_spaces(result), 400 );
+        std::string result = parsed.get("list.0.definition","");
+
+        if ( result.empty() )
+            result = string::replace(not_found_reply,{
+                {"search", msg.message},
+                {"user", msg.from.name}
+            }, "%");
+        else
+            result = string::elide( string::collapse_spaces(result), 400 );
+
         reply_to(msg,result);
     }
+private:
+    std::string not_found_reply = "I don't know what %search means";
 };
 
 
@@ -121,7 +140,8 @@ public:
     SearchWebSearx(const Settings& settings, handler::HandlerContainer* parent)
         : SimpleJson("search",settings,parent)
     {
-        api_url = settings.get("url","https://searx.me/");
+        api_url = settings.get("url",api_url);
+        not_found_reply = settings.get("not_found", not_found_reply );
     }
 
 protected:
@@ -135,7 +155,8 @@ protected:
     {
         if ( parsed.has_child("results.0.title") )
         {
-            string::FormattedString title("utf8");
+            string::FormatterUtf8 fmt;
+            string::FormattedString title(&fmt);
             title << string::FormatFlags::BOLD << parsed.get("results.0.title","")
                   << string::FormatFlags::NO_FORMAT << ": "
                   << parsed.get("results.0.url","");
@@ -147,13 +168,18 @@ protected:
         }
         else
         {
-            reply_to(msg,"Didn't find anything about "+msg.message);
+            std::string result = string::replace(not_found_reply,{
+                {"search", msg.message},
+                {"user", msg.from.name}
+            }, "%");
+            reply_to(msg,result);
         }
 
     }
 private:
 
-    std::string api_url;
+    std::string api_url = "https://searx.me/";
+    std::string not_found_reply = "Didn't find anything about %search";
 };
 
 
