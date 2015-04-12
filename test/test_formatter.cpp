@@ -228,9 +228,9 @@ BOOST_AUTO_TEST_CASE( test_irc )
 {
     irc::FormatterIrc fmt;
 
-    std::string formatted = "Hello \x03""04,05World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§";
+    std::string formatted = "Hello \x03""04,05World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§\x03";
     auto decoded = fmt.decode(formatted);
-    BOOST_CHECK( decoded.size() == 12 );
+    BOOST_CHECK( decoded.size() == 13 );
     // "Hello "
     BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
     BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
@@ -267,8 +267,11 @@ BOOST_AUTO_TEST_CASE( test_irc )
     BOOST_CHECK( cast<Unicode>(decoded[11]) );
     BOOST_CHECK( cast<Unicode>(decoded[11])->utf8() == u8"§" );
     BOOST_CHECK( cast<Unicode>(decoded[11])->point() == 0x00A7 );
+    // invalid color
+    BOOST_CHECK( cast<Color>(decoded[12]) );
+    BOOST_CHECK( cast<Color>(decoded[12])->color() == color::nocolor );
 
-    BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§" );
+    BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§\xf" );
 }
 
 BOOST_AUTO_TEST_CASE( test_xonotic )

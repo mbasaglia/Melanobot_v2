@@ -113,29 +113,13 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                 break;
             case '\3':
             {
-                /// \todo use regex
-                std::string fg;
-                if ( std::isdigit(parser.input.peek()) )
-                {
-                    fg += parser.input.next();
-                    if ( std::isdigit(parser.input.peek()) )
-                        fg += parser.input.next();
-
-                    if ( parser.input.peek() == ',' )
-                    {
-                        parser.input.ignore();
-                        if ( std::isdigit(parser.input.peek()) )
-                        {
-                            parser.input.ignore();
-                            if ( std::isdigit(parser.input.peek()) )
-                                parser.input.ignore();
-                        }
-                        else
-                            parser.input.unget();
-                    }
-                }
+                static std::regex regex_irc_color (
+                    "([0-9]{1,2})(?:,[0-9]{1,2})?",
+                    std::regex::optimize|std::regex::ECMAScript);
+                std::smatch match;
+                parser.input.get_regex(regex_irc_color,match);
                 push_flags(true);
-                str.append<string::Color>(FormatterIrc::color_from_string(fg));
+                str.append<string::Color>(FormatterIrc::color_from_string(match[1]));
                 break;
             }
             case '\x1d': case '\x16':

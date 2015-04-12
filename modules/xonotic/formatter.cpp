@@ -18,8 +18,6 @@
  */
 #include "formatter.hpp"
 
-#include <regex>
-
 #include "string/string_functions.hpp"
 
 namespace xonotic {
@@ -86,40 +84,30 @@ string::FormattedString Formatter::decode(const std::string& source) const
 
     parser.callback_ascii = [&str,&parser,&ascii,push_ascii](uint8_t byte)
     {
-        if ( byte == '^' )
+        if ( byte != '^' )
         {
-            auto pos = parser.input.tell_pos();
-            char next = parser.input.next();
-            /// \todo use regex
-            if ( next == '^' )
-            {
-                ascii += '^';
-                return;
-            }
-            else if ( std::isdigit(next) )
-            {
-                push_ascii();
-                str.append<string::Color>(Formatter::color_from_string(std::string(1,next)));
-                return;
-            }
-            else if ( next == 'x' )
-            {
-                std::string col = "^x";
-                int i = 0;
-                for ( ; i < 3 && std::isxdigit(parser.input.peek()); i++ )
-                {
-                    col += parser.input.next();
-                }
-                if ( col.size() == 5 )
-                {
-                    push_ascii();
-                    str.append<string::Color>(color_from_string(col));
-                    return;
-                }
-            }
-            parser.input.set_pos(pos); /// \todo could just append from pos to the current position
+            ascii += byte;
+            return;
         }
-        ascii += byte;
+
+        if ( parser.input.peek() == '^' )
+        {
+            parser.input.ignore();
+            ascii += '^';
+            return;
+        }
+
+        std::smatch match;
+
+        if ( parser.input.get_regex(regex_xoncolor,match) )
+        {
+            push_ascii();
+            str.append<string::Color>(color_from_match(match));
+        }
+        else
+        {
+            ascii += '^';
+        }
     };
     parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
     {
@@ -141,17 +129,29 @@ std::string Formatter::name() const
     return "xonotic";
 }
 
-color::Color12 Formatter::color_from_string(const std::string& color)
+color::Color12 Formatter::color_from_string(std::string color)
+{
+    if ( color.empty() )
+        return {};
+
+    if ( color[0] == '^' )
+        color = color.substr(1);
+
+    std::smatch match;
+
+    if ( !std::regex_match(color,match,regex_xoncolor) )
+        return {};
+
+    return color_from_match(match);
+}
+
+std::regex Formatter::regex_xoncolor( "([[:digit:]]|x([[:xdigit:]]{3}))",
+    std::regex_constants::syntax_option_type::optimize |
+    std::regex_constants::syntax_option_type::extended
+);
+color::Color12 Formatter::color_from_match(const std::smatch& match)
 {
     using namespace color;
-
-    static std::regex regex = std::regex( "\\^?([[:digit:]]|x([[:xdigit:]]{3}))",
-        std::regex_constants::syntax_option_type::optimize |
-        std::regex_constants::syntax_option_type::extended
-    );
-    std::smatch match;
-    if ( !std::regex_match(color,match,regex) )
-        return Color12();
 
     if ( !match[2].str().empty() )
         return Color12(match[2]);
@@ -169,6 +169,7 @@ color::Color12 Formatter::color_from_string(const std::string& color)
         case '8': return gray;
         case '9': return silver;
     }
+
     return Color12();
 }
 

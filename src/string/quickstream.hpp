@@ -223,6 +223,23 @@ public:
     }
 
     /**
+     * \brief Extract a regex result matching the given regex, starting at the current position
+     * \return \b true if the regex has been matched
+     */
+    bool get_regex(const regex_type& regex, match_type& match,
+                   std::regex_constants::match_flag_type match_flags =
+                        std::regex_constants::match_default)
+    {
+        if ( regex_match(regex,match,match_flags) )
+        {
+            pos += match.length();
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
      * \brief Returns whether the source matches the given regex,
      * starting from the current position
      * \note It doesn't move forward the stream position

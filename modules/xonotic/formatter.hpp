@@ -19,6 +19,8 @@
 #ifndef XONOTIC_FORMATTER_HPP
 #define XONOTIC_FORMATTER_HPP
 
+#include <regex>
+
 #include "string/string.hpp"
 
 /**
@@ -44,7 +46,17 @@ public:
     /**
      * \brief Creates a color from a DP color string ^. or ^x...
      */
-    static color::Color12 color_from_string(const std::string& color);
+    static color::Color12 color_from_string(std::string color);
+
+private:
+    static std::regex regex_xoncolor; ///< Regex matching color sequences
+
+    /**
+     * \brief Creates a color from a regex match
+     * \pre \c match has been passed to a successful call to regex_match
+     *      which used \c regex_xoncolor
+     */
+    static color::Color12 color_from_match(const std::smatch& match);
 };
 
 
