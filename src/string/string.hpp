@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "color.hpp"
+#include "quickstream.hpp"
 
 /**
  * \brief Namespace for string formatting
@@ -48,7 +49,7 @@ public:
     std::function<void(const std::string&)>          callback_invalid;
     std::function<void()>                            callback_end;
 
-    std::istringstream input;
+    QuickStream input;
 
     /**
      * \brief Parse the string

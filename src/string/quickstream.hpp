@@ -181,7 +181,16 @@ public:
 
     /**
      * \brief Reads a simple int (without sign) expressed in base 10
+     * \return \b true on success
      */
+    bool get_int(int& out) noexcept
+    {
+        if ( eof() || source[pos] < '0' || source[pos] > '9' )
+            return false;
+        out = get_int();
+        return true;
+    }
+
     int get_int() noexcept
     {
        int ret = 0;

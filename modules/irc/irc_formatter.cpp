@@ -113,12 +113,13 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                 break;
             case '\3':
             {
+                /// \todo use regex
                 std::string fg;
                 if ( std::isdigit(parser.input.peek()) )
                 {
-                    fg += parser.input.get();
+                    fg += parser.input.next();
                     if ( std::isdigit(parser.input.peek()) )
-                        fg += parser.input.get();
+                        fg += parser.input.next();
 
                     if ( parser.input.peek() == ',' )
                     {

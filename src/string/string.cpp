@@ -69,14 +69,10 @@ char Utf8Parser::to_ascii(const std::string& utf8)
 
 void Utf8Parser::parse(const std::string& string)
 {
-    input.clear();
     input.str(string);
-    while ( true )
+    while ( !input.eof() )
     {
-        uint8_t byte = input.get();
-
-        if ( !input )
-            break;
+        uint8_t byte = input.next();
 
         // 0... .... => ASCII
         if ( byte < 0b1000'0000 )
@@ -356,10 +352,10 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
             while (parser.input)
             {
                 int i = 0;
-                if ( parser.input >> i )
+                if ( parser.input.get_int(i) )
                 {
                     codes.push_back(i);
-                    char next = parser.input.get();
+                    char next = parser.input.next();
                     if ( next != ';' )
                     {
                         if ( next != 'm' )
@@ -504,8 +500,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
     {
         if ( byte == '#' )
         {
-            std::string format;
-            std::getline(parser.input, format, '#');
+            std::string format = parser.input.get_line('#');
 
             if ( format.empty() )
             {

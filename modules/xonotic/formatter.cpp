@@ -88,8 +88,9 @@ string::FormattedString Formatter::decode(const std::string& source) const
     {
         if ( byte == '^' )
         {
-            auto pos = parser.input.tellg();
-            char next = parser.input.get();
+            auto pos = parser.input.tell_pos();
+            char next = parser.input.next();
+            /// \todo use regex
             if ( next == '^' )
             {
                 ascii += '^';
@@ -107,7 +108,7 @@ string::FormattedString Formatter::decode(const std::string& source) const
                 int i = 0;
                 for ( ; i < 3 && std::isxdigit(parser.input.peek()); i++ )
                 {
-                    col += parser.input.get();
+                    col += parser.input.next();
                 }
                 if ( col.size() == 5 )
                 {
@@ -116,7 +117,7 @@ string::FormattedString Formatter::decode(const std::string& source) const
                     return;
                 }
             }
-            parser.input.seekg(pos); /// \todo could just append from pos to the current position
+            parser.input.set_pos(pos); /// \todo could just append from pos to the current position
         }
         ascii += byte;
     };
