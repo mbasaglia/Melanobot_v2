@@ -122,3 +122,195 @@ BOOST_AUTO_TEST_CASE( test_config )
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello #1#World #-bu#test#-###1#2#green#4#blue§" );
 }
+
+BOOST_AUTO_TEST_CASE( test_ansi_ascii )
+{
+    FormatterAnsi fmt(false);
+    std::string utf8 = u8"Foo bar è$ç";
+    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
+
+    std::string formatted = "Hello \x1b[31mWorld \x1b[1;4;41mtest\x1b[0m#1\x1b[92mgreen\x1b[1;34mblue\x1b[39m$";
+    auto decoded = fmt.decode(formatted);
+    BOOST_CHECK( decoded.size() == 13 );
+    // "Hello "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    // red
+    BOOST_CHECK( cast<Color>(decoded[1]) );
+    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::dark_red );
+    // "World "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    // bold+underline
+    BOOST_CHECK( cast<Format>(decoded[3]) );
+    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    // "test"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    // clear
+    BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
+    // "#1"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    // green
+    BOOST_CHECK( cast<Color>(decoded[7]) );
+    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    // "green"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    // blue
+    BOOST_CHECK( cast<Color>(decoded[9]) );
+    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    // "blue"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    // nocolor
+    BOOST_CHECK( cast<Color>(decoded[11]) );
+    BOOST_CHECK( cast<Color>(decoded[11])->color() == color::nocolor );
+    // "$"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[12]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[12])->string() == "$" );
+
+    BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m$" );
+}
+
+BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
+{
+    FormatterAnsi fmt(true);
+
+    std::string formatted = "Hello \x1b[31mWorld \x1b[1;4;41mtest\x1b[0m#1\x1b[92mgreen\x1b[1;34mblue\x1b[39m§";
+    auto decoded = fmt.decode(formatted);
+    BOOST_CHECK( decoded.size() == 13 );
+    // "Hello "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    // red
+    BOOST_CHECK( cast<Color>(decoded[1]) );
+    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::dark_red );
+    // "World "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    // bold+underline
+    BOOST_CHECK( cast<Format>(decoded[3]) );
+    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    // "test"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    // clear
+    BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
+    // "#1"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    // green
+    BOOST_CHECK( cast<Color>(decoded[7]) );
+    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    // "green"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    // blue
+    BOOST_CHECK( cast<Color>(decoded[9]) );
+    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    // "blue"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    // nocolor
+    BOOST_CHECK( cast<Color>(decoded[11]) );
+    BOOST_CHECK( cast<Color>(decoded[11])->color() == color::nocolor );
+    // Unicode §
+    BOOST_CHECK( cast<Unicode>(decoded[12]) );
+    BOOST_CHECK( cast<Unicode>(decoded[12])->utf8() == u8"§" );
+
+    BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m§" );
+}
+
+BOOST_AUTO_TEST_CASE( test_irc )
+{
+    irc::FormatterIrc fmt;
+
+    std::string formatted = "Hello \x03""04,05World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§";
+    auto decoded = fmt.decode(formatted);
+    BOOST_CHECK( decoded.size() == 12 );
+    // "Hello "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    // red
+    BOOST_CHECK( cast<Color>(decoded[1]) );
+    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::red );
+    // "World "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    // bold+underline
+    BOOST_CHECK( cast<Format>(decoded[3]) );
+    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    // "test"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    // clear
+    BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
+    // "#1"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    // green
+    BOOST_CHECK( cast<Color>(decoded[7]) );
+    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    // "green"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    // blue
+    BOOST_CHECK( cast<Color>(decoded[9]) );
+    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    // "blue"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    // Unicode §
+    BOOST_CHECK( cast<Unicode>(decoded[11]) );
+    BOOST_CHECK( cast<Unicode>(decoded[11])->utf8() == u8"§" );
+    BOOST_CHECK( cast<Unicode>(decoded[11])->point() == 0x00A7 );
+
+    BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§" );
+}
+
+
+BOOST_AUTO_TEST_CASE( test_xonotic )
+{
+    xonotic::Formatter fmt;
+
+    std::string formatted = "Hello ^1World ^^^2green^x00fblue^x00§\ue012";
+    auto decoded = fmt.decode(formatted);
+    BOOST_CHECK( decoded.size() == 9 );
+    // "Hello "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    // red
+    BOOST_CHECK( cast<Color>(decoded[1]) );
+    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::red );
+    // "World "
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World ^" );
+    // green
+    BOOST_CHECK( cast<Color>(decoded[3]) );
+    BOOST_CHECK( cast<Color>(decoded[3])->color() == color::green );
+    // "green"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "green" );
+    // blue
+    BOOST_CHECK( cast<Color>(decoded[5]) );
+    BOOST_CHECK( cast<Color>(decoded[5])->color() == color::blue );
+    // "blue"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "blue^x00" );
+    // Unicode §
+    BOOST_CHECK( cast<Unicode>(decoded[7]) );
+    BOOST_CHECK( cast<Unicode>(decoded[7])->utf8() == u8"§" );
+    // QFont smile
+    BOOST_CHECK( cast<QFont>(decoded[8]) );
+    BOOST_CHECK( cast<QFont>(decoded[8])->index() == 0x12 );
+    BOOST_CHECK( cast<QFont>(decoded[8])->alternative() == ":)" );
+    BOOST_CHECK( cast<QFont>(decoded[8])->unicode_point() == 0xe012 );
+
+    BOOST_CHECK( decoded.encode(fmt) == "Hello ^1World ^^^2green^4blue^^x00§\ue012" );
+
+    /// \todo test re-encoding with a different formatter (tests qfont to string)
+}
+
+/// \todo test the rainbow one

@@ -72,11 +72,19 @@ std::string Formatter::qfont(const string::QFont& c) const
 string::FormattedString Formatter::decode(const std::string& source) const
 {
     string::FormattedString str;
-
     string::Utf8Parser parser;
+    std::string ascii;
 
-    string::FormatFlags flags;
-    parser.callback_ascii = [&str,&flags,&parser](uint8_t byte)
+    auto push_ascii = [&ascii,&str]()
+    {
+        if ( !ascii.empty() )
+        {
+            str.append<string::AsciiSubstring>(ascii);
+            ascii.clear();
+        }
+    };
+
+    parser.callback_ascii = [&str,&parser,&ascii,push_ascii](uint8_t byte)
     {
         if ( byte == '^' )
         {
@@ -84,11 +92,12 @@ string::FormattedString Formatter::decode(const std::string& source) const
             char next = parser.input.get();
             if ( next == '^' )
             {
-                str.append<string::Character>('^');
+                ascii += '^';
                 return;
             }
             else if ( std::isdigit(next) )
             {
+                push_ascii();
                 str.append<string::Color>(Formatter::color_from_string(std::string(1,next)));
                 return;
             }
@@ -102,21 +111,24 @@ string::FormattedString Formatter::decode(const std::string& source) const
                 }
                 if ( col.size() == 5 )
                 {
+                    push_ascii();
                     str.append<string::Color>(color_from_string(col));
                     return;
                 }
             }
-            parser.input.seekg(pos);
+            parser.input.seekg(pos); /// \todo could just append from pos to the current position
         }
-        str.append<string::Character>(byte);
+        ascii += byte;
     };
-    parser.callback_utf8 = [&str](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
     {
+        push_ascii();
         if ( (unicode & 0xff00) == 0xe000 )
             str.append<string::QFont>(unicode&0xff);
         else
             str.append<string::Unicode>(utf8,unicode);
     };
+    parser.callback_end = push_ascii;
 
     parser.parse(source);
 

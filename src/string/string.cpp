@@ -302,7 +302,7 @@ std::string FormatterAscii::name() const
 std::string FormatterAnsi::color(const color::Color12& color) const
 {
     if ( !color.is_valid() )
-        return "\x1b[0m";
+        return "\x1b[39m";
 
     auto c4b = color.to_4bit();
     bool bright = c4b & 8;
@@ -346,10 +346,11 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&parser,&str,&ascii](uint8_t byte)
+    parser.callback_ascii = [&parser,&str,&ascii,push_ascii](uint8_t byte)
     {
         if ( byte == '\x1b' && parser.input.peek() == '[' )
         {
+            push_ascii();
             parser.input.ignore();
             std::vector<int> codes;
             while (parser.input)
@@ -404,7 +405,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                     i -= 30;
                     if ( flags == FormatFlags::BOLD )
                     {
-                        i &= 0xf;
+                        i |= 0b1000;
                         flags = FormatFlags::NO_FORMAT;
                         use_flags = false;
                     }
@@ -413,7 +414,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                 else if ( i >= 90 && i <= 97 )
                 {
                     i -= 90;
-                    i &= 0xf;
+                    i |= 0b1000;
                     str.append<Color>(color::Color12::from_4bit(i));
                 }
             }

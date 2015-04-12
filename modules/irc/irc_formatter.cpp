@@ -52,7 +52,7 @@ std::string FormatterIrc::color(const color::Color12& color) const
         case 0b1110: ircn = 11; break; // cyan
         case 0b1111: ircn =  0; break; // white
     }
-    return '\3'+std::to_string(ircn);
+    return '\3'+string::to_string(ircn,2);
 }
 std::string FormatterIrc::format_flags(string::FormatFlags flags) const
 {
@@ -76,27 +76,39 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
     string::Utf8Parser parser;
 
     string::FormatFlags flags;
-    parser.callback_ascii = [&str,&flags,&parser](uint8_t byte)
+
+    std::string ascii;
+
+    auto push_flags = [&flags,&str,&ascii](bool force_ascii)
+    {
+        if ( ( force_ascii || flags )  && !ascii.empty() )
+        {
+            str.append<string::AsciiSubstring>(ascii);
+            ascii.clear();
+        }
+        if ( flags )
+        {
+            str.append<string::Format>(flags);
+            flags = string::FormatFlags::NO_FORMAT;
+        }
+    };
+
+    parser.callback_ascii = [&str,&flags,&parser,&ascii,&push_flags](uint8_t byte)
     {
         // see https://github.com/myano/jenni/wiki/IRC-String-Formatting
         switch ( byte )
         {
             case '\2':
                 if ( !(flags & string::FormatFlags::BOLD) )
-                {
                     flags |= string::FormatFlags::BOLD;
-                    str.append<string::Format>(flags);
-                }
                 break;
             case '\x1f':
                 if ( !(flags & string::FormatFlags::UNDERLINE) )
-                {
                     flags |= string::FormatFlags::UNDERLINE;
-                    str.append<string::Format>(flags);
-                }
                 break;
             case '\xf':
                 flags = string::FormatFlags::NO_FORMAT;
+                push_flags(true);
                 str.append<string::ClearFormatting>();
                 break;
             case '\3':
@@ -121,6 +133,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                             parser.input.unget();
                     }
                 }
+                push_flags(true);
                 str.append<string::Color>(FormatterIrc::color_from_string(fg));
                 break;
             }
@@ -128,16 +141,19 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                 // Skip unsupported format flags
                 break;
             default:
-                str.append<string::Character>(byte);
+                push_flags(false);
+                ascii += byte;
                 break;
         }
     };
-    parser.callback_utf8 = [&str](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [&str,&push_flags](uint32_t unicode,const std::string& utf8)
     {
+        push_flags(true);
         str.append<string::Unicode>(utf8,unicode);
     };
 
     parser.parse(source);
+    push_flags(true);
 
     return str;
 }
