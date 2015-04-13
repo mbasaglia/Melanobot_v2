@@ -547,6 +547,11 @@ public:
         return elements.insert(p,il);
     }
 
+    void pop_back()
+    {
+        elements.pop_back();
+    }
+
     iterator erase(const const_iterator& q)
     {
         return elements.erase(q);
@@ -554,6 +559,10 @@ public:
     iterator erase(const const_iterator& p, const const_iterator& q)
     {
         return elements.erase(p,q);
+    }
+    void clear()
+    {
+        elements.clear();
     }
 
     void assign(size_type n, const value_type& t)
@@ -581,7 +590,7 @@ public:
             elements.push_back(std::make_shared<ElementType>(std::forward<Args>(args)...));
         }
 
-    void append ( std::shared_ptr<Element> element )
+    void append ( const_reference element )
     {
         elements.push_back(element);
     }

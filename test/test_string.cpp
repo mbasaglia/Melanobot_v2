@@ -430,6 +430,12 @@ BOOST_AUTO_TEST_CASE( test_QuickStream )
     BOOST_CHECK( qs.peek() == 'f' );
     BOOST_CHECK( qs.get_int() == 0 );
     BOOST_CHECK( qs.peek() == 'f' );
+    qs.set_pos(0);
+    int i = 0;
+    BOOST_CHECK( qs.get_int(i) );
+    BOOST_CHECK( i == 123 );
+    BOOST_CHECK( !qs.get_int(i) );
+    BOOST_CHECK( i == 123 );
 
     // tell_pos/set_pos
     BOOST_CHECK( qs.tell_pos() == 3 );
@@ -450,6 +456,11 @@ BOOST_AUTO_TEST_CASE( test_QuickStream )
     BOOST_CHECK( qs.get_regex(re) == "" );
     std::smatch match;
     BOOST_CHECK( !qs.regex_match(re,match) );
-
+    qs.set_pos(0);
+    re = std::regex("([0-9]+)([a-z]+)");
+    BOOST_CHECK( qs.get_regex(re,match) );
+    BOOST_CHECK( match[1] == "123" );
+    BOOST_CHECK( match[2] == "foo" );
+    BOOST_CHECK( qs.eof() );
 }
 

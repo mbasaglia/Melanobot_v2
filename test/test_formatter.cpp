@@ -60,13 +60,19 @@ BOOST_AUTO_TEST_CASE( test_utf8 )
     auto invalid_utf8 = utf8;
     invalid_utf8.push_back(uint8_t(0b1110'0000)); // '));
     BOOST_CHECK( fmt.decode(invalid_utf8).encode(fmt) == utf8 );
+
+    BOOST_CHECK( decoded.encode(fmt.name()) == utf8 );
 }
 
 BOOST_AUTO_TEST_CASE( test_ascii )
 {
     string::FormatterAscii fmt;
     std::string utf8 = u8"Foo bar è$ç";
+#ifdef HAS_ICONV
+    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar e$c" );
+#else
     BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
+#endif
 }
 
 BOOST_AUTO_TEST_CASE( test_config )
@@ -128,7 +134,11 @@ BOOST_AUTO_TEST_CASE( test_ansi_ascii )
 {
     FormatterAnsi fmt(false);
     std::string utf8 = u8"Foo bar è$ç";
+#ifdef HAS_ICONV
+    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar e$c" );
+#else
     BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
+#endif
 
     std::string formatted = "Hello \x1b[31mWorld \x1b[1;4;41mtest\x1b[0m#1\x1b[92mgreen\x1b[1;34mblue\x1b[39m$";
     auto decoded = fmt.decode(formatted);
@@ -341,4 +351,142 @@ BOOST_AUTO_TEST_CASE( test_rainbow  )
         BOOST_CHECK( cast<Color>(decoded[i*2])->color() == color::Color12::hsv(0.5+i*0.25,0.5,0.5) );
     }
 
+}
+
+BOOST_AUTO_TEST_CASE( test_FormattedString )
+{
+    // Ctors
+    BOOST_CHECK( FormattedString().empty() );
+    BOOST_CHECK( (FormattedString(string::Formatter::formatter("utf8"))
+        << "hellò world").size() == 3 );
+    BOOST_CHECK( FormattedString("foobar").size() == 1 );
+    {
+        FormattedString foo("foo");
+        foo << "bar";
+        BOOST_CHECK( FormattedString(foo).size() == 2 );
+        BOOST_CHECK( !foo.empty() );
+        FormattedString s1 = std::move(foo);
+        BOOST_CHECK( s1.size() == 2 );
+        FormattedString s2;
+        s2 = std::move(s1);
+        BOOST_CHECK( s2.size() == 2 );
+        s2 = FormattedString();
+        BOOST_CHECK( s2.size() == 0 );
+    }
+
+    // Iterator/Element access
+    FormattedString s;
+    BOOST_CHECK( s.begin() == s.end() );
+    s << "Foo" << color::black;
+    BOOST_CHECK( s.end() - s.begin() == 2 );
+    BOOST_CHECK( cast<AsciiSubstring>(*s.begin()) );
+    BOOST_CHECK( cast<Color>(*(s.end()-1)) );
+    BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
+    BOOST_CHECK( cast<Color>(s[1]) );
+    {
+        const FormattedString s2 = s;
+        BOOST_CHECK( s2.begin() == s2.cbegin() );
+        BOOST_CHECK( s2.end() == s2.cend() );
+        BOOST_CHECK( cast<AsciiSubstring>(s2[0]) );
+        BOOST_CHECK( cast<Color>(s2[1]) );
+    }
+
+    // Insert
+    s.push_back(std::make_unique<AsciiSubstring>("bar"));
+    BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
+    s.insert(s.begin()+2,std::make_unique<Color>(color::blue));
+    BOOST_CHECK( cast<Color>(s[2]) );
+    s.insert(s.begin()+2,3,std::make_unique<Format>(FormatFlags()));
+    for ( int i = 2; i < 5; i++ )
+        BOOST_CHECK( cast<Format>(s[i]) );
+    {
+        FormattedString s2;
+        s2 << "Hello" << "World";
+        s.insert(s.begin()+3,s2.begin(),s2.end());
+        BOOST_CHECK( cast<AsciiSubstring>(s[3]) );
+        BOOST_CHECK( cast<AsciiSubstring>(s[4]) );
+    }
+    s.insert(s.begin(),{
+        std::make_unique<AsciiSubstring>("bar"),
+        std::make_unique<Color>(color::red)
+    });
+    BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
+    BOOST_CHECK( cast<Color>(s[1]) );
+
+    // Erase
+    s.erase(s.begin()+1);
+    BOOST_CHECK( cast<AsciiSubstring>(s[1]) );
+    s.erase(s.begin()+1,s.end()-1);
+    BOOST_CHECK( s.size() == 2 );
+
+    // Assign
+    s.assign(5,std::make_unique<Color>(color::green));
+    BOOST_CHECK( s.size() == 5 );
+    {
+        FormattedString s2;
+        s2 << "Hello" << "World" << "!";
+        s.assign(s2.begin(),s2.end());
+        BOOST_CHECK( s.size() == 3 );
+    }
+    s.assign({
+        std::make_unique<AsciiSubstring>("bar"),
+        std::make_unique<Color>(color::red)
+    });
+    BOOST_CHECK( s.size() == 2 );
+
+    // Append
+    s.append<AsciiSubstring>("hello");
+    BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
+    s.append<AsciiSubstring>(std::string("hello"));
+    s.pop_back();
+    s.append(std::make_unique<Color>(color::white));
+    BOOST_CHECK( cast<Color>(s[3]) );
+    {
+        FormattedString s2;
+        s2 << "Hello" << "World";
+        s.append(s2);
+        BOOST_CHECK( s.size() == 6 );
+    }
+
+    // operator<<
+    s.clear();
+    s << "hello";
+    BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
+    s << std::string("hello");
+    BOOST_CHECK( cast<AsciiSubstring>(s[1]) );
+    s << color::dark_magenta;
+    BOOST_CHECK( cast<Color>(s[2]) );
+    s << FormatFlags();
+    BOOST_CHECK( cast<Format>(s[3]) );
+    s << FormatFlags::BOLD;
+    BOOST_CHECK( cast<Format>(s[4]) );
+    s << ClearFormatting();
+    BOOST_CHECK( cast<ClearFormatting>(s[5]) );
+    s << 'c';
+    BOOST_CHECK( cast<Character>(s[6]) );
+    {
+        FormattedString s2;
+        s2 << "Hello" << "World";
+        s << s2;
+        BOOST_CHECK( s.size() == 9 );
+    }
+    s << 12.3;
+    BOOST_CHECK( cast<AsciiSubstring>(s[9]) );
+}
+
+BOOST_AUTO_TEST_CASE( test_Misc )
+{
+    // FormatFlags
+    FormatFlags fmt = FormatFlags::BOLD|FormatFlags::UNDERLINE;
+    fmt &= ~FormatFlags::BOLD;
+    BOOST_CHECK( fmt == FormatFlags::UNDERLINE );
+    BOOST_CHECK( (fmt|FormatFlags::BOLD) ==
+        (FormatFlags::BOLD|FormatFlags::UNDERLINE));
+    BOOST_CHECK( fmt );
+    BOOST_CHECK( fmt & FormatFlags::UNDERLINE );
+    BOOST_CHECK( ~fmt & FormatFlags::BOLD );
+
+    // QFont
+    QFont qf(1000);
+    BOOST_CHECK( qf.alternative() == "" );
 }

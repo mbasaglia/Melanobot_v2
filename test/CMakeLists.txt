@@ -22,6 +22,11 @@ find_package (Boost COMPONENTS unit_test_framework REQUIRED)
 include_directories (${Boost_INCLUDE_DIRS})
 add_definitions (-DBOOST_TEST_DYN_LINK)
 
+find_package(Iconv)
+if(Iconv_FOUND)
+    add_definitions(-DHAS_ICONV)
+endif()
+
 #Tests
 enable_testing()
 

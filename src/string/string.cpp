@@ -31,7 +31,6 @@
 #include "logger.hpp"
 #include "string_functions.hpp"
 #include "functional.hpp"
-#include "config.hpp"
 
 #ifdef HAS_ICONV
 #       include <iconv.h>
