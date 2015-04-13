@@ -390,8 +390,10 @@ BOOST_AUTO_TEST_CASE( test_format )
     // Custom formats
     BOOST_CHECK( format(time, "Y-m-d H:i:s.u") == "2015-04-04 15:00:00.005000" );
     BOOST_CHECK( format(time, "l, F \\t\\h\\e jS, g:i a") == "Saturday, April the 4th, 3:00 pm" );
-}
 
+    DateTime dt;
+    BOOST_CHECK( format(dt, "Y-m-d") == format("Y-m-d") );
+}
 
 BOOST_AUTO_TEST_CASE( test_TimeParser )
 {
@@ -490,4 +492,10 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     BOOST_CHECK( nowcheck(parse_time("?"),now) );
     BOOST_CHECK( nowcheck(parse_time("2015-05"),now) );
     BOOST_CHECK( nowcheck(parse_time("2015-13-01"),now) );
+}
+
+BOOST_AUTO_TEST_CASE( test_duration_string )
+{
+    BOOST_CHECK( duration_string(days(9)) == "1 week 2 days 0 hours 0 minutes" );
+    BOOST_CHECK( duration_string(seconds(69)) == "1 minute 9 seconds" );
 }
