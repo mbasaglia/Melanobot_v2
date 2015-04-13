@@ -133,6 +133,7 @@ public:
         api_url = settings.get("url",api_url);
         reply = settings.get("found",reply);
         not_found = settings.get("not_found",not_found);
+        help = "Pony countdown ("+api_url+")";
     }
 
 protected:
@@ -153,7 +154,9 @@ protected:
         map["episode"] = string::to_string(parsed.get("episode",0),2);
         map["duration"] = parsed.get("duration","");
         timer::DateTime time = timer::parse_time(parsed.get("time",""));
-        map["time_delta"] = timer::duration_string(time-timer::DateTime());
+        timer::DateTime now;
+        auto delta = time > now ? time - now : now - time;
+        map["time_delta"] = timer::duration_string(delta);
 
         string::FormatterConfig fmt;
         reply_to(msg,fmt.decode(string::replace(reply,map,"%")));
