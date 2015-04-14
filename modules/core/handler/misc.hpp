@@ -24,6 +24,7 @@
 
 #include "handler/handler.hpp"
 #include "math.hpp"
+#include "string/language.hpp"
 
 namespace handler {
 
@@ -376,6 +377,64 @@ private:
     bool        case_sensitive{true};   ///< Whether matches are case sensitive
     bool        direct{true};           ///< Whether the input message must be direct
     std::regex  trigger_regex;          ///< Regex for the trigger
+};
+
+/**
+ * \brief Performs an action
+ */
+class Action : public SimpleAction
+{
+public:
+    Action(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("please",settings,parent)
+    {
+        help = "Make the bot perform a chat action (Roleplay)";
+        synopsis += " Action...";
+        unauthorized = settings.get("unauthorized",unauthorized);
+        empty = settings.get("empty",empty);
+    }
+
+    bool authorized(const network::Message& msg) const override
+    {
+        return true;
+    }
+
+protected:
+
+    bool on_handle(network::Message& msg) override
+    {
+        if ( !Handler::authorized(msg) )
+        {
+            reply_to(msg,unauthorized);
+            return true;
+        }
+
+        string::English engl;
+        // should match \S+|(?:don't be) but it's ambiguous
+        static std::regex regex_imperative (
+            R"(\s*(\S+(?: be)?)\s+(.*))",
+            std::regex::ECMAScript|std::regex::optimize|std::regex::icase
+        );
+
+        std::smatch match;
+        if ( std::regex_match(msg.message, match, regex_imperative) )
+        {
+            reply_to(msg,network::OutputMessage(
+                engl.imperate(match[1])+" "+
+                engl.pronoun_to3rd(match[2],msg.from.name,msg.source->name()),
+                true
+            ));
+        }
+        else
+        {
+            reply_to(msg,empty);
+        }
+        return true;
+    }
+
+private:
+    std::string unauthorized = "Won't do!";
+    std::string empty = "Please what?";
 };
 
 } // namespace handler
