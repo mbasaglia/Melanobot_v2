@@ -143,6 +143,12 @@ protected:
  */
 class ThreadedAsyncService : public AsyncService
 {
+public:
+
+    ~ThreadedAsyncService() override
+    {
+        stop();
+    }
 
     void start() override
     {

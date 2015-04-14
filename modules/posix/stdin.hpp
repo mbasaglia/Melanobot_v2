@@ -106,7 +106,7 @@ private:
     string::Formatter*                    formatter_;
     boost::asio::streambuf                buffer_read;
     boost::asio::io_service               io_service;
-    boost::asio::posix::stream_descriptor input {io_service, STDOUT_FILENO};
+    boost::asio::posix::stream_descriptor input {io_service, STDIN_FILENO};
     std::thread                           thread;
 
     void run()
