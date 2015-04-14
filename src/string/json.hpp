@@ -152,7 +152,7 @@ private:
                 parse_json_object();
             } catch ( const JsonError& err ) {
                 ErrorLog errlog("web","JSON Error");
-                if ( Settings::global_settings.get("debug",0) )
+                if ( settings::global_settings.get("debug",0) )
                     errlog << err.file << ':' << err.line << ": ";
                 errlog << err.what();
             }

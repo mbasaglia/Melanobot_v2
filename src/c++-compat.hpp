@@ -29,7 +29,7 @@
 
 #ifdef __has_include
 // optional
-#if __has_include(<optional>)
+/*#if __has_include(<optional>)
 #    include<optional>
     template<class T>
         using Optional = std::optional<T>;
@@ -37,7 +37,8 @@
 #    include <experimental/optional>
     template<class T>
         using Optional = std::experimental::optional<T>;
-#  elif __has_include(<boost/optional.hpp>)
+#  elif __has_include(<boost/optional.hpp>)*/
+#  if __has_include(<boost/optional.hpp>)
 #    include <boost/optional.hpp>
     template<class T>
         using Optional = boost::optional<T>;

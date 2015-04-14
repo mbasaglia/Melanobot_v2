@@ -37,7 +37,7 @@ public:
     License(const Settings& settings, handler::HandlerContainer* parent)
         : SimpleAction("license",settings,parent)
     {
-        sources_url = settings.get("url",Settings::global_settings.get("website",""));
+        sources_url = settings.get("url",settings::global_settings.get("website",""));
         help = "Shows licensing information";
     }
 

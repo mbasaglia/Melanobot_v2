@@ -35,13 +35,13 @@ int main(int argc, char **argv)
     MELANOMODULES_INIT
 
     try {
-        Settings settings = Settings::initialize(argc,argv);
+        Settings settings = settings::initialize(argc,argv);
 
         Logger::instance().load_settings(settings.get_child("log",{}));
 
         if ( !settings.empty() )
         {
-            Log("sys",'!',0) << "Executing from " << Settings::global_settings.get("config","");
+            Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
             network::ServiceRegistry::instance().initialize(settings.get_child("services",{}));
             network::ServiceRegistry::instance().start();
             Melanobot bot(settings);
@@ -50,20 +50,20 @@ int main(int argc, char **argv)
             /// \todo some way to reload the config and restart the bot
         }
 
-        int exit_code = Settings::global_settings.get("exit_code",0);
+        int exit_code = settings::global_settings.get("exit_code",0);
         Log("sys",'!',4) << "Exiting with status " << exit_code;
         return exit_code;
 
     } catch ( const CriticalException& exc ) {
         /// \todo policy on how to handle exceptions
         ErrorLog errlog("sys","Critical Error");
-        if ( Settings::global_settings.get("debug",0) )
+        if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": in " << exc.function << "(): ";
         errlog  << exc.what();
         return 1;
     } catch ( const LocatableException& exc ) {
         ErrorLog errlog("sys","Critical Error");
-        if ( Settings::global_settings.get("debug",0) )
+        if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": ";
         errlog  << exc.what();
         return 1;

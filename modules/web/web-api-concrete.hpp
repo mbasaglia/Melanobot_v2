@@ -153,7 +153,7 @@ protected:
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        if ( parsed.has_child("results.0.title") )
+        if ( settings::has_child(parsed,"results.0.title") )
         {
             string::FormatterUtf8 fmt;
             string::FormattedString title(&fmt);

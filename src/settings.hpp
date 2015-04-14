@@ -30,17 +30,10 @@
 
 
 using PropertyTree = boost::property_tree::ptree;
+using Settings = PropertyTree;
 
-/**
- * \brief Class containing hierarchical settings
- * \todo Avoid copies on conversion from PropertyTree:
- *       store PropertyTree as an optionally-owned pointer and copy relevant
- *       functions in the interface.
- *       (This would also allow merge() to be non-static)
- */
-class Settings : public PropertyTree
+namespace settings
 {
-public:
     /**
     * \brief File format used to open/save settings
     */
@@ -56,39 +49,33 @@ public:
     /**
      * \brief Settings with global information
      */
-    static Settings global_settings;
+    extern Settings global_settings;
 
     /**
      * \brief Parses the program options and returns the configurations
      *
      * It will also load the logger configuration
      */
-    static Settings initialize ( int argc, char** argv );
+    Settings initialize ( int argc, char** argv );
 
     /**
      * \brief Tries to find a file from which settings can be loaded
      */
-    static std::string find_config( FileFormat format = FileFormat::AUTO );
+    std::string find_config( FileFormat format = FileFormat::AUTO );
 
-    Settings() {}
-    Settings(const PropertyTree& p) : PropertyTree(p) {}
-    Settings(const Settings&) = default;
-    Settings(Settings&&) = default;
-    Settings& operator=(const Settings&) = default;
-    Settings& operator=(Settings&&) = default;
 
     /**
      * \brief Load settings from file
      * \throw CriticalException If \c file_name isn't valid
      */
-    explicit Settings ( const std::string& file_name, FileFormat format = FileFormat::AUTO );
+    Settings load( const std::string& file_name, FileFormat format = FileFormat::AUTO );
 
     /**
      * \brief Whether a child node/property exists
      */
-    bool has_child ( const path_type& path ) const
+    inline bool has_child ( const Settings& s, const Settings::path_type& path )
     {
-        return get_child_optional(path);
+        return s.get_child_optional(path);
     }
 
     /**
@@ -98,7 +85,7 @@ public:
      * \param overwrite If \b true all of the properties of \c source will be used,
      *                  if \b false, only those not already found in the tree
      */
-    static void merge( PropertyTree& target, const PropertyTree& source, bool overwrite)
+    inline void merge( Settings& target, const Settings& source, bool overwrite)
     {
         for ( const auto& prop : source )
         {
@@ -106,40 +93,7 @@ public:
                 target.put(prop.first,prop.second.data());
         }
     }
-
-    /**
-     * \brief Possibly convert between std::optional and boost::optional
-     */
-    template<class T, class S/*,
-        class = std::enable_if_t<!std::is_same<Optional<T>,boost::optional<T>>::value>,
-        class = std::enable_if_t<std::is_convertible<S,std::string>::value>*/>
-    Optional<T> get_optional(S&& path) const
-    {
-        auto opt = PropertyTree::get_optional<T>(std::forward<S>(path));
-        return opt ? *opt : Optional<T>();
-    }
-
-    /**
-     * \brief Get a formatted string, decoded using the config formatter
-     */
-    string::FormattedString get_formatted_string(const std::string& path,
-                                                 const std::string& default_value={})
-    {
-        return string::FormatterConfig().decode(get(path,default_value));
-    }
-
-private:
-    /**
-     * \brief Maps extensions to file formats
-     */
-    static std::unordered_map<std::string,FileFormat> format_extension;
-
-
-    /**
-     * \brief Tries to find a config file in the given directory
-     */
-    static std::string find_config ( const std::string& dir, FileFormat format);
-};
+}
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
 

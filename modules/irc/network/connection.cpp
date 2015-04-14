@@ -155,7 +155,7 @@ void IrcConnection::reconnect(const std::string& quit_message)
 void IrcConnection::error_stop()
 {
     disconnect();
-    Settings::global_settings.put("exit_code",1);
+    settings::global_settings.put("exit_code",1);
     bot->stop(); /// \todo is this the right thing to do?
 }
 

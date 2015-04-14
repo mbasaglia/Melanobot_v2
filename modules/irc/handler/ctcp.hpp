@@ -127,7 +127,7 @@ public:
     CtcpSource ( const Settings& settings, ::handler::HandlerContainer* parent )
         : CtcpBase("SOURCE", settings, parent)
     {
-        sources_url = settings.get("url",Settings::global_settings.get("website",""));
+        sources_url = settings.get("url",settings::global_settings.get("website",""));
         clientinfo = ": Shows the bot's source URL";
     }
 

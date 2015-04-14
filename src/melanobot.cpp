@@ -39,7 +39,7 @@ Melanobot::Melanobot(const Settings& settings )
 
     if ( connections.empty() )
     {
-        Settings::global_settings.put("exit_code",1);
+        settings::global_settings.put("exit_code",1);
         ErrorLog("sys") << "Creating a bot with no connections";
     }
 

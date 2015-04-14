@@ -51,7 +51,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
         // start with an uppercase name
         if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
-            Settings::merge(p.second,default_settings,false);
+            settings::merge(p.second,default_settings,false);
             auto hand = handler::HandlerFactory::instance().build(
                 p.first,
                 p.second,

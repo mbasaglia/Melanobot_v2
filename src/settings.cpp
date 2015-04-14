@@ -30,16 +30,16 @@
 #include "string/json.hpp"
 #include "config.hpp"
 
-std::unordered_map<std::string,Settings::FileFormat> Settings::format_extension = {
-    {".json",FileFormat::JSON},
-    {".info",FileFormat::INFO},
-    {".xml",FileFormat::XML},
-    {".ini",FileFormat::INI},
+static std::unordered_map<std::string,settings::FileFormat> format_extension = {
+    {".json",settings::FileFormat::JSON},
+    {".info",settings::FileFormat::INFO},
+    {".xml",settings::FileFormat::XML},
+    {".ini",settings::FileFormat::INI},
 };
 
-Settings Settings::global_settings;
+Settings settings::global_settings;
 
-Settings Settings::initialize ( int argc, char** argv )
+Settings settings::initialize ( int argc, char** argv )
 {
     // Global settings
     global_settings.put("website",PROJECT_WEBSITE);
@@ -115,7 +115,7 @@ Settings Settings::initialize ( int argc, char** argv )
     }
 
     // Load config
-    Settings settings(settings_file);
+    Settings settings = load(settings_file);
 
     // Overwrite config options from the command line
     for ( const auto& opt : parsed.options )
@@ -130,7 +130,7 @@ Settings Settings::initialize ( int argc, char** argv )
     return settings;
 }
 
-Settings::Settings ( const std::string& file_name, FileFormat format )
+Settings settings::load ( const std::string& file_name, FileFormat format )
 {
     boost::filesystem::path path = file_name;
 
@@ -146,7 +146,7 @@ Settings::Settings ( const std::string& file_name, FileFormat format )
     if ( status.type() != boost::filesystem::regular_file || err )
         CRITICAL_ERROR("Cannot load config file: "+file_name);
 
-    PropertyTree& ptree = *this;
+    Settings ptree;
     switch ( format )
     {
         case FileFormat::INFO:
@@ -167,9 +167,10 @@ Settings::Settings ( const std::string& file_name, FileFormat format )
         case FileFormat::AUTO:
             CRITICAL_ERROR("Cannot detect file format for "+file_name);
     }
+    return ptree;
 }
 
-std::string Settings::find_config ( const std::string& dir, FileFormat format)
+static std::string find_config ( const std::string& dir, settings::FileFormat format)
 {
     boost::system::error_code err;
     auto status = boost::filesystem::status(dir,err);
@@ -179,7 +180,7 @@ std::string Settings::find_config ( const std::string& dir, FileFormat format)
 
     for ( const auto& p : format_extension )
     {
-        if ( format == FileFormat::AUTO || format == p.second )
+        if ( format == settings::FileFormat::AUTO || format == p.second )
         {
             boost::filesystem::path fp = dir + "/config"+p.first;
             if ( boost::filesystem::exists(fp) )
@@ -194,7 +195,7 @@ std::string Settings::find_config ( const std::string& dir, FileFormat format)
 
     return {};
 }
-std::string Settings::find_config(FileFormat format)
+std::string settings::find_config(FileFormat format)
 {
     std::vector<std::string> paths;
     paths.push_back(".");
@@ -210,7 +211,7 @@ std::string Settings::find_config(FileFormat format)
 
     for ( const auto& path : paths )
     {
-        auto file = find_config(path, format);
+        auto file = ::find_config(path, format);
         if ( !file.empty() )
             return file;
     }

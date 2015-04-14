@@ -372,7 +372,7 @@ public:
         }
         catch ( const LocatableException& exc ) {
             ErrorLog errlog("sys","Connection Error");
-            if ( Settings::global_settings.get("debug",0) )
+            if ( settings::global_settings.get("debug",0) )
                 errlog << exc.file << ':' << exc.line << ": ";
             errlog  << exc.what();
         } catch ( const std::exception& exc ) {
