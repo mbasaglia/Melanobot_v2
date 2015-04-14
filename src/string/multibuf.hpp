@@ -24,6 +24,8 @@
 #include <vector>
 #include <string>
 
+#include "maybe_ptr.hpp"
+
 /**
  * \brief (Output) Stream buffer supporting multiple targets (defined by other buffers)
  */
@@ -35,16 +37,7 @@ public:
     Multibuf(Multibuf&&) = delete;
     Multibuf& operator=(const Multibuf&) = delete;
     Multibuf& operator=(Multibuf&&) = delete;
-
-    ~Multibuf()
-    {
-        for ( auto item : buffers )
-        {
-            if ( item->owner )
-                delete item->buffer;
-            delete item;
-        }
-    }
+    ~Multibuf() = default;
 
     /**
      * \brief Adds a buffer to the list of targets
@@ -53,7 +46,7 @@ public:
      */
     void push_buffer(std::streambuf* buffer, bool take_ownership = false)
     {
-        buffers.push_back(new MultibufItem(buffer,take_ownership));
+        buffers.emplace_back(buffer,take_ownership);
     }
 
     /**
@@ -62,11 +55,11 @@ public:
      */
     bool push_file(const std::string& name, std::ios::openmode mode = std::ios::out|std::ios::app)
     {
-        std::filebuf* buf = new std::filebuf;
+        auto buf = MaybePtr<std::filebuf>::make();
         buf->open(name, mode);
         if ( buf->is_open() )
         {
-            push_buffer(buf,true);
+            buffers.push_back(std::move(buf));
             return true;
         }
         return false;
@@ -78,8 +71,8 @@ protected:
      */
     int overflow(int c) override
     {
-        for ( auto item : buffers )
-            item->buffer->sputc(c);
+        for ( auto& item : buffers )
+            item->sputc(c);
         return 0;
     }
 
@@ -88,24 +81,14 @@ protected:
      */
     int sync() override
     {
-        for ( auto item : buffers )
-            item->buffer->pubsync();
+        for ( auto& item : buffers )
+            item->pubsync();
         return 0;
     }
 
 private:
-    /**
-     * \brief Buffer item
-     */
-    struct MultibufItem
-    {
-        std::streambuf* buffer; ///< Stream buffer
-        bool owner; ///< Whether the multibuf shall take ownership of the buffer
-        MultibufItem(std::streambuf* buffer, bool owner)
-            : buffer(buffer), owner(owner) {}
-    };
 
-    std::vector<MultibufItem*> buffers;
+    std::vector<MaybePtr<std::streambuf>> buffers;
 };
 
 #endif // MULTIBUF_HPP
