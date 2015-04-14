@@ -215,7 +215,6 @@ private:
                        const std::vector<std::vector<std::string>*>& categories) const;
 };
 
-
 /**
  * \brief Slaps someone
  */
@@ -250,6 +249,51 @@ public:
 
 protected:
     bool on_handle(network::Message& msg) override;
+};
+
+
+/**
+ * \brief Discordian Calendar
+ */
+class Discord : public handler::SimpleAction
+{
+public:
+    Discord(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("discord",settings,parent)
+    {
+        synopsis += " [time]";
+        help = "Show the Discordian date";
+        format = settings.get("format",format);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        static std::vector<std::string> day_names {
+            "Sweetmorn", "Boomtime", "Pungenday", "Prickle-Prickle", "Setting Orange"};
+        static std::vector<std::string> season_names {
+            "Chaos", "Discord", "Confusion", "Bureaucracy", "The Aftermath"};
+
+        timer::DateTime dt = timer::parse_time(msg.message);
+        int day = dt.year_day();
+        int year = dt.year() + 1166;
+        if ( year % 4 == 2 && day >= 59 )
+            day--;
+
+        Properties discord {
+            {"day_name", day_names[day%day_names.size()]},
+            {"season_day", std::to_string(day%73+1)+string::English().ordinal_suffix(day%73+1)},
+            {"season", season_names[(day/73)%season_names.size()]},
+            {"yold", std::to_string(year)}
+        };
+
+        reply_to(msg,string::FormatterConfig().decode(
+            string::replace(format,discord,"%") ));
+        return true;
+    }
+
+private:
+    std::string format = "%day_name, the %season_day day of %season in the YOLD %yold";
 };
 
 } // namespace fun

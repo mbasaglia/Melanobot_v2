@@ -33,5 +33,6 @@ Melanomodule melanomodule_fun()
     module.register_handler<fun::Morse>("Morse");
     module.register_handler<fun::RainbowBridgeChat>("RainbowBridgeChat");
     module.register_handler<fun::Slap>("Slap");
+    module.register_handler<fun::Discord>("Discord");
     return module;
 }
