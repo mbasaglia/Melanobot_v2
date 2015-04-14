@@ -52,17 +52,26 @@ std::string English::pronoun_to3rd(const std::string& sentence,
     Inflector pronoun_swap ( {
         {"you\\s+are",  you+" is"},
         {"are\\s+you",  "is "+you},
-        {"you",         you},
-        {"your",        "its"},
-        {"yours",       "its"},
         {"yourself",    "itself"},
+        {"yours",       "its"},
+        {"your",        "its"},
+        {"you",         you},
+
+        {"thou\\s+art", you+" is"},
+        {"art\\s+thou", "is "+you},
+        {"thyself",     "itself"},
+        {"thine",       "its"},
+        {"thy",         "its"},
+        {"thou",        you},
+        {"thee",        you},
+
         {"am",          "is"},
         {"I\'m",        me+" is"},
         {"I",           me},
         {"me",          me},
+        {"myself",      me},
         {"my",          my},
         {"mine",        my},
-        {"myself",      me},
     }, true );
     return pronoun_swap.inflect_all(sentence);
 
@@ -90,6 +99,7 @@ std::string English::pluralize_with_number(int number, const std::string& noun) 
 
 Inflector English::infl_imperate({
         {"can",                          "can"},
+        {"don\'t be",                    "isn\'t"},
         {"be",                           "is"},
         {"have",                         "has"},
         {"say",                          "says"},
