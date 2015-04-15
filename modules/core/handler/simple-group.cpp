@@ -39,9 +39,11 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     // Copy relevant defaults to show the children
     Settings default_settings;
     for ( const auto& p : settings )
-        if ( !p.second.data().empty() && p.first != "trigger" &&
-                p.first != "auth" && p.first != "name" )
+        if ( !p.second.data().empty() &&
+                !string::is_one_of(p.first,{"trigger","auth","name","type"}) )
+        {
             default_settings.put(p.first,p.second.data());
+        }
 
     // Initialize children
     Settings child_settings = settings;

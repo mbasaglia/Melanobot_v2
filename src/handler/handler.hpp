@@ -360,7 +360,11 @@ public:
     std::unique_ptr<Handler> build(const std::string& handler_name,
                    const Settings& settings, handler::HandlerContainer* parent) const
     {
-        auto it = factory.find(settings.get("type",string::strtolower(handler_name)));
+        std::string type = string::strtolower(settings.get("type",handler_name));
+        if ( type == "template" )
+            return build_template(handler_name, settings, parent);
+
+        auto it = factory.find(type);
         if ( it != factory.end() )
         {
             try {
@@ -375,6 +379,13 @@ public:
         ErrorLog("sys") << "Unknown handler type: " << handler_name;
         return nullptr;
     }
+
+    /**
+     * \brief Build a handler from a template
+     * \return \c nullptr if it could not be created
+     */
+    std::unique_ptr<Handler> build_template(const std::string& handler_name,
+                   const Settings& settings, handler::HandlerContainer* parent) const;
 
     /**
      * \brief Register a handler type

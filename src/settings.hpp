@@ -93,6 +93,17 @@ namespace settings
                 target.put(prop.first,prop.second.data());
         }
     }
+
+    /**
+     * \brief Recursively calls a functor on every node of the tree
+     */
+    template<class Func>
+        void recurse(Settings& sett, const Func& func)
+        {
+            func(sett);
+            for ( auto& child : sett )
+                recurse(child.second,func);
+        }
 }
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );

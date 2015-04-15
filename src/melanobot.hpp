@@ -77,12 +77,19 @@ public:
 
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
+    /**
+     * \brief Returns handler template from name
+     */
+    Settings get_template(const std::string& name) const;
+
 private:
     /// \todo allow dynamic connection/handler creation (requires locking)
     std::unordered_map<std::string,std::unique_ptr<network::Connection>> connections;
     std::vector<std::unique_ptr<handler::Handler>> handlers;
 
     ConcurrentQueue<network::Message> messages;
+
+    Settings templates;
 };
 
 

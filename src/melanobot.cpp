@@ -20,7 +20,7 @@
 
 #include "handler/handler.hpp"
 
-Melanobot::Melanobot(const Settings& settings )
+Melanobot::Melanobot(const Settings& settings)
 {
     static int counter = 0;
     for(const auto& pt : settings.get_child("connections",{}))
@@ -43,6 +43,8 @@ Melanobot::Melanobot(const Settings& settings )
         ErrorLog("sys") << "Creating a bot with no connections";
     }
 
+    templates = settings.get_child("templates",{});
+
     for(const auto& pt : settings.get_child("handlers",{}))
     {
         auto hand = handler::HandlerFactory::instance().build(pt.first,pt.second,this);
@@ -51,16 +53,24 @@ Melanobot::Melanobot(const Settings& settings )
     }
 
 }
+
 Melanobot::~Melanobot()
 {
     stop();
 }
+
+Settings Melanobot::get_template(const std::string& name) const
+{
+    return templates.get_child(name,{});
+}
+
 void Melanobot::stop()
 {
     messages.stop();
     for ( auto &conn : connections )
         conn.second->stop();
 }
+
 void Melanobot::run()
 {
     if ( connections.empty() )
