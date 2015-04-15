@@ -360,8 +360,8 @@ public:
     std::unique_ptr<Handler> build(const std::string& handler_name,
                    const Settings& settings, handler::HandlerContainer* parent) const
     {
-        std::string type = string::strtolower(settings.get("type",handler_name));
-        if ( type == "template" )
+        std::string type = settings.get("type",handler_name);
+        if ( type == "Template" )
             return build_template(handler_name, settings, parent);
 
         auto it = factory.find(type);
@@ -394,10 +394,9 @@ public:
      */
     void register_handler(const std::string& name, const CreateFunction& func)
     {
-        std::string lcname = string::strtolower(name);
-        if ( handler::HandlerFactory().instance().factory.count(lcname) )
+        if ( handler::HandlerFactory().instance().factory.count(name) )
             ErrorLog("sys") << "Overwriting handler " << name;
-        handler::HandlerFactory().instance().factory[lcname] = func;
+        handler::HandlerFactory().instance().factory[name] = func;
     }
 
 private:
