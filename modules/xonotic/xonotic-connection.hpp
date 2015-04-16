@@ -259,6 +259,12 @@ private:
      */
     void close_connection();
 
+    /**
+     * \brief Clear match info (players. map etc)
+     * \note The caller must have a lock on \c mutex
+     */
+    void clear_match();
+
 };
 
 } // namespace xonotic

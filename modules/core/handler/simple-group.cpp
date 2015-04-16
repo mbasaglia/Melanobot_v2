@@ -22,7 +22,6 @@
 
 namespace handler {
 
-/// \todo option to copy settings from another group
 SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* parent)
     : SimpleAction("",settings,parent)
 {

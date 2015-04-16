@@ -115,5 +115,50 @@ private:
     std::string part = "#1#- part#-#: %name #1#%map#-# [#1#%players#-#/#1#%max#-#]";
 };
 
+/**
+ * \brief Shows match start messages
+ */
+class XonoticMatchStart : public handler::Handler
+{
+public:
+    XonoticMatchStart( const Settings& settings, HandlerContainer* parent )
+        : Handler(settings, parent)
+    {
+        message = settings.get("message",message);
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return Handler::can_handle(msg) && msg.command == "gamestart";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        string::FormatterConfig fmt;
+        Properties props = {
+            {"players", msg.source->get_property("count_players")}, /// \todo
+            {"bots",    msg.source->get_property("count_bots")}, /// \todo
+            {"total",   msg.source->get_property("count_all")}, /// \todo
+            {"max",     msg.source->get_property("cvar.g_maxplayers")}, /// \todo
+            {"free",    std::to_string(
+                            string::to_uint(msg.source->get_property("cvar.g_maxplayers")) -
+                            string::to_uint(msg.source->get_property("count_players"))
+                        ) },
+            {"map",     msg.source->get_property("map")},
+            {"gt",      msg.source->get_property("gametype")},
+            {"gametype",xonotic::gametype_name(msg.source->get_property("gametype"))},
+            {"sv_host", msg.source->formatter()->decode(msg.source->get_property("host")).encode(&fmt)},
+            {"sv_server",msg.source->server().name()}
+        };
+
+        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        return true;
+    }
+
+private:
+    std::string message = "Playing #dark_cyan#%gametype#-# on #1#%map#-# (%free free slots); join now: #-b#xonotic +connect %sv_server";
+};
+
 } // namespace xonotic
 #endif // XONOTIC_HANDLER_STATUS_HPP

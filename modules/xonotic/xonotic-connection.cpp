@@ -128,8 +128,8 @@ void XonoticConnection::connect()
             // Just connected, clear all
             Lock lock(mutex);
                 rcon_buffer.clear();    /// \todo Maybe don't clear?
-                cvars.clear();          // cvars might have chan
-                user_manager.clear();   // same with users
+                cvars.clear();          // cvars might have changed
+                clear_match();
             lock.unlock();
             update_connection();
         }
@@ -149,7 +149,7 @@ void XonoticConnection::disconnect(const std::string& message)
     close_connection();
     Lock lock(mutex);
     rcon_buffer.clear();
-    user_manager.clear();
+    clear_match();
     lock.unlock();
 }
 void XonoticConnection::update_user(const std::string& local_id,
@@ -460,6 +460,10 @@ void XonoticConnection::handle_message(network::Message& msg)
                 R"regex(^:part:(\d+))regex",
                 std::regex::ECMAScript|std::regex::optimize
             );
+            static std::regex regex_gamestart(
+                R"regex(^:gamestart:([a-z]+)_([^:]*):[0-9.]*)regex",
+                std::regex::ECMAScript|std::regex::optimize
+            );
             std::smatch match;
             if ( std::regex_match(msg.raw,match,regex_join) )
             {
@@ -485,6 +489,15 @@ void XonoticConnection::handle_message(network::Message& msg)
                     msg.command = "part";
                     user_manager.remove_user(found->local_id);
                 }
+            }
+            else if ( std::regex_match(msg.raw,match,regex_gamestart) )
+            {
+                Lock lock(mutex);
+                clear_match();
+                msg.command = "gamestart";
+                msg.params = { match[1], match[2] };
+                properties["gametype"] = match[1];
+                properties["map"] = match[2];
             }
         }
         // status reply
@@ -582,6 +595,7 @@ void XonoticConnection::cleanup_connection()
     Lock lock(mutex);
     rcon_buffer.clear();
     cvars.clear();
+    clear_match();
 }
 
 void XonoticConnection::request_status()
@@ -619,4 +633,11 @@ void XonoticConnection::close_connection()
             thread_input.get_id() != std::this_thread::get_id() )
         thread_input.join();
 }
+
+void XonoticConnection::clear_match()
+{
+    user_manager.clear();
+    properties.erase("map");
+}
+
 } // namespace xonotic

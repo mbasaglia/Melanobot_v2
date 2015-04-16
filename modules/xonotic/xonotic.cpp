@@ -37,6 +37,7 @@ Melanomodule melanomodule_xonotic()
 
     module.register_handler<xonotic::ConnectionEvents>("ConnectionEvents");
     module.register_handler<xonotic::XonoticJoinPart>("XonoticJoinPart");
+    module.register_handler<xonotic::XonoticMatchStart>("XonoticMatchStart");
 
     return module;
 }
