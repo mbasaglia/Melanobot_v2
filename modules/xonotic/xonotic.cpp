@@ -38,6 +38,11 @@ Melanomodule melanomodule_xonotic()
     module.register_handler<xonotic::ConnectionEvents>("ConnectionEvents");
     module.register_handler<xonotic::XonoticJoinPart>("XonoticJoinPart");
     module.register_handler<xonotic::XonoticMatchStart>("XonoticMatchStart");
+    module.register_handler<xonotic::ShowVoteCall>("ShowVoteCall");
+    module.register_handler<xonotic::ShowVoteLogin>("ShowVoteLogin");
+    module.register_handler<xonotic::ShowVoteDo>("ShowVoteDo");
+    module.register_handler<xonotic::ShowVoteResult>("ShowVoteResult");
+    module.register_handler<xonotic::ShowVoteStop>("ShowVoteStop");
 
     return module;
 }

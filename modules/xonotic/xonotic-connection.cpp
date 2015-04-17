@@ -171,10 +171,27 @@ void XonoticConnection::update_user(const std::string& local_id,
 
 user::User XonoticConnection::get_user(const std::string& local_id) const
 {
+    if ( local_id.empty() )
+        return {};
+
+    if ( local_id == "0" || local_id == "#0" )
+    {
+        user::User user;
+        user.local_id = "0";
+        user.properties["entity"] = "#0";
+        user.host = server_.name();
+        return user;
+    }
+
     Lock lock(mutex);
-    const user::User* user = user_manager.user(local_id);
+
+    const user::User* user = local_id[0] == '#' ?
+        user_manager.user_by_property("entity",local_id)
+        : user_manager.user(local_id);
+
     if ( user )
         return *user;
+
     return {};
 }
 
@@ -187,7 +204,9 @@ std::vector<user::User> XonoticConnection::get_users( const std::string& channel
 
 std::string XonoticConnection::name() const
 {
-    return "Todo";
+    Lock lock(mutex);
+    auto it = cvars.find("sv_adminnick");
+    return it != cvars.end() ? it->second : "(server admin)";
 }
 
 std::string XonoticConnection::get_property(const std::string& property) const
