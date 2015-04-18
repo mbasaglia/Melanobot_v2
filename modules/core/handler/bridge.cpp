@@ -91,7 +91,7 @@ bool BridgeChat::on_handle(network::Message& msg)
 {
     msg.destination->say(network::OutputMessage(
         msg.source->formatter()->decode(msg.message),
-        msg.action,
+        msg.type == network::Message::ACTION,
         msg.dst_channel ? *msg.dst_channel : "",
         priority,
         msg.source->formatter()->decode(from ? *from : msg.from.name),

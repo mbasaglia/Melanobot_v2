@@ -66,7 +66,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return msg.command == "JOIN" && msg.params.size() == 1 &&
+        return msg.type == network::Message::JOIN && msg.params.size() == 1 &&
             msg.source->protocol() == "irc";
     }
 

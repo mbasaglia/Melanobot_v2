@@ -97,5 +97,62 @@ protected:
     Bridge* parent{nullptr}; ///< Bridge object to apply the attachment to
 };
 
+
+/**
+ * \brief Prints a message when a user joins a channel (or server)
+ */
+class JoinMessage: public ::handler::Handler
+{
+public:
+    JoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
+    {
+        message = settings.get("message",message);
+        on_self = settings.get("on_self",on_self);
+        on_others=settings.get("on_others",on_others);
+        action  = settings.get("action",action);
+        prefix  = settings.get("prefix",prefix);
+        if ( message.empty() || !(on_others || on_self) )
+            throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return Handler::can_handle(msg) && !msg.channels.empty() &&
+            msg.type == network::Message::JOIN &&
+            ( ( on_others && msg.from.name != msg.source->name() ) ||
+              ( on_self && msg.from.name == msg.source->name() ) );
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        string::FormatterConfig fmt;
+        auto from = msg.source->formatter()->decode(msg.from.name);
+        auto str = string::replace(message,{
+            {"channel",msg.channels[0]},
+            {"name", from.encode(fmt)},
+            {"host", msg.from.host},
+            {"global_id", msg.from.global_id}
+        },"%");
+        reply_to(msg,network::OutputMessage(
+            str,
+            action,
+            reply_channel(msg),
+            priority,
+            action ? from : string::FormattedString(),
+            prefix
+        ));
+        return true;
+    }
+
+private:
+    std::string prefix;         ///< Message prefix
+    std::string message;        ///< Message to send
+    bool        on_self = true; ///< Whether to be triggered when the joining user has the same name as the source connection
+    bool        on_others=true; ///< Whether to be triggered when the joining user name differs from the source connection
+    bool        action = false; ///< Whether it should output an action
+};
+
 } // namespace handler
 #endif // HANDLER_BRIDGE_HPP

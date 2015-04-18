@@ -97,18 +97,31 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
 
     cmd_say = settings.get("say","say %message");
     cmd_say_as = settings.get("say_as", "say \"%prefix%from^7: %message\"");
+    cmd_say_action = settings.get("cmd_say_action", "say \"^4* ^3%prefix%from^3 %message\"");
 
     // Preset templates
     if ( cmd_say_as == "modpack" )
     {
-        cmd_say_as = "sv_cmd ircmsg %prefix%from^7: %message";
+        cmd_say = "sv_cmd ircmsg %prefix%message";
+        cmd_say_as = "sv_cmd ircmsg %prefix%from: %message";
+        cmd_say_action = "sv_cmd ircmsg ^4* ^3%prefix%from^3 %message";
     }
     else if ( cmd_say_as == "sv_adminnick" )
     {
+        cmd_say =   "set Melanobot_sv_adminnick \"$sv_adminnick\";"
+                    "set sv_adminnick \"^3%prefix^3\";"
+                    "say ^7%message;"
+                    "set sv_adminnick \"$Melanobot_sv_adminnick\"";
+
         cmd_say_as ="set Melanobot_sv_adminnick \"$sv_adminnick\";"
-                    "set sv_adminnick \"^3%prefix^3%from^3\";"
-                    "say \"^7%message\";"
-                    "set sv_adminnick \"Melanobot_sv_adminnick\"";
+                    "set sv_adminnick \"^3%prefix^3\";"
+                    "say ^7%from: %message;"
+                    "set sv_adminnick \"$Melanobot_sv_adminnick\"";
+
+        cmd_say_action ="set Melanobot_sv_adminnick \"$sv_adminnick\";"
+                    "set sv_adminnick \"^3%prefix^3\";"
+                    "say ^4* ^3%from^3 %message;"
+                    "set sv_adminnick \"$Melanobot_sv_adminnick\"";
     }
 
     status_polling = network::Timer{[this]{request_status();},
@@ -217,13 +230,17 @@ std::string XonoticConnection::get_property(const std::string& property) const
         auto it = cvars.find(property.substr(5));
         return it != cvars.end() ? it->second : "";
     }
+    else if ( property == "say" )
+    {
+        return cmd_say;
+    }
     else if ( property == "say_as" )
     {
         return cmd_say_as;
     }
-    else if ( property == "say" )
+    else if ( property == "say_action" )
     {
-        return cmd_say;
+        return cmd_say_action;
     }
     else if ( property == "host" )
     {
@@ -251,6 +268,8 @@ bool XonoticConnection::set_property(const std::string& property,
         cmd_say_as = value;
     else if ( property == "say" )
         cmd_say = value;
+    else if ( property == "say_action" )
+        cmd_say_action = value;
     else
         properties[property] = value;
     return true;
@@ -258,20 +277,9 @@ bool XonoticConnection::set_property(const std::string& property,
 
 void XonoticConnection::say ( const network::OutputMessage& message )
 {
-    string::FormattedString prefix_stream;
-    if ( !message.prefix.empty() )
-        prefix_stream << message.prefix << ' ';
-
-    string::FormattedString from_stream;
-    if ( !message.from.empty() )
-    {
-        if ( message.action )
-            from_stream << "* ";
-        from_stream << message.from;
-    }
-
-    std::string prefix   = prefix_stream.encode(formatter_);
-    std::string from     = from_stream.encode(formatter_);
+    auto nocolor = string::Color(color::nocolor).to_string(*formatter_);
+    std::string prefix   = message.prefix.encode(formatter_)+' '+nocolor;
+    std::string from     = message.from.encode(formatter_)+nocolor;
     std::string contents = message.message.encode(formatter_);
     Properties message_properties = {
         {"prefix",              prefix},
@@ -281,7 +289,10 @@ void XonoticConnection::say ( const network::OutputMessage& message )
         //{"message_quoted",      quote_string(contents)},
     };
 
-    auto expl = string::regex_split(message.from.empty() ? cmd_say : cmd_say_as,";\\s*");
+    auto expl = string::regex_split(
+        message.action ? cmd_say_action :
+            ( message.from.empty() ? cmd_say : cmd_say_as ),
+        ";\\s*");
     for ( const auto & cmd : expl )
         command({"rcon", { string::replace(cmd,message_properties,"%")},
                 message.priority, message.timeout});
@@ -432,6 +443,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             {
                 msg.from.name = match[1];
                 msg.message = match[2];
+                msg.type = network::Message::CHAT;
             }
         }
         // cvars
@@ -496,6 +508,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 lock.unlock();
                 msg.command = "join";
                 msg.from = user;
+                msg.type = network::Message::JOIN;
                 Log("xon",'!',2) << "Added user " << formatter()->decode(user.name);
             }
             else if ( std::regex_match(msg.raw,match,regex_part) )
@@ -505,8 +518,9 @@ void XonoticConnection::handle_message(network::Message& msg)
                 {
                     Log("xon",'!',2) << "Removed user " << formatter()->decode(found->name);
                     msg.from = *found;
-                    msg.command = "part";
+                    msg.command = "part"; /// \todo remove these
                     user_manager.remove_user(found->local_id);
+                    msg.type = network::Message::PART;
                 }
             }
             else if ( std::regex_match(msg.raw,match,regex_gamestart) )

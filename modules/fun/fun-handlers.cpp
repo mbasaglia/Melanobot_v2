@@ -498,7 +498,7 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
 
     msg.destination->say(network::OutputMessage(
         message,
-        msg.action,
+        msg.type == network::Message::ACTION,
         msg.dst_channel ? *msg.dst_channel : "",
         priority,
         from,

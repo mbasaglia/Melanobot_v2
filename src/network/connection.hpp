@@ -82,6 +82,22 @@ struct Command
  */
 struct Message
 {
+    /**
+     * \brief Type of message
+     * \todo CONNECT/DISCONNECT (and issue them from IRC)
+     */
+    enum Type
+    {
+        UNKNOWN, ///< Some unknown message, most likely protocol-specific stuff
+        CHAT,    ///< Simple chat message
+        ACTION,  ///< Similar to \c CHAT, but used for actions/roleplay
+        JOIN,    ///< User joined the connection/a channel
+        PART,    ///< User parted or quit
+        KICK,    ///< User has been kicked
+        RENAME,  ///< User changed name
+        ERROR,   ///< Server error
+    };
+
     class Connection*        source {nullptr};     ///< Connection originating this message
 
     class Connection*        destination {nullptr};///< Connection which should receive replies
@@ -94,7 +110,7 @@ struct Message
 
     std::string              message; ///< (optional) Simple message contents
     std::vector<std::string> channels;///< (optional) Simple message origin
-    bool                     action{0};///<(optional) Simple message is an action
+    Type                     type{UNKNOWN}; ///< (optional) Simple message type
     bool                     direct{0};///<(optional) Simple message has been addessed to the bot directly
 };
 

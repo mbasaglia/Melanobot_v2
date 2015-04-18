@@ -156,7 +156,7 @@ void IrcConnection::error_stop()
 {
     disconnect();
     settings::global_settings.put("exit_code",1);
-    bot->stop(); /// \todo is this the right thing to do?
+    bot->stop(); /// \todo is this the right thing to do? -- maybe have a handler that does this
 }
 
 network::Server IrcConnection::server() const
@@ -364,6 +364,7 @@ void IrcConnection::handle_message(network::Message msg)
                 msg.channels = { msg.params[0] };
             }
         }
+        msg.type = network::Message::CHAT;
 
         // Handle CTCP
         if ( msg.message[0] == '\1' )
@@ -378,11 +379,12 @@ void IrcConnection::handle_message(network::Message msg)
 
             if ( ctcp == "ACTION" )
             {
-                msg.action = 1;
+                msg.type = network::Message::ACTION;
                 msg.message = match[2];
             }
             else
             {
+                msg.type = network::Message::UNKNOWN;
                 msg.command = "CTCP";
                 msg.params = { ctcp };
                 if ( !match[2].str().empty() )
@@ -391,7 +393,6 @@ void IrcConnection::handle_message(network::Message msg)
         }
         else
         {
-
             Lock lock(mutex);
                 std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
             lock.unlock();
@@ -410,6 +411,7 @@ void IrcConnection::handle_message(network::Message msg)
             errl << "Unknown error";
         else
             errl << msg.params[0];
+        msg.type = network::Message::ERROR;
         error_stop();
     }
     else if ( msg.command == "JOIN" )
@@ -435,6 +437,7 @@ void IrcConnection::handle_message(network::Message msg)
             }
             msg.from.channels = from_user->channels;
         }
+        msg.type = network::Message::JOIN;
 
         Log("irc",'!',3) << "User " << color::dark_cyan << msg.from.name
             << color::dark_green << " joined " << color::nocolor
@@ -446,6 +449,7 @@ void IrcConnection::handle_message(network::Message msg)
         {
             msg.channels = string::comma_split(msg.params[0]);
             remove_from_channel(msg.from.name,msg.channels);
+            msg.type = network::Message::PART;
         }
     }
     else if ( msg.command == "QUIT" )
@@ -466,29 +470,30 @@ void IrcConnection::handle_message(network::Message msg)
                 lock.unlock();
                 command({"NICK",{preferred_nick}});
             }
+            msg.type = network::Message::PART;
         }
     }
     else if ( msg.command == "NICK" )
     {
         if ( msg.params.size() == 1 )
         {
+            Lock lock(mutex);
+            if ( from_user )
             {
-                Lock lock(mutex);
-                if ( from_user )
+                msg.channels = from_user->channels;
+                from_user->name = from_user->local_id = msg.params[0];
+
+                Log("irc",'!',2) << "Renamed user " << color::dark_cyan << msg.from.name
+                    << color::nocolor << " to " << color::dark_cyan << from_user->name;
+
+                if ( strtolower(msg.from.name) == current_nick_lowecase )
                 {
-                    msg.channels = from_user->channels;
-                    from_user->name = from_user->local_id = msg.params[0];
-
-                    Log("irc",'!',2) << "Renamed user " << color::dark_cyan << msg.from.name
-                        << color::nocolor << " to " << color::dark_cyan << from_user->name;
-
-                    if ( strtolower(msg.from.name) == current_nick_lowecase )
-                    {
-                        current_nick = from_user->name;
-                        current_nick_lowecase = strtolower(current_nick);
-                        attempted_nick.clear();
-                    }
+                    current_nick = from_user->name;
+                    current_nick_lowecase = strtolower(current_nick);
+                    attempted_nick.clear();
                 }
+
+                msg.type = network::Message::RENAME;
             }
         }
     }
@@ -500,6 +505,8 @@ void IrcConnection::handle_message(network::Message msg)
         /// \note Assumes a single victim
         msg.params.erase(msg.params.begin());
         remove_from_channel(msg.params[0],msg.channels);
+        /// \todo maybe it's more useful if msg.from becomes the kick victim
+        msg.type = network::Message::KICK;
     }
     // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
     /* Skipped: * = maybe later X = surely later

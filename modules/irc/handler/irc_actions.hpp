@@ -27,48 +27,6 @@ namespace irc {
 namespace handler {
 
 /**
- * \brief Prints a message when a user joins a channel
- */
-class IrcJoinMessage: public ::handler::Handler
-{
-public:
-    IrcJoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
-        : Handler(settings,parent)
-    {
-        message = settings.get("message",message);
-        on_self = settings.get("on_self",on_self);
-        on_others=settings.get("on_others",on_others);
-        if ( message.empty() || !(on_others || on_self) )
-            throw ConfigurationError();
-    }
-
-    bool can_handle(const network::Message& msg) const override
-    {
-        return Handler::can_handle(msg) && !msg.channels.empty() &&
-            msg.command == "JOIN" &&
-            ( ( on_others && msg.from.name != msg.source->name() ) ||
-              ( on_self && msg.from.name == msg.source->name() ) );
-    }
-
-protected:
-    bool on_handle(network::Message& msg) override
-    {
-        reply_to(msg,string::replace(message,{
-            {"channel",msg.channels[0]},
-            {"nick", msg.from.name},
-            {"host", msg.from.host},
-            {"name", msg.from.global_id}
-        },"%"));
-        return true;
-    }
-
-private:
-    std::string message;
-    bool        on_self = false;
-    bool        on_others = true;
-};
-
-/**
  * \brief Prints a message when a user is kicked from a channel
  */
 class IrcKickMessage: public ::handler::Handler

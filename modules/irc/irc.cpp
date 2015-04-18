@@ -41,7 +41,6 @@ Melanomodule melanomodule_irc()
     module.register_handler<irc::handler::CtcpTime>("CtcpTime");
     module.register_handler<irc::handler::CtcpClientInfo>("CtcpClientInfo");
 
-    module.register_handler<irc::handler::IrcJoinMessage>("IrcJoinMessage");
     module.register_handler<irc::handler::IrcKickMessage>("IrcKickMessage");
     module.register_handler<irc::handler::IrcKickRejoin>("IrcKickRejoin");
 

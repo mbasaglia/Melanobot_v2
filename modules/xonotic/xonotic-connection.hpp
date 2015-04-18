@@ -191,6 +191,7 @@ private:
     int                 rcon_secure{0};                 ///< Rcon secure protocol
     std::string         cmd_say;                        ///< Command used to say messages
     std::string         cmd_say_as;                     ///< Command used to say messages as another user
+    std::string         cmd_say_action;                 ///< Command used to show actions
     Properties          cvars;                          ///< Cvar values
     Properties          properties;                     ///< Misc properties (eg: map, gametype)
     std::list<SecureRconCommand>rcon_buffer;            ///< Buffer for rcon secure commands
