@@ -140,7 +140,7 @@ void XonoticConnection::connect()
                 thread_input = std::move(std::thread([this]{io.run_input();}));
             // Just connected, clear all
             Lock lock(mutex);
-                rcon_buffer.clear();    /// \todo Maybe don't clear?
+                rcon_buffer.clear();    // don't run old rcon_secure 2 commands
                 cvars.clear();          // cvars might have changed
                 clear_match();
             lock.unlock();
@@ -300,6 +300,10 @@ void XonoticConnection::say ( const network::OutputMessage& message )
 
 void XonoticConnection::command ( network::Command cmd )
 {
+    // discards commands sent too early
+    if ( status_ == DISCONNECTED )
+        return;
+
     if ( cmd.command == "rcon" )
     {
         if ( cmd.parameters.empty() )
@@ -376,6 +380,9 @@ void XonoticConnection::write(std::string line)
 
 void XonoticConnection::read(const std::string& datagram)
 {
+    if ( datagram.empty() && status_ == DISCONNECTED )
+        return;
+
     if ( datagram.size() < 5 || !string::starts_with(datagram,"\xff\xff\xff\xff") )
     {
         ErrorLog("xon","Network Error") << "Invalid datagram: " << datagram;
@@ -598,6 +605,9 @@ void XonoticConnection::update_connection()
         command({"rcon",{"set","log_dest_udp",io.local_endpoint().name()},1024});
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
+
+        if ( status_ == CONNECTING )
+            read(io.read());
 
         // Make sure the connection is being checked
         if ( !status_polling.running() )

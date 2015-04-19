@@ -75,8 +75,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) &&
-            string::is_one_of(msg.command,{"CONNECTED","DISCONNECTED"});
+        return string::is_one_of(msg.command,{"CONNECTED","DISCONNECTED"});
     }
 
 protected:
@@ -113,8 +112,8 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) &&
-            ( msg.command == "join" || msg.command == "part" );
+        return msg.type == network::Message::JOIN ||
+               msg.type == network::Message::PART;
     }
 
 protected:
