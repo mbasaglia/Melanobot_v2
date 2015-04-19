@@ -83,7 +83,7 @@ BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* pare
 
 bool BridgeChat::can_handle(const network::Message& msg) const
 {
-    return Handler::can_handle(msg) && !msg.message.empty() && !msg.direct &&
+    return !msg.message.empty() && !msg.direct &&
         (!ignore_self || msg.from.name != msg.source->name());
 }
 

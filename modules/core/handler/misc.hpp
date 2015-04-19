@@ -335,8 +335,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) && !msg.message.empty() &&
-            (!direct || msg.direct);
+        return !msg.message.empty() && (!direct || msg.direct);
     }
 
 protected:
@@ -392,18 +391,21 @@ public:
         synopsis += " Action...";
         unauthorized = settings.get("unauthorized",unauthorized);
         empty = settings.get("empty",empty);
+        auth = settings.get("auth",auth);
     }
 
-    bool authorized(const network::Message& msg) const override
+    std::string get_property(const std::string& name) const override
     {
-        return true;
+        if ( name == "auth" )
+            return auth;
+        return SimpleAction::get_property(name);
     }
 
 protected:
 
     bool on_handle(network::Message& msg) override
     {
-        if ( !Handler::authorized(msg) )
+        if ( !auth.empty() && !msg.source->user_auth(msg.from.local_id,auth) )
         {
             reply_to(msg,unauthorized);
             return true;
@@ -412,7 +414,7 @@ protected:
         string::English engl;
         // should match \S+|(?:don't be) but it's ambiguous
         static std::regex regex_imperative (
-            R"(\s*(\S+(?: be)?)\s+(.*))",
+            R"(\s*(\S+(?: be)?)\s*(.*))",
             std::regex::ECMAScript|std::regex::optimize|std::regex::icase
         );
 
@@ -435,6 +437,7 @@ protected:
 private:
     std::string unauthorized = "Won't do!";
     std::string empty = "Please what?";
+    std::string auth;
 };
 
 } // namespace handler

@@ -53,7 +53,6 @@ public:
         : bot ( parent->melanobot() ),
           parent_handler(dynamic_cast<Handler*>(parent))
     {
-        auth = settings.get("auth",auth);
         priority = settings.get("priority",priority);
         if ( !bot )
             throw ConfigurationError();
@@ -84,7 +83,7 @@ public:
      */
     virtual bool can_handle(const network::Message& msg) const
     {
-        return authorized(msg);
+        return true;
     }
 
     /**
@@ -98,14 +97,6 @@ public:
     virtual void finalize() {}
 
     /**
-     * \brief Checks if a message is authorized to be executed by this message
-     */
-    virtual bool authorized(const network::Message& msg) const
-    {
-        return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
-    }
-
-    /**
      * \brief Get a property by name
      * \note If you inherit a Handler class, it is recommended that you
      *       override this for properties of that class but still call the
@@ -116,9 +107,7 @@ public:
      */
     virtual std::string get_property(const std::string& name) const
     {
-        if ( name == "auth" )
-            return auth;
-        else if ( name == "priority" )
+        if ( name == "priority" )
             return std::to_string(priority);
         return {};
     }
@@ -199,10 +188,6 @@ protected:
         }
 
     /**
-     * \brief Authorization group required for a user message to be handled
-     */
-    std::string auth;
-    /**
      * \brief Message priority
      */
     int priority{0};
@@ -271,8 +256,8 @@ public:
      */
     bool can_handle(const network::Message& msg) const override
     {
-        return authorized(msg) && ( msg.direct || !direct ) &&
-            msg.channels.size() < 2 && string::starts_with(msg.message,trigger);
+        return ( msg.direct || !direct ) && msg.channels.size() < 2 &&
+            string::starts_with(msg.message,trigger);
     }
 
     /**

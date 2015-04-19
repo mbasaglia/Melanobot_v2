@@ -49,7 +49,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return authorized(msg) && !msg.params.empty() &&
+        return !msg.params.empty() &&
             msg.source->protocol() == "irc" && msg.source == msg.destination &&
             msg.channels.size() == 1 && msg.from.name == msg.channels[0] &&
             irc::strtoupper(msg.command) == "CTCP" &&

@@ -118,8 +118,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) && !msg.channels.empty() &&
-            msg.type == network::Message::JOIN &&
+        return !msg.channels.empty() && msg.type == network::Message::JOIN &&
             ( ( on_others && msg.from.name != msg.source->name() ) ||
               ( on_self && msg.from.name == msg.source->name() ) );
     }

@@ -44,11 +44,21 @@ public:
 
     std::string get_property(const std::string& name) const override
     {
-        if ( name == "name" )
+        if ( name == "auth" )
+            return auth;
+        else if ( name == "name" )
             return this->name;
         else if ( name == "help_group" )
             return help_group;
         return SimpleAction::get_property(name);
+    }
+
+    /**
+     * \brief Checks if a message is authorized to be executed by this message
+     */
+    bool authorized(const network::Message& msg) const
+    {
+        return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
     }
 
     void initialize() override;
@@ -57,12 +67,16 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    std::vector<std::unique_ptr<Handler>> children;         ///< Contained handlers
+    /**
+     * \brief Authorization group required for a user message to be handled
+     */
+    std::string           auth;
     std::string           channels;         ///< Channel filter
+    network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)
     /// \todo if posible, merge name and help_group
     std::string           name;             ///< Name to show in help
     std::string           help_group;       ///< Selects whether to be shown in help
-    network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)
+    std::vector<std::unique_ptr<Handler>> children;         ///< Contained handlers
 };
 
 /**

@@ -26,6 +26,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     : SimpleAction("",settings,parent)
 {
     // Gather settings
+    auth = settings.get("auth",auth);
     channels = settings.get("channels","");
     name = settings.get("name",trigger);
     help_group = settings.get("help_group",help_group);
@@ -85,7 +86,8 @@ bool SimpleGroup::on_handle(network::Message& msg)
 
 bool SimpleGroup::can_handle(const network::Message& msg) const
 {
-    return SimpleAction::can_handle(msg) && (!source || msg.source == source) &&
+    return authorized(msg) && SimpleAction::can_handle(msg) &&
+        (!source || msg.source == source) &&
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 

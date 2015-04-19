@@ -149,7 +149,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) && msg.command == "gamestart";
+        return msg.command == "gamestart";
     }
 
 protected:
@@ -181,7 +181,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) && msg.command == "n";
+        return msg.command == "n";
     }
 
 protected:

@@ -131,8 +131,14 @@ public:
     FilterGroup(const Settings& settings, handler::HandlerContainer* parent)
         : Handler(settings,parent)
     {
-        if ( auth.empty() )
+        ignore = settings.get("ignore",ignore);
+        if ( ignore.empty() )
             throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.source->user_auth(msg.from.local_id,ignore);
     }
 
 private:
@@ -140,6 +146,8 @@ private:
     {
         return true;
     }
+
+    std::string ignore; ///< Group to ignore
 };
 
 /**
@@ -241,9 +249,9 @@ public:
 
     }
 
-    bool can_handle(const network::Message& msg) const
+    bool can_handle(const network::Message& msg) const override
     {
-        return Handler::can_handle(msg) && !msg.message.empty();
+        return !msg.message.empty();
     }
 
     std::string get_property(const std::string& name) const override
