@@ -46,6 +46,7 @@ Melanomodule melanomodule_core()
     module.register_handler<handler::BridgeAttach>("BridgeAttach");
     module.register_handler<handler::BridgeAttachChannel>("BridgeAttachChannel");
     module.register_handler<handler::JoinMessage>("JoinMessage");
+    module.register_handler<handler::PartMessage>("PartMessage");
 
     module.register_handler<handler::License>("License");
     module.register_handler<handler::Help>("Help");

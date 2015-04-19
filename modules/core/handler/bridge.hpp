@@ -97,30 +97,25 @@ protected:
     Bridge* parent{nullptr}; ///< Bridge object to apply the attachment to
 };
 
-
 /**
- * \brief Prints a message when a user joins a channel (or server)
+ * \brief Base class for JoinMessage and PartMessage
  */
-class JoinMessage: public ::handler::Handler
+class JoinPartMessage: public ::handler::Handler
 {
 public:
-    JoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+    JoinPartMessage(const Settings& settings, ::handler::HandlerContainer* parent)
         : Handler(settings,parent)
     {
         message = settings.get("message",message);
-        on_self = settings.get("on_self",on_self);
-        on_others=settings.get("on_others",on_others);
         action  = settings.get("action",action);
         prefix  = settings.get("prefix",prefix);
-        if ( message.empty() || !(on_others || on_self) )
+        if ( message.empty() )
             throw ConfigurationError();
     }
 
     bool can_handle(const network::Message& msg) const override
     {
-        return !msg.channels.empty() && msg.type == network::Message::JOIN &&
-            ( ( on_others && msg.from.name != msg.source->name() ) ||
-              ( on_self && msg.from.name == msg.source->name() ) );
+        return !msg.channels.empty();
     }
 
 protected:
@@ -148,9 +143,49 @@ protected:
 private:
     std::string prefix;         ///< Message prefix
     std::string message;        ///< Message to send
+    bool        action = false; ///< Whether it should output an action
+};
+
+/**
+ * \brief Prints a message when a user joins a channel (or server)
+ */
+class JoinMessage: public JoinPartMessage
+{
+public:
+    JoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : JoinPartMessage(settings,parent)
+    {
+        on_self = settings.get("on_self",on_self);
+        on_others=settings.get("on_others",on_others);
+        if ( !(on_others || on_self) )
+            throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return JoinPartMessage::can_handle(msg) && msg.type == network::Message::JOIN &&
+            ( ( on_others && msg.from.name != msg.source->name() ) ||
+              ( on_self && msg.from.name == msg.source->name() ) );
+    }
+
+private:
     bool        on_self = true; ///< Whether to be triggered when the joining user has the same name as the source connection
     bool        on_others=true; ///< Whether to be triggered when the joining user name differs from the source connection
-    bool        action = false; ///< Whether it should output an action
+};
+
+/**
+ * \brief Prints a message when a user parts a channel (or server)
+ */
+class PartMessage: public JoinPartMessage
+{
+public:
+    using JoinPartMessage::JoinPartMessage;
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return JoinPartMessage::can_handle(msg) &&
+            msg.type == network::Message::PART;
+    }
 };
 
 } // namespace handler
