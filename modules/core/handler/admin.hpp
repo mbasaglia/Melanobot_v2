@@ -66,7 +66,9 @@ public:
     AdminGroup(const Settings& settings, handler::HandlerContainer* parent)
         : AbstractList(settings.get("group",""),false,settings,parent)
     {
-        if ( !source )
+        std::string conn_name = settings.get("connection",settings.get("source",""));
+        connection = bot->connection(conn_name);
+        if ( !connection )
             throw ConfigurationError();
 
         description = settings.get("description","the "+trigger+" group");
@@ -75,15 +77,15 @@ public:
 
     bool add(const std::string& element) override
     {
-        if ( ignore.empty() || !source->user_auth(element, ignore) )
-            return source->add_to_group(element,trigger);
+        if ( ignore.empty() || !connection->user_auth(element, ignore) )
+            return connection->add_to_group(element,trigger);
         return false;
     }
 
     bool remove(const std::string& element) override
     {
-        if ( ignore.empty() || !source->user_auth(element, ignore) )
-            return source->remove_from_group(element,trigger);
+        if ( ignore.empty() || !connection->user_auth(element, ignore) )
+            return connection->remove_from_group(element,trigger);
         return false;
     }
 
@@ -94,7 +96,7 @@ public:
 
     std::vector<std::string> elements() const override
     {
-        auto users = source->users_in_group(trigger);
+        auto users = connection->users_in_group(trigger);
         std::vector<std::string> names;
         for ( const user::User& user : users )
         {
@@ -118,6 +120,7 @@ public:
         return AbstractList::get_property(name);
     }
 private:
+    network::Connection*connection{nullptr};///< Managed connection
     std::string description; ///< Used as list_name property
     std::string ignore;      ///< Group to be ignored on add/remove
 };
@@ -251,7 +254,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return !msg.message.empty();
+        return msg.type == network::Message::CHAT && !msg.message.empty();
     }
 
     std::string get_property(const std::string& name) const override

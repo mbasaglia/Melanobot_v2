@@ -113,18 +113,13 @@ public:
             throw ConfigurationError();
     }
 
-    bool can_handle(const network::Message& msg) const override
-    {
-        return !msg.channels.empty();
-    }
-
 protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormatterConfig fmt;
         auto from = msg.source->formatter()->decode(msg.from.name);
         auto str = string::replace(message,{
-            {"channel",msg.channels[0]},
+            {"channel",string::implode(", ",msg.channels)},
             {"name", from.encode(fmt)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id}
@@ -163,7 +158,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return JoinPartMessage::can_handle(msg) && msg.type == network::Message::JOIN &&
+        return msg.type == network::Message::JOIN &&
             ( ( on_others && msg.from.name != msg.source->name() ) ||
               ( on_self && msg.from.name == msg.source->name() ) );
     }
@@ -183,8 +178,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return JoinPartMessage::can_handle(msg) &&
-            msg.type == network::Message::PART;
+        return msg.type == network::Message::PART;
     }
 };
 

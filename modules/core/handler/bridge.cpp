@@ -35,7 +35,7 @@ Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
 
 bool Bridge::on_handle(network::Message& msg)
 {
-    network::Message& targeted = msg;
+    network::Message targeted = msg;
     if ( destination )
         targeted.destination = destination;
     if ( dst_channel )
@@ -83,7 +83,7 @@ BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* pare
 
 bool BridgeChat::can_handle(const network::Message& msg) const
 {
-    return !msg.message.empty() && !msg.direct &&
+    return msg.type == network::Message::CHAT && !msg.direct &&
         (!ignore_self || msg.from.name != msg.source->name());
 }
 

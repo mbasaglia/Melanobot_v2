@@ -73,7 +73,6 @@ protected:
     std::string           auth;
     std::string           channels;         ///< Channel filter
     network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)
-    /// \todo if posible, merge name and help_group
     std::string           name;             ///< Name to show in help
     std::string           help_group;       ///< Selects whether to be shown in help
     std::vector<std::unique_ptr<Handler>> children;         ///< Contained handlers
@@ -85,7 +84,7 @@ protected:
  *       which contains a human-readable name of the list,
  *       used for descriptions of the handler.
  */
-class AbstractList : public SimpleGroup
+class AbstractList : public SimpleAction
 {
 public:
     /**
@@ -122,11 +121,14 @@ public:
     {
         if ( name == "help" )
             return "Manages "+get_property("list_name");
-        return SimpleGroup::get_property(name);
+        return SimpleAction::get_property(name);
     }
 
 protected:
     bool on_handle(network::Message& msg) override;
+
+private:
+    std::vector<std::unique_ptr<Handler>> children;         ///< Contained handlers
 };
 
 } // namespace handler

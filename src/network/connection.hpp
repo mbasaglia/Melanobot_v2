@@ -88,30 +88,88 @@ struct Message
      */
     enum Type
     {
-        UNKNOWN, ///< Some unknown message, most likely protocol-specific stuff
-        CHAT,    ///< Simple chat message
-        ACTION,  ///< Similar to \c CHAT, but used for actions/roleplay
-        JOIN,    ///< User joined the connection/a channel
-        PART,    ///< User parted or quit
-        KICK,    ///< User has been kicked
-        RENAME,  ///< User changed name
-        ERROR,   ///< Server error
+        /**
+         * \brief Some unknown message, most likely protocol-specific stuff
+         */
+        UNKNOWN,
+        /**
+         * \brief Simple chat message
+         *
+         * These messages should give meaningful values to:
+         *      * \c message
+         *      * \c from
+         *      * \c direct
+         *      * \c channels
+         */
+        CHAT,
+        /**
+         * \brief Similar to \c CHAT, but used for actions/roleplay
+         *
+         * These messages should give meaningful values to:
+         *      * \c message
+         *      * \c from
+         *      * \c channels
+         */
+        ACTION,
+        /**
+         * \brief User joined the connection/a channel
+         *
+         * These messages should give meaningful values to:
+         *      * \c from
+         *      * \c channels
+         */
+        JOIN,
+        /**
+         * \brief User parted or quit
+         *
+         * These messages should give meaningful values to:
+         *      * \c message
+         *      * \c from
+         *      * \c channels
+         */
+        PART,
+        /**
+         * \brief User has been kicked
+         *
+         * These messages should give meaningful values to:
+         *      * \c message
+         *      * \c from
+         *      * \c victim
+         *      * \c channels
+         */
+        KICK,
+        /**
+         * \brief User changed name
+         *
+         * These messages should give meaningful values to:
+         *      * \c from
+         * \todo where is the best place to store the new name?
+         */
+        RENAME,
+        /**
+         * \brief Server error
+         *
+         * These messages should give meaningful values to:
+         *      * \c message
+         */
+        ERROR,
     };
-
+// origin
     class Connection*        source {nullptr};     ///< Connection originating this message
-
+// reply
     class Connection*        destination {nullptr};///< Connection which should receive replies
     Optional<std::string>    dst_channel;          ///< Channel which should receive replies
-
+// low level properties
     std::string              raw;     ///< Raw contents
     std::string              command; ///< Protocol command name
     std::vector<std::string> params;  ///< Tokenized parameters
-    user::User               from;    ///< (optional) User who created this command
-
-    std::string              message; ///< (optional) Simple message contents
-    std::vector<std::string> channels;///< (optional) Simple message origin
-    Type                     type{UNKNOWN}; ///< (optional) Simple message type
-    bool                     direct{0};///<(optional) Simple message has been addessed to the bot directly
+// high level properties (all optional)
+    Type                     type{UNKNOWN};///< Message type
+    std::string              message;      ///< Message contents
+    std::vector<std::string> channels;     ///< Channels affected by the message
+    bool                     direct{false};///< Message has been addessed to the bot directly
+    user::User               from;         ///< User who created this message
+    user::User               victim;       ///< User victim of this command
 };
 
 /**

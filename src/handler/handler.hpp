@@ -256,8 +256,8 @@ public:
      */
     bool can_handle(const network::Message& msg) const override
     {
-        return ( msg.direct || !direct ) && msg.channels.size() < 2 &&
-            string::starts_with(msg.message,trigger);
+        return msg.type == network::Message::CHAT &&
+            (msg.direct || !direct) && string::starts_with(msg.message,trigger);
     }
 
     /**
@@ -269,6 +269,9 @@ public:
     {
         if ( can_handle(msg) )
         {
+            if ( trigger.empty() )
+                return on_handle(msg);
+            
             network::Message trimmed_msg = msg;
             auto it = trimmed_msg.message.begin()+trigger.size();
             it = std::find_if(it,trimmed_msg.message.end(),[](char c){return !std::isspace(c);});
@@ -318,6 +321,7 @@ protected:
             channel = msg.channels[0];
         return channel;
     }
+
 };
 
 /**

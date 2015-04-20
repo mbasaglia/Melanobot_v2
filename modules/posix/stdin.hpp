@@ -145,6 +145,7 @@ private:
         msg.message = msg.raw;
         msg.from = name();
         msg.source = this;
+        msg.type = network::Message::CHAT;
 
         bot->message(msg);
 

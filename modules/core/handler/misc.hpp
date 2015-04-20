@@ -335,7 +335,7 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return !msg.message.empty() && (!direct || msg.direct);
+        return msg.type == network::Message::CHAT && (!direct || msg.direct);
     }
 
 protected:

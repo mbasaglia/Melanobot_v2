@@ -86,8 +86,8 @@ bool SimpleGroup::on_handle(network::Message& msg)
 
 bool SimpleGroup::can_handle(const network::Message& msg) const
 {
-    return authorized(msg) && SimpleAction::can_handle(msg) &&
-        (!source || msg.source == source) &&
+    return authorized(msg) && (!source || msg.source == source) &&
+        ( msg.direct || !direct ) && string::starts_with(msg.message,trigger) &&
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
@@ -232,10 +232,8 @@ protected:
 
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
                            const Settings& settings, handler::HandlerContainer* parent)
-    : SimpleGroup(settings, parent)
+    : SimpleAction(default_trigger,settings, parent)
 {
-    if ( trigger.empty() )
-        trigger = name = default_trigger;
 
     Settings child_settings;
     for ( const auto& p : settings )
@@ -269,7 +267,10 @@ bool AbstractList::on_handle(network::Message& msg)
         return true;
     }
 
-    return SimpleGroup::on_handle(msg);
+    for ( const auto& h : children )
+        if ( h->handle(msg) )
+            return true;
+    return false;
 }
 
 } // namespace handler
