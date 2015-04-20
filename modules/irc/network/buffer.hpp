@@ -95,6 +95,11 @@ public:
      */
     bool connected() const;
 
+    /**
+     * \brief Parses an input line into a raw message
+     */
+    network::Message parse_line(const std::string& line) const;
+
 private:
 
     IrcConnection& irc;

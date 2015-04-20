@@ -197,10 +197,22 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     }
 
     std::istream buffer_stream(&buffer_read);
-    network::Message msg;
-    std::getline(buffer_stream,msg.raw,'\r');
-    Log("irc",'>',1) << irc.formatter()->decode(msg.raw);
+    std::string line;
+    std::getline(buffer_stream,line,'\r');
+    Log("irc",'>',1) << irc.formatter()->decode(line);
     buffer_stream.ignore(2,'\n');
+
+    irc.handle_message(parse_line(line));
+
+    schedule_read();
+}
+
+
+network::Message Buffer::parse_line(const std::string& line) const
+{
+    network::Message msg;
+
+    msg.raw = line;
     std::istringstream socket_stream(msg.raw);
 
     if ( socket_stream.peek() == ':' )
@@ -229,9 +241,8 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     }
 
     msg.source = msg.destination = &irc;
-    irc.handle_message(msg);
 
-    schedule_read();
+    return msg;
 }
 
 } // namespace irc

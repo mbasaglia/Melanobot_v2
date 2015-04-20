@@ -57,6 +57,7 @@ Melanomodule melanomodule_core()
     module.register_handler<handler::Cointoss>("Cointoss");
     module.register_handler<handler::Reply>("Reply");
     module.register_handler<handler::Action>("Action");
+    module.register_handler<handler::Command>("Command");
 
     module.register_handler<handler::SimpleGroup>("Group");
 

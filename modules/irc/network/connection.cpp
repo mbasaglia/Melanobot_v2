@@ -667,9 +667,16 @@ void IrcConnection::handle_message(network::Message msg)
     bot->message(msg);
 }
 
-void IrcConnection::command ( network::Command cmd )
+void IrcConnection::command(network::Command cmd)
 {
     if ( cmd.command.empty() ) return;
+
+    if ( cmd.parameters.empty() && cmd.command.find(' ') != std::string::npos )
+    {
+        auto msg = buffer.parse_line(cmd.command);
+        cmd.command = msg.command;
+        cmd.parameters = msg.params;
+    }
 
     cmd.command = strtoupper(cmd.command);
 

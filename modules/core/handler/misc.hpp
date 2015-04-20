@@ -346,27 +346,34 @@ protected:
             std::smatch match;
             if ( std::regex_match(msg.message,match,trigger_regex) )
             {
-                Properties map;
-                map["sender"] = msg.from.name;
+                Properties map = {
+                    {"sender", msg.from.name},
+                    {"channel", string::implode(",",msg.channels)},
+                };
                 for ( unsigned i = 0; i < match.size(); i++ )
                     map[std::to_string(i)] = match[i];
-                reply_to(msg,string::replace(reply,map,"%"));
+                on_handle(msg,string::replace(reply,map,"%"));
                 return true;
             }
         }
         else if ( msg.message == trigger )
         {
-            reply_to(msg,reply);
+            on_handle(msg,reply);
             return true;
         }
         else if ( !case_sensitive &&
             string::strtolower(msg.message) == string::strtolower(trigger) )
         {
-            reply_to(msg,reply);
+            on_handle(msg,reply);
             return true;
         }
 
         return false;
+    }
+
+    virtual void on_handle(const network::Message& msg, const std::string& reply) const
+    {
+        reply_to(msg,reply);
     }
 
 private:
@@ -376,6 +383,21 @@ private:
     bool        case_sensitive{true};   ///< Whether matches are case sensitive
     bool        direct{true};           ///< Whether the input message must be direct
     std::regex  trigger_regex;          ///< Regex for the trigger
+};
+
+/**
+ * \brief Fixed command
+ */
+class Command : public Reply
+{
+public:
+    using Reply::Reply;
+
+protected:
+    virtual void on_handle(const network::Message& msg, const std::string& reply) const
+    {
+        msg.source->command(network::Command(reply,{},priority));
+    }
 };
 
 /**

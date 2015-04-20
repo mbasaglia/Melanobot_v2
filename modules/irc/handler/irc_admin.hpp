@@ -122,15 +122,16 @@ public:
         : Handler(settings,parent)
     {}
 
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.command == "INVITE" && msg.params.size() == 2;
+    }
+
 protected:
     bool on_handle(network::Message& msg) override
     {
-        if ( msg.command == "INVITE" && msg.params.size() == 2 )
-        {
-            msg.destination->command({"JOIN",{msg.params[1]}});
-            return true;
-        }
-        return false;
+        msg.destination->command({"JOIN",{msg.params[1]}});
+        return true;
     }
 };
 
