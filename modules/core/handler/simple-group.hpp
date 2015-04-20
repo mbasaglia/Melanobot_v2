@@ -79,6 +79,57 @@ protected:
 };
 
 /**
+ * \brief Group which never blocks the message for further processing
+ * \todo maybe it can become a flag to SimpleGroup
+ */
+class PassThrough : public Handler
+{
+public:
+    PassThrough(const Settings& settings, handler::HandlerContainer* parent)
+        : Handler(settings,parent)
+    {
+        for ( auto& p : settings )
+        {
+            if ( !p.first.empty() && std::isupper(p.first[0]) )
+            {
+                auto hand = handler::HandlerFactory::instance().build(
+                    p.first,
+                    p.second,
+                    this
+                );
+                if ( hand )
+                    children.push_back(std::move(hand));
+            }
+        }
+    }
+
+
+    void initialize() override
+    {
+        for ( const auto& h : children )
+            h->initialize();
+    }
+
+    void finalize() override
+    {
+        for ( const auto& h : children )
+            h->finalize();
+    }
+
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        for ( auto& h : children )
+            h->handle(msg);
+        return false;
+    }
+
+private:
+    std::vector<std::unique_ptr<Handler>> children; ///< Contained handlers
+};
+
+/**
  * \brief Handles a list of elements (base class)
  * \note Derived classes shall provide the property \c list_name
  *       which contains a human-readable name of the list,

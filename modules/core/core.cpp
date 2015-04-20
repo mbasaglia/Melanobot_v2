@@ -59,6 +59,7 @@ Melanomodule melanomodule_core()
     module.register_handler<handler::Action>("Action");
 
     module.register_handler<handler::SimpleGroup>("Group");
+    module.register_handler<handler::PassThrough>("PassThrough");
 
     return module;
 }
