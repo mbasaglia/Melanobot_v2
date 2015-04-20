@@ -136,15 +136,23 @@ void XonoticConnection::connect()
 
         if ( io.connect(server_) )
         {
-            if ( !thread_input.joinable() )
-                thread_input = std::move(std::thread([this]{io.run_input();}));
-            // Just connected, clear all
-            Lock lock(mutex);
-                rcon_buffer.clear();    // don't run old rcon_secure 2 commands
-                cvars.clear();          // cvars might have changed
-                clear_match();
-            lock.unlock();
-            update_connection();
+            if ( thread_input.get_id() == std::this_thread::get_id() )
+                CRITICAL_ERROR("XonoticConnection::connect() called from the wrong thread");
+
+            if ( thread_input.joinable() )
+                thread_input.join();
+
+            thread_input = std::move(std::thread([this]{
+                // Just connected, clear all
+                Lock lock(mutex);
+                    rcon_buffer.clear();    // don't run old rcon_secure 2 commands
+                    cvars.clear();          // cvars might have changed
+                    clear_match();
+                lock.unlock();
+                update_connection();
+
+                io.run_input();
+            }));
         }
     }
 
