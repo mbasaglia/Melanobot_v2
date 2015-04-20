@@ -30,6 +30,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     channels = settings.get("channels","");
     name = settings.get("name",trigger);
     help_group = settings.get("help_group",help_group);
+    pass_through = settings.get("pass_through",pass_through);
 
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
@@ -79,7 +80,7 @@ void SimpleGroup::finalize()
 bool SimpleGroup::on_handle(network::Message& msg)
 {
     for ( const auto& h : children )
-        if ( h->handle(msg) )
+        if ( h->handle(msg) && !pass_through )
             return true;
     return false;
 }
