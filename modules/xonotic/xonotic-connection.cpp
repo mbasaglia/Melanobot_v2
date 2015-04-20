@@ -285,10 +285,14 @@ bool XonoticConnection::set_property(const std::string& property,
 
 void XonoticConnection::say ( const network::OutputMessage& message )
 {
+    string::FormattedString prefix_stream;
+    if ( !message.prefix.empty() )
+        prefix_stream << message.prefix << ' ' << color::nocolor;
+
     auto nocolor = string::Color(color::nocolor).to_string(*formatter_);
-    std::string prefix   = message.prefix.encode(formatter_)+' '+nocolor;
+    std::string prefix   = prefix_stream.encode(formatter_);
     std::string from     = message.from.encode(formatter_)+nocolor;
-    std::string contents = message.message.encode(formatter_);
+    std::string contents = message.message.encode(formatter_)+nocolor;
     Properties message_properties = {
         {"prefix",              prefix},
         {"from",                from},

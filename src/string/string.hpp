@@ -503,7 +503,8 @@ public:
         : input_formatter(formatter) {}
     FormattedString(std::string ascii_string)
     {
-        append<AsciiSubstring>(std::move(ascii_string));
+        if ( !ascii_string.empty() )
+            append<AsciiSubstring>(std::move(ascii_string));
     }
     FormattedString() = default;
     FormattedString(const FormattedString&) = default;
