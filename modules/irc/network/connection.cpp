@@ -503,9 +503,10 @@ void IrcConnection::handle_message(network::Message msg)
             return;
         msg.channels = string::comma_split(msg.params[0]);
         /// \note Assumes a single victim
-        msg.params.erase(msg.params.begin());
-        remove_from_channel(msg.params[0],msg.channels);
-        /// \todo maybe it's more useful if msg.from becomes the kick victim
+        msg.victim = get_user(msg.params[1]);
+        if ( msg.params.size() > 2 )
+            msg.message = msg.params.back();
+        remove_from_channel(msg.params[1],msg.channels);
         msg.type = network::Message::KICK;
     }
     // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)

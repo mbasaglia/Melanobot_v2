@@ -98,19 +98,30 @@ protected:
 };
 
 /**
- * \brief Base class for JoinMessage and PartMessage
+ * \brief Base class for JoinMessage and similar
  */
-class JoinPartMessage: public ::handler::Handler
+class EventMessageBase: public ::handler::Handler
 {
 public:
-    JoinPartMessage(const Settings& settings, ::handler::HandlerContainer* parent)
-        : Handler(settings,parent)
+    EventMessageBase(network::Message::Type type,
+                     const Settings& settings,
+                     ::handler::HandlerContainer* parent)
+        : Handler(settings,parent), type(type)
     {
         message = settings.get("message",message);
         action  = settings.get("action",action);
         prefix  = settings.get("prefix",prefix);
-        if ( message.empty() )
+        on_self = settings.get("on_self",on_self);
+        on_others=settings.get("on_others",on_others);
+        if ( message.empty() ||  !(on_others || on_self) )
             throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.type == type && (
+                ( on_others && msg.from.name != msg.source->name() ) ||
+                ( on_self && msg.from.name == msg.source->name() ) );
     }
 
 protected:
@@ -118,12 +129,7 @@ protected:
     {
         string::FormatterConfig fmt;
         auto from = msg.source->formatter()->decode(msg.from.name);
-        auto str = string::replace(message,{
-            {"channel",string::implode(", ",msg.channels)},
-            {"name", from.encode(fmt)},
-            {"host", msg.from.host},
-            {"global_id", msg.from.global_id}
-        },"%");
+        auto str = string::replace(message,message_replacements(msg),"%");
         reply_to(msg,network::OutputMessage(
             str,
             action,
@@ -135,50 +141,76 @@ protected:
         return true;
     }
 
+    virtual Properties message_replacements(const network::Message& msg) const
+    {
+        string::FormatterConfig fmt;
+        auto from = msg.source->formatter()->decode(msg.from.name);
+        return {
+            {"channel",string::implode(", ",msg.channels)},
+            {"name", from.encode(fmt)},
+            {"host", msg.from.host},
+            {"global_id", msg.from.global_id}
+        };
+    }
+
 private:
+    network::Message::Type type;///< Type of messages to be handled
     std::string prefix;         ///< Message prefix
     std::string message;        ///< Message to send
     bool        action = false; ///< Whether it should output an action
+    bool        on_self = false;///< Whether to be triggered when the joining user has the same name as the source connection
+    bool        on_others=true; ///< Whether to be triggered when the joining user name differs from the source connection
 };
 
 /**
  * \brief Prints a message when a user joins a channel (or server)
  */
-class JoinMessage: public JoinPartMessage
+class JoinMessage: public EventMessageBase
 {
 public:
     JoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
-        : JoinPartMessage(settings,parent)
-    {
-        on_self = settings.get("on_self",on_self);
-        on_others=settings.get("on_others",on_others);
-        if ( !(on_others || on_self) )
-            throw ConfigurationError();
-    }
-
-    bool can_handle(const network::Message& msg) const override
-    {
-        return msg.type == network::Message::JOIN &&
-            ( ( on_others && msg.from.name != msg.source->name() ) ||
-              ( on_self && msg.from.name == msg.source->name() ) );
-    }
-
-private:
-    bool        on_self = true; ///< Whether to be triggered when the joining user has the same name as the source connection
-    bool        on_others=true; ///< Whether to be triggered when the joining user name differs from the source connection
+        : EventMessageBase(network::Message::JOIN,settings,parent)
+    {}
 };
 
 /**
  * \brief Prints a message when a user parts a channel (or server)
  */
-class PartMessage: public JoinPartMessage
+class PartMessage: public EventMessageBase
 {
 public:
-    using JoinPartMessage::JoinPartMessage;
+    PartMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : EventMessageBase(network::Message::PART,settings,parent)
+    {}
+};
+/**
+ * \brief Prints a message when a user is kicked from a channel
+ */
+class KickMessage: public EventMessageBase
+{
+public:
+    KickMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : EventMessageBase(network::Message::KICK,settings,parent)
+    {}
 
-    bool can_handle(const network::Message& msg) const override
+protected:
+    Properties message_replacements(const network::Message& msg) const override
     {
-        return msg.type == network::Message::PART;
+        string::FormatterConfig fmt;
+        return {
+            {"channel",string::implode(", ",msg.channels)},
+            {"message",msg.message},
+
+            {"kicker", msg.source->formatter()->decode(msg.from.name).encode(fmt)},
+            {"kicker.host", msg.from.host},
+            {"kicker.global_id", msg.from.global_id},
+            {"kicker.local_id", msg.from.local_id},
+
+            {"kicked", msg.source->formatter()->decode(msg.victim.name).encode(fmt)},
+            {"kicked.host", msg.victim.host},
+            {"kicked.global_id", msg.victim.global_id},
+            {"kicked.local_id", msg.victim.local_id}
+        };
     }
 };
 

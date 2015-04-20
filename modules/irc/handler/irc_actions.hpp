@@ -27,49 +27,6 @@ namespace irc {
 namespace handler {
 
 /**
- * \brief Prints a message when a user is kicked from a channel
- */
-class IrcKickMessage: public ::handler::Handler
-{
-public:
-    IrcKickMessage(const Settings& settings, ::handler::HandlerContainer* parent)
-        : Handler(settings,parent)
-    {
-        message = settings.get("message",message);
-        on_self = settings.get("on_self",on_self);
-        on_others=settings.get("on_others",on_others);
-        if ( message.empty() || !(on_others || on_self) )
-            throw ConfigurationError();
-    }
-
-    bool can_handle(const network::Message& msg) const override
-    {
-        return !msg.channels.empty() &&
-            msg.command == "KICK" && msg.params.size() >= 2 &&
-            msg.params[0] != msg.source->name() &&
-            ( ( on_others && msg.from.name != msg.source->name() ) ||
-              ( on_self && msg.from.name == msg.source->name() ) );
-    }
-
-protected:
-    bool on_handle(network::Message& msg) override
-    {
-        reply_to(msg,string::replace(message,{
-            {"channel",msg.channels[0]},
-            {"kicker", msg.from.name},
-            {"kicked", msg.params[0]},
-            {"message", msg.params.size() > 1 ? msg.params.back() : "" }
-        },"%"));
-        return true;
-    }
-
-private:
-    std::string message;
-    bool        on_self = false;
-    bool        on_others = true;
-};
-
-/**
  * \brief Joins again once kicked
  */
 class IrcKickRejoin: public ::handler::Handler
