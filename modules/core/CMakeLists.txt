@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-set(MODULE_NAME melanomodule_core)
+melanomodule(core       "Core module, should always be enabled" ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 

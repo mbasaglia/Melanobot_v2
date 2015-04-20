@@ -15,10 +15,9 @@
 
 include_directories("${CMAKE_SOURCE_DIR}/modules")
 
-#modules     ID         Desctiption                             Default
-melanomodule(core       "Core module, should always be enabled" ON)
-melanomodule(irc        "Internet Relay Chat support"           ON)
-melanomodule(xonotic    "Xonotic integration"                   ON)
-melanomodule(posix      "Extra features for POSIX systems"      OFF)
-melanomodule(web        "Web stuff (HTTP and friends)"          ON)
-melanomodule(fun        "Possibly useless yet silly stuff"      ON)
+file(GLOB SUBDIRS RELATIVE "${CMAKE_SOURCE_DIR}/modules" ${CMAKE_SOURCE_DIR}/modules/*)
+foreach(subdir ${SUBDIRS})
+    if(IS_DIRECTORY "${CMAKE_SOURCE_DIR}/modules/${subdir}")
+        add_subdirectory(${subdir})
+    endif()
+endforeach()

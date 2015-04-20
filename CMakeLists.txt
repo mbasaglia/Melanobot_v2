@@ -30,9 +30,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 # Flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Werror")
 include_directories("${CMAKE_SOURCE_DIR}/src")
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-vexing-parse")
-endif()
 
 # Check C++14
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
@@ -62,25 +59,28 @@ configure_file ("${PROJECT_SOURCE_DIR}/src/config.hpp.in" ${CONFIG_HEADER})
 include_directories("${CMAKE_BINARY_DIR}/src")
 
 #Melano modules
-set(MELANOMODULES "")
-set(MELANOMODULES_INIT "")
+set_property(GLOBAL PROPERTY MELANOMODULES "")
+set_property(GLOBAL PROPERTY MELANOMODULES_INIT "")
+set_property(GLOBAL PROPERTY MELANOMODULES_DECLARE "")
 macro(melanomodule name description default)
     string(TOUPPER "MODULE_${name}" OPTION_NAME)
     option (${OPTION_NAME} ${description} ${default})
+    set(MODULE_NAME "melanomodule_${name}")
     if (${${OPTION_NAME}})
-        add_subdirectory(${name})
-        set(MELANOMODULES_ ${MELANOMODULES_} "melanomodule_${name}")
-        set(MELANOMODULES ${MELANOMODULES_} PARENT_SCOPE)
-        set(MELANOMODULES_INIT_ "${MELANOMODULES_INIT_} \\
-            Melanomodule melanomodule_${name}()\; \\
-            modules.push_back(melanomodule_${name}())\;")
-        set(MELANOMODULES_INIT ${MELANOMODULES_INIT_} PARENT_SCOPE)
+        set_property(GLOBAL APPEND PROPERTY MELANOMODULES ${MODULE_NAME})
+        set_property(GLOBAL APPEND_STRING PROPERTY MELANOMODULES_DECLARE "
+Melanomodule ${MODULE_NAME}();")
+        set_property(GLOBAL APPEND_STRING PROPERTY MELANOMODULES_INIT "\\
+    modules.push_back(${MODULE_NAME}());")
         message(STATUS "Enabled module ${name}: ${description}")
     endif()
 endmacro()
 
 add_subdirectory(modules lib)
 
+get_property(MELANOMODULES GLOBAL PROPERTY MELANOMODULES)
+get_property(MELANOMODULES_INIT GLOBAL PROPERTY MELANOMODULES_INIT)
+get_property(MELANOMODULES_DECLARE GLOBAL PROPERTY MELANOMODULES_DECLARE)
 if (NOT MELANOMODULES)
     message(STATUS "No modules enabled")
 else()

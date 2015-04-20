@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-set(MODULE_NAME melanomodule_web)
+melanomodule(web        "Web stuff (HTTP and friends)"          ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
