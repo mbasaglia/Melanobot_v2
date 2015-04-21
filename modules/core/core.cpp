@@ -49,6 +49,7 @@ Melanomodule melanomodule_core()
     module.register_handler<handler::JoinMessage>("JoinMessage");
     module.register_handler<handler::PartMessage>("PartMessage");
     module.register_handler<handler::KickMessage>("KickMessage");
+    module.register_handler<handler::RenameMessage>("RenameMessage");
 
     module.register_handler<handler::License>("License");
     module.register_handler<handler::Help>("Help");

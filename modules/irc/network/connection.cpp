@@ -449,6 +449,8 @@ void IrcConnection::handle_message(network::Message msg)
         {
             msg.channels = string::comma_split(msg.params[0]);
             remove_from_channel(msg.from.name,msg.channels);
+            if ( !msg.params.size() > 1 )
+                msg.message = msg.params[1];
             msg.type = network::Message::PART;
         }
     }
@@ -470,6 +472,8 @@ void IrcConnection::handle_message(network::Message msg)
                 lock.unlock();
                 command({"NICK",{preferred_nick}});
             }
+            if ( !msg.params.empty() )
+                msg.message = msg.params[0];
             msg.type = network::Message::PART;
         }
     }
@@ -492,7 +496,7 @@ void IrcConnection::handle_message(network::Message msg)
                     current_nick_lowecase = strtolower(current_nick);
                     attempted_nick.clear();
                 }
-
+                msg.message = msg.params[0];
                 msg.type = network::Message::RENAME;
             }
         }

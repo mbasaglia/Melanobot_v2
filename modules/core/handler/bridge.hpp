@@ -131,7 +131,7 @@ protected:
         auto from = msg.source->formatter()->decode(msg.from.name);
         auto str = string::replace(message,message_replacements(msg),"%");
         reply_to(msg,network::OutputMessage(
-            str,
+            fmt.decode(str),
             action,
             reply_channel(msg),
             priority,
@@ -149,7 +149,8 @@ protected:
             {"channel",string::implode(", ",msg.channels)},
             {"name", from.encode(fmt)},
             {"host", msg.from.host},
-            {"global_id", msg.from.global_id}
+            {"global_id", msg.from.global_id},
+            {"message", msg.source->formatter()->decode(msg.message).encode(fmt)}
         };
     }
 
@@ -212,6 +213,18 @@ protected:
             {"kicked.local_id", msg.victim.local_id}
         };
     }
+};
+
+/**
+ * \brief Prints a message when a user changes name
+ * \note %name expands to the old name, %message to the new one
+ */
+class RenameMessage: public EventMessageBase
+{
+public:
+    RenameMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+        : EventMessageBase(network::Message::RENAME,settings,parent)
+    {}
 };
 
 } // namespace handler
