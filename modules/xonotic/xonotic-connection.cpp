@@ -503,17 +503,22 @@ void XonoticConnection::handle_message(network::Message& msg)
         else if ( msg.raw[0] == ':' )
         {
             static std::regex regex_join(
-                R"regex(^:join:(\d+):(\d+):((?:[0-9]+(?:\.[0-9]+){3})|(?:[[:xdigit:]](?::[[:xdigit:]]){7})):(.*))regex",
+                R"regex(:join:(\d+):(\d+):((?:[0-9]+(?:\.[0-9]+){3})|(?:[[:xdigit:]](?::[[:xdigit:]]){7})):(.*))regex",
                 std::regex::ECMAScript|std::regex::optimize
             );
             static std::regex regex_part(
-                R"regex(^:part:(\d+))regex",
+                R"regex(:part:(\d+))regex",
                 std::regex::ECMAScript|std::regex::optimize
             );
             static std::regex regex_gamestart(
-                R"regex(^:gamestart:([a-z]+)_([^:]*):[0-9.]*)regex",
+                R"regex(:gamestart:([a-z]+)_([^:]*):[0-9.]*)regex",
                 std::regex::ECMAScript|std::regex::optimize
             );
+            static std::regex regex_name(
+                R"regex(:name:(\d+):(.*))regex",
+                std::regex::ECMAScript|std::regex::optimize
+            );
+
             std::smatch match;
             if ( std::regex_match(msg.raw,match,regex_join) )
             {
@@ -525,7 +530,6 @@ void XonoticConnection::handle_message(network::Message& msg)
                 Lock lock(mutex);
                 user_manager.add_user(user);
                 lock.unlock();
-                msg.command = "join";
                 msg.from = user;
                 msg.type = network::Message::JOIN;
                 Log("xon",'!',2) << "Added user " << formatter()->decode(user.name);
@@ -537,7 +541,6 @@ void XonoticConnection::handle_message(network::Message& msg)
                 {
                     Log("xon",'!',2) << "Removed user " << formatter()->decode(found->name);
                     msg.from = *found;
-                    msg.command = "part"; /// \todo remove these
                     user_manager.remove_user(found->local_id);
                     msg.type = network::Message::PART;
                 }
@@ -550,6 +553,19 @@ void XonoticConnection::handle_message(network::Message& msg)
                 msg.params = { match[1], match[2] };
                 properties["gametype"] = match[1];
                 properties["map"] = match[2];
+            }
+            else if ( std::regex_match(msg.raw,match,regex_name) )
+            {
+                Lock lock(mutex);
+                if ( user::User *found = user_manager.user(match[1]) )
+                {
+                    msg.from = *found;
+                    msg.message = match[2];
+                    msg.type = network::Message::RENAME;
+                    Log("irc",'!',3) << "Renamed user " << formatter()->decode(found->name)
+                        << color::nocolor << " to " << formatter()->decode(msg.message);
+                    found->name = msg.message;
+                }
             }
         }
         // status reply
