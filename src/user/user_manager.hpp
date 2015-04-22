@@ -105,6 +105,36 @@ public:
      */
     void clear() { users_.clear(); }
 
+    /**
+     * \brief Iterator to the first user
+     */
+    auto begin() { return users_.begin(); }
+    /**
+     * \brief Iterator to past the last user
+     */
+    auto end() { return users_.end(); }
+    /**
+     * \brief Constant iterator to the first user
+     */
+    auto begin() const { return users_.begin(); }
+    /**
+     * \brief Constant iterator to past the last user
+     */
+    auto end() const { return users_.end(); }
+    /**
+     * \brief Constant iterator to the first user
+     */
+    auto cbegin() const { return users_.begin(); }
+    /**
+     * \brief Constant iterator to past the last user
+     */
+    auto cend() const { return users_.end(); }
+
+    /**
+     * \brief Returns a writable reference to the user list
+     */
+    std::list<User>& users_writable() { return users_; }
+
 private:
     std::list<User> users_;
 };

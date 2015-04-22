@@ -108,12 +108,14 @@ public:
     {
         join = settings.get("join",join);
         part = settings.get("part",part);
+        bots = settings.get("bots",bots);
     }
 
     bool can_handle(const network::Message& msg) const override
     {
-        return msg.type == network::Message::JOIN ||
-               msg.type == network::Message::PART;
+        return ( msg.type == network::Message::JOIN ||
+                 msg.type == network::Message::PART ) &&
+               ( bots || !msg.from.host.empty() );
     }
 
 protected:
@@ -124,7 +126,7 @@ protected:
         auto overprops = message_properties(msg.source,msg.from);
         props.insert(overprops.begin(),overprops.end());
 
-        const std::string& message = msg.command == "join" ? join : part;
+        const std::string& message = msg.type == network::Message::JOIN ? join : part;
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
         return true;
     }
@@ -132,6 +134,7 @@ protected:
 private:
     std::string join = "#2#+ join#-#: %name #1#%map#-# [#1#%players#-#/#1#%max#-#]";
     std::string part = "#1#- part#-#: %name #1#%map#-# [#1#%players#-#/#1#%max#-#]";
+    bool        bots = false;
 };
 
 /**

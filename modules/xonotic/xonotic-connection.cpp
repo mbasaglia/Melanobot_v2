@@ -132,7 +132,8 @@ void XonoticConnection::connect()
 {
     if ( !io.connected() )
     {
-        status_ = CONNECTING;
+        // status: DISCONNECTED -> WAITING
+        status_ = WAITING;
 
         if ( io.connect(server_) )
         {
@@ -160,6 +161,7 @@ void XonoticConnection::connect()
 
 void XonoticConnection::disconnect(const std::string& message)
 {
+    // status: * -> DISCONNECTED
     status_polling.stop();
     if ( io.connected() )
     {
@@ -401,8 +403,9 @@ void XonoticConnection::read(const std::string& datagram)
         return;
     }
 
-    if ( status_ == CONNECTING )
-        status_ = CHECKING;
+    // status: WAITING -> CONNECTING
+    if ( status_ == WAITING )
+        status_ = CONNECTING;
 
     if ( datagram[4] != 'n' )
     {
@@ -487,14 +490,21 @@ void XonoticConnection::handle_message(network::Message& msg)
                 /// \todo keep in sync when update_connection() is changed
                 if ( cvar_name == "log_dest_udp" )
                 {
+                    // status: INVALID    -> CONNECTING
+                    // status: CONNECTING -> CONNECTED + message
+                    // status: CHECKING   -> CONNECTED
                     if ( cvar_value != io.local_endpoint().name() )
                     {
                         update_connection();
                     }
-                    else if ( status_ == CHECKING )
+                    else if ( status_ == CONNECTING )
                     {
                         status_ = CONNECTED;
                         virtual_message("CONNECTED");
+                    }
+                    else
+                    {
+                        status_ = CONNECTED;
                     }
                 }
             }
@@ -503,7 +513,7 @@ void XonoticConnection::handle_message(network::Message& msg)
         else if ( msg.raw[0] == ':' )
         {
             static std::regex regex_join(
-                R"regex(:join:(\d+):(\d+):((?:[0-9]+(?:\.[0-9]+){3})|(?:[[:xdigit:]](?::[[:xdigit:]]){7})):(.*))regex",
+                R"regex(:join:(\d+):(\d+):((?:[0-9]+(?:\.[0-9]+){3})|(?:[[:xdigit:]](?::[[:xdigit:]]){7})|bot):(.*))regex",
                 std::regex::ECMAScript|std::regex::optimize
             );
             static std::regex regex_part(
@@ -525,7 +535,8 @@ void XonoticConnection::handle_message(network::Message& msg)
                 user::User user;
                 user.local_id = match[1]; // playerid
                 user.properties["entity"] = match[2]; // entity number
-                user.host = match[3]; // ip address or "bot"
+                if ( match[3] != "bot" )
+                    user.host = match[3];
                 user.name = match[4];
                 Lock lock(mutex);
                 user_manager.add_user(user);
@@ -569,10 +580,15 @@ void XonoticConnection::handle_message(network::Message& msg)
             }
         }
         // status reply
-        else if ( status_ == CHECKING )
+        else if ( status_ == CHECKING || status_ == CONNECTING )
         {
             static std::regex regex_status1(
                 "([a-z]+):\\s+(.*)",
+                std::regex::ECMAScript|std::regex::optimize
+            );
+            static std::regex regex_status1_player(
+                //rowcol  IP      %pl    ping    time    frags   entity     name
+                R"(\^[37](\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+#([0-9]+)\s+\^7(.*))",
                 std::regex::ECMAScript|std::regex::optimize
             );
             std::smatch match;
@@ -582,6 +598,10 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::string status_value = match[2];
                 Lock lock(mutex);
                 properties[status_name] = status_value;
+            }
+            else if ( std::regex_match(msg.raw, match, regex_status1_player) )
+            {
+                check_user(match);
             }
         }
     }
@@ -623,9 +643,10 @@ void XonoticConnection::handle_message(network::Message& msg)
 
 void XonoticConnection::update_connection()
 {
+    // status: WAITING -> CONNECTING
     if ( status_ > DISCONNECTED )
     {
-        status_ = CONNECTING;
+        status_ = WAITING;
 
         /// \todo the host name for log_dest_udp needs to be read from settings
         /// (and if settings don't provide it, fallback to what local_endpoint() gives)
@@ -634,7 +655,8 @@ void XonoticConnection::update_connection()
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
-        if ( status_ == CONNECTING )
+        // status: WAITING -> CONNECTING
+        if ( status_ == WAITING )
             read(io.read());
 
         // Make sure the connection is being checked
@@ -642,11 +664,11 @@ void XonoticConnection::update_connection()
             status_polling.start();
 
         /// \todo should:
-        ///     * wait while status_ == CONNECTING
+        ///     * wait while status_ == WAITING
         ///     * return if status_ == DISCONNECTED
-        ///     * keep going if status_ >= CHECKING
+        ///     * keep going if status_ >= CONNECTING
         // Commands failed
-        if ( status_ < CHECKING )
+        if ( status_ < CONNECTING )
             return;
 
         // Request status right away (will also be called later by status_polling)
@@ -671,8 +693,14 @@ void XonoticConnection::cleanup_connection()
 
 void XonoticConnection::request_status()
 {
-    if ( status_ > CONNECTING )
+    // status: CONNECTING  -> CONNECTING
+    // status: CONNECTED   -> CHECKING
+    // status: DISCONNECTED-> WAITING
+    if ( status_ >= CONNECTING )
     {
+        if ( status_ == CONNECTED )
+            status_ = CHECKING;
+        check_user_start();
         /// \todo attribute holding these commands, check timeouts etc.
         command({"rcon",{"status 1"},1024});
         command({"rcon",{"log_dest_udp"},1024});
@@ -695,6 +723,8 @@ void XonoticConnection::virtual_message(std::string command)
 
 void XonoticConnection::close_connection()
 {
+    // status: CONNECTED|CHECKING -> DISCONNECTED + message
+    // status: * -> DISCONNECTED
     if ( status_ > CONNECTING )
         virtual_message("DISCONNECTED");
     status_ = DISCONNECTED;
@@ -710,5 +740,60 @@ void XonoticConnection::clear_match()
     user_manager.clear();
     properties.erase("map");
 }
+
+void XonoticConnection::check_user_start()
+{
+    // Marks all users as unchecked
+    Lock lock(mutex);
+    for ( user::User& user : user_manager )
+        user.checked = false;
+}
+
+/**
+ * \pre \c match a successful result of \c regex_status1_player:
+ *      * \b 1 IP|botclient
+ *      * \b 2 %pl
+ *      * \b 3 ping
+ *      * \b 4 time
+ *      * \b 5 frags
+ *      * \b 6 entity number (no #)
+ *      * \b 7 name
+ */
+void XonoticConnection::check_user(const std::smatch& match)
+{
+    Lock lock(mutex);
+    user::User* user = user_manager.user_by_property("entity",match[6]);
+    Properties props = {
+        {"host",   match[1] == "botclient" ? std::string(): match[1]},
+        {"pl",     match[2]},
+        {"ping",   match[3]},
+        {"time",   match[4]},
+        {"frags",  match[5]},
+        {"entity", match[6]},
+        {"name",   match[7]},
+    };
+    if ( user )
+    {
+        user->update(props);
+        user->checked = true;
+    }
+    else
+    {
+        /// \todo Send join command
+        user::User new_user;
+        new_user.update(props);
+        user_manager.add_user(new_user);
+    }
+}
+
+void XonoticConnection::check_user_end()
+{
+    // Removes all unchecked users
+    /// \todo Send part command
+    Lock lock(mutex);
+    user_manager.users_writable().remove_if(
+        [](const user::User& user) { return !user.checked; } );
+}
+
 
 } // namespace xonotic

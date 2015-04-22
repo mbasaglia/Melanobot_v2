@@ -266,6 +266,19 @@ private:
      */
     void clear_match();
 
+    /**
+     * \brief Initializes user checking
+     */
+    void check_user_start();
+    /**
+     * \brief Checks a player
+     */
+    void check_user(const std::smatch& match);
+    /**
+     * \brief Finalizes user checking
+     */
+    void check_user_end();
+
 };
 
 } // namespace xonotic

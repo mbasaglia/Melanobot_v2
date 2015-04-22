@@ -106,8 +106,10 @@ struct User
     void update(const Properties& props)
     {
         static std::unordered_map<std::string,std::string (User::*)> attributes = {
-            {"name",&User::name}, {"host",&User::host},
-            {"local_id", &User::local_id}, {"global_id",&User::global_id}
+            {"name",&User::name},
+            {"host",&User::host},
+            {"local_id", &User::local_id},
+            {"global_id",&User::global_id}
         };
         for ( const auto& p : props )
         {
@@ -151,6 +153,11 @@ struct User
      * \brief Custom properties associated to the user
      */
     Properties properties;
+
+    /**
+     * \brief Whether the user has been checked
+     */
+    bool checked = true;
 };
 
 } // namespace user
