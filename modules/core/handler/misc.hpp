@@ -25,6 +25,7 @@
 #include "handler/handler.hpp"
 #include "math.hpp"
 #include "string/language.hpp"
+#include "time/time_string.hpp"
 
 namespace handler {
 
@@ -460,6 +461,32 @@ private:
     std::string unauthorized = "Won't do!";
     std::string empty = "Please what?";
     std::string auth;
+};
+
+
+/**
+ * \brief Handler showing the time
+ */
+class Time : public SimpleAction
+{
+public:
+    Time(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("time",settings,parent)
+    {
+        format = settings.get("format",format);
+        synopsis += "[time]";
+        help = "Shows the time";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        reply_to(msg,timer::format(timer::parse_time(msg.message), format));
+        return true;
+    }
+
+private:
+    std::string format = "r (\\U\\T\\C)"; ///< Output time format
 };
 
 } // namespace handler
