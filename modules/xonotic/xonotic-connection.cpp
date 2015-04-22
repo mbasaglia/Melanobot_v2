@@ -237,8 +237,8 @@ std::string XonoticConnection::get_property(const std::string& property) const
     Lock lock(mutex);
     if ( string::starts_with(property,"cvar.") )
     {
-        auto it = cvars.find(property.substr(5));
-        return it != cvars.end() ? it->second : "";
+        lock.unlock();
+        return get_cvar(property.substr(5));
     }
     else if ( property == "say" )
     {
@@ -262,6 +262,34 @@ std::string XonoticConnection::get_property(const std::string& property) const
                 return description();
         }
         return it->second;
+    }
+    else if ( string::starts_with(property,"count_") )
+    {
+        int total = user_manager.users_reference().size();
+        if ( string::ends_with(property,"all") )
+            return std::to_string(total);
+
+        int bots = 0;
+        int players = 0;
+        for ( const auto& user : user_manager )
+            (user.host.empty() ? bots : players)++;
+
+        if ( string::ends_with(property,"bots") )
+            return std::to_string(bots);
+
+        if ( string::ends_with(property,"players") )
+            return std::to_string(players);
+
+        lock.unlock();
+        int max = string::to_uint(get_cvar("g_maxplayers"));
+
+        if ( string::ends_with(property,"max") )
+            return std::to_string(max);
+
+        if ( string::ends_with(property,"free") )
+            return std::to_string(max < players ? 0 : max - players);
+
+        lock.lock();
     }
     auto it = properties.find(property);
     return it != properties.end() ? it->second : "";
@@ -582,6 +610,10 @@ void XonoticConnection::handle_message(network::Message& msg)
         // status reply
         else if ( status_ == CHECKING || status_ == CONNECTING )
         {
+            static std::regex regex_status1_players(
+                R"(players:  \d+ active \((\d+) max\))",
+                std::regex::ECMAScript|std::regex::optimize
+            );
             static std::regex regex_status1(
                 "([a-z]+):\\s+(.*)",
                 std::regex::ECMAScript|std::regex::optimize
@@ -592,7 +624,11 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::regex::ECMAScript|std::regex::optimize
             );
             std::smatch match;
-            if ( std::regex_match(msg.raw, match, regex_status1) )
+            if ( std::regex_match(msg.raw, match, regex_status1_players) )
+            {
+                cvars["g_maxplayers"] = match[1];
+            }
+            else if ( std::regex_match(msg.raw, match, regex_status1) )
             {
                 std::string status_name = match[1];
                 std::string status_value = match[2];
@@ -791,7 +827,7 @@ void XonoticConnection::check_user_end()
     // Removes all unchecked users
     /// \todo Send part command
     Lock lock(mutex);
-    user_manager.users_writable().remove_if(
+    user_manager.users_reference().remove_if(
         [](const user::User& user) { return !user.checked; } );
 }
 

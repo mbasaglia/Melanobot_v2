@@ -133,7 +133,8 @@ public:
     /**
      * \brief Returns a writable reference to the user list
      */
-    std::list<User>& users_writable() { return users_; }
+    std::list<User>& users_reference() { return users_; }
+    const std::list<User>& users_reference() const { return users_; }
 
 private:
     std::list<User> users_;

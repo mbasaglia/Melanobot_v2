@@ -32,14 +32,11 @@ inline Properties message_properties(network::Connection* source)
 {
     string::FormatterConfig fmt;
     return Properties {
-        {"players", source->get_property("count_players")}, /// \todo
-        {"bots",    source->get_property("count_bots")}, /// \todo
-        {"total",   source->get_property("count_all")}, /// \todo
-        {"max",     source->get_property("cvar.g_maxplayers")}, /// \todo
-        {"free",    std::to_string(
-                        string::to_uint(source->get_property("cvar.g_maxplayers")) -
-                        string::to_uint(source->get_property("count_players"))
-                    ) },
+        {"players", source->get_property("count_players")},
+        {"bots",    source->get_property("count_bots")},
+        {"total",   source->get_property("count_all")},
+        {"max",     source->get_property("count_max")},
+        {"free",    source->get_property("count_free")},
         {"map",     source->get_property("map")},
         {"gt",      source->get_property("gametype")},
         {"gametype",xonotic::gametype_name(source->get_property("gametype"))},
