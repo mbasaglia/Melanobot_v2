@@ -124,7 +124,8 @@ private:
     void schedule_read()
     {
         boost::asio::async_read_until(input, buffer_read, '\n',
-            std::bind(&StdinConnection::on_read_line, this, std::placeholders::_1));
+            [this](const boost::system::error_code& error, std::size_t)
+            { return on_read_line(error); });
     }
 
     void on_read_line(const boost::system::error_code &error)

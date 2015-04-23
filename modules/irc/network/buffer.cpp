@@ -184,7 +184,8 @@ bool Buffer::connected() const
 void Buffer::schedule_read()
 {
     boost::asio::async_read_until(socket, buffer_read, "\r\n",
-        std::bind(&Buffer::on_read_line, this, std::placeholders::_1));
+        [this](const boost::system::error_code& error, std::size_t)
+        { return on_read_line(error); });
 }
 
 void Buffer::on_read_line(const boost::system::error_code &error)

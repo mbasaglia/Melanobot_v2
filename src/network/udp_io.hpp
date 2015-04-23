@@ -203,9 +203,8 @@ private:
         receive_buffer.resize(max_bytes);
         socket.async_receive(
             boost::asio::mutable_buffers_1(&receive_buffer[0], max_bytes),
-            std::bind(&UdpIo::on_receive, this,
-                std::placeholders::_1,
-                std::placeholders::_2));
+                [this](const boost::system::error_code& error, std::size_t nbytes)
+                { return on_receive(error,nbytes); });
     }
 
     /**
