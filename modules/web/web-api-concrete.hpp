@@ -34,27 +34,76 @@ public:
     SearchVideoYoutube(const Settings& settings, handler::HandlerContainer* parent)
         : SimpleJson("video",settings,parent)
     {
-        api_url = settings.get("url",
-            "https://gdata.youtube.com/feeds/api/videos?alt=json&max-results=1");
-        not_found_reply = settings.get("not_found",
-            "http://www.youtube.com/watch?v=oHg5SJYRHA0" );
+        api_key = settings.get("api_key", "");
+        order = settings.get("order", order);
+        api_url = settings.get("url", api_url);
+        reply = settings.get("reply", reply);
+        not_found_reply = settings.get("not_found", not_found_reply );
+        if ( api_key.empty() || api_url.empty() || reply.empty() )
+            throw ConfigurationError();
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url,{{"q",msg.message}}));
+        request_json(msg,network::http::get(api_url,{
+            {"part", "snippet"},
+            {"type", "video" },
+            {"maxResults","1"},
+            {"order",order},
+            {"key",api_key},
+            {"q",msg.message},
+        }));
         return true;
     }
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        reply_to(msg,parsed.get("feed.entry.0.link.0.href",not_found_reply));
+        int found = parsed.get("pageInfo.totalResults",0);
+        if ( !found )
+        {
+            reply_to(msg,not_found_reply);
+            return;
+        }
+        string::FormatterConfig fmt;
+        string::FormatterUtf8   f8;
+        Properties prop {
+            {"videoId",parsed.get("items.0.id.videoId","")},
+            {"title",f8.decode(parsed.get("items.0.snippet.title","")).encode(fmt)},
+            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
+            {"description",f8.decode(parsed.get("items.0.snippet.description","")).encode(fmt)},
+        };
+        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
     }
 
 private:
-    std::string api_url;
-    std::string not_found_reply;
+    /**
+     * \brief API soring order
+     *
+     * Acceptable values are:
+     *  * date          : reverse chronological order
+     *  * rating        : from highest to lowest rating
+     *  * relevance     : relevance to the search query
+     *  * title         : sorted alphabetically
+     *  * viewCount     : from highest to lowest number of views
+     */
+    std::string order = "relevance";
+    /**
+     * \brief API key
+     */
+    std::string api_key;
+    /**
+     * \brief API URL
+     */
+    std::string api_url = "https://www.googleapis.com/youtube/v3/search";
+    /**
+     * \brief Reply to give on found
+     */
+    std::string reply = "https://www.youtube.com/watch?v=%videoId";
+    /**
+     * \brief Fixed reply to give on not found
+     */
+    std::string not_found_reply = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
 };
 
 /**
