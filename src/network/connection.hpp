@@ -25,6 +25,7 @@
 #include "string/logger.hpp"
 #include "string/string_functions.hpp"
 #include "user/auth_system.hpp"
+#include "user/user_counter.hpp"
 #include "user/user_manager.hpp"
 #include "network.hpp"
 
@@ -292,6 +293,7 @@ public:
 
     /**
      * \brief Returns the connection status
+     * \todo is this ever called?
      */
     virtual Status status() const = 0;
 
@@ -398,6 +400,12 @@ public:
      * \return \b true on success
      */
     virtual bool set_property(const std::string& property, const std::string& value ) = 0;
+
+    /**
+     * \brief Counts the number of users in a channel (or the whole connection),
+     *        as visible to the bot.
+     */
+    virtual user::UserCounter count_users(const std::string& channel = {} ) const = 0;
 };
 
 /**

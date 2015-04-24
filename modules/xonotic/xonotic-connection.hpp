@@ -153,6 +153,24 @@ public:
      */
     bool set_property(const std::string& property, const std::string& value ) override;
 
+    /**
+     * \thead external \lock data
+     */
+    user::UserCounter count_users(const std::string& channel = {}) const override;
+
+    /**
+     * \brief Returns the value of a cvar (or the empty string)
+     * \thread external \lock data
+     *
+     * Equivalent to get_property("cvar.name")
+     */
+    std::string get_cvar(const std::string& name) const
+    {
+        Lock lock(mutex);
+        auto it = cvars.find(name);
+        return it != cvars.end() ? it->second : "";
+    }
+
     // Dummy methods:
     bool channel_mask(const std::vector<std::string>&, const std::string& ) const override
     {
@@ -174,20 +192,6 @@ public:
     std::vector<user::User> users_in_group(const std::string&) const override
     {
         return {};
-    }
-
-
-    /**
-     * \brief Returns the value of a cvar (or the empty string)
-     * \thread external \lock data
-     *
-     * Equivalent to get_property("cvar.name")
-     */
-    std::string get_cvar(const std::string& name) const
-    {
-        Lock lock(mutex);
-        auto it = cvars.find(name);
-        return it != cvars.end() ? it->second : "";
     }
 
 private:

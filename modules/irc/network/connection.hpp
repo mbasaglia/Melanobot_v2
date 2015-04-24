@@ -225,6 +225,7 @@ public:
     /**
      * \brief Returns properties reported by RPL_ISUPPORT, for features
      *        without a value "1" is reported.
+     * \thead external \lock data
      */
     std::string get_property(const std::string& property) const override;
 
@@ -232,6 +233,11 @@ public:
      * \brief Always fails
      */
     bool set_property(const std::string& property, const std::string& value ) override;
+
+    /**
+     * \thead external \lock data
+     */
+    user::UserCounter count_users(const std::string& channel = {}) const override;
 
 private:
     friend class Buffer;

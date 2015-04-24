@@ -31,12 +31,13 @@ namespace xonotic {
 inline Properties message_properties(network::Connection* source)
 {
     string::FormatterConfig fmt;
+    user::UserCounter count = source->count_users();
     return Properties {
-        {"players", source->get_property("count_players")},
-        {"bots",    source->get_property("count_bots")},
-        {"total",   source->get_property("count_all")},
-        {"max",     source->get_property("count_max")},
-        {"free",    source->get_property("count_free")},
+        {"players", std::to_string(count.users)},
+        {"bots",    std::to_string(count.bots)},
+        {"total",   std::to_string(count.users+count.bots)},
+        {"max",     std::to_string(count.max)},
+        {"free",    std::to_string(count.max-count.users)},
         {"map",     source->get_property("map")},
         {"gt",      source->get_property("gametype")},
         {"gametype",xonotic::gametype_name(source->get_property("gametype"))},
@@ -144,6 +145,7 @@ public:
         : Handler(settings, parent)
     {
         message = settings.get("message",message);
+        empty = settings.get("empty",empty);
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -157,12 +159,14 @@ protected:
         string::FormatterConfig fmt;
         Properties props = message_properties(msg.source);
 
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        if ( empty || msg.source->count_users().users )
+            reply_to(msg,fmt.decode(string::replace(message,props,"%")));
         return true;
     }
 
 private:
     std::string message = "Playing #dark_cyan#%gametype#-# on #1#%map#-# (%free free slots); join now: #-b#xonotic +connect %sv_server";
+    bool empty = false;
 };
 
 /**

@@ -149,6 +149,7 @@ void XonoticConnection::connect()
                     rcon_buffer.clear();    // don't run old rcon_secure 2 commands
                     cvars.clear();          // cvars might have changed
                     clear_match();
+                    user_manager.clear();
                 lock.unlock();
                 update_connection();
 
@@ -173,6 +174,7 @@ void XonoticConnection::disconnect(const std::string& message)
     Lock lock(mutex);
     rcon_buffer.clear();
     clear_match();
+    user_manager.clear();
     lock.unlock();
 }
 void XonoticConnection::update_user(const std::string& local_id,
@@ -263,36 +265,19 @@ std::string XonoticConnection::get_property(const std::string& property) const
         }
         return it->second;
     }
-    else if ( string::starts_with(property,"count_") )
-    {
-        int total = user_manager.users_reference().size();
-        if ( string::ends_with(property,"all") )
-            return std::to_string(total);
-
-        int bots = 0;
-        int players = 0;
-        for ( const auto& user : user_manager )
-            (user.host.empty() ? bots : players)++;
-
-        if ( string::ends_with(property,"bots") )
-            return std::to_string(bots);
-
-        if ( string::ends_with(property,"players") )
-            return std::to_string(players);
-
-        lock.unlock();
-        int max = string::to_uint(get_cvar("g_maxplayers"));
-
-        if ( string::ends_with(property,"max") )
-            return std::to_string(max);
-
-        if ( string::ends_with(property,"free") )
-            return std::to_string(max < players ? 0 : max - players);
-
-        lock.lock();
-    }
     auto it = properties.find(property);
     return it != properties.end() ? it->second : "";
+}
+
+user::UserCounter XonoticConnection::count_users(const std::string& channel) const
+{
+    Lock lock(mutex);
+    user::UserCounter c;
+    for ( const auto& user : user_manager )
+        (user.host.empty() ? c.bots : c.users)++;
+    lock.unlock();
+    c.max = string::to_uint(get_cvar("g_maxplayers"));
+    return c;
 }
 
 bool XonoticConnection::set_property(const std::string& property,
@@ -527,11 +512,13 @@ void XonoticConnection::handle_message(network::Message& msg)
                     }
                     else if ( status_ == CONNECTING )
                     {
+                        check_user_end();
                         status_ = CONNECTED;
                         virtual_message("CONNECTED");
                     }
                     else
                     {
+                        check_user_end();
                         status_ = CONNECTED;
                     }
                 }
@@ -560,6 +547,9 @@ void XonoticConnection::handle_message(network::Message& msg)
             std::smatch match;
             if ( std::regex_match(msg.raw,match,regex_join) )
             {
+                user_manager.users_reference().remove_if(
+                    [match](const user::User& u) {
+                        return u.property("entity") == match[2]; });
                 user::User user;
                 user.local_id = match[1]; // playerid
                 user.properties["entity"] = match[2]; // entity number
@@ -588,6 +578,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             {
                 Lock lock(mutex);
                 clear_match();
+                //check_user_start();
                 msg.command = "gamestart";
                 msg.params = { match[1], match[2] };
                 properties["gametype"] = match[1];
@@ -773,7 +764,6 @@ void XonoticConnection::close_connection()
 
 void XonoticConnection::clear_match()
 {
-    user_manager.clear();
     properties.erase("map");
 }
 
