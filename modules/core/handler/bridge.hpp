@@ -115,6 +115,11 @@ public:
         on_others=settings.get("on_others",on_others);
         if ( message.empty() ||  !(on_others || on_self) )
             throw ConfigurationError();
+
+        int timeout_seconds = settings.get("timeout",0);
+        if ( timeout_seconds > 0 )
+            timeout = std::chrono::duration_cast<network::Duration>(
+                std::chrono::seconds(timeout_seconds) );
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -136,7 +141,10 @@ protected:
             reply_channel(msg),
             priority,
             action ? from : string::FormattedString(),
-            prefix
+            prefix,
+            timeout == network::Duration::zero() ?
+                network::Time::max() :
+                network::Clock::now() + timeout
         ));
         return true;
     }
@@ -161,6 +169,7 @@ private:
     bool        action = false; ///< Whether it should output an action
     bool        on_self = false;///< Whether to be triggered when the joining user has the same name as the source connection
     bool        on_others=true; ///< Whether to be triggered when the joining user name differs from the source connection
+    network::Duration timeout{network::Duration::zero()};///< Output message timeout
 };
 
 /**
