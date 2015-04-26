@@ -38,8 +38,8 @@ inline Properties message_properties(network::Connection* source)
         {"total",   std::to_string(count.users+count.bots)},
         {"max",     std::to_string(count.max)},
         {"free",    std::to_string(count.max-count.users)},
-        {"map",     source->get_property("map")},
-        {"gt",      source->get_property("gametype")},
+        {"map",     source->get_property("map")}, /// \todo replace with "?" or something
+        {"gt",      source->get_property("gametype")}, /// same here
         {"gametype",xonotic::gametype_name(source->get_property("gametype"))},
         {"sv_host", source->formatter()->decode(source->get_property("host")).encode(&fmt)},
         {"sv_server",source->server().name()}
@@ -372,6 +372,92 @@ protected:
 
 private:
     std::string message = "#4#*#-# %name#-# used their master status to do %vote";
+};
+
+/**
+ * \brief Shows match scores
+ */
+class XonoticMatchScore : public ParseEventlog
+{
+public:
+    XonoticMatchScore( const Settings& settings, HandlerContainer* parent )
+        : ParseEventlog(
+            ":(?:"
+            "(end)"// 1
+            "|(teamscores:see-labels:(-?\\d+)[-0-9,]*:(\\d+))" // 2 - score=3 id=4
+            "|(player:see-labels:(-?\\d+)[-0-9,]*:(\\d+):([^:]+):(\\d+):(.*))"// 5 - score=6 time=7 team=8 id=9 name=10
+            "|(scores:([a-z]+)_(.*)):"//11 gametype=12 map=13
+            "|(labels:player:([^[,<!]*)(<?)!!,.*)"//14 primary=15 sort=16
+            ")",
+            settings, parent
+        )
+    {
+        message = settings.get("message",message);
+        empty = settings.get("empty",empty);
+    }
+
+    /**
+     * \todo maybe this check isn't needed (empty check can be deferred to :end)
+     */
+    bool can_handle(const network::Message& msg) const override
+    {
+        return !msg.raw.empty() && msg.raw[0] == ':' &&
+            (empty || msg.source->count_users().users);
+    }
+
+protected:
+    bool on_handle(network::Message& msg, const std::smatch& match) override
+    {
+        if ( match[1].matched )
+            handle_end(msg,match);
+
+        return true;
+    }
+
+    /**
+     * \brief Handles :end and shows the score list
+     */
+    void handle_end(const network::Message& msg, const std::smatch& match)
+    {
+        string::FormatterConfig fmt;
+        Properties props = message_properties(msg.source);
+
+        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+
+        if ( !player_scores.empty() || !team_scores.empty() ||
+            (show_spectators && !spectators.empty()) )
+            print_scores(msg);
+
+        spectators.clear();
+        player_scores.clear();
+        team_scores.clear();
+        sort_reverse = false;
+    }
+
+    /**
+     * \brief Prints the score list
+     */
+    void print_scores(const network::Message& msg)
+    {
+        // TODO
+    }
+
+private:
+    bool empty = false;         ///< Whether to show the scores on an empty/bot-only match
+    bool show_spectators = true; ///< Whether to show spectators on the score list
+    std::string message = "#dark_cyan#%gametype#-# on #1#%map#-# ended"; ///< Message starting the score list
+
+    std::vector<std::string>                    spectators;     ///< Spectator names
+    std::unordered_map<std::string,std::string> player_scores;  ///< Scores (name => score)
+    std::unordered_map<std::string,std::string> team_scores;    ///< Scores (name => score)
+    bool                                        sort_reverse{0};///< Whether a low score is better
+
+    std::unordered_map<int, color::Color12> team_colors {
+        {  5, color::red    },
+        { 14, color::blue   },
+        { 13, color::yellow },
+        { 10, color::magenta}
+    };
 };
 
 
