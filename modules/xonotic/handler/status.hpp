@@ -379,15 +379,36 @@ private:
  */
 class XonoticMatchScore : public ParseEventlog
 {
+private:
+    /**
+     * \brief Struct for player score
+     */
+    struct PlayerScore
+    {
+        std::string name;       ///< Player name
+        int score = 0;          ///< Score
+        int id = 0;             ///< Player ID
+        PlayerScore(std::string name, int score, int id)
+            : name(std::move(name)), score(score), id(id) {}
+
+        bool operator< (const PlayerScore& o) const noexcept { return score < o.score; }
+        bool operator> (const PlayerScore& o) const noexcept { return score > o.score; }
+    };
+
 public:
     XonoticMatchScore( const Settings& settings, HandlerContainer* parent )
         : ParseEventlog(
             ":(?:"
-            "(end)"// 1
-            "|(teamscores:see-labels:(-?\\d+)[-0-9,]*:(\\d+))" // 2 - score=3 id=4
-            "|(player:see-labels:(-?\\d+)[-0-9,]*:(\\d+):([^:]+):(\\d+):(.*))"// 5 - score=6 time=7 team=8 id=9 name=10
-            "|(scores:([a-z]+)_(.*)):"//11 gametype=12 map=13
-            "|(labels:player:([^[,<!]*)(<?)!!,.*)"//14 primary=15 sort=16
+            // 1
+            "(end)"
+            // 2                     score=3           id=4
+            "|(teamscores:see-labels:(-?\\d+)[-0-9,]*:(\\d+))"
+            // 5                  score=6         time=7 team=8   id=9 name=10
+            "|(player:see-labels:(-?\\d+)[-0-9,]*:(\\d+):([^:]+):(\\d+):(.*))"
+            // 11   gametype=12 map=13
+            "|(scores:([a-z]+)_(.*)):\\d+"
+            // 14           primary=15 sort=16
+            "|(labels:player:([^[,<!]*)(<)?!!,.*)"
             ")",
             settings, parent
         )
@@ -410,6 +431,14 @@ protected:
     {
         if ( match[1].matched )
             handle_end(msg,match);
+        else if ( match[2].matched )
+            handle_team(match);
+        else if ( match[5].matched )
+            handle_player(msg.source,match);
+        else if ( match[11].matched )
+            handle_scores(msg.source,match);
+        else if ( match[14].matched )
+            handle_labels(match);
 
         return true;
     }
@@ -424,14 +453,47 @@ protected:
 
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
 
-        if ( !player_scores.empty() || !team_scores.empty() ||
-            (show_spectators && !spectators.empty()) )
+        if ( !player_scores.empty() || !team_scores.empty() )
             print_scores(msg);
 
-        spectators.clear();
         player_scores.clear();
         team_scores.clear();
         sort_reverse = false;
+    }
+
+    /**
+     * \brief Prints the score for all the players in a given team
+     */
+    void print_scores(const network::Message& msg, int team)
+    {
+        auto it = player_scores.find(team);
+        if ( it == player_scores.end() && it->second.empty() )
+            return;
+
+        if ( team != SPECTATORS )
+        {
+            if ( !sort_reverse )
+                std::stable_sort(it->second.begin(),it->second.end());
+            else
+                std::stable_sort(it->second.rbegin(),it->second.rend());
+        }
+
+        string::FormattedString out;
+        auto color = team_colors[team];
+        for ( unsigned i = 0; i < it->second.size(); i++ )
+        {
+            if ( team != SPECTATORS )
+                out << string::FormatFlags::BOLD << color << it->second[i].score
+                    << string::ClearFormatting() << ' ';
+
+            out << msg.source->formatter()->decode(it->second[i].name)
+                << string::ClearFormatting();
+
+            if ( i < it->second.size() - 1 )
+                out << ", ";
+        }
+
+        reply_to(msg, out);
     }
 
     /**
@@ -439,7 +501,74 @@ protected:
      */
     void print_scores(const network::Message& msg)
     {
-        // TODO
+        if ( !show_spectators && player_scores.size() < 2 )
+            return;
+
+        if ( !team_scores.empty() )
+        {
+            std::vector<string::FormattedString> out;
+            out.reserve(team_scores.size());
+            for ( const auto& p : team_scores )
+                out.push_back(string::FormattedString() <<
+                    team_colors[p.first] << p.second);
+
+            reply_to(msg, string::implode(
+                string::FormattedString() << string::ClearFormatting() << ":",
+                out
+            ));
+        }
+
+        auto it = player_scores.begin();
+        for ( ++it; it != player_scores.end(); ++it )
+            print_scores(msg,it->first);
+
+        if ( show_spectators )
+            print_scores(msg,SPECTATORS);
+    }
+
+    /**
+     * \brief Handles :teamscores:see-labels and gathers the team scores
+     */
+    void handle_team(const std::smatch& match)
+    {
+        team_scores[string::to_int(match[4])] = string::to_int(match[3]);
+    }
+
+    /**
+     * \brief Handles :player:see-labels and gathers the player scores
+     */
+    void handle_player(network::Connection* conn, const std::smatch& match)
+    {
+        // Team number (-1 = no team, -2 = spectator)
+        int team = string::to_int(match[8],10,SPECTATORS);
+        int score = string::to_int(match[6]);
+        if ( team == -1 && score == 0 && conn->get_property("gametype") == "lms" )
+            team = SPECTATORS;
+        player_scores[team].emplace_back(
+            match[10],                     // name
+            score,
+            string::to_int(match[9])       // id
+        );
+    }
+
+    /**
+     * \brief Handles :scores, updates gametype and map and initializes the data structures
+     */
+    void handle_scores(network::Connection* conn, const std::smatch& match)
+    {
+        conn->set_property("gametype",match[12]);
+        conn->set_property("map",match[13]);
+        player_scores = { {SPECTATORS, {}} };
+        team_scores.clear();
+        sort_reverse = false;
+    }
+
+    /**
+     * \brief Handles :labels:player and selects the sorting order
+     */
+    void handle_labels(const std::smatch& match)
+    {
+        sort_reverse = match[16].matched;
     }
 
 private:
@@ -447,10 +576,9 @@ private:
     bool show_spectators = true; ///< Whether to show spectators on the score list
     std::string message = "#dark_cyan#%gametype#-# on #1#%map#-# ended"; ///< Message starting the score list
 
-    std::vector<std::string>                    spectators;     ///< Spectator names
-    std::unordered_map<std::string,std::string> player_scores;  ///< Scores (name => score)
-    std::unordered_map<std::string,std::string> team_scores;    ///< Scores (name => score)
-    bool                                        sort_reverse{0};///< Whether a low score is better
+    std::map<int,std::vector<PlayerScore>>player_scores;  ///< Player Scores (team number => scores)
+    std::map<int,int>                     team_scores;    ///< Team Scores (number => score)
+    bool                                  sort_reverse{0};///< Whether a low score is better
 
     std::unordered_map<int, color::Color12> team_colors {
         {  5, color::red    },
@@ -458,6 +586,8 @@ private:
         { 13, color::yellow },
         { 10, color::magenta}
     };
+
+    enum { SPECTATORS = -2 };
 };
 
 

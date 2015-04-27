@@ -205,9 +205,28 @@ std::string::size_type similarity(const std::string& s1, const std::string& s2);
  * \brief Converts \c string to an unsigned integer
  * \returns The corresponding integer or \c default_value on failure
  */
-unsigned long to_uint(const std::string& string,
+inline unsigned long to_uint(const std::string& string,
                       unsigned long base = 10,
-                      unsigned long default_value = 0);
+                      unsigned long default_value = 0) noexcept
+try {
+    return std::stoul(string,0,base);
+} catch(const std::exception&) {
+    return default_value;
+}
+
+/**
+ * \brief Converts \c string to an integer
+ * \returns The corresponding integer or \c default_value on failure
+ */
+inline long to_int(const std::string& string,
+            unsigned long base = 10,
+            long default_value = 0) noexcept
+try {
+    return std::stol(string,0,base);
+} catch(const std::exception&) {
+    return default_value;
+}
+
 
 /**
  * \brief Check if a string is one of a given set

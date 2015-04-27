@@ -691,6 +691,36 @@ private:
     Formatter *input_formatter{nullptr};
 };
 
+/**
+ * \brief Merge several formatted strings
+ */
+template<class Container, class =
+    std::enable_if_t<
+        std::is_same<
+            FormattedString,
+            std::decay_t<typename Container::value_type>
+        >::value
+    >>
+FormattedString implode (const FormattedString& separator, const Container& elements)
+{
+    auto iter = std::begin(elements);
+    auto end = std::end(elements);
+    if ( iter == end )
+        return {};
+
+    FormattedString ret;
+    while ( true )
+    {
+        ret << *iter;
+        ++iter;
+        if ( iter != end )
+            ret << separator;
+        else
+            break;
+    }
+    return ret;
+}
+
 
 /**
  * \brief Plain UTF-8
