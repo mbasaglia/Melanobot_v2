@@ -1,0 +1,364 @@
+; Full bot config (INFO format)
+; Syntax Overview (You can also use INI, JSON or XML if you wish)
+;       ; comment
+;       key1
+;       key2    value2
+;       key3    "value 3"
+;       parent1
+;       {
+;               child1 "value"
+;       }
+;       parent2 { child2 "value" }
+;       #include "otherfile"
+
+; Sets up the connections
+connections
+{
+    ; Allows to control the bot from standard input
+    ; Requires the Posix module to have been enabled explicitly
+    stdin
+    {
+        protocol        stdin
+    }
+
+    ; Creates an irc connection (To QuakeNet in this example)
+    ; The connection name (irc_quakenet) is used to recognize the connection
+    ; later on, so give simple meaningful names
+    irc_quakenet
+    {
+        protocol        irc          ; required (fixed string)
+        nick            MyAwesomeBot ; required IRC Nick
+
+        ; Q AUTH information
+        ;login
+        ;{
+        ;    nick        MyAwesomeBot
+        ;    password    "MyAwesomePassword"
+        ;    service     Q@CServe.quakenet.org
+        ;    command     AUTH
+        ;}
+        ;modes           "+x"
+
+        channels        "#channel1 #channel2"  ; Channels to be joined
+        notice          1                       ; If 1 private message are sent as NOTICEs
+        server          irc.quakenet.org:6667   ; Server address
+        ; More explicit server setup:
+        ;server
+        ;{
+        ;    host        irc.quakenet.org
+        ;    port        6667
+        ;    password    "network/bouncer password"
+        ;}
+
+        ; Setting up user roles
+        ; Note that you don't need to define all groups, they will be created as they are used
+        groups
+        {
+            owner       "admin" ; An owner is also an admin
+        }
+        ; Assigning users to groups
+        users
+        {
+            !BotOwner    "owner" ; The nick starts with ! to signify that it would be checked using the logged in name, not the current nick
+            !Someone     "admin"
+            @example.com "admin" ; If it starts with an @ it will be checked using the hostname
+            troll        "banned"; Banned users are completely ignored
+            user         "a b"   ; This user is assigned to 2 groups
+        }
+    }
+
+    ; Sets up a xonotic connection
+    xon_localhost
+    {
+        protocol        xonotic         ; required (fixed string)
+        server          localhost:26000 ; Connection info
+        rcon_password   "MyPassword"
+        rcon_secure     0
+        say_as          modpack         ; Say option
+                                        ; Builtin values include: modpack, sv_adminnick.
+                                        ; You can also use explicit commands
+        ;status_delay    60             ; How often the bots asks for status updates (seconds)
+    }
+}
+
+; Defines reusable definitions which can be repeated
+templates
+{
+    ; Xonotic integration
+    Xonotic
+    {
+        ; Parameter declarations
+        @xonotic                        ; Xonotic connection
+        @irc            irc_quakenet    ; IRC connection (defaults to irc_quakenet)
+        @channel                        ; IRC channel name
+        @prefix                         ; Prefix shown on IRC
+
+        type    Group
+        name    @xonotic
+
+        ; Xonotic to IRC
+        Bridge
+        {
+            source          @xonotic
+            destination     @irc
+            dst_channel     @channel
+            prefix          @prefix
+            priority        0
+
+            BridgeChat
+            {
+                timeout     10
+            }
+            ConnectionEvents
+            XonoticJoinPart
+            XonoticMatchStart
+            RenameMessage { message "#4#*#-# %name#-# changed name to %message" }
+            XonoticMatchScore
+
+            ShowVoteCall
+            ShowVoteLogin
+            ShowVoteResult
+            ShowVoteStop
+            ShowVoteDo
+        }
+
+        ; IRC to Xonotic
+        Bridge
+        {
+            source          @irc
+            channels        @channel
+            destination     @xonotic
+            prefix          [IRC]
+            priority        0
+
+            Group
+            {
+                pass_through 1
+                action       1
+
+                JoinMessage { message "has joined" }
+                PartMessage { message "has left" }
+                KickMessage { message "has kicked %kicked!" }
+                RenameMessage { message "changed name to #7#%message" }
+            }
+
+            Group {
+                trigger         @prefix
+
+                Group
+                {
+                    direct      1
+                    RconCommand endmatch
+                    RconCommand gotomap
+                    RconCommand chmap
+                    RconCommand restart
+                    RconCommand kick
+                    RconCommand kickban
+                    RconCommand ban
+                }
+                ; RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
+                BridgeChat
+            }
+        }
+    }
+
+    ; Basic IRC functionality
+    IrcBase
+    {
+        @irc
+        type    Group
+
+        source          @irc
+        help_group      @irc
+
+        FilterGroup { ignore banned }
+
+        Whois330
+        WhoisCheckMe
+        {
+            direct 1
+        }
+
+        CtcpVersion
+        CtcpSource
+        CtcpPing
+        CtcpTime
+        CtcpClientInfo
+
+        Group           ; Admin Commands
+        {
+            name        administration
+            auth        admin
+            priority    100
+
+            AcceptInvite
+            Group
+            {
+                direct          1
+                priority        100
+
+                Quit
+                Reconnect
+                Nick
+                Join
+                Part
+                AdminGroup { group admin }
+                ; AdminGroup { group rainbow }  ; If you want to add users to the rainbow group at runtime
+                AdminGroup
+                {
+                    group  banned
+                    ignore owner
+                }
+                ServerHost
+            }
+        }
+    }
+}
+
+; Defines handlers
+handlers
+{
+    ; Standard input actions
+    ; Requires the Posix module to have been enabled explicitly
+    Group
+    {
+        source          stdin
+        help_group      stdin
+
+        Group {
+            trigger     "/"
+            Quit
+            Help
+        }
+
+        ; Creates a detachable bridge to the IRC connection
+        Bridge
+        {
+            destination irc_quakenet
+            priority    100
+
+            Group {
+                trigger         "/"
+                BridgeAttach
+                BridgeAttachChannel
+
+                Connect
+                Disconnect
+                Reconnect
+                Nick
+                Join
+                Part
+                Raw
+                Raw { trigger "" }
+            }
+            BridgeChat
+            {
+                ignore_self     0
+                from            ""
+            }
+        }
+    }
+
+    ; Adds IRC functionality executed before other IRC actions
+    Group
+    {
+        source          irc_quakenet
+        help_group      irc_quakenet
+
+        ; These two recognize authed users on Quakenet automatically,
+        ; For them to work, the bot needs to be authed and have at least
+        ; +k on the channel it will have to join on startup
+        QSendWhois
+        QGetWhois
+
+        ; If you want the bot to say something when it joins a channel
+        ;JoinMessage
+        ;{
+        ;    message     "Hello, I'm a nice bot"
+        ;    on_self     1
+        ;    on_others   0
+        ;}
+    }
+
+
+    ; Loads the basic IRC functionality
+    Template
+    {
+        template        IrcBase
+        irc             irc_quakenet
+    }
+
+    ; Creates a bridge between IRC and a Xonotic server
+    Template
+    {
+        template        Xonotic
+        xonotic         xon_localhost
+        channel         #channel1
+        prefix          xon
+        ; note that irc defaults to irc_quakenet
+    }
+
+
+    ; Add extra functionality to IRC
+    ; Note: while most of these aren't required, some of them should be enabled (Read below)
+    Group
+    {
+        source          irc_quakenet
+        help_group      irc_quakenet
+
+        ; Various search services
+        Group
+        {
+            name    searching
+
+            SearchImageGoogle
+            UrbanDictionary
+            SearchWebSearx
+            Time
+        }
+
+        ; Misc actions
+        Group
+        {
+            direct      1
+
+            ; IMPORTANT: License **MUST** be enabled, Help is strongly recommended
+            License
+            Help { public 0 }
+
+            ; Funny stuff
+            Group
+            {
+                name    fun
+
+                Morse
+                ReverseText
+                ChuckNorris { trigger joke }
+
+                ;PonyCountDown ; If you want to know when the next episode of My Little pony is going to be
+                ;PonyCountDown ; If you want to know when the last episode of My Little pony was
+                ;{
+                ;    url         http://api.ponycountdown.com/last
+                ;    not_found   "Don't know O_o"
+                ;    found       "%time_delta since #-b#%title#-# (S%seasonE%episode)"
+                ;    trigger     lastpony
+                ;}
+                Echo { trigger say }
+                Action { auth admin }
+                Cointoss
+                Discord
+                AnswerQuestions
+            }
+        }
+        ; Gives a message when someone is kicked
+        ;KickMessage
+        ;{
+        ;    message     "Good job %kicker, we won't miss %kicked!"
+        ;}
+        ; Joins automatically once kicked
+        IrcKickRejoin
+        {
+            ;message "HAHAHA! You can't get rid of me so easily %kicker!" ; Sassy response
+        }
+    }
+}
