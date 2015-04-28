@@ -112,7 +112,11 @@ templates
             ConnectionEvents
             XonoticJoinPart
             XonoticMatchStart
-            RenameMessage { message "#4#*#-# %name#-# changed name to %message" }
+            RenameMessage
+            {
+                message "#4#*#-# %name#-# changed name to %message"
+                timeout 10
+            }
             XonoticMatchScore
 
             ShowVoteCall
