@@ -682,6 +682,9 @@ void XonoticConnection::update_connection()
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
+        /// \todo maybe this should be an option
+        command({"rcon",{"set", "sv_logscores_bots", "1"},1024});
+
         // status: WAITING -> CONNECTING
         if ( status_ == WAITING )
             read(io.read());

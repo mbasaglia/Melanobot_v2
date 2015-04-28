@@ -23,12 +23,12 @@ namespace user {
 
 User* UserManager::add_user(const User& user)
 {
-    for ( User& u : users_ )
+    /*for ( User& u : users_ )
         if ( u.local_id == user.local_id )
         {
             u = user;
             return &u;
-        }
+        }*/
 
     users_.push_back(user);
     return &users_.back();

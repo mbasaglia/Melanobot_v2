@@ -401,10 +401,10 @@ public:
             ":(?:"
             // 1
             "(end)"
-            // 2                     score=3           id=4
-            "|(teamscores:see-labels:(-?\\d+)[-0-9,]*:(\\d+))"
-            // 5                  score=6         time=7 team=8   id=9 name=10
-            "|(player:see-labels:(-?\\d+)[-0-9,]*:(\\d+):([^:]+):(\\d+):(.*))"
+            // 2                     score=3                id=4
+            "|(teamscores:see-labels:(-?\\d+)(?:-|[0-9,])*:(\\d+))"
+            // 5                  score=6              time=7 team=8   id=9 name=10
+            "|(player:see-labels:(-?\\d+)(?:-|[0-9,])*:(\\d+):([^:]+):(\\d+):(.*))"
             // 11   gametype=12 map=13
             "|(scores:([a-z]+)_(.*)):\\d+"
             // 14           primary=15 sort=16
@@ -467,12 +467,12 @@ protected:
     void print_scores(const network::Message& msg, int team)
     {
         auto it = player_scores.find(team);
-        if ( it == player_scores.end() && it->second.empty() )
+        if ( it == player_scores.end() || it->second.empty() )
             return;
 
         if ( team != SPECTATORS )
         {
-            if ( !sort_reverse )
+            if ( sort_reverse )
                 std::stable_sort(it->second.begin(),it->second.end());
             else
                 std::stable_sort(it->second.rbegin(),it->second.rend());
@@ -483,7 +483,7 @@ protected:
         for ( unsigned i = 0; i < it->second.size(); i++ )
         {
             if ( team != SPECTATORS )
-                out << string::FormatFlags::BOLD << color << it->second[i].score
+                out << color << string::FormatFlags::BOLD << it->second[i].score
                     << string::ClearFormatting() << ' ';
 
             out << msg.source->formatter()->decode(it->second[i].name)
