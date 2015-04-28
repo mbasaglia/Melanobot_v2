@@ -719,7 +719,7 @@ void IrcConnection::command(network::Command cmd)
     }
     else if ( cmd.command == "PASS" )
     {
-        if ( status() != Connection::WAITING )
+        if ( status() > Connection::CONNECTING )
         {
             ErrorLog("irc") << "PASS called at a wrong time";
             return;
