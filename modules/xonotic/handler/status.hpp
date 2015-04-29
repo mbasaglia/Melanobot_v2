@@ -480,6 +480,11 @@ protected:
 
         string::FormattedString out;
         auto color = team_colors[team];
+
+        auto itt = team_scores.find(team);
+        if ( itt != team_scores.end() )
+            out << color << itt->second << color::nocolor << ") ";
+
         for ( unsigned i = 0; i < it->second.size(); i++ )
         {
             if ( team != SPECTATORS )
@@ -503,20 +508,6 @@ protected:
     {
         if ( !show_spectators && player_scores.size() < 2 )
             return;
-
-        if ( !team_scores.empty() )
-        {
-            std::vector<string::FormattedString> out;
-            out.reserve(team_scores.size());
-            for ( const auto& p : team_scores )
-                out.push_back(string::FormattedString() <<
-                    team_colors[p.first] << p.second);
-
-            reply_to(msg, string::implode(
-                string::FormattedString() << string::ClearFormatting() << ":",
-                out
-            ));
-        }
 
         auto it = player_scores.begin();
         for ( ++it; it != player_scores.end(); ++it )
