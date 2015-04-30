@@ -1,8 +1,8 @@
 <map id="StdinConnection" name="StdinConnection">
-<area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="5,215,148,241"/>
-<area shape="rect" id="node3" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="172,215,291,241"/>
-<area shape="rect" id="node4" href="$classMelanobot.html" title="Main bot class. " alt="" coords="314,215,397,241"/>
-<area shape="rect" id="node5" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="207,118,381,145"/>
-<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="405,111,588,152"/>
-<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="411,5,582,61"/>
+<area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="528,5,671,32"/>
+<area shape="rect" id="node3" href="$classstring_1_1Formatter.html" title="Abstract formatting visitor (and factory) " alt="" coords="540,56,659,83"/>
+<area shape="rect" id="node4" href="$classMelanobot.html" title="Main bot class. " alt="" coords="558,107,641,133"/>
+<area shape="rect" id="node5" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="237,83,410,109"/>
+<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="232,134,415,175"/>
+<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, std::deque\l\&lt; network::Message \&gt; \&gt; \&gt;" alt="" coords="5,119,183,190"/>
 </map>

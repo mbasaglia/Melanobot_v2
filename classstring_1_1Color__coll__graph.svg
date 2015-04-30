@@ -38,7 +38,7 @@
 <g id="edge2" class="edge"><title>Node3&#45;&gt;Node1</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M126.612,-58.9037C117.09,-46.2729 104.525,-29.6041 97.0037,-19.6273"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="124.077,-61.3554 132.892,-67.2338 129.667,-57.1417 124.077,-61.3554"/>
-<text text-anchor="middle" x="130" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00"> color</text>
+<text text-anchor="middle" x="132.5" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00"> color_</text>
 </g>
 </g>
 </svg>

@@ -1,6 +1,10 @@
 <map id="src/user/user_group.cpp" name="src/user/user_group.cpp">
-<area shape="rect" id="node2" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="188,80,299,107"/>
-<area shape="rect" id="node4" href="$user_8hpp.html" title="user.hpp" alt="" coords="245,155,317,181"/>
-<area shape="rect" id="node7" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="311,229,405,256"/>
-<area shape="rect" id="node10" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="299,311,417,338"/>
+<area shape="rect" id="node2" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="800,80,910,107"/>
+<area shape="rect" id="node4" href="$user_8hpp.html" title="user.hpp" alt="" coords="596,155,668,181"/>
+<area shape="rect" id="node7" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="586,229,679,256"/>
+<area shape="rect" id="node10" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="780,468,898,495"/>
+<area shape="rect" id="node11" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="500,311,615,338"/>
+<area shape="rect" id="node16" href="$color_8hpp.html" title="color.hpp" alt="" coords="764,393,839,420"/>
+<area shape="rect" id="node19" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="228,393,346,420"/>
+<area shape="rect" id="node17" href="$math_8hpp.html" title="math.hpp" alt="" coords="680,468,756,495"/>
 </map>

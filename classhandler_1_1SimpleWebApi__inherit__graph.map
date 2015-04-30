@@ -1,11 +1,12 @@
 <map id="handler::SimpleWebApi" name="handler::SimpleWebApi">
-<area shape="rect" id="node5" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="796,107,936,133"/>
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="392,107,541,133"/>
-<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,107,344,133"/>
-<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,107,179,133"/>
+<area shape="rect" id="node5" href="$classhandler_1_1SimpleJson.html" title="Simple base class for handlers using AJAX web APIs. " alt="" coords="796,132,936,159"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="392,132,541,159"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,132,344,159"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,132,179,159"/>
 <area shape="rect" id="node6" href="$classfun_1_1ChuckNorris.html" title="Searches for a Chuck Norris joke. " alt="" coords="1021,5,1142,32"/>
-<area shape="rect" id="node7" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="986,56,1177,83"/>
-<area shape="rect" id="node8" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="984,107,1179,133"/>
-<area shape="rect" id="node9" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="994,157,1169,184"/>
-<area shape="rect" id="node10" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="998,208,1165,235"/>
+<area shape="rect" id="node7" href="$classfun_1_1PonyCountDown.html" title="Shows a countdown to the next My Little Pony episode. " alt="" coords="1008,56,1155,83"/>
+<area shape="rect" id="node8" href="$classhandler_1_1SearchImageGoogle.html" title="Handler searching images with Google. " alt="" coords="986,107,1177,133"/>
+<area shape="rect" id="node9" href="$classhandler_1_1SearchVideoYoutube.html" title="Handler searching a video on Youtube. " alt="" coords="984,157,1179,184"/>
+<area shape="rect" id="node10" href="$classhandler_1_1SearchWebSearx.html" title="Handler searching a web page using Searx. " alt="" coords="994,208,1169,235"/>
+<area shape="rect" id="node11" href="$classhandler_1_1UrbanDictionary.html" title="Handler searching a definition on Urban Dictionary. " alt="" coords="998,259,1165,285"/>
 </map>

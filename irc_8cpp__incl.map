@@ -1,29 +1,31 @@
 <map id="modules/irc/irc.cpp" name="modules/irc/irc.cpp">
-<area shape="rect" id="node2" href="$modules_2irc_2network_2connection_8hpp.html" title="irc/network/connection.hpp" alt="" coords="459,155,637,181"/>
-<area shape="rect" id="node39" href="$irc__formatter_8hpp.html" title="irc/irc_formatter.hpp" alt="" coords="2788,155,2927,181"/>
-<area shape="rect" id="node40" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="2523,80,2659,107"/>
-<area shape="rect" id="node46" href="$irc__actions_8hpp.html" title="File containing Handlers which manage responses to various IRC commands. " alt="" coords="1942,80,2117,107"/>
-<area shape="rect" id="node47" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="2141,80,2307,107"/>
-<area shape="rect" id="node48" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="2331,80,2498,107"/>
-<area shape="rect" id="node49" href="$melanomodule_8hpp.html" title="melanomodule.hpp" alt="" coords="1787,80,1917,107"/>
-<area shape="rect" id="node8" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="537,304,697,331"/>
-<area shape="rect" id="node32" href="$buffer_8hpp.html" title="irc/network/buffer.hpp" alt="" coords="1517,229,1665,256"/>
-<area shape="rect" id="node36" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1128,229,1235,256"/>
-<area shape="rect" id="node11" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1907,379,2026,405"/>
-<area shape="rect" id="node24" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="562,453,737,480"/>
-<area shape="rect" id="node28" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="378,379,529,405"/>
-<area shape="rect" id="node29" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="195,379,354,405"/>
-<area shape="rect" id="node30" href="$network_8hpp.html" title="network.hpp" alt="" coords="655,379,748,405"/>
-<area shape="rect" id="node16" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1751,453,1844,480"/>
-<area shape="rect" id="node18" href="$string_8hpp.html" title="string.hpp" alt="" coords="2186,453,2265,480"/>
-<area shape="rect" id="node23" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1297,528,1391,555"/>
-<area shape="rect" id="node22" href="$color_8hpp.html" title="color.hpp" alt="" coords="2188,528,2263,555"/>
-<area shape="rect" id="node31" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="1868,453,1969,480"/>
-<area shape="rect" id="node35" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1628,304,1796,331"/>
-<area shape="rect" id="node38" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="924,304,1119,331"/>
-<area shape="rect" id="node41" href="$handler_8hpp.html" title="handler/handler.hpp" alt="" coords="2153,155,2287,181"/>
-<area shape="rect" id="node42" href="$config_8hpp.html" title="config.hpp" alt="" coords="2579,155,2661,181"/>
-<area shape="rect" id="node43" href="$functions_8hpp.html" title="irc/network/functions.hpp" alt="" coords="2687,453,2855,480"/>
-<area shape="rect" id="node45" href="$time__string_8hpp.html" title="time/time_string.hpp" alt="" coords="2471,229,2611,256"/>
-<area shape="rect" id="node50" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="1896,229,2077,256"/>
+<area shape="rect" id="node2" href="$modules_2irc_2network_2connection_8hpp.html" title="irc/network/connection.hpp" alt="" coords="564,155,742,181"/>
+<area shape="rect" id="node38" href="$irc__formatter_8hpp.html" title="irc/irc_formatter.hpp" alt="" coords="157,155,296,181"/>
+<area shape="rect" id="node39" href="$ctcp_8hpp.html" title="This files has handlers for CTCP messages. " alt="" coords="2278,80,2414,107"/>
+<area shape="rect" id="node46" href="$irc__actions_8hpp.html" title="File containing Handlers which manage responses to various IRC commands. " alt="" coords="1551,80,1726,107"/>
+<area shape="rect" id="node47" href="$irc__admin_8hpp.html" title="This file defines handlers which allows admin to administrate the bot (IRC&#45;specific actions) ..." alt="" coords="1170,80,1336,107"/>
+<area shape="rect" id="node48" href="$irc__whois_8hpp.html" title="This file contains handlers for WHOIS recognition on IRC. " alt="" coords="1360,80,1527,107"/>
+<area shape="rect" id="node49" href="$melanomodule_8hpp.html" title="melanomodule.hpp" alt="" coords="1014,80,1145,107"/>
+<area shape="rect" id="node8" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="1032,304,1192,331"/>
+<area shape="rect" id="node31" href="$buffer_8hpp.html" title="irc/network/buffer.hpp" alt="" coords="579,229,727,256"/>
+<area shape="rect" id="node35" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1253,229,1360,256"/>
+<area shape="rect" id="node11" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="898,379,1016,405"/>
+<area shape="rect" id="node23" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="1875,453,2050,480"/>
+<area shape="rect" id="node26" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1496,603,1647,629"/>
+<area shape="rect" id="node27" href="$user__counter_8hpp.html" title="user/user_counter.hpp" alt="" coords="1040,379,1191,405"/>
+<area shape="rect" id="node28" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="604,379,763,405"/>
+<area shape="rect" id="node29" href="$network_8hpp.html" title="network.hpp" alt="" coords="1216,379,1309,405"/>
+<area shape="rect" id="node15" href="$string_8hpp.html" title="string.hpp" alt="" coords="1020,603,1099,629"/>
+<area shape="rect" id="node22" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1504,528,1597,555"/>
+<area shape="rect" id="node20" href="$color_8hpp.html" title="color.hpp" alt="" coords="1022,677,1097,704"/>
+<area shape="rect" id="node21" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="1120,677,1239,704"/>
+<area shape="rect" id="node30" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="1218,453,1320,480"/>
+<area shape="rect" id="node34" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="453,304,621,331"/>
+<area shape="rect" id="node37" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1621,304,1816,331"/>
+<area shape="rect" id="node40" href="$handler_8hpp.html" title="handler/handler.hpp" alt="" coords="1376,155,1511,181"/>
+<area shape="rect" id="node41" href="$config_8hpp.html" title="config.hpp" alt="" coords="2384,155,2466,181"/>
+<area shape="rect" id="node42" href="$functions_8hpp.html" title="irc/network/functions.hpp" alt="" coords="2384,453,2552,480"/>
+<area shape="rect" id="node44" href="$time__string_8hpp.html" title="time/time_string.hpp" alt="" coords="2016,379,2156,405"/>
+<area shape="rect" id="node45" href="$language_8hpp.html" title="string/language.hpp" alt="" coords="1926,603,2060,629"/>
+<area shape="rect" id="node50" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="752,229,933,256"/>
 </map>

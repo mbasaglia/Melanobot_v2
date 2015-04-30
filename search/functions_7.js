@@ -1,10 +1,15 @@
 var searchData=
 [
   ['handle',['handle',['../classhandler_1_1Handler.html#a105124a15fba64cbfae4aebe9581f243',1,'handler::Handler::handle()'],['../classhandler_1_1SimpleAction.html#ac6b37c745d5a22c5ef606259864852c5',1,'handler::SimpleAction::handle()']]],
+  ['handle_5fend',['handle_end',['../classxonotic_1_1XonoticMatchScore.html#a885ae319155035daa941331d916fcaad',1,'xonotic::XonoticMatchScore']]],
+  ['handle_5flabels',['handle_labels',['../classxonotic_1_1XonoticMatchScore.html#a54caeb2326ec0832a824dbd79f5c7e90',1,'xonotic::XonoticMatchScore']]],
   ['handle_5fmessage',['handle_message',['../classxonotic_1_1XonoticConnection.html#a64849f93b55dbe525adca0236d883ec6',1,'xonotic::XonoticConnection::handle_message()'],['../classirc_1_1IrcConnection.html#ae22ce0da5da885daf1ac66c1b64a3f53',1,'irc::IrcConnection::handle_message()']]],
+  ['handle_5fplayer',['handle_player',['../classxonotic_1_1XonoticMatchScore.html#afaef5baee7d37352c9cf1a80b2404861',1,'xonotic::XonoticMatchScore']]],
+  ['handle_5fscores',['handle_scores',['../classxonotic_1_1XonoticMatchScore.html#abfc433ed5f0195ee5f2095306733b962',1,'xonotic::XonoticMatchScore']]],
+  ['handle_5fteam',['handle_team',['../classxonotic_1_1XonoticMatchScore.html#a8242a5fc2330ea25d3e2efe79ba68e6f',1,'xonotic::XonoticMatchScore']]],
   ['handler',['Handler',['../classhandler_1_1Handler.html#a96a3fd2adf06146dcd2e60988367e880',1,'handler::Handler::Handler(const Settings &amp;settings, HandlerContainer *parent)'],['../classhandler_1_1Handler.html#a773303bb11280b65e695d7bd7ea306c0',1,'handler::Handler::Handler(const Handler &amp;)=delete']]],
   ['handlerfactory',['HandlerFactory',['../classhandler_1_1HandlerFactory.html#a4adcb21f2356c87341d9a323867cec9e',1,'handler::HandlerFactory::HandlerFactory()'],['../classhandler_1_1HandlerFactory.html#a71acac16408d3c1d2412371408232206',1,'handler::HandlerFactory::HandlerFactory(const HandlerFactory &amp;)=delete']]],
-  ['has_5fchild',['has_child',['../classSettings.html#a9d8cb2957fa6787b34a9d747d426f503',1,'Settings']]],
+  ['has_5fchild',['has_child',['../namespacesettings.html#aa4cfc3c6ee81612e7ac6f624c2e4a2b6',1,'settings']]],
   ['help',['Help',['../classhandler_1_1Help.html#a02221c4832e14d8b9318d92190c14e8b',1,'handler::Help']]],
   ['hex_5fblue',['hex_blue',['../classcolor_1_1Color12.html#a7d8b40b822bb14b6f633d50ed1a9dd3a',1,'color::Color12']]],
   ['hex_5fgreen',['hex_green',['../classcolor_1_1Color12.html#ac0dd8fb1aec73ad00031092710209572',1,'color::Color12']]],

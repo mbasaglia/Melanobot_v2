@@ -6,7 +6,7 @@ var searchData=
   ['web_2dapi_2ehpp',['web-api.hpp',['../web-api_8hpp.html',1,'']]],
   ['web_2ecpp',['web.cpp',['../web_8cpp.html',1,'']]],
   ['wednesday',['WEDNESDAY',['../namespacetimer.html#aee0c799fd0dc92fc05a2ec2e794db308aaaebdc947e9f7d4ea362e5dc4fe7f825',1,'timer']]],
-  ['week_5fday',['week_day',['../classtimer_1_1DateTime.html#a3353e732e670968ffccfa4de319168b1',1,'timer::DateTime']]],
+  ['week_5fday',['week_day',['../classtimer_1_1DateTime.html#a3353e732e670968ffccfa4de319168b1',1,'timer::DateTime::week_day()'],['../structtimer_1_1TimeParser_1_1Token.html#a826470ea593f2fab46f1b34b205e4087a95f6529a01de66c4b25dbfc87b7a868f',1,'timer::TimeParser::Token::WEEK_DAY()']]],
   ['weekday',['WeekDay',['../namespacetimer.html#aee0c799fd0dc92fc05a2ec2e794db308',1,'timer']]],
   ['weekday_5ffrom_5fname',['weekday_from_name',['../namespacetimer.html#a6663518e5bc9977c8ea4940772be69f0',1,'timer']]],
   ['weekday_5fname',['weekday_name',['../namespacetimer.html#a84f2448efa10f479e1a1250a248a1ff6',1,'timer']]],

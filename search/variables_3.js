@@ -6,7 +6,7 @@ var searchData=
   ['dark_5fmagenta',['dark_magenta',['../namespacecolor.html#a7582b279c0c449cb977d13764bf3560d',1,'color']]],
   ['dark_5fred',['dark_red',['../namespacecolor.html#ad9ed37d086492840df7b92a2363a9fd2',1,'color']]],
   ['dark_5fyellow',['dark_yellow',['../namespacecolor.html#af1b7ac51586032f214565e1229cc2121',1,'color']]],
-  ['data',['data',['../classstring_1_1BasicTrie_1_1TrieNodeData.html#aac921a220c41d232cc2f318fbede7811',1,'string::BasicTrie::TrieNodeData']]],
+  ['data',['data',['../classstring_1_1BasicTrie_1_1TrieNodeData.html#aac921a220c41d232cc2f318fbede7811',1,'string::BasicTrie::TrieNodeData::data()'],['../classMaybePtr.html#a907ca0dcf0558bb1fe3b3fb5c481ab4a',1,'MaybePtr::data()']]],
   ['day_5f',['day_',['../classtimer_1_1DateTime.html#aa674e957d7a211759d283fb74444a3a2',1,'timer::DateTime']]],
   ['default_5fformatter',['default_formatter',['../classstring_1_1Formatter_1_1Registry.html#a23db47b121c8b010b9fdbee6133de4b9',1,'string::Formatter::Registry']]],
   ['default_5fitems',['default_items',['../classhandler_1_1Cointoss.html#a3ac2747f7122f3143629d332d2123976',1,'handler::Cointoss']]],
@@ -16,5 +16,6 @@ var searchData=
   ['detach',['detach',['../classhandler_1_1BridgeAttach.html#a7526c09fb832b40084a6bb5d0b4e06ce',1,'handler::BridgeAttach']]],
   ['direct',['direct',['../structnetwork_1_1Message.html#ae33f9f027073b43e9bc491afc9b2c574',1,'network::Message::direct()'],['../classhandler_1_1SimpleAction.html#a18a6f9f77f02a1c5b5a7c183297cb4ee',1,'handler::SimpleAction::direct()'],['../classfun_1_1AnswerQuestions.html#a2526c6656ed4106b9b69e33510636d26',1,'fun::AnswerQuestions::direct()'],['../classhandler_1_1Reply.html#a6f10a61f5b9ae39c7e306c407ef2100f',1,'handler::Reply::direct()']]],
   ['direction',['direction',['../classLog.html#a739b327769436d99cffcc13d11eaaa50',1,'Log']]],
+  ['disconnect',['disconnect',['../classxonotic_1_1ConnectionEvents.html#a7cd0855a558aea2389b2cf98354dedfa',1,'xonotic::ConnectionEvents']]],
   ['dst_5fchannel',['dst_channel',['../structnetwork_1_1Message.html#adae32bc2a3f78ec1a4ff2eabaa967644',1,'network::Message::dst_channel()'],['../classhandler_1_1Bridge.html#a055145bc43b92c2641b5f75b520718cb',1,'handler::Bridge::dst_channel()']]]
 ];

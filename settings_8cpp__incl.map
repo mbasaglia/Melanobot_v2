@@ -1,12 +1,14 @@
 <map id="src/settings.cpp" name="src/settings.cpp">
-<area shape="rect" id="node2" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1111,244,1204,271"/>
-<area shape="rect" id="node14" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="489,169,607,196"/>
-<area shape="rect" id="node29" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="1104,87,1211,114"/>
-<area shape="rect" id="node36" href="$config_8hpp.html" title="config.hpp" alt="" coords="1235,87,1317,114"/>
-<area shape="rect" id="node7" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1379,408,1496,435"/>
-<area shape="rect" id="node19" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="335,244,428,271"/>
-<area shape="rect" id="node22" href="$string_8hpp.html" title="string.hpp" alt="" coords="847,244,926,271"/>
-<area shape="rect" id="node26" href="$color_8hpp.html" title="color.hpp" alt="" coords="1212,326,1287,353"/>
-<area shape="rect" id="node27" href="$math_8hpp.html" title="math.hpp" alt="" coords="1193,408,1269,435"/>
-<area shape="rect" id="node32" href="$string__functions_8hpp.html" title="string_functions.hpp" alt="" coords="1333,169,1472,196"/>
+<area shape="rect" id="node2" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="325,244,419,271"/>
+<area shape="rect" id="node25" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="538,169,657,196"/>
+<area shape="rect" id="node33" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="1077,87,1184,114"/>
+<area shape="rect" id="node38" href="$config_8hpp.html" title="config.hpp" alt="" coords="2140,87,2223,114"/>
+<area shape="rect" id="node7" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="5,483,123,509"/>
+<area shape="rect" id="node8" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="460,326,575,353"/>
+<area shape="rect" id="node14" href="$color_8hpp.html" title="color.hpp" alt="" coords="277,408,352,435"/>
+<area shape="rect" id="node17" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="633,408,751,435"/>
+<area shape="rect" id="node15" href="$math_8hpp.html" title="math.hpp" alt="" coords="410,483,486,509"/>
+<area shape="rect" id="node29" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="937,244,1031,271"/>
+<area shape="rect" id="node31" href="$maybe__ptr_8hpp.html" title="maybe_ptr.hpp" alt="" coords="957,326,1065,353"/>
+<area shape="rect" id="node36" href="$string__functions_8hpp.html" title="string_functions.hpp" alt="" coords="1199,169,1337,196"/>
 </map>

@@ -1,0 +1,8 @@
+<map id="handler::EventMessageBase" name="handler::EventMessageBase">
+<area shape="rect" id="node4" href="$classhandler_1_1JoinMessage.html" title="Prints a message when a user joins a channel (or server) " alt="" coords="642,5,791,32"/>
+<area shape="rect" id="node5" href="$classhandler_1_1KickMessage.html" title="Prints a message when a user is kicked from a channel. " alt="" coords="641,56,792,83"/>
+<area shape="rect" id="node6" href="$classhandler_1_1PartMessage.html" title="Prints a message when a user parts a channel (or server) " alt="" coords="642,107,791,133"/>
+<area shape="rect" id="node7" href="$classhandler_1_1RenameMessage.html" title="Prints a message when a user changes name. " alt="" coords="629,157,804,184"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,81,344,108"/>
+<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,81,179,108"/>
+</map>

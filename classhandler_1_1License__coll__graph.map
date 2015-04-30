@@ -1,8 +1,8 @@
 <map id="handler::License" name="handler::License">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="48,380,197,407"/>
-<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="64,304,181,331"/>
-<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,118,179,145"/>
-<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="129,215,212,241"/>
-<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="203,111,386,152"/>
-<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="209,5,380,61"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="848,44,997,71"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="681,44,799,71"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="237,28,410,55"/>
+<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="528,73,611,100"/>
+<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="232,83,415,125"/>
+<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, std::deque\l\&lt; network::Message \&gt; \&gt; \&gt;" alt="" coords="5,69,183,139"/>
 </map>

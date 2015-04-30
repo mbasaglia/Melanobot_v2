@@ -1,0 +1,5 @@
+<map id="handler::RenameMessage" name="handler::RenameMessage">
+<area shape="rect" id="node2" href="$classhandler_1_1EventMessageBase.html" title="Base class for JoinMessage and similar. " alt="" coords="5,155,195,181"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="41,80,159,107"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="13,5,187,32"/>
+</map>

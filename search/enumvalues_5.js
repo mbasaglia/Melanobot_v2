@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['info',['INFO',['../classSettings.html#ad16df62d407753259389b3c440125be3a551b723eafd6a31d444fcb2f5920fbd3',1,'Settings']]],
-  ['ini',['INI',['../classSettings.html#ad16df62d407753259389b3c440125be3a19cf3bd8d7d38ff28b25e78c190c6262',1,'Settings']]]
+  ['february',['FEBRUARY',['../namespacetimer.html#a1da9faa7e2cafb4bbb05c0e91e38b66ca1915019c0990fae3943a1a73b3572f24',1,'timer']]],
+  ['friday',['FRIDAY',['../namespacetimer.html#aee0c799fd0dc92fc05a2ec2e794db308a86fb6d343289267f3e9edb9b7403d936',1,'timer']]]
 ];

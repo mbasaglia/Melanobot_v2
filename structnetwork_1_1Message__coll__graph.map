@@ -1,3 +1,4 @@
 <map id="network::Message" name="network::Message">
 <area shape="rect" id="node2" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node3" href="$structuser_1_1User.html" title="A user visible from a connection. " alt="" coords="171,5,254,32"/>
 </map>

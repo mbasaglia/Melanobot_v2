@@ -1,0 +1,4 @@
+<map id="xonotic::XonoticMatchStart" name="xonotic::XonoticMatchStart">
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="37,80,154,107"/>
+<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="9,5,182,32"/>
+</map>

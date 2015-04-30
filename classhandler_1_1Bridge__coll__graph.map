@@ -1,10 +1,10 @@
 <map id="handler::Bridge" name="handler::Bridge">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="88,469,235,496"/>
-<area shape="rect" id="node3" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="39,380,188,407"/>
-<area shape="rect" id="node4" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="55,304,172,331"/>
-<area shape="rect" id="node5" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,118,179,145"/>
-<area shape="rect" id="node6" href="$classMelanobot.html" title="Main bot class. " alt="" coords="129,215,212,241"/>
-<area shape="rect" id="node7" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="203,111,386,152"/>
-<area shape="rect" id="node8" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="209,5,380,61"/>
-<area shape="rect" id="node9" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="211,380,354,407"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="1089,71,1236,97"/>
+<area shape="rect" id="node3" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="848,44,997,71"/>
+<area shape="rect" id="node4" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="681,44,799,71"/>
+<area shape="rect" id="node5" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="237,32,410,59"/>
+<area shape="rect" id="node6" href="$classMelanobot.html" title="Main bot class. " alt="" coords="528,77,611,104"/>
+<area shape="rect" id="node7" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="232,87,415,129"/>
+<area shape="rect" id="node8" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, std::deque\l\&lt; network::Message \&gt; \&gt; \&gt;" alt="" coords="5,73,183,143"/>
+<area shape="rect" id="node9" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="851,108,994,135"/>
 </map>

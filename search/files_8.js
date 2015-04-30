@@ -4,6 +4,7 @@ var searchData=
   ['main_2edox',['main.dox',['../main_8dox.html',1,'']]],
   ['math_2ecpp',['math.cpp',['../math_8cpp.html',1,'']]],
   ['math_2ehpp',['math.hpp',['../math_8hpp.html',1,'']]],
+  ['maybe_5fptr_2ehpp',['maybe_ptr.hpp',['../maybe__ptr_8hpp.html',1,'']]],
   ['melanobot_2ecpp',['melanobot.cpp',['../melanobot_8cpp.html',1,'']]],
   ['melanobot_2ehpp',['melanobot.hpp',['../melanobot_8hpp.html',1,'']]],
   ['melanomodule_2ehpp',['melanomodule.hpp',['../melanomodule_8hpp.html',1,'']]],

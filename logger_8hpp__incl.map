@@ -1,8 +1,10 @@
 <map id="src/string/logger.hpp" name="src/string/logger.hpp">
-<area shape="rect" id="node8" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="229,80,323,107"/>
-<area shape="rect" id="node11" href="$string_8hpp.html" title="string.hpp" alt="" coords="602,80,681,107"/>
-<area shape="rect" id="node20" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1099,80,1192,107"/>
-<area shape="rect" id="node16" href="$color_8hpp.html" title="color.hpp" alt="" coords="893,162,968,189"/>
-<area shape="rect" id="node17" href="$math_8hpp.html" title="math.hpp" alt="" coords="883,244,959,271"/>
-<area shape="rect" id="node19" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1211,244,1328,271"/>
+<area shape="rect" id="node8" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="301,80,395,107"/>
+<area shape="rect" id="node14" href="$string_8hpp.html" title="string.hpp" alt="" coords="785,162,863,189"/>
+<area shape="rect" id="node24" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1232,80,1325,107"/>
+<area shape="rect" id="node11" href="$maybe__ptr_8hpp.html" title="maybe_ptr.hpp" alt="" coords="193,162,301,189"/>
+<area shape="rect" id="node18" href="$color_8hpp.html" title="color.hpp" alt="" coords="1073,244,1148,271"/>
+<area shape="rect" id="node22" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="631,244,750,271"/>
+<area shape="rect" id="node19" href="$math_8hpp.html" title="math.hpp" alt="" coords="1063,319,1139,345"/>
+<area shape="rect" id="node21" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1380,319,1497,345"/>
 </map>

@@ -1,25 +1,26 @@
 <map id="modules/web/web&#45;api.hpp" name="modules/web/web&#45;api.hpp">
-<area shape="rect" id="node2" href="$handler_8hpp.html" title="handler/handler.hpp" alt="" coords="964,80,1098,107"/>
-<area shape="rect" id="node45" href="$http_8hpp.html" title="http.hpp" alt="" coords="1115,229,1184,256"/>
-<area shape="rect" id="node48" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="187,304,294,331"/>
-<area shape="rect" id="node8" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="1628,229,1788,256"/>
-<area shape="rect" id="node11" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="892,379,1010,405"/>
-<area shape="rect" id="node22" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1304,528,1398,555"/>
-<area shape="rect" id="node24" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="1340,379,1514,405"/>
-<area shape="rect" id="node41" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="2312,155,2419,181"/>
-<area shape="rect" id="node29" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="2018,304,2169,331"/>
-<area shape="rect" id="node32" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1629,304,1788,331"/>
-<area shape="rect" id="node34" href="$network_8hpp.html" title="network.hpp" alt="" coords="1498,304,1591,331"/>
-<area shape="rect" id="node15" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="419,453,512,480"/>
-<area shape="rect" id="node18" href="$string_8hpp.html" title="string.hpp" alt="" coords="932,453,1010,480"/>
-<area shape="rect" id="node20" href="$color_8hpp.html" title="color.hpp" alt="" coords="1155,528,1230,555"/>
-<area shape="rect" id="node21" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1292,610,1410,637"/>
-<area shape="rect" id="node30" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1816,379,1926,405"/>
-<area shape="rect" id="node31" href="$user_8hpp.html" title="user.hpp" alt="" coords="1762,453,1834,480"/>
-<area shape="rect" id="node35" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="2403,379,2504,405"/>
-<area shape="rect" id="node37" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="2330,453,2433,480"/>
-<area shape="rect" id="node38" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="2762,453,2881,480"/>
-<area shape="rect" id="node43" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="2074,379,2242,405"/>
-<area shape="rect" id="node44" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1208,229,1403,256"/>
-<area shape="rect" id="node46" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="1812,304,1994,331"/>
+<area shape="rect" id="node2" href="$handler_8hpp.html" title="handler/handler.hpp" alt="" coords="900,80,1034,107"/>
+<area shape="rect" id="node45" href="$http_8hpp.html" title="http.hpp" alt="" coords="220,304,290,331"/>
+<area shape="rect" id="node48" href="$json_8hpp.html" title="string/json.hpp" alt="" coords="110,379,216,405"/>
+<area shape="rect" id="node8" href="$src_2network_2connection_8hpp.html" title="network/connection.hpp" alt="" coords="1224,229,1384,256"/>
+<area shape="rect" id="node11" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1234,453,1353,480"/>
+<area shape="rect" id="node26" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1938,528,2031,555"/>
+<area shape="rect" id="node28" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="706,453,881,480"/>
+<area shape="rect" id="node39" href="$melanobot_8hpp.html" title="melanobot.hpp" alt="" coords="1680,155,1787,181"/>
+<area shape="rect" id="node31" href="$auth__system_8hpp.html" title="user/auth_system.hpp" alt="" coords="1962,304,2113,331"/>
+<area shape="rect" id="node34" href="$user__counter_8hpp.html" title="user/user_counter.hpp" alt="" coords="1157,304,1308,331"/>
+<area shape="rect" id="node35" href="$user__manager_8hpp.html" title="user/user_manager.hpp" alt="" coords="1510,304,1669,331"/>
+<area shape="rect" id="node37" href="$network_8hpp.html" title="network.hpp" alt="" coords="934,379,1027,405"/>
+<area shape="rect" id="node15" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="956,528,1050,555"/>
+<area shape="rect" id="node20" href="$string_8hpp.html" title="string.hpp" alt="" coords="1530,610,1609,637"/>
+<area shape="rect" id="node18" href="$maybe__ptr_8hpp.html" title="maybe_ptr.hpp" alt="" coords="362,610,470,637"/>
+<area shape="rect" id="node22" href="$color_8hpp.html" title="color.hpp" alt="" coords="1584,692,1659,719"/>
+<area shape="rect" id="node24" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="1390,692,1509,719"/>
+<area shape="rect" id="node23" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1563,767,1680,793"/>
+<area shape="rect" id="node32" href="$user__group_8hpp.html" title="user_group.hpp" alt="" coords="1982,379,2093,405"/>
+<area shape="rect" id="node33" href="$user_8hpp.html" title="user.hpp" alt="" coords="1995,453,2067,480"/>
+<area shape="rect" id="node38" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="1143,610,1244,637"/>
+<area shape="rect" id="node43" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1632,453,1800,480"/>
+<area shape="rect" id="node44" href="$handler__container_8hpp.html" title="handler/handler_container.hpp" alt="" coords="1966,229,2160,256"/>
+<area shape="rect" id="node46" href="$async__service_8hpp.html" title="network/async_service.hpp" alt="" coords="1051,379,1232,405"/>
 </map>

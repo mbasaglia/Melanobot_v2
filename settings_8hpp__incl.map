@@ -1,3 +1,7 @@
 <map id="src/settings.hpp" name="src/settings.hpp">
-<area shape="rect" id="node6" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="465,87,582,114"/>
+<area shape="rect" id="node6" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="176,244,293,271"/>
+<area shape="rect" id="node7" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="483,87,597,114"/>
+<area shape="rect" id="node13" href="$color_8hpp.html" title="color.hpp" alt="" coords="644,169,719,196"/>
+<area shape="rect" id="node16" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="742,169,861,196"/>
+<area shape="rect" id="node14" href="$math_8hpp.html" title="math.hpp" alt="" coords="653,244,729,271"/>
 </map>

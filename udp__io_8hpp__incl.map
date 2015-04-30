@@ -1,14 +1,16 @@
 <map id="src/network/udp_io.hpp" name="src/network/udp_io.hpp">
-<area shape="rect" id="node3" href="$network_8hpp.html" title="network.hpp" alt="" coords="636,80,729,107"/>
-<area shape="rect" id="node19" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="14,229,117,256"/>
-<area shape="rect" id="node27" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1459,80,1578,107"/>
-<area shape="rect" id="node5" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="707,155,882,181"/>
-<area shape="rect" id="node16" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="359,155,460,181"/>
-<area shape="rect" id="node11" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1141,229,1235,256"/>
-<area shape="rect" id="node15" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="940,311,1057,338"/>
-<area shape="rect" id="node21" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="227,229,346,256"/>
-<area shape="rect" id="node26" href="$math_8hpp.html" title="math.hpp" alt="" coords="819,311,895,338"/>
-<area shape="rect" id="node31" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1792,155,1885,181"/>
-<area shape="rect" id="node34" href="$string_8hpp.html" title="string.hpp" alt="" coords="1427,155,1506,181"/>
-<area shape="rect" id="node36" href="$color_8hpp.html" title="color.hpp" alt="" coords="1043,229,1117,256"/>
+<area shape="rect" id="node3" href="$network_8hpp.html" title="network.hpp" alt="" coords="635,80,728,107"/>
+<area shape="rect" id="node26" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="179,311,282,338"/>
+<area shape="rect" id="node33" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1630,155,1749,181"/>
+<area shape="rect" id="node5" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="913,155,1087,181"/>
+<area shape="rect" id="node24" href="$time_8hpp.html" title="time/time.hpp" alt="" coords="573,229,675,256"/>
+<area shape="rect" id="node11" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1256,229,1349,256"/>
+<area shape="rect" id="node15" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="864,468,981,495"/>
+<area shape="rect" id="node16" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="1320,311,1435,338"/>
+<area shape="rect" id="node21" href="$color_8hpp.html" title="color.hpp" alt="" coords="960,393,1035,420"/>
+<area shape="rect" id="node23" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="1211,393,1330,420"/>
+<area shape="rect" id="node22" href="$math_8hpp.html" title="math.hpp" alt="" coords="586,468,662,495"/>
+<area shape="rect" id="node28" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="441,311,559,338"/>
+<area shape="rect" id="node36" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="2079,229,2172,256"/>
+<area shape="rect" id="node38" href="$maybe__ptr_8hpp.html" title="maybe_ptr.hpp" alt="" coords="1895,311,2003,338"/>
 </map>

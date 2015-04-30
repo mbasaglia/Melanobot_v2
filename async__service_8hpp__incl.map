@@ -1,11 +1,13 @@
 <map id="src/network/async_service.hpp" name="src/network/async_service.hpp">
-<area shape="rect" id="node5" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="1129,80,1247,107"/>
-<area shape="rect" id="node24" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="491,80,659,107"/>
-<area shape="rect" id="node11" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="1373,155,1467,181"/>
-<area shape="rect" id="node14" href="$string_8hpp.html" title="string.hpp" alt="" coords="835,155,914,181"/>
-<area shape="rect" id="node22" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="1217,155,1311,181"/>
-<area shape="rect" id="node18" href="$color_8hpp.html" title="color.hpp" alt="" coords="800,237,875,263"/>
-<area shape="rect" id="node19" href="$math_8hpp.html" title="math.hpp" alt="" coords="809,319,885,345"/>
-<area shape="rect" id="node21" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="1072,319,1189,345"/>
-<area shape="rect" id="node25" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="211,155,330,181"/>
+<area shape="rect" id="node5" href="$logger_8hpp.html" title="string/logger.hpp" alt="" coords="739,80,858,107"/>
+<area shape="rect" id="node28" href="$concurrent__container_8hpp.html" title="concurrent_container.hpp" alt="" coords="1233,80,1401,107"/>
+<area shape="rect" id="node11" href="$multibuf_8hpp.html" title="multibuf.hpp" alt="" coords="809,155,903,181"/>
+<area shape="rect" id="node17" href="$string_8hpp.html" title="string.hpp" alt="" coords="669,237,747,263"/>
+<area shape="rect" id="node26" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="533,155,627,181"/>
+<area shape="rect" id="node14" href="$maybe__ptr_8hpp.html" title="maybe_ptr.hpp" alt="" coords="914,237,1022,263"/>
+<area shape="rect" id="node20" href="$color_8hpp.html" title="color.hpp" alt="" coords="772,319,847,345"/>
+<area shape="rect" id="node24" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="485,319,603,345"/>
+<area shape="rect" id="node21" href="$math_8hpp.html" title="math.hpp" alt="" coords="762,393,838,420"/>
+<area shape="rect" id="node23" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="613,393,731,420"/>
+<area shape="rect" id="node29" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="1478,155,1597,181"/>
 </map>

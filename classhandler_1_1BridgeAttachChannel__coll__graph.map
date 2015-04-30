@@ -1,11 +1,11 @@
 <map id="handler::BridgeAttachChannel" name="handler::BridgeAttachChannel">
-<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="199,380,349,407"/>
-<area shape="rect" id="node9" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="118,469,265,496"/>
-<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="215,304,333,331"/>
-<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="157,118,330,145"/>
-<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="281,215,363,241"/>
-<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="355,111,537,152"/>
-<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, Container \&gt; \&gt;" alt="" coords="361,5,531,61"/>
-<area shape="rect" id="node8" href="$classhandler_1_1Bridge.html" title="Acts as bridge across connections. " alt="" coords="137,545,246,572"/>
-<area shape="rect" id="node10" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="5,380,148,407"/>
+<area shape="rect" id="node2" href="$classhandler_1_1SimpleAction.html" title="A simple action sends a message to the same connection it came from. " alt="" coords="848,84,997,111"/>
+<area shape="rect" id="node9" href="$classhandler_1_1SimpleGroup.html" title="A simple group of actions which share settings. " alt="" coords="1089,49,1236,76"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="681,84,799,111"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="237,68,410,95"/>
+<area shape="rect" id="node5" href="$classMelanobot.html" title="Main bot class. " alt="" coords="528,113,611,140"/>
+<area shape="rect" id="node6" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::Message \&gt;" alt="" coords="232,123,415,165"/>
+<area shape="rect" id="node7" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::Message, std::deque\l\&lt; network::Message \&gt; \&gt; \&gt;" alt="" coords="5,109,183,179"/>
+<area shape="rect" id="node8" href="$classhandler_1_1Bridge.html" title="Acts as bridge across connections. " alt="" coords="1285,49,1395,76"/>
+<area shape="rect" id="node10" href="$classnetwork_1_1Connection.html" title="Abstract service connection. " alt="" coords="851,5,994,32"/>
 </map>

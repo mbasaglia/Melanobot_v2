@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::ThreadedAsyncService\l::Item, Container \&gt; \&gt;" alt="" coords="5,5,171,76"/>
-<area shape="rect" id="node2" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::ThreadedAsyncService\l::Item \&gt;" alt="" coords="219,13,401,69"/>
+<area shape="rect" id="node1" href="$classConcurrentContainer.html" title="ConcurrentContainer\l\&lt; std::queue\&lt; network\l::ThreadedAsyncService\l::Item, std::deque\&lt; network\l::ThreadedAsyncService::Item \&gt; \&gt; \&gt;" alt="" coords="5,5,240,91"/>
+<area shape="rect" id="node2" href="$classConcurrentQueue.html" title="ConcurrentQueue\&lt; network\l::ThreadedAsyncService\l::Item \&gt;" alt="" coords="288,20,471,76"/>
 </map>

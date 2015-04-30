@@ -1,11 +1,14 @@
 <map id="src/time/time_string.cpp" name="src/time/time_string.cpp">
-<area shape="rect" id="node2" href="$time__string_8hpp.html" title="time_string.hpp" alt="" coords="461,80,571,107"/>
-<area shape="rect" id="node16" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="774,80,949,107"/>
-<area shape="rect" id="node26" href="$language_8hpp.html" title="string/language.hpp" alt="" coords="1054,80,1189,107"/>
-<area shape="rect" id="node3" href="$time_8hpp.html" title="time.hpp" alt="" coords="300,155,372,181"/>
-<area shape="rect" id="node6" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="13,237,115,263"/>
-<area shape="rect" id="node8" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="277,237,395,263"/>
-<area shape="rect" id="node13" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="520,237,637,263"/>
-<area shape="rect" id="node14" href="$math_8hpp.html" title="math.hpp" alt="" coords="419,237,495,263"/>
-<area shape="rect" id="node22" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="712,155,805,181"/>
+<area shape="rect" id="node2" href="$time__string_8hpp.html" title="time_string.hpp" alt="" coords="1036,80,1147,107"/>
+<area shape="rect" id="node16" href="$language_8hpp.html" title="string/language.hpp" alt="" coords="1164,311,1299,338"/>
+<area shape="rect" id="node20" href="$string__functions_8hpp.html" title="string/string_functions.hpp" alt="" coords="524,155,699,181"/>
+<area shape="rect" id="node3" href="$time_8hpp.html" title="time.hpp" alt="" coords="1129,229,1201,256"/>
+<area shape="rect" id="node6" href="$functional_8hpp.html" title="functional.hpp" alt="" coords="1375,311,1477,338"/>
+<area shape="rect" id="node8" href="$concurrency_8hpp.html" title="concurrency.hpp" alt="" coords="1611,311,1729,338"/>
+<area shape="rect" id="node13" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="141,468,258,495"/>
+<area shape="rect" id="node14" href="$math_8hpp.html" title="math.hpp" alt="" coords="427,468,503,495"/>
+<area shape="rect" id="node24" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="565,229,658,256"/>
+<area shape="rect" id="node27" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="554,311,669,338"/>
+<area shape="rect" id="node31" href="$color_8hpp.html" title="color.hpp" alt="" coords="427,393,502,420"/>
+<area shape="rect" id="node32" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="1012,393,1131,420"/>
 </map>

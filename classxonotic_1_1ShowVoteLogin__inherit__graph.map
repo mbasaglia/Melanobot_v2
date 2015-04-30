@@ -1,0 +1,5 @@
+<map id="xonotic::ShowVoteLogin" name="xonotic::ShowVoteLogin">
+<area shape="rect" id="node2" href="$classxonotic_1_1ParseEventlog.html" title="Base class for handlers parsing the Xonotic eventlog. " alt="" coords="13,155,171,181"/>
+<area shape="rect" id="node3" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="33,80,151,107"/>
+<area shape="rect" id="node4" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,5,179,32"/>
+</map>

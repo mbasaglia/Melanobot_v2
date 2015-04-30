@@ -1,0 +1,10 @@
+<map id="xonotic::ParseEventlog" name="xonotic::ParseEventlog">
+<area shape="rect" id="node4" href="$classxonotic_1_1ShowVoteCall.html" title="Shows :vote:vcall. " alt="" coords="613,5,768,32"/>
+<area shape="rect" id="node5" href="$classxonotic_1_1ShowVoteDo.html" title="Shows :vote:vdo. " alt="" coords="616,56,765,83"/>
+<area shape="rect" id="node6" href="$classxonotic_1_1ShowVoteLogin.html" title="Shows :vote:vlogin. " alt="" coords="609,107,772,133"/>
+<area shape="rect" id="node7" href="$classxonotic_1_1ShowVoteResult.html" title="Shows :vote:v(yes|no|timeout) " alt="" coords="605,157,776,184"/>
+<area shape="rect" id="node8" href="$classxonotic_1_1ShowVoteStop.html" title="Shows :vote:vstop. " alt="" coords="611,208,770,235"/>
+<area shape="rect" id="node9" href="$classxonotic_1_1XonoticMatchScore.html" title="Shows match scores. " alt="" coords="597,259,784,285"/>
+<area shape="rect" id="node2" href="$classhandler_1_1Handler.html" title="Message handler abstract base class. " alt="" coords="227,132,344,159"/>
+<area shape="rect" id="node3" href="$classhandler_1_1HandlerContainer.html" title="Base class for classes which may contain handlers. " alt="" coords="5,132,179,159"/>
+</map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['simplegroup',['SimpleGroup',['../classhandler_1_1SimpleAction.html#a5a9cea2c67d7a177c40b1dea9d57378d',1,'handler::SimpleAction']]]
+  ['maybeptr',['MaybePtr',['../classMaybePtr.html#a5c42d2b4b6d3325fffd334d3fbe3ac3a',1,'MaybePtr']]]
 ];

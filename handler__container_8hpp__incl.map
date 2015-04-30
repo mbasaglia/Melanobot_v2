@@ -1,4 +1,8 @@
 <map id="src/handler/handler_container.hpp" name="src/handler/handler_container.hpp">
-<area shape="rect" id="node2" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="179,95,273,121"/>
-<area shape="rect" id="node7" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="465,177,582,203"/>
+<area shape="rect" id="node2" href="$settings_8hpp.html" title="settings.hpp" alt="" coords="145,95,239,121"/>
+<area shape="rect" id="node7" href="$c_09_09-compat_8hpp.html" title="This file defined some compatibility for features of C++14 and beyond. " alt="" coords="176,333,293,360"/>
+<area shape="rect" id="node8" href="$string_8hpp.html" title="string/string.hpp" alt="" coords="483,177,597,203"/>
+<area shape="rect" id="node14" href="$color_8hpp.html" title="color.hpp" alt="" coords="644,259,719,285"/>
+<area shape="rect" id="node17" href="$quickstream_8hpp.html" title="quickstream.hpp" alt="" coords="742,259,861,285"/>
+<area shape="rect" id="node15" href="$math_8hpp.html" title="math.hpp" alt="" coords="653,333,729,360"/>
 </map>
