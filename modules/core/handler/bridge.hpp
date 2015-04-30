@@ -111,9 +111,9 @@ public:
         message = settings.get("message",message);
         action  = settings.get("action",action);
         prefix  = settings.get("prefix",prefix);
-        on_self = settings.get("on_self",on_self);
-        on_others=settings.get("on_others",on_others);
-        if ( message.empty() ||  !(on_others || on_self) )
+        discard_self = settings.get("discard_self",discard_self);
+        discard_others=settings.get("discard_others",discard_others);
+        if ( message.empty() ||  (discard_others && discard_self) )
             throw ConfigurationError();
 
         int timeout_seconds = settings.get("timeout",0);
@@ -125,8 +125,8 @@ public:
     bool can_handle(const network::Message& msg) const override
     {
         return msg.type == type && (
-                ( on_others && msg.from.name != msg.source->name() ) ||
-                ( on_self && msg.from.name == msg.source->name() ) );
+                ( discard_others || msg.from.name != msg.source->name() ) ||
+                ( discard_self || msg.from.name != msg.source->name() ) );
     }
 
 protected:
@@ -167,8 +167,8 @@ private:
     std::string prefix;         ///< Message prefix
     std::string message;        ///< Message to send
     bool        action = false; ///< Whether it should output an action
-    bool        on_self = false;///< Whether to be triggered when the joining user has the same name as the source connection
-    bool        on_others=true; ///< Whether to be triggered when the joining user name differs from the source connection
+    bool        discard_self{0};///< Whether not triggered when the joining user has the same name as the source connection
+    bool        discard_others{0};///< Whether not triggered when the joining user name differs from the source connection
     network::Duration timeout{network::Duration::zero()};///< Output message timeout
 };
 
