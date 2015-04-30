@@ -71,7 +71,7 @@ melanotest(test_formatter)
 set(TRACEFILE "${CMAKE_BINARY_DIR}/test/coverage.info")
 add_custom_target(coverage
     COMMAND cd "${CMAKE_BINARY_DIR}/test"
-    COMMAND ctest
+    COMMAND ctest -V
     COMMAND lcov -c -d "${CMAKE_BINARY_DIR}/test" -b "${CMAKE_SOURCE_DIR}" -o ${TRACEFILE} --no-external
     COMMAND genhtml ${TRACEFILE} -o "${CMAKE_BINARY_DIR}/lconv" -p "${CMAKE_SOURCE_DIR}" --demangle-cpp
     COMMAND xdg-open "${CMAKE_BINARY_DIR}/lconv/index.html"

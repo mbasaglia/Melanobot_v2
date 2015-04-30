@@ -457,8 +457,8 @@ BOOST_AUTO_TEST_CASE( test_QuickStream )
     std::smatch match;
     BOOST_CHECK( !qs.regex_match(re,match) );
     qs.set_pos(0);
-    re = std::regex("([0-9]+)([a-z]+)");
-    BOOST_CHECK( qs.get_regex(re,match) );
+    std::regex re1("([0-9]+)([a-z]+)");
+    BOOST_CHECK( qs.get_regex(re1,match) );
     BOOST_CHECK( match[1] == "123" );
     BOOST_CHECK( match[2] == "foo" );
     BOOST_CHECK( qs.eof() );
