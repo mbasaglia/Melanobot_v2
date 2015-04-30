@@ -14,8 +14,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 include(CTest)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0 -fno-inline -fno-inline-small-functions -fno-default-inline")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0 -fno-inline")
 include_directories("${CMAKE_SOURCE_DIR}/modules")
+
+
 
 # Boost
 find_package (Boost COMPONENTS unit_test_framework REQUIRED)

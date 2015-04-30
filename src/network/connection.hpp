@@ -69,7 +69,7 @@ struct Command
     Command(const Command&) = default;
     Command(Command&&) noexcept = default;
     Command& operator=(const Command&) = default;
-    Command& operator=(Command&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) = default;
+    Command& operator=(Command&&) /*noexcept(std::is_nothrow_move_assignable<std::string>::value)*/ = default;
 
     bool operator< ( const Command& other ) const
     {
@@ -196,7 +196,7 @@ struct OutputMessage
     OutputMessage(const OutputMessage&) = default;
     OutputMessage(OutputMessage&&) noexcept = default;
     OutputMessage& operator=(const OutputMessage&) = default;
-    OutputMessage& operator=(OutputMessage&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) = default;
+    OutputMessage& operator=(OutputMessage&&) /*noexcept(std::is_nothrow_move_assignable<std::string>::value)*/ = default;
 
 
     /**

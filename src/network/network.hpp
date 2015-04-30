@@ -59,7 +59,7 @@ struct Server
     Server(const Server&) = default;
     Server(Server&&) noexcept = default;
     Server& operator=(const Server&) = default;
-    Server& operator=(Server&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) = default;
+    Server& operator=(Server&&)/*noexcept(std::is_nothrow_move_assignable<std::string>::value)*/ = default;
 
     /**
      * \brief Name as host:port

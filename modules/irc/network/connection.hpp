@@ -55,7 +55,7 @@ struct LoginInfo
     LoginInfo(const LoginInfo&) = default;
     LoginInfo(LoginInfo&&) noexcept = default;
     LoginInfo& operator=(const LoginInfo&) = default;
-    LoginInfo& operator=(LoginInfo&&) noexcept(std::is_nothrow_move_assignable<std::string>::value) = default;
+    LoginInfo& operator=(LoginInfo&&) /*noexcept(std::is_nothrow_move_assignable<std::string>::value)*/ = default;
 
     /**
      * \brief Whether it has all the required information to auth

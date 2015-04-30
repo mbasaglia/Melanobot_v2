@@ -176,7 +176,7 @@ public:
     {
         return false;
     }
-    bool user_auth(const std::string&, const std::string&) const
+    bool user_auth(const std::string&, const std::string&) const override
     {
         /// \todo (?)
         return false;
