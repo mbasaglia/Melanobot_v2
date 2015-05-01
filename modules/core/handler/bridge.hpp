@@ -125,8 +125,8 @@ public:
     bool can_handle(const network::Message& msg) const override
     {
         return msg.type == type && (
-                ( discard_others || msg.from.name != msg.source->name() ) ||
-                ( discard_self || msg.from.name != msg.source->name() ) );
+                ( discard_others && msg.from.name == msg.source->name() ) ||
+                ( discard_self && msg.from.name != msg.source->name() ) );
     }
 
 protected:
