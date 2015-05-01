@@ -449,7 +449,7 @@ void IrcConnection::handle_message(network::Message msg)
         {
             msg.channels = string::comma_split(msg.params[0]);
             remove_from_channel(msg.from.name,msg.channels);
-            if ( !(msg.params.size() > 1) )
+            if ( msg.params.size() > 1 )
                 msg.message = msg.params[1];
             msg.type = network::Message::PART;
         }
