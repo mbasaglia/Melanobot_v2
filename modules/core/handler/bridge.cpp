@@ -31,6 +31,7 @@ Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
 
     destination = bot->connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
+    prefix = settings.get("prefix",prefix);
 }
 
 bool Bridge::on_handle(network::Message& msg)
@@ -38,8 +39,6 @@ bool Bridge::on_handle(network::Message& msg)
     network::Message targeted = msg;
     if ( destination )
         targeted.destination = destination;
-    if ( dst_channel )
-        targeted.dst_channel = dst_channel;
     return SimpleGroup::on_handle(targeted);
 }
 
@@ -69,8 +68,6 @@ void Bridge::attach_channel(Optional<std::string> channel)
 BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* parent)
     : Handler(settings,parent)
 {
-    prefix = settings.get("prefix",prefix);
-
     int timeout_seconds = settings.get("timeout",0);
     if ( timeout_seconds > 0 )
         timeout = std::chrono::duration_cast<network::Duration>(
@@ -89,13 +86,13 @@ bool BridgeChat::can_handle(const network::Message& msg) const
 
 bool BridgeChat::on_handle(network::Message& msg)
 {
-    msg.destination->say(network::OutputMessage(
+    reply_to(msg, network::OutputMessage(
         msg.source->formatter()->decode(msg.message),
         msg.type == network::Message::ACTION,
-        msg.dst_channel ? *msg.dst_channel : "",
+        {},
         priority,
         msg.source->formatter()->decode(from ? *from : msg.from.name),
-        prefix,
+        {},
         timeout == network::Duration::zero() ?
             network::Time::max() :
             network::Clock::now() + timeout

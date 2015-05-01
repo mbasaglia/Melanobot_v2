@@ -44,8 +44,16 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    network::Connection*         destination{nullptr};  ///< Message destination
+    void output_filter(network::OutputMessage& output) const
+    {
+        if ( dst_channel && output.target.empty() )
+            output.target = *dst_channel;
+        output.prefix = string::FormattedString(prefix) << output.prefix;
+    }
+
+    network::Connection*  destination{nullptr};  ///< Message destination
     Optional<std::string> dst_channel;           ///< Message destination channel
+    std::string           prefix;                ///< Output message prefix
 };
 
 /**
@@ -60,7 +68,6 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    std::string       prefix;                            ///< Output message prefix
     network::Duration timeout{network::Duration::zero()};///< Output message timeout
     bool              ignore_self{true};                 ///< Ignore bot messages
     Optional<std::string> from;                   ///< Override from
@@ -110,7 +117,6 @@ public:
     {
         message = settings.get("message",message);
         action  = settings.get("action",action);
-        prefix  = settings.get("prefix",prefix);
         discard_self = settings.get("discard_self",discard_self);
         discard_others=settings.get("discard_others",discard_others);
         if ( message.empty() ||  (discard_others && discard_self) )
@@ -141,7 +147,7 @@ protected:
             reply_channel(msg),
             priority,
             action ? from : string::FormattedString(),
-            prefix,
+            {},
             timeout == network::Duration::zero() ?
                 network::Time::max() :
                 network::Clock::now() + timeout
@@ -164,7 +170,6 @@ protected:
 
 private:
     network::Message::Type type;///< Type of messages to be handled
-    std::string prefix;         ///< Message prefix
     std::string message;        ///< Message to send
     bool        action = false; ///< Whether it should output an action
     bool        discard_self{0};///< Whether not triggered when the joining user has the same name as the source connection

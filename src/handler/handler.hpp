@@ -140,9 +140,7 @@ protected:
     virtual std::string reply_channel(const network::Message& msg) const
     {
         std::string channel;
-        if ( msg.dst_channel )
-            channel = *msg.dst_channel;
-        else if ( !msg.channels.empty() )
+        if ( !msg.channels.empty() )
             channel = msg.channels[0];
         return channel;
     }
@@ -156,11 +154,11 @@ protected:
     {
         output.target = reply_channel(input);
         output.priority = priority;
-        input.destination->say(output);
+        deliver(input.destination,output);
     }
     void reply_to(const network::Message& msg, const string::FormattedString& text) const
     {
-        msg.destination->say(network::OutputMessage(text,false,reply_channel(msg),priority));
+        reply_to(msg, {text,false});
     }
     void reply_to(const network::Message& msg, const std::string& text) const
     {
@@ -186,6 +184,24 @@ protected:
                 return p;
             return parent_handler->get_parent<HandlerT>();
         }
+
+    /**
+     * \brief Delivers a message to the destination applying filters of all the parents
+     */
+    void deliver(network::Connection* destination,
+                 network::OutputMessage& output) const
+    {
+        output_filter(output);
+        if ( parent_handler )
+            parent_handler->deliver(destination, output);
+        else
+            destination->say(output);
+    }
+
+    /**
+     * \brief Filters an output message
+     */
+    virtual void output_filter(network::OutputMessage& output) const {}
 
     /**
      * \brief Message priority
@@ -313,9 +329,7 @@ protected:
     std::string reply_channel(const network::Message& msg) const override
     {
         std::string channel;
-        if ( msg.dst_channel )
-            channel = *msg.dst_channel;
-        else if ( !public_reply )
+        if ( !public_reply )
             channel = msg.from.local_id;
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];

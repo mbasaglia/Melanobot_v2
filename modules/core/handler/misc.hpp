@@ -374,7 +374,8 @@ protected:
 
     virtual void on_handle(const network::Message& msg, const std::string& reply) const
     {
-        reply_to(msg,reply);
+        string::FormatterConfig cfg;
+        reply_to(msg,cfg.decode(reply));
     }
 
 private:

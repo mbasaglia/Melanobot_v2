@@ -496,13 +496,13 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
     auto message = formatter.decode(
         msg.source->formatter()->decode(msg.message).encode(&formatter));
 
-    msg.destination->say(network::OutputMessage(
+    reply_to(msg,network::OutputMessage(
         message,
         msg.type == network::Message::ACTION,
-        msg.dst_channel ? *msg.dst_channel : "",
+        {},
         priority,
         from,
-        prefix,
+        {},
         timeout == network::Duration::zero() ?
             network::Time::max() :
             network::Clock::now() + timeout
