@@ -33,6 +33,7 @@ Melanomodule melanomodule_irc()
     module.register_connection<irc::IrcConnection>("irc");
     module.register_log_type("irc",color::dark_magenta);
     module.register_formatter<irc::FormatterIrc>();
+    module.register_formatter<irc::FormatterIrcWhite>();
 
     module.register_handler<irc::handler::CtcpVersion>("CtcpVersion");
     module.register_handler<irc::handler::CtcpSource>("CtcpSource");

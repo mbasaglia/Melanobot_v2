@@ -770,6 +770,18 @@ private:
 };
 
 /**
+ * \brief IRC formatter optimized for black backgrounds
+ * \todo Might be better to have a generic color filter option in the formatter
+ */
+class FormatterAnsiBlack : public FormatterAnsi
+{
+public:
+    using FormatterAnsi::FormatterAnsi;
+    std::string color(const color::Color12& color) const override;
+    std::string name() const override;
+};
+
+/**
  * \brief Custom string formatting (Utf-8)
  *
  * Style formatting:

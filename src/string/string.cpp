@@ -188,6 +188,8 @@ Formatter::Registry::Registry()
     add_formatter(new FormatterAnsi(true));
     add_formatter(new FormatterAnsi(false));
     add_formatter(new FormatterConfig);
+    add_formatter(new FormatterAnsiBlack(true));
+    add_formatter(new FormatterAnsiBlack(false));
 }
 
 Formatter* Formatter::Registry::formatter(const std::string& name)
@@ -438,6 +440,16 @@ std::string FormatterAnsi::name() const
     return utf8 ? "ansi-utf8" : "ansi-ascii";
 }
 
+std::string FormatterAnsiBlack::color(const color::Color12& color) const
+{
+    if ( color.is_valid() && color.to_4bit() == 0 )
+        return FormatterAnsi::color(color::silver);
+    return FormatterAnsi::color(color);
+}
+std::string FormatterAnsiBlack::name() const
+{
+    return FormatterAnsi::name()+"_black";
+}
 
 std::string FormatterConfig::color(const color::Color12& color) const
 {

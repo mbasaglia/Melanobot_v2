@@ -40,5 +40,15 @@ public:
     static color::Color12 color_from_string(const std::string& color);
 };
 
+/**
+ * \brief IRC formatter optimized for white baclgrounds
+ */
+class FormatterIrcWhite : public FormatterIrc
+{
+public:
+    std::string color(const color::Color12& color) const override;
+    std::string name() const override;
+};
+
 } // namespace irc
 #endif // IRC_FORMATTER_HPP

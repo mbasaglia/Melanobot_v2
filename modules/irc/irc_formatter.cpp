@@ -32,7 +32,6 @@ std::string FormatterIrc::color(const color::Color12& color) const
     if ( !color.is_valid() )
         return "\xf"; // no color
 
-
     switch ( color.to_4bit() )
     {
         case 0b0000: ircn =  1; break; // black
@@ -180,6 +179,26 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
         case 15: return silver;
         default: return Color12();
     }
+}
+
+std::string FormatterIrcWhite::color(const color::Color12& color) const
+{
+    if ( color.is_valid() )
+    {
+        switch ( color.to_4bit() )
+        {
+            case 0b1011: // yellow -> dark yellow
+                return FormatterIrc::color(color::dark_yellow);
+            case 0b1111: // white -> black
+                return FormatterIrc::color(color::black);
+        }
+    }
+    return FormatterIrc::color(color);
+}
+
+std::string FormatterIrcWhite::name() const
+{
+    return "irc_white";
 }
 
 } // namespace irc
