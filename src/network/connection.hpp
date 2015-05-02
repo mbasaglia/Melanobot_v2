@@ -144,7 +144,6 @@ struct Message
          *
          * These messages should give meaningful values to:
          *      * \c from
-         * \todo where is the best place to store the new name?
          */
         RENAME,
         /**

@@ -376,6 +376,7 @@ private:
 
 /**
  * \brief Shows match scores
+ * \todo Could use parameterized score list messages
  */
 class XonoticMatchScore : public ParseEventlog
 {

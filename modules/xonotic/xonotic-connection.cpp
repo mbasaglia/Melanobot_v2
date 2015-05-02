@@ -343,7 +343,6 @@ void XonoticConnection::command ( network::Command cmd )
                 ErrorLog("xon") << "Wrong parameters for \""+cmd.parameters[0]+"\"";
                 return;
             }
-            /// \todo validate cmd.parameters[1] as a proper cvar name
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
 

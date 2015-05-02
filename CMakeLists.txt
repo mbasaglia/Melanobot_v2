@@ -33,6 +33,9 @@ include_directories("${CMAKE_SOURCE_DIR}/src")
 
 # Check C++14
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# For some reason the above flags don't really work...
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag(--std=c++14 STD_CXX14)
@@ -51,6 +54,21 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
     set(DEBUG 1)
 else()
     set(DEBUG 0)
+endif()
+
+# Git describe
+set(PROJECT_DEV_VERSION ${PROJECT_VERSION})
+if(NOT GIT_FOUND)
+    find_package(Git QUIET)
+    if(GIT_FOUND)
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" describe --always
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            OUTPUT_VARIABLE PROJECT_DEV_VERSION
+            ERROR_QUIET
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    endif()
 endif()
 
 # Config header

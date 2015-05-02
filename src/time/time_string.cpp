@@ -139,7 +139,7 @@ Optional<WeekDay> weekday_from_name(const std::string& name)
     return {};
 }
 /**
- * \todo a varsion with the same format as POSIX date command
+ * \todo A version with the same format as POSIX date command
  */
 std::string format_char(const DateTime& date_time, char c)
 {

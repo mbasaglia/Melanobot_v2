@@ -99,9 +99,10 @@ public:
         version = settings.get("version","");
         clientinfo = ": Shows the bot's version";
 
-        /// \todo more detailed system information
         if ( version.empty() )
-            version = PROJECT_NAME ":" PROJECT_VERSION ":C++";
+            version = PROJECT_NAME ":" PROJECT_DEV_VERSION ":"
+                SYSTEM_COMPILER " " SYSTEM_PROCESSOR " "
+                SYSTEM_NAME " " SYSTEM_VERSION;
     }
 
 protected:

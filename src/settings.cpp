@@ -199,15 +199,15 @@ std::string settings::find_config(FileFormat format)
 {
     std::vector<std::string> paths;
     paths.push_back(".");
-    std::string exe_dir = global_settings.get("path.executable","");
-    if ( !exe_dir.empty() )
-        paths.push_back(exe_dir);
     std::string home_dir = global_settings.get("path.home","");
     if ( !home_dir.empty() )
     {
         paths.push_back(home_dir + "/.config/" + PROJECT_SHORTNAME);
         paths.push_back(home_dir + ("/." PROJECT_SHORTNAME));
     }
+    std::string exe_dir = global_settings.get("path.executable","");
+    if ( !exe_dir.empty() )
+        paths.push_back(exe_dir);
 
     for ( const auto& path : paths )
     {

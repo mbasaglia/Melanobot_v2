@@ -805,7 +805,7 @@ private:
     int8_t     day_;            ///< Day of the month [1,31]
     int8_t     hour_;           ///< Hour [0,23]
     int8_t     minute_;         ///< Minute [0,59]
-    int8_t     second_;         ///< Second [0,59] \todo (allow leap seconds?)
+    int8_t     second_;         ///< Second [0,59] (no leap seconds)
     int16_t    milliseconds_;   ///< Milli seconds [0,10^3)
 
     /**
