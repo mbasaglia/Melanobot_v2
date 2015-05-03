@@ -18,7 +18,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "simple-group.hpp"
+#include "group.hpp"
 
 #ifndef HANDLER_ADMIN_HPP
 #define HANDLER_ADMIN_HPP

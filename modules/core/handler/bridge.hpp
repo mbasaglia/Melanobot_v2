@@ -19,7 +19,7 @@
 #ifndef HANDLER_BRIDGE_HPP
 #define HANDLER_BRIDGE_HPP
 
-#include "simple-group.hpp"
+#include "group.hpp"
 
 namespace handler {
 

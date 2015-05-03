@@ -22,7 +22,7 @@
 #include "handler/admin.hpp"
 #include "handler/bridge.hpp"
 #include "handler/misc.hpp"
-#include "handler/simple-group.hpp"
+#include "handler/group.hpp"
 
 /**
  * \brief Defines the core module

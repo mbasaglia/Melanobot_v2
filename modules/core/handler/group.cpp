@@ -18,12 +18,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "simple-group.hpp"
+#include "group.hpp"
 
 namespace handler {
 
 SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* parent)
-    : SimpleAction("",settings,parent)
+    : AbstractGroup("",settings,parent)
 {
     // Gather settings
     auth = settings.get("auth",auth);
@@ -47,34 +47,14 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
         }
 
     // Initialize children
-    Settings child_settings = settings;
-    for ( auto& p : child_settings )
-    {
-        /// \note children are recognized by the fact that they
-        // start with an uppercase name
-        if ( !p.first.empty() && std::isupper(p.first[0]) )
-        {
-            settings::merge(p.second,default_settings,false);
-            auto hand = handler::HandlerFactory::instance().build(
-                p.first,
-                p.second,
-                this
-            );
-            if ( hand )
-                children.push_back(std::move(hand));
-        }
-    }
-}
-void SimpleGroup::initialize()
-{
-    for ( const auto& h : children )
-        h->initialize();
+    add_children(settings,default_settings);
 }
 
-void SimpleGroup::finalize()
+bool SimpleGroup::can_handle(const network::Message& msg) const
 {
-    for ( const auto& h : children )
-        h->finalize();
+    return authorized(msg) && (!source || msg.source == source) &&
+        ( msg.direct || !direct ) && string::starts_with(msg.message,trigger) &&
+        (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
 bool SimpleGroup::on_handle(network::Message& msg)
@@ -83,13 +63,6 @@ bool SimpleGroup::on_handle(network::Message& msg)
         if ( h->handle(msg) && !pass_through )
             return true;
     return false;
-}
-
-bool SimpleGroup::can_handle(const network::Message& msg) const
-{
-    return authorized(msg) && (!source || msg.source == source) &&
-        ( msg.direct || !direct ) && string::starts_with(msg.message,trigger) &&
-        (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
 void SimpleGroup::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
@@ -233,7 +206,7 @@ protected:
 
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
                            const Settings& settings, handler::HandlerContainer* parent)
-    : SimpleAction(default_trigger,settings, parent)
+    : AbstractGroup(default_trigger,settings, parent)
 {
 
     Settings child_settings;
@@ -258,6 +231,7 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
 
 bool AbstractList::on_handle(network::Message& msg)
 {
+    /// \todo Maybe this can be made into a ListShow handler or something
     if ( msg.message.empty() )
     {
         auto elem = elements();
@@ -267,11 +241,7 @@ bool AbstractList::on_handle(network::Message& msg)
             reply_to(msg,get_property("list_name")+": "+string::implode(" ",elem));
         return true;
     }
-
-    for ( const auto& h : children )
-        if ( h->handle(msg) )
-            return true;
-    return false;
+    return AbstractGroup::on_handle(msg);
 }
 
 } // namespace handler

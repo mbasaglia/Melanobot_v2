@@ -29,11 +29,70 @@
 namespace handler {
 
 /**
+ * \brief Base class for group-like handlers
+ */
+class AbstractGroup : public SimpleAction
+{
+public:
+    using SimpleAction::SimpleAction;
+
+    void initialize() override
+    {
+        for ( const auto& h : children )
+            h->initialize();
+    }
+
+    void finalize() override
+    {
+        for ( const auto& h : children )
+            h->finalize();
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        for ( const auto& h : children )
+            if ( h->handle(msg) )
+                return true;
+        return false;
+    }
+
+    /**
+     * \brief Creates children from settings
+     * \param child_settings    Settings for all the children
+     * \param default_settings  Settings to fallback to for every child
+     */
+    void add_children(Settings child_settings,
+                      const Settings& default_settings={})
+    {
+        for ( auto& p : child_settings )
+        {
+            /// \note children are recognized by the fact that they
+            // start with an uppercase name
+            if ( !p.first.empty() && std::isupper(p.first[0]) )
+            {
+                settings::merge(p.second,default_settings,false);
+                auto hand = handler::HandlerFactory::instance().build(
+                    p.first,
+                    p.second,
+                    this
+                );
+                if ( hand )
+                    children.push_back(std::move(hand));
+            }
+        }
+    }
+
+
+    std::vector<std::unique_ptr<Handler>> children;  ///< Contained handlers
+};
+
+/**
  * \brief A simple group of actions which share settings
  * \todo Add a simple way to create pre-defined group classes which will have
  *       a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration)
  */
-class SimpleGroup : public SimpleAction
+class SimpleGroup : public AbstractGroup
 {
 public:
     SimpleGroup(const Settings& settings, handler::HandlerContainer* parent);
@@ -61,21 +120,17 @@ public:
         return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
     }
 
-    void initialize() override;
-    void finalize() override;
-
 protected:
     bool on_handle(network::Message& msg) override;
 
     /**
      * \brief Authorization group required for a user message to be handled
      */
-    std::string           auth;
-    std::string           channels;         ///< Channel filter
-    network::Connection*  source = nullptr; ///< Accepted connection (Null => all connections)
-    std::string           name;             ///< Name to show in help
-    std::string           help_group;       ///< Selects whether to be shown in help
-    std::vector<std::unique_ptr<Handler>> children;  ///< Contained handlers
+    std::string          auth;
+    std::string          channels;          ///< Channel filter
+    network::Connection* source = nullptr;  ///< Accepted connection (Null => all connections)
+    std::string          name;              ///< Name to show in help
+    std::string          help_group;        ///< Selects whether to be shown in help
     bool                 pass_through=false;///< Whether it should keep processing the message after a match
 };
 
@@ -85,7 +140,7 @@ protected:
  *       which contains a human-readable name of the list,
  *       used for descriptions of the handler.
  */
-class AbstractList : public SimpleAction
+class AbstractList : public AbstractGroup
 {
 public:
     /**
@@ -127,9 +182,6 @@ public:
 
 protected:
     bool on_handle(network::Message& msg) override;
-
-private:
-    std::vector<std::unique_ptr<Handler>> children;         ///< Contained handlers
 };
 
 } // namespace handler
