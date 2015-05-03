@@ -21,7 +21,7 @@
 #ifndef IRC_HANDLER_CTCP
 #define IRC_HANDLER_CTCP
 
-#include "handler/handler.hpp"
+#include "core/handler/group.hpp"
 #include "config.hpp"
 #include "irc/network/functions.hpp"
 #include "time/time_string.hpp"
@@ -283,6 +283,23 @@ private:
         }
     }
 };
+
+/**
+ * \brief Preset for basic CTCP actions
+ */
+class Ctcp : public ::handler::PresetGroup
+{
+public:
+    Ctcp(const Settings& settings, ::handler::HandlerContainer* parent)
+        : PresetGroup({
+            "CtcpVersion",
+            "CtcpSource",
+            "CtcpPing",
+            "CtcpTime",
+            "CtcpClientInfo",
+        },settings,parent) {}
+};
+
 
 } // namespace handler
 } // namespace irc

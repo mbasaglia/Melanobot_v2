@@ -63,25 +63,7 @@ protected:
      * \param default_settings  Settings to fallback to for every child
      */
     void add_children(Settings child_settings,
-                      const Settings& default_settings={})
-    {
-        for ( auto& p : child_settings )
-        {
-            /// \note children are recognized by the fact that they
-            // start with an uppercase name
-            if ( !p.first.empty() && std::isupper(p.first[0]) )
-            {
-                settings::merge(p.second,default_settings,false);
-                auto hand = handler::HandlerFactory::instance().build(
-                    p.first,
-                    p.second,
-                    this
-                );
-                if ( hand )
-                    children.push_back(std::move(hand));
-            }
-        }
-    }
+                      const Settings& default_settings={});
 
 
     std::vector<std::unique_ptr<Handler>> children;  ///< Contained handlers
@@ -89,8 +71,6 @@ protected:
 
 /**
  * \brief A simple group of actions which share settings
- * \todo Add a simple way to create pre-defined group classes which will have
- *       a set of preset actions (eg: Q Whois system, Cup management, Xonotic integration)
  */
 class SimpleGroup : public AbstractGroup
 {
@@ -182,6 +162,23 @@ public:
 
 protected:
     bool on_handle(network::Message& msg) override;
+};
+
+/**
+ * \brief Very basic group with preset handlers, configurable from the config
+ */
+class PresetGroup : public handler::AbstractGroup
+{
+public:
+    PresetGroup( const std::initializer_list<std::string>& preset,
+                 const Settings& settings, HandlerContainer* parent)
+        : AbstractGroup("",settings,parent)
+    {
+        add_children(settings::merge_copy(settings,
+            settings::from_initializer(preset), false));
+    }
+
+    bool can_handle(const network::Message&) const override { return true; }
 };
 
 } // namespace handler

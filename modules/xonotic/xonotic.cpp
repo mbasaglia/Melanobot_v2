@@ -43,6 +43,7 @@ Melanomodule melanomodule_xonotic()
     module.register_handler<xonotic::ShowVoteDo>("ShowVoteDo");
     module.register_handler<xonotic::ShowVoteResult>("ShowVoteResult");
     module.register_handler<xonotic::ShowVoteStop>("ShowVoteStop");
+    module.register_handler<xonotic::ShowVotes>("ShowVotes");
     module.register_handler<xonotic::XonoticMatchScore>("XonoticMatchScore");
 
     return module;

@@ -41,6 +41,7 @@ Melanomodule melanomodule_irc()
     module.register_handler<irc::handler::CtcpPing>("CtcpPing");
     module.register_handler<irc::handler::CtcpTime>("CtcpTime");
     module.register_handler<irc::handler::CtcpClientInfo>("CtcpClientInfo");
+    module.register_handler<irc::handler::Ctcp>("Ctcp");
 
     module.register_handler<irc::handler::IrcKickRejoin>("IrcKickRejoin");
 
@@ -53,6 +54,7 @@ Melanomodule melanomodule_irc()
     module.register_handler<irc::handler::Whois330>("Whois330");
     module.register_handler<irc::handler::QSendWhois>("QSendWhois");
     module.register_handler<irc::handler::QGetWhois>("QGetWhois");
+    module.register_handler<irc::handler::QWhois>("QWhois");
     module.register_handler<irc::handler::WhoisCheckMe>("WhoisCheckMe");
 
     return module;

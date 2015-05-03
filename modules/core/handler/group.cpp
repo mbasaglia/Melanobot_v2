@@ -22,6 +22,28 @@
 
 namespace handler {
 
+
+void AbstractGroup::add_children(Settings child_settings,
+                    const Settings& default_settings)
+{
+    for ( auto& p : child_settings )
+    {
+        /// \note children are recognized by the fact that they
+        // start with an uppercase name
+        if ( !p.first.empty() && std::isupper(p.first[0]) )
+        {
+            settings::merge(p.second,default_settings,false);
+            auto hand = handler::HandlerFactory::instance().build(
+                p.first,
+                p.second,
+                this
+            );
+            if ( hand )
+                children.push_back(std::move(hand));
+        }
+    }
+}
+
 SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* parent)
     : AbstractGroup("",settings,parent)
 {

@@ -19,7 +19,7 @@
 #ifndef XONOTIC_HANDLER_STATUS_HPP
 #define XONOTIC_HANDLER_STATUS_HPP
 
-#include "handler/handler.hpp"
+#include "core/handler/group.hpp"
 #include "string/string_functions.hpp"
 #include "xonotic/xonotic.hpp"
 
@@ -372,6 +372,24 @@ protected:
 
 private:
     std::string message = "#4#*#-# %name#-# used their master status to do %vote";
+};
+
+/**
+ * \brief Shows all the votes
+ * \note This will inherit SimpleAction, which isn't needed...
+ */
+class ShowVotes : public handler::PresetGroup
+{
+public:
+    ShowVotes(const Settings& settings, HandlerContainer* parent)
+        : PresetGroup({
+            "ShowVoteCall",
+            "ShowVoteResult",
+            "ShowVoteStop",
+            "ShowVoteLogin",
+            "ShowVoteDo"
+        },settings,parent)
+    {}
 };
 
 /**

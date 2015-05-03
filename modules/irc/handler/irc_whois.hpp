@@ -21,7 +21,7 @@
 #ifndef IRC_HANDLER_WHOIS
 #define IRC_HANDLER_WHOIS
 
-#include "handler/handler.hpp"
+#include "core/handler/group.hpp"
 
 namespace irc {
 namespace handler {
@@ -151,6 +151,16 @@ protected:
 private:
     std::string q_bot = "Q";
     bool expects_users = false; ///< Whether it's parsing the output of USERS
+};
+
+/**
+ * \brief Preset for QSendWhois and QGetWhois
+ */
+class QWhois : public ::handler::PresetGroup
+{
+public:
+    QWhois(const Settings& settings, ::handler::HandlerContainer* parent)
+        : PresetGroup({"QSendWhois","QGetWhois"},settings,parent) {}
 };
 
 /**

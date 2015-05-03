@@ -85,13 +85,23 @@ namespace settings
      * \param overwrite If \b true all of the properties of \c source will be used,
      *                  if \b false, only those not already found in the tree
      */
-    inline void merge( Settings& target, const Settings& source, bool overwrite)
+    inline void merge(Settings& target, const Settings& source, bool overwrite)
     {
         for ( const auto& prop : source )
         {
             if ( overwrite || !target.get_child_optional(prop.first) )
                 target.put(prop.first,prop.second.data());
         }
+    }
+
+    /**
+     * \brief Same as \c merge but instead of modifying \c target, it returns a new object
+     */
+    inline Settings merge_copy(const Settings& target, const Settings& source, bool overwrite)
+    {
+        Settings copy = target;
+        merge(copy,source,overwrite);
+        return copy;
     }
 
     /**
@@ -104,6 +114,18 @@ namespace settings
             for ( auto& child : sett )
                 recurse(child.second,func);
         }
+
+    /**
+     * \brief Initialize Settings from a simple initializer list
+     * \todo Could use a structure to allow a recursive initializer
+     */
+    inline Settings from_initializer(const std::initializer_list<std::string>& init)
+    {
+        Settings sett;
+        for ( const auto& key : init )
+            sett.put_child(key, {});
+        return sett;
+    }
 }
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
