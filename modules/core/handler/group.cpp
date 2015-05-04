@@ -53,6 +53,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     name = settings.get("name",trigger);
     help_group = settings.get("help_group",help_group);
     pass_through = settings.get("pass_through",pass_through);
+    prefix = settings.get("prefix",prefix);
 
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )

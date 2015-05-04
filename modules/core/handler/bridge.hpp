@@ -44,16 +44,15 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    void output_filter(network::OutputMessage& output) const
+    void output_filter(network::OutputMessage& output) const override
     {
+        SimpleGroup::output_filter(output);
         if ( dst_channel && output.target.empty() )
             output.target = *dst_channel;
-        output.prefix = string::FormattedString(prefix) << output.prefix;
     }
 
     network::Connection*  destination{nullptr};  ///< Message destination
     Optional<std::string> dst_channel;           ///< Message destination channel
-    std::string           prefix;                ///< Output message prefix
 };
 
 /**

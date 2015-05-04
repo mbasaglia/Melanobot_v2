@@ -31,7 +31,6 @@ Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
 
     destination = bot->connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
-    prefix = settings.get("prefix",prefix);
 }
 
 bool Bridge::on_handle(network::Message& msg)

@@ -103,6 +103,11 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
+    void output_filter(network::OutputMessage& output) const override
+    {
+        output.prefix = string::FormattedString(prefix) << output.prefix;
+    }
+
     /**
      * \brief Authorization group required for a user message to be handled
      */
@@ -112,6 +117,7 @@ protected:
     std::string          name;              ///< Name to show in help
     std::string          help_group;        ///< Selects whether to be shown in help
     bool                 pass_through=false;///< Whether it should keep processing the message after a match
+    std::string          prefix;            ///< Output message prefix
 };
 
 /**

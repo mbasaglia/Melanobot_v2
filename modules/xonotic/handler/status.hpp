@@ -22,6 +22,7 @@
 #include "core/handler/group.hpp"
 #include "string/string_functions.hpp"
 #include "xonotic/xonotic.hpp"
+#include "core/handler/connection_monitor.hpp"
 
 namespace xonotic {
 
@@ -600,6 +601,47 @@ private:
     enum { SPECTATORS = -2 };
 };
 
+
+
+/**
+ * \brief Lists users in a xonotic server
+ */
+class ListPlayers : public handler::ConnectionMonitor
+{
+public:
+    ListPlayers(const Settings& settings, handler::HandlerContainer* parent)
+        : ConnectionMonitor("who", settings, parent)
+    {
+        bots = settings.get("bots", bots);
+    }
+
+protected:
+    bool on_handle(network::Message& msg)
+    {
+        auto users = monitored->get_users();
+        Properties props = message_properties(monitored);
+
+        string::FormatterConfig fmt;
+
+        std::vector<string::FormattedString> list;
+        for ( const user::User& user: users )
+            if ( bots || !user.host.empty() )
+                list.push_back(monitored->formatter()->decode(user.name));
+
+        if ( list.empty() )
+            reply_to(msg,fmt.decode(string::replace(reply_empty, props, "%")));
+        else
+            reply_to(msg,fmt.decode(string::replace(reply, props, "%"))
+                << string::implode(string::FormattedString(", "),list));
+
+        return true;
+    }
+
+
+    bool        bots{false};                            ///< Show bots
+    std::string reply{"#1#%players#-#/#1#%max#-#: "};   ///< Reply when there are players (followed by the list)
+    std::string reply_empty{"Server is empty"};         ///< Reply when there are no players
+};
 
 } // namespace xonotic
 #endif // XONOTIC_HANDLER_STATUS_HPP
