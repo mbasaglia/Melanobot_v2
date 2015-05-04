@@ -200,6 +200,8 @@ templates
                 Group
                 {
                     direct      1
+                    auth        admin
+                    
                     RconCommand endmatch
                     RconCommand gotomap
                     RconCommand chmap
