@@ -64,7 +64,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     Settings default_settings;
     for ( const auto& p : settings )
         if ( !p.second.data().empty() &&
-                !string::is_one_of(p.first,{"trigger","auth","name","type"}) )
+                !string::is_one_of(p.first,{"trigger","auth","name","type","prefix"}) )
         {
             default_settings.put(p.first,p.second.data());
         }

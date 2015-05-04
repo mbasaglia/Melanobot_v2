@@ -404,6 +404,12 @@ public:
      *        as visible to the bot.
      */
     virtual user::UserCounter count_users(const std::string& channel = {} ) const = 0;
+
+    /**
+     * \brief Returns a list of properties used to message formatting
+     * \note Returned properties should be formatted using the FormatterConfig
+     */
+    virtual Properties message_properties() const = 0;
 };
 
 /**

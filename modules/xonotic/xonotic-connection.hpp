@@ -152,6 +152,10 @@ public:
      * \thread external \lock data
      */
     bool set_property(const std::string& property, const std::string& value ) override;
+    /**
+     * \thread external \lock data
+     */
+    Properties message_properties() const override;
 
     /**
      * \thead external \lock data

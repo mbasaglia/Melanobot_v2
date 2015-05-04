@@ -46,5 +46,58 @@ protected:
     network::Connection* monitored{nullptr}; ///< Monitored connection
 };
 
+/**
+ * \brief Shows a message saying whether the server is connected or not
+ */
+class MonitorServerStatus : public ConnectionMonitor
+{
+public:
+    MonitorServerStatus(const Settings& settings, handler::HandlerContainer* parent)
+        : ConnectionMonitor("status", settings, parent)
+    {
+        connected = settings.get("connected", connected);
+        disconnected = settings.get("disconnected", disconnected);
+    }
+
+protected:
+    bool on_handle(network::Message& msg)
+    {
+        string::FormatterConfig fmt;
+        if ( monitored->status() >= network::Connection::CHECKING )
+            reply_to(msg,fmt.decode(connected));
+        else
+            reply_to(msg,fmt.decode(connected));
+        return true;
+    }
+
+    std::string connected = "#dark_green#Server is connected";
+    std::string disconnected = "#red#Server is not connected";
+};
+
+/**
+ * \brief Shows the server description
+ */
+class MonitorReply : public ConnectionMonitor
+{
+public:
+    MonitorReply(const Settings& settings, handler::HandlerContainer* parent)
+        : ConnectionMonitor("",settings,parent)
+    {
+        reply = settings.get("reply", reply);
+        if ( reply.empty() )
+            throw ConfigurationError();
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        string::FormatterConfig fmt;
+        reply_to(msg,fmt.decode(string::replace(reply,monitored->message_properties(),"%")));
+        return true;
+    }
+
+    std::string reply;
+};
+
 } // namespace handler
 #endif // CONNECTION_MONITOR_HPP

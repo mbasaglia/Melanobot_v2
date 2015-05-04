@@ -1146,6 +1146,12 @@ bool IrcConnection::set_property( const std::string& property, const std::string
     return false;
 }
 
+/// \todo provide useful properties
+Properties IrcConnection::message_properties() const
+{
+    return Properties{};
+}
+
 user::UserCounter IrcConnection::count_users(const std::string& channel) const
 {
     Lock lock(mutex);

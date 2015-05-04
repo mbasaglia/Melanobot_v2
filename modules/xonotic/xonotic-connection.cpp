@@ -298,6 +298,47 @@ bool XonoticConnection::set_property(const std::string& property,
     return true;
 }
 
+Properties XonoticConnection::message_properties() const
+{
+    string::FormatterConfig fmt;
+
+    user::UserCounter count = count_users();
+    std::string map = "?";
+    std::string gt  = "?";
+    std::string host;
+
+    {
+        Lock lock(mutex);
+
+        auto it = properties.find("map");
+        if ( it != properties.end() )
+            map = it->second;
+
+        it = properties.find("gametype");
+        if ( it != properties.end() )
+            gt = it->second;
+
+        it = properties.find("host");
+        if ( it != properties.end() )
+            host = formatter_->decode(it->second).encode(&fmt);
+        else
+            host = "(unconnected) " + server().name();
+    }
+
+    return Properties {
+        {"players", std::to_string(count.users)},
+        {"bots",    std::to_string(count.bots)},
+        {"total",   std::to_string(count.users+count.bots)},
+        {"max",     std::to_string(count.max)},
+        {"free",    std::to_string(count.max-count.users)},
+        {"map",     map},
+        {"gt",      gt},
+        {"gametype",xonotic::gametype_name(gt)},
+        {"sv_host", host},
+        {"sv_server",server().name()}
+    };
+}
+
 void XonoticConnection::say ( const network::OutputMessage& message )
 {
     string::FormattedString prefix_stream;

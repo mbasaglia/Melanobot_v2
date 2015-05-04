@@ -26,32 +26,11 @@
 
 namespace xonotic {
 
-/**
- * \brief Returns a list of properties to be used for message formatting
- */
-inline Properties message_properties(network::Connection* source)
-{
-    string::FormatterConfig fmt;
-    user::UserCounter count = source->count_users();
-    return Properties {
-        {"players", std::to_string(count.users)},
-        {"bots",    std::to_string(count.bots)},
-        {"total",   std::to_string(count.users+count.bots)},
-        {"max",     std::to_string(count.max)},
-        {"free",    std::to_string(count.max-count.users)},
-        {"map",     source->get_property("map")}, /// \todo replace with "?" or something
-        {"gt",      source->get_property("gametype")}, /// same here
-        {"gametype",xonotic::gametype_name(source->get_property("gametype"))},
-        {"sv_host", source->formatter()->decode(source->get_property("host")).encode(&fmt)},
-        {"sv_server",source->server().name()}
-    };
-}
-
 inline Properties message_properties(network::Connection* source,
                                      const user::User& user)
 {
     string::FormatterConfig fmt;
-    Properties props =  message_properties(source);
+    Properties props =  source->message_properties();
     props.insert({
         {"name",    source->formatter()->decode(user.name).encode(&fmt)},
         {"ip",      user.host},
@@ -158,7 +137,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormatterConfig fmt;
-        Properties props = message_properties(msg.source);
+        Properties props = msg.source->message_properties();
 
         if ( empty || msg.source->count_users().users )
             reply_to(msg,fmt.decode(string::replace(message,props,"%")));
@@ -253,7 +232,7 @@ protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
         string::FormatterConfig fmt;
-        Properties props = message_properties(msg.source);
+        Properties props = msg.source->message_properties();
         props["result"] = match[1];
         props["yes"] = match[2];
         props["no"] = match[3];
@@ -469,7 +448,7 @@ protected:
     void handle_end(const network::Message& msg, const std::smatch& match)
     {
         string::FormatterConfig fmt;
-        Properties props = message_properties(msg.source);
+        Properties props = msg.source->message_properties();
 
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
 
@@ -499,11 +478,14 @@ protected:
         }
 
         string::FormattedString out;
-        auto color = team_colors[team];
+        color::Color12 color;
 
         auto itt = team_scores.find(team);
         if ( itt != team_scores.end() )
+        {
+            color = team_colors[team];
             out << color << itt->second << color::nocolor << ") ";
+        }
 
         for ( unsigned i = 0; i < it->second.size(); i++ )
         {
@@ -601,8 +583,6 @@ private:
     enum { SPECTATORS = -2 };
 };
 
-
-
 /**
  * \brief Lists users in a xonotic server
  */
@@ -619,7 +599,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         auto users = monitored->get_users();
-        Properties props = message_properties(monitored);
+        Properties props = monitored->message_properties();
 
         string::FormatterConfig fmt;
 

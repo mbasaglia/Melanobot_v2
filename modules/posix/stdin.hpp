@@ -101,6 +101,7 @@ public:
     bool set_property(const std::string& , const std::string& ) override { return false; }
     void command (network::Command) override {}
     user::UserCounter count_users(const std::string& channel = {}) const override { return {}; }
+    Properties message_properties() const override { return Properties{}; }
 
 private:
     Melanobot*                            bot;

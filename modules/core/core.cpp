@@ -19,10 +19,10 @@
 
 #include "melanomodule.hpp"
 #include "handler/admin.hpp"
-#include "handler/admin.hpp"
 #include "handler/bridge.hpp"
 #include "handler/misc.hpp"
 #include "handler/group.hpp"
+#include "handler/connection_monitor.hpp"
 
 /**
  * \brief Defines the core module
@@ -45,6 +45,9 @@ Melanomodule melanomodule_core()
     module.register_handler<handler::BridgeChat>("BridgeChat");
     module.register_handler<handler::BridgeAttach>("BridgeAttach");
     module.register_handler<handler::BridgeAttachChannel>("BridgeAttachChannel");
+
+    module.register_handler<handler::MonitorServerStatus>("MonitorServerStatus");
+    module.register_handler<handler::MonitorReply>("MonitorReply");
 
     module.register_handler<handler::JoinMessage>("JoinMessage");
     module.register_handler<handler::PartMessage>("PartMessage");
