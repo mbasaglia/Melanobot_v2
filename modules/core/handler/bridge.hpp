@@ -138,7 +138,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormatterConfig fmt;
-        auto from = msg.source->formatter()->decode(msg.from.name);
+        auto from = msg.source->decode(msg.from.name);
         auto str = string::replace(message,message_replacements(msg),"%");
         reply_to(msg,network::OutputMessage(
             fmt.decode(str),
@@ -157,13 +157,13 @@ protected:
     virtual Properties message_replacements(const network::Message& msg) const
     {
         string::FormatterConfig fmt;
-        auto from = msg.source->formatter()->decode(msg.from.name);
+        auto from = msg.source->decode(msg.from.name);
         return {
             {"channel",string::implode(", ",msg.channels)},
             {"name", from.encode(fmt)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id},
-            {"message", msg.source->formatter()->decode(msg.message).encode(fmt)}
+            {"message", msg.source->encode_to(msg.message, fmt)}
         };
     }
 
@@ -215,12 +215,12 @@ protected:
             {"channel",string::implode(", ",msg.channels)},
             {"message",msg.message},
 
-            {"kicker", msg.source->formatter()->decode(msg.from.name).encode(fmt)},
+            {"kicker", msg.source->encode_to(msg.from.name,fmt)},
             {"kicker.host", msg.from.host},
             {"kicker.global_id", msg.from.global_id},
             {"kicker.local_id", msg.from.local_id},
 
-            {"kicked", msg.source->formatter()->decode(msg.victim.name).encode(fmt)},
+            {"kicked", msg.source->encode_to(msg.victim.name,fmt)},
             {"kicked.host", msg.victim.host},
             {"kicked.global_id", msg.victim.global_id},
             {"kicked.local_id", msg.victim.local_id}

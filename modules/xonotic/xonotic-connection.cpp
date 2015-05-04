@@ -334,6 +334,7 @@ Properties XonoticConnection::message_properties() const
         {"map",     map},
         {"gt",      gt},
         {"gametype",xonotic::gametype_name(gt)},
+        {"mutators",get_property("mutators")},
         {"sv_host", host},
         {"sv_server",server().name()}
     };
@@ -396,12 +397,12 @@ void XonoticConnection::command ( network::Command cmd )
 
         if ( rcon_secure <= 0 )
         {
-            Log("xon",'<',2) << formatter()->decode(rcon_command);
+            Log("xon",'<',2) << decode(rcon_command);
             write("rcon "+rcon_password+' '+rcon_command);
         }
         else if ( rcon_secure == 1 )
         {
-            Log("xon",'<',2) << formatter()->decode(rcon_command);
+            Log("xon",'<',2) << decode(rcon_command);
             std::string argbuf = (boost::format("%ld.%06d %s")
                 % std::time(nullptr) % math::random(1000000)
                 % rcon_command).str();
@@ -583,6 +584,10 @@ void XonoticConnection::handle_message(network::Message& msg)
                 R"regex(:name:(\d+):(.*))regex",
                 std::regex::ECMAScript|std::regex::optimize
             );
+            static std::regex regex_mutators(
+                R"regex(:gameinfo:mutators:LIST:(.*))regex",
+                std::regex::ECMAScript|std::regex::optimize
+            );
 
             std::smatch match;
             if ( std::regex_match(msg.raw,match,regex_join) )
@@ -601,14 +606,14 @@ void XonoticConnection::handle_message(network::Message& msg)
                 lock.unlock();
                 msg.from = user;
                 msg.type = network::Message::JOIN;
-                Log("xon",'!',2) << "Added user " << formatter()->decode(user.name);
+                Log("xon",'!',2) << "Added user " << decode(user.name);
             }
             else if ( std::regex_match(msg.raw,match,regex_part) )
             {
                 Lock lock(mutex);
                 if ( user::User *found = user_manager.user(match[1]) )
                 {
-                    Log("xon",'!',2) << "Removed user " << formatter()->decode(found->name);
+                    Log("xon",'!',2) << "Removed user " << decode(found->name);
                     msg.from = *found;
                     user_manager.remove_user(found->local_id);
                     msg.type = network::Message::PART;
@@ -632,10 +637,15 @@ void XonoticConnection::handle_message(network::Message& msg)
                     msg.from = *found;
                     msg.message = match[2];
                     msg.type = network::Message::RENAME;
-                    Log("irc",'!',3) << "Renamed user " << formatter()->decode(found->name)
-                        << color::nocolor << " to " << formatter()->decode(msg.message);
+                    Log("irc",'!',3) << "Renamed user " << decode(found->name)
+                        << color::nocolor << " to " << decode(msg.message);
                     found->name = msg.message;
                 }
+            }
+            else if ( std::regex_match(msg.raw,match,regex_mutators) )
+            {
+                Lock lock(mutex);
+                properties["mutators"] = string::replace(match[1],":",", ");
             }
         }
         // status reply
@@ -693,7 +703,7 @@ void XonoticConnection::handle_message(network::Message& msg)
         rcon_buffer.pop_front();
         lock.unlock();
 
-        Log("xon",'<',2) << formatter()->decode(rcon_command.command);
+        Log("xon",'<',2) << decode(rcon_command.command);
         std::string challenge = msg.params[0].substr(0,11);
         std::string challenge_command = challenge+' '+rcon_command.command;
         std::string key = hmac_md4(challenge_command, rcon_password);

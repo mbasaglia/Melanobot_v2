@@ -86,11 +86,11 @@ bool BridgeChat::can_handle(const network::Message& msg) const
 bool BridgeChat::on_handle(network::Message& msg)
 {
     reply_to(msg, network::OutputMessage(
-        msg.source->formatter()->decode(msg.message),
+        msg.source->decode(msg.message),
         msg.type == network::Message::ACTION,
         {},
         priority,
-        msg.source->formatter()->decode(from ? *from : msg.from.name),
+        msg.source->decode(from ? *from : msg.from.name),
         {},
         timeout == network::Duration::zero() ?
             network::Time::max() :

@@ -143,7 +143,7 @@ std::unordered_map<char,std::string> Morse::morse {
 
 bool ReverseText::on_handle(network::Message& msg)
 {
-    std::string ascii = msg.source->formatter()->decode(msg.message).encode("ascii");
+    std::string ascii = msg.source->encode_to(msg.message,string::FormatterAscii());
     if ( ascii.empty() )
         return true;
 
@@ -491,10 +491,10 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
     FormatterRainbow formatter(math::random_real(),0.6,1);
 
     auto from = formatter.decode(
-        msg.source->formatter()->decode(msg.from.name).encode(&formatter));
+        msg.source->encode_to(msg.from.name,formatter));
 
     auto message = formatter.decode(
-        msg.source->formatter()->decode(msg.message).encode(&formatter));
+        msg.source->encode_to(msg.message,formatter));
 
     reply_to(msg,network::OutputMessage(
         message,

@@ -331,6 +331,23 @@ public:
     virtual string::Formatter* formatter() const = 0;
 
     /**
+     * \brief Decodes \c input with formatter()
+     */
+    string::FormattedString decode(const std::string& input) const
+    {
+        return formatter()->decode(input);
+    }
+
+    /**
+     * \brief Decodes \c input with formatter() and re-encodes it using \c target_format
+     */
+    std::string encode_to(const std::string& input,
+                          const string::Formatter& target_format) const
+    {
+        return decode(input).encode(target_format);
+    }
+
+    /**
      * \brief Whether a list of channels matches the mask
      * (Meaning depends on the specialized class)
      */

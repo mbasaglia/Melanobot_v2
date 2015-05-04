@@ -307,6 +307,10 @@ public:
      */
     virtual std::string to_string(const Formatter& formatter) const = 0;
     std::string to_string(Formatter* formatter) const { return to_string(*formatter); }
+    /**
+     * \brief Returns the number of visible characters used to represent the element
+     */
+    virtual int char_count() const { return 0; }
 };
 
 /**
@@ -334,6 +338,8 @@ public:
         return formatter.ascii(c);
     }
 
+    int char_count() const override { return 1; }
+
     /**
      * \brief Returns the character
      */
@@ -355,6 +361,8 @@ public:
     {
         return formatter.ascii(s);
     }
+
+    int char_count() const override { return s.size(); }
 
     /**
      * \brief Returns the string
@@ -422,6 +430,8 @@ public:
         return formatter.unicode(*this);
     }
 
+    int char_count() const override { return 1; }
+
     /**
      * \brief Returns the UTF-8 representation
      */
@@ -453,6 +463,8 @@ public:
     {
         return formatter.qfont(*this);
     }
+
+    int char_count() const override { return 1; }
 
     /**
      * \brief Gets an alternative representation of the character
@@ -581,6 +593,45 @@ public:
     }
 
 // Non-C++ container methods
+
+    /**
+     * \brief Adds some padding round the string
+     * \param count     Minimum number of characters required,
+     *                  if less than char_count(), won't do anything
+     * \param fill      Character to use to fill
+     * \param align     Alignment (0 = left, 1 = right)
+     */
+    FormattedString& pad(int count, double align = 1, char fill=' ')
+    {
+        count -= char_count();
+        if ( count <= 0 )
+            return *this;
+
+        int before = count * align;
+        if ( before )
+            elements.insert(elements.begin(),
+                std::make_unique<string::AsciiSubstring>(
+                    std::string(before,fill)
+            ));
+        if ( count-before )
+            elements.push_back(
+                std::make_unique<string::AsciiSubstring>(
+                    std::string(count-before,fill)
+            ));
+
+        return *this;
+    }
+
+    /**
+     * \brief Counts the number of characters
+     */
+    int char_count() const
+    {
+        int c = 0;
+        for ( const auto& p : elements )
+            c += p->char_count();
+        return c;
+    }
 
     /**
      * \brief Append an element
@@ -720,7 +771,6 @@ FormattedString implode (const FormattedString& separator, const Container& elem
     }
     return ret;
 }
-
 
 /**
  * \brief Plain UTF-8

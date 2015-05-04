@@ -126,11 +126,11 @@ void Buffer::write_line ( std::string line )
     std::ostream request_stream(&buffer_write);
     if ( line.size() > flood_max_length )
     {
-        Log("irc",'!',4) << "Truncating " << irc.formatter()->decode(line);
+        Log("irc",'!',4) << "Truncating " << irc.decode(line);
         line.erase(flood_max_length-1);
     }
     request_stream << line << "\r\n";
-    Log("irc",'<',1) << irc.formatter()->decode(line);
+    Log("irc",'<',1) << irc.decode(line);
 
     boost::system::error_code error;
     boost::asio::write(socket, buffer_write, error);
@@ -200,7 +200,7 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     std::istream buffer_stream(&buffer_read);
     std::string line;
     std::getline(buffer_stream,line,'\r');
-    Log("irc",'>',1) << irc.formatter()->decode(line);
+    Log("irc",'>',1) << irc.decode(line);
     buffer_stream.ignore(2,'\n');
 
     irc.handle_message(parse_line(line));
