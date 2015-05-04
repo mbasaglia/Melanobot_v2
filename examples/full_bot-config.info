@@ -11,6 +11,15 @@
 ;       parent2 { child2 "value" }
 ;       #include "otherfile"
 
+; Sets log output options
+log
+{
+    string_format    "ansi-utf8_black"
+}
+services
+{
+}
+
 ; Sets up the connections
 connections
 {
@@ -28,7 +37,7 @@ connections
     {
         protocol        irc          ; required (fixed string)
         nick            MyAwesomeBot ; required IRC Nick
-
+        string_format   irc_white
         ; Q AUTH information
         ;login
         ;{
@@ -96,6 +105,49 @@ templates
         type    Group
         name    @xonotic
 
+
+        ; IRC showing information on the Xonotic server
+        Group {
+            source          @irc
+            channels        @channel
+            monitored       @xonotic
+            trigger         @prefix
+            prefix          @prefix
+
+            ListPlayers
+            Group
+            {
+                trigger "server"
+                MonitorServerStatus
+                MonitorReply
+                {
+                    trigger     "ip"
+                    reply       "%sv_server"
+                }
+                Reply
+                {
+                    trigger "stats"
+                    reply   "@stats "
+                }
+                MonitorReply
+                {
+                    trigger     "game"
+                    reply       "Playing #dark_cyan#%gametype#-# on #1#%map"
+                }
+                MonitorReply
+                {
+                    reply       "%sv_host"
+                }
+            }
+
+            Group
+            {
+                auth        admin
+                priority    100
+                XonoticStatus { public 0 }
+            }
+        }
+        
         ; Xonotic to IRC
         Bridge
         {
@@ -119,11 +171,7 @@ templates
             }
             XonoticMatchScore
 
-            ShowVoteCall
-            ShowVoteLogin
-            ShowVoteResult
-            ShowVoteStop
-            ShowVoteDo
+            ShowVotes
         }
 
         ; IRC to Xonotic
@@ -183,11 +231,7 @@ templates
             direct 1
         }
 
-        CtcpVersion
-        CtcpSource
-        CtcpPing
-        CtcpTime
-        CtcpClientInfo
+        Ctcp
 
         Group           ; Admin Commands
         {
@@ -269,18 +313,16 @@ handlers
         source          irc_quakenet
         help_group      irc_quakenet
 
-        ; These two recognize authed users on Quakenet automatically,
-        ; For them to work, the bot needs to be authed and have at least
+        ; This recognizes authed users on Quakenet automatically,
+        ; For this to work, the bot needs to be authed and have at least
         ; +k on the channel it will have to join on startup
-        QSendWhois
-        QGetWhois
+        QWhois
 
         ; If you want the bot to say something when it joins a channel
         ;JoinMessage
         ;{
         ;    message     "Hello, I'm a nice bot"
-        ;    on_self     1
-        ;    on_others   0
+        ;    discard_others     1
         ;}
     }
 
@@ -299,6 +341,7 @@ handlers
         xonotic         xon_localhost
         channel         #channel1
         prefix          xon
+        ;stats           http://stats.xonotic.org/server/(your server id)
         ; note that irc defaults to irc_quakenet
     }
 
