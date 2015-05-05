@@ -1,0 +1,226 @@
+; This file defines some templates to be used in config.info
+; To use it, #include "examples/templates.info" in the templates section
+; of your config.info
+
+
+; Xonotic integration
+Xonotic
+{
+    ; Parameter declarations
+    @xonotic                            ; Xonotic connection
+    @irc        irc_quakenet            ; IRC connection (defaults to irc_quakenet)
+    @channel                            ; IRC channel name
+    @prefix                             ; Prefix shown on IRC
+    @stats                              ; Stats URL
+    @admin      admin                   ; User group required to trigger admin functionality
+
+    type    Group
+    name    @xonotic
+
+
+    ; IRC showing information on the Xonotic server
+    Group {
+        source          @irc
+        channels        @channel
+        monitored       @xonotic
+        trigger         @prefix
+        prefix          @prefix
+
+        ListPlayers                     ; "who" shows the connected players
+
+        Group                           ; "server" shows server information
+        {
+            trigger "server"
+            MonitorServerStatus
+            MonitorReply                ; "server ip" shows the IP address and port
+            {
+                trigger     "ip"
+                reply       "%sv_server"
+            }
+            Reply                       ; "server stats" shows the stats URL
+            {
+                trigger "stats"
+                reply   "@stats "
+            }
+            MonitorReply                ; "server game" shows gametype and map
+            {
+                trigger     "game"
+                reply       "Playing #dark_cyan#%gametype#-# on #1#%map"
+            }
+            MonitorReply                ; "server" (no parameter) shows the host name
+            {
+                reply       "%sv_host"
+            }
+        }
+
+        Group
+        {
+            auth        @admin
+            priority    100
+            XonoticStatus { public 0 }  ; "status" shows info on players and the server
+        }
+    }
+
+    ; Xonotic to IRC
+    Bridge
+    {
+        source          @xonotic
+        destination     @irc
+        dst_channel     @channel
+        prefix          @prefix
+        priority        0
+
+        BridgeChat                      ; Sends chat
+        {
+            timeout     10
+        }
+        ConnectionEvents                ; Shows when the server connected or disconnected
+        XonoticJoinPart                 ; Shows join/part messages
+        XonoticMatchStart               ; Shows a message on match start
+        RenameMessage                   ; Shows player name changes
+        {
+            message "#4#*#-# %name#-# changed name to %message"
+            timeout 10
+        }
+        XonoticMatchScore               ; Shows the score at match end
+
+        ShowVotes                       ; Show vote calls and results
+    }
+
+    ; IRC to Xonotic
+    Bridge
+    {
+        source          @irc
+        channels        @channel
+        destination     @xonotic
+        prefix          [IRC]
+        priority        0
+
+        Group                           ; Shows join/parts and similar
+        {
+            pass_through 1
+            action       1
+
+            JoinMessage { message "has joined" }
+            PartMessage { message "has left" }
+            KickMessage { message "has kicked %kicked!" }
+            RenameMessage { message "changed name to #7#%message" }
+        }
+
+        Group {
+            trigger         @prefix
+
+            Group
+            {
+                direct      1
+                auth        @admin
+
+                RconCommand endmatch    ; "endmatch" ends the current match
+                RconCommand gotomap     ; "gotomap (map)" changes the map after showing the scoreboard
+                RconCommand chmap       ; "chmap (map)" changes the map immediately
+                RconCommand restart     ; "restart" restarts the match
+                ; These will be provided with a better interface in the future:
+                RconCommand kick
+                RconCommand kickban
+                RconCommand ban
+            }
+            RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
+            BridgeChat                  ; Sends chat
+        }
+    }
+}
+
+; Basic IRC functionality
+IrcBase
+{
+    @irc                                ; Connection to act upon
+    @admin      admin                   ; User group required to trigger admin functionality
+    type        Group
+
+    source      @irc
+    help_group  @irc
+
+    FilterGroup { ignore banned }       ; Ignore banned users
+
+    Whois330                            ; Parse WHOIS reply to find logged-in users
+    WhoisCheckMe                        ; "checkme" makes the bot check if you are logged in
+    {
+        direct 1
+    }
+
+    Ctcp                                ; Basic CTCP functionality
+
+    Group                               ; Admin Commands
+    {
+        name        administration
+        auth        @admin
+        priority    100
+
+        AcceptInvite                    ; Admins can INVITE the bot to a channel
+        Group
+        {
+            direct          1
+            priority        100
+
+            Quit                        ; "quit" Quits the bot
+            Reconnect                   ; "reconnect" Reconnects to the IRC server
+            Nick                        ; "nick (newnick)" Changes the bot nick
+            Join                        ; "join #channel" Makes the bot join the channel
+            Part                        ; "part [#channel]" Makes the bot leave the channel
+            AdminGroup { group @admin } ; "admin" Manages the admin group
+            AdminGroup { group rainbow }; "rainbow" Manages the rainbow group
+            AdminGroup                  ; "banned" Manages the banned group
+            {
+                group  banned
+                ignore owner
+            }
+            ServerHost                  ; "server" Shows the current IRC server
+        }
+    }
+}
+
+
+; Standard input actions
+; Requires the Posix module to have been enabled explicitly
+Stdin
+{
+    @stdin      stdin                   ; connection to use (should be of type stdin)
+    @destination                        ; default bridged connection
+    type        Group
+
+    source      @stdin
+    help_group  @stdin
+
+    Group {
+        trigger     "/"
+        Quit                            ; /quit shuts down the bot
+        Help                            ; /help shows available actions
+    }
+
+    ; Creates a detachable bridge to a connection
+    Bridge
+    {
+        destination @destination
+        priority    100
+
+        Group {
+            trigger         "/"
+            BridgeAttach                ; "/attach connection" selects a connection to attach to
+            BridgeAttachChannel         ; "/attach channel" selects a channel in the connection
+
+            Connect                     ; /connect activates the attached connection
+            Disconnect                  ; /disconnect deactivates the attached connection
+            Reconnect                   ; /reconnect reconnects the attached connection
+            Nick                        ; "/nick name" changes the bot name in the connection
+            Join                        ; "/join channel" makes the bot join the channel
+            Part                        ; "/part channel" makes the bot leave the channel
+            Raw                         ; "/raw command" sends a raw command to the attached connection
+            Raw { trigger "" }          ; "/(command) ..." sends a raw command to the attached connection
+        }
+        BridgeChat                      ; sends chat to the attached connection and channel
+        {
+            ignore_self     0
+            from            ""
+        }
+    }
+}

@@ -26,10 +26,8 @@ Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
 {
 
     std::string destination_name = settings.get("destination","");
-    if ( destination_name.empty() )
-        throw ConfigurationError();
-
-    destination = bot->connection(destination_name);
+    if ( !destination_name.empty() )
+        destination = bot->connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
 }
 
