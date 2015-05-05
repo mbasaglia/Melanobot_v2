@@ -15,7 +15,7 @@ Xonotic
     @admin      admin                   ; User group required to trigger admin functionality
 
     type    Group
-    name    @xonotic
+    ;name    @xonotic
 
 
     ; IRC showing information on the Xonotic server
@@ -31,21 +31,25 @@ Xonotic
         Group                           ; "server" shows server information
         {
             trigger "server"
-            MonitorServerStatus
+            help "Shows server information"
+            MonitorServerStatus         ; "server status" shows whether the server is connected
             MonitorReply                ; "server ip" shows the IP address and port
             {
-                trigger     "ip"
-                reply       "%sv_server"
+                trigger "ip"
+                reply   "%sv_server"
+                help    "Shows IP address and port"
             }
             Reply                       ; "server stats" shows the stats URL
             {
                 trigger "stats"
                 reply   "@stats "
+                help    "Shows the stats URL"
             }
             MonitorReply                ; "server game" shows gametype and map
             {
-                trigger     "game"
-                reply       "Playing #dark_cyan#%gametype#-# on #1#%map"
+                trigger "game"
+                reply   "Playing #dark_cyan#%gametype#-# on #1#%map"
+                help    "Shows the current gametype and map"
             }
             MonitorReply                ; "server" (no parameter) shows the host name
             {

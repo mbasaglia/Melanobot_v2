@@ -125,6 +125,16 @@ handlers
         ;}
     }
 
+    ; Creates a bridge between IRC and a Xonotic server
+    Template
+    {
+        template        Xonotic
+        xonotic         xon_localhost   ; Xonotic connection name
+        channel         #channel1       ; Channel
+        prefix          xon             ; Prefix required for input/output (can be empty or omitted)
+        ;stats           http://stats.xonotic.org/server/(your server id)
+        ; note that irc defaults to irc_quakenet
+    }
 
     ; Loads the basic IRC functionality
     Template
@@ -132,18 +142,6 @@ handlers
         template        IrcBase
         irc             irc_quakenet
     }
-
-    ; Creates a bridge between IRC and a Xonotic server
-    Template
-    {
-        template        Xonotic
-        xonotic         xon_localhost
-        channel         #channel1
-        prefix          xon
-        ;stats           http://stats.xonotic.org/server/(your server id)
-        ; note that irc defaults to irc_quakenet
-    }
-
 
     ; Add extra functionality to IRC
     ; Note: while most of these aren't required, some of them should be enabled (Read below)

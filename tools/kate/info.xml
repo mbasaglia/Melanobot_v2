@@ -40,7 +40,6 @@
             <DetectChar char="}" context="#pop" attribute="Style_Delimiter" endRegion="Region_Object" />
             <DetectChar char=";" context="Comment" attribute="Style_Comment" />
             <LineContinue context="#stay" attribute="Style_Delimiter" />
-            <DetectChar char="#" context="Error" attribute="Style_Error" />
         </context>
 
         <context name="String_Value" lineEndContext="#stay" attribute="Style_Value">

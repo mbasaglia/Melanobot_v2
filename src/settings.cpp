@@ -63,8 +63,11 @@ Settings settings::initialize ( int argc, char** argv )
         global_settings.put("path.home",home_dir);
 
     // Load command line options
+    string::FormatterAnsi fmt(true);
+    auto bold = fmt.format_flags(string::FormatFlags::BOLD);
+    auto clear = fmt.clear();
     namespace po = boost::program_options;
-    po::options_description described_options("Options");
+    po::options_description described_options(bold+"Options"+clear);
     described_options.add_options()
         ("help", "Print a description of the command-line options")
         ("config", po::value<std::string>(), "Configuration file path")
@@ -83,9 +86,16 @@ Settings settings::initialize ( int argc, char** argv )
     // Show help and exit
     if ( vm.count("help") )
     {
-        std::cout << "Usage:\n";
+        std::cout << bold << "Version" << clear << ":\n";
+        std::cout << "  " PROJECT_NAME " " PROJECT_DEV_VERSION << "\n";
+        std::cout << bold << "Usage" << clear << ":\n";
         std::cout << "  " << global_settings.get("executable","") << " [option ...]\n";
         std::cout << described_options;
+        std::cout << bold << "System" << clear << ":\n";
+        std::cout << "  " SYSTEM_NAME " " SYSTEM_VERSION " " SYSTEM_PROCESSOR " " SYSTEM_COMPILER "\n";
+        std::cout << bold << "Website" << clear << ":\n";
+        std::cout << "  " PROJECT_WEBSITE "\n";
+        std::cout << "\n";
         return {};
     }
 

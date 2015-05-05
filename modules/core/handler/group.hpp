@@ -182,6 +182,8 @@ public:
     {
         add_children(settings::merge_copy(settings,
             settings::from_initializer(preset), false));
+        synopsis = "";
+        help = "";
     }
 
     bool can_handle(const network::Message&) const override { return true; }

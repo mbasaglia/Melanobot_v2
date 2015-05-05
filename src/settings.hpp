@@ -90,7 +90,7 @@ namespace settings
         for ( const auto& prop : source )
         {
             if ( overwrite || !target.get_child_optional(prop.first) )
-                target.put(prop.first,prop.second.data());
+                target.put_child(prop.first,prop.second);
         }
     }
 

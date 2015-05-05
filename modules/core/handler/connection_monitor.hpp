@@ -57,6 +57,7 @@ public:
     {
         connected = settings.get("connected", connected);
         disconnected = settings.get("disconnected", disconnected);
+        help = "Shows whether the server is connected";
     }
 
 protected:
@@ -66,7 +67,7 @@ protected:
         if ( monitored->status() >= network::Connection::CHECKING )
             reply_to(msg,fmt.decode(connected));
         else
-            reply_to(msg,fmt.decode(connected));
+            reply_to(msg,fmt.decode(disconnected));
         return true;
     }
 
@@ -86,6 +87,7 @@ public:
         reply = settings.get("reply", reply);
         if ( reply.empty() )
             throw ConfigurationError();
+        help = settings.get("help", help);
     }
 
 protected:

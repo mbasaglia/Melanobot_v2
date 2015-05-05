@@ -93,7 +93,7 @@ protected:
 
                 std::vector<std::string> names;
                 gather(*queried, names);
-                if ( names.size() > 1 )
+                if ( !names.empty() )
                 {
                     std::sort(names.begin(),names.end());
                     if ( !synopsis.empty() )
@@ -171,7 +171,13 @@ private:
             {
                 auto child = restructure(p.second,parent);
                 if ( child )
-                    parent->put_child(p.first,*child);
+                {
+                    auto merge = parent->get_child_optional(p.first);
+                    if ( merge )
+                        settings::merge(*merge,*child,true);
+                    else
+                        parent->put_child(p.first,*child);
+                }
             }
             else if ( ret && !p.second.data().empty() )
             {
@@ -321,6 +327,7 @@ public:
         regex           = settings.get("regex",0);
         case_sensitive  = settings.get("case_sensitive",1);
         direct          = settings.get("direct",1);
+        help            = settings.get("help",help);
 
         if ( trigger.empty() || reply.empty() )
             throw ConfigurationError();
@@ -337,6 +344,25 @@ public:
     bool can_handle(const network::Message& msg) const override
     {
         return msg.type == network::Message::CHAT && (!direct || msg.direct);
+    }
+
+    /**
+     * Extra properties:
+     *  * trigger
+     *  * name (same as trigger)
+     *  * direct
+     *  * help
+     *  * synopsis
+     */
+    std::string get_property(const std::string& name) const override
+    {
+        if ( !help.empty() && (name == "trigger" || name == "name") )
+            return trigger;
+        else if ( name == "direct" )
+            return direct ? "1" : "0";
+        else if ( name == "help" )
+            return help;
+        return Handler::get_property(name);
     }
 
 protected:
@@ -385,6 +411,7 @@ private:
     bool        case_sensitive{true};   ///< Whether matches are case sensitive
     bool        direct{true};           ///< Whether the input message must be direct
     std::regex  trigger_regex;          ///< Regex for the trigger
+    std::string help;                   ///< Help message
 };
 
 /**

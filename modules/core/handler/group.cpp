@@ -58,7 +58,8 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
         source = bot->connection(source_name);
-    synopsis = help = "";
+    synopsis = "";
+    help = settings.get("help","");
 
     // Copy relevant defaults to show the children
     Settings default_settings;

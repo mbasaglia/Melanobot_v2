@@ -596,6 +596,7 @@ public:
         : ConnectionMonitor("who", settings, parent)
     {
         bots = settings.get("bots", bots);
+        help = "Shows the players on the server";
     }
 
 protected:
@@ -634,7 +635,10 @@ class XonoticStatus : public handler::ConnectionMonitor
 public:
     XonoticStatus(const Settings& settings, handler::HandlerContainer* parent)
         : ConnectionMonitor("status", settings, parent)
-    {}
+    {
+        synopsis += " [filter]";
+        help = "Shows detailed information on the players and server";
+    }
 
 protected:
     bool on_handle(network::Message& msg)
