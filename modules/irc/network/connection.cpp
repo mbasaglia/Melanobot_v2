@@ -85,10 +85,9 @@ void IrcConnection::read_settings(const Settings& settings)
 
     private_notice = settings.get("notice",private_notice);
 
-    std::istringstream ss ( settings.get("channels",std::string()) );
-    std::string chan;
-    while ( ss >> chan )
-        command({"JOIN",{chan}});
+    auto channels = string::comma_split(settings.get("channels",""));
+    for ( const auto& chan : channels )
+        command({"JOIN",{chan},1024});
 
     for ( const auto pt: settings.get_child("users",{}) )
     {
@@ -260,8 +259,11 @@ void IrcConnection::handle_message(network::Message msg)
         lock.unlock();
         connection_status = CONNECTED;
         auth();
-        for ( const auto& c : missed_commands )
+        for ( auto& c : missed_commands )
+        {
+            c.timein = network::Clock::now();
             command(c);
+        }
     }
     else if ( msg.command == "005" )
     {
