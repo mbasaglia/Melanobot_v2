@@ -482,12 +482,19 @@ protected:
 
         string::FormattedString out;
         color::Color12 color;
+        static const int indent = 3;
 
         auto itt = team_scores.find(team);
         if ( itt != team_scores.end() )
         {
             color = team_colors[team];
-            out << color << itt->second << color::nocolor << ") ";
+            out << color << itt->second;
+            out.pad(indent);
+            out << color::nocolor << ") ";
+        }
+        else
+        {
+            out << std::string(indent,' ');
         }
 
         for ( unsigned i = 0; i < it->second.size(); i++ )
@@ -514,6 +521,23 @@ protected:
         if ( !show_spectators && player_scores.size() < 2 )
             return;
 
+        if ( team_scores.empty() )
+        {
+            auto& no_team = player_scores[NO_TEAM];
+            for (auto it = player_scores.begin(); it != player_scores.end(); )
+            {
+                if ( it->first < 0 )
+                {
+                    ++it;
+                }
+                else
+                {
+                    no_team.insert(no_team.end(),it->second.begin(),it->second.end());
+                    it = player_scores.erase(it);
+                }
+            }
+        }
+
         auto it = player_scores.begin();
         for ( ++it; it != player_scores.end(); ++it )
             print_scores(msg,it->first);
@@ -538,8 +562,10 @@ protected:
         // Team number (-1 = no team, -2 = spectator)
         int team = string::to_int(match[8],10,SPECTATORS);
         int score = string::to_int(match[6]);
-        if ( team == -1 && score == 0 && conn->get_property("gametype") == "lms" )
+
+        if ( team == NO_TEAM && score == 0 && conn->get_property("gametype") == "lms" )
             team = SPECTATORS;
+
         player_scores[team].emplace_back(
             match[10],                     // name
             score,
@@ -583,7 +609,10 @@ private:
         { 10, color::magenta}
     };
 
-    enum { SPECTATORS = -2 };
+    enum {
+        NO_TEAM = -1,
+        SPECTATORS = -2,
+    };
 };
 
 /**
