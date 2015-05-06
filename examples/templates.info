@@ -42,6 +42,7 @@ Xonotic
         monitored       @name
         trigger         @prefix
         prefix          @prefix
+        direct          1
 
         ListPlayers                     ; "who" shows the connected players
 
