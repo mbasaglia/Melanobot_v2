@@ -21,10 +21,16 @@
 
 namespace string {
 
+Formatter::Formatter() = default;
+Formatter::Formatter(const Formatter&) = default;
+Formatter::Formatter(Formatter&&) = default;
+Formatter& Formatter::operator=(const Formatter&) = default;
+Formatter& Formatter::operator=(Formatter&&) = default;
+Formatter::~Formatter() = default;
 
 Formatter::Registry::Registry()
 {
-    add_formatter(default_formatter = new FormatterUtf8);
+    add_formatter(default_formatter = new FormatterPlain);
     add_formatter(new FormatterAscii);
     add_formatter(new FormatterAnsi(true));
     add_formatter(new FormatterAnsi(false));

@@ -143,7 +143,7 @@ std::unordered_map<char,std::string> Morse::morse {
 
 bool ReverseText::on_handle(network::Message& msg)
 {
-    std::string ascii = msg.source->encode_to(msg.message,string::FormatterAscii());
+    std::string ascii = msg.source->encode_to(msg.message,string::FormatterPlain(string::AsciiEncoding()));
     if ( ascii.empty() )
         return true;
 

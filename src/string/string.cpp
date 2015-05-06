@@ -60,86 +60,55 @@ std::string FormattedString::encode(Formatter* formatter) const
     return encode(*formatter);
 }
 
-std::string FormatterUtf8::ascii(char c) const
+std::string FormatterPlain::ascii(char c) const
 {
     return std::string(1,c);
 }
-std::string FormatterUtf8::ascii(const std::string& s) const
+std::string FormatterPlain::ascii(const std::string& s) const
 {
     return s;
 }
-std::string FormatterUtf8::color(const color::Color12& color) const
+std::string FormatterPlain::color(const color::Color12& color) const
 {
     return "";
 }
-std::string FormatterUtf8::format_flags(FormatFlags flags) const
+std::string FormatterPlain::format_flags(FormatFlags flags) const
 {
     return "";
 }
-std::string FormatterUtf8::clear() const
+std::string FormatterPlain::clear() const
 {
     return "";
 }
-std::string FormatterUtf8::unicode(const Unicode& c) const
+std::string FormatterPlain::unicode(const Unicode& c) const
 {
-    return c.utf8();
+    return encoding()->encode(c);
 }
-std::string FormatterUtf8::qfont(const QFont& c) const
+std::string FormatterPlain::qfont(const QFont& c) const
 {
     return c.alternative();
 }
-FormattedString FormatterUtf8::decode(const std::string& source) const
+FormattedString FormatterPlain::decode(const std::string& source) const
 {
-    FormattedString str;
-
-    Utf8Parser parser;
-
-    std::string ascii;
-
-    auto push_ascii = [&ascii,&str]()
-    {
-        if ( !ascii.empty() )
-        {
-            str.append<AsciiSubstring>(ascii);
-            ascii.clear();
-        }
-    };
-
-    parser.callback_ascii = [&str,&ascii](uint8_t byte)
-    {
-        ascii += byte;
-    };
-    parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
-    {
-        push_ascii();
-        str.append<Unicode>(utf8,unicode);
-    };
-    parser.callback_end = push_ascii;
-
-    parser.parse(source);
-
-    return str;
+    return Utf8Encoding().parse(source,*this);
 }
-std::string FormatterUtf8::name() const
+std::string FormatterPlain::name() const
 {
-    return "utf8";
+    return "plain";
 }
 
-
-std::string FormatterAscii::unicode(const Unicode& c) const
+void decode_ascii(DecodeEnvironment& env, uint8_t byte) const
 {
-    return std::string(1,Utf8Parser::to_ascii(c.utf8()));
+    env.ascii_substring += byte;
 }
-FormattedString FormatterAscii::decode(const std::string& source) const
+void decode_unicode(DecodeEnvironment& env, const Unicode& unicode) const
 {
-    FormattedString str;
-    str.append<AsciiSubstring>(source);
-    return str;
+    env.push_ascii();
+    env.output.push_back(unicode);
 }
-
-std::string FormatterAscii::name() const
+void decode_end(DecodeEnvironment& env) const
 {
-    return "ascii";
+    env.push_ascii();
 }
 
 std::string FormatterAnsi::color(const color::Color12& color) const
@@ -166,124 +135,89 @@ std::string FormatterAnsi::clear() const
 {
     return "\x1b[0m";
 }
-std::string FormatterAnsi::unicode(const Unicode& c) const
+void FormatterAnsi::decode_ascii(DecodeEnvironment& env, uint8_t byte) const
 {
-    if ( utf8 )
-        return c.utf8();
-    return std::string(1,Utf8Parser::to_ascii(c.utf8()));
-}
-FormattedString FormatterAnsi::decode(const std::string& source) const
-{
-    FormattedString str;
-
-    Utf8Parser parser;
-
-    std::string ascii;
-
-    auto push_ascii = [&ascii,&str]()
+    if ( byte == '\x1b' && env.input.peek() == '[' )
     {
-        if ( !ascii.empty() )
+        env.push_ascii();
+        env.input.ignore();
+        std::vector<int> codes;
+        while (env.input)
         {
-            str.append<AsciiSubstring>(ascii);
-            ascii.clear();
-        }
-    };
-
-    parser.callback_ascii = [&parser,&str,&ascii,push_ascii](uint8_t byte)
-    {
-        if ( byte == '\x1b' && parser.input.peek() == '[' )
-        {
-            push_ascii();
-            parser.input.ignore();
-            std::vector<int> codes;
-            while (parser.input)
+            int i = 0;
+            if ( env.input.get_int(i) )
             {
-                int i = 0;
-                if ( parser.input.get_int(i) )
+                codes.push_back(i);
+                char next = env.input.next();
+                if ( next != ';' )
                 {
-                    codes.push_back(i);
-                    char next = parser.input.next();
-                    if ( next != ';' )
-                    {
-                        if ( next != 'm' )
-                            parser.input.unget();
-                        break;
-                    }
+                    if ( next != 'm' )
+                        env.input.unget();
+                    break;
                 }
             }
-            FormatFlags flags;
-            bool use_flags = false;
-            for ( int i : codes )
+        }
+        FormatFlags flags;
+        bool use_flags = false;
+        for ( int i : codes )
+        {
+            if ( i == 0)
             {
-                if ( i == 0)
+                env.output.append<ClearFormatting>();
+            }
+            else if ( i == 1 )
+            {
+                flags |= FormatFlags::BOLD;
+                use_flags = true;
+            }
+            else if ( i == 22 )
+            {
+                flags &= ~FormatFlags::BOLD;
+                use_flags = true;
+            }
+            else if ( i == 4 )
+            {
+                flags |= FormatFlags::UNDERLINE;
+                use_flags = true;
+            }
+            else if ( i == 24 )
+            {
+                flags &= ~FormatFlags::UNDERLINE;
+                use_flags = true;
+            }
+            else if ( i == 39 )
+            {
+                env.output.append<Color>(color::nocolor);
+            }
+            else if ( i >= 30 && i <= 37 )
+            {
+                i -= 30;
+                if ( flags == FormatFlags::BOLD )
                 {
-                    str.append<ClearFormatting>();
-                }
-                else if ( i == 1 )
-                {
-                    flags |= FormatFlags::BOLD;
-                    use_flags = true;
-                }
-                else if ( i == 22 )
-                {
-                    flags &= ~FormatFlags::BOLD;
-                    use_flags = true;
-                }
-                else if ( i == 4 )
-                {
-                    flags |= FormatFlags::UNDERLINE;
-                    use_flags = true;
-                }
-                else if ( i == 24 )
-                {
-                    flags &= ~FormatFlags::UNDERLINE;
-                    use_flags = true;
-                }
-                else if ( i == 39 )
-                {
-                    str.append<Color>(color::nocolor);
-                }
-                else if ( i >= 30 && i <= 37 )
-                {
-                    i -= 30;
-                    if ( flags == FormatFlags::BOLD )
-                    {
-                        i |= 0b1000;
-                        flags = FormatFlags::NO_FORMAT;
-                        use_flags = false;
-                    }
-                    str.append<Color>(color::Color12::from_4bit(i));
-                }
-                else if ( i >= 90 && i <= 97 )
-                {
-                    i -= 90;
                     i |= 0b1000;
-                    str.append<Color>(color::Color12::from_4bit(i));
+                    flags = FormatFlags::NO_FORMAT;
+                    use_flags = false;
                 }
+                env.output.append<Color>(color::Color12::from_4bit(i));
             }
-            if ( use_flags )
-                str.append<Format>(flags);
+            else if ( i >= 90 && i <= 97 )
+            {
+                i -= 90;
+                i |= 0b1000;
+                env.output.append<Color>(color::Color12::from_4bit(i));
+            }
         }
-        else
-        {
-            ascii += byte;
-        }
-    };
-    parser.callback_utf8 = [this,&str,push_ascii](uint32_t unicode,const std::string& utf8)
+        if ( use_flags )
+            env.output.append<Format>(flags);
+    }
+    else
     {
-        push_ascii();
-        if ( this->utf8 )
-            str.append<Unicode>(utf8,unicode);
-    };
-    parser.callback_end = push_ascii;
-
-    parser.parse(source);
-
-    return str;
+        env.ascii_substring += byte;
+    }
 }
 std::string FormatterAnsi::name() const
 {
-    return utf8 ? "ansi-utf8" : "ansi-ascii";
+    return "ansi";
 }
 
 std::string FormatterAnsiBlack::color(const color::Color12& color) const
@@ -340,7 +274,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 {
     FormattedString str;
 
-    Utf8Parser parser;
+    Utf8Encoding parser;
 
     std::string ascii;
 

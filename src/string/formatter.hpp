@@ -23,13 +23,14 @@
 
 #include "format_flags.hpp"
 #include "color.hpp"
-#include "encoding.hpp"
 
 namespace string {
 
 class Unicode;
 class QFont;
 class FormattedString;
+class DecodeEnvironment;
+class CharEncoding;
 
 /**
  * \brief Abstract formatting visitor (and factory)
@@ -82,14 +83,15 @@ public:
         Registry& operator=(const Registry&) = delete;
         Registry& operator=(Registry&&) = delete;
     };
+    friend class CharEncoding;
 
-    Formatter() = default;
-    Formatter(const Formatter&) = delete;
-    Formatter(Formatter&&) = delete;
-    Formatter& operator=(const Formatter&) = delete;
-    Formatter& operator=(Formatter&&) = delete;
+    Formatter();
+    Formatter(const Formatter&);
+    Formatter(Formatter&&);
+    Formatter& operator=(const Formatter&);
+    Formatter& operator=(Formatter&&);
 
-    virtual ~Formatter() {}
+    virtual ~Formatter();
     /**
      * \brief Encode a single ASCII character
      */
@@ -143,6 +145,29 @@ public:
      * \brief Get the formatter registry singleton
      */
     static Registry& registry() { return Registry::instance(); }
+
+    CharEncoding* encoding() const { return encoding_.get(); }
+
+protected:
+    /**
+     * \brief Decodes an ASCII byte from a stream
+     */
+    virtual void decode_ascii(DecodeEnvironment& env, uint8_t byte) const = 0;
+    /**
+     * \brief Decodes a Unicode pont from a stream
+     */
+    virtual void decode_unicode(DecodeEnvironment& env, const Unicode& unicode) const = 0;
+    /**
+     * \brief Decodes an invalid sequence from a stream
+     */
+    virtual void decode_invalid(DecodeEnvironment& env, const std::string& parsed) const {};
+    /**
+     * \brief Decodes the end of a stream
+     */
+    virtual void decode_end(DecodeEnvironment& env) const {};
+
+private:
+    std::unique_ptr<CharEncoding> encoding_;
 };
 
 } // namespace string

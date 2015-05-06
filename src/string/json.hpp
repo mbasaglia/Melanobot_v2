@@ -29,6 +29,7 @@
 
 #include "string/logger.hpp"
 #include "string_functions.hpp"
+#include "string/encoding.hpp"
 
 
 /**
@@ -343,7 +344,7 @@ private:
                             if ( !std::isxdigit(hex[i]) )
                                 hex[i] = '0';
                         }
-                        r += string::Utf8Parser::encode(string::to_uint(hex,16));
+                        r += string::Utf8Encoding::encode(string::to_uint(hex,16));
 
                         continue;
                     }

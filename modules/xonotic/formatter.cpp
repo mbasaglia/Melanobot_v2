@@ -19,6 +19,7 @@
 #include "formatter.hpp"
 
 #include "string/string_functions.hpp"
+#include "string/encoding.hpp"
 
 namespace xonotic {
 
@@ -65,12 +66,12 @@ std::string Formatter::unicode(const string::Unicode& c) const
 }
 std::string Formatter::qfont(const string::QFont& c) const
 {
-    return string::Utf8Parser::encode(0xE000|c.index());
+    return string::Utf8Encoding::encode(0xE000|c.index());
 }
 string::FormattedString Formatter::decode(const std::string& source) const
 {
     string::FormattedString str;
-    string::Utf8Parser parser;
+    string::Utf8Encoding parser;
     std::string ascii;
 
     auto push_ascii = [&ascii,&str]()

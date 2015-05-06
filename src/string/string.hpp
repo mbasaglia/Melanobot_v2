@@ -514,9 +514,9 @@ FormattedString implode (const FormattedString& separator, const Container& elem
 }
 
 /**
- * \brief Plain UTF-8
+ * \brief Plain Text
  */
-class FormatterUtf8 : public Formatter
+class FormatterPlain : public Formatter
 {
 public:
     std::string ascii(char c) const override;
@@ -528,36 +528,26 @@ public:
     std::string qfont(const QFont& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
+
+protected:
+    void decode_ascii(DecodeEnvironment& env, uint8_t byte) const override;
+    void decode_unicode(DecodeEnvironment& env, const Unicode& unicode) const override;
+    void decode_end(DecodeEnvironment& env) const override;
 };
 
 /**
- * \brief Plain ASCII
+ * \brief ANSI-formatted
  */
-class FormatterAscii : public FormatterUtf8
+class FormatterAnsi : public FormatterPlain
 {
 public:
-    std::string unicode(const Unicode& c) const override;
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-};
-
-/**
- * \brief ANSI-formatted UTF-8 or ASCII
- */
-class FormatterAnsi : public FormatterUtf8
-{
-public:
-    explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
 
     std::string color(const color::Color12& color) const override;
     std::string format_flags(FormatFlags flags) const override;
     std::string clear() const override;
-    std::string unicode(const Unicode& c) const override;
-    FormattedString decode(const std::string& source) const override;
     std::string name() const override;
-
-private:
-    bool utf8;
+protected:
+    void decode_ascii(DecodeEnvironment& env, uint8_t byte) const override;
 };
 
 /**
@@ -567,7 +557,6 @@ private:
 class FormatterAnsiBlack : public FormatterAnsi
 {
 public:
-    using FormatterAnsi::FormatterAnsi;
     std::string color(const color::Color12& color) const override;
     std::string name() const override;
 };
@@ -585,7 +574,7 @@ public:
  *      * #red#         red
  *      * #nocolor#     no color
  */
-class FormatterConfig : public FormatterUtf8
+class FormatterConfig : public FormatterPlain
 {
 public:
     explicit FormatterConfig() {}
@@ -595,9 +584,7 @@ public:
     std::string color(const color::Color12& color) const override;
     std::string format_flags(FormatFlags flags) const override;
     std::string clear() const override;
-    FormattedString decode(const std::string& source) const override;
     std::string name() const override;
-
 };
 
 } // namespace string

@@ -26,14 +26,14 @@
 
 namespace string {
 
-char Utf8Parser::to_ascii(uint32_t unicode)
+char Utf8Encoding::to_ascii(uint32_t unicode)
 {
     if ( unicode < 128 )
         return char(unicode);
     return to_ascii(encode(unicode));
 }
 
-char Utf8Parser::to_ascii(const std::string& utf8)
+char Utf8Encoding::to_ascii(const std::string& utf8)
 {
 #ifdef HAS_ICONV
     // With the C locale, //TRANSLIT won't work properly
@@ -54,18 +54,34 @@ char Utf8Parser::to_ascii(const std::string& utf8)
 #endif
 }
 
-void Utf8Parser::parse(const std::string& string)
+FormattedString Utf8Encoding::parse(const std::string& string, const Formatter& formatter)
 {
-    input.str(string);
-    while ( !input.eof() )
+    std::string utf8;         // Multibyte string
+    uint32_t    unicode;      // Multibyte value
+    unsigned    length = 0;   // Multibyte length
+    DecodeEnvironment env(string, formatter);
+    // Handles an invalid/incomplete sequence
+    auto check_valid = [&]()
     {
-        uint8_t byte = input.next();
+        if ( length != 0 )
+        {
+            // premature end of a multi-byte character
+            decode_invalid(env,utf8);
+            length = 0;
+            utf8.clear();
+            unicode = 0;
+        }
+    };
+
+    while ( !env.input.eof() )
+    {
+        uint8_t byte = env.input.next();
 
         // 0... .... => ASCII
-        if ( byte < 0b1000'0000 )
+        if ( byte < 0b1000'0000 ) // '
         {
             check_valid();
-            callback(callback_ascii,byte);
+            decode_ascii(env,byte);
         }
         // 11.. .... => Begin multibyte
         else if ( (byte & 0b1100'0000) == 0b1100'0000 )
@@ -74,7 +90,7 @@ void Utf8Parser::parse(const std::string& string)
             utf8.push_back(byte);
 
             // extract number of leading 1s
-            while ( byte & 0b1000'0000 )
+            while ( byte & 0b1000'0000 ) // '
             {
                 length++;
                 byte <<= 1;
@@ -92,7 +108,7 @@ void Utf8Parser::parse(const std::string& string)
             unicode |= byte&0b0011'1111; //'
             if ( utf8.size() == length )
             {
-                callback(callback_utf8,unicode,utf8);
+                decode_unicode(env,Unicode(unicode,utf8));
                 unicode = 0;
                 length = 0;
                 utf8.clear();
@@ -100,10 +116,11 @@ void Utf8Parser::parse(const std::string& string)
         }
     }
     check_valid();
-    callback(callback_end);
+    decode_end(env);
+    return env.output;
 }
 
-std::string Utf8Parser::encode(uint32_t value)
+std::string Utf8Encoding::encode(uint32_t value)
 {
     if ( value < 128 )
         return std::string(1,char(value));
@@ -119,7 +136,7 @@ std::string Utf8Parser::encode(uint32_t value)
         head |= 1;
     }
 
-    if ( (uint8_t(s.back())&0b0011'1111) > (1 << (7 - s.size())) )
+    if ( (uint8_t(s.back())&0b0011'1111) > (1 << (7 - s.size())) ) // '
     {
         head <<= 1;
         head |= 1;
@@ -131,16 +148,25 @@ std::string Utf8Parser::encode(uint32_t value)
     return std::string(s.rbegin(),s.rend());
 }
 
-void Utf8Parser::check_valid()
+FormattedString AsciiEncoding::parse(const std::string& string, const Formatter& formatter) const
 {
-    if ( length != 0 )
+    DecodeEnvironment env(string, formatter);
+
+    while ( !env.input.eof() )
     {
-        // premature end of a multi-byte character
-        callback(callback_invalid,utf8);
-        length = 0;
-        utf8.clear();
-        unicode = 0;
+        uint8_t byte = env.input.next();
+        if ( byte < 128 )
+            decode_ascii(env,byte);
+        else
+            decode_invalid(env,std::string(1,byte));
+
     }
+
+    return env.output();
+}
+std::string encode(const Unicode& c) const
+{
+    Utf8Encoding::to_ascii(c.utf8());
 }
 
 } // namespace string

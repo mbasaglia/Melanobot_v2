@@ -66,7 +66,7 @@ protected:
             return;
         }
         string::FormatterConfig fmt;
-        string::FormatterUtf8   f8;
+        string::FormatterPlain   f8;
         Properties prop {
             {"videoId",parsed.get("items.0.id.videoId","")},
             {"title",f8.decode(parsed.get("items.0.snippet.title","")).encode(fmt)},
@@ -204,7 +204,7 @@ protected:
     {
         if ( settings::has_child(parsed,"results.0.title") )
         {
-            string::FormatterUtf8 fmt;
+            string::FormatterPlain fmt;
             string::FormattedString title(&fmt);
             title << string::FormatFlags::BOLD << parsed.get("results.0.title","")
                   << string::FormatFlags::NO_FORMAT << ": "

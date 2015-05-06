@@ -26,7 +26,7 @@ namespace irc {
 /**
  * \brief UTF-8 with IRC colors
  */
-class FormatterIrc : public string::FormatterUtf8
+class FormatterIrc : public string::FormatterPlain
 {
 public:
     std::string color(const color::Color12& color) const override;

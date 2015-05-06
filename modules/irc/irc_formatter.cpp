@@ -22,6 +22,7 @@
 #include <regex>
 
 #include "string/string_functions.hpp"
+#include "string/encoding.hpp"
 
 namespace irc {
 
@@ -72,7 +73,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
 {
     string::FormattedString str;
 
-    string::Utf8Parser parser;
+    string::Utf8Encoding parser;
 
     string::FormatFlags flags;
 

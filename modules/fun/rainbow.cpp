@@ -18,39 +18,32 @@
  */
 
 #include "rainbow.hpp"
+#include "string/encoding.hpp"
 
 namespace fun {
 
-string::FormattedString FormatterRainbow::decode(const std::string& source) const
-{
-    string::FormattedString str;
-
-    string::Utf8Parser parser;
-    std::vector<std::shared_ptr<string::Color>> colors;
-
-    parser.callback_ascii = [&str,&colors](uint8_t byte)
-    {
-        colors.push_back(std::make_shared<string::Color>(color::nocolor));
-        str.append(colors.back());
-        str.append<string::Character>(byte);
-    };
-    parser.callback_utf8 = [&str,&colors](uint32_t unicode,const std::string& utf8)
-    {
-        colors.push_back(std::make_shared<string::Color>(color::nocolor));
-        str.append(colors.back());
-        str.append<string::Unicode>(utf8,unicode);
-    };
-
-    parser.parse(source);
-
-    for ( unsigned i = 0; i < colors.size(); i++ )
-        *colors[i] = color::Color12::hsv(hue+double(i)/colors.size(),saturation,value);
-
-    return str;
-}
 std::string FormatterRainbow::name() const
 {
     return "rainbow";
+}
+
+void FormatterRainbow::decode_ascii(string::DecodeEnvironment& env, uint8_t byte) const
+{
+    colors.push_back(std::make_shared<string::Color>(color::nocolor));
+    env.output.append(colors.back());
+    env.output.append<string::Character>(byte);
+}
+void FormatterRainbow::decode_unicode(string::DecodeEnvironment& env, const string::Unicode& unicode) const
+{
+    colors.push_back(std::make_shared<string::Color>(color::nocolor));
+    env.output.append(colors.back());
+    env.output.append<string::Unicode>(unicode);
+}
+void FormatterRainbow::decode_end(string::DecodeEnvironment& env) const
+{
+    for ( unsigned i = 0; i < colors.size(); i++ )
+        *colors[i] = color::Color12::hsv(hue+double(i)/colors.size(),saturation,value);
+    colors.clear();
 }
 
 } // namespace fun

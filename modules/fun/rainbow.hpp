@@ -26,19 +26,26 @@ namespace fun {
 /**
  * \brief Rainbow UTF-8
  *
- * Encodes like FormatterUtf8 and decodes adding colors between each character
+ * Encodes like FormatterPlain and decodes adding colors between each character
  */
-class FormatterRainbow : public string::FormatterUtf8
+class FormatterRainbow : public string::FormatterPlain
 {
 public:
     explicit FormatterRainbow(double hue = 0, double saturation = 1, double value = 1)
         : hue(hue), saturation(saturation), value(value) {}
-    string::FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 
     double hue;         ///< Starting hue [0,1]
     double saturation;  ///< Saturation [0,1]
     double value;       ///< Value [0,1]
+
+protected:
+    void decode_ascii(string::DecodeEnvironment& env, uint8_t byte) const override;
+    void decode_unicode(string::DecodeEnvironment& env, const string::Unicode& unicode) const override;
+    void decode_end(string::DecodeEnvironment& env) const override;
+
+private:
+    mutable std::vector<std::shared_ptr<string::Color>> colors;
 };
 
 } // namespace fun

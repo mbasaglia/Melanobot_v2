@@ -21,33 +21,91 @@
 
 #include "quickstream.hpp"
 #include "functional.hpp"
+#include "string.hpp"
 
 namespace string {
+
+struct DecodeEnvironment
+{
+    QuickStream input;
+    const Formatter& formatter;
+    FormattedString output;
+    std::string ascii_substring;
+
+    DecodeEnvironment(const std::string& input, const Formatter& formatter)
+        : input(input), formatter(formatter) {}
+
+    /**
+     * \brief Pushes \c ascii_substring into \c output
+     */
+    void push_ascii()
+    {
+        if ( !ascii_substring.empty() )
+        {
+            output.append<AsciiSubstring>(ascii_substring);
+            ascii_substring.clear();
+        }
+    }
+};
+
+/**
+ * \brief Character encoding
+ */
+class CharEncoding
+{
+public:
+    virtual FormattedString parse(const std::string& input, const Formatter& formatter) const = 0;
+
+    virtual std::string encode(const Unicode& c) const = 0;
+
+protected:
+    /**
+     * \brief Decodes an ASCII byte from a stream
+     */
+    void decode_ascii(DecodeEnvironment& env, uint8_t byte) const
+    {
+        env.formatter.decode_ascii(env,byte);
+    }
+    /**
+     * \brief Decodes a Unicode pont from a stream
+     */
+    void decode_unicode(DecodeEnvironment& env, const Unicode& unicode) const
+    {
+        env.formatter.decode_unicode(env,unicode);
+    }
+    /**
+     * \brief Decodes an invalid sequence from a stream
+     */
+    void decode_invalid(DecodeEnvironment& env, const std::string& parsed) const
+    {
+        env.formatter.decode_invalid(env,parsed);
+    }
+    /**
+     * \brief Decodes the end of a stream
+     */
+    void decode_end(DecodeEnvironment& env) const
+    {
+        env.formatter.decode_end(env);
+    }
+};
 
 /**
  * \brief Class used to parse and convert UTF-8
  */
-class Utf8Parser
+class Utf8Encoding : public CharEncoding
 {
 public:
     using Byte = uint8_t;
 
-    std::function<void(uint8_t)>                     callback_ascii;
-    std::function<void(uint32_t,const std::string&)> callback_utf8;
-    std::function<void(const std::string&)>          callback_invalid;
-    std::function<void()>                            callback_end;
-
-    QuickStream input;
-
     /**
      * \brief Parse the string
      */
-    void parse(const std::string& string);
+    FormattedString parse(const std::string& string, const Formatter& fmt) const override;
 
-    /**
-     * \brief Whether the end of the string has been reached
-     */
-    bool finished() const { return !input; }
+    std::string encode(const Unicode& c) const override
+    {
+        return c.utf8();
+    }
 
     /**
      * \brief Encode a unicode value to UTF-8
@@ -67,19 +125,15 @@ public:
      * \brief Transliterate a single character to ascii
      */
     static char to_ascii(const std::string& utf8_char);
-
-
-private:
-    std::string           utf8;         ///< Multibyte string
-    uint32_t              unicode;      ///< Multibyte value
-    unsigned              length = 0;   ///< Multibyte length
-
-    /**
-     * \brief Handles an invalid/incomplete sequence
-     */
-    void check_valid();
 };
 
+
+class AsciiEncoding : public CharEncoding
+{
+public:
+    FormattedString parse(const std::string& string, const Formatter& formatter) const override;
+    std::string encode(const Unicode& c) const override;
+};
 
 } // namespace string
 #endif // STRING_ENCODING_HPP
