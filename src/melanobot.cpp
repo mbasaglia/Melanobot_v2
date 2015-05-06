@@ -22,19 +22,9 @@
 
 Melanobot::Melanobot(const Settings& settings)
 {
-    static int counter = 0;
     for(const auto& pt : settings.get_child("connections",{}))
     {
-        auto conn = network::ConnectionFactory::instance().create(this,pt.second);
-
-        std::string id = !pt.first.empty() ? pt.first :
-            "unnamed_connection_"+std::to_string(++counter);
-
-        if ( conn )
-            connections[id] = std::move(conn);
-        else
-            ErrorLog("sys") << "Could not create connection "
-                << string::FormatFlags::BOLD << id;
+        add_connection(pt.first,pt.second);
     }
 
     if ( connections.empty() )
@@ -117,6 +107,39 @@ network::Connection* Melanobot::connection(const std::string& name) const
     if ( it == connections.end() )
         return nullptr;
     return it->second.get();
+}
+
+void Melanobot::add_connection(std::string suggested_name, const Settings& settings)
+{
+    if ( suggested_name == "Connection" )
+        suggested_name.clear();
+    suggested_name = settings.get("name",suggested_name);
+
+    if ( suggested_name.empty() )
+    {
+        ErrorLog("sys") << "Connection " << string::FormatFlags::BOLD << suggested_name
+            << string::FormatFlags::NO_FORMAT << " already exists.";
+        return;
+    }
+    else if ( connections.count(suggested_name) )
+    {
+        ErrorLog("sys") << "Cannot create unnamed connection";
+        return;
+    }
+
+    auto conn = network::ConnectionFactory::instance().create(this,settings);
+
+    if ( conn )
+    {
+        Log("sys",'!') << "Created connection "
+            << string::FormatFlags::BOLD << suggested_name;
+        connections[suggested_name] = std::move(conn);
+    }
+    else
+    {
+        ErrorLog("sys") << "Could not create connection "
+            << string::FormatFlags::BOLD << suggested_name;
+    }
 }
 
 void Melanobot::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const

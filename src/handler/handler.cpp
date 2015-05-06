@@ -44,4 +44,36 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
     /// \todo recursion check
     return build(handler_name,source,parent);
 }
+
+
+std::unique_ptr<Handler> HandlerFactory::build(const std::string& handler_name,
+    const Settings& settings, handler::HandlerContainer* parent) const
+{
+    std::string type = settings.get("type",handler_name);
+    if ( type == "Template" )
+    {
+        return build_template(handler_name, settings, parent);
+    }
+    else if ( type == "Connection" )
+    {
+        parent->melanobot()->add_connection(handler_name, settings);
+        return nullptr;
+    }
+
+    auto it = factory.find(type);
+    if ( it != factory.end() )
+    {
+        try {
+            return it->second(settings, parent);
+        } catch ( const ConfigurationError& error )
+        {
+            ErrorLog("sys") << "Error creating " << handler_name << ": "
+                << error.what();
+            return nullptr;
+        }
+    }
+    ErrorLog("sys") << "Unknown handler type: " << handler_name;
+    return nullptr;
+}
+
 } // namespace handler

@@ -75,6 +75,11 @@ public:
      */
     network::Connection* connection(const std::string& name) const;
 
+    /**
+     * \brief Adds a connection from settings
+     */
+    void add_connection(std::string suggested_name, const Settings& settings);
+
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
     /**

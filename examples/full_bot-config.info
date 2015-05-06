@@ -16,20 +16,10 @@ log
 {
     string_format    "ansi-utf8_black"
 }
-services
-{
-}
 
 ; Sets up the connections
 connections
 {
-    ; Allows to control the bot from standard input
-    ; Requires the Posix module to have been enabled explicitly
-    stdin
-    {
-        protocol        stdin
-    }
-
     ; Creates an irc connection (To QuakeNet in this example)
     ; The connection name (irc_quakenet) is used to recognize the connection
     ; later on, so give simple meaningful names
@@ -75,19 +65,6 @@ connections
             user         "a b"   ; This user is assigned to 2 groups
         }
     }
-
-    ; Sets up a xonotic connection
-    xon_localhost
-    {
-        protocol        xonotic         ; required (fixed string)
-        server          localhost:26000 ; Connection info
-        rcon_password   "MyPassword"
-        rcon_secure     0
-        say_as          modpack         ; Say option
-                                        ; Builtin values include: modpack, sv_adminnick.
-                                        ; You can also use explicit commands
-        ;status_delay    60             ; How often the bots asks for status updates (seconds)
-    }
 }
 
 ; Defines reusable definitions which can be repeated
@@ -99,11 +76,11 @@ templates
 ; Defines handlers
 handlers
 {
-    ; Standard input actions
+    ; Allows to control the bot from standard input
     ; Requires the Posix module to have been enabled explicitly
     Template
     {
-        template Stdin
+        template        Stdin
     }
 
     ; Adds IRC functionality executed before other IRC actions
@@ -129,10 +106,18 @@ handlers
     Template
     {
         template        Xonotic
-        xonotic         xon_localhost   ; Xonotic connection name
-        channel         #channel1       ; Channel
-        prefix          xon             ; Prefix required for input/output (can be empty or omitted)
-        ;stats           http://stats.xonotic.org/server/(your server id)
+        ; Xonotic connection settings
+        name            xon_localhost   ; Xonotic connection name
+        server          localhost:26000 ; Connection info
+        rcon_password   "MyPassword"
+        rcon_secure     0
+        say_as          modpack         ; Say option
+                                        ; Builtin values include: modpack, sv_adminnick.
+                                        ; You can also use explicit commands
+        stats           http://stats.xonotic.org/server/(your server id)
+        ; IRC settings
+        channel         #channel1       ; IRC channel
+        prefix          xon             ; Prefix used for input/output (can be empty or omitted)
         ; note that irc defaults to irc_quakenet
     }
 

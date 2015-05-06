@@ -57,7 +57,11 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
 
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
+    {
         source = bot->connection(source_name);
+        if ( !source )
+            throw ConfigurationError();
+    }
     synopsis = "";
     help = settings.get("help","");
 

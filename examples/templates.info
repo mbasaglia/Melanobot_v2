@@ -7,22 +7,39 @@
 Xonotic
 {
     ; Parameter declarations
-    @xonotic                            ; Xonotic connection
+    @name                               ; Xonotic connection name
+    @server     localhost:26000         ; Xonotic server
+    @rcon_password
+    @rcon_secure 0
+    @say_as     sv_adminnick            ; Say option
+                                        ; Builtin values include: modpack, sv_adminnick.
+                                        ; You can also use explicit commands
+    @stats                              ; Stats URL
+
     @irc        irc_quakenet            ; IRC connection (defaults to irc_quakenet)
     @channel                            ; IRC channel name
     @prefix                             ; Prefix shown on IRC
-    @stats                              ; Stats URL
     @admin      admin                   ; User group required to trigger admin functionality
 
     type    Group
-    ;name    @xonotic
+    ;name    @name
 
+    ; Sets up a xonotic connection
+    Connection
+    {
+        protocol        xonotic         ; required (fixed string)
+        name            @name
+        server          @server
+        rcon_password   @rcon_password
+        rcon_secure     @rcon_secure
+        say_as          @say_as
+    }
 
     ; IRC showing information on the Xonotic server
     Group {
         source          @irc
         channels        @channel
-        monitored       @xonotic
+        monitored       @name
         trigger         @prefix
         prefix          @prefix
 
@@ -68,7 +85,7 @@ Xonotic
     ; Xonotic to IRC
     Bridge
     {
-        source          @xonotic
+        source          @name
         destination     @irc
         dst_channel     @channel
         prefix          @prefix
@@ -96,7 +113,7 @@ Xonotic
     {
         source          @irc
         channels        @channel
-        destination     @xonotic
+        destination     @name
         prefix          [IRC]
         priority        0
 
@@ -188,43 +205,53 @@ IrcBase
 ; Requires the Posix module to have been enabled explicitly
 Stdin
 {
-    @stdin      stdin                   ; connection to use (should be of type stdin)
-    @destination                        ; default bridged connection
+    @name       stdin   ; Connection name
+    @destination        ; Default bridged connection
     type        Group
 
-    source      @stdin
-    help_group  @stdin
-
-    Group {
-        trigger     "/"
-        Quit                            ; /quit shuts down the bot
-        Help                            ; /help shows available actions
+    ; Allows to control the bot from standard input
+    ; Requires the Posix module to have been enabled explicitly
+    Connection
+    {
+        protocol        stdin
+        name            @name
     }
 
-    ; Creates a detachable bridge to a connection
-    Bridge
-    {
-        destination @destination
-        priority    100
+    Group {
+        source          @name
+        help_group      @name
 
         Group {
-            trigger         "/"
-            BridgeAttach                ; "/attach connection" selects a connection to attach to
-            BridgeAttachChannel         ; "/attach channel" selects a channel in the connection
-
-            Connect                     ; /connect activates the attached connection
-            Disconnect                  ; /disconnect deactivates the attached connection
-            Reconnect                   ; /reconnect reconnects the attached connection
-            Nick                        ; "/nick name" changes the bot name in the connection
-            Join                        ; "/join channel" makes the bot join the channel
-            Part                        ; "/part channel" makes the bot leave the channel
-            Raw                         ; "/raw command" sends a raw command to the attached connection
-            Raw { trigger "" }          ; "/(command) ..." sends a raw command to the attached connection
+            trigger     "/"
+            Quit                            ; /quit shuts down the bot
+            Help                            ; /help shows available actions
         }
-        BridgeChat                      ; sends chat to the attached connection and channel
+
+        ; Creates a detachable bridge to a connection
+        Bridge
         {
-            ignore_self     0
-            from            ""
+            destination @destination
+            priority    100
+
+            Group {
+                trigger         "/"
+                BridgeAttach                ; "/attach connection" selects a connection to attach to
+                BridgeAttachChannel         ; "/attach channel" selects a channel in the connection
+
+                Connect                     ; /connect activates the attached connection
+                Disconnect                  ; /disconnect deactivates the attached connection
+                Reconnect                   ; /reconnect reconnects the attached connection
+                Nick                        ; "/nick name" changes the bot name in the connection
+                Join                        ; "/join channel" makes the bot join the channel
+                Part                        ; "/part channel" makes the bot leave the channel
+                Raw                         ; "/raw command" sends a raw command to the attached connection
+                Raw { trigger "" }          ; "/(command) ..." sends a raw command to the attached connection
+            }
+            BridgeChat                      ; sends chat to the attached connection and channel
+            {
+                ignore_self     0
+                from            ""
+            }
         }
     }
 }

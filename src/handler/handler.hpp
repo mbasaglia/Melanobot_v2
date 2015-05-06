@@ -361,27 +361,7 @@ public:
      * \return \c nullptr if it could not be created
      */
     std::unique_ptr<Handler> build(const std::string& handler_name,
-                   const Settings& settings, handler::HandlerContainer* parent) const
-    {
-        std::string type = settings.get("type",handler_name);
-        if ( type == "Template" )
-            return build_template(handler_name, settings, parent);
-
-        auto it = factory.find(type);
-        if ( it != factory.end() )
-        {
-            try {
-                return it->second(settings, parent);
-            } catch ( const ConfigurationError& error )
-            {
-                ErrorLog("sys") << "Error creating " << handler_name << ": "
-                    << error.what();
-                return nullptr;
-            }
-        }
-        ErrorLog("sys") << "Unknown handler type: " << handler_name;
-        return nullptr;
-    }
+                   const Settings& settings, handler::HandlerContainer* parent) const;
 
     /**
      * \brief Build a handler from a template
