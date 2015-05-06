@@ -76,7 +76,6 @@ protected:
         PropertyTree props;
         bot->populate_properties({"name","help","auth","synopsis","help_group"},
                                  props);
-
         if ( cleanup(msg, props) )
         {
             PropertyTree result;

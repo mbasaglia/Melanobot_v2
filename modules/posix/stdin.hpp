@@ -80,7 +80,7 @@ public:
 
     void say ( const network::OutputMessage& msg ) override
     {
-        Log("std",'<',1) << msg.message;
+        Log("std",'>',1) << msg.message;
     }
 
     // dummy overrides:
@@ -142,7 +142,7 @@ private:
         std::istream buffer_stream(&buffer_read);
         network::Message msg;
         std::getline(buffer_stream,msg.raw);
-        Log("std",'>',1) << formatter_->decode(msg.raw);
+        Log("std",'<',1) << formatter_->decode(msg.raw);
         std::istringstream socket_stream(msg.raw);
 
         msg.message = msg.raw;

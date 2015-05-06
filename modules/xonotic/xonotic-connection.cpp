@@ -606,14 +606,14 @@ void XonoticConnection::handle_message(network::Message& msg)
                 lock.unlock();
                 msg.from = user;
                 msg.type = network::Message::JOIN;
-                Log("xon",'!',2) << "Added user " << decode(user.name);
+                Log("xon",'!',3) << "Added user " << decode(user.name);
             }
             else if ( std::regex_match(msg.raw,match,regex_part) )
             {
                 Lock lock(mutex);
                 if ( user::User *found = user_manager.user(match[1]) )
                 {
-                    Log("xon",'!',2) << "Removed user " << decode(found->name);
+                    Log("xon",'!',3) << "Removed user " << decode(found->name);
                     msg.from = *found;
                     user_manager.remove_user(found->local_id);
                     msg.type = network::Message::PART;
@@ -637,7 +637,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                     msg.from = *found;
                     msg.message = match[2];
                     msg.type = network::Message::RENAME;
-                    Log("irc",'!',3) << "Renamed user " << decode(found->name)
+                    Log("xon",'!',3) << "Renamed user " << decode(found->name)
                         << color::nocolor << " to " << decode(msg.message);
                     found->name = msg.message;
                 }

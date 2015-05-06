@@ -50,7 +50,7 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     // Gather settings
     auth = settings.get("auth",auth);
     channels = settings.get("channels","");
-    name = settings.get("name",trigger);
+    name = settings.get("name","");
     help_group = settings.get("help_group",help_group);
     pass_through = settings.get("pass_through",pass_through);
     prefix = settings.get("prefix",prefix);
@@ -64,6 +64,9 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     }
     synopsis = "";
     help = settings.get("help","");
+    // Force a name for groups with explicit help
+    if ( !help.empty() && name.empty() )
+        name = trigger;
 
     // Copy relevant defaults to show the children
     Settings default_settings;

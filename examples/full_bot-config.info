@@ -15,6 +15,35 @@
 log
 {
     string_format    "ansi-utf8_black"
+    verbosity
+    {
+        sys 10  ; Change log verbosity for system information
+                ; 0 Only shows system errors
+                ; 2 [default]
+                ; 3 Show bridge attach/detach messages
+                ; 4 Show exit status when the application ends
+        irc 2   ; Change log verbosity for IRC connections:
+                ; 0 Only shows connection errors
+                ; 1 Shows commands sent/received from the IRC server
+                ; 2 [default] Shows users joining or quitting from the sight of the bot
+                ; 3 Shows detailed user actions:
+                ;       * Joinining/parting channels
+                ;       * Being added to groups
+                ;       * Being recognized as authed
+                ; 4 Shows detailed IRC information:
+                ;       * Outgoing IRC commands being truncated,
+                ;       * Attempting new nicknames on clashes
+        xon 0   ; Change log verbosity for xonotic servers:
+                ; 0 Only shows connection errors
+                ; 1 Shows special commands being sent to the server
+                ; 2 [default] Shows all commands being sent to the servers
+                ; 3 Shows users activity in the server (join, part and similar)
+                ; 4 Shows log from the xonotic server (very spammy)
+                ; 5 Shows rcon challenge requests
+        web 2   ; Change log verbosity for web requests
+                ; 0 Only shows errors
+                ; 2 [default] Shows web requests
+    }
 }
 
 ; Sets up the connections

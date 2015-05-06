@@ -141,7 +141,7 @@ Response HttpService::query (const Request& request)
         return ok(ss.str(),request);
 
     } catch (std::exception & e) {
-        Log("web",'!') << "Error processing " << request.location;
+        ErrorLog("web") << "Error processing " << request.location;
         return error(e.what(),request);
     }
 }

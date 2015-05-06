@@ -27,12 +27,6 @@ Melanobot::Melanobot(const Settings& settings)
         add_connection(pt.first,pt.second);
     }
 
-    if ( connections.empty() )
-    {
-        settings::global_settings.put("exit_code",1);
-        ErrorLog("sys") << "Creating a bot with no connections";
-    }
-
     templates = settings.get_child("templates",{});
 
     for(const auto& pt : settings.get_child("handlers",{}))
@@ -42,6 +36,11 @@ Melanobot::Melanobot(const Settings& settings)
             handlers.push_back(std::move(hand));
     }
 
+    if ( connections.empty() )
+    {
+        settings::global_settings.put("exit_code",1);
+        ErrorLog("sys") << "Creating a bot with no connections";
+    }
 }
 
 Melanobot::~Melanobot()

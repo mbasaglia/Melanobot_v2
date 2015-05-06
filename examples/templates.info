@@ -42,6 +42,8 @@ Xonotic
         monitored       @name
         trigger         @prefix
         prefix          @prefix
+        help            "Integration with the xonotic server @server"
+        help_group      @irc
         direct          1
 
         ListPlayers                     ; "who" shows the connected players
@@ -83,6 +85,50 @@ Xonotic
         }
     }
 
+    ; IRC to Xonotic
+    Bridge
+    {
+        source          @irc
+        channels        @channel
+        destination     @name
+        prefix          [IRC]
+        priority        0
+
+        Group                           ; Shows join/parts and similar
+        {
+            pass_through 1
+            action       1
+
+            JoinMessage { message "has joined" }
+            PartMessage { message "has left" }
+            KickMessage { message "has kicked %kicked!" }
+            RenameMessage { message "changed name to #7#%message" }
+        }
+
+        Group {
+            trigger         @prefix
+            help            "Integration with the xonotic server @server"
+            help_group      @irc
+
+            Group
+            {
+                direct      1
+                auth        @admin
+
+                RconCommand endmatch    ; "endmatch" ends the current match
+                RconCommand gotomap     ; "gotomap (map)" changes the map after showing the scoreboard
+                RconCommand chmap       ; "chmap (map)" changes the map immediately
+                RconCommand restart     ; "restart" restarts the match
+                ; These will be provided with a better interface in the future:
+                RconCommand kick
+                RconCommand kickban
+                RconCommand ban
+            }
+            RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
+            BridgeChat                  ; Sends chat
+        }
+    }
+
     ; Xonotic to IRC
     Bridge
     {
@@ -107,48 +153,6 @@ Xonotic
         XonoticMatchScore               ; Shows the score at match end
 
         ShowVotes                       ; Show vote calls and results
-    }
-
-    ; IRC to Xonotic
-    Bridge
-    {
-        source          @irc
-        channels        @channel
-        destination     @name
-        prefix          [IRC]
-        priority        0
-
-        Group                           ; Shows join/parts and similar
-        {
-            pass_through 1
-            action       1
-
-            JoinMessage { message "has joined" }
-            PartMessage { message "has left" }
-            KickMessage { message "has kicked %kicked!" }
-            RenameMessage { message "changed name to #7#%message" }
-        }
-
-        Group {
-            trigger         @prefix
-
-            Group
-            {
-                direct      1
-                auth        @admin
-
-                RconCommand endmatch    ; "endmatch" ends the current match
-                RconCommand gotomap     ; "gotomap (map)" changes the map after showing the scoreboard
-                RconCommand chmap       ; "chmap (map)" changes the map immediately
-                RconCommand restart     ; "restart" restarts the match
-                ; These will be provided with a better interface in the future:
-                RconCommand kick
-                RconCommand kickban
-                RconCommand ban
-            }
-            RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
-            BridgeChat                  ; Sends chat
-        }
     }
 }
 
