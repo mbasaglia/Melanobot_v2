@@ -106,19 +106,15 @@ handlers
     Template
     {
         template        Xonotic
-        ; Xonotic connection settings
-        name            xon_localhost   ; Xonotic connection name
-        server          localhost:26000 ; Connection info
+        name            xon_localhost
+        server          localhost:26000
         rcon_password   "MyPassword"
-        rcon_secure     0
-        say_as          modpack         ; Say option
-                                        ; Builtin values include: modpack, sv_adminnick.
-                                        ; You can also use explicit commands
-        stats           http://stats.xonotic.org/server/(your server id)
-        ; IRC settings
-        channel         #channel1       ; IRC channel
-        prefix          xon             ; Prefix used for input/output (can be empty or omitted)
-        ; note that irc defaults to irc_quakenet
+        ; rcon_secure     0
+        ; say_as          modpack
+        ; stats           http://stats.xonotic.org/server/(your server id)
+        channel         #channel1
+        prefix          xon
+        ; irc irc_quakenet
     }
 
     ; Loads the basic IRC functionality
