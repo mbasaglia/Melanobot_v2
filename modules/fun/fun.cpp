@@ -26,13 +26,16 @@ Melanomodule melanomodule_fun()
 {
     Melanomodule module{"fun","Fun handlers"};
     module.register_handler<fun::AnswerQuestions>("AnswerQuestions");
-    module.register_handler<fun::RenderPony>("RenderPony");
-    module.register_handler<fun::PonyCountDown>("PonyCountDown");
     module.register_handler<fun::ChuckNorris>("ChuckNorris");
     module.register_handler<fun::ReverseText>("ReverseText");
     module.register_handler<fun::Morse>("Morse");
     module.register_handler<fun::RainbowBridgeChat>("RainbowBridgeChat");
     module.register_handler<fun::Slap>("Slap");
     module.register_handler<fun::Discord>("Discord");
+
+
+    module.register_handler<fun::RenderPony>("RenderPony");
+    module.register_handler<fun::PonyCountDown>("PonyCountDown");
+    module.register_handler<fun::PonyFace>("PonyFace");
     return module;
 }

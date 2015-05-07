@@ -174,6 +174,50 @@ private:
 };
 
 /**
+ * \brief Shows a pony face
+ */
+class PonyFace : public handler::SimpleJson
+{
+public:
+    PonyFace(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleJson("ponyface",settings,parent)
+    {
+        api_url = settings.get("url",api_url);
+        not_found = settings.get("not_found",not_found);
+        help = "Pony face ("+api_url+")";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg,network::http::get(api_url+"tag:"+
+            network::http::urlencode(msg.message)
+        ));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        if ( parsed.empty() )
+            return json_failure(msg);
+        auto faces = parsed.get_child("faces",{});
+        if ( faces.empty() )
+            return json_failure(msg);
+
+        reply_to(msg,faces.get(std::to_string(math::random(faces.size()-1))+".image",not_found));
+    }
+
+    void json_failure(const network::Message& msg) override
+    {
+        reply_to(msg,not_found);
+    }
+
+private:
+    std::string api_url = "http://ponyfac.es/api.json/";
+    std::string not_found = "Pony not found http://ponyfac.es/138/full";
+};
+
+/**
  * \brief Answers direct questions
  */
 class AnswerQuestions : public handler::Handler
