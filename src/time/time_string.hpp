@@ -112,5 +112,28 @@ template<class Rep, class Period>
     return string::implode(" ",durtext);
 }
 
+template<class Rep, class Period>
+    std::string duration_string_short(const std::chrono::duration<Rep, Period>& duration)
+{
+    auto dursec = std::chrono::duration_cast<seconds>(duration).count();
+    std::string durtext;
+    string::English English;
+
+    durtext = string::to_string(dursec%60,2) + durtext;
+
+    dursec /= 60;
+    durtext = string::to_string(dursec%60,2) + ':' + durtext;
+
+    dursec /= 60;
+    if ( dursec )
+        durtext = string::to_string(dursec%60,2) + ':' + durtext;
+
+    dursec /= 24;
+    if ( dursec % 7 )
+        durtext = English.pluralize_with_number(dursec%7, "day")+' '+durtext;
+
+    return durtext;
+}
+
 } // namespace timer
 #endif // TIME_STRING_HPP

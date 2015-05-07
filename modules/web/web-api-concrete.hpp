@@ -22,6 +22,7 @@
 #define WEB_API_CONCRETE
 
 #include "web-api.hpp"
+#include "time/time_string.hpp"
 
 namespace handler {
 
@@ -34,12 +35,12 @@ public:
     SearchVideoYoutube(const Settings& settings, handler::HandlerContainer* parent)
         : SimpleJson("video",settings,parent)
     {
-        api_key = settings.get("api_key", "");
+        yt_api_key = settings.get("yt_api_key", "");
         order = settings.get("order", order);
         api_url = settings.get("url", api_url);
         reply = settings.get("reply", reply);
         not_found_reply = settings.get("not_found", not_found_reply );
-        if ( api_key.empty() || api_url.empty() || reply.empty() )
+        if ( yt_api_key.empty() || api_url.empty() || reply.empty() )
             throw ConfigurationError();
     }
 
@@ -51,7 +52,7 @@ protected:
             {"type", "video" },
             {"maxResults","1"},
             {"order",order},
-            {"key",api_key},
+            {"key",yt_api_key},
             {"q",msg.message},
         }));
         return true;
@@ -91,7 +92,7 @@ private:
     /**
      * \brief API key
      */
-    std::string api_key;
+    std::string yt_api_key;
     /**
      * \brief API URL
      */
@@ -104,6 +105,119 @@ private:
      * \brief Fixed reply to give on not found
      */
     std::string not_found_reply = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
+};
+
+/**
+ * \brief Shows info on video links
+ */
+class VideoInfo : public Handler
+{
+public:
+    VideoInfo(const Settings& settings, handler::HandlerContainer* parent)
+        : Handler(settings,parent)
+    {
+        yt_api_key = settings.get("yt_api_key", "");
+        yt_api_url = settings.get("yt_api_url", yt_api_url);
+        reply = settings.get("reply", reply);
+        network::require_service("web");
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.type == network::Message::CHAT;
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::smatch match;
+        if ( std::regex_search(msg.message,match,regex) )
+        {
+            network::Request request;
+
+            request = network::http::get(yt_api_url,{
+                {"part", "snippet,contentDetails"},
+                {"maxResults","1"},
+                {"key",yt_api_key},
+                {"id",match[1]},
+            });
+
+            network::service("web")->async_query(request,
+                [this,msg](const network::Response& response)
+                {
+                    if ( response.error_message.empty() )
+                    {
+                        Settings ptree;
+                        JsonParser parser;
+                        parser.throws(false);
+                        ptree = parser.parse_string(response.contents,response.origin);
+                        if ( !parser.error() )
+                            yt_found(msg,ptree);
+                    }
+                });
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * \brief Found youtube video
+     */
+    void yt_found(const network::Message& msg, const Settings& parsed)
+    {
+        if ( !parsed.get("pageInfo.totalResults",0) )
+            return;
+
+        string::FormatterConfig fmt;
+        string::FormatterUtf8   f8;
+        Properties prop {
+            {"videoId",parsed.get("items.0.id","")},
+            {"title",f8.decode(parsed.get("items.0.snippet.title","")).encode(fmt)},
+            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
+            {"description",f8.decode(parsed.get("items.0.snippet.description","")).encode(fmt)},
+            {"duration",
+                timer::duration_string_short(
+                    timer::parse_duration(
+                        parsed.get("items.0.contentDetails.duration","")
+                ))},
+            {"channel",string::implode(", ",msg.channels)},
+            {"name", msg.source->encode_to(msg.from.name,fmt)},
+            {"host", msg.from.host},
+            {"global_id", msg.from.global_id},
+        };
+        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+    }
+
+    /**
+     * \brief Send message with the video info
+     */
+    void send_message(const network::Message& msg, Properties properties)
+    {
+        string::FormatterConfig fmt;
+        reply_to(msg,fmt.decode(string::replace(reply,properties,"%")));
+    }
+
+private:
+    /**
+     * \brief YouTube API URL
+     */
+    std::string yt_api_url = "https://www.googleapis.com/youtube/v3/videos";
+    /**
+     * \brief YouTube API key
+     */
+    std::string yt_api_key;
+    /**
+     * \brief Reply to give on found
+     */
+    std::string reply = "Ha Ha! Nice vid %name! %title (#-b#%duration#-#)";
+    /**
+     * \brief Message regex
+     */
+    std::regex regex{
+        R"regex((?:(?:www\.youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+)))regex",
+        std::regex::ECMAScript|std::regex::optimize
+    };
 };
 
 /**

@@ -105,6 +105,11 @@ public:
                 }
             }
         }
+        else if ( lookahead.type == Token::IDENTIFIER && lookahead.lexeme == "PT" )
+        {
+            // Note: between P and T there could be years/months/weeks/days in duration
+            scan();
+        }
 
         // Read multiple number/unit pairs
         while ( lookahead.type == Token::NUMBER )

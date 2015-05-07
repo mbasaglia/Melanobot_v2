@@ -33,6 +33,7 @@ Melanomodule melanomodule_web()
     module.register_handler<handler::SearchImageGoogle>("SearchImageGoogle");
     module.register_handler<handler::UrbanDictionary>("UrbanDictionary");
     module.register_handler<handler::SearchWebSearx>("SearchWebSearx");
+    module.register_handler<handler::VideoInfo>("VideoInfo");
 
     return module;
 }
