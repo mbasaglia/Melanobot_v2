@@ -151,8 +151,12 @@ Xonotic
             timeout 10
         }
         XonoticMatchScore               ; Shows the score at match end
-
         ShowVotes                       ; Show vote calls and results
+        XonoticHostError                ; Notifies admins that the server crashed
+        {
+            notify      @admin
+            priority    100
+        }
     }
 }
 

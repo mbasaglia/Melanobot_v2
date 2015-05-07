@@ -616,6 +616,43 @@ private:
 };
 
 /**
+ * \brief Notifies admins that a severe error has occurred in the Xonotic server
+ */
+class XonoticHostError : public ParseEventlog
+{
+public:
+    XonoticHostError( const Settings& settings, HandlerContainer* parent )
+        : ParseEventlog( "Host_Error:(.*)", settings, parent )
+    {
+        message = settings.get("message",message);
+        notify = settings.get("notify",notify);
+        if ( notify.empty() )
+            throw ConfigurationError();
+    }
+
+
+protected:
+    bool on_handle(network::Message& msg, const std::smatch& match) override
+    {
+        string::FormatterConfig fmt;
+        auto props = msg.source->message_properties();
+        props["connection"] = msg.source->config_name();
+        props["message"] = msg.source->encode_to(match[1], fmt);
+        for ( const auto& admin : msg.source->users_in_group(notify) )
+        {
+            network::OutputMessage out(fmt.decode(string::replace(message,props,"%")));
+            out.target = admin.local_id;
+            deliver(msg.destination,out);
+        }
+        return true;
+    }
+
+private:
+    std::string message = "#1##-b#SERVER ERROR#-# %connection (#-b#%sv_server#-#) on #1#%map#-# %message";
+    std::string notify; ///< Group to be notified
+};
+
+/**
  * \brief Lists players in a xonotic server
  */
 class ListPlayers : public handler::ConnectionMonitor
