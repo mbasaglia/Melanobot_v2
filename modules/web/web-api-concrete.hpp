@@ -150,6 +150,13 @@ protected:
                 found_func = &VideoInfo::vimeo_found;
                 request = network::http::get(vimeo_api_url+std::string(match[2])+".json");
             }
+            else if ( match[3].matched )
+            {
+                found_func = &VideoInfo::dm_found;
+                request = network::http::get(dm_api_url+std::string(match[3]),{
+                    {"fields", "id,title,channel,duration,description"},
+                });
+            }
 
             network::service("web")->async_query(request,
                 [this,msg,found_func](const network::Response& response)
@@ -210,6 +217,25 @@ protected:
         });
     }
 
+    void dm_found(const network::Message& msg, const Settings& parsed)
+    {
+        if ( parsed.get_child_optional("error") )
+            return;
+        string::FormatterConfig fmt;
+        string::FormatterUtf8   f8;
+        send_message(msg,{
+            {"videoId",parsed.get("id","")},
+            {"title",f8.decode(parsed.get("title","")).encode(fmt)},
+            {"channelTitle",f8.decode(parsed.get("cannel","")).encode(fmt)},
+            {"description",f8.decode(parsed.get("description","")).encode(fmt)},
+            {"duration",
+                timer::duration_string_short(
+                    timer::seconds(
+                        parsed.get("duration",0)
+                ))}
+        });
+    }
+
     /**
      * \brief Send message with the video info
      */
@@ -230,7 +256,9 @@ private:
      * \brief Message regex
      */
     std::regex regex{
-        R"regex((?:(?:www\.youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+))|(?:vimeo.com/([0-9]+)))regex",
+        R"regex((?:(?:www\.youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+)))regex"
+        R"regex(|(?:vimeo.com/([0-9]+)))regex"
+        R"regex(|(?:www.dailymotion.com/video/([0-9a-zA-Z]+)))regex",
         std::regex::ECMAScript|std::regex::optimize
     };
     /**
@@ -249,6 +277,10 @@ private:
      * \brief Vimeo API URL
      */
     std::string vimeo_api_url = "https://vimeo.com/api/v2/video/";
+    /**
+     * \brief Dailymotion API URL
+     */
+    std::string dm_api_url = "https://api.dailymotion.com/video/";
 };
 
 /**
