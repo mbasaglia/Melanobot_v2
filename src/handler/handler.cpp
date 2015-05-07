@@ -50,6 +50,13 @@ std::unique_ptr<Handler> HandlerFactory::build(const std::string& handler_name,
     const Settings& settings, handler::HandlerContainer* parent) const
 {
     std::string type = settings.get("type",handler_name);
+
+    if ( settings.get("disabled",false) )
+    {
+        Log("sys",'!') << "Skipping disabled handler " << color::red << handler_name;
+        return nullptr;
+    }
+
     if ( type == "Template" )
     {
         return build_template(handler_name, settings, parent);

@@ -87,12 +87,14 @@ public:
     /**
      * \brief Create from settings
      */
-    static std::unique_ptr<IrcConnection> create(Melanobot* bot, const Settings& settings);
+    static std::unique_ptr<IrcConnection> create(
+        Melanobot* bot, const Settings& settings, const std::string& name);
 
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const network::Server& server, const Settings& settings = {});
+    IrcConnection(Melanobot* bot, const network::Server& server,
+                  const Settings& settings = {}, const std::string& name = {});
     
     /**
      * \thread main \lock none

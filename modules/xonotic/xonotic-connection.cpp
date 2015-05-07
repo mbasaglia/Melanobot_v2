@@ -47,13 +47,13 @@ std::string hmac_md4(const std::string& input, const std::string& key)
     return std::string(out,out+out_size);
 }
 
-std::unique_ptr<XonoticConnection> XonoticConnection::create(Melanobot* bot, const Settings& settings)
+std::unique_ptr<XonoticConnection> XonoticConnection::create(
+    Melanobot* bot, const Settings& settings, const std::string& name)
 {
     if ( settings.get("protocol",std::string()) != "xonotic" )
     {
         /// \todo accept similar protocols? eg: nexuiz
-        ErrorLog("xon") << "Wrong protocol for Xonotic connection";
-        return nullptr;
+        throw ConfigurationError("Wrong protocol for Xonotic connection");
     }
 
     network::Server server ( settings.get("server",std::string()) );
@@ -63,17 +63,18 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(Melanobot* bot, con
     server.port = settings.get("server.port",server.port);
     if ( server.host.empty() || !server.port )
     {
-        ErrorLog("xon") << "Xonotic connection with no server";
-        return nullptr;
+        throw ConfigurationError("Xonotic connection with no server");
     }
 
-    return std::make_unique<XonoticConnection>(bot, server, settings);
+    return std::make_unique<XonoticConnection>(bot, server, settings, name);
 }
 
 XonoticConnection::XonoticConnection ( Melanobot* bot,
                                        const network::Server& server,
-                                       const Settings& settings )
-    : server_(server), status_(DISCONNECTED), bot(bot)
+                                       const Settings& settings,
+                                       const std::string& name
+                                     )
+    : Connection(name), server_(server), status_(DISCONNECTED), bot(bot)
 {
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));

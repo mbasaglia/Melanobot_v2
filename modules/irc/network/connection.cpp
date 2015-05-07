@@ -32,12 +32,12 @@ LoginInfo::LoginInfo(const Settings& settings, const std::string& default_nick)
     command     = settings.get("command","");
 }
 
-std::unique_ptr<IrcConnection> IrcConnection::create(Melanobot* bot, const Settings& settings)
+std::unique_ptr<IrcConnection> IrcConnection::create(
+    Melanobot* bot, const Settings& settings, const std::string& name)
 {
     if ( settings.get("protocol",std::string()) != "irc" )
     {
-        ErrorLog("irc") << "Wrong protocol for IRC connection";
-        return nullptr;
+        throw ConfigurationError("Wrong protocol for IRC connection");
     }
 
     network::Server server ( settings.get("server",std::string()) );
@@ -47,16 +47,15 @@ std::unique_ptr<IrcConnection> IrcConnection::create(Melanobot* bot, const Setti
     server.port = settings.get("server.port",server.port);
     if ( server.host.empty() || !server.port )
     {
-        ErrorLog("irc") << "IRC connection with no server";
-        return nullptr;
+        throw ConfigurationError("IRC connection with no server");
     }
 
-    return std::make_unique<IrcConnection>(bot, server, settings);
+    return std::make_unique<IrcConnection>(bot, server, settings, name);
 }
 
 IrcConnection::IrcConnection ( Melanobot* bot, const network::Server& server,
-                               const Settings& settings )
-    : bot(bot), main_server(server), current_server(server),
+                               const Settings& settings, const std::string& name )
+    : Connection(name), bot(bot), main_server(server), current_server(server),
     buffer(*this, settings.get_child("buffer",{}))
 {
     read_settings(settings);

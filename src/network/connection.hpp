@@ -261,7 +261,7 @@ public:
     };
     using AtomicStatus = std::atomic<Status>;
 
-    Connection() = default;
+    explicit Connection(std::string config_name) : config_name_(std::move(config_name)) {}
     Connection(const Connection&) = delete;
     Connection(Connection&&) = delete;
     Connection& operator=(const Connection&) = delete;
@@ -427,6 +427,14 @@ public:
      * \note Returned properties should be formatted using the FormatterConfig
      */
     virtual Properties message_properties() const = 0;
+
+    /**
+     * \brief Returns the name of the connection as used in the config
+     */
+    const std::string& config_name() const { return config_name_; }
+
+private:
+    std::string config_name_;
 };
 
 /**
@@ -435,8 +443,8 @@ public:
 class ConnectionFactory
 {
 public:
-    using Contructor = std::function<std::unique_ptr<Connection>(Melanobot* bot, const Settings&)>;
-
+    using Contructor = std::function<std::unique_ptr<Connection>
+        (Melanobot* bot, const Settings& settings, const std::string&name)>;
 
     /**
      * \brief Singleton instance
@@ -451,39 +459,16 @@ public:
      * \brief Registers a connection type
      * \throws CriticalException If a protocol is defined twice
      */
-    void register_connection ( const std::string& protocol_name, const Contructor& function )
-    {
-        if ( factory.count(protocol_name) )
-            CRITICAL_ERROR("Re-registering connection protocol "+protocol_name);
-        factory[protocol_name] = function;
-    }
+    void register_connection ( const std::string& protocol_name,
+                               const Contructor& function );
 
     /**
      * \brief Creates a connection from its settings
      */
-    std::unique_ptr<Connection> create(Melanobot* bot, const Settings& settings)
-    {
-        try {
-            std::string protocol = settings.get("protocol",std::string());
-            auto it = factory.find(protocol);
-            if ( it != factory.end() )
-                return it->second(bot, settings);
-            ErrorLog ("sys","Connection Error")
-                << ": Unknown connection protocol "+protocol;
-        } catch ( const CriticalException& ) {
-            throw;
-        }
-        catch ( const LocatableException& exc ) {
-            ErrorLog errlog("sys","Connection Error");
-            if ( settings::global_settings.get("debug",0) )
-                errlog << exc.file << ':' << exc.line << ": ";
-            errlog  << exc.what();
-        } catch ( const std::exception& exc ) {
-            ErrorLog ("sys","Connection Error") << exc.what();
-        }
-
-        return nullptr;
-    }
+    std::unique_ptr<Connection> create(Melanobot* bot,
+                                       const Settings& settings,
+                                       const std::string& name
+                                      );
 
 private:
     ConnectionFactory(){}

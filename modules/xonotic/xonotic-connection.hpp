@@ -49,13 +49,14 @@ public:
      * \todo remove these functions and add a ctor overload w/o server object
      *          (which might throw)
      */
-    static std::unique_ptr<XonoticConnection> create(Melanobot* bot, const Settings& settings);
+    static std::unique_ptr<XonoticConnection> create(
+        Melanobot* bot, const Settings& settings, const std::string& name);
 
     /**
      * \thread main \lock none
      */
     XonoticConnection ( Melanobot* bot, const network::Server& server,
-                                const Settings& settings={} );
+                        const Settings& settings={}, const std::string& name={} );
 
     /**
      * \thread main \lock none

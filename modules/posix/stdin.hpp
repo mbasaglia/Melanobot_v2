@@ -35,13 +35,14 @@
 class StdinConnection : public network::Connection
 {
 public:
-    static std::unique_ptr<StdinConnection> create(Melanobot* bot, const Settings& settings)
+    static std::unique_ptr<StdinConnection> create(
+        Melanobot* bot, const Settings& settings, const std::string& name)
     {
-        return std::make_unique<StdinConnection>(bot,settings);
+        return std::make_unique<StdinConnection>(bot,settings, name);
     }
 
-    StdinConnection(Melanobot* bot, const Settings& settings)
-        : bot(bot)
+    StdinConnection(Melanobot* bot, const Settings& settings, const std::string& name)
+        : Connection(name), bot(bot)
     {
         formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("utf8")));
     }

@@ -19,7 +19,7 @@ log
     {
         sys 10  ; Change log verbosity for system information
                 ; 0 Only shows system errors
-                ; 2 [default]
+                ; 2 [default] Show connection creation
                 ; 3 Show bridge attach/detach messages
                 ; 4 Show exit status when the application ends
         irc 2   ; Change log verbosity for IRC connections:

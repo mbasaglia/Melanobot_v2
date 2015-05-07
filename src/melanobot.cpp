@@ -116,28 +116,22 @@ void Melanobot::add_connection(std::string suggested_name, const Settings& setti
 
     if ( suggested_name.empty() )
     {
-        ErrorLog("sys") << "Connection " << string::FormatFlags::BOLD << suggested_name
-            << string::FormatFlags::NO_FORMAT << " already exists.";
+        ErrorLog("sys") << "Cannot create unnamed connection";
         return;
     }
     else if ( connections.count(suggested_name) )
     {
-        ErrorLog("sys") << "Cannot create unnamed connection";
+        ErrorLog("sys") << "Connection " << string::FormatFlags::BOLD << suggested_name
+            << string::FormatFlags::NO_FORMAT << " already exists.";
         return;
     }
 
-    auto conn = network::ConnectionFactory::instance().create(this,settings);
+    auto conn = network::ConnectionFactory::instance().create(this,settings,suggested_name);
 
     if ( conn )
     {
-        Log("sys",'!') << "Created connection "
-            << string::FormatFlags::BOLD << suggested_name;
+        Log("sys",'!') << "Created connection " << color::green << suggested_name;
         connections[suggested_name] = std::move(conn);
-    }
-    else
-    {
-        ErrorLog("sys") << "Could not create connection "
-            << string::FormatFlags::BOLD << suggested_name;
     }
 }
 
