@@ -149,18 +149,29 @@ private:
         if ( nothrow )
         {
             try {
-                parse_json_object();
+                parse_json_root_throw();
             } catch ( const JsonError& err ) {
                 ErrorLog errlog("web","JSON Error");
                 if ( settings::global_settings.get("debug",0) )
                     errlog << err.file << ':' << err.line << ": ";
                 errlog << err.what();
+                error_flag = true;
             }
         }
         else
         {
-            parse_json_object();
+            parse_json_root_throw();
         }
+    }
+
+    void parse_json_root_throw()
+    {
+        char c = get_skipws();
+        stream.unget();
+        if ( c == '[' )
+            parse_json_array();
+        else
+            parse_json_object();
     }
 
     /**

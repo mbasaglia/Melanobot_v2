@@ -117,7 +117,6 @@ public:
         : Handler(settings,parent)
     {
         yt_api_key = settings.get("yt_api_key", "");
-        yt_api_url = settings.get("yt_api_url", yt_api_url);
         reply = settings.get("reply", reply);
         network::require_service("web");
     }
@@ -134,16 +133,26 @@ protected:
         if ( std::regex_search(msg.message,match,regex) )
         {
             network::Request request;
+            void (VideoInfo::*found_func)(const network::Message&,const Settings&) = nullptr;
 
-            request = network::http::get(yt_api_url,{
-                {"part", "snippet,contentDetails"},
-                {"maxResults","1"},
-                {"key",yt_api_key},
-                {"id",match[1]},
-            });
+            if ( match[1].matched )
+            {
+                found_func = &VideoInfo::yt_found;
+                request = network::http::get(yt_api_url,{
+                    {"part", "snippet,contentDetails"},
+                    {"maxResults","1"},
+                    {"key",yt_api_key},
+                    {"id",match[1]},
+                });
+            }
+            else if ( match[2].matched )
+            {
+                found_func = &VideoInfo::vimeo_found;
+                request = network::http::get(vimeo_api_url+std::string(match[2])+".json");
+            }
 
             network::service("web")->async_query(request,
-                [this,msg](const network::Response& response)
+                [this,msg,found_func](const network::Response& response)
                 {
                     if ( response.error_message.empty() )
                     {
@@ -152,7 +161,7 @@ protected:
                         parser.throws(false);
                         ptree = parser.parse_string(response.contents,response.origin);
                         if ( !parser.error() )
-                            yt_found(msg,ptree);
+                            (this->*found_func)(msg,ptree);
                     }
                 });
 
@@ -171,7 +180,7 @@ protected:
 
         string::FormatterConfig fmt;
         string::FormatterUtf8   f8;
-        Properties prop {
+        send_message(msg,{
             {"videoId",parsed.get("items.0.id","")},
             {"title",f8.decode(parsed.get("items.0.snippet.title","")).encode(fmt)},
             {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
@@ -180,13 +189,25 @@ protected:
                 timer::duration_string_short(
                     timer::parse_duration(
                         parsed.get("items.0.contentDetails.duration","")
-                ))},
-            {"channel",string::implode(", ",msg.channels)},
-            {"name", msg.source->encode_to(msg.from.name,fmt)},
-            {"host", msg.from.host},
-            {"global_id", msg.from.global_id},
-        };
-        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+                ))}
+        });
+    }
+
+    void vimeo_found(const network::Message& msg, const Settings& parsed)
+    {
+        string::FormatterConfig fmt;
+        string::FormatterUtf8   f8;
+        send_message(msg,{
+            {"videoId",parsed.get("0.id","")},
+            {"title",f8.decode(parsed.get("0.title","")).encode(fmt)},
+            {"channelTitle",f8.decode(parsed.get("0.user_name","")).encode(fmt)},
+            {"description",f8.decode(parsed.get("0.description","")).encode(fmt)},
+            {"duration",
+                timer::duration_string_short(
+                    timer::seconds(
+                        parsed.get("0.duration",0)
+                ))}
+        });
     }
 
     /**
@@ -195,10 +216,27 @@ protected:
     void send_message(const network::Message& msg, Properties properties)
     {
         string::FormatterConfig fmt;
+        properties.insert({
+            {"channel",string::implode(", ",msg.channels)},
+            {"name", msg.source->encode_to(msg.from.name,fmt)},
+            {"host", msg.from.host},
+            {"global_id", msg.from.global_id},
+        });
         reply_to(msg,fmt.decode(string::replace(reply,properties,"%")));
     }
 
 private:
+    /**
+     * \brief Message regex
+     */
+    std::regex regex{
+        R"regex((?:(?:www\.youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+))|(?:vimeo.com/([0-9]+)))regex",
+        std::regex::ECMAScript|std::regex::optimize
+    };
+    /**
+     * \brief Reply to give on found
+     */
+    std::string reply = "Ha Ha! Nice vid %name! %title (#-b#%duration#-#)";
     /**
      * \brief YouTube API URL
      */
@@ -208,16 +246,9 @@ private:
      */
     std::string yt_api_key;
     /**
-     * \brief Reply to give on found
+     * \brief Vimeo API URL
      */
-    std::string reply = "Ha Ha! Nice vid %name! %title (#-b#%duration#-#)";
-    /**
-     * \brief Message regex
-     */
-    std::regex regex{
-        R"regex((?:(?:www\.youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+)))regex",
-        std::regex::ECMAScript|std::regex::optimize
-    };
+    std::string vimeo_api_url = "https://vimeo.com/api/v2/video/";
 };
 
 /**
