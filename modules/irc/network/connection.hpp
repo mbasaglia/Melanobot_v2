@@ -216,6 +216,10 @@ public:
      * \thead external \lock data
      */
     std::vector<user::User> users_in_group(const std::string& group) const override;
+    /**
+     * \thead external \lock data
+     */
+    std::vector<user::User> real_users_in_group(const std::string& group) const override;
 
     /**
      * \brief Build a user::User from an extended name

@@ -198,6 +198,10 @@ public:
     {
         return {};
     }
+    std::vector<user::User> real_users_in_group(const std::string& group) const override
+    {
+        return {};
+    }
 
 private:
     /**

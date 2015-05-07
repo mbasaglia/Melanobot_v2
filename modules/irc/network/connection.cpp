@@ -1128,11 +1128,24 @@ bool IrcConnection::remove_from_group(const std::string& username, const std::st
     return false;
 }
 
-
 std::vector<user::User> IrcConnection::users_in_group(const std::string& group) const
 {
     Lock lock(mutex);
     return auth_system.users_with_auth(group);
+}
+std::vector<user::User> IrcConnection::real_users_in_group(const std::string& group) const
+{
+    Lock lock(mutex);
+
+    auto user_group = auth_system.group(group);
+    if ( !user_group )
+        return {};
+
+    std::vector<user::User> users;
+    for ( const user::User& user : user_manager )
+        if ( user_group->contains(user,true) )
+            users.push_back(user);
+    return users;
 }
 
 std::string IrcConnection::get_property(const std::string& property) const

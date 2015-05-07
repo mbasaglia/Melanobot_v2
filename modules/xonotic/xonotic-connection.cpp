@@ -487,7 +487,7 @@ void XonoticConnection::read(const std::string& datagram)
     while (socket_stream)
     {
         std::getline(socket_stream,line);
-        if (socket_stream.eof())
+        if (socket_stream.eof() && !line.empty())
         {
             lock.lock();
             line_buffer = line;

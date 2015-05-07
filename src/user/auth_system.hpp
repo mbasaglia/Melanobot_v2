@@ -101,6 +101,13 @@ public:
         return it->second.all_users();
     }
 
+    const UserGroup* group(const std::string &group) const
+    {
+        auto it = user_groups.find(group);
+        if ( it == user_groups.end() )
+            return nullptr;
+        return &it->second;
+    }
 
 private:
     std::unordered_map<std::string,UserGroup> user_groups;

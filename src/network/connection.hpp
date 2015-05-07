@@ -395,9 +395,14 @@ public:
     virtual bool remove_from_group(const std::string& user, const std::string& group) = 0;
 
     /**
-     * \brief Get a vector with the users in the given group
+     * \brief Get a vector with the users in the given group (as set from the config)
      */
     virtual std::vector<user::User> users_in_group(const std::string& group) const = 0;
+
+    /**
+     * \brief Get a vector with the users in the given group (currently connected
+     */
+    virtual std::vector<user::User> real_users_in_group(const std::string& group) const = 0;
 
     /**
      * \brief Name of the service provided by this connection,

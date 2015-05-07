@@ -97,6 +97,7 @@ public:
     bool add_to_group(const std::string&, const std::string&) override { return false; }
     bool remove_from_group(const std::string&, const std::string& ) override { return false; }
     std::vector<user::User> users_in_group(const std::string&) const override { return {}; }
+    std::vector<user::User> real_users_in_group(const std::string& group) const override { return {}; }
     // maybe could be given some actual functionality:
     std::string get_property(const std::string&) const override { return {}; }
     bool set_property(const std::string& , const std::string& ) override { return false; }

@@ -622,7 +622,7 @@ class XonoticHostError : public ParseEventlog
 {
 public:
     XonoticHostError( const Settings& settings, HandlerContainer* parent )
-        : ParseEventlog( "Host_Error:(.*)", settings, parent )
+        : ParseEventlog( "Host_Error: (.*)", settings, parent )
     {
         message = settings.get("message",message);
         notify = settings.get("notify",notify);
@@ -638,7 +638,7 @@ protected:
         auto props = msg.source->message_properties();
         props["connection"] = msg.source->config_name();
         props["message"] = msg.source->encode_to(match[1], fmt);
-        for ( const auto& admin : msg.source->users_in_group(notify) )
+        for ( const auto& admin : msg.destination->real_users_in_group(notify) )
         {
             network::OutputMessage out(fmt.decode(string::replace(message,props,"%")));
             out.target = admin.local_id;
@@ -648,7 +648,7 @@ protected:
     }
 
 private:
-    std::string message = "#1##-b#SERVER ERROR#-# %connection (#-b#%sv_server#-#) on #1#%map#-# %message";
+    std::string message = "#1##-b#SERVER ERROR#-# %connection (#-b#%sv_server#-#) on #1#%map#-#: %message";
     std::string notify; ///< Group to be notified
 };
 
