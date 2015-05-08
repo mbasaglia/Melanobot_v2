@@ -65,11 +65,11 @@ void Melanobot::run()
     if ( connections.empty() )
         return;
     
-    for ( auto &conn : connections )
-        conn.second->start();
-
     for ( const auto& handler : handlers )
         handler->initialize();
+    
+    for ( auto &conn : connections )
+        conn.second->start();
 
     while ( messages.active() )
     {

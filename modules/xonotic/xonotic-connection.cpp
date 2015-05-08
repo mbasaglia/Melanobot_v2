@@ -542,7 +542,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::string cvar_name = match[1];
                 std::string cvar_value = match[2];
                 Lock lock(mutex);
-                cvars[cvar_name] = cvars[cvar_value];
+                cvars[cvar_name] = cvar_value;
                 lock.unlock();
                 /// \todo keep in sync when update_connection() is changed
                 if ( cvar_name == "log_dest_udp" )
@@ -767,7 +767,6 @@ void XonoticConnection::update_connection()
 
 void XonoticConnection::cleanup_connection()
 {
-
     command({"rcon",{"set", "log_dest_udp", ""},1024});
 
     // try to actually clear log_dest_udp when challenges are required
@@ -803,7 +802,11 @@ void XonoticConnection::request_status()
 
 void XonoticConnection::add_polling_command(const network::Command& command, bool continuous)
 {
-    (continuous?polling_status:polling_match).push_back(command);
+    auto& list = (continuous ? polling_status : polling_match);
+    for ( const auto& cmd : list )
+        if ( cmd.command == command.command && cmd.parameters == command.parameters )
+            return;
+    list.push_back(command);
 }
 
 

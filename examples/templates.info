@@ -48,6 +48,18 @@ Xonotic
 
         ListPlayers                     ; "who" shows the connected players
 
+        Group
+        {
+            auth        @admin
+            priority    100
+            XonoticStatus { public 0 }  ; "status" shows info on players and the server
+            XonoticMaps                 ; "maps" shpws a list of maps (regex for admins)
+            {
+                regex           1
+                max_print       10
+            }
+        }
+
         Group                           ; "server" shows server information
         {
             trigger "server"
@@ -76,13 +88,7 @@ Xonotic
                 reply       "%sv_host"
             }
         }
-
-        Group
-        {
-            auth        @admin
-            priority    100
-            XonoticStatus { public 0 }  ; "status" shows info on players and the server
-        }
+        XonoticMaps                     ; "maps" shpws a list of maps
     }
 
     ; IRC to Xonotic

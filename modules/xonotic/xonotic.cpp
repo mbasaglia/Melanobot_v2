@@ -51,6 +51,7 @@ Melanomodule melanomodule_xonotic()
 
     module.register_handler<xonotic::ListPlayers>("ListPlayers");
     module.register_handler<xonotic::XonoticStatus>("XonoticStatus");
+    module.register_handler<xonotic::XonoticMaps>("XonoticMaps");
     
     return module;
 }
