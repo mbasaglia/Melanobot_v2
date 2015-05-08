@@ -34,100 +34,100 @@ Xonotic
         rcon_secure     @rcon_secure
         say_as          @say_as
     }
-;
-;     ; IRC showing information on the Xonotic server
-;     Group {
-;         source          @irc
-;         channels        @channel
-;         monitored       @name
-;         trigger         @prefix
-;         prefix          @prefix
-;         help            "Integration with the xonotic server @server"
-;         help_group      @irc
-;         direct          1
-;
-;         ListPlayers                     ; "who" shows the connected players
-;
-;         Group                           ; "server" shows server information
-;         {
-;             trigger "server"
-;             help "Shows server information"
-;             MonitorServerStatus         ; "server status" shows whether the server is connected
-;             MonitorReply                ; "server ip" shows the IP address and port
-;             {
-;                 trigger "ip"
-;                 reply   "%sv_server"
-;                 help    "Shows IP address and port"
-;             }
-;             Reply                       ; "server stats" shows the stats URL
-;             {
-;                 trigger "stats"
-;                 reply   "@stats "
-;                 help    "Shows the stats URL"
-;             }
-;             MonitorReply                ; "server game" shows gametype and map
-;             {
-;                 trigger "game"
-;                 reply   "Playing #dark_cyan#%gametype#-# on #1#%map"
-;                 help    "Shows the current gametype and map"
-;             }
-;             MonitorReply                ; "server" (no parameter) shows the host name
-;             {
-;                 reply       "%sv_host"
-;             }
-;         }
-;
-;         Group
-;         {
-;             auth        @admin
-;             priority    100
-;             XonoticStatus { public 0 }  ; "status" shows info on players and the server
-;         }
-;     }
-;
-;     ; IRC to Xonotic
-;     Bridge
-;     {
-;         source          @irc
-;         channels        @channel
-;         destination     @name
-;         prefix          [IRC]
-;         priority        0
-;
-;         Group                           ; Shows join/parts and similar
-;         {
-;             pass_through 1
-;             action       1
-;
-;             JoinMessage { message "has joined" }
-;             PartMessage { message "has left" }
-;             KickMessage { message "has kicked %kicked!" }
-;             RenameMessage { message "changed name to #7#%message" }
-;         }
-;
-;         Group {
-;             trigger         @prefix
-;             help            "Integration with the xonotic server @server"
-;             help_group      @irc
-;
-;             Group
-;             {
-;                 direct      1
-;                 auth        @admin
-;
-;                 RconCommand endmatch    ; "endmatch" ends the current match
-;                 RconCommand gotomap     ; "gotomap (map)" changes the map after showing the scoreboard
-;                 RconCommand chmap       ; "chmap (map)" changes the map immediately
-;                 RconCommand restart     ; "restart" restarts the match
-;                 ; These will be provided with a better interface in the future:
-;                 RconCommand kick
-;                 RconCommand kickban
-;                 RconCommand ban
-;             }
-;             RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
-;             BridgeChat                  ; Sends chat
-;         }
-;     }
+
+    ; IRC showing information on the Xonotic server
+    Group {
+        source          @irc
+        channels        @channel
+        monitored       @name
+        trigger         @prefix
+        prefix          @prefix
+        help            "Integration with the xonotic server @server"
+        help_group      @irc
+        direct          1
+
+        ListPlayers                     ; "who" shows the connected players
+
+        Group                           ; "server" shows server information
+        {
+            trigger "server"
+            help "Shows server information"
+            MonitorServerStatus         ; "server status" shows whether the server is connected
+            MonitorReply                ; "server ip" shows the IP address and port
+            {
+                trigger "ip"
+                reply   "%sv_server"
+                help    "Shows IP address and port"
+            }
+            Reply                       ; "server stats" shows the stats URL
+            {
+                trigger "stats"
+                reply   "@stats "
+                help    "Shows the stats URL"
+            }
+            MonitorReply                ; "server game" shows gametype and map
+            {
+                trigger "game"
+                reply   "Playing #dark_cyan#%gametype#-# on #1#%map"
+                help    "Shows the current gametype and map"
+            }
+            MonitorReply                ; "server" (no parameter) shows the host name
+            {
+                reply       "%sv_host"
+            }
+        }
+
+        Group
+        {
+            auth        @admin
+            priority    100
+            XonoticStatus { public 0 }  ; "status" shows info on players and the server
+        }
+    }
+
+    ; IRC to Xonotic
+    Bridge
+    {
+        source          @irc
+        channels        @channel
+        destination     @name
+        prefix          [IRC]
+        priority        0
+
+        Group                           ; Shows join/parts and similar
+        {
+            pass_through 1
+            action       1
+
+            JoinMessage { message "has joined" }
+            PartMessage { message "has left" }
+            KickMessage { message "has kicked %kicked!" }
+            RenameMessage { message "changed name to #7#%message" }
+        }
+
+        Group {
+            trigger         @prefix
+            help            "Integration with the xonotic server @server"
+            help_group      @irc
+
+            Group
+            {
+                direct      1
+                auth        @admin
+
+                RconCommand endmatch    ; "endmatch" ends the current match
+                RconCommand gotomap     ; "gotomap (map)" changes the map after showing the scoreboard
+                RconCommand chmap       ; "chmap (map)" changes the map immediately
+                RconCommand restart     ; "restart" restarts the match
+                ; These will be provided with a better interface in the future:
+                RconCommand kick
+                RconCommand kickban
+                RconCommand ban
+            }
+            RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
+            BridgeChat                  ; Sends chat
+        }
+    }
 
     ; Xonotic to IRC
     Bridge
@@ -138,20 +138,20 @@ Xonotic
         prefix          @prefix
         priority        0
 
-;         BridgeChat                      ; Sends chat
-;         {
-;             timeout     10
-;         }
-;         ConnectionEvents                ; Shows when the server connected or disconnected
-;         XonoticJoinPart                 ; Shows join/part messages
-;         XonoticMatchStart               ; Shows a message on match start
-;         RenameMessage                   ; Shows player name changes
-;         {
-;             message "#4#*#-# %name#-# changed name to %message"
-;             timeout 10
-;         }
-;         XonoticMatchScore               ; Shows the score at match end
-;         ShowVotes                       ; Show vote calls and results
+        BridgeChat                      ; Sends chat
+        {
+            timeout     10
+        }
+        ConnectionEvents                ; Shows when the server connected or disconnected
+        XonoticJoinPart                 ; Shows join/part messages
+        XonoticMatchStart               ; Shows a message on match start
+        RenameMessage                   ; Shows player name changes
+        {
+            message "#4#*#-# %name#-# changed name to %message"
+            timeout 10
+        }
+        XonoticMatchScore               ; Shows the score at match end
+        ShowVotes                       ; Show vote calls and results
         XonoticHostError                ; Notifies admins that the server crashed
         {
             notify      @admin
