@@ -64,7 +64,8 @@ Melanomodule melanomodule_core()
     module.register_handler<handler::Command>("Command");
     module.register_handler<handler::Time>("Time");
 
-    module.register_handler<handler::SimpleGroup>("Group");
+    module.register_handler<handler::Group>("Group");
+    module.register_handler<handler::Multi>("Multi");
 
     return module;
 }

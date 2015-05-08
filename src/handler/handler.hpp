@@ -287,11 +287,7 @@ public:
         {
             if ( trigger.empty() )
                 return on_handle(msg);
-            
-            network::Message trimmed_msg = msg;
-            auto it = trimmed_msg.message.begin()+trigger.size();
-            it = std::find_if(it,trimmed_msg.message.end(),[](char c){return !std::isspace(c);});
-            trimmed_msg.message.erase(trimmed_msg.message.begin(),it);
+            auto trimmed_msg = trimmed(msg);
             return on_handle(trimmed_msg);
         }
         return false;
@@ -334,6 +330,15 @@ protected:
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
         return channel;
+    }
+
+    network::Message trimmed(const network::Message& msg)
+    {
+        network::Message trimmed_msg = msg;
+        auto it = trimmed_msg.message.begin()+trigger.size();
+        it = std::find_if(it,trimmed_msg.message.end(),[](char c){return !std::isspace(c);});
+        trimmed_msg.message.erase(trimmed_msg.message.begin(),it);
+        return trimmed_msg;
     }
 
 };

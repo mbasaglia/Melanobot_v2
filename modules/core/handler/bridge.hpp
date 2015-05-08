@@ -26,7 +26,7 @@ namespace handler {
 /**
  * \brief Acts as bridge across connections
  */
-class Bridge : public SimpleGroup
+class Bridge : public Group
 {
 public:
     Bridge(const Settings& settings, handler::HandlerContainer* parent);
@@ -46,7 +46,7 @@ protected:
 
     void output_filter(network::OutputMessage& output) const override
     {
-        SimpleGroup::output_filter(output);
+        Group::output_filter(output);
         if ( dst_channel && output.target.empty() )
             output.target = *dst_channel;
     }

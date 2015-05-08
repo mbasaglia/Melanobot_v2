@@ -22,7 +22,7 @@
 namespace handler {
 
 Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
-    : SimpleGroup(settings,parent)
+    : Group(settings,parent)
 {
 
     std::string destination_name = settings.get("destination","");
@@ -36,7 +36,7 @@ bool Bridge::on_handle(network::Message& msg)
     network::Message targeted = msg;
     if ( destination )
         targeted.destination = destination;
-    return SimpleGroup::on_handle(targeted);
+    return Group::on_handle(targeted);
 }
 
 void Bridge::attach(network::Connection* connection)
@@ -106,7 +106,7 @@ BridgeAttach::BridgeAttach(const Settings& settings, handler::HandlerContainer* 
 
 void BridgeAttach::initialize()
 {
-    // this ensures we arent in SimpleGroup constructor when called
+    // This ensures we aren't in Group constructor when called
     if ( !(this->parent = get_parent<Bridge>()) )
         throw ConfigurationError{};
 }
@@ -128,7 +128,7 @@ BridgeAttachChannel::BridgeAttachChannel(const Settings& settings,
 
 void BridgeAttachChannel::initialize()
 {
-    // this ensures we arent in SimpleGroup constructor when called
+    // This ensures we aren't in Group constructor when called
     if ( !(this->parent = get_parent<Bridge>()) )
         throw ConfigurationError{};
 }

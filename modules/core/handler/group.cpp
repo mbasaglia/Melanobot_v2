@@ -22,7 +22,6 @@
 
 namespace handler {
 
-
 void AbstractGroup::add_children(Settings child_settings,
                     const Settings& default_settings)
 {
@@ -44,7 +43,7 @@ void AbstractGroup::add_children(Settings child_settings,
     }
 }
 
-SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* parent)
+Group::Group(const Settings& settings, handler::HandlerContainer* parent)
     : AbstractGroup("",settings,parent)
 {
     // Gather settings
@@ -81,14 +80,14 @@ SimpleGroup::SimpleGroup(const Settings& settings, handler::HandlerContainer* pa
     add_children(settings,default_settings);
 }
 
-bool SimpleGroup::can_handle(const network::Message& msg) const
+bool Group::can_handle(const network::Message& msg) const
 {
     return authorized(msg) && (!source || msg.source == source) &&
         ( msg.direct || !direct ) && string::starts_with(msg.message,trigger) &&
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
-bool SimpleGroup::on_handle(network::Message& msg)
+bool Group::on_handle(network::Message& msg)
 {
     for ( const auto& h : children )
         if ( h->handle(msg) && !pass_through )
@@ -96,7 +95,7 @@ bool SimpleGroup::on_handle(network::Message& msg)
     return false;
 }
 
-void SimpleGroup::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
+void Group::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
 {
     Handler::populate_properties(properties, output);
 
@@ -113,7 +112,6 @@ void SimpleGroup::populate_properties(const std::vector<std::string>& properties
         }
     }
 }
-
 
 /**
  * \brief Used by \c AbstractList to add elements
@@ -273,6 +271,61 @@ bool AbstractList::on_handle(network::Message& msg)
         return true;
     }
     return AbstractGroup::on_handle(msg);
+}
+
+Multi::Multi(const Settings& settings, handler::HandlerContainer* parent)
+    : Group(settings,parent)
+{
+    PropertyTree props;
+    populate_properties({"trigger"},props);
+
+    prefixes.resize(children.size());
+    auto it = props.begin();
+    ++it;
+    for ( unsigned i = 0; i < children.size() && it != props.end(); ++it, ++i )
+    {
+        settings::breakable_recurse(it->second,
+        [this,i](const PropertyTree& node){
+            if ( auto opt = node.get_optional<std::string>("trigger") )
+            {
+                std::string debug = *opt;
+                prefixes[i] = *opt;
+                return true;
+            }
+            return false;
+        });;
+    }
+}
+
+bool Multi::can_handle(const network::Message& msg) const
+{
+    return authorized(msg) && (!source || msg.source == source) &&
+        ( msg.direct || !direct ) &&
+        (channels.empty() || msg.source->channel_mask(msg.channels, channels));
+}
+
+bool Multi::on_handle ( network::Message& msg )
+{
+    bool handled = false;
+    if ( !trigger.empty() && string::starts_with(msg.message,trigger) )
+    {
+        network::Message trimmed_msg = trimmed(msg);
+        std::string base_message = trimmed_msg.message;
+
+        for ( unsigned i = 0; i < children.size(); i++ )
+        {
+            trimmed_msg.message = prefixes[i]+' '+base_message;
+            if ( children[i]->handle(trimmed_msg) )
+                handled = true;
+        }
+    }
+    else
+    {
+        for ( const auto& h : children )
+            if ( h->handle(msg) )
+                handled = true;
+    }
+    return handled;
 }
 
 } // namespace handler

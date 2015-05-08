@@ -72,10 +72,10 @@ protected:
 /**
  * \brief A simple group of actions which share settings
  */
-class SimpleGroup : public AbstractGroup
+class Group : public AbstractGroup
 {
 public:
-    SimpleGroup(const Settings& settings, handler::HandlerContainer* parent);
+    Group(const Settings& settings, handler::HandlerContainer* parent);
 
     bool can_handle(const network::Message& msg) const override;
 
@@ -187,6 +187,30 @@ public:
     }
 
     bool can_handle(const network::Message&) const override { return true; }
+};
+
+/**
+ * \brief A group muticasting to its children
+ * (which should be SimpleActions with a non-empty trigger)
+ */
+class Multi : public Group
+{
+public:
+    Multi(const Settings& settings, handler::HandlerContainer* parent);
+
+    bool can_handle(const network::Message& msg) const override;
+
+
+    bool handle(network::Message& msg) override
+    {
+        return Handler::handle(msg);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override;
+
+private:
+    std::vector<std::string> prefixes;
 };
 
 } // namespace handler

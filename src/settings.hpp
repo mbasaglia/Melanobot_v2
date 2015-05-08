@@ -116,6 +116,22 @@ namespace settings
         }
 
     /**
+     * \brief Recursively calls a functor on every node of the tree
+     *
+     * If \c func returns true, \c breakable_recurse returns
+     */
+    template<class Func>
+        bool breakable_recurse(Settings& sett, const Func& func)
+        {
+            if ( func(sett) )
+                return true;
+            for ( auto& child : sett )
+                if ( breakable_recurse(child.second,func) )
+                    return true;
+            return false;
+        }
+
+    /**
      * \brief Initialize Settings from a simple initializer list
      * \todo Could use a structure to allow a recursive initializer
      */
