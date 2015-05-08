@@ -20,6 +20,7 @@ Xonotic
     @channel                            ; IRC channel name
     @prefix                             ; Prefix shown on IRC
     @admin      admin                   ; User group required to trigger admin functionality
+    @network    QuakeNet                ; Network name, as shown to the players on !irc
 
     type    Group
     ;name    @name
@@ -133,6 +134,22 @@ Xonotic
             RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
             BridgeChat                  ; Sends chat
         }
+    }
+
+    ; Xonotic showing information on the IRC server
+    Group
+    {
+        trigger         "!"
+        help_group      @name
+        direct          0
+
+        Reply                                   ; !irc shows the IRC channel
+        {
+            trigger "irc"
+            reply "@network #@channel"          ; Note: the # is to escape the format ##
+            help "Shows the IRC channel"
+        }
+        Help                                    ; !help shows help
     }
 
     ; Xonotic to IRC

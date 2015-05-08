@@ -76,6 +76,7 @@ protected:
         PropertyTree props;
         bot->populate_properties({"name","help","auth","synopsis","help_group"},
                                  props);
+        
         if ( cleanup(msg, props) )
         {
             PropertyTree result;
@@ -117,11 +118,15 @@ protected:
                         << string::FormatterConfig().decode(help));
                 }
             }
+            else
+            {
+                reply_to(msg,string::FormattedString() << "Not found: " <<
+                    string::FormatFlags::BOLD << msg.message);
+            }
         }
         else
         {
-            reply_to(msg,string::FormattedString() << "Not found: " <<
-                string::FormatFlags::BOLD << msg.message);
+            reply_to(msg,string::FormattedString() << "No help items found");
         }
 
         return true;

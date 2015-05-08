@@ -188,10 +188,9 @@ public:
     {
         return false;
     }
-    bool user_auth(const std::string&, const std::string&) const override
+    bool user_auth(const std::string&, const std::string& auth_group) const override
     {
-        /// \todo (?)
-        return false;
+        return auth_group.empty();
     }
     bool add_to_group(const std::string&, const std::string&) override
     {
