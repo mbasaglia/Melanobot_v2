@@ -22,6 +22,7 @@
 #include "xonotic-connection.hpp"
 #include "handler/rcon.hpp"
 #include "handler/status.hpp"
+#include "handler/log.hpp"
 
 /**
  * \brief Initializes the Xonotic module

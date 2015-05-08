@@ -125,6 +125,8 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
                     "set sv_adminnick \"$Melanobot_sv_adminnick\"";
     }
 
+    add_polling_command({"rcon",{"status 1"},1024},true);
+    add_polling_command({"rcon",{"log_dest_udp"},1024},true);
     status_polling = network::Timer{[this]{request_status();},
         timer::seconds(settings.get("status_delay",60))};
 }
@@ -629,6 +631,8 @@ void XonoticConnection::handle_message(network::Message& msg)
                 msg.params = { match[1], match[2] };
                 properties["gametype"] = match[1];
                 properties["map"] = match[2];
+                for ( const auto& cmd : polling_match )
+                    command(cmd);
             }
             else if ( std::regex_match(msg.raw,match,regex_name) )
             {
@@ -754,6 +758,10 @@ void XonoticConnection::update_connection()
 
         // Request status right away (will also be called later by status_polling)
         request_status();
+
+        // Run match commands as well
+        for ( const auto& cmd : polling_match )
+            command(cmd);
     }
 }
 
@@ -783,14 +791,19 @@ void XonoticConnection::request_status()
             status_ = CHECKING;
         check_user_start();
         /// \todo attribute holding these commands, check timeouts etc.
-        command({"rcon",{"status 1"},1024});
-        command({"rcon",{"log_dest_udp"},1024});
+        for ( const auto& cmd : polling_status )
+            command(cmd);
     }
     else
     {
         close_connection();
         connect();
     }
+}
+
+void XonoticConnection::add_polling_command(const network::Command& command, bool continuous)
+{
+    (continuous?polling_status:polling_match).push_back(command);
 }
 
 

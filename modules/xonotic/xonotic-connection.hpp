@@ -159,6 +159,13 @@ public:
     Properties message_properties() const override;
 
     /**
+     * \brief Adds a command that needs to be sent regularly to the server
+     * \param command    Command to be sent
+     * \param continuous If true send every each \c status_delay, otherwise only at match start
+     */
+    void add_polling_command(const network::Command& command, bool continuous=false);
+
+    /**
      * \thead external \lock data
      */
     user::UserCounter count_users(const std::string& channel = {}) const override;
@@ -241,6 +248,8 @@ private:
     std::thread         thread_input;   ///< Thread handling input
     mutable std::mutex  mutex;          ///< Guard data races
     network::Timer      status_polling; ///< Timer used to gether the connection status
+    std::vector<network::Command> polling_match; ///< Commands to send on match start
+    std::vector<network::Command> polling_status; ///< Commands to send on status_polling
 
     /**
      * \brief Writes a raw line to the socket
