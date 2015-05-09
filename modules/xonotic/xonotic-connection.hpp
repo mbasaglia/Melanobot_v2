@@ -170,19 +170,6 @@ public:
      */
     user::UserCounter count_users(const std::string& channel = {}) const override;
 
-    /**
-     * \brief Returns the value of a cvar (or the empty string)
-     * \thread external \lock data
-     *
-     * Equivalent to get_property("cvar.name")
-     */
-    std::string get_cvar(const std::string& name) const
-    {
-        Lock lock(mutex);
-        auto it = cvars.find(name);
-        return it != cvars.end() ? it->second : "";
-    }
-
     // Dummy methods:
     bool channel_mask(const std::vector<std::string>&, const std::string& ) const override
     {
@@ -231,8 +218,7 @@ private:
     std::string         cmd_say;                        ///< Command used to say messages
     std::string         cmd_say_as;                     ///< Command used to say messages as another user
     std::string         cmd_say_action;                 ///< Command used to show actions
-    Properties          cvars;                          ///< Cvar values
-    Properties          properties;                     ///< Misc properties (eg: map, gametype)
+    PropertyTree        properties;                     ///< Misc properties (eg: map, gametype)
     std::list<SecureRconCommand>rcon_buffer;            ///< Buffer for rcon secure commands
 
 

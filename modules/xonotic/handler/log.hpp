@@ -686,6 +686,5 @@ private:
     std::string notify; ///< Group to be notified
 };
 
-
 } // namespace xonotic
 #endif // XONOTIC_HANDLER_LOG_HPP

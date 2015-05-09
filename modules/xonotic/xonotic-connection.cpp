@@ -149,8 +149,8 @@ void XonoticConnection::connect()
             thread_input = std::move(std::thread([this]{
                 // Just connected, clear all
                 Lock lock(mutex);
-                    rcon_buffer.clear();    // don't run old rcon_secure 2 commands
-                    cvars.clear();          // cvars might have changed
+                    rcon_buffer.clear();     // don't run old rcon_secure 2 commands
+                    properties.erase("cvar");// cvars might have changed
                     clear_match();
                     user_manager.clear();
                 lock.unlock();
@@ -233,19 +233,13 @@ std::vector<user::User> XonoticConnection::get_users( const std::string& channel
 std::string XonoticConnection::name() const
 {
     Lock lock(mutex);
-    auto it = cvars.find("sv_adminnick");
-    return it != cvars.end() ? it->second : "(server admin)";
+    return properties.get("cvar.sv_adminnick","(server admin)");
 }
 
 std::string XonoticConnection::get_property(const std::string& property) const
 {
     Lock lock(mutex);
-    if ( string::starts_with(property,"cvar.") )
-    {
-        lock.unlock();
-        return get_cvar(property.substr(5));
-    }
-    else if ( property == "say" )
+    if ( property == "say" )
     {
         return cmd_say;
     }
@@ -257,19 +251,7 @@ std::string XonoticConnection::get_property(const std::string& property) const
     {
         return cmd_say_action;
     }
-    else if ( property == "host" )
-    {
-        auto it = properties.find(property);
-        if ( it == properties.end() )
-        {
-            it = cvars.find("cvar.hostname");
-            if ( it == cvars.end() )
-                return description();
-        }
-        return it->second;
-    }
-    auto it = properties.find(property);
-    return it != properties.end() ? it->second : "";
+    return properties.get(property,"");
 }
 
 user::UserCounter XonoticConnection::count_users(const std::string& channel) const
@@ -278,8 +260,7 @@ user::UserCounter XonoticConnection::count_users(const std::string& channel) con
     user::UserCounter c;
     for ( const auto& user : user_manager )
         (user.host.empty() ? c.bots : c.users)++;
-    lock.unlock();
-    c.max = string::to_uint(get_cvar("g_maxplayers"));
+    c.max = properties.get("cvar.g_maxplayers",0);
     return c;
 }
 
@@ -288,16 +269,14 @@ bool XonoticConnection::set_property(const std::string& property,
 {
 
     Lock lock(mutex);
-    if ( string::starts_with(property,"cvar.") )
-        cvars[property.substr(5)] = value;
-    else if ( property == "say_as" )
+    if ( property == "say_as" )
         cmd_say_as = value;
     else if ( property == "say" )
         cmd_say = value;
     else if ( property == "say_action" )
         cmd_say_action = value;
     else
-        properties[property] = value;
+        properties.put(property,value);
     return true;
 }
 
@@ -306,27 +285,16 @@ Properties XonoticConnection::message_properties() const
     string::FormatterConfig fmt;
 
     user::UserCounter count = count_users();
-    std::string map = "?";
-    std::string gt  = "?";
+
+    Lock lock(mutex);
+
+    std::string gt = properties.get("match.gametype","?");
+
     std::string host;
-
-    {
-        Lock lock(mutex);
-
-        auto it = properties.find("map");
-        if ( it != properties.end() )
-            map = it->second;
-
-        it = properties.find("gametype");
-        if ( it != properties.end() )
-            gt = it->second;
-
-        it = properties.find("host");
-        if ( it != properties.end() )
-            host = formatter_->decode(it->second).encode(&fmt);
-        else
-            host = "(unconnected) " + server().name();
-    }
+    if ( auto opt = properties.get_optional<std::string>("host") )
+        host = formatter_->decode(*opt).encode(&fmt);
+    else
+        host = "(unconnected) " + server().name();
 
     return Properties {
         {"players", std::to_string(count.users)},
@@ -334,10 +302,10 @@ Properties XonoticConnection::message_properties() const
         {"total",   std::to_string(count.users+count.bots)},
         {"max",     std::to_string(count.max)},
         {"free",    std::to_string(count.max-count.users)},
-        {"map",     map},
+        {"map",     properties.get("match.map","?")},
         {"gt",      gt},
         {"gametype",xonotic::gametype_name(gt)},
-        {"mutators",get_property("mutators")},
+        {"mutators",properties.get("match.mutators","")},
         {"sv_host", host},
         {"sv_server",server().name()}
     };
@@ -542,7 +510,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::string cvar_name = match[1];
                 std::string cvar_value = match[2];
                 Lock lock(mutex);
-                cvars[cvar_name] = cvar_value;
+                properties.put("cvar."+cvar_name,cvar_value);
                 lock.unlock();
                 /// \todo keep in sync when update_connection() is changed
                 if ( cvar_name == "log_dest_udp" )
@@ -629,8 +597,8 @@ void XonoticConnection::handle_message(network::Message& msg)
                 //check_user_start();
                 msg.command = "gamestart";
                 msg.params = { match[1], match[2] };
-                properties["gametype"] = match[1];
-                properties["map"] = match[2];
+                properties.put<std::string>("match.gametype", match[1]);
+                properties.put<std::string>("match.map", match[2]);
                 for ( const auto& cmd : polling_match )
                     command(cmd);
             }
@@ -650,7 +618,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             else if ( std::regex_match(msg.raw,match,regex_mutators) )
             {
                 Lock lock(mutex);
-                properties["mutators"] = string::replace(match[1],":",", ");
+                properties.put("match.mutators", string::replace(match[1],":",", "));
             }
         }
         // status reply
@@ -672,14 +640,16 @@ void XonoticConnection::handle_message(network::Message& msg)
             std::smatch match;
             if ( std::regex_match(msg.raw, match, regex_status1_players) )
             {
-                cvars["g_maxplayers"] = match[1];
+                properties.put<std::string>("cvar.g_maxplayers", match[1]);
             }
             else if ( std::regex_match(msg.raw, match, regex_status1) )
             {
                 std::string status_name = match[1];
                 std::string status_value = match[2];
                 Lock lock(mutex);
-                properties[status_name] = status_value;
+                if ( status_name == "map" )
+                    status_name = "match.map";
+                properties.put(status_name, status_value);
             }
             else if ( std::regex_match(msg.raw, match, regex_status1_player) )
             {
@@ -775,7 +745,7 @@ void XonoticConnection::cleanup_connection()
 
     Lock lock(mutex);
     rcon_buffer.clear();
-    cvars.clear();
+    properties.erase("cvar");
     clear_match();
 }
 
@@ -834,7 +804,7 @@ void XonoticConnection::close_connection()
 
 void XonoticConnection::clear_match()
 {
-    properties.erase("map");
+    properties.erase("match");
 }
 
 void XonoticConnection::check_user_start()
