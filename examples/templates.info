@@ -59,6 +59,7 @@ Xonotic
                 regex           1
                 max_print       10
             }
+            XonoticBan { public 0 }     ; "ban" manages bans
         }
 
         Group                           ; "server" shows server information
@@ -128,8 +129,6 @@ Xonotic
                 RconCommand restart     ; "restart" restarts the match
                 ; These will be provided with a better interface in the future:
                 RconCommand kick
-                RconCommand kickban
-                RconCommand ban
             }
             RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
             BridgeChat                  ; Sends chat
@@ -180,6 +179,7 @@ Xonotic
             notify      @admin
             priority    100
         }
+        XonoticUpdateBans
     }
 }
 

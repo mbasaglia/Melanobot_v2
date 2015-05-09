@@ -28,6 +28,7 @@
 #include "user/user_counter.hpp"
 #include "user/user_manager.hpp"
 #include "network.hpp"
+#include "concurrency/locked_properties.hpp"
 
 class Melanobot;
 
@@ -411,15 +412,9 @@ public:
     virtual std::string name() const = 0;
 
     /**
-     * \brief Get a connection property
+     * \brief Get connection properties
      */
-    virtual std::string get_property(const std::string& property) const = 0;
-
-    /**
-     * \brief Set a connection property
-     * \return \b true on success
-     */
-    virtual bool set_property(const std::string& property, const std::string& value ) = 0;
+    virtual LockedProperties properties() = 0;
 
     /**
      * \brief Counts the number of users in a channel (or the whole connection),

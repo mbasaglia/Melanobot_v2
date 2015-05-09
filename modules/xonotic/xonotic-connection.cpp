@@ -150,7 +150,7 @@ void XonoticConnection::connect()
                 // Just connected, clear all
                 Lock lock(mutex);
                     rcon_buffer.clear();     // don't run old rcon_secure 2 commands
-                    properties.erase("cvar");// cvars might have changed
+                    properties_.erase("cvar");// cvars might have changed
                     clear_match();
                     user_manager.clear();
                 lock.unlock();
@@ -206,7 +206,7 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
     {
         user::User user;
         user.local_id = "0";
-        user.properties["entity"] = "#0";
+        user.properties["entity"] = "0";
         user.host = server_.name();
         return user;
     }
@@ -214,7 +214,7 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
     Lock lock(mutex);
 
     const user::User* user = local_id[0] == '#' ?
-        user_manager.user_by_property("entity",local_id)
+        user_manager.user_by_property("entity",local_id.substr(1))
         : user_manager.user(local_id);
 
     if ( user )
@@ -233,25 +233,7 @@ std::vector<user::User> XonoticConnection::get_users( const std::string& channel
 std::string XonoticConnection::name() const
 {
     Lock lock(mutex);
-    return properties.get("cvar.sv_adminnick","(server admin)");
-}
-
-std::string XonoticConnection::get_property(const std::string& property) const
-{
-    Lock lock(mutex);
-    if ( property == "say" )
-    {
-        return cmd_say;
-    }
-    else if ( property == "say_as" )
-    {
-        return cmd_say_as;
-    }
-    else if ( property == "say_action" )
-    {
-        return cmd_say_action;
-    }
-    return properties.get(property,"");
+    return properties_.get("cvar.sv_adminnick","(server admin)");
 }
 
 user::UserCounter XonoticConnection::count_users(const std::string& channel) const
@@ -260,24 +242,13 @@ user::UserCounter XonoticConnection::count_users(const std::string& channel) con
     user::UserCounter c;
     for ( const auto& user : user_manager )
         (user.host.empty() ? c.bots : c.users)++;
-    c.max = properties.get("cvar.g_maxplayers",0);
+    c.max = properties_.get("cvar.g_maxplayers",0);
     return c;
 }
 
-bool XonoticConnection::set_property(const std::string& property,
-                                     const std::string& value )
+LockedProperties XonoticConnection::properties()
 {
-
-    Lock lock(mutex);
-    if ( property == "say_as" )
-        cmd_say_as = value;
-    else if ( property == "say" )
-        cmd_say = value;
-    else if ( property == "say_action" )
-        cmd_say_action = value;
-    else
-        properties.put(property,value);
-    return true;
+    return LockedProperties(&mutex,&properties_);
 }
 
 Properties XonoticConnection::message_properties() const
@@ -288,10 +259,10 @@ Properties XonoticConnection::message_properties() const
 
     Lock lock(mutex);
 
-    std::string gt = properties.get("match.gametype","?");
+    std::string gt = properties_.get("match.gametype","?");
 
     std::string host;
-    if ( auto opt = properties.get_optional<std::string>("host") )
+    if ( auto opt = properties_.get_optional<std::string>("host") )
         host = formatter_->decode(*opt).encode(&fmt);
     else
         host = "(unconnected) " + server().name();
@@ -302,10 +273,10 @@ Properties XonoticConnection::message_properties() const
         {"total",   std::to_string(count.users+count.bots)},
         {"max",     std::to_string(count.max)},
         {"free",    std::to_string(count.max-count.users)},
-        {"map",     properties.get("match.map","?")},
+        {"map",     properties_.get("match.map","?")},
         {"gt",      gt},
         {"gametype",xonotic::gametype_name(gt)},
-        {"mutators",properties.get("match.mutators","")},
+        {"mutators",properties_.get("match.mutators","")},
         {"sv_host", host},
         {"sv_server",server().name()}
     };
@@ -510,7 +481,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::string cvar_name = match[1];
                 std::string cvar_value = match[2];
                 Lock lock(mutex);
-                properties.put("cvar."+cvar_name,cvar_value);
+                properties_.put("cvar."+cvar_name,cvar_value);
                 lock.unlock();
                 /// \todo keep in sync when update_connection() is changed
                 if ( cvar_name == "log_dest_udp" )
@@ -597,8 +568,8 @@ void XonoticConnection::handle_message(network::Message& msg)
                 //check_user_start();
                 msg.command = "gamestart";
                 msg.params = { match[1], match[2] };
-                properties.put<std::string>("match.gametype", match[1]);
-                properties.put<std::string>("match.map", match[2]);
+                properties_.put<std::string>("match.gametype", match[1]);
+                properties_.put<std::string>("match.map", match[2]);
                 for ( const auto& cmd : polling_match )
                     command(cmd);
             }
@@ -618,7 +589,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             else if ( std::regex_match(msg.raw,match,regex_mutators) )
             {
                 Lock lock(mutex);
-                properties.put("match.mutators", string::replace(match[1],":",", "));
+                properties_.put("match.mutators", string::replace(match[1],":",", "));
             }
         }
         // status reply
@@ -640,7 +611,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             std::smatch match;
             if ( std::regex_match(msg.raw, match, regex_status1_players) )
             {
-                properties.put<std::string>("cvar.g_maxplayers", match[1]);
+                properties_.put<std::string>("cvar.g_maxplayers", match[1]);
             }
             else if ( std::regex_match(msg.raw, match, regex_status1) )
             {
@@ -649,7 +620,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 Lock lock(mutex);
                 if ( status_name == "map" )
                     status_name = "match.map";
-                properties.put(status_name, status_value);
+                properties_.put(status_name, status_value);
             }
             else if ( std::regex_match(msg.raw, match, regex_status1_player) )
             {
@@ -745,7 +716,7 @@ void XonoticConnection::cleanup_connection()
 
     Lock lock(mutex);
     rcon_buffer.clear();
-    properties.erase("cvar");
+    properties_.erase("cvar");
     clear_match();
 }
 
@@ -804,7 +775,7 @@ void XonoticConnection::close_connection()
 
 void XonoticConnection::clear_match()
 {
-    properties.erase("match");
+    properties_.erase("match");
 }
 
 void XonoticConnection::check_user_start()

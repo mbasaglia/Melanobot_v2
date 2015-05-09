@@ -25,7 +25,7 @@
 #include <boost/asio.hpp>
 
 #include "network/connection.hpp"
-#include "concurrent_container.hpp"
+#include "concurrency/container.hpp"
 #include "string/logger.hpp"
 
 namespace irc {

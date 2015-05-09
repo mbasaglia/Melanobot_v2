@@ -24,7 +24,7 @@
 #include <thread>
 
 #include "string/logger.hpp"
-#include "concurrent_container.hpp"
+#include "concurrency/container.hpp"
 
 /**
  * \brief Namespace for network operations

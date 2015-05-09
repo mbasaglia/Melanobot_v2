@@ -48,10 +48,12 @@ Melanomodule melanomodule_xonotic()
     module.register_handler<xonotic::ShowVotes>("ShowVotes");
     module.register_handler<xonotic::XonoticMatchScore>("XonoticMatchScore");
     module.register_handler<xonotic::XonoticHostError>("XonoticHostError");
+    module.register_handler<xonotic::XonoticUpdateBans>("XonoticUpdateBans");
 
     module.register_handler<xonotic::ListPlayers>("ListPlayers");
     module.register_handler<xonotic::XonoticStatus>("XonoticStatus");
     module.register_handler<xonotic::XonoticMaps>("XonoticMaps");
+    module.register_handler<xonotic::XonoticBan>("XonoticBan");
     
     return module;
 }

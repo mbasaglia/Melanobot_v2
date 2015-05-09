@@ -130,7 +130,7 @@ void IrcConnection::disconnect(const std::string& message)
     connection_status = DISCONNECTED;
     current_nick = "";
     current_server = main_server;
-    server_features.clear();
+    properties_.erase("005");
     user_manager.clear();
     buffer.stop();
 }
@@ -165,10 +165,10 @@ network::Server IrcConnection::server() const
 
 std::string IrcConnection::description() const
 {
-    std::string irc_network = get_property("NETWORK");
+    Lock lock(mutex);
+    std::string irc_network = properties_.get("005.NETWORK","");
     if ( !irc_network.empty() )
         irc_network = '('+irc_network+") ";
-    Lock lock(mutex);
     return irc_network+current_server.name();
 }
 
@@ -275,7 +275,7 @@ void IrcConnection::handle_message(network::Message msg)
             auto eq = msg.params[i].find('=');
             std::string name = msg.params[i].substr(0,eq);
             std::string value = eq == std::string::npos ? "1" : msg.params[i].substr(eq+1);
-            server_features[name] = value;
+            properties_.put("005."+name,value);
         }
     }
     else if ( msg.command == "353" )
@@ -737,8 +737,7 @@ void IrcConnection::command(network::Command cmd)
 
         if ( cmd.parameters.size() == 1 )
         {
-            std::string::size_type nick_length =
-                string::to_uint(server_features["NICKLEN"],10,std::string::npos);
+            auto nick_length = properties_.get("005.NICKLEN",std::string::npos);
             nick_length = std::min(nick_length,cmd.parameters[0].size());
             /// \note NICK validation is very basic, the spec is more precise
             for ( unsigned i = 0; i < nick_length; i++ )
@@ -1148,16 +1147,9 @@ std::vector<user::User> IrcConnection::real_users_in_group(const std::string& gr
     return users;
 }
 
-std::string IrcConnection::get_property(const std::string& property) const
+LockedProperties IrcConnection::properties()
 {
-    Lock lock(mutex);
-    auto it = server_features.find(property);
-    return it == server_features.end() ? "" : it->second;
-}
-
-bool IrcConnection::set_property( const std::string& property, const std::string& value )
-{
-    return false;
+    return LockedProperties(&mutex,&properties_);
 }
 
 /// \todo provide useful properties

@@ -23,7 +23,7 @@
 #include <functional>
 
 #include "functional.hpp"
-#include "concurrency.hpp"
+#include "concurrency/concurrency.hpp"
 #include "c++-compat.hpp"
 #include "math.hpp"
 

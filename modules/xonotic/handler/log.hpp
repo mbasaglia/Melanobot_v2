@@ -62,7 +62,7 @@ protected:
         string::FormatterConfig fmt;
         /// \todo Should the host property be returned from description()?
         Properties props = {
-            {"host",msg.source->encode_to(msg.source->get_property("host"),fmt)},
+            {"host",msg.source->encode_to(msg.source->properties().get("host"),fmt)},
             {"server",msg.source->server().name()}
         };
         const std::string& str = msg.command == "CONNECTED" ? connect : disconnect;
@@ -595,7 +595,7 @@ protected:
         int team = string::to_int(match[8],10,SPECTATORS);
         int score = string::to_int(match[6]);
 
-        if ( team == NO_TEAM && score == 0 && conn->get_property("gametype") == "lms" )
+        if ( team == NO_TEAM && score == 0 && conn->properties().get("gametype") == "lms" )
             team = SPECTATORS;
 
         player_scores[team].emplace_back(
@@ -610,8 +610,8 @@ protected:
      */
     void handle_scores(network::Connection* conn, const std::smatch& match)
     {
-        conn->set_property("gametype",match[12]);
-        conn->set_property("map",match[13]);
+        conn->properties().put<std::string>("gametype",match[12]);
+        conn->properties().put<std::string>("map",match[13]);
         player_scores = { {SPECTATORS, {}} };
         team_scores.clear();
         sort_reverse = false;
@@ -684,6 +684,38 @@ protected:
 private:
     std::string message = "#1##-b#SERVER ERROR#-# %connection (#-b#%sv_server#-#) on #1#%map#-#: %message";
     std::string notify; ///< Group to be notified
+};
+
+/**
+ * \brief This class stores the ban list in the connection
+ */
+class XonoticUpdateBans : public ParseEventlog
+{
+public:
+    XonoticUpdateBans(const Settings& settings, HandlerContainer* parent)
+        : ParseEventlog(
+            "(\\^2Listing all existing active bans:)|"// 1
+            //         2  banid=3     ip=4                            time=5
+            R"regex(\s*(#([0-9]+): (\S+) is still banned for (inf|[0-9]+)\S* seconds))regex",
+            //R"regex(\s*(#([0-9]+): ([:./0-9]+) is still banned for (inf|[0-9]+)(?:\.[0-9]+)? seconds))regex",
+            settings, parent )
+    {}
+
+protected:
+    bool on_handle(network::Message& msg, const std::smatch& match) override
+    {
+        if ( match[1].matched )
+        {
+            msg.source->properties().erase("banlist");
+        }
+        else if ( match[2].matched )
+        {
+            std::string ban_id = "banlist."+std::string(match[3]);
+            msg.source->properties().put<std::string>(ban_id+".ip",match[4]);
+            msg.source->properties().put<std::string>(ban_id+".time",match[5]);
+        }
+        return true;
+    }
 };
 
 } // namespace xonotic

@@ -20,21 +20,9 @@
 #define XONOTIC_HANDLER_RCON_HPP
 
 #include "handler/handler.hpp"
+#include "xonotic/xonotic.hpp"
 
 namespace xonotic {
-
-/**
- * \brief Sends a rcon command
- * \param destination Xonotic connection
- * \param command Rcon command and arguments
- */
-void rcon(network::Connection* destination,
-          std::vector<std::string> command,
-          int priority = 0
-         )
-{
-    destination->command({"rcon",std::move(command),priority});
-}
 
 /**
  * \brief Send a fixed rcon command to a Xonotic connection
@@ -63,7 +51,7 @@ protected:
         std::vector<std::string> args = { command };
         if ( arguments && !msg.message.empty() )
             args.push_back(msg.message);
-        rcon(msg.destination,std::move(args),priority);
+        msg.destination->command({"rcon",std::move(args),priority});
         return true;
     }
 

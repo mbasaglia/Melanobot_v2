@@ -25,7 +25,7 @@
 
 #include "network/connection.hpp"
 #include "network/udp_io.hpp"
-#include "concurrent_container.hpp"
+#include "concurrency/container.hpp"
 #include "user/user_manager.hpp"
 #include "melanobot.hpp"
 #include "xonotic.hpp"
@@ -142,17 +142,13 @@ public:
 
     user::User get_user(const std::string& local_id) const override;
 
-    std::vector<user::User> get_users( const std::string& channel_mask = "" ) const override;
+    std::vector<user::User> get_users(const std::string& channel_mask = "") const override;
 
     std::string name() const override;
     /**
      * \thread external \lock data
      */
-    std::string get_property(const std::string& property) const override;
-    /**
-     * \thread external \lock data
-     */
-    bool set_property(const std::string& property, const std::string& value ) override;
+    LockedProperties properties() override;
     /**
      * \thread external \lock data
      */
@@ -218,7 +214,7 @@ private:
     std::string         cmd_say;                        ///< Command used to say messages
     std::string         cmd_say_as;                     ///< Command used to say messages as another user
     std::string         cmd_say_action;                 ///< Command used to show actions
-    PropertyTree        properties;                     ///< Misc properties (eg: map, gametype)
+    PropertyTree        properties_;                     ///< Misc properties (eg: map, gametype)
     std::list<SecureRconCommand>rcon_buffer;            ///< Buffer for rcon secure commands
 
 

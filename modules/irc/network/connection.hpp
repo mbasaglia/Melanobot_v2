@@ -233,12 +233,7 @@ public:
      *        without a value "1" is reported.
      * \thead external \lock data
      */
-    std::string get_property(const std::string& property) const override;
-
-    /**
-     * \brief Always fails
-     */
-    bool set_property(const std::string& property, const std::string& value ) override;
+    LockedProperties properties() override;
 
     /*
      * \thead external \lock data
@@ -318,7 +313,7 @@ private:
      * As seen on 005 (RPL_ISUPPORT)
      * \see http://www.irc.org/tech_docs/005.html
      */
-    Properties server_features;
+    PropertyTree properties_;
     /**
      * \brief Current bot nick
      */

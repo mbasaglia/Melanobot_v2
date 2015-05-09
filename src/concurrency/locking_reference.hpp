@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright 2015 Mattia Basaglia
+ * \copyright Copyright  Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,28 +16,27 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef XONOTIC_HPP
-#define XONOTIC_HPP
-#include <regex>
-#include "network/connection.hpp"
+#ifndef LOCKING_REFERENCE_HPP
+#define LOCKING_REFERENCE_HPP
 
-namespace xonotic {
+#include "pointer_lock.hpp"
 
 /**
- * \brief Escapes characters and puts the string in double quotes
+ * \brief Base class for classes that provide a locking interface to another class
  */
-inline std::string quote_string(const std::string& text)
+template <class Lockable, class Referenced>
+class LockingReferenceBase
 {
-    static std::regex regex_xonquote(R"(([\\"]))",
-        std::regex::ECMAScript|std::regex::optimize
-    );
-    return '"'+std::regex_replace(text,regex_xonquote,"\\$&")+'"';
-}
+public:
+    LockingReferenceBase(Lockable* lock_target, Referenced* referenced)
+        : lock_target(lock_target), referenced(referenced)
+        {}
 
-/**
- * \brief Returns the human-readable gametyp name from a short name
- */
-std::string gametype_name(const std::string& short_name);
+protected:
+    auto lock() { return PointerLock<Lockable>(lock_target); }
 
-} // namespace xonotic
-#endif // XONOTIC_HPP
+    Lockable*  lock_target = nullptr;
+    Referenced*referenced  = nullptr;
+};
+
+#endif // LOCKING_REFERENCE_HPP

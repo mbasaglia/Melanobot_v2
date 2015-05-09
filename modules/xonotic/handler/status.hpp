@@ -19,6 +19,7 @@
 #ifndef XONOTIC_HANDLER_STATUS_HPP
 #define XONOTIC_HANDLER_STATUS_HPP
 
+#include <sstream>
 #include "string/string_functions.hpp"
 #include "xonotic/xonotic.hpp"
 #include "core/handler/connection_monitor.hpp"
@@ -149,7 +150,6 @@ protected:
     }
 };
 
-
 /**
  * \brief Lists xonotic maps matching a query
  */
@@ -174,7 +174,7 @@ public:
 protected:
     bool on_handle(network::Message& msg)
     {
-        auto maps = string::regex_split(monitored->get_property("cvar.g_maplist"),"\\s+");
+        auto maps = string::regex_split(monitored->properties().get("cvar.g_maplist"),"\\s+");
         int total = maps.size();
         if ( !msg.message.empty() )
         {
@@ -216,6 +216,211 @@ protected:
     bool regex = false;
     int max_print = 6;
 };
+
+/**
+ * \brief Manage xonotic bans
+ */
+class XonoticBan : public handler::ConnectionMonitor
+{
+public:
+    XonoticBan(const Settings& settings, handler::HandlerContainer* parent)
+        : ConnectionMonitor("ban", settings, parent)
+    {
+        synopsis += "#-# refresh | list | rm #-i#banid#-#... |"
+            "(ip #-i#address#-# | player (###-i#entity#-#|name)) [#-i#duration#-# [:#-i#reason#-#]]";
+        help = "Manage xonotic bans";
+    }
+
+    void initialize() override
+    {
+        if ( auto xon = dynamic_cast<xonotic::XonoticConnection*>(monitored) )
+            xon->add_polling_command({"rcon",{"banlist"}});
+    }
+
+protected:
+    bool on_handle(network::Message& msg)
+    {
+        if ( msg.message == "refresh" )
+        {
+            refresh();
+            reply_to(msg, "Ban list refreshed");
+            return true;
+        }
+        if ( msg.message.empty() || msg.message == "list" )
+        {
+            show_bans(msg);
+            return true;
+        }
+        else if ( string::starts_with(msg.message,"rm ") )
+        {
+            unban(msg);
+            return true;
+        }
+
+        static std::regex regex_banmsg(
+            //                       1=entity     2=name              3=address        4=time     5=reason
+            R"((?:(?:player\s+(?:(?:#([0-9]+))|([a-zA-Z0-9]+)))|(?:ip\s+(\S+)))(?:\s+([^:]+)(?::\s*(.*))?)?)",
+            // |  |           |  |   ^number^| ^-name-------^|| |       ^ip-^|||     ^time-^|reason^--^| |
+            // |  |           |  ^-#entity---^               || |            |||            ^-reason---^ |
+            // |  |           ^-player identifier------------^| |            ||^-extra info--------------^
+            // |  ^-player------------------------------------^ ^-ip---------^|
+            // ^-selection (player|ip)----------------------------------------^
+            std::regex::ECMAScript|std::regex::optimize);
+        std::smatch match;
+
+        // ban
+        if ( std::regex_match(msg.message,match,regex_banmsg) )
+        {
+            if ( match[1].matched || match[2].matched )
+                kickban(msg,match);
+            else
+                ban(msg,match);
+            return true;
+        }
+
+        reply_to(msg, "Invalid call, see help for usage"); // AKA RTFM
+        return true;
+
+    }
+
+private:
+    /**
+     * \brief Finds a user to kickban
+     */
+    Optional<user::User> find_user(const std::smatch& match)
+    {
+        std::vector<user::User> users = monitored->get_users();
+        auto kicked = users.end();
+        // find user with given entity number
+        if ( match[1].matched )
+        {
+            kicked = std::find_if(users.begin(),users.end(),
+                [&match](const user::User& user) {
+                    return user.property("entity") == match[1];
+                });
+        }
+        // find user with given name
+        else
+        {
+            string::FormatterAscii ascii;
+            kicked = std::find_if(users.begin(),users.end(),
+                [&match,&ascii,this](const user::User& user) {
+                    return monitored->encode_to(user.name,ascii)
+                        .find(match[2]) == std::string::npos;
+                });
+        }
+        if ( kicked == users.end() )
+            return {};
+        return *kicked;
+    }
+
+    /**
+     * \brief Handles a kickban
+     */
+    void kickban(const network::Message& msg, const std::smatch& match)
+    {
+        if ( auto kicked = find_user(match) )
+        {
+            std::vector<std::string> params = {"kickban",
+                "#"+kicked->property("entity") };
+            string::FormattedString notice;
+            notice << "Banning #" << kicked->property("entity") << " "
+                << kicked->host << " " << monitored->decode(kicked->name);
+            if ( match[4].matched )
+            {
+                params.push_back(std::to_string(
+                    std::chrono::duration_cast<timer::seconds>(
+                        timer::parse_duration(match[4])
+                ).count()));
+                notice << " for "+params[2]+" seconds";
+                if ( match[5].matched )
+                    params.push_back(match[5]);
+            }
+            reply_to(msg, notice);
+            monitored->command({"rcon", params, priority});
+            refresh();
+        }
+        else
+        {
+            reply_to(msg, "Player not found");
+        }
+    }
+
+    /**
+     * \brief Handles a ban
+     */
+    void ban(const network::Message& msg, const std::smatch& match)
+    {
+        std::vector<std::string> params = {"ban", match[3]};
+        std::string notice = "Banning "+params[1];
+        if ( match[4].matched )
+        {
+            params.push_back(std::to_string(
+                std::chrono::duration_cast<timer::seconds>(
+                    timer::parse_duration(match[4])
+                ).count()));
+            notice += " for "+params[2]+" seconds";
+            if ( match[5].matched )
+                params.push_back(match[5]);
+        }
+        reply_to(msg, notice);
+        monitored->command({"rcon", params, priority});
+        refresh();
+    }
+
+    /**
+     * \brief Removes bans
+     */
+    void unban(const network::Message& msg)
+    {
+        std::stringstream ss(msg.message);
+        ss.ignore(3);
+        char c;
+        std::string id;
+        while ( ss )
+        {
+            ss >> c;
+            if ( c != '#' )
+                ss.unget();
+            if ( !(ss >> id) )
+                break;
+            monitored->command({"rcon", {"unban","#"+id}, priority});
+        }
+        reply_to(msg, "Remoing given bans");
+        refresh();
+    }
+
+    /**
+     * \brief Prints the active bans
+     */
+    void show_bans(const network::Message& msg)
+    {
+        auto banlist = monitored->properties().get_child("banlist");
+        if ( banlist.empty() )
+        {
+            reply_to(msg, "No active bans");
+            return;
+        }
+        using s = string::FormattedString;
+        for ( const auto& ban : banlist )
+            reply_to(msg,s()
+                << color::red << s("#"+ban.first).pad(4) << " "
+                << color::dark_cyan << s(ban.second.get("ip","")).pad(16,0) << " "
+                << color::nocolor << s(ban.second.get("time","?")).pad(6)
+                << " seconds"
+            );
+    }
+
+    /**
+     * \brief Updates the ban list
+     */
+    void refresh()
+    {
+        // defer 1 because apparently the server doesn't update bans right away
+        monitored->command({"rcon",{"defer","1","banlist"},priority});
+    }
+};
+
 
 
 } // namespace xonotic
