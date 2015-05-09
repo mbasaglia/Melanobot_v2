@@ -30,6 +30,7 @@ public:
         NO_FORMAT = 0,
         BOLD      = 1,
         UNDERLINE = 2,
+        ITALIC    = 4,
     };
     constexpr FormatFlags(FormatFlagsEnum flags) noexcept : flags(flags) {}
 

@@ -160,6 +160,7 @@ std::string FormatterAnsi::format_flags(FormatFlags flags) const
     std::vector<int> codes;
     codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
     codes.push_back( flags & FormatFlags::UNDERLINE ? 4 : 24 );
+    codes.push_back( flags & FormatFlags::ITALIC ? 3 : 23 );
     return  "\x1b["+implode(";",codes)+"m";
 }
 std::string FormatterAnsi::clear() const
@@ -227,6 +228,16 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                 else if ( i == 22 )
                 {
                     flags &= ~FormatFlags::BOLD;
+                    use_flags = true;
+                }
+                else if ( i == 3 )
+                {
+                    flags |= FormatFlags::ITALIC;
+                    use_flags = true;
+                }
+                else if ( i == 23 )
+                {
+                    flags &= ~FormatFlags::ITALIC;
                     use_flags = true;
                 }
                 else if ( i == 4 )
@@ -322,6 +333,8 @@ std::string FormatterConfig::format_flags(FormatFlags flags) const
         r += "b";
     if ( flags & FormatFlags::UNDERLINE )
         r += "u";
+    if ( flags & FormatFlags::ITALIC )
+        r += "i";
     return r+'#';
 }
 std::string FormatterConfig::clear() const
@@ -375,6 +388,8 @@ FormattedString FormatterConfig::decode(const std::string& source) const
                             flag |= FormatFlags::BOLD;
                         else if ( format[i] == 'u' )
                             flag |= FormatFlags::UNDERLINE;
+                        else if ( format[i] == 'i' )
+                            flag |= FormatFlags::ITALIC;
                     }
                     if ( !flag )
                         str << ClearFormatting();

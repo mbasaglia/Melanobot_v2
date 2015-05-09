@@ -62,6 +62,8 @@ std::string FormatterIrc::format_flags(string::FormatFlags flags) const
         format += "\x2";
     if ( flags & string::FormatFlags::UNDERLINE )
         format += "\x1f";
+    if ( flags & string::FormatFlags::ITALIC )
+        format += "\x1d";
     return format;
 }
 std::string FormatterIrc::clear() const
@@ -98,12 +100,13 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
         switch ( byte )
         {
             case '\2':
-                if ( !(flags & string::FormatFlags::BOLD) )
-                    flags |= string::FormatFlags::BOLD;
+                flags |= string::FormatFlags::BOLD;
                 break;
             case '\x1f':
-                if ( !(flags & string::FormatFlags::UNDERLINE) )
-                    flags |= string::FormatFlags::UNDERLINE;
+                flags |= string::FormatFlags::UNDERLINE;
+                break;
+            case '\x1d':
+                flags |= string::FormatFlags::ITALIC;
                 break;
             case '\xf':
                 flags = string::FormatFlags::NO_FORMAT;
@@ -121,7 +124,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                 str.append<string::Color>(FormatterIrc::color_from_string(match[1]));
                 break;
             }
-            case '\x1d': case '\x16':
+            case '\x16':
                 // Skip unsupported format flags
                 break;
             default:
