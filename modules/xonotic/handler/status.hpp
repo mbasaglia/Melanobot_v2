@@ -217,6 +217,7 @@ protected:
     int max_print = 6;
 };
 
+
 /**
  * \brief Manage xonotic bans
  */
@@ -226,7 +227,7 @@ public:
     XonoticBan(const Settings& settings, handler::HandlerContainer* parent)
         : ConnectionMonitor("ban", settings, parent)
     {
-        synopsis += "#-# refresh | list | rm #-i#banid#-#... |"
+        synopsis += "#-# refresh | list | rm #-i#banid#-#... | "
             "(ip #-i#address#-# | player (###-i#entity#-#|name)) [#-i#duration#-# [:#-i#reason#-#]]";
         help = "Manage xonotic bans";
     }
@@ -257,7 +258,7 @@ protected:
             return true;
         }
 
-        static std::regex regex_banmsg(
+        static std::regex regex_ban(
             //                       1=entity     2=name              3=address        4=time     5=reason
             R"((?:(?:player\s+(?:(?:#([0-9]+))|([a-zA-Z0-9]+)))|(?:ip\s+(\S+)))(?:\s+([^:]+)(?::\s*(.*))?)?)",
             // |  |           |  |   ^number^| ^-name-------^|| |       ^ip-^|||     ^time-^|reason^--^| |
@@ -266,10 +267,9 @@ protected:
             // |  ^-player------------------------------------^ ^-ip---------^|
             // ^-selection (player|ip)----------------------------------------^
             std::regex::ECMAScript|std::regex::optimize);
-        std::smatch match;
 
-        // ban
-        if ( std::regex_match(msg.message,match,regex_banmsg) )
+        std::smatch match;
+        if ( std::regex_match(msg.message,match,regex_ban) )
         {
             if ( match[1].matched || match[2].matched )
                 kickban(msg,match);
@@ -280,14 +280,15 @@ protected:
 
         reply_to(msg, "Invalid call, see help for usage"); // AKA RTFM
         return true;
-
     }
 
 private:
+    friend class XonoticKick;
+
     /**
      * \brief Finds a user to kickban
      */
-    Optional<user::User> find_user(const std::smatch& match)
+    static Optional<user::User> find_user(network::Connection*monitored, const std::smatch& match)
     {
         std::vector<user::User> users = monitored->get_users();
         auto kicked = users.end();
@@ -304,7 +305,7 @@ private:
         {
             string::FormatterAscii ascii;
             kicked = std::find_if(users.begin(),users.end(),
-                [&match,&ascii,this](const user::User& user) {
+                [&match,&ascii,monitored](const user::User& user) {
                     return monitored->encode_to(user.name,ascii)
                         .find(match[2]) == std::string::npos;
                 });
@@ -319,7 +320,7 @@ private:
      */
     void kickban(const network::Message& msg, const std::smatch& match)
     {
-        if ( auto kicked = find_user(match) )
+        if ( auto kicked = find_user(monitored,match) )
         {
             std::vector<std::string> params = {"kickban",
                 "#"+kicked->property("entity") };
@@ -386,7 +387,7 @@ private:
                 break;
             monitored->command({"rcon", {"unban","#"+id}, priority});
         }
-        reply_to(msg, "Remoing given bans");
+        reply_to(msg, "Removing given bans");
         refresh();
     }
 
@@ -421,6 +422,63 @@ private:
     }
 };
 
+/**
+ * \brief Kicks players
+ */
+class XonoticKick : public handler::ConnectionMonitor
+{
+public:
+    XonoticKick(const Settings& settings, handler::HandlerContainer* parent)
+        : ConnectionMonitor("kick", settings, parent)
+    {
+        synopsis += "#-####-i#entity#-#|name";
+        help = "Kicks a player";
+    }
+
+
+protected:
+    bool on_handle(network::Message& msg)
+    {
+        static std::regex regex_kick(
+            //               1=entity     2=name
+            R"(\s*(?:(?:#([0-9]+))|([a-zA-Z0-9]+)))",
+            //    |  |   ^number^| ^-name-------^|
+            //    |  ^-#entity---^               |
+            //    ^-player identifier------------^
+            std::regex::ECMAScript|std::regex::optimize);
+
+        std::smatch match;
+        if ( std::regex_match(msg.message,match,regex_kick) )
+            kick(msg,match);
+        else
+            reply_to(msg, "Invalid call, see help for usage"); // AKA RTFM
+
+        return true;
+    }
+
+private:
+
+    /**
+     * \brief Handles a kick
+     */
+    void kick(const network::Message& msg, const std::smatch& match)
+    {
+        if ( auto kicked = XonoticBan::find_user(monitored,match) )
+        {
+            std::vector<std::string> params = {"kick",
+                "# "+kicked->property("entity") };
+            string::FormattedString notice;
+            notice << "Kicking #" << kicked->property("entity") << " "
+                << kicked->host << " " << monitored->decode(kicked->name);
+            reply_to(msg, notice);
+            monitored->command({"rcon", params, priority});
+        }
+        else
+        {
+            reply_to(msg, "Player not found");
+        }
+    }
+};
 
 
 } // namespace xonotic

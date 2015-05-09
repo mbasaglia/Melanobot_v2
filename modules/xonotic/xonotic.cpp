@@ -54,6 +54,7 @@ Melanomodule melanomodule_xonotic()
     module.register_handler<xonotic::XonoticStatus>("XonoticStatus");
     module.register_handler<xonotic::XonoticMaps>("XonoticMaps");
     module.register_handler<xonotic::XonoticBan>("XonoticBan");
+    module.register_handler<xonotic::XonoticKick>("XonoticKick");
     
     return module;
 }
