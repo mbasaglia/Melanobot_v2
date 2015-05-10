@@ -202,16 +202,19 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
     if ( local_id.empty() )
         return {};
 
+    Lock lock(mutex);
+
     if ( local_id == "0" || local_id == "#0" )
     {
         user::User user;
         user.local_id = "0";
         user.properties["entity"] = "0";
         user.host = server_.name();
+        user.name = properties_.get("cvar.sv_adminnick","");
+        if ( user.name.empty() )
+            user.name = "(Server Admin)";
         return user;
     }
-
-    Lock lock(mutex);
 
     const user::User* user = local_id[0] == '#' ?
         user_manager.user_by_property("entity",local_id.substr(1))
@@ -326,6 +329,11 @@ void XonoticConnection::command ( network::Command cmd )
             {
                 ErrorLog("xon") << "Wrong parameters for \""+cmd.parameters[0]+"\"";
                 return;
+            }
+            if ( cmd.parameters[0] == "set" )
+            {
+                Lock lock(mutex);
+                properties_.put("cvar."+cmd.parameters[1],cmd.parameters[2]);
             }
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
@@ -680,6 +688,9 @@ void XonoticConnection::update_connection()
 
         /// \todo maybe this should be an option
         command({"rcon",{"set", "sv_logscores_bots", "1"},1024});
+
+        command({"rcon",{"alias", "Melanobot_nick_push", "set Melanobot_sv_adminnick \"$sv_adminnick\""},1024});
+        command({"rcon",{"alias", "Melanobot_nick_pop", "set sv_adminnick \"$Melanobot_sv_adminnick\"; sv_adminnick"},1024});
 
         // status: WAITING -> CONNECTING
         if ( status_ == WAITING )

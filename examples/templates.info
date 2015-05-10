@@ -128,6 +128,12 @@ Xonotic
                 RconCommand gotomap     ; "gotomap (map)" changes the map after showing the scoreboard
                 RconCommand chmap       ; "chmap (map)" changes the map immediately
                 RconCommand restart     ; "restart" restarts the match
+                Group
+                {
+                    nick "[IRC] %name"
+                    XonoticVCall        ; "vcall" calls a vote
+                    XonoticVStop        ; "vstop" stops the vote
+                }
             }
             RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
             BridgeChat                  ; Sends chat

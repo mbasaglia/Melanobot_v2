@@ -25,6 +25,19 @@
 namespace xonotic {
 
 /**
+ * \brief Sends a command overriding sv_adminnick
+ */
+inline void rcon_adminnick(network::Connection* destination,
+                           const std::vector<std::string>& command,
+                           const std::string& nick)
+{
+    destination->command({"rcon",{"Melanobot_nick_push"}});
+    destination->command({"rcon",{"set", "sv_adminnick", nick+"^3"}});
+    destination->command({"rcon",command});
+    destination->command({"rcon",{"defer 1 Melanobot_nick_pop"}});
+}
+
+/**
  * \brief Send a fixed rcon command to a Xonotic connection
  */
 class RconCommand : public handler::SimpleAction
@@ -58,6 +71,74 @@ protected:
 private:
     std::string command;        ///< Rcon command to be sent
     bool        arguments{true};///< Whether to allow command arguments
+};
+
+/**
+ * \brief Calls a vote on the server, changing the admin name
+ *        to that of the user calling the vote
+ */
+class XonoticVCall : public handler::SimpleAction
+{
+public:
+    XonoticVCall(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("vcall",settings,parent)
+    {
+        synopsis += " vote";
+        help = "Call a vote on the Xonotic server";
+        nick = settings.get("nick",nick);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        string::FormatterConfig fmt;
+        Properties props {
+            {"name",msg.source->encode_to(msg.from.name,fmt)},
+            {"local_id",msg.from.local_id},
+            {"channel",string::implode(", ",msg.channels)}
+        };
+        std::string call_nick = string::replace(nick, props, "%");
+        call_nick = fmt.decode(call_nick).encode(msg.destination->formatter());
+        rcon_adminnick(msg.destination,{"vcall",msg.message},call_nick);
+        return true;
+    }
+
+private:
+    std::string nick = "%name"; // Nick to use
+};
+
+/**
+ * \brief Stop a vote on the server, changing the admin name
+ *        to that of the user calling the vote
+ */
+class XonoticVStop : public handler::SimpleAction
+{
+public:
+    XonoticVStop(const Settings& settings, handler::HandlerContainer* parent)
+        : SimpleAction("vstop",settings,parent)
+    {
+        synopsis += " vote";
+        help = "Stop a vote on the Xonotic server";
+        nick = settings.get("nick",nick);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        string::FormatterConfig fmt;
+        Properties props {
+            {"name",msg.source->encode_to(msg.from.name,fmt)},
+            {"local_id",msg.from.local_id},
+            {"channel",string::implode(", ",msg.channels)}
+        };
+        std::string call_nick = string::replace(nick, props, "%");
+        call_nick = fmt.decode(call_nick).encode(msg.destination->formatter());
+        rcon_adminnick(msg.destination,{"vstop",msg.message},call_nick);
+        return true;
+    }
+
+private:
+    std::string nick = "%name"; // Nick to use
 };
 
 } // namespace xonotic

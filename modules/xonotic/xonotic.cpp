@@ -35,6 +35,8 @@ Melanomodule melanomodule_xonotic()
     module.register_connection<xonotic::XonoticConnection>("xonotic");
 
     module.register_handler<xonotic::RconCommand>("RconCommand");
+    module.register_handler<xonotic::XonoticVCall>("XonoticVCall");
+    module.register_handler<xonotic::XonoticVStop>("XonoticVStop");
 
     module.register_handler<xonotic::ConnectionEvents>("ConnectionEvents");
     module.register_handler<xonotic::XonoticJoinPart>("XonoticJoinPart");
