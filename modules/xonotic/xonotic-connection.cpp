@@ -109,20 +109,20 @@ XonoticConnection::XonoticConnection ( Melanobot* bot,
     }
     else if ( cmd_say_as == "sv_adminnick" )
     {
-        cmd_say =   "set Melanobot_sv_adminnick \"$sv_adminnick\";"
+        cmd_say =   "Melanobot_nick_push;"
                     "set sv_adminnick \"^3%prefix^3\";"
                     "say ^7%message;"
-                    "set sv_adminnick \"$Melanobot_sv_adminnick\"";
+                    "Melanobot_nick_pop";
 
-        cmd_say_as ="set Melanobot_sv_adminnick \"$sv_adminnick\";"
+        cmd_say_as ="Melanobot_nick_push;"
                     "set sv_adminnick \"^3%prefix^3\";"
                     "say ^7%from: %message;"
-                    "set sv_adminnick \"$Melanobot_sv_adminnick\"";
+                    "Melanobot_nick_pop";
 
-        cmd_say_action ="set Melanobot_sv_adminnick \"$sv_adminnick\";"
+        cmd_say_action ="Melanobot_nick_push;"
                     "set sv_adminnick \"^3%prefix^3\";"
                     "say ^4* ^3%from^3 %message;"
-                    "set sv_adminnick \"$Melanobot_sv_adminnick\"";
+                    "Melanobot_nick_pop";
     }
 
     add_polling_command({"rcon",{"status 1"},1024},true);
@@ -236,7 +236,7 @@ std::vector<user::User> XonoticConnection::get_users( const std::string& channel
 std::string XonoticConnection::name() const
 {
     Lock lock(mutex);
-    return properties_.get("cvar.sv_adminnick","(server admin)");
+    return properties_.get("cvar.sv_adminnick","");
 }
 
 user::UserCounter XonoticConnection::count_users(const std::string& channel) const
