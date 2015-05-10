@@ -74,7 +74,7 @@ add_executable(test_formatter EXCLUDE_FROM_ALL test_formatter.cpp
 melanotest(test_formatter)
 
 # Coverage
-add_custom_target(test
+add_custom_target(test_all
     DEPENDS ${TEST_TARGETS}
     COMMENT "Building all tests"
 )
