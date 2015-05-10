@@ -200,6 +200,9 @@ protected:
         });
     }
 
+    /**
+     * \brief Found a Vimeo video
+     */
     void vimeo_found(const network::Message& msg, const Settings& parsed)
     {
         string::FormatterConfig fmt;
@@ -217,6 +220,9 @@ protected:
         });
     }
 
+    /**
+     * \brief Found a Dailymotion video
+     */
     void dm_found(const network::Message& msg, const Settings& parsed)
     {
         if ( parsed.get_child_optional("error") )
