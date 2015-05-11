@@ -57,7 +57,6 @@ private:
 /**
  * \brief Handler showing help on the available handlers
  * \note It is trongly recommended that this is enabled
- * \todo option for inline help (synopsis+message all on the same line)
  */
 class Help : public SimpleAction
 {
@@ -68,6 +67,7 @@ public:
         help = "Shows available commands";
         synopsis += " [command|group]";
         help_group = settings.get("help_group",help_group);
+        show_inline = settings.get("inline",show_inline);
     }
 
 protected:
@@ -110,14 +110,21 @@ protected:
                     synopsis << string::FormatterConfig().decode(synopsis_string);
                 }
 
+                std::string help_raw = queried->get("help","");
+                string::FormattedString help;
+                if ( !help_raw.empty() )
+                    help << color::dark_blue << string::FormatterConfig().decode(help_raw);
+
+                if ( show_inline )
+                {
+                    synopsis << string::ClearFormatting() << ": " << help;
+                    help.clear();
+                }
+
                 reply_to(msg,synopsis);
 
-                std::string help = queried->get("help","");
                 if ( !help.empty() )
-                {
-                    reply_to(msg,string::FormattedString() << color::dark_blue
-                        << string::FormatterConfig().decode(help));
-                }
+                    reply_to(msg,help);
             }
             else
             {
@@ -135,6 +142,7 @@ protected:
 
 private:
     std::string help_group; ///< Only shows help for members of this group
+    bool        show_inline = false; ///< if true, prints a single line.
 
     /**
      * \brief Remove items the user can't perform
