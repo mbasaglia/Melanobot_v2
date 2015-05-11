@@ -84,6 +84,12 @@ public:
         Log("std",'>',1) << msg.message;
     }
 
+    LockedProperties properties() override
+    {
+        static PropertyTree props;
+        return {nullptr, &props};
+    }
+
     // dummy overrides:
     Status status() const override { return CONNECTED; }
     void connect() override {}
@@ -98,10 +104,9 @@ public:
     bool remove_from_group(const std::string&, const std::string& ) override { return false; }
     std::vector<user::User> users_in_group(const std::string&) const override { return {}; }
     std::vector<user::User> real_users_in_group(const std::string& group) const override { return {}; }
-    // maybe could be given some actual functionality:
-    LockedProperties properties() override { return {nullptr, nullptr}; }
     void command (network::Command) override {}
     user::UserCounter count_users(const std::string& channel = {}) const override { return {}; }
+    // maybe could be given some actual functionality:
     Properties message_properties() const override { return Properties{}; }
 
 private:
