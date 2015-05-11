@@ -74,8 +74,9 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        bot->populate_properties({"name","help","auth","synopsis","help_group"},
-                                 props);
+        bot->populate_properties(
+            {"name","help","auth","synopsis","help_group","channels"},
+            props);
         
         if ( cleanup(msg, props) )
         {
@@ -141,19 +142,22 @@ private:
      */
     bool cleanup(network::Message& msg, PropertyTree& properties ) const
     {
-        if ( msg.source->user_auth(msg.from.local_id,properties.get("auth","")) &&
-            properties.get("help_group",help_group) == help_group )
+        if ( !msg.source->user_auth(msg.from.local_id,properties.get("auth","")) )
+            return false;
+        if ( properties.get("help_group",help_group) != help_group )
+            return false;
+        auto channels = properties.get_optional<std::string>("channels");
+        if ( channels && !msg.source->channel_mask(msg.channels,*channels) )
+            return false;
+
+        for ( auto it = properties.begin(); it != properties.end(); )
         {
-            for ( auto it = properties.begin(); it != properties.end(); )
-            {
-                if ( !cleanup(msg,it->second) )
-                    it = properties.erase(it);
-                else
-                     ++it;
-            }
-            return true;
+            if ( !cleanup(msg,it->second) )
+                it = properties.erase(it);
+            else
+                    ++it;
         }
-        return false;
+        return true;
     }
 
     /**

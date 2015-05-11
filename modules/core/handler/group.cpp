@@ -80,6 +80,19 @@ Group::Group(const Settings& settings, handler::HandlerContainer* parent)
     add_children(settings,default_settings);
 }
 
+std::string Group::get_property ( const std::string& name ) const
+{
+    if ( name == "auth" )
+        return auth;
+    else if ( name == "name" )
+        return this->name;
+    else if ( name == "help_group" )
+        return help_group;
+    else if ( name == "channels" )
+        return channels;
+    return SimpleAction::get_property(name);
+}
+
 bool Group::can_handle(const network::Message& msg) const
 {
     return authorized(msg) && (!source || msg.source == source) &&

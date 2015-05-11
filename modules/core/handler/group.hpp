@@ -81,16 +81,7 @@ public:
 
     void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override;
 
-    std::string get_property(const std::string& name) const override
-    {
-        if ( name == "auth" )
-            return auth;
-        else if ( name == "name" )
-            return this->name;
-        else if ( name == "help_group" )
-            return help_group;
-        return SimpleAction::get_property(name);
-    }
+    std::string get_property(const std::string& name) const override;
 
     /**
      * \brief Checks if a message is authorized to be executed by this message
