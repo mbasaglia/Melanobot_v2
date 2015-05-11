@@ -255,7 +255,7 @@ public:
      * \param settings        Settings
      * \param bot             Pointer to the bot instance (cannot be null)
      * \throws ConfigurationError If the requirements stated above are not met
-     * \todo flag saying whether there must be a space after the trigger (default true)
+     * \todo flag saying whether there must be a space after the trigger (default true, except groups)
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
                  handler::HandlerContainer* parent)

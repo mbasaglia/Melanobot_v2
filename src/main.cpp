@@ -55,7 +55,7 @@ int main(int argc, char **argv)
         return exit_code;
 
     } catch ( const CriticalException& exc ) {
-        /// \todo policy on how to handle exceptions
+        /// \todo policy on how to handle exceptions (quit/restart)
         ErrorLog errlog("sys","Critical Error");
         if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": in " << exc.function << "(): ";

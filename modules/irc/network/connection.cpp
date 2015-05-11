@@ -787,7 +787,6 @@ void IrcConnection::command(network::Command cmd)
             ErrorLog("irc") << "Ill-formed MODE";
             return;
         }
-        /// \todo allow channel mode
         */
         /// \todo sanitaze the mode string
     }

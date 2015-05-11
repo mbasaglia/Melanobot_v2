@@ -741,7 +741,6 @@ void XonoticConnection::request_status()
         if ( status_ == CONNECTED )
             status_ = CHECKING;
         check_user_start();
-        /// \todo attribute holding these commands, check timeouts etc.
         for ( const auto& cmd : polling_status )
             command(cmd);
     }
