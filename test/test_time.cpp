@@ -347,14 +347,17 @@ BOOST_AUTO_TEST_CASE( test_MonthWeek_string )
 BOOST_AUTO_TEST_CASE( test_format )
 {
     DateTime time(2015,Month::APRIL,days(4),hours(15),minutes(0),seconds(0),milliseconds(5));
+    DateTime time2(2015,Month::APRIL,days(5),hours(8),minutes(0),seconds(0),milliseconds(5));
     // day
     BOOST_CHECK( format_char(time,'d') == "04" );
     BOOST_CHECK( format_char(time,'D') == "Sat" );
     BOOST_CHECK( format_char(time,'j') == "4" );
     BOOST_CHECK( format_char(time,'l') == "Saturday" );
-    BOOST_CHECK( format_char(time,'N') == "6" );  /// \todo test with sunday
+    BOOST_CHECK( format_char(time,'N') == "6" );
+    BOOST_CHECK( format_char(time2,'N') == "7" );
     BOOST_CHECK( format_char(time,'S') == "th" );
-    BOOST_CHECK( format_char(time,'w') == "6" ); /// \todo test with sunday
+    BOOST_CHECK( format_char(time,'w') == "6" );
+    BOOST_CHECK( format_char(time2,'w') == "0" );
     BOOST_CHECK( format_char(time,'z') == "93" );
     // week
     //BOOST_CHECK( format_char(time,'W') == "14" );
@@ -374,9 +377,11 @@ BOOST_AUTO_TEST_CASE( test_format )
     BOOST_CHECK( format_char(time,'A') == "PM" );
     //BOOST_CHECK( format_char(time,'B') == "625" );
     BOOST_CHECK( format_char(time,'g') == "3" );
-    BOOST_CHECK( format_char(time,'G') == "15" ); /// \todo test with hour < 10
+    BOOST_CHECK( format_char(time,'G') == "15" );
+    BOOST_CHECK( format_char(time2,'G') == "8" );
     BOOST_CHECK( format_char(time,'h') == "03" );
-    BOOST_CHECK( format_char(time,'H') == "15" ); /// \todo test with hour < 10
+    BOOST_CHECK( format_char(time,'H') == "15" );
+    BOOST_CHECK( format_char(time2,'H') == "08" );
     BOOST_CHECK( format_char(time,'i') == "00" );
     BOOST_CHECK( format_char(time,'s') == "00" );
     BOOST_CHECK( format_char(time,'u') == "005000" );
