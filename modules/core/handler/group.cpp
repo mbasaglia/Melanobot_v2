@@ -250,12 +250,12 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
-    children.push_back(std::make_unique<ListInsert>("+",child_settings,this));
-    children.push_back(std::make_unique<ListInsert>("add",child_settings,this));
-    children.push_back(std::make_unique<ListRemove>("-",child_settings,this));
-    children.push_back(std::make_unique<ListRemove>("rm",child_settings,this));
+    children.push_back(New<ListInsert>("+",child_settings,this));
+    children.push_back(New<ListInsert>("add",child_settings,this));
+    children.push_back(New<ListRemove>("-",child_settings,this));
+    children.push_back(New<ListRemove>("rm",child_settings,this));
     if ( clear )
-        children.push_back(std::make_unique<ListClear>(child_settings,this));
+        children.push_back(New<ListClear>(child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)

@@ -38,7 +38,7 @@ public:
     static std::unique_ptr<StdinConnection> create(
         Melanobot* bot, const Settings& settings, const std::string& name)
     {
-        return std::make_unique<StdinConnection>(bot,settings, name);
+        return New<StdinConnection>(bot,settings, name);
     }
 
     StdinConnection(Melanobot* bot, const Settings& settings, const std::string& name)

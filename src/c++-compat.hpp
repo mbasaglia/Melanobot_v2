@@ -60,4 +60,14 @@
 #  endif
 #endif // __has_include
 
+#include <memory>
+/**
+ * \brief Just a shorter version of std::make_unique
+ */
+template<class T, class... Args>
+auto New (Args&&... args)
+{
+    return std::make_unique<T>(std::forward<Args>(args)...);
+}
+
 #endif // CXX_COMPAT_HPP

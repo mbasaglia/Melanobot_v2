@@ -104,7 +104,7 @@ struct Melanomodule
             handler::HandlerFactory::instance().register_handler( name,
                 [] ( const Settings& settings, handler::HandlerContainer* parent )
                         -> std::unique_ptr<handler::Handler> {
-                    return std::make_unique<HandlerT>(settings,parent);
+                    return New<HandlerT>(settings,parent);
             });
         }
 };

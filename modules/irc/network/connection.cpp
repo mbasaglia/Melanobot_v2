@@ -50,7 +50,7 @@ std::unique_ptr<IrcConnection> IrcConnection::create(
         throw ConfigurationError("IRC connection with no server");
     }
 
-    return std::make_unique<IrcConnection>(bot, server, settings, name);
+    return New<IrcConnection>(bot, server, settings, name);
 }
 
 IrcConnection::IrcConnection ( Melanobot* bot, const network::Server& server,

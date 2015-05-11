@@ -66,7 +66,7 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
         throw ConfigurationError("Xonotic connection with no server");
     }
 
-    return std::make_unique<XonoticConnection>(bot, server, settings, name);
+    return New<XonoticConnection>(bot, server, settings, name);
 }
 
 XonoticConnection::XonoticConnection ( Melanobot* bot,

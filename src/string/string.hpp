@@ -351,12 +351,12 @@ public:
         int before = count * align;
         if ( before )
             elements.insert(elements.begin(),
-                std::make_unique<string::AsciiSubstring>(
+                New<string::AsciiSubstring>(
                     std::string(before,fill)
             ));
         if ( count-before )
             elements.push_back(
-                std::make_unique<string::AsciiSubstring>(
+                New<string::AsciiSubstring>(
                     std::string(count-before,fill)
             ));
 
