@@ -345,14 +345,7 @@ void IrcConnection::handle_message(network::Message msg)
             Lock lock(mutex);
             if ( strtolower(msg.from.name) == current_nick_lowecase )
                 return; // received our own message for some reason, disregard
-        }
 
-        std::string message = msg.params[1];
-
-        msg.message = message;
-
-        {
-            Lock lock(mutex);
             if ( strtolower(msg.params[0]) == current_nick_lowecase )
             {
                 msg.channels = { msg.from.local_id };
@@ -363,7 +356,8 @@ void IrcConnection::handle_message(network::Message msg)
                 msg.channels = { msg.params[0] };
             }
         }
-        msg.type = network::Message::CHAT;
+
+        msg.chat(msg.params[1]);
 
         // Handle CTCP
         if ( msg.message[0] == '\1' )
@@ -372,14 +366,13 @@ void IrcConnection::handle_message(network::Message msg)
                 std::regex_constants::syntax_option_type::optimize |
                 std::regex_constants::syntax_option_type::ECMAScript);
             std::smatch match;
-            std::regex_match(message,match,regex_ctcp);
+            std::regex_match(msg.message,match,regex_ctcp);
             msg.message.clear();
             std::string ctcp = strtoupper(match[1].str());
 
             if ( ctcp == "ACTION" )
             {
-                msg.type = network::Message::ACTION;
-                msg.message = match[2];
+                msg.action(match[2]);
             }
             else
             {
@@ -393,10 +386,11 @@ void IrcConnection::handle_message(network::Message msg)
         else
         {
             Lock lock(mutex);
+                /// \todo Case-Insensitive?
                 std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
             lock.unlock();
             std::smatch match;
-            if ( std::regex_match(message,match,regex_direct) )
+            if ( std::regex_match(msg.message,match,regex_direct) )
             {
                 msg.direct = true;
                 msg.message = match[1];

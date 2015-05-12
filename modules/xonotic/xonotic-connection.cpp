@@ -468,8 +468,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             if ( std::regex_match(msg.raw,match,regex_chat) )
             {
                 msg.from.name = match[1];
-                msg.message = match[2];
-                msg.type = network::Message::CHAT;
+                msg.chat(match[2]);
             }
         }
         // cvars

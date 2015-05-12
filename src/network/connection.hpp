@@ -199,6 +199,26 @@ struct Message
         type = DISCONNECTED;
         return *this;
     }
+
+    /**
+     * \brief Turns into a CHAT message
+     */
+    Message& chat(const std::string& message)
+    {
+        type = CHAT;
+        this->message = message;
+        return *this;
+    }
+
+    /**
+     * \brief Turns into an ACTION message
+     */
+    Message& action(const std::string& message)
+    {
+        type = ACTION;
+        this->message = message;
+        return *this;
+    }
 };
 
 /**
