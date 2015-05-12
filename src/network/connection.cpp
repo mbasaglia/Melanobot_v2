@@ -35,7 +35,7 @@ std::unique_ptr<Connection> ConnectionFactory::create(
         auto it = factory.find(protocol);
         if ( it != factory.end() )
         {
-            if ( settings.get("disabled",false) )
+            if ( !settings.get("enabled",true) )
             {
                 Log("sys",'!') << "Skipping disabled connection " << color::red << name;
                 return nullptr;

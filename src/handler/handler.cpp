@@ -51,7 +51,7 @@ std::unique_ptr<Handler> HandlerFactory::build(const std::string& handler_name,
 {
     std::string type = settings.get("type",handler_name);
 
-    if ( settings.get("disabled",false) )
+    if ( !settings.get("enabled",true) )
     {
         Log("sys",'!') << "Skipping disabled handler " << color::red << handler_name;
         return nullptr;
