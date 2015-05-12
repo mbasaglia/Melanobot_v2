@@ -53,7 +53,8 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return string::is_one_of(msg.command,{"CONNECTED","DISCONNECTED"});
+        return msg.type == network::Message::CONNECTED ||
+               msg.type == network::Message::DISCONNECTED;
     }
 
 protected:
@@ -65,7 +66,7 @@ protected:
             {"host",msg.source->encode_to(msg.source->properties().get("host"),fmt)},
             {"server",msg.source->server().name()}
         };
-        const std::string& str = msg.command == "CONNECTED" ? connect : disconnect;
+        const std::string& str = msg.type == network::Message::CONNECTED ? connect : disconnect;
         reply_to(msg,fmt.decode(string::replace(str,props,"%")));
         return true;
     }

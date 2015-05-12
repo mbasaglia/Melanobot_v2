@@ -505,7 +505,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                     {
                         check_user_end();
                         status_ = CONNECTED;
-                        virtual_message("CONNECTED");
+                        network::Message().connected().send(this,bot);
                     }
                     else
                     {
@@ -668,8 +668,7 @@ void XonoticConnection::handle_message(network::Message& msg)
         return; // don't propagate challenge messages
     }
 
-    msg.source = msg.destination = this;
-    bot->message(msg);
+    msg.send(this,bot);
 }
 
 void XonoticConnection::update_connection()
@@ -760,21 +759,12 @@ void XonoticConnection::add_polling_command(const network::Command& command, boo
     list.push_back(command);
 }
 
-
-void XonoticConnection::virtual_message(std::string command)
-{
-    network::Message msg;
-    msg.source = msg.destination = this;
-    msg.command = std::move(command);
-    bot->message(msg);
-}
-
 void XonoticConnection::close_connection()
 {
     // status: CONNECTED|CHECKING -> DISCONNECTED + message
     // status: * -> DISCONNECTED
     if ( status_ > CONNECTING )
-        virtual_message("DISCONNECTED");
+        network::Message().disconnected().send(this,bot);
     status_ = DISCONNECTED;
     if ( io.connected() )
         io.disconnect();

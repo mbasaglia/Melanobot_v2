@@ -23,6 +23,11 @@
 
 namespace irc {
 
+/**
+ * \todo Mimic interface of UdpIo and remove dependency on IrcConnection
+ * Maybe it could become TcpIo And have a separate templated? class
+ * containing TcpIo or UdpIo which handles flood settings
+ */
 Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     : irc(irc)
 {
@@ -240,8 +245,6 @@ network::Message Buffer::parse_line(const std::string& line) const
             msg.params.push_back(param);
         }
     }
-
-    msg.source = msg.destination = &irc;
 
     return msg;
 }

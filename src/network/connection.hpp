@@ -86,7 +86,6 @@ struct Message
 {
     /**
      * \brief Type of message
-     * \todo CONNECT/DISCONNECT (and issue them from IRC)
      */
     enum Type
     {
@@ -154,6 +153,14 @@ struct Message
          *      * \c message
          */
         ERROR,
+        /**
+         * \brief Connection activated
+         */
+        CONNECTED,
+        /**
+         * \brief Connection deactivated
+         */
+        DISCONNECTED,
     };
 // origin
     class Connection*        source {nullptr};     ///< Connection originating this message
@@ -170,6 +177,28 @@ struct Message
     bool                     direct{false};///< Message has been addessed to the bot directly
     user::User               from;         ///< User who created this message
     user::User               victim;       ///< User victim of this command
+
+    /**
+     * \brief Set \c source and \c destination and sends to the given bot
+     */
+    void send(Connection* from, Melanobot* to);
+
+    /**
+     * \brief Turns into a CONNECTED message
+     */
+    Message& connected()
+    {
+        type = CONNECTED;
+        return *this;
+    }
+    /**
+     * \brief Turns into a DISCONNECTED message
+     */
+    Message& disconnected()
+    {
+        type = DISCONNECTED;
+        return *this;
+    }
 };
 
 /**

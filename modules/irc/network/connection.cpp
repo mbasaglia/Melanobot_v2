@@ -128,6 +128,7 @@ void IrcConnection::disconnect(const std::string& message)
         buffer.disconnect();
     Lock lock(mutex);
     connection_status = DISCONNECTED;
+    network::Message().disconnected().send(this,bot);
     current_nick = "";
     current_server = main_server;
     properties_.erase("005");
@@ -257,6 +258,7 @@ void IrcConnection::handle_message(network::Message msg)
             scheduled_commands.swap(missed_commands);
         lock.unlock();
         connection_status = CONNECTED;
+        msg.connected();
         auth();
         for ( auto& c : missed_commands )
         {
@@ -669,7 +671,7 @@ void IrcConnection::handle_message(network::Message msg)
      * 502
      */
 
-    bot->message(msg);
+    msg.send(this,bot);
 }
 
 void IrcConnection::command(network::Command cmd)
