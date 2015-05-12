@@ -189,10 +189,12 @@ Xonotic
 }
 
 ; Basic IRC functionality
-IrcBase
+IrcCore
 {
     @irc                                ; Connection to act upon
     @admin      admin                   ; User group required to trigger admin functionality
+    @direct     1                       ; Whether explicit commands must be direct
+    @trigger                            ; Trigger prefix for explicit commands
     type        Group
 
     source      @irc
@@ -201,10 +203,6 @@ IrcBase
     FilterGroup { ignore banned }       ; Ignore banned users
 
     Whois330                            ; Parse WHOIS reply to find logged-in users
-    WhoisCheckMe                        ; "checkme" makes the bot check if you are logged in
-    {
-        direct 1
-    }
 
     Ctcp                                ; Basic CTCP functionality
 
@@ -217,7 +215,7 @@ IrcBase
         AcceptInvite                    ; Admins can INVITE the bot to a channel
         Group
         {
-            direct          1
+            direct          @direct
             priority        100
 
             Quit                        ; "quit" Quits the bot
@@ -234,6 +232,15 @@ IrcBase
             }
             ServerHost                  ; "server" Shows the current IRC server
         }
+    }
+
+    Group                               ; Commands available to everyone
+    {
+        direct          @direct
+        trigger         @trigger
+        WhoisCheckMe                    ; "checkme" Makes the bot check if you are logged in
+        License                         ; "license" Shows license info (Note: Required by the AGPL
+        Help { public 0 }               ; "help" Shows help on available commands
     }
 }
 

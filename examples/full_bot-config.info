@@ -149,36 +149,20 @@ handlers
     ; Loads the basic IRC functionality
     Template
     {
-        template        IrcBase
+        template        IrcCore
         irc             irc_quakenet
     }
 
     ; Add extra functionality to IRC
-    ; Note: while most of these aren't required, some of them should be enabled (Read below)
     Group
     {
         source          irc_quakenet
         help_group      irc_quakenet
 
-        ; Various search services
-        Group
-        {
-            name    searching
-
-            SearchImageGoogle
-            UrbanDictionary
-            SearchWebSearx
-            Time
-        }
-
         ; Misc actions
         Group
         {
             direct      1
-
-            ; IMPORTANT: License **MUST** be enabled, Help is strongly recommended
-            License
-            Help { public 0 }
 
             ; Funny stuff
             Group
@@ -213,6 +197,25 @@ handlers
         IrcKickRejoin
         {
             ;message "HAHAHA! You can't get rid of me so easily %kicker!" ; Sassy response
+        }
+
+        ; Various search services
+        Group
+        {
+            name    searching
+
+;             SearchVideoYoutube  ; "video" Searches for a youtube video (Note: requires a (free) API Key)
+;             {
+;                 yt_api_key "Your YouTube Data API Key"
+;             }
+            SearchImageGoogle   ; "image" Searches for an image using Google
+            UrbanDictionary     ; "define" Searches on Urban Dictionary
+            SearchWebSearx      ; "search" Searches for web pages with Searx
+            Time                ; "time" Shows the current time (UTC)
+            VideoInfo           ; This shows info (Like title and similar) on video links
+            {                   ; Supports Dailymotion, Vimeo and YouTube
+                ; yt_api_key "Your YouTube Data API Key" ; YouTube needs an API Key
+            }
         }
     }
 }
