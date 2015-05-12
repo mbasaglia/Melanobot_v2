@@ -195,6 +195,7 @@ IrcCore
     @admin      admin                   ; User group required to trigger admin functionality
     @direct     1                       ; Whether explicit commands must be direct
     @trigger                            ; Trigger prefix for explicit commands
+
     type        Group
 
     source      @irc
@@ -244,6 +245,49 @@ IrcCore
     }
 }
 
+; Q bot functionality
+IrcQuakeNet
+{
+    @irc                                ; Connection to act upon
+    @nick                               ; Nickname to auth as, if empty uses the bot's nick
+    @password                           ; Q Password
+
+    type        Group
+    source      @irc
+
+    ; This recognizes authed users on Quakenet automatically,
+    ; For this to work, the bot needs to be authed and have at least
+    ; +k on the channel it will have to join on startup
+    QWhois
+
+    ; Authenticates to Q
+    IrcIdentify
+    {
+        nick        @nick
+        password    @password
+        service     Q@CServe.quakenet.org
+        command     AUTH
+        modes       "+x"
+    }
+}
+
+; NickServ functionality
+IrcNickServ
+{
+    @irc                                ; Connection to act upon
+    @nick                               ; Nickname to auth as, if empty uses the bot's nick
+    @password                           ; NickServ Password
+
+    type        Group
+    source      @irc
+
+    ; Identifies to NickServ
+    IrcIdentify
+    {
+        nick        @nick
+        password    @password
+    }
+}
 
 ; Standard input actions
 ; Requires the Posix module to have been enabled explicitly

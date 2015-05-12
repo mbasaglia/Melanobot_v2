@@ -24,14 +24,6 @@
 
 namespace irc {
 
-LoginInfo::LoginInfo(const Settings& settings, const std::string& default_nick)
-{
-    nick        = settings.get("nick",default_nick);
-    password    = settings.get("password","");
-    service     = settings.get("service","");
-    command     = settings.get("command","");
-}
-
 std::unique_ptr<IrcConnection> IrcConnection::create(
     Melanobot* bot, const Settings& settings, const std::string& name)
 {
@@ -75,9 +67,7 @@ void IrcConnection::read_settings(const Settings& settings)
     main_server.port = settings.get("server.port",main_server.port);
 
     preferred_nick   = settings.get("nick","PleaseNameMe");
-    modes            = settings.get("modes",std::string());
-
-    login_info = LoginInfo(settings.get_child("login",{}),preferred_nick);
+    properties_.put("config.nick",preferred_nick);
 
     formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
     connection_status = DISCONNECTED;
@@ -254,12 +244,18 @@ void IrcConnection::handle_message(network::Message msg)
             current_server.host = msg.from.name;
             current_nick_lowecase = strtolower(current_nick);
             // copy so we can unlock before command()
-            std::list<network::Command> missed_commands;
-            scheduled_commands.swap(missed_commands);
         lock.unlock();
         connection_status = CONNECTED;
         msg.connected();
-        auth();
+    }
+    else if ( msg.command == "002" )
+    {
+        // these could be executed on 001, but this gives time to
+        // messages triggered on CONNECTED to take over if needed
+        Lock lock(mutex);
+            std::list<network::Command> missed_commands;
+            scheduled_commands.swap(missed_commands);
+        lock.unlock();
         for ( auto& c : missed_commands )
         {
             c.timein = network::Clock::now();
@@ -898,7 +894,6 @@ void IrcConnection::command(network::Command cmd)
     buffer.insert(cmd);
 }
 
-
 void IrcConnection::say ( const network::OutputMessage& message )
 {
     string::FormattedString str;
@@ -972,15 +967,6 @@ void IrcConnection::login()
         command({"PASS",{server_password},1024});
     command({"NICK",{preferred_nick},1024});
     command({"USER",{preferred_nick, "0", preferred_nick, preferred_nick},1024});
-}
-
-void IrcConnection::auth()
-{
-    if ( login_info.can_auth() )
-        command(login_info.irc_command(1024));
-    if ( !modes.empty() )
-        command({"MODE",{current_nick, modes},1024});
-
 }
 
 

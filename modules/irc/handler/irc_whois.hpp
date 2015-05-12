@@ -190,6 +190,47 @@ private:
     std::string sources_url;
 };
 
+/**
+ * \brief Log in to an authentication service on connect
+ */
+class IrcIdentify : public ::handler::Handler
+{
+public:
+    IrcIdentify(const Settings& settings, ::handler::HandlerContainer* parent)
+        : Handler(settings,parent)
+    {
+        if ( !settings.get_optional<int>("priority") )
+            priority = 2048; // higher than 1024 used by IrcConnection
+        nick        = settings.get("nick",nick);
+        password    = settings.get("password",password);
+        service     = settings.get("service",service);
+        command     = settings.get("command",command);
+        modes       = settings.get("modes",modes);
+        if ( password.empty() || service.empty() || command.empty() )
+            throw ConfigurationError();
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.type == network::Message::CONNECTED;
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string auth_nick = nick.empty() ? msg.source->properties().get("config.nick") : nick;
+        msg.destination->command({"PRIVMSG",{service,command+' '+auth_nick+' '+password},priority});
+        if ( !modes.empty() )
+            msg.destination->command({"MODE",{msg.source->name(), modes},priority});
+        return true;
+    }
+
+    std::string nick;                   ///< Nick used to log in
+    std::string password;               ///< Password used to log in
+    std::string service="NickServ";     ///< Service used to log in
+    std::string command="IDENTIFY";     ///< Command used to log in
+    std::string modes;                  ///< Modes to set after logging in
+};
 
 } // namespace handler
 } // namespace irc

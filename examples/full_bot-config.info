@@ -57,15 +57,6 @@ connections
         protocol        irc          ; required (fixed string)
         nick            MyAwesomeBot ; required IRC Nick
         string_format   irc_white
-        ; Q AUTH information
-        ;login
-        ;{
-        ;    nick        MyAwesomeBot
-        ;    password    "MyAwesomePassword"
-        ;    service     Q@CServe.quakenet.org
-        ;    command     AUTH
-        ;}
-        ;modes           "+x"
 
         channels        "#channel1 #channel2"  ; Channels to be joined
         notice          1                       ; If 1 private message are sent as NOTICEs
@@ -112,24 +103,29 @@ handlers
         template        Stdin
     }
 
-    ; Adds IRC functionality executed before other IRC actions
-    Group
+    ; Loads the basic IRC functionality
+    Template
     {
-        source          irc_quakenet
-        help_group      irc_quakenet
-
-        ; This recognizes authed users on Quakenet automatically,
-        ; For this to work, the bot needs to be authed and have at least
-        ; +k on the channel it will have to join on startup
-        QWhois
-
-        ; If you want the bot to say something when it joins a channel
-        ;JoinMessage
-        ;{
-        ;    message     "Hello, I'm a nice bot"
-        ;    discard_others     1
-        ;}
+        template        IrcCore
+        irc             irc_quakenet
     }
+
+;     ; Q AUTH information
+;     Template
+;     {
+;         template        IrcQuakeNet
+;         irc             irc_quakenet
+;         nick            MyAwesomeBot          ; Can be omitted if the same as the bot's nick
+;         password        "MyAwesomePassword"
+;     }
+;     ; NickServ Identify information
+;     Template
+;     {
+;         template        IrcNickServ
+;         irc             irc_quakenet
+;         nick            MyAwesomeBot          ; Can be omitted if the same as the bot's nick
+;         password        "MyAwesomePassword"
+;     }
 
     ; Creates a bridge between IRC and a Xonotic server
     Template
@@ -146,18 +142,18 @@ handlers
         ; irc irc_quakenet
     }
 
-    ; Loads the basic IRC functionality
-    Template
-    {
-        template        IrcCore
-        irc             irc_quakenet
-    }
-
     ; Add extra functionality to IRC
     Group
     {
         source          irc_quakenet
         help_group      irc_quakenet
+
+        ; If you want the bot to say something when it joins a channel
+        ;JoinMessage
+        ;{
+        ;    message             "'sup guys?"
+        ;    discard_others      1
+        ;}
 
         ; Misc actions
         Group

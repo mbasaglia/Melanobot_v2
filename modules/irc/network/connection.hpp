@@ -37,48 +37,6 @@
 namespace irc {
 
 /**
- * \brief IRC log-in system
- */
-struct LoginInfo
-{
-    std::string nick;           ///< Nick used to log in
-    std::string password;       ///< Password used to log in
-    std::string service;        ///< Service used to log in
-    std::string command;        ///< Command used to log in
-
-    LoginInfo(){}
-    /**
-     * \brief Read from settings
-     */
-    explicit LoginInfo(const Settings& settings, const std::string& nick="");
-
-    LoginInfo(const LoginInfo&) = default;
-    LoginInfo(LoginInfo&&) noexcept = default;
-    LoginInfo& operator=(const LoginInfo&) = default;
-    LoginInfo& operator=(LoginInfo&&) /*noexcept(std::is_nothrow_move_assignable<std::string>::value)*/ = default;
-
-    /**
-     * \brief Whether it has all the required information to auth
-     */
-    bool can_auth() const
-    {
-        return !nick.empty() && !password.empty() &&
-               !service.empty() && !command.empty();
-    }
-
-    /**
-     * \brief Builds the auth command
-     *
-     * PRIVMSG \c service :\c command \c nick \c password
-     */
-    network::Command irc_command(int priority) const
-    {
-        return {"PRIVMSG",{service,command+' '+nick+' '+password},priority};
-    }
-};
-
-
-/**
  * \brief IRC connection
  */
 class IrcConnection : public network::Connection
@@ -330,14 +288,6 @@ private:
      * \brief Nick used by the latest NICK command
      */
     std::string attempted_nick;
-    /**
-     * \brief System used to log in
-     */
-    LoginInfo login_info;
-    /**
-     * \brief Modes to set after logging in
-     */
-    std::string modes;
     /**
      * \brief Whether private messages to other users shall be done via "NOTICE"
      *        instead than "PRIVMSG"

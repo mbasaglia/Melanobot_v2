@@ -56,6 +56,7 @@ Melanomodule melanomodule_irc()
     module.register_handler<irc::handler::QGetWhois>("QGetWhois");
     module.register_handler<irc::handler::QWhois>("QWhois");
     module.register_handler<irc::handler::WhoisCheckMe>("WhoisCheckMe");
+    module.register_handler<irc::handler::IrcIdentify>("IrcIdentify");
 
     return module;
 }
