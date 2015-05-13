@@ -209,10 +209,10 @@ handlers
             UrbanDictionary     ; "define" Searches on Urban Dictionary
             SearchWebSearx      ; "search" Searches for web pages with Searx
             Time                ; "time" Shows the current time (UTC)
-            VideoInfo           ; This shows info (Like title and similar) on video links
-            {                   ; Supports Dailymotion, Vimeo and YouTube
-                ; yt_api_key "Your YouTube Data API Key" ; YouTube needs an API Key
-            }
+        }
+        VideoInfo           ; This shows info (Like title and similar) on video links
+        {                   ; Supports Dailymotion, Vimeo and YouTube
+            ; yt_api_key "Your YouTube Data API Key" ; YouTube needs an API Key
         }
     }
 }
