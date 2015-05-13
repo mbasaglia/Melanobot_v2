@@ -198,7 +198,8 @@ handlers
         ; Various search services
         Group
         {
-            name    searching
+            name        searching
+            direct      1
 
 ;             SearchVideoYoutube  ; "video" Searches for a youtube video (Note: requires a (free) API Key)
 ;             {
