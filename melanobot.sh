@@ -72,6 +72,13 @@ error()
     exit 1
 }
 
+# Checks whether the bot appears to be running
+is_running()
+{
+    local pidfile="$(tmp_dir)/pid"
+    [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null
+}
+
 # Runs the bot (blocking)
 # Accepts arguments passed to the executable
 melanobot_run()
@@ -83,11 +90,16 @@ melanobot_run()
     local input="$(tmp_dir)/input"
     # Action file for looping
     local action="$(tmp_dir)/action"
+    # Pid file to recognize the process running the server
+    local pid="$(tmp_dir)/pid"
 
-    [ -p "$input" ] && error "$MELANOBOT_EXECUTABLE is already running"
+    is_running && error "$MELANOBOT_EXECUTABLE is already running"
 
     # Create a named pipe
     mkfifo "$input"
+
+    # Create file with the process id
+    echo $$ >"$pid"
 
     # Loop forever
     while :
@@ -106,6 +118,7 @@ melanobot_run()
                     # Exit, we remove the file and exit
                     rm "$action"
                     rm "$input"
+                    rm "$pid"
                     exit 0
                     ;;
                 loop)
@@ -114,12 +127,14 @@ melanobot_run()
                 *)
                     # Error, unknown action
                     rm "$input"
+                    rm "$pid"
                     error "Unknown loop action"
                     ;;
             esac
         else
             # No special action, therefore we exit
             rm "$input"
+            rm "$pid"
             exit 0
         fi
     done
@@ -133,7 +148,7 @@ melanobot_start()
 {
     # Pipe file for input
     local input="$(tmp_dir)/input"
-    [ -p "$input" ] && error "$MELANOBOT_EXECUTABLE is already running"
+    is_running && error "$MELANOBOT_EXECUTABLE is already running"
 
     if [ "$1" = loop ]
     then
@@ -146,13 +161,19 @@ melanobot_start()
 # Stops the bot
 melanobot_stop()
 {
-    # Pipe file for input
-    local input="$(tmp_dir)/input"
-
-    if [ -p "$input" ]
+    if is_running
     then
         echo quit >"$(tmp_dir)/action"
-        echo quit >"$input"
+        echo quit >"$(tmp_dir)/input"
+        sleep 1
+        if is_running
+        then
+            error_log "Didn't close cleanly"
+            kill -9 "$(cat "$(tmp_dir)/pid")"
+            rm -f "$(tmp_dir)/pid" "$(tmp_dir)/input"
+        else
+            echo "$MELANOBOT_EXECUTABLE exited cleanly"
+        fi
     else
         error "$MELANOBOT_EXECUTABLE isn't running" 1>&2
     fi
@@ -163,7 +184,7 @@ melanobot_restart()
 {
     # Pipe file for input
     local input="$(tmp_dir)/input"
-    [ -p "$input" ] && melanobot_stop
+    is_running && melanobot_stop
     rm -f "$input"
     melanobot_start
 }
