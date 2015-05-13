@@ -294,7 +294,9 @@ IrcNickServ
 Stdin
 {
     @name       stdin   ; Connection name
+    @file               ; File to read from (defaults to stdin)
     @destination        ; Default bridged connection
+
     type        Group
 
     ; Allows to control the bot from standard input
@@ -302,6 +304,7 @@ Stdin
     Connection
     {
         protocol        stdin
+        file            @file
         name            @name
     }
 
@@ -341,5 +344,26 @@ Stdin
                 from            ""
             }
         }
+    }
+}
+
+; This is here to be used with melanobot.sh
+; Requires the Posix module to have been enabled explicitly
+Pipe
+{
+    @file                       ; File to read from
+    @name               pipe    ; Connection name
+    type                Group
+    help_group          @name
+    Connection
+    {
+        protocol        stdin
+        name            @name
+        file            @file
+    }
+    Group
+    {
+        source          @name
+        Quit
     }
 }

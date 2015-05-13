@@ -103,6 +103,15 @@ handlers
         template        Stdin
     }
 
+    ; This is here to be used with melanobot.sh
+    ; Requires the Posix module to have been enabled explicitly
+    Pipe
+    {
+        enabled         0
+        type            Template
+        template        Pipe
+    }
+
     ; Loads the basic IRC functionality
     Template
     {

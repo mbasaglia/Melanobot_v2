@@ -26,11 +26,14 @@
 #include <memory>
 #include <thread>
 
+#include <fcntl.h>
+#include <unistd.h>
+
 #include "melanobot.hpp"
 #include "network/connection.hpp"
 
 /**
- * \brief Acts as a network connection to handle standard input
+ * \brief Acts as a network connection to handle standard input (or any file)
  */
 class StdinConnection : public network::Connection
 {
@@ -42,8 +45,13 @@ public:
     }
 
     StdinConnection(Melanobot* bot, const Settings& settings, const std::string& name)
-        : Connection(name), bot(bot)
+        : Connection(name), bot(bot), input{io_service}
     {
+        std::string filename = settings.get("file","");
+        int file = open_file(filename);
+        if ( file < 0 )
+            throw ConfigurationError("Cannot open "+filename);
+        input = boost::asio::posix::stream_descriptor(io_service,file);
         formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("utf8")));
     }
 
@@ -56,6 +64,8 @@ public:
     void stop() override
     {
         io_service.stop();
+        if ( input.native_handle() > 0 )
+            close(input.native_handle());
         if ( thread.joinable() )
             thread.join();
     }
@@ -114,7 +124,7 @@ private:
     string::Formatter*                    formatter_;
     boost::asio::streambuf                buffer_read;
     boost::asio::io_service               io_service;
-    boost::asio::posix::stream_descriptor input {io_service, STDIN_FILENO};
+    boost::asio::posix::stream_descriptor input;
     std::thread                           thread;
 
     void run()
@@ -161,4 +171,14 @@ private:
         schedule_read();
     }
 
+    /**
+     * \brief Opens a file descriptor
+     */
+    static int open_file(const std::string& name)
+    {
+        if ( name.empty() || name == "stdin" || name == "/dev/stdin" )
+            return STDIN_FILENO;
+        // O_RDWR so that named pipes don't have to block until a writer arrives
+        return open(name.c_str(), O_RDWR);
+    }
 };
