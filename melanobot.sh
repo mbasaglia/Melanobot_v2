@@ -24,7 +24,6 @@
 #
 #     Pipe
 #     {
-#         enabled         0
 #         type            Template
 #         template        Pipe
 #     }
