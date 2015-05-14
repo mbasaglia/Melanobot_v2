@@ -131,7 +131,12 @@ Settings settings::initialize ( int argc, char** argv )
     for ( const auto& opt : parsed.options )
     {
         if ( opt.unregistered && !opt.value.empty() )
-            settings.put(opt.string_key,opt.value.front());
+        {
+            if ( string::starts_with(opt.string_key,"settings.") )
+                global_settings.put(opt.string_key,opt.value.front());
+            else
+                settings.put(opt.string_key,opt.value.front());
+        }
     }
 
     debug = settings.get("log.debug", debug);

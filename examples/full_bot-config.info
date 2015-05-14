@@ -107,7 +107,6 @@ handlers
     ; Requires the Posix module to have been enabled explicitly
     Pipe
     {
-        enabled         0
         type            Template
         template        Pipe
     }

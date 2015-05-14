@@ -66,6 +66,7 @@ Melanomodule melanomodule_core()
 
     module.register_handler<handler::Group>("Group");
     module.register_handler<handler::Multi>("Multi");
+    module.register_handler<handler::IfSet>("IfSet");
 
     return module;
 }

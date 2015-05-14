@@ -43,6 +43,24 @@ void AbstractGroup::add_children(Settings child_settings,
     }
 }
 
+void AbstractGroup::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
+{
+    Handler::populate_properties(properties, output);
+
+    for ( unsigned i = 0; i < children.size(); i++ )
+    {
+        PropertyTree child;
+        children[i]->populate_properties(properties,child);
+        if ( !child.empty() || !child.data().empty() )
+        {
+            std::string name = children[i]->get_property("name");
+            if ( name.empty() )
+                name = std::to_string(i);
+            output.put_child(name,child);
+        }
+    }
+}
+
 Group::Group(const Settings& settings, handler::HandlerContainer* parent)
     : AbstractGroup("",settings,parent)
 {
@@ -106,24 +124,6 @@ bool Group::on_handle(network::Message& msg)
         if ( h->handle(msg) && !pass_through )
             return true;
     return false;
-}
-
-void Group::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const
-{
-    Handler::populate_properties(properties, output);
-
-    for ( unsigned i = 0; i < children.size(); i++ )
-    {
-        PropertyTree child;
-        children[i]->populate_properties(properties,child);
-        if ( !child.empty() || !child.data().empty() )
-        {
-            std::string name = children[i]->get_property("name");
-            if ( name.empty() )
-                name = std::to_string(i);
-            output.put_child(name,child);
-        }
-    }
 }
 
 /**
@@ -339,6 +339,30 @@ bool Multi::on_handle ( network::Message& msg )
                 handled = true;
     }
     return handled;
+}
+
+IfSet::IfSet (const Settings& settings, HandlerContainer* parent)
+        : AbstractGroup("",settings,parent)
+{
+    std::string key = settings.get("key","");
+    if ( key.empty() )
+        throw ConfigurationError();
+
+    auto expected = settings.get_optional<std::string>("value");
+    auto value = settings::global_settings.get_optional<std::string>(key);
+    Optional<std::string> message;
+
+    if ( value == expected )
+    {
+        message = settings.get_optional<std::string>("log_true");
+        add_children(settings);
+    }
+    else
+    {
+        message = settings.get_optional<std::string>("log_false");
+    }
+    if ( message )
+        Log("sys",'!') << string::FormatterConfig().decode(*message);
 }
 
 } // namespace handler

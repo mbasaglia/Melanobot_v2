@@ -105,7 +105,11 @@ melanobot_run()
     while :
     do
         # Run the bot
-        "$MELANOBOT_BIN_DIR/$MELANOBOT_EXECUTABLE" $@ --handlers.Pipe.enabled=1 --handlers.Pipe.file="$input"
+        "$MELANOBOT_BIN_DIR/$MELANOBOT_EXECUTABLE" $@ \
+            --settings.melanobot_sh=1 \
+            --settings.tmp_dir="$(tmp_dir)" \
+            --handlers.Pipe.file="$input"
+
         # Check for an action file
         if [ -f "$action" ]
         then

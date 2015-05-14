@@ -219,7 +219,6 @@ IrcCore
             direct          @direct
             priority        100
 
-            Quit                        ; "quit" Quits the bot
             Reconnect                   ; "reconnect" Reconnects to the IRC server
             Nick                        ; "nick (newnick)" Changes the bot nick
             Join                        ; "join #channel" Makes the bot join the channel
@@ -232,6 +231,11 @@ IrcCore
                 ignore owner
             }
             ServerHost                  ; "server" Shows the current IRC server
+            IfSet { ; Conditional because if melanobot.sh is being used, there is a different quit handler
+                key     settings.melanobot_sh
+                Quit                    ; "quit" Quits the bot
+            }
+            Template { template MelanobotSh } ; Conditionally load handlers useful when using melanobot.sh
         }
     }
 
@@ -314,8 +318,12 @@ Stdin
 
         Group {
             trigger     "/"
-            Quit                            ; /quit shuts down the bot
-            Help                            ; /help shows available actions
+            Help                                ; /help shows available actions
+            Template { template MelanobotSh }   ; Conditionally load handlers useful when using melanobot.sh
+            IfSet {
+                key     settings.melanobot_sh
+                Quit                            ; /quit shuts down the bot
+            }
         }
 
         ; Creates a detachable bridge to a connection
@@ -349,12 +357,38 @@ Stdin
 
 ; This is here to be used with melanobot.sh
 ; Requires the Posix module to have been enabled explicitly
+MelanobotSh
+{
+    type                IfSet
+    key                 settings.melanobot_sh
+    value               1
+    log_true            "#magenta#Actions for melanobot.sh activated"
+
+    MelanobotShAction           ; "loop" enables auto-restart
+    {
+        action  loop
+    }
+    MelanobotShAction           ; "noloop" disables auto-restart
+    {
+        trigger noloop
+        action  quit
+    }
+    MelanobotShRestart          ; "restart" restarts the bot
+    MelanobotShQuit             ; "quit" quits the bot
+}
+
+; This is here to be used with melanobot.sh
+; Requires the Posix module to have been enabled explicitly
 Pipe
 {
     @file                       ; File to read from
     @name               pipe    ; Connection name
-    type                Group
-    help_group          @name
+
+    type                IfSet
+    key                 settings.melanobot_sh
+    value               1
+    log_true            "#magenta#Pipe listener activated"
+
     Connection
     {
         protocol        stdin
@@ -363,7 +397,9 @@ Pipe
     }
     Group
     {
+        help_group      @name
         source          @name
         Quit
+        MelanobotShRestart
     }
 }

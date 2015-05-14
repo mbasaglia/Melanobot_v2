@@ -48,6 +48,8 @@ public:
             h->finalize();
     }
 
+    void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override;
+
 protected:
     bool on_handle(network::Message& msg) override
     {
@@ -78,8 +80,6 @@ public:
     Group(const Settings& settings, handler::HandlerContainer* parent);
 
     bool can_handle(const network::Message& msg) const override;
-
-    void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override;
 
     std::string get_property(const std::string& name) const override;
 
@@ -202,6 +202,16 @@ protected:
 
 private:
     std::vector<std::string> prefixes;
+};
+
+/**
+ * \brief Group that gets enabled only if a global config value has a certain value
+ */
+class IfSet : public AbstractGroup
+{
+public:
+    IfSet (const Settings& settings, HandlerContainer* parent);
+
 };
 
 } // namespace handler

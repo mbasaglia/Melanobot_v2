@@ -18,6 +18,9 @@
  */
 #include <boost/asio.hpp>
 
+#ifndef POSIX_STDIN_HPP
+#define POSIX_STDIN_HPP
+
 #ifndef BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR
 #       error "The posix module requires a POSIX-conformant system"
 #endif
@@ -32,6 +35,7 @@
 #include "melanobot.hpp"
 #include "network/connection.hpp"
 
+namespace posix {
 /**
  * \brief Acts as a network connection to handle standard input (or any file)
  */
@@ -182,3 +186,6 @@ private:
         return open(name.c_str(), O_RDWR);
     }
 };
+} // namespace posix
+
+#endif // POSIX_STDIN_HPP

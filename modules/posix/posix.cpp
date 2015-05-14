@@ -19,13 +19,17 @@
 
 #include "stdin.hpp"
 #include "melanomodule.hpp"
+#include "handlers.hpp"
 /**
  * \brief POSIX module initialization
  */
 Melanomodule melanomodule_posix()
 {
     Melanomodule module{"posix","POSIX extensions"};
-    module.register_connection<StdinConnection>("stdin");
+    module.register_connection<posix::StdinConnection>("stdin");
+    module.register_handler<posix::MelanobotShAction>("MelanobotShAction");
+    module.register_handler<posix::MelanobotShRestart>("MelanobotShRestart");
+    module.register_handler<posix::MelanobotShQuit>("MelanobotShQuit");
     module.register_log_type("std",color::white);
     return module;
 }
