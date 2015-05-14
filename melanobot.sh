@@ -44,6 +44,9 @@ declare MELANOBOT_EXECUTABLE="melanobot"
 declare MELANOBOT_TMP_DIR="/tmp/.melanobot"
 # Bot identifier
 declare MELANOBOT_BOT_ID="$USER"
+# Tmux session
+declare MELANOBOT_TMUX_SESSION="bot"
+
 # Directory of this script file
 SELFDIR=$(dirname $(readlink -se "${BASH_SOURCE[0]}"))
 
@@ -147,7 +150,6 @@ melanobot_run()
 # Starts the bot (non-blocking)
 # Accepts arguments passed to the executable
 # If the first argument is "loop", it will call melanobot_loop
-# TODO tmux
 melanobot_start()
 {
     # Pipe file for input
@@ -159,7 +161,14 @@ melanobot_start()
         shift
         melanobot_loop
     fi
-    melanobot_run $@ &
+
+    # TODO pass on the MELANOBOT_* variables
+    if tmux new -d -s "$MELANOBOT_TMUX_SESSION" "\"$0\" run $@"
+    then
+        echo "Bot started"
+    else
+        error "Bot starting failed"
+    fi
 }
 
 # Stops the bot
@@ -251,6 +260,19 @@ melanobot_configure()
     fi
     cd "$MELANOBOT_BUILD_DIR"
     cmake $@ "$MELANOBOT_SRC_DIR"
+}
+
+# Attaches to the tmux session
+melanobot_attach()
+{
+    is_running || error "Bot isn't running"
+
+    if tmux has -t "$MELANOBOT_TMUX_SESSION"
+    then
+        tmux attach -t "$MELANOBOT_TMUX_SESSION"
+    else
+        error "Bot is running but not in the tmux session \"$MELANOBOT_TMUX_SESSION\""
+    fi
 }
 
 # Shows help
