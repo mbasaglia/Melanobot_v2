@@ -46,15 +46,21 @@ log
     }
 }
 
-; Sets up the connections
-connections
+; Defines reusable definitions which can be repeated
+templates
+{
+    #include "examples/templates.info"
+}
+; Defines connections and handlers
+bot
 {
     ; Creates an irc connection (To QuakeNet in this example)
     ; The connection name (irc_quakenet) is used to recognize the connection
     ; later on, so give simple meaningful names
-    irc_quakenet
+    Connection
     {
-        protocol        irc          ; required (fixed string)
+        name            irc_quakenet ; required, must be unique
+        protocol        irc          ; required
         nick            MyAwesomeBot ; required IRC Nick
         string_format   irc_white
 
@@ -85,17 +91,7 @@ connections
             user         "a b"   ; This user is assigned to 2 groups
         }
     }
-}
 
-; Defines reusable definitions which can be repeated
-templates
-{
-    #include "examples/templates.info"
-}
-
-; Defines handlers
-handlers
-{
     ; Allows to control the bot from standard input
     ; Requires the Posix module to have been enabled explicitly
     Template

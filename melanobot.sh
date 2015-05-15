@@ -20,7 +20,7 @@
 # Bot launcher script.
 #
 # In order for this to work properly, the POSIX module must have be enabled and
-# the bot configuration needs to have the following code inside "handlers":
+# the bot configuration needs to have the following code inside "bot":
 #
 #     Pipe
 #     {

@@ -22,14 +22,9 @@
 
 Melanobot::Melanobot(const Settings& settings)
 {
-    for(const auto& pt : settings.get_child("connections",{}))
-    {
-        add_connection(pt.first,pt.second);
-    }
-
     templates = settings.get_child("templates",{});
 
-    for(const auto& pt : settings.get_child("handlers",{}))
+    for(const auto& pt : settings.get_child("bot",{}))
     {
         auto hand = handler::HandlerFactory::instance().build(pt.first,pt.second,this);
         if ( hand )
