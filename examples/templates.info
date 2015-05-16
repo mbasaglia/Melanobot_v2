@@ -134,6 +134,9 @@ Xonotic
                     XonoticVCall        ; "vcall" calls a vote
                     XonoticVStop        ; "vstop" stops the vote
                 }
+                Connect                 ; "connect" activates the attached connection
+                Disconnect              ; "disconnect" deactivates the attached connection
+                Reconnect               ; "reconnect" reconnects the attached connection
             }
             RainbowBridgeChat { auth rainbow } ; If you want some users to have their chat shown in rainbows
             BridgeChat                  ; Sends chat
