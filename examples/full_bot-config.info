@@ -191,11 +191,13 @@ bot
         ; Gives a message when someone is kicked
         ;KickMessage
         ;{
+        ;    discard_self 1
         ;    message     "Good job %kicker, we won't miss %kicked!"
         ;}
         ; Joins automatically once kicked
         IrcKickRejoin
         {
+            priority 512
             ;message "HAHAHA! You can't get rid of me so easily %kicker!" ; Sassy response
         }
 

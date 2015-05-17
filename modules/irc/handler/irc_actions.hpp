@@ -40,9 +40,8 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return !msg.channels.empty() &&
-            msg.command == "KICK" && msg.params.size() >= 2 &&
-            msg.params[0] == msg.source->name();
+        return !msg.channels.empty() && msg.type == network::Message::KICK &&
+            msg.victim.name == msg.source->name();
     }
 
 protected:

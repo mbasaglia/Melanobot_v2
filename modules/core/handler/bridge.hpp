@@ -129,9 +129,13 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return msg.type == type && (
-                ( discard_others && msg.from.name == msg.source->name() ) ||
-                ( discard_self && msg.from.name != msg.source->name() ) );
+        if ( msg.type != type )
+            return false;
+        if ( discard_others && !involves_self(msg) )
+            return false;
+        if ( discard_self && involves_self(msg) )
+            return false;
+        return true;
     }
 
 protected:
@@ -168,6 +172,16 @@ protected:
     }
 
 private:
+    /**
+     * \brief Checks if the message involves the bot's user
+     */
+    bool involves_self(const network::Message& msg) const
+    {
+        return msg.from.name == msg.source->name() || (
+            !(msg.victim.local_id.empty() && msg.victim.name.empty()) &&
+            msg.victim.name == msg.source->name() );
+    }
+
     network::Message::Type type;///< Type of messages to be handled
     std::string message;        ///< Message to send
     bool        action = false; ///< Whether it should output an action
