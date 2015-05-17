@@ -212,6 +212,10 @@ class IfSet : public AbstractGroup
 public:
     IfSet (const Settings& settings, HandlerContainer* parent);
 
+    bool can_handle(const network::Message& msg) const override
+    {
+        return !children.empty();
+    }
 };
 
 } // namespace handler

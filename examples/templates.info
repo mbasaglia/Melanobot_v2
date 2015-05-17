@@ -20,7 +20,7 @@ Xonotic
     @channel                            ; IRC channel name
     @prefix                             ; Prefix shown on IRC
     @admin      admin                   ; User group required to trigger admin functionality
-    @network    QuakeNet                ; Network name, as shown to the players on !irc
+    @show_irc_events    1               ; Show to xonotic players IRC join/parts and similar
 
     type    Group
     ;name    @name
@@ -103,15 +103,18 @@ Xonotic
         prefix          [IRC]
         priority        0
 
-        Group                           ; Shows join/parts and similar
+        IfSet                           ; Shows join/parts and similar
         {
-            pass_through 1
-            action       1
+            value               @show_irc_events
+            Group {
+                action          1
+                discard_self    1
 
-            JoinMessage { message "has joined" }
-            PartMessage { message "has left" }
-            KickMessage { message "has kicked %kicked!" }
-            RenameMessage { message "changed name to #7#%message" }
+                JoinMessage { message "has joined" }
+                PartMessage { message "has left" }
+                KickMessage { message "has kicked %kicked!" }
+                RenameMessage { message "changed name to #7#%message" }
+            }
         }
 
         Group {
@@ -149,14 +152,15 @@ Xonotic
         trigger         "!"
         help_group      @name
         direct          0
+        monitored       @irc
 
-        Reply                                   ; !irc shows the IRC channel
+        MonitorReply                    ; !irc shows the IRC channel
         {
             trigger "irc"
-            reply "@network #@channel"          ; Note: the # is to escape the format ##
-            help "Shows the IRC channel"
+            reply   "%network (%default_server) #@channel" ; Note: the # is to escape the format ##
+            help    "Shows the IRC channel"
         }
-        Help                                    ; !help shows help
+        Help                            ; !help shows help
     }
 
     ; Xonotic to IRC

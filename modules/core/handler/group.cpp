@@ -345,14 +345,25 @@ IfSet::IfSet (const Settings& settings, HandlerContainer* parent)
         : AbstractGroup("",settings,parent)
 {
     std::string key = settings.get("key","");
-    if ( key.empty() )
-        throw ConfigurationError();
 
-    auto expected = settings.get_optional<std::string>("value");
-    auto value = settings::global_settings.get_optional<std::string>(key);
+    bool active = false;
     Optional<std::string> message;
 
-    if ( value == expected )
+    if ( !key.empty() )
+    {
+        auto expected = settings.get_optional<std::string>("value");
+        auto value = settings::global_settings.get_optional<std::string>(key);
+
+        if ( !value )
+            value = settings.get_optional<std::string>(key);
+
+        if ( value == expected )
+            active = true;
+    }
+    else
+        active = settings.get("value",false);
+
+    if ( active )
     {
         message = settings.get_optional<std::string>("log_true");
         add_children(settings);

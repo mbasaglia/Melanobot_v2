@@ -1136,7 +1136,14 @@ LockedProperties IrcConnection::properties()
 /// \todo provide useful properties
 Properties IrcConnection::message_properties() const
 {
-    return Properties{};
+    Lock lock(mutex);
+    return Properties{
+        {"network",             properties_.get("005.NETWORK","")},
+        {"default_server",      main_server.name()},
+        {"server",              current_server.name()},
+        {"nick",                current_nick},
+        {"default_nick",        preferred_nick},
+    };
 }
 
 user::UserCounter IrcConnection::count_users(const std::string& channel) const
