@@ -490,7 +490,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 Lock lock(mutex);
                 properties_.put("cvar."+cvar_name,cvar_value);
                 lock.unlock();
-                /// \todo keep in sync when update_connection() is changed
+
                 if ( cvar_name == "log_dest_udp" )
                 {
                     // status: INVALID    -> CONNECTING
@@ -677,9 +677,6 @@ void XonoticConnection::update_connection()
     {
         status_ = WAITING;
 
-        /// \todo the host name for log_dest_udp needs to be read from settings
-        /// (and if settings don't provide it, fallback to what local_endpoint() gives)
-        /// see also in handle_message()
         command({"rcon",{"set","log_dest_udp",io.local_endpoint().name()},1024});
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});

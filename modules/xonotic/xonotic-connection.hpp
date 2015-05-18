@@ -46,8 +46,6 @@ class XonoticConnection : public network::Connection {
 public:
     /**
      * \brief Create from settings
-     * \todo remove these functions and add a ctor overload w/o server object
-     *          (which might throw)
      */
     static std::unique_ptr<XonoticConnection> create(
         Melanobot* bot, const Settings& settings, const std::string& name);
@@ -77,7 +75,6 @@ public:
 
     /**
      * \thread external \lock none (reading a constant value)
-     * \todo connection server might differ from the publicly visible one (eg localhost)
      */
     std::string description() const override
     {

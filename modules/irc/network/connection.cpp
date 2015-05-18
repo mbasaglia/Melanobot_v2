@@ -1133,7 +1133,6 @@ LockedProperties IrcConnection::properties()
     return LockedProperties(&mutex,&properties_);
 }
 
-/// \todo provide useful properties
 Properties IrcConnection::message_properties() const
 {
     Lock lock(mutex);
