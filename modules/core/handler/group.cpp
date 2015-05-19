@@ -33,6 +33,7 @@ void AbstractGroup::add_children(Settings child_settings,
         {
             settings::merge(p.second,default_settings,false);
             auto hand = handler::HandlerFactory::instance().build(
+                bot(),
                 p.first,
                 p.second,
                 this
@@ -61,7 +62,7 @@ void AbstractGroup::populate_properties(const std::vector<std::string>& properti
     }
 }
 
-Group::Group(const Settings& settings, handler::HandlerContainer* parent)
+Group::Group(const Settings& settings, MessageConsumer* parent)
     : AbstractGroup("",settings,parent)
 {
     // Gather settings
@@ -75,7 +76,7 @@ Group::Group(const Settings& settings, handler::HandlerContainer* parent)
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
     {
-        source = bot->connection(source_name);
+        source = bot()->connection(source_name);
         if ( !source )
             throw ConfigurationError();
     }
@@ -132,7 +133,7 @@ bool Group::on_handle(network::Message& msg)
 class ListInsert : public SimpleAction
 {
 public:
-    ListInsert(std::string trigger, const Settings& settings, handler::HandlerContainer* parent)
+    ListInsert(std::string trigger, const Settings& settings, MessageConsumer* parent)
     : SimpleAction(trigger,settings,parent),
         parent(dynamic_cast<AbstractList*>(parent))
     {
@@ -177,7 +178,7 @@ protected:
 class ListRemove : public SimpleAction
 {
 public:
-    ListRemove(std::string trigger, const Settings& settings, handler::HandlerContainer* parent)
+    ListRemove(std::string trigger, const Settings& settings, MessageConsumer* parent)
     : SimpleAction(trigger,settings,parent),
         parent(dynamic_cast<AbstractList*>(parent))
     {
@@ -223,7 +224,7 @@ private:
 class ListClear : public SimpleAction
 {
 public:
-    ListClear(const Settings& settings, handler::HandlerContainer* parent)
+    ListClear(const Settings& settings, MessageConsumer* parent)
     : SimpleAction("clear",settings,parent),
         parent(dynamic_cast<AbstractList*>(parent))
     {
@@ -247,7 +248,7 @@ protected:
 };
 
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
-                           const Settings& settings, handler::HandlerContainer* parent)
+                           const Settings& settings, MessageConsumer* parent)
     : AbstractGroup(default_trigger,settings, parent)
 {
 
@@ -286,7 +287,7 @@ bool AbstractList::on_handle(network::Message& msg)
     return AbstractGroup::on_handle(msg);
 }
 
-Multi::Multi(const Settings& settings, handler::HandlerContainer* parent)
+Multi::Multi(const Settings& settings, MessageConsumer* parent)
     : Group(settings,parent)
 {
     PropertyTree props;
@@ -341,7 +342,7 @@ bool Multi::on_handle ( network::Message& msg )
     return handled;
 }
 
-IfSet::IfSet (const Settings& settings, HandlerContainer* parent)
+IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
         : AbstractGroup("",settings,parent)
 {
     std::string key = settings.get("key","");

@@ -32,7 +32,7 @@ namespace handler {
 class IrcKickRejoin: public ::handler::Handler
 {
 public:
-    IrcKickRejoin(const Settings& settings, ::handler::HandlerContainer* parent)
+    IrcKickRejoin(const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent)
     {
         message = settings.get("message",message);

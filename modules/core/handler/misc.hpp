@@ -36,7 +36,7 @@ namespace handler {
 class License : public SimpleAction
 {
 public:
-    License(const Settings& settings, handler::HandlerContainer* parent)
+    License(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("license",settings,parent)
     {
         sources_url = settings.get("url",settings::global_settings.get("website",""));
@@ -61,7 +61,7 @@ private:
 class Help : public SimpleAction
 {
 public:
-    Help(const Settings& settings, handler::HandlerContainer* parent)
+    Help(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("help",settings,parent)
     {
         help = "Shows available commands";
@@ -74,7 +74,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        bot->populate_properties(
+        bot()->populate_properties(
             {"name","help","auth","synopsis","help_group","channels"},
             props);
         
@@ -246,7 +246,7 @@ private:
 class Echo : public SimpleAction
 {
 public:
-    Echo(const Settings& settings, handler::HandlerContainer* parent)
+    Echo(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("echo",settings,parent)
     {
         help = "Repeats \"Text...\"";
@@ -267,7 +267,7 @@ protected:
 class ServerHost : public SimpleAction
 {
 public:
-    ServerHost(const Settings& settings, handler::HandlerContainer* parent)
+    ServerHost(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("server",settings,parent)
     {}
 
@@ -285,7 +285,7 @@ protected:
 class Cointoss : public SimpleAction
 {
 public:
-    Cointoss(const Settings& settings, handler::HandlerContainer* parent)
+    Cointoss(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("cointoss",settings,parent)
     {
         auto items = settings.get_optional<std::string>("items");
@@ -335,7 +335,7 @@ private:
 class Reply : public Handler
 {
 public:
-    Reply(const Settings& settings, handler::HandlerContainer* parent)
+    Reply(const Settings& settings, MessageConsumer* parent)
         : Handler(settings,parent)
     {
         trigger         = settings.get("trigger","");
@@ -451,7 +451,7 @@ protected:
 class Action : public SimpleAction
 {
 public:
-    Action(const Settings& settings, handler::HandlerContainer* parent)
+    Action(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("please",settings,parent)
     {
         help = "Make the bot perform a chat action (Roleplay)";
@@ -514,7 +514,7 @@ private:
 class Time : public SimpleAction
 {
 public:
-    Time(const Settings& settings, handler::HandlerContainer* parent)
+    Time(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("time",settings,parent)
     {
         format = settings.get("format",format);

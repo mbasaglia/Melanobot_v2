@@ -32,7 +32,7 @@ class SimpleWebApi : public SimpleAction
 {
 public:
     SimpleWebApi(const std::string& default_trigger, const Settings& settings,
-                 handler::HandlerContainer* parent)
+                 MessageConsumer* parent)
         : SimpleAction(default_trigger, settings, parent)
     {
         network::require_service("web");

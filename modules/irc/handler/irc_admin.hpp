@@ -33,7 +33,7 @@ namespace handler {
 class AdminNick: public ::handler::SimpleAction
 {
 public:
-    AdminNick(const Settings& settings, ::handler::HandlerContainer* parent)
+    AdminNick(const Settings& settings, ::MessageConsumer* parent)
         : SimpleAction("nick",settings,parent)
     {
         synopsis += " nickname";
@@ -58,7 +58,7 @@ protected:
 class AdminJoin: public ::handler::SimpleAction
 {
 public:
-    AdminJoin(const Settings& settings, ::handler::HandlerContainer* parent)
+    AdminJoin(const Settings& settings, ::MessageConsumer* parent)
         : SimpleAction("join",settings,parent)
     {
         synopsis += " channel...";
@@ -86,7 +86,7 @@ protected:
 class AdminPart: public ::handler::SimpleAction
 {
 public:
-    AdminPart(const Settings& settings, ::handler::HandlerContainer* parent)
+    AdminPart(const Settings& settings, ::MessageConsumer* parent)
         : SimpleAction("part",settings,parent)
     {
         synopsis += " [channel]";
@@ -118,7 +118,7 @@ protected:
 class AcceptInvite: public ::handler::Handler
 {
 public:
-    AcceptInvite(const Settings& settings, ::handler::HandlerContainer* parent)
+    AcceptInvite(const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent)
     {}
 
@@ -141,7 +141,7 @@ protected:
 class AdminRaw: public ::handler::SimpleAction
 {
 public:
-    AdminRaw(const Settings& settings, ::handler::HandlerContainer* parent)
+    AdminRaw(const Settings& settings, ::MessageConsumer* parent)
         : SimpleAction("raw",settings,parent)
     {
         synopsis += " command";

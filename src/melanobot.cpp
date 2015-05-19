@@ -20,13 +20,13 @@
 
 #include "handler/handler.hpp"
 
-Melanobot::Melanobot(const Settings& settings)
+Melanobot::Melanobot(const Settings& settings) : MessageConsumer(nullptr)
 {
     templates = settings.get_child("templates",{});
 
     for(const auto& pt : settings.get_child("bot",{}))
     {
-        auto hand = handler::HandlerFactory::instance().build(pt.first,pt.second,this);
+        auto hand = handler::HandlerFactory::instance().build(this,pt.first,pt.second,this);
         if ( hand )
             handlers.push_back(std::move(hand));
     }
@@ -81,9 +81,7 @@ void Melanobot::run()
         if ( !msg.destination )
             msg.destination = msg.source;
 
-        for ( const auto& handler : handlers )
-            if ( handler->handle(msg) )
-                break;
+        handle(msg);
     }
 
     for ( const auto& handler : handlers )
@@ -146,4 +144,11 @@ void Melanobot::populate_properties(const std::vector<std::string>& properties, 
     }
 }
 
-
+/// \todo Same code as in AbstractGroup, if possible create a common base
+bool Melanobot::handle ( network::Message& msg )
+{
+    for ( const auto& handler : handlers )
+        if ( handler->handle(msg) )
+            return true;
+    return false;
+}

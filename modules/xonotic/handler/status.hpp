@@ -33,7 +33,7 @@ namespace xonotic {
 class ListPlayers : public handler::ConnectionMonitor
 {
 public:
-    ListPlayers(const Settings& settings, handler::HandlerContainer* parent)
+    ListPlayers(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("who", settings, parent)
     {
         bots = settings.get("bots", bots);
@@ -74,7 +74,7 @@ protected:
 class XonoticStatus : public handler::ConnectionMonitor
 {
 public:
-    XonoticStatus(const Settings& settings, handler::HandlerContainer* parent)
+    XonoticStatus(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("status", settings, parent)
     {
         synopsis += " [filter]";
@@ -156,7 +156,7 @@ protected:
 class XonoticMaps : public handler::ConnectionMonitor
 {
 public:
-    XonoticMaps(const Settings& settings, handler::HandlerContainer* parent)
+    XonoticMaps(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("maps", settings, parent)
     {
         help = "Shows the maps on the server";
@@ -224,7 +224,7 @@ protected:
 class XonoticBan : public handler::ConnectionMonitor
 {
 public:
-    XonoticBan(const Settings& settings, handler::HandlerContainer* parent)
+    XonoticBan(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("ban", settings, parent)
     {
         synopsis += "#-# refresh | list | rm #-i#banid#-#... | "
@@ -428,7 +428,7 @@ private:
 class XonoticKick : public handler::ConnectionMonitor
 {
 public:
-    XonoticKick(const Settings& settings, handler::HandlerContainer* parent)
+    XonoticKick(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("kick", settings, parent)
     {
         synopsis += "#-####-i#entity#-#|name";

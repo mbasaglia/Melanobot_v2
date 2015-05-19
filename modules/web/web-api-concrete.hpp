@@ -32,7 +32,7 @@ namespace handler {
 class SearchVideoYoutube : public SimpleJson
 {
 public:
-    SearchVideoYoutube(const Settings& settings, handler::HandlerContainer* parent)
+    SearchVideoYoutube(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("video",settings,parent)
     {
         yt_api_key = settings.get("yt_api_key", "");
@@ -113,7 +113,7 @@ private:
 class VideoInfo : public Handler
 {
 public:
-    VideoInfo(const Settings& settings, handler::HandlerContainer* parent)
+    VideoInfo(const Settings& settings, MessageConsumer* parent)
         : Handler(settings,parent)
     {
         yt_api_key = settings.get("yt_api_key", "");
@@ -295,7 +295,7 @@ private:
 class SearchImageGoogle : public SimpleJson
 {
 public:
-    SearchImageGoogle(const Settings& settings, handler::HandlerContainer* parent)
+    SearchImageGoogle(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("image",settings,parent)
     {
         not_found_reply = settings.get("not_found", not_found_reply );
@@ -330,7 +330,7 @@ private:
 class UrbanDictionary : public SimpleJson
 {
 public:
-    UrbanDictionary(const Settings& settings, handler::HandlerContainer* parent)
+    UrbanDictionary(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("define",settings,parent)
     {
         not_found_reply = settings.get("not_found", not_found_reply );
@@ -369,7 +369,7 @@ private:
 class SearchWebSearx : public SimpleJson
 {
 public:
-    SearchWebSearx(const Settings& settings, handler::HandlerContainer* parent)
+    SearchWebSearx(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("search",settings,parent)
     {
         api_url = settings.get("url",api_url);

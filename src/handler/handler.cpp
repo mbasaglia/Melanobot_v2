@@ -20,9 +20,10 @@
 namespace handler {
 
 std::unique_ptr<Handler> HandlerFactory::build_template(
-    const std::string& handler_name,
-    const Settings& settings,
-    handler::HandlerContainer* parent) const
+    Melanobot*          bot,
+    const std::string&  handler_name,
+    const Settings&     settings,
+    MessageConsumer*    parent) const
 {
     auto type = settings.get_optional<std::string>("template");
     if ( !type )
@@ -31,7 +32,7 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
                 << ": missing template reference";
         return nullptr;
     }
-    Settings source = parent->melanobot()->get_template(*type);
+    Settings source = bot->get_template(*type);
     Properties arguments;
     for ( const auto& ch : source )
         if ( string::starts_with(ch.first,"@") )
@@ -42,12 +43,15 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
         node.data() = string::replace(node.data(),arguments);
     });
     /// \todo recursion check
-    return build(handler_name,source,parent);
+    return build(bot,handler_name,source,parent);
 }
 
 
-std::unique_ptr<Handler> HandlerFactory::build(const std::string& handler_name,
-    const Settings& settings, handler::HandlerContainer* parent) const
+std::unique_ptr<Handler> HandlerFactory::build(
+    Melanobot*          bot,
+    const std::string&  handler_name,
+    const Settings&     settings,
+    MessageConsumer*    parent) const
 {
     std::string type = settings.get("type",handler_name);
 
@@ -59,11 +63,11 @@ std::unique_ptr<Handler> HandlerFactory::build(const std::string& handler_name,
 
     if ( type == "Template" )
     {
-        return build_template(handler_name, settings, parent);
+        return build_template(bot, handler_name, settings, parent);
     }
     else if ( type == "Connection" )
     {
-        parent->melanobot()->add_connection(handler_name, settings);
+        bot->add_connection(handler_name, settings);
         return nullptr;
     }
 

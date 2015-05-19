@@ -46,30 +46,27 @@ namespace handler {
  * The constructor of a handler class must have the same signature as the
  * one used here to work properly.
  */
-class Handler : public handler::HandlerContainer
+class Handler : public MessageConsumer
 {
 public:
-    Handler( const Settings& settings, HandlerContainer* parent )
-        : bot ( parent->melanobot() ),
-          parent_handler(dynamic_cast<Handler*>(parent))
+    Handler(const Settings& settings, MessageConsumer* parent)
+        : MessageConsumer(parent)
     {
         priority = settings.get("priority",priority);
-        if ( !bot )
-            throw ConfigurationError();
     }
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
     virtual ~Handler() {}
 
-    Melanobot* melanobot() const final { return bot; }
+    Melanobot* bot() const { return get_parent<Melanobot>(); }
 
     /**
-     * \brief Attempt to handle the message
+     * \brief Attempts to handle the message
      * \pre msg.source and msg.destination not null
      * \return \b true if the message has been handled and needs no further processing
      * \note Unless you really need to, override on_handle()
      */
-    virtual bool handle(network::Message& msg)
+    bool handle(network::Message& msg) override
     {
         if ( can_handle(msg) )
             return on_handle(msg);
@@ -145,7 +142,6 @@ protected:
         return channel;
     }
 
-
     /**
      * \brief Send a reply to a message
      * \note \c output priority and channel will be overwritten
@@ -167,54 +163,10 @@ protected:
     }
 
     /**
-     * \brief Find the parent handler with the given type
-     * \tparam HandlerT Handler type
-     *
-     * Walks up the handler tree to find a parent with the given type
-     * \return The found parent or \b nullptr if not found
-     */
-    template<class HandlerT>
-        HandlerT* get_parent() const
-        {
-            static_assert(std::is_base_of<handler::Handler,HandlerT>::value,
-                          "Expected handler::Handler type");
-            if ( !parent_handler )
-                return nullptr;
-            if ( auto p = dynamic_cast<HandlerT*>(parent_handler) )
-                return p;
-            return parent_handler->get_parent<HandlerT>();
-        }
-
-    /**
-     * \brief Delivers a message to the destination applying filters of all the parents
-     */
-    void deliver(network::Connection* destination,
-                 network::OutputMessage& output) const
-    {
-        output_filter(output);
-        if ( parent_handler )
-            parent_handler->deliver(destination, output);
-        else
-            destination->say(output);
-    }
-
-    /**
-     * \brief Filters an output message
-     */
-    virtual void output_filter(network::OutputMessage& output) const {}
-
-    /**
      * \brief Message priority
+     * \todo Add filter to enforce it?
      */
     int priority{0};
-    /**
-     * \brief Pointer to the main bot
-     */
-    Melanobot*  bot{nullptr};
-    /**
-     * \brief Pointer to a handler containing this one
-     */
-    Handler* parent_handler{nullptr};
 };
 
 /**
@@ -225,7 +177,7 @@ protected:
 class MyAction : public handler::SimpleAction
 {
 public:
-    MyAction(const Settings& settings, handler::HandlerContainer* parent)
+    MyAction(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("default_handler",settings,parent)
     {
         some_setting = settings.get("some_setting",some_setting);
@@ -258,7 +210,7 @@ public:
      * \todo flag saying whether there must be a space after the trigger (default true, except groups)
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
-                 handler::HandlerContainer* parent)
+                 MessageConsumer* parent)
         : Handler(settings,parent)
     {
         trigger      = settings.get("trigger",default_trigger);
@@ -352,7 +304,7 @@ public:
     /**
      * \brief Function object type used to create instances
      */
-    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,handler::HandlerContainer*)>;
+    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,MessageConsumer*)>;
 
 
     static HandlerFactory& instance()
@@ -365,15 +317,21 @@ public:
      * \brief Build a handler from its name and settings
      * \return \c nullptr if it could not be created
      */
-    std::unique_ptr<Handler> build(const std::string& handler_name,
-                   const Settings& settings, handler::HandlerContainer* parent) const;
+    std::unique_ptr<Handler> build(
+        Melanobot*              bot,
+        const std::string&      handler_name,
+        const Settings&         settings,
+        MessageConsumer*        parent) const;
 
     /**
      * \brief Build a handler from a template
      * \return \c nullptr if it could not be created
      */
-    std::unique_ptr<Handler> build_template(const std::string& handler_name,
-                   const Settings& settings, handler::HandlerContainer* parent) const;
+    std::unique_ptr<Handler> build_template(
+        Melanobot*              bot,
+        const std::string&      handler_name,
+        const Settings&         settings,
+        MessageConsumer*        parent) const;
 
     /**
      * \brief Register a handler type

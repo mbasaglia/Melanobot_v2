@@ -32,12 +32,12 @@ class ConnectionMonitor : public handler::SimpleAction
 public:
     ConnectionMonitor(const std::string& default_trigger,
                       const Settings& settings,
-                      handler::HandlerContainer* parent)
+                      MessageConsumer* parent)
         : SimpleAction(default_trigger,settings,parent)
     {
         std::string monitored_name = settings.get("monitored","");
         if ( !monitored_name.empty() )
-            monitored = bot->connection(monitored_name);
+            monitored = bot()->connection(monitored_name);
         if ( !monitored )
             throw ConfigurationError();
     }
@@ -52,7 +52,7 @@ protected:
 class MonitorServerStatus : public ConnectionMonitor
 {
 public:
-    MonitorServerStatus(const Settings& settings, handler::HandlerContainer* parent)
+    MonitorServerStatus(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("status", settings, parent)
     {
         connected = settings.get("connected", connected);
@@ -81,7 +81,7 @@ protected:
 class MonitorReply : public ConnectionMonitor
 {
 public:
-    MonitorReply(const Settings& settings, handler::HandlerContainer* parent)
+    MonitorReply(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("",settings,parent)
     {
         reply = settings.get("reply", reply);

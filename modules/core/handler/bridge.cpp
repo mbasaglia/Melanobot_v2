@@ -21,13 +21,13 @@
 
 namespace handler {
 
-Bridge::Bridge(const Settings& settings, handler::HandlerContainer* parent)
+Bridge::Bridge(const Settings& settings, MessageConsumer* parent)
     : Group(settings,parent)
 {
 
     std::string destination_name = settings.get("destination","");
     if ( !destination_name.empty() )
-        destination = bot->connection(destination_name);
+        destination = bot()->connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
 }
 
@@ -62,7 +62,7 @@ void Bridge::attach_channel(Optional<std::string> channel)
 
 }
 
-BridgeChat::BridgeChat(const Settings& settings, handler::HandlerContainer* parent)
+BridgeChat::BridgeChat(const Settings& settings, MessageConsumer* parent)
     : Handler(settings,parent)
 {
     int timeout_seconds = settings.get("timeout",0);
@@ -97,7 +97,7 @@ bool BridgeChat::on_handle(network::Message& msg)
     return true;
 }
 
-BridgeAttach::BridgeAttach(const Settings& settings, handler::HandlerContainer* parent)
+BridgeAttach::BridgeAttach(const Settings& settings, MessageConsumer* parent)
     : SimpleAction("attach",settings,parent)
 {
     protocol = settings.get("protocol",protocol); /// \todo unused?
@@ -113,7 +113,7 @@ void BridgeAttach::initialize()
 
 bool BridgeAttach::on_handle(network::Message& msg)
 {
-    auto conn = bot->connection(msg.message);
+    auto conn = bot()->connection(msg.message);
     if ( conn || detach )
         parent->attach(conn);
     else
@@ -122,7 +122,7 @@ bool BridgeAttach::on_handle(network::Message& msg)
 }
 
 BridgeAttachChannel::BridgeAttachChannel(const Settings& settings,
-                                         handler::HandlerContainer* parent)
+                                         MessageConsumer* parent)
     : SimpleAction("channel",settings,parent)
 {}
 

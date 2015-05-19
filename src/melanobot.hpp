@@ -28,13 +28,12 @@
 
 #include "concurrency/container.hpp"
 #include "settings.hpp"
-#include "network/connection.hpp"
-#include "handler/handler_container.hpp"
+#include "message/message_consumer.hpp"
 
 /**
  * \brief Main bot class
  */
-class Melanobot : public handler::HandlerContainer
+class Melanobot : public MessageConsumer
 {
 public:
     explicit Melanobot(const Settings& settings);
@@ -43,11 +42,6 @@ public:
     Melanobot& operator=(const Melanobot&) = delete;
     Melanobot& operator=(Melanobot&&) = delete;
     ~Melanobot();
-
-    Melanobot* melanobot() const override
-    {
-        return const_cast<Melanobot*>(this);
-    }
 
     /**
      * \brief Runs the bot
@@ -81,6 +75,8 @@ public:
     void add_connection(std::string suggested_name, const Settings& settings);
 
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
+
+    bool handle(network::Message& msg) override;
 
     /**
      * \brief Returns handler template from name

@@ -37,7 +37,7 @@ namespace fun {
 class Morse : public handler::SimpleAction
 {
 public:
-    Morse(const Settings& settings, handler::HandlerContainer* parent)
+    Morse(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("morse",settings,parent)
     {
         synopsis += " text|morse";
@@ -57,7 +57,7 @@ private:
 class ReverseText : public handler::SimpleAction
 {
 public:
-    ReverseText(const Settings& settings, handler::HandlerContainer* parent)
+    ReverseText(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("reverse",settings,parent)
     {
         synopsis += " text";
@@ -77,7 +77,7 @@ private:
 class ChuckNorris : public handler::SimpleJson
 {
 public:
-    ChuckNorris(const Settings& settings, handler::HandlerContainer* parent)
+    ChuckNorris(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("norris",settings,parent)
     {
         synopsis += " [name]";
@@ -106,7 +106,7 @@ private:
 class RenderPony : public handler::SimpleAction
 {
 public:
-    RenderPony(const Settings& settings, handler::HandlerContainer* parent)
+    RenderPony(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("render_pony",settings,parent)
     {
         synopsis += " pony";
@@ -127,7 +127,7 @@ private:
 class PonyCountDown : public handler::SimpleJson
 {
 public:
-    PonyCountDown(const Settings& settings, handler::HandlerContainer* parent)
+    PonyCountDown(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("nextpony",settings,parent)
     {
         api_url = settings.get("url",api_url);
@@ -179,7 +179,7 @@ private:
 class PonyFace : public handler::SimpleJson
 {
 public:
-    PonyFace(const Settings& settings, handler::HandlerContainer* parent)
+    PonyFace(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("ponyface",settings,parent)
     {
         api_url = settings.get("url",api_url);
@@ -223,7 +223,7 @@ private:
 class AnswerQuestions : public handler::Handler
 {
 public:
-    AnswerQuestions(const Settings& settings, handler::HandlerContainer* parent)
+    AnswerQuestions(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
         direct    = settings.get("direct",direct);
@@ -265,7 +265,7 @@ private:
 class Slap : public handler::SimpleAction
 {
 public:
-    Slap(const Settings& settings, handler::HandlerContainer* parent)
+    Slap(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("slap",settings,parent)
     {
         synopsis += " victim";
@@ -302,7 +302,7 @@ protected:
 class Discord : public handler::SimpleAction
 {
 public:
-    Discord(const Settings& settings, handler::HandlerContainer* parent)
+    Discord(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("discord",settings,parent)
     {
         synopsis += " [time]";

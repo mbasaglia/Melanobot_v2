@@ -44,7 +44,7 @@ inline Properties message_properties(network::Connection* source,
 class ConnectionEvents : public handler::Handler
 {
 public:
-    ConnectionEvents( const Settings& settings, HandlerContainer* parent )
+    ConnectionEvents( const Settings& settings, MessageConsumer* parent )
         : Handler(settings, parent)
     {
         connect = settings.get("connect","Server #2#%host#-# connected.");
@@ -82,7 +82,7 @@ private:
 class XonoticJoinPart : public handler::Handler
 {
 public:
-    XonoticJoinPart( const Settings& settings, HandlerContainer* parent )
+    XonoticJoinPart( const Settings& settings, MessageConsumer* parent )
         : Handler(settings, parent)
     {
         join = settings.get("join",join);
@@ -125,7 +125,7 @@ private:
 class XonoticMatchStart : public handler::Handler
 {
 public:
-    XonoticMatchStart( const Settings& settings, HandlerContainer* parent )
+    XonoticMatchStart( const Settings& settings, MessageConsumer* parent )
         : Handler(settings, parent)
     {
         message = settings.get("message",message);
@@ -161,7 +161,7 @@ private:
 class ParseEventlog : public handler::Handler
 {
 public:
-    ParseEventlog(std::string regex, const Settings& settings, HandlerContainer* parent)
+    ParseEventlog(std::string regex, const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent),
         regex(std::move(regex), std::regex::ECMAScript|std::regex::optimize)
     {}
@@ -194,7 +194,7 @@ private:
 class ShowVoteCall : public ParseEventlog
 {
 public:
-    ShowVoteCall(const Settings& settings, HandlerContainer* parent)
+    ShowVoteCall(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vcall:(\d+):(.*))",settings,parent)
     {
         message = settings.get("message",message);
@@ -222,7 +222,7 @@ private:
 class ShowVoteResult : public ParseEventlog
 {
 public:
-    ShowVoteResult(const Settings& settings, HandlerContainer* parent)
+    ShowVoteResult(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:v(yes|no|timeout):(\d+):(\d+):(\d+):(\d+):(-?\d+))",settings,parent)
     {
         message = settings.get("message",message);
@@ -297,7 +297,7 @@ private:
 class ShowVoteStop : public ParseEventlog
 {
 public:
-    ShowVoteStop(const Settings& settings, HandlerContainer* parent)
+    ShowVoteStop(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vstop:(\d+))",settings,parent)
     {
         message = settings.get("message",message);
@@ -323,7 +323,7 @@ private:
 class ShowVoteLogin : public ParseEventlog
 {
 public:
-    ShowVoteLogin(const Settings& settings, HandlerContainer* parent)
+    ShowVoteLogin(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vlogin:(\d+))",settings,parent)
     {
         message = settings.get("message",message);
@@ -349,7 +349,7 @@ private:
 class ShowVoteDo : public ParseEventlog
 {
 public:
-    ShowVoteDo(const Settings& settings, HandlerContainer* parent)
+    ShowVoteDo(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vdo:(\d+):(.*))",settings,parent)
     {
         message = settings.get("message",message);
@@ -377,7 +377,7 @@ private:
 class ShowVotes : public handler::PresetGroup
 {
 public:
-    ShowVotes(const Settings& settings, HandlerContainer* parent)
+    ShowVotes(const Settings& settings, MessageConsumer* parent)
         : PresetGroup({
             "ShowVoteCall",
             "ShowVoteResult",
@@ -411,7 +411,7 @@ private:
     };
 
 public:
-    XonoticMatchScore( const Settings& settings, HandlerContainer* parent )
+    XonoticMatchScore( const Settings& settings, MessageConsumer* parent )
         : ParseEventlog(
             ":(?:"
             // 1
@@ -656,7 +656,7 @@ private:
 class XonoticHostError : public ParseEventlog
 {
 public:
-    XonoticHostError( const Settings& settings, HandlerContainer* parent )
+    XonoticHostError( const Settings& settings, MessageConsumer* parent )
         : ParseEventlog( "Host_Error: (.*)", settings, parent )
     {
         message = settings.get("message",message);
@@ -693,7 +693,7 @@ private:
 class XonoticUpdateBans : public ParseEventlog
 {
 public:
-    XonoticUpdateBans(const Settings& settings, HandlerContainer* parent)
+    XonoticUpdateBans(const Settings& settings, MessageConsumer* parent)
         : ParseEventlog(
             "(\\^2Listing all existing active bans:)|"// 1
             //         2  banid=3     ip=4                            time=5

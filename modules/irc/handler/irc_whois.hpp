@@ -32,7 +32,7 @@ namespace handler {
 class Whois330 : public ::handler::Handler
 {
 public:
-    Whois330(const Settings& settings, ::handler::HandlerContainer* parent)
+    Whois330(const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent) {}
 
     bool can_handle(const network::Message& msg) const override
@@ -58,7 +58,7 @@ protected:
 class QSendWhois : public ::handler::Handler
 {
 public:
-    QSendWhois(const Settings& settings, ::handler::HandlerContainer* parent)
+    QSendWhois(const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent)
     {
         q_bot = settings.get("q_to",q_bot);
@@ -96,7 +96,7 @@ private:
 class QGetWhois : public ::handler::Handler
 {
 public:
-    QGetWhois(const Settings& settings, ::handler::HandlerContainer* parent)
+    QGetWhois(const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent)
     {
         q_bot = settings.get("q_from",q_bot);
@@ -159,7 +159,7 @@ private:
 class QWhois : public ::handler::PresetGroup
 {
 public:
-    QWhois(const Settings& settings, ::handler::HandlerContainer* parent)
+    QWhois(const Settings& settings, ::MessageConsumer* parent)
         : PresetGroup({"QSendWhois","QGetWhois"},settings,parent) {}
 };
 
@@ -169,7 +169,7 @@ public:
 class WhoisCheckMe : public ::handler::SimpleAction
 {
 public:
-    WhoisCheckMe(const Settings& settings, ::handler::HandlerContainer* parent)
+    WhoisCheckMe(const Settings& settings, ::MessageConsumer* parent)
         : SimpleAction("checkme",settings,parent)
     {}
 
@@ -196,7 +196,7 @@ private:
 class IrcIdentify : public ::handler::Handler
 {
 public:
-    IrcIdentify(const Settings& settings, ::handler::HandlerContainer* parent)
+    IrcIdentify(const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent)
     {
         if ( !settings.get_optional<int>("priority") )

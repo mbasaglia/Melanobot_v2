@@ -43,7 +43,7 @@ inline void rcon_adminnick(network::Connection* destination,
 class RconCommand : public handler::SimpleAction
 {
 public:
-    RconCommand(const Settings& settings, handler::HandlerContainer* parent)
+    RconCommand(const Settings& settings, MessageConsumer* parent)
         : SimpleAction(settings.get("command",settings.data()),settings,parent)
     {
         /// \note it allows the command to be specified in the top-level data
@@ -80,7 +80,7 @@ private:
 class XonoticVCall : public handler::SimpleAction
 {
 public:
-    XonoticVCall(const Settings& settings, handler::HandlerContainer* parent)
+    XonoticVCall(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("vcall",settings,parent)
     {
         synopsis += " vote";
@@ -114,7 +114,7 @@ private:
 class XonoticVStop : public handler::SimpleAction
 {
 public:
-    XonoticVStop(const Settings& settings, handler::HandlerContainer* parent)
+    XonoticVStop(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("vstop",settings,parent)
     {
         synopsis += " vote";

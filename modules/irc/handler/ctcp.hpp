@@ -40,7 +40,7 @@ class CtcpBase : public ::handler::Handler
 {
 public:
 
-    CtcpBase(const std::string& ctcp, const Settings& settings, ::handler::HandlerContainer* parent)
+    CtcpBase(const std::string& ctcp, const Settings& settings, ::MessageConsumer* parent)
         : Handler(settings,parent), ctcp(irc::strtoupper(ctcp))
     {
         if ( ctcp.empty() )
@@ -93,7 +93,7 @@ class CtcpVersion: public CtcpBase
 {
 
 public:
-    CtcpVersion ( const Settings& settings, ::handler::HandlerContainer* parent )
+    CtcpVersion ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("VERSION", settings, parent)
     {
         version = settings.get("version","");
@@ -125,7 +125,7 @@ class CtcpSource: public CtcpBase
 {
 
 public:
-    CtcpSource ( const Settings& settings, ::handler::HandlerContainer* parent )
+    CtcpSource ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("SOURCE", settings, parent)
     {
         sources_url = settings.get("url",settings::global_settings.get("website",""));
@@ -151,7 +151,7 @@ class CtcpUserInfo: public CtcpBase
 {
 
 public:
-    CtcpUserInfo ( const Settings& settings, ::handler::HandlerContainer* parent )
+    CtcpUserInfo ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase(settings.get("ctcp","USERINFO"), settings, parent)
     {
         reply = settings.get("reply","");
@@ -176,7 +176,7 @@ class CtcpPing: public CtcpBase
 {
 
 public:
-    CtcpPing ( const Settings& settings, ::handler::HandlerContainer* parent )
+    CtcpPing ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("PING", settings, parent)
     {
         clientinfo = "time_string : Replies the same as the input";
@@ -199,7 +199,7 @@ class CtcpTime: public CtcpBase
 {
 
 public:
-    CtcpTime ( const Settings& settings, ::handler::HandlerContainer* parent )
+    CtcpTime ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("TIME", settings, parent)
     {
         format = settings.get("format","r");
@@ -225,7 +225,7 @@ class CtcpClientInfo: public CtcpBase
 {
 
 public:
-    CtcpClientInfo ( const Settings& settings, ::handler::HandlerContainer* parent )
+    CtcpClientInfo ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("CLIENTINFO", settings, parent)
     {
         clientinfo = "[command] : Shows help on CTCP commands";
@@ -236,7 +236,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        bot->populate_properties({"ctcp","clientinfo","help_group"},props);
+        bot()->populate_properties({"ctcp","clientinfo","help_group"},props);
 
         Properties clientinfo;
         gather(props, clientinfo);
@@ -290,7 +290,7 @@ private:
 class Ctcp : public ::handler::PresetGroup
 {
 public:
-    Ctcp(const Settings& settings, ::handler::HandlerContainer* parent)
+    Ctcp(const Settings& settings, ::MessageConsumer* parent)
         : PresetGroup({
             "CtcpVersion",
             "CtcpSource",

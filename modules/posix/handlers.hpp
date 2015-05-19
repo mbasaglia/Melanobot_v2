@@ -33,7 +33,7 @@ class MelanobotShBase : public handler::SimpleAction
 public:
     MelanobotShBase(const std::string& default_trigger,
                       const Settings& settings,
-                      handler::HandlerContainer* parent)
+                      MessageConsumer* parent)
         : SimpleAction(default_trigger,settings,parent)
     {
         if ( !settings::global_settings.get_child_optional("settings.tmp_dir") )
@@ -76,7 +76,7 @@ protected:
 class MelanobotShAction : public MelanobotShBase
 {
 public:
-    MelanobotShAction(const Settings& settings, handler::HandlerContainer* parent)
+    MelanobotShAction(const Settings& settings, MessageConsumer* parent)
         : MelanobotShBase(settings.get("action",""),settings,parent)
     {
         action = settings.get("action",action);
@@ -103,7 +103,7 @@ protected:
 class MelanobotShRestart : public MelanobotShBase
 {
 public:
-    MelanobotShRestart(const Settings& settings, handler::HandlerContainer* parent)
+    MelanobotShRestart(const Settings& settings, MessageConsumer* parent)
         : MelanobotShBase("restart",settings,parent)
     {
         help = "Restarts the bot";
@@ -114,7 +114,7 @@ protected:
     {
         if ( get_action() != "loop" )
             set_action("restart");
-        bot->stop();
+        bot()->stop();
         return true;
     }
 
@@ -126,7 +126,7 @@ protected:
 class MelanobotShQuit : public MelanobotShBase
 {
 public:
-    MelanobotShQuit(const Settings& settings, handler::HandlerContainer* parent)
+    MelanobotShQuit(const Settings& settings, MessageConsumer* parent)
         : MelanobotShBase("quit",settings,parent)
     {
         help = "Quits the bot";
@@ -136,7 +136,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         set_action("quit");
-        bot->stop();
+        bot()->stop();
         return true;
     }
 

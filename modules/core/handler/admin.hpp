@@ -31,7 +31,7 @@ namespace handler {
 class AdminQuit: public SimpleAction
 {
 public:
-    AdminQuit(const Settings& settings, handler::HandlerContainer* parent)
+    AdminQuit(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("quit",settings,parent)
     {
         message = settings.get("message",message);
@@ -49,7 +49,7 @@ protected:
             quit_msg = message;
 
         msg.destination->disconnect(quit_msg);
-        bot->stop();
+        bot()->stop();
         return true;
     }
 
@@ -63,11 +63,11 @@ private:
 class AdminGroup: public AbstractList
 {
 public:
-    AdminGroup(const Settings& settings, handler::HandlerContainer* parent)
+    AdminGroup(const Settings& settings, MessageConsumer* parent)
         : AbstractList(settings.get("group",""),false,settings,parent)
     {
         std::string conn_name = settings.get("connection",settings.get("source",""));
-        connection = bot->connection(conn_name);
+        connection = bot()->connection(conn_name);
         if ( !connection )
             throw ConfigurationError();
 
@@ -131,7 +131,7 @@ private:
 class FilterGroup: public Handler
 {
 public:
-    FilterGroup(const Settings& settings, handler::HandlerContainer* parent)
+    FilterGroup(const Settings& settings, MessageConsumer* parent)
         : Handler(settings,parent)
     {
         ignore = settings.get("ignore",ignore);
@@ -159,7 +159,7 @@ private:
 class AdminReconnect: public SimpleAction
 {
 public:
-    AdminReconnect(const Settings& settings, handler::HandlerContainer* parent)
+    AdminReconnect(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("reconnect",settings,parent)
     {
         message = settings.get("message",message);
@@ -190,7 +190,7 @@ private:
 class AdminConnect: public SimpleAction
 {
 public:
-    AdminConnect(const Settings& settings, handler::HandlerContainer* parent)
+    AdminConnect(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("connect",settings,parent)
     {
         help = "Connects bot";
@@ -210,7 +210,7 @@ protected:
 class AdminDisconnect: public SimpleAction
 {
 public:
-    AdminDisconnect(const Settings& settings, handler::HandlerContainer* parent)
+    AdminDisconnect(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("disconnect",settings,parent)
     {
         message = settings.get("message",message);
@@ -241,7 +241,7 @@ private:
 class Chanhax: public Handler
 {
 public:
-    Chanhax(const Settings& settings, handler::HandlerContainer* parent)
+    Chanhax(const Settings& settings, MessageConsumer* parent)
         : Handler(settings,parent),
         trigger(settings.get("trigger","chanhax")),
         regex_chanhax (

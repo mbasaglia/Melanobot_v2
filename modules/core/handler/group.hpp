@@ -77,7 +77,7 @@ protected:
 class Group : public AbstractGroup
 {
 public:
-    Group(const Settings& settings, handler::HandlerContainer* parent);
+    Group(const Settings& settings, MessageConsumer* parent);
 
     bool can_handle(const network::Message& msg) const override;
 
@@ -127,7 +127,7 @@ public:
      * \param bot               Main bot
      */
     AbstractList(const std::string& default_trigger, bool clear,
-                 const Settings& settings, handler::HandlerContainer* parent);
+                 const Settings& settings, MessageConsumer* parent);
 
     /**
      * \brief Adds \c element to the list
@@ -168,7 +168,7 @@ class PresetGroup : public handler::AbstractGroup
 {
 public:
     PresetGroup( const std::initializer_list<std::string>& preset,
-                 const Settings& settings, HandlerContainer* parent)
+                 const Settings& settings, MessageConsumer* parent)
         : AbstractGroup("",settings,parent)
     {
         add_children(settings::merge_copy(settings,
@@ -187,7 +187,7 @@ public:
 class Multi : public Group
 {
 public:
-    Multi(const Settings& settings, handler::HandlerContainer* parent);
+    Multi(const Settings& settings, MessageConsumer* parent);
 
     bool can_handle(const network::Message& msg) const override;
 
@@ -210,7 +210,7 @@ private:
 class IfSet : public AbstractGroup
 {
 public:
-    IfSet (const Settings& settings, HandlerContainer* parent);
+    IfSet (const Settings& settings, MessageConsumer* parent);
 
     bool can_handle(const network::Message& msg) const override
     {

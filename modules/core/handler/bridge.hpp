@@ -29,7 +29,7 @@ namespace handler {
 class Bridge : public Group
 {
 public:
-    Bridge(const Settings& settings, handler::HandlerContainer* parent);
+    Bridge(const Settings& settings, MessageConsumer* parent);
 
     /**
      * \brief Attach to the given connection
@@ -61,7 +61,7 @@ protected:
 class BridgeChat : public Handler
 {
 public:
-    BridgeChat(const Settings& settings, handler::HandlerContainer* parent);
+    BridgeChat(const Settings& settings, MessageConsumer* parent);
     bool can_handle(const network::Message& msg) const override;
 
 protected:
@@ -78,7 +78,7 @@ protected:
 class BridgeAttach : public SimpleAction
 {
 public:
-    BridgeAttach(const Settings& settings, handler::HandlerContainer* parent);
+    BridgeAttach(const Settings& settings, MessageConsumer* parent);
     void initialize() override;
 
 protected:
@@ -94,7 +94,7 @@ protected:
 class BridgeAttachChannel : public SimpleAction
 {
 public:
-    BridgeAttachChannel(const Settings& settings, handler::HandlerContainer* parent);
+    BridgeAttachChannel(const Settings& settings, MessageConsumer* parent);
     void initialize() override;
 
 protected:
@@ -111,7 +111,7 @@ class EventMessageBase: public ::handler::Handler
 public:
     EventMessageBase(network::Message::Type type,
                      const Settings& settings,
-                     ::handler::HandlerContainer* parent)
+                     ::MessageConsumer* parent)
         : Handler(settings,parent), type(type)
     {
         message = settings.get("message",message);
@@ -196,7 +196,7 @@ private:
 class JoinMessage: public EventMessageBase
 {
 public:
-    JoinMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+    JoinMessage(const Settings& settings, ::MessageConsumer* parent)
         : EventMessageBase(network::Message::JOIN,settings,parent)
     {}
 };
@@ -207,7 +207,7 @@ public:
 class PartMessage: public EventMessageBase
 {
 public:
-    PartMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+    PartMessage(const Settings& settings, ::MessageConsumer* parent)
         : EventMessageBase(network::Message::PART,settings,parent)
     {}
 };
@@ -217,7 +217,7 @@ public:
 class KickMessage: public EventMessageBase
 {
 public:
-    KickMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+    KickMessage(const Settings& settings, ::MessageConsumer* parent)
         : EventMessageBase(network::Message::KICK,settings,parent)
     {}
 
@@ -249,7 +249,7 @@ protected:
 class RenameMessage: public EventMessageBase
 {
 public:
-    RenameMessage(const Settings& settings, ::handler::HandlerContainer* parent)
+    RenameMessage(const Settings& settings, ::MessageConsumer* parent)
         : EventMessageBase(network::Message::RENAME,settings,parent)
     {}
 };
