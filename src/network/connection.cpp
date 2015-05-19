@@ -21,12 +21,6 @@
 
 namespace network {
 
-void Message::send ( Connection* from, Melanobot* to )
-{
-    source = destination = from;
-    to->message(*this);
-}
-
 void ConnectionFactory::register_connection ( const std::string& protocol_name, const Contructor& function )
 {
     if ( factory.count(protocol_name) )
