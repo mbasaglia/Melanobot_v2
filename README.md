@@ -2,6 +2,8 @@ Melanobot v2
 ============
 
 A not so simple IRC bot.
+For more detailed information on the bot and how to set up an instance,
+see https://wiki.evil-ant-colony.org/doku.php?id=melanobot:melanobot
 
 Contacts
 --------
@@ -47,7 +49,11 @@ Running
 Configuration
 -------------
 
-See https://github.com/mbasaglia/Melanobot_v2/wiki/Config
+The bot by default tries to load a file called config.info.
+This file can is searched in the run directory,
+the executable directory, ~/.config/melanobot, or ~/.melanobot.
+
+See configuration examples in ./examples
 
 Installation
 ------------
