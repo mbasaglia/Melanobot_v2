@@ -50,7 +50,7 @@ Configuration
 -------------
 
 The bot by default tries to load a file called config.info.
-This file can is searched in the run directory,
+This file is searched in: the run directory,
 the executable directory, ~/.config/melanobot, or ~/.melanobot.
 
 See configuration examples in ./examples
