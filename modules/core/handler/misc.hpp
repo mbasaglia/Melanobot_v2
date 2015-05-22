@@ -256,7 +256,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,msg.message);
+        reply_to(msg,msg.source->decode(msg.message));
         return true;
     }
 };
