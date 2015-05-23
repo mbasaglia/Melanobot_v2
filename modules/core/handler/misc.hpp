@@ -2,7 +2,6 @@
  * \file
  * \brief This file defines handlers which perform miscellaneous tasks
  *
- *
  * \author Mattia Basaglia
  * \copyright Copyright 2015 Mattia Basaglia
  * \license

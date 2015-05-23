@@ -19,10 +19,12 @@
 #ifndef CONCURRENT_CONTAINER_HPP
 #define CONCURRENT_CONTAINER_HPP
 
-#include "concurrency.hpp"
+#include <algorithm>
 #include <functional>
 #include <queue>
 #include <vector>
+
+#include "concurrency.hpp"
 
 /**
  * \brief Container wrapper which makes it fit for concurrent use
@@ -104,13 +106,35 @@ public:
     void stop()
     {
         run = false;
-        condition.notify_one();
+        condition.notify_all();
     }
 
     /**
      * \brief Returns a reference to the container without any locks
      */
     Container& get_container() { return container; }
+
+    /**
+     * \brief Removes all elements matching \c pred from the container
+     * \tparam Predicate Functor taking \c value_type and returning \b bool
+     */
+    template<class Predicate>
+    void remove_if(const Predicate& pred)
+    {
+        Lock lock(mutex);
+
+        Container swapped;
+        std::swap(swapped,container);
+
+        value_type value;
+        while ( !swapped.empty() )
+        {
+            value = (swapped.*container_get)();
+            (swapped.*container_pop)();
+            if ( !pred(value) )
+                (container.*container_push)(value);
+        }
+    }
 
 private:
     method_push container_push;

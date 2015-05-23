@@ -249,4 +249,11 @@ network::Message Buffer::parse_line(const std::string& line) const
     return msg;
 }
 
+void Buffer::clear(int priority)
+{
+    buffer.remove_if([priority](const network::Command& cmd){
+        return cmd.priority <= priority;
+    });
+}
+
 } // namespace irc

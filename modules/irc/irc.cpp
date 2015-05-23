@@ -50,6 +50,7 @@ Melanomodule melanomodule_irc()
     module.register_handler<irc::handler::AdminPart>("Part");
     module.register_handler<irc::handler::AcceptInvite>("AcceptInvite");
     module.register_handler<irc::handler::AdminRaw>("Raw");
+    module.register_handler<irc::handler::ClearBuffer>("ClearBuffer");
 
     module.register_handler<irc::handler::Whois330>("Whois330");
     module.register_handler<irc::handler::QSendWhois>("QSendWhois");

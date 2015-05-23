@@ -100,6 +100,12 @@ public:
      */
     network::Message parse_line(const std::string& line) const;
 
+    /**
+     * \brief Clears all messages with given priority or less
+     * \thread external \lock buffer
+     */
+    void clear(int priority);
+
 private:
 
     IrcConnection& irc;

@@ -179,6 +179,26 @@ protected:
     }
 };
 
+/**
+ * \brief Clears the IRC buffer
+ */
+class ClearBuffer: public ::handler::SimpleAction
+{
+public:
+    ClearBuffer(const Settings& settings, ::MessageConsumer* parent)
+        : SimpleAction("stop",settings,parent)
+    {
+        help = "Clears the IRC buffer";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        msg.destination->command({"CLEARBUFFER",{},priority});
+        return true;
+    }
+};
+
 } // namespace handler
 } // namespace irc
 

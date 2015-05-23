@@ -844,6 +844,11 @@ void IrcConnection::command(network::Command cmd)
                 return;
         }
     }
+    // Custom command
+    else if ( cmd.command == "CLEARBUFFER" )
+    {
+        buffer.clear(cmd.priority);
+    }
     /* Skipped: * = maybe later o = maybe disallow completely
      * OPER     o
      * SERVICE  o
