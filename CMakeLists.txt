@@ -22,7 +22,7 @@ project(MelanoBot CXX)
 set(PROJECT_VERSION 2.0)
 string(TOLOWER MelanoBot EXECUTABLE_NAME)
 set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
-set(PROJECT_WEBSITE "https://github.com/mbasaglia/Melanobot_v2")
+set(PROJECT_WEBSITE "https://wiki.evil-ant-colony.org/doku.php?id=melanobot:melanobot")
 
 # CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
@@ -147,3 +147,28 @@ if(DOXYGEN_FOUND)
         COMMENT "Committing Doxygen documentation"
     )
 endif(DOXYGEN_FOUND)
+
+# CPack
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A not-so-simple IRC bot")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER ${MAINTAINER})
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+install(DIRECTORY examples/ DESTINATION "share/${EXECUTABLE_NAME}" FILES_MATCHING PATTERN "*.info")
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${PROJECT_WEBSITE})
+install(FILES "${CMAKE_SOURCE_DIR}/COPYING" DESTINATION "share/doc/${EXECUTABLE_NAME}" RENAME copyright)
+
+include(CPack)
+
+# Custom dist
+set(DIST_ROOT "${PROJECT_NAME}-${PROJECT_DEV_VERSION}")
+set(DIST_PACKAGE "${DIST_ROOT}.tar.gz")
+add_custom_command(OUTPUT "${DIST_PACKAGE}"
+    COMMAND rm -f "${CMAKE_BINARY_DIR}/${DIST_PACKAGE}"
+    COMMAND git ls-files | xargs tar --transform="s,^,${DIST_ROOT}/," -caf "${CMAKE_BINARY_DIR}/${DIST_PACKAGE}"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+add_custom_target(dist DEPENDS "${DIST_PACKAGE}")
+
