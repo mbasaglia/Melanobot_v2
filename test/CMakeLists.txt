@@ -70,6 +70,8 @@ add_executable(test_formatter EXCLUDE_FROM_ALL test_formatter.cpp
     ${CMAKE_SOURCE_DIR}/src/time/time.cpp
     ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp
     ${CMAKE_SOURCE_DIR}/src/string/language.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/encoding.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/formatter.cpp
 )
 melanotest(test_formatter)
 
