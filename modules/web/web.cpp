@@ -34,6 +34,8 @@ Melanomodule melanomodule_web()
     module.register_handler<handler::UrbanDictionary>("UrbanDictionary");
     module.register_handler<handler::SearchWebSearx>("SearchWebSearx");
     module.register_handler<handler::VideoInfo>("VideoInfo");
+    module.register_handler<handler::MediaWiki>("MediaWiki");
+    module.register_handler<handler::MediaWikiTitles>("MediaWikiTitles");
 
     return module;
 }

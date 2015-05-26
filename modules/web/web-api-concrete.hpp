@@ -414,6 +414,119 @@ private:
     std::string not_found_reply = "Didn't find anything about %search";
 };
 
+/**
+ * \brief Handler searching on a Mediawiki (text search)
+ */
+class MediaWiki : public SimpleJson
+{
+public:
+    MediaWiki(const Settings& settings, MessageConsumer* parent)
+        : SimpleJson("wiki",settings,parent)
+    {
+        api_url = settings.get("url",api_url);
+        reply = settings.get("reply",reply);
+        not_found_reply = settings.get("not_found_reply",not_found_reply);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg,network::http::get(api_url,{
+            {"format",  "json"},
+            {"action",  "query"},
+            {"list",    "search"},
+            {"srsearch",msg.message},
+            {"srlimit", "1"},
+        }));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        auto result = parsed.get_child_optional("query.search.0");
+        string::FormatterConfig fmt;
+        Properties prop {
+            {"search", msg.source->encode_to(msg.message,fmt)},
+            {"user", msg.source->encode_to(msg.from.name,fmt)},
+        };
+
+        if ( !result )
+        {
+            reply_to(msg,fmt.decode(string::replace(not_found_reply,prop,"%")));
+            return;
+        }
+        prop["title"] = result->get("title","");
+        /// \todo Transform snippet to plaintext
+        prop["snippet"] = result->get("snippet","");
+
+        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+    }
+
+protected:
+    /**
+     * \brief API endpoint URL
+     */
+    std::string api_url = "http://en.wikipedia.org/w/api.php";
+    /**
+     * \brief Reply to give on found
+     */
+    std::string reply = "%snippet";
+    /**
+     * \brief Reply to give on not found
+     */
+    std::string not_found_reply = "I don't know anything about %search";
+};
+
+/**
+ * \brief Handler searching on a Mediawiki (Title Search)
+ */
+class MediaWikiTitles : public MediaWiki
+{
+public:
+    MediaWikiTitles(const Settings& settings, MessageConsumer* parent)
+        : MediaWiki(settings,parent)
+    {}
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg,network::http::get(api_url,{
+            {"format",  "json"},
+            {"action",  "query"},
+            {"prop",    "revisions"},
+            {"titles",  msg.message},
+            {"rvprop",  "content"},
+            {"rvsection","0"},
+            {"redirects",""},
+        }));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        auto result = parsed.get_child_optional("query.pages");
+        string::FormatterConfig fmt;
+        Properties prop {
+            {"search", msg.source->encode_to(msg.message,fmt)},
+            {"user", msg.source->encode_to(msg.from.name,fmt)},
+        };
+
+        if ( result && !result->empty() )
+            result = result->front().second;
+
+        if ( !result || !settings::has_child(*result,"revisions.0.*") )
+        {
+            reply_to(msg,fmt.decode(string::replace(not_found_reply,prop,"%")));
+            return;
+        }
+
+        prop["title"] = result->get("title","");
+        /// \todo Transform snippet to plaintext
+        prop["snippet"] = result->get("revisions.0.*","");
+
+        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+    }
+};
 
 } // namespace handler
 
