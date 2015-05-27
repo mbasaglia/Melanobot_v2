@@ -124,11 +124,11 @@ if(DOXYGEN_FOUND)
         set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/doc)
     endif()
 
-    set(DOXYGEN_INPUT "${CONFIG_HEADER} ${MELANOMODULE_HEADER}")
+    set(DOXYGEN_INPUT "\"${CONFIG_HEADER}\" \"${MELANOMODULE_HEADER}\"")
 
     file(GLOB_RECURSE DOXYGEN_INPUT_FILES "doc/*.dox" "src/*.cpp" "src/*.hpp" "modules/*.cpp" "modules/*.hpp" )
     foreach(source ${DOXYGEN_INPUT_FILES})
-        set(DOXYGEN_INPUT "${DOXYGEN_INPUT} ${source}")
+        set(DOXYGEN_INPUT "${DOXYGEN_INPUT} \"${source}\"")
     endforeach()
 
     configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
