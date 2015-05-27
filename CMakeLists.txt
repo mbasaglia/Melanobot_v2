@@ -119,9 +119,9 @@ find_package(Doxygen)
 if(DOXYGEN_FOUND)
 
     if ( ${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
-        set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/doc-out)
+        set(DOXYGEN_OUTPUT "\"${CMAKE_BINARY_DIR}/doc-out\"")
     else()
-        set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/doc)
+        set(DOXYGEN_OUTPUT "\"${CMAKE_BINARY_DIR}/doc\"")
     endif()
 
     set(DOXYGEN_INPUT "\"${CONFIG_HEADER}\" \"${MELANOMODULE_HEADER}\"")
