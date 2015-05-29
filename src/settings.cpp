@@ -254,3 +254,51 @@ std::ostream& operator<< ( std::ostream& stream, const Settings& settings )
 {
     return recursive_print(stream,settings);
 }
+
+/**
+ * \brief Info about data paths
+ */
+struct DataPathInfo
+{
+    DataPathInfo()
+    {
+        // Search current directory
+        paths.push_back(".");
+
+        std::string home_dir = settings::global_settings.get("path.home","");
+        if ( !home_dir.empty() )
+        {
+            // Search ~/.config/melanobot
+            paths.push_back(home_dir + "/.config/" + PROJECT_SHORTNAME);
+            best_match = paths.back();
+            // Search ~/.melanobot
+            paths.push_back(home_dir + ("/." PROJECT_SHORTNAME));
+        }
+
+        // Search installation directory PREFIX/share/melanobot
+        std::string exe_dir = settings::global_settings.get("path.executable","");
+        if ( !exe_dir.empty() )
+            paths.push_back(boost::filesystem::canonical(
+                exe_dir+"/../share/"+PROJECT_SHORTNAME).string());
+    }
+
+    std::vector<std::string> paths; ///< All search paths
+    std::string best_match=".";     ///< Preferred path
+};
+
+std::string settings::data_file(const std::string& rel_path, bool check)
+{
+    static DataPathInfo paths;
+
+    if ( !check )
+        return boost::filesystem::canonical(paths.best_match+"/"+rel_path).string();
+
+    for ( const auto& dir : paths.paths )
+    {
+        std::string full = dir+"/"+rel_path;
+        if ( boost::filesystem::exists(full) )
+            return boost::filesystem::canonical(full).string();
+    }
+
+    return {};
+}

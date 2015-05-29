@@ -142,6 +142,15 @@ namespace settings
             sett.put_child(key, {});
         return sett;
     }
+
+    /**
+     * \brief Gets the full path to a data file
+     * \param path      Path relative to the data directory
+     * \param check     Whether to check that the path exists
+     * \return The path to the requested file or an empty string
+     *         if \c check is \b true and the file doesn't exist
+     */
+    std::string data_file(const std::string& path, bool check = true);
 }
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
