@@ -278,8 +278,7 @@ struct DataPathInfo
         // Search installation directory PREFIX/share/melanobot
         std::string exe_dir = settings::global_settings.get("path.executable","");
         if ( !exe_dir.empty() )
-            paths.push_back(boost::filesystem::canonical(
-                exe_dir+"/../share/"+PROJECT_SHORTNAME).string());
+            paths.push_back(exe_dir+"/../share/"+PROJECT_SHORTNAME);
     }
 
     std::vector<std::string> paths; ///< All search paths
@@ -291,7 +290,7 @@ std::string settings::data_file(const std::string& rel_path, bool check)
     static DataPathInfo paths;
 
     if ( !check )
-        return boost::filesystem::canonical(paths.best_match+"/"+rel_path).string();
+        return boost::filesystem::absolute(paths.best_match+"/"+rel_path).string();
 
     for ( const auto& dir : paths.paths )
     {
