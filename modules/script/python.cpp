@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright  Mattia Basaglia
+ * \copyright Copyright 2015 Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 namespace python {
 
 
-ScriptOutput PythonEngine::exec(const std::string& python_code)
+ScriptOutput PythonEngine::exec(const std::string& python_code, const PropertyTree& dict)
 {
     if ( !initialize() )
         return ScriptOutput{};
@@ -31,8 +31,8 @@ ScriptOutput PythonEngine::exec(const std::string& python_code)
     ScriptOutput output;
 
     try {
-        ScriptEnvironment env(output);
-        boost::python::exec({python_code.data(), python_code.length()}, env.main_namespace());
+        ScriptEnvironment env(output, dict);
+        boost::python::exec(py_str(python_code), env.main_namespace());
         output.success = true;
     } catch (const boost::python::error_already_set&) {
         ErrorLog("py") << "Exception from python script";
@@ -42,7 +42,7 @@ ScriptOutput PythonEngine::exec(const std::string& python_code)
     return output;
 }
 
-ScriptOutput PythonEngine::exec_file(const std::string& file)
+ScriptOutput PythonEngine::exec_file(const std::string& file, const PropertyTree& dict)
 {
     if ( !initialize() )
         return ScriptOutput{};
@@ -50,8 +50,8 @@ ScriptOutput PythonEngine::exec_file(const std::string& file)
     ScriptOutput output;
 
     try {
-        ScriptEnvironment env(output);
-        boost::python::exec_file({file.data(), file.length()}, env.main_namespace());
+        ScriptEnvironment env(output, dict);
+        boost::python::exec_file(py_str(file), env.main_namespace());
         output.success = true;
     } catch (const boost::python::error_already_set&) {
         ErrorLog("py") << "Exception from python script";

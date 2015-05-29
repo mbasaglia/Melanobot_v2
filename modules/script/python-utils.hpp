@@ -1,7 +1,8 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright  Mattia Basaglia
+ * \copyright Copyright 2015 Mattia Basaglia
+ * \brief Low-level utilities interfacing directly to boost python
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +25,7 @@
 
 #include "string/logger.hpp"
 #include "python.hpp"
+#include "settings.hpp"
 
 namespace python {
 
@@ -67,12 +69,39 @@ private:
 inline std::string raw_input(const std::string&) { return {}; }
 
 /**
+ * \brief Convert C++ strings to Python strings
+ */
+inline boost::python::str py_str(const std::string& str)
+{
+    return { str.data(), str.size() };
+}
+
+
+/**
+ * \brief Recursevily converts a property tree to a Python dict object
+ */
+inline void ptree_to_dict(boost::python::object& output, const PropertyTree& tree)
+{
+    for ( const auto& child : tree )
+    {
+        if ( child.second.empty() )
+            output[py_str(child.first)] = py_str(child.second.data());
+        else
+        {
+            boost::python::dict child_object;
+            ptree_to_dict(child_object, child.second);
+            output[py_str(child.first)] = child_object;
+        }
+    }
+}
+
+/**
  * \brief Environment used to execute python scripts
  */
 class ScriptEnvironment
 {
 public:
-    ScriptEnvironment(ScriptOutput& output) :
+    ScriptEnvironment(ScriptOutput& output, const PropertyTree& dict) :
         stdout{[this](const std::string& line){output_.output.push_back(line);}},
         stderr{[](const std::string& line){Log("py",'>',3) << line;}},
         output_(output)
@@ -86,6 +115,7 @@ public:
         sys_module.attr("stdout") = ptr(&stdout);
         sys_module.attr("stderr") = ptr(&stderr);
         main_module.attr("raw_input") = make_function(&raw_input);
+        ptree_to_dict(main_namespace_, dict);
     }
 
     boost::python::object& main_namespace()

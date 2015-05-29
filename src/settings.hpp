@@ -161,6 +161,13 @@ std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
 using Properties = std::unordered_map<std::string,std::string>;
 
 /**
+ * \brief Converts flat properties to a tree
+ *
+ * Properties containing "." will be split into several nodes
+ */
+PropertyTree properties_to_tree(const Properties& properties);
+
+/**
  * \brief Class representing an error occurring during configuration
  */
 class ConfigurationError : public std::runtime_error

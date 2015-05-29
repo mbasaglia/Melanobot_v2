@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright  Mattia Basaglia
+ * \copyright Copyright 2015 Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <string>
+#include "settings.hpp"
 
 namespace python {
 
@@ -42,14 +43,16 @@ public:
     /**
      * \brief Executes some python code
      * \param python_code Python sources to execute
+     * \param dict        Properties to be added to the main dict
      */
-    ScriptOutput exec(const std::string& python_code);
+    ScriptOutput exec(const std::string& python_code, const PropertyTree& dict = {});
 
     /**
      * \brief Executes some python code from a file
      * \param file File containing python sources
+     * \param dict Properties to be added to the main dict
      */
-    ScriptOutput exec_file(const std::string& file);
+    ScriptOutput exec_file(const std::string& file, const PropertyTree& dict = {});
 
     /**
      * \brief Singleton instance

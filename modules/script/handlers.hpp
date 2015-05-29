@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright  Mattia Basaglia
+ * \copyright Copyright 2015 Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -49,9 +49,20 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
+        PropertyTree properties;
+        properties.put_child("source", properties_to_tree(msg.source->message_properties()));
+        properties.put_child("user", properties_to_tree(msg.from.properties));
+        properties.put("user.name",msg.from.name);
+        properties.put("user.channels",string::implode(",",msg.from.channels));
+        properties.put("user.global_id",msg.from.global_id);
+        properties.put("user.host",msg.from.host);
+        properties.put("user.local_id",msg.from.local_id);
+        properties.put("message", msg.message);
+        properties.put("input", msg.raw);
+        properties.put("channels", string::implode(",",msg.channels));
+
         /// \todo Timeout
-        /// \todo Python (readonly) variables for: raw, message, message_properties, from, channels
-        auto output = python::PythonEngine::instance().exec_file(script);
+        auto output = python::PythonEngine::instance().exec_file(script,properties);
         if ( output.success || !discard_error )
             for ( const auto& line : output.output )
                 reply_to(msg,line);

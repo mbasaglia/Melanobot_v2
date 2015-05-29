@@ -301,3 +301,11 @@ std::string settings::data_file(const std::string& rel_path, bool check)
 
     return {};
 }
+
+PropertyTree properties_to_tree(const Properties& properties)
+{
+    PropertyTree ptree;
+    for ( const auto& prop : properties )
+        ptree.put(prop.first,prop.second);
+    return ptree;
+}
