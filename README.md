@@ -33,8 +33,10 @@ Dependencies
     * filesystem
     * program_options
     * property_tree
+    * python (MODULE_SCRIPT)
 * [cURLpp](http://jpbarrette.github.io/curlpp/) (MODULE_WEB)
 * [OpenSSL](http://openssl.org/) (MODULE_XONOTIC)
+* [CPython API](https://www.python.org/) (MODULE_SCRIPT)
 
 Building
 --------
@@ -58,4 +60,4 @@ See configuration examples in ./examples
 Installation
 ------------
 
-TODO
+    make install
