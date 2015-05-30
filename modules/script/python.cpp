@@ -22,7 +22,6 @@
 
 namespace python {
 
-
 ScriptOutput PythonEngine::exec(const std::string& python_code, const PropertyTree& dict)
 {
     if ( !initialize() )
@@ -64,7 +63,11 @@ ScriptOutput PythonEngine::exec_file(const std::string& file, const PropertyTree
 bool PythonEngine::initialize()
 {
     if ( !Py_IsInitialized() )
+    {
+        /// \todo custom module factory
+        PyImport_AppendInittab( "melanobot", &python::melanobot::initmelanobot );
         Py_Initialize();
+    }
 
     if ( !Py_IsInitialized() )
     {

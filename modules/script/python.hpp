@@ -23,6 +23,9 @@
 #include <string>
 #include "settings.hpp"
 
+/**
+ * \brief Namespace for Python-related functionality
+ */
 namespace python {
 
 /**

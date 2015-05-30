@@ -21,11 +21,11 @@
 #define PYTHON_UTILS_HPP
 
 #include <functional>
-#include <boost/python.hpp>
 
 #include "string/logger.hpp"
 #include "python.hpp"
 #include "settings.hpp"
+#include "python-modules.hpp"
 
 namespace python {
 
@@ -75,7 +75,6 @@ inline boost::python::str py_str(const std::string& str)
 {
     return { str.data(), str.size() };
 }
-
 
 /**
  * \brief Recursevily converts a property tree to a Python dict object
