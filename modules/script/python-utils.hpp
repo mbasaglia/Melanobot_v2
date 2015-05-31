@@ -25,7 +25,7 @@
 #include "string/logger.hpp"
 #include "python.hpp"
 #include "settings.hpp"
-#include "python-modules.hpp"
+#include "boost-python.hpp"
 
 namespace python {
 
@@ -77,44 +77,25 @@ inline boost::python::str py_str(const std::string& str)
 }
 
 /**
- * \brief Recursevily converts a property tree to a Python dict object
- */
-inline void ptree_to_dict(boost::python::object& output, const PropertyTree& tree)
-{
-    for ( const auto& child : tree )
-    {
-        if ( child.second.empty() )
-            output[py_str(child.first)] = py_str(child.second.data());
-        else
-        {
-            boost::python::dict child_object;
-            ptree_to_dict(child_object, child.second);
-            output[py_str(child.first)] = child_object;
-        }
-    }
-}
-
-/**
  * \brief Environment used to execute python scripts
  */
 class ScriptEnvironment
 {
 public:
-    ScriptEnvironment(ScriptOutput& output, const PropertyTree& dict) :
+    ScriptEnvironment(ScriptOutput& output) :
         stdout{[this](const std::string& line){output_.output.push_back(line);}},
         stderr{[](const std::string& line){Log("py",'>',3) << line;}},
         output_(output)
     {
         using namespace boost::python;
+        static object class_OutputCapture = class_<OutputCapture>("OutputCapture",no_init)
+            .def("write", &OutputCapture::write);
         object main_module = import("__main__");
         main_namespace_ = main_module.attr("__dict__");
-        object class_PythonOutputCapture = class_<OutputCapture>("OutputCapture",no_init)
-            .def("write", &OutputCapture::write);
         object sys_module = import("sys");
         sys_module.attr("stdout") = ptr(&stdout);
         sys_module.attr("stderr") = ptr(&stderr);
         main_module.attr("raw_input") = make_function(&raw_input);
-        ptree_to_dict(main_namespace_, dict);
     }
 
     boost::python::object& main_namespace()

@@ -19,10 +19,11 @@
 #include "python.hpp"
 
 #include "python-utils.hpp"
+#include "python-modules.hpp"
 
 namespace python {
 
-ScriptOutput PythonEngine::exec(const std::string& python_code, const PropertyTree& dict)
+ScriptOutput PythonEngine::exec(const std::string& python_code, const Converter& vars)
 {
     if ( !initialize() )
         return ScriptOutput{};
@@ -30,7 +31,8 @@ ScriptOutput PythonEngine::exec(const std::string& python_code, const PropertyTr
     ScriptOutput output;
 
     try {
-        ScriptEnvironment env(output, dict);
+        ScriptEnvironment env(output);
+        vars.convert(env.main_namespace());
         boost::python::exec(py_str(python_code), env.main_namespace());
         output.success = true;
     } catch (const boost::python::error_already_set&) {
@@ -41,7 +43,7 @@ ScriptOutput PythonEngine::exec(const std::string& python_code, const PropertyTr
     return output;
 }
 
-ScriptOutput PythonEngine::exec_file(const std::string& file, const PropertyTree& dict)
+ScriptOutput PythonEngine::exec_file(const std::string& file, const Converter& vars)
 {
     if ( !initialize() )
         return ScriptOutput{};
@@ -49,7 +51,8 @@ ScriptOutput PythonEngine::exec_file(const std::string& file, const PropertyTree
     ScriptOutput output;
 
     try {
-        ScriptEnvironment env(output, dict);
+        ScriptEnvironment env(output);
+        vars.convert(env.main_namespace());
         boost::python::exec_file(py_str(file), env.main_namespace());
         output.success = true;
     } catch (const boost::python::error_already_set&) {

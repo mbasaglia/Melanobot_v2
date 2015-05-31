@@ -21,7 +21,7 @@
 
 #include <vector>
 #include <string>
-#include "settings.hpp"
+#include "script_variables.hpp"
 
 /**
  * \brief Namespace for Python-related functionality
@@ -48,14 +48,14 @@ public:
      * \param python_code Python sources to execute
      * \param dict        Properties to be added to the main dict
      */
-    ScriptOutput exec(const std::string& python_code, const PropertyTree& dict = {});
+    ScriptOutput exec(const std::string& python_code, const Converter& vars = {});
 
     /**
      * \brief Executes some python code from a file
      * \param file File containing python sources
      * \param dict Properties to be added to the main dict
      */
-    ScriptOutput exec_file(const std::string& file, const PropertyTree& dict = {});
+    ScriptOutput exec_file(const std::string& file, const Converter& vars = {});
 
     /**
      * \brief Singleton instance

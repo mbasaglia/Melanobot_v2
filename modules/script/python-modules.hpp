@@ -21,20 +21,57 @@
 
 #include "boost-python.hpp"
 #include "settings.hpp"
+#include "message/input_message.hpp"
+#include "script_variables.hpp"
 
 namespace python {
+
+/**
+ * \brief Return a functor converting a pointer to member using Converter::convert
+ */
+template<class Class, class Member>
+    auto convert_member(Member Class::*member)
+    {
+        return [member](const Class& obj) {
+            boost::python::object out;
+            Converter::convert(obj.*member, out);
+            return out;
+        };
+    }
 
 /**
  * \brief Namespace corresponding to the python module \c melanobot
  */
 namespace melanobot {
-using namespace boost::python;
-
 
 BOOST_PYTHON_MODULE(melanobot)
 {
+    using namespace boost::python;
+
     def("data_file", &settings::data_file);
     def("data_file", [](const std::string& path) { return settings::data_file(path); } );
+
+    class_<user::User>("User",no_init)
+        .def_readwrite("name",&user::User::name)
+        .def_readwrite("host",&user::User::host)
+        .def_readwrite("local_id",&user::User::local_id)
+        .def_readwrite("global_id",&user::User::global_id)
+        .add_property("channels",convert_member(&user::User::channels))
+        .def("__getattr__",&user::User::property)
+        /// \todo setattr
+    ;
+
+    /// \todo readonly or readwrite?
+    class_<network::Message>("Message",no_init)
+        .def_readonly("raw",&network::Message::raw)
+        .def_readonly("params",convert_member(&network::Message::params))
+
+        .def_readonly("message",&network::Message::message)
+        .def_readonly("channels",convert_member(&network::Message::channels))
+        .def_readonly("direct",&network::Message::direct)
+        .def_readonly("user",&network::Message::from)
+        .def_readonly("victim",&network::Message::victim)
+    ;
 }
 
 } // namespace melanobot
