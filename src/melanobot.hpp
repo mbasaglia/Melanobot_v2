@@ -36,12 +36,20 @@
 class Melanobot : public MessageConsumer
 {
 public:
-    explicit Melanobot(const Settings& settings);
-    Melanobot(const Melanobot&) = delete;
-    Melanobot(Melanobot&&) = delete;
-    Melanobot& operator=(const Melanobot&) = delete;
-    Melanobot& operator=(Melanobot&&) = delete;
     ~Melanobot();
+
+    /**
+     * \brief Returns the singleton instance
+     * \pre initialize() has been called
+     */
+    static Melanobot& instance();
+
+    /**
+     * \brief Initializes the singleton instance
+     * \pre initialize() has never been called
+     * \post instance() can be called
+     */
+    static Melanobot& initialize(const Settings& settings);
 
     /**
      * \brief Runs the bot
@@ -84,12 +92,24 @@ public:
     Settings get_template(const std::string& name) const;
 
 private:
+    explicit Melanobot(const Settings& settings);
+    Melanobot(const Melanobot&) = delete;
+    Melanobot(Melanobot&&) = delete;
+    Melanobot& operator=(const Melanobot&) = delete;
+    Melanobot& operator=(Melanobot&&) = delete;
+
+    friend std::unique_ptr<Melanobot> std::make_unique<Melanobot, const Settings&>(const Settings& settings);
+    /// Singleton instance
+    static std::unique_ptr<Melanobot> singleton;
+
     /// \todo allow dynamic connection/handler creation (requires locking)
     std::unordered_map<std::string,std::unique_ptr<network::Connection>> connections;
     std::vector<std::unique_ptr<handler::Handler>> handlers;
 
+    /// Message Queue
     ConcurrentQueue<network::Message> messages;
 
+    /// Settings containing configuration template definitions
     Settings templates;
 };
 

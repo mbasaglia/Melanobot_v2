@@ -20,6 +20,23 @@
 
 #include "handler/handler.hpp"
 
+std::unique_ptr<Melanobot> Melanobot::singleton;
+
+Melanobot& Melanobot::instance()
+{
+    if ( !singleton )
+        CRITICAL_ERROR("Melanobot singleton has not been initialized");
+    return *singleton;
+}
+
+Melanobot& Melanobot::initialize(const Settings& settings)
+{
+    if ( singleton )
+        CRITICAL_ERROR("Melanobot singleton initialized twice");
+    singleton = std::make_unique<Melanobot>(settings);
+    return *singleton;
+}
+
 Melanobot::Melanobot(const Settings& settings) : MessageConsumer(nullptr)
 {
     templates = settings.get_child("templates",{});
