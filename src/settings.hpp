@@ -85,14 +85,7 @@ namespace settings
      * \param overwrite If \b true all of the properties of \c source will be used,
      *                  if \b false, only those not already found in the tree
      */
-    inline void merge(Settings& target, const Settings& source, bool overwrite)
-    {
-        for ( const auto& prop : source )
-        {
-            if ( overwrite || !target.get_child_optional(prop.first) )
-                target.put_child(prop.first,prop.second);
-        }
-    }
+    void merge(Settings& target, const Settings& source, bool overwrite);
 
     /**
      * \brief Same as \c merge but instead of modifying \c target, it returns a new object

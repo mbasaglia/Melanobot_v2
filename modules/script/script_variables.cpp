@@ -18,6 +18,7 @@
  */
 #include "script_variables.hpp"
 #include "python-utils.hpp"
+#include "handlers.hpp"
 
 namespace python {
 
@@ -54,6 +55,15 @@ void MessageVariables::convert(boost::python::object& target_namespace) const
     boost::python::import("melanobot");
     target_namespace["message"] = boost::ref(message);
     /// \todo message.source (with message_properties)
+}
+
+
+void StructuredScript::Variables::convert(boost::python::object& target_namespace) const
+{
+    MessageVariables::convert(target_namespace);
+    boost::python::dict sett;
+    Converter::convert(settings, sett);
+    target_namespace["settings"] = sett;
 }
 
 } // namespace python

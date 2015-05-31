@@ -30,6 +30,7 @@ Melanomodule melanomodule_script()
     module.register_log_type("py",color::dark_yellow);
 
     module.register_handler<python::SimplePython>("SimplePython");
+    module.register_handler<python::StructuredScript>("StructuredScript");
 
     return module;
 }

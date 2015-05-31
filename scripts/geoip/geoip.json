@@ -1,0 +1,11 @@
+{
+	"script"   : "geoip/geoip.py",
+	"trigger"  : "geoip",
+	"synopsis" : "address",
+	"help"     : "Shows geolocation information on the given address",
+	"discard_error" : 0,
+	"settings" : {
+		"database" : "/usr/share/GeoIP/GeoLite2.mmdb",
+		"format"   : "Address: %resolved, Country: %country.name (%country.iso_code)"
+	}
+}

@@ -309,3 +309,18 @@ PropertyTree properties_to_tree(const Properties& properties)
         ptree.put(prop.first,prop.second);
     return ptree;
 }
+
+void settings::merge ( Settings& target, const Settings& source, bool overwrite )
+{
+    if ( overwrite )
+        target.data() = source.data();
+
+    for ( const auto& prop : source )
+    {
+        auto child = target.get_child_optional(prop.first);
+        if ( !child )
+            target.put_child(prop.first,prop.second);
+        else
+            merge(*child, prop.second, overwrite);
+    }
+}

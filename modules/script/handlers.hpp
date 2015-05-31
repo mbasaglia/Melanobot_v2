@@ -37,6 +37,7 @@ public:
         if ( script_rel.empty() )
             throw ConfigurationError("Missing script file");
 
+        /// \todo check for absolute path
         script = settings::data_file("scripts/"+script_rel);
         if ( script.empty() )
             throw ConfigurationError("Script file not found: "+script_rel);
@@ -50,7 +51,8 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         /// \todo Timeout
-        auto output = python::PythonEngine::instance().exec_file(script,MessageVariables(msg));
+        auto env = environment(msg);
+        auto output = python::PythonEngine::instance().exec_file(script,*env);
         if ( output.success || !discard_error )
             for ( const auto& line : output.output )
                 reply_to(msg,line);
@@ -58,9 +60,88 @@ protected:
         return true;
     }
 
+    /**
+     * \brief Build the environment on which the script is run
+     */
+    virtual std::unique_ptr<MessageVariables> environment(network::Message& msg) const
+    {
+        return std::make_unique<MessageVariables>(msg);
+    }
+
 private:
     std::string script;         ///< Script file path
     bool discard_error = true;  ///< If \b true, only prints output of scripts that didn't fail
+};
+
+/**
+ * \brief Reads a json file describing the handler
+ */
+class StructuredScript : public SimplePython
+{
+private:
+    /**
+     * \brief Exposes \c settings
+     * \note A bit ugly, convert is defined in script_variables.cpp
+     */
+    struct Variables : public MessageVariables
+    {
+        Variables(const Settings& settings, network::Message& msg)
+            : MessageVariables(msg), settings(settings) {}
+
+        void convert(boost::python::object& target_namespace) const override;
+
+        const Settings& settings;
+    };
+
+public:
+    StructuredScript(const Settings& in_settings, MessageConsumer* parent)
+        : StructuredScript(load_settings(in_settings),parent,true)
+    {}
+
+protected:
+    std::unique_ptr<MessageVariables> environment(network::Message& msg) const override
+    {
+        return std::make_unique<Variables>(settings,msg);
+    }
+
+private:
+    /**
+     * \brief Called by the public constructor to ensure settings are read only once
+     */
+    StructuredScript(const Settings& read_settings, MessageConsumer* parent, bool)
+        : SimplePython(read_settings,parent)
+    {
+        settings = read_settings.get_child("settings",{});
+    }
+
+    /**
+     * \brief Load settings from a file descibing the handler
+     * \param input Settings passed to the constructor
+     * \returns Settings containing merged keys of \c input and what has been
+     *          read from the file
+     */
+    static Settings load_settings(const Settings& input)
+    {
+        std::string relfile = input.get("id","");
+        if ( relfile.empty() )
+            throw ConfigurationError("Missing id file");
+
+        std::string descriptor = settings::data_file("scripts/"+relfile+"/"+relfile+".json");
+        if ( descriptor.empty() )
+            throw ConfigurationError("Id file not found: "+relfile);
+
+        Settings description;
+        try {
+            description = settings::load(descriptor,settings::FileFormat::JSON);
+        } catch ( const CriticalException& exc ) {
+            throw ConfigurationError(exc.what());
+        }
+
+        settings::merge(description, input, true);
+        return description;
+    }
+
+    Settings settings;
 };
 
 } // namespace python
