@@ -58,6 +58,12 @@ public:
         }
     }
 
+    void write_unicode(const boost::python::object& unicode)
+    {
+        using namespace boost::python;
+        write(extract<std::string>(str(unicode).encode("utf-8")));
+    }
+
 private:
     std::string line; ///< Partial line buffer
     std::function<void(const std::string&)> print; ///< Functor called when a line has to be printed
@@ -89,7 +95,9 @@ public:
     {
         using namespace boost::python;
         static object class_OutputCapture = class_<OutputCapture>("OutputCapture",no_init)
-            .def("write", &OutputCapture::write);
+            .def("write", &OutputCapture::write)
+            .def("write", &OutputCapture::write_unicode)
+        ;
         object main_module = import("__main__");
         main_namespace_ = main_module.attr("__dict__");
         object sys_module = import("sys");
