@@ -37,7 +37,11 @@ ScriptOutput PythonEngine::exec(const std::string& python_code, const Converter&
         output.success = true;
     } catch (const boost::python::error_already_set&) {
         ErrorLog("py") << "Exception from python script";
-        PyErr_Print();
+
+        if (PyErr_ExceptionMatches(PyExc_SystemExit))
+            Log("py",'!',3) << "Called sys.exit";
+        else
+            PyErr_Print();
     }
 
     return output;
@@ -57,7 +61,11 @@ ScriptOutput PythonEngine::exec_file(const std::string& file, const Converter& v
         output.success = true;
     } catch (const boost::python::error_already_set&) {
         ErrorLog("py") << "Exception from python script";
-        PyErr_Print();
+        
+        if (PyErr_ExceptionMatches(PyExc_SystemExit))
+            Log("py",'!',3) << "Called sys.exit";
+        else
+            PyErr_Print();
     }
 
     return output;
