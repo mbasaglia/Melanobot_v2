@@ -54,11 +54,13 @@ BOOST_PYTHON_MODULE(melanobot)
     class_<user::User>("User",no_init)
         .def_readwrite("name",&user::User::name)
         .def_readwrite("host",&user::User::host)
-        .def_readwrite("local_id",&user::User::local_id)
+        .def_readonly("local_id",&user::User::local_id)
         .def_readwrite("global_id",&user::User::global_id)
         .add_property("channels",convert_member(&user::User::channels))
         .def("__getattr__",&user::User::property)
-        /// \todo setattr
+        .def("__setattr__",[](user::User& user, const std::string& property, object val) {
+            user.properties[property] = extract<std::string>(val);
+        })
     ;
 
     /// \todo readonly or readwrite?
