@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright  Mattia Basaglia
+ * \copyright Copyright 2015 Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,39 +19,7 @@
 #ifndef PYTHON_MODULES_HPP
 #define PYTHON_MODULES_HPP
 
-#include <type_traits>
-
-namespace boost {
-namespace python {
-namespace detail {
-
-/**
- * \brief get_signature for pointer to members, discarding the owner class
- */
-template <class Class, class R, class... Args>
-    auto get_signature_nomember(R(Class::*)(Args...))
-    {
-        return boost::mpl::vector<R, Args...>();
-    }
-
-template <class Class, class R, class... Args>
-    auto get_signature_nomember(R(Class::*)(Args...) const)
-    {
-        return boost::mpl::vector<R, Args...>();
-    }
-
-/**
- * \brief get_signature for functors
- */
-template <class T, class = std::enable_if_t<std::is_member_function_pointer<decltype(&T::operator())>::value>>
-    auto get_signature(T, void* = 0)
-    {
-        return get_signature_nomember(decltype(&T::operator())());
-    }
-
-}}} // namespace boost::python::detail
-
-#include <boost/python.hpp>
+#include "boost-python.hpp"
 #include "settings.hpp"
 
 namespace python {
