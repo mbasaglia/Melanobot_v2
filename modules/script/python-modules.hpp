@@ -74,6 +74,9 @@ BOOST_PYTHON_MODULE(melanobot)
     def("data_file", &settings::data_file);
     def("data_file", [](const std::string& path) { return settings::data_file(path); } );
 
+    /// \todo Proxy class thak keeps user and pointer to connection,
+    /// and updates the user on write operations
+    /// (or smart pointers that updates upon destructor -> custom deleter)
     class_<user::User>("User",no_init)
         .def_readwrite("name",&user::User::name)
         .def_readwrite("host",&user::User::host)

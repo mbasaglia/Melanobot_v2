@@ -74,7 +74,6 @@ protected:
         if ( output.success || !discard_error )
             for ( const auto& line : output.output )
                 reply_to(msg,format(line));
-        /// \todo Update from/victim
 
         return true;
     }
