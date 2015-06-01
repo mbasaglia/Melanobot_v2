@@ -24,6 +24,7 @@
 #include "message/input_message.hpp"
 #include "script_variables.hpp"
 #include "melanobot.hpp"
+#include "network/connection.hpp"
 
 namespace python {
 
@@ -38,6 +39,27 @@ template<class Class, class Member>
             Converter::convert(obj.*member, out);
             return out;
         };
+    }
+
+/**
+ * \brief Shothand to make functions that return pointer managed by C++
+ */
+template<class Func>
+    auto return_pointer(Func&& func)
+    {
+        using namespace boost::python;
+        return make_function(std::forward<Func>(func),
+            return_value_policy<reference_existing_object>());
+    }
+/**
+ * \brief Shothand to make functions that return a reference that should be copied
+ */
+template<class Func>
+    auto return_copy(Func&& func)
+    {
+        using namespace boost::python;
+        return make_function(std::forward<Func>(func),
+            return_value_policy<return_by_value>());
     }
 
 /**
@@ -74,10 +96,14 @@ BOOST_PYTHON_MODULE(melanobot)
         .def_readwrite("direct",&network::Message::direct)
         .def_readonly("user",&network::Message::from)
         .def_readonly("victim",&network::Message::victim)
+
+        .def_readonly("source",&network::Message::source)
+        .def_readonly("destination",&network::Message::destination)
     ;
 
     class_<Melanobot,Melanobot*,boost::noncopyable>("Melanobot",no_init)
         .def("stop",&Melanobot::stop)
+        .def("connection",return_pointer(&Melanobot::connection))
     ;
 
     class_<color::Color12>("Color")
@@ -115,6 +141,22 @@ BOOST_PYTHON_MODULE(melanobot)
         .def("convert",[](string::Formatter* fmt, const std::string& str) {
             return str;
         })
+    ;
+
+    class_<network::Connection,network::Connection*,boost::noncopyable>("Connection",no_init)
+        .add_property("name",return_copy(&network::Connection::config_name))
+        .add_property("description",&network::Connection::description)
+        .add_property("protocol",&network::Connection::protocol)
+        .add_property("formatter",return_pointer(&network::Connection::formatter))
+        .def("user",&network::Connection::get_user)
+        /// \todo Expose Command
+        .def("command",[](network::Connection* conn,const std::string& command){
+            conn->command({command});
+        })
+        /// \todo Expose OutputMessage and say()
+        .def("connect",&network::Connection::connect)
+        .def("disconnect",&network::Connection::disconnect)
+        .def("reconnect",&network::Connection::reconnect)
     ;
 
 }
