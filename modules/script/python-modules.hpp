@@ -80,6 +80,15 @@ BOOST_PYTHON_MODULE(melanobot)
         .def("stop",&Melanobot::stop)
     ;
 
+    class_<string::Formatter,string::Formatter*,boost::noncopyable>("Formatter",no_init)
+        .def("__init__", make_constructor([](const std::string& name) {
+            return string::Formatter::formatter(name);
+        }))
+        .add_property("name",[](string::Formatter* fmt) {
+            return fmt ? fmt->name() : "";
+        })
+    ;
+
 }
 
 } // namespace melanobot

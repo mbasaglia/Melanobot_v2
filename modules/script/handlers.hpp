@@ -29,6 +29,20 @@ namespace python {
  */
 class SimplePython : public handler::SimpleAction
 {
+protected:
+    /**
+     * \brief Exposes data members
+     * \note A bit ugly, convert is defined in script_variables.cpp
+     */
+    struct Variables : public MessageVariables
+    {
+        Variables(SimplePython* obj, network::Message& msg)
+            : MessageVariables(msg), obj(obj) {}
+
+        void convert(boost::python::object& target_namespace) const override;
+
+        SimplePython* obj;
+    };
 public:
     SimplePython(const Settings& settings, MessageConsumer* parent)
         : SimpleAction(settings.get("trigger",settings.get("script","")),settings,parent)
@@ -68,9 +82,9 @@ protected:
     /**
      * \brief Build the environment on which the script is run
      */
-    virtual std::unique_ptr<MessageVariables> environment(network::Message& msg) const
+    virtual std::unique_ptr<MessageVariables> environment(network::Message& msg)
     {
-        return std::make_unique<MessageVariables>(msg);
+        return std::make_unique<Variables>(this,msg);
     }
 
 private:
@@ -96,14 +110,12 @@ private:
      * \brief Exposes \c settings
      * \note A bit ugly, convert is defined in script_variables.cpp
      */
-    struct Variables : public MessageVariables
+    struct Variables : public SimplePython::Variables
     {
-        Variables(const Settings& settings, network::Message& msg)
-            : MessageVariables(msg), settings(settings) {}
+        Variables(StructuredScript* obj, network::Message& msg)
+            : SimplePython::Variables(obj,msg) {}
 
         void convert(boost::python::object& target_namespace) const override;
-
-        const Settings& settings;
     };
 
 public:
@@ -112,9 +124,9 @@ public:
     {}
 
 protected:
-    std::unique_ptr<MessageVariables> environment(network::Message& msg) const override
+    std::unique_ptr<MessageVariables> environment(network::Message& msg) override
     {
-        return std::make_unique<Variables>(settings,msg);
+        return std::make_unique<Variables>(this,msg);
     }
 
 private:

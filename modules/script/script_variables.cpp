@@ -57,12 +57,19 @@ void MessageVariables::convert(boost::python::object& target_namespace) const
     /// \todo message.source (with message_properties)
 }
 
+void SimplePython::Variables::convert(boost::python::object& target_namespace) const
+{
+    using namespace boost::python;
+    MessageVariables::convert(target_namespace);
+    import("melanobot");
+    target_namespace["formatter"] = ptr(obj->formatter);
+}
 
 void StructuredScript::Variables::convert(boost::python::object& target_namespace) const
 {
-    MessageVariables::convert(target_namespace);
+    SimplePython::Variables::convert(target_namespace);
     boost::python::dict sett;
-    Converter::convert(settings, sett);
+    Converter::convert(static_cast<StructuredScript*>(obj)->settings, sett);
     target_namespace["settings"] = sett;
 }
 
