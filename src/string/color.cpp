@@ -40,6 +40,23 @@ Color12 dark_blue       = Color12(0x0, 0x0, 0x8);
 Color12 dark_magenta    = Color12(0x8, 0x0, 0x8);
 Color12 dark_cyan       = Color12(0x0, 0x8, 0x8);
 
+
+Color12(const std::string& s)
+{
+    if ( s.empty() )
+        return;
+
+    if ( s.size() == 3 && std::isxdigit(s[0]) )
+    {
+        valid = true;
+        r = component_from_hex(s[0]);
+        g = component_from_hex(s[1]);
+        b = component_from_hex(s[2]);
+    }
+    else
+        *this = color::Color12::from_name(s);
+}
+
 Color12::Component Color12::to_4bit() const
 {
     if ( !valid )

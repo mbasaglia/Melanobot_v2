@@ -80,6 +80,18 @@ BOOST_PYTHON_MODULE(melanobot)
         .def("stop",&Melanobot::stop)
     ;
 
+    class_<color::Color12>("Color")
+        .def(init<std::string>())
+        .def(init<color::Color12::BitMask>())
+        .def(init<color::Color12::Component,color::Color12::Component,color::Color12::Component>())
+        .add_property("valid",&color::Color12::is_valid)
+        .add_property("red",&color::Color12::red)
+        .add_property("green",&color::Color12::green)
+        .add_property("blue",&color::Color12::blue)
+        .def("hsv",&color::Color12::hsv).staticmethod("hsv")
+        .def("blend",&color::Color12::blend).staticmethod("blend")
+    ;
+
     class_<string::Formatter,string::Formatter*,boost::noncopyable>("Formatter",no_init)
         .def("__init__", make_constructor([](const std::string& name) {
             return string::Formatter::formatter(name);
@@ -87,6 +99,13 @@ BOOST_PYTHON_MODULE(melanobot)
         .add_property("name",[](string::Formatter* fmt) {
             return fmt ? fmt->name() : "";
         })
+        .def("convert",[](string::Formatter* fmt, const color::Color12& col) {
+            return fmt ? fmt->color(col) : "";
+        })
+        .def("convert",[](string::Formatter* fmt, const std::string& str) {
+            return str;
+        })
+
     ;
 
 }

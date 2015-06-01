@@ -62,17 +62,22 @@ public:
     SUPER_CONSTEXPR Color12(Component r, Component g, Component b)
         : valid(true), r(validate(r)), g(validate(g)), b(validate(b)) {}
     /**
-     * \brief Creates a color from a hex string
+     * \brief Creates a color from a hex string or a name
      */
     Color12(const std::string& s)
     {
-        if ( s.size() >= 3 )
+        if ( s.empty() )
+            return;
+
+        if ( s.size() == 3 && std::isxdigit(s[0]) )
         {
             valid = true;
             r = component_from_hex(s[0]);
             g = component_from_hex(s[1]);
             b = component_from_hex(s[2]);
         }
+
+        *this = color::Color12::from_name(s);
     }
 
     /**
