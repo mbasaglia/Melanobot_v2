@@ -41,7 +41,7 @@ Color12 dark_magenta    = Color12(0x8, 0x0, 0x8);
 Color12 dark_cyan       = Color12(0x0, 0x8, 0x8);
 
 
-Color12(const std::string& s)
+Color12::Color12(const std::string& s)
 {
     if ( s.empty() )
         return;

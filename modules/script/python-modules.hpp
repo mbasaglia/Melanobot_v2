@@ -90,6 +90,16 @@ BOOST_PYTHON_MODULE(melanobot)
         .add_property("blue",&color::Color12::blue)
         .def("hsv",&color::Color12::hsv).staticmethod("hsv")
         .def("blend",&color::Color12::blend).staticmethod("blend")
+        .def("__str__",[](const color::Color12& col){
+            object main = import("__main__");
+            dict main_namespace = extract<dict>(main.attr("__dict__"));
+            if ( !main_namespace.has_key("formatter") )
+                return object(str());
+            return main_namespace["formatter"].attr("convert")(col);
+        })
+        .def("__add__",[](const color::Color12& lhs, const str& rhs) {
+            return str(lhs)+rhs;
+        })
     ;
 
     class_<string::Formatter,string::Formatter*,boost::noncopyable>("Formatter",no_init)
@@ -105,7 +115,6 @@ BOOST_PYTHON_MODULE(melanobot)
         .def("convert",[](string::Formatter* fmt, const std::string& str) {
             return str;
         })
-
     ;
 
 }
