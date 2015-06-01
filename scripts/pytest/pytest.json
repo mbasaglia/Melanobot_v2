@@ -1,0 +1,7 @@
+{
+        "script"   : "pytest/pytest.py",
+        "trigger"  : "pytest",
+        "synopsis" : "script [arguments]",
+        "help"     : "Runs the given bot script",
+        "discard_error" : 0,
+}

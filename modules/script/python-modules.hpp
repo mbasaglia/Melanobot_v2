@@ -66,12 +66,12 @@ BOOST_PYTHON_MODULE(melanobot)
 
     /// \todo readonly or readwrite?
     class_<network::Message>("Message",no_init)
-        .def_readonly("raw",&network::Message::raw)
+        .def_readwrite("raw",&network::Message::raw)
         .def_readonly("params",convert_member(&network::Message::params))
 
-        .def_readonly("message",&network::Message::message)
+        .def_readwrite("message",&network::Message::message)
         .def_readonly("channels",convert_member(&network::Message::channels))
-        .def_readonly("direct",&network::Message::direct)
+        .def_readwrite("direct",&network::Message::direct)
         .def_readonly("user",&network::Message::from)
         .def_readonly("victim",&network::Message::victim)
     ;
