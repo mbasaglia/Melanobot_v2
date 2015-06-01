@@ -45,6 +45,10 @@ public:
         synopsis += settings.get("synopsis","");
         help = settings.get("help", "Runs "+script_rel);
         discard_error = settings.get("discard_error", discard_error);
+
+        auto formatter_name = settings.get_optional<std::string>("formatter");
+        if ( formatter_name )
+            formatter = string::Formatter::formatter(*formatter_name);
     }
 
 protected:
@@ -55,7 +59,7 @@ protected:
         auto output = python::PythonEngine::instance().exec_file(script,*env);
         if ( output.success || !discard_error )
             for ( const auto& line : output.output )
-                reply_to(msg,line);
+                reply_to(msg,format(line));
         /// \todo Update from/victim
 
         return true;
@@ -70,8 +74,16 @@ protected:
     }
 
 private:
+    string::FormattedString format(const std::string& line)
+    {
+        if ( formatter )
+            return formatter->decode(line);
+        return string::FormattedString(line);
+    }
+
     std::string script;         ///< Script file path
     bool discard_error = true;  ///< If \b true, only prints output of scripts that didn't fail
+    string::Formatter* formatter{nullptr};      ///< Formatter used to parse the output
 };
 
 /**
