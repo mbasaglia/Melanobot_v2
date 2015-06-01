@@ -84,8 +84,6 @@ public:
 
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
-    bool handle(network::Message& msg) override;
-
     /**
      * \brief Returns handler template from name
      */
@@ -97,6 +95,8 @@ private:
     Melanobot(Melanobot&&) = delete;
     Melanobot& operator=(const Melanobot&) = delete;
     Melanobot& operator=(Melanobot&&) = delete;
+    
+    bool handle(network::Message& msg) override;
 
     friend std::unique_ptr<Melanobot> std::make_unique<Melanobot, const Settings&>(const Settings& settings);
     /// Singleton instance

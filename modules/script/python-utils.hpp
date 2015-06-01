@@ -26,6 +26,7 @@
 #include "python.hpp"
 #include "settings.hpp"
 #include "boost-python.hpp"
+#include "melanobot.hpp"
 
 namespace python {
 
@@ -104,6 +105,9 @@ public:
         sys_module.attr("stdout") = ptr(&stdout);
         sys_module.attr("stderr") = ptr(&stderr);
         main_module.attr("raw_input") = make_function(&raw_input);
+
+        object melanobot_module = import("melanobot");
+        melanobot_module.attr("bot") = ptr(&Melanobot::instance());
     }
 
     boost::python::object& main_namespace()

@@ -23,6 +23,7 @@
 #include "settings.hpp"
 #include "message/input_message.hpp"
 #include "script_variables.hpp"
+#include "melanobot.hpp"
 
 namespace python {
 
@@ -74,6 +75,11 @@ BOOST_PYTHON_MODULE(melanobot)
         .def_readonly("user",&network::Message::from)
         .def_readonly("victim",&network::Message::victim)
     ;
+
+    class_<Melanobot,Melanobot*,boost::noncopyable>("Melanobot",no_init)
+        .def("stop",&Melanobot::stop)
+    ;
+
 }
 
 } // namespace melanobot
