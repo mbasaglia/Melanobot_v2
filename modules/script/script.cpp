@@ -29,7 +29,7 @@ Melanomodule melanomodule_script()
     Melanomodule module{"script","Scripting interface"};
     module.register_log_type("py",color::dark_yellow);
 
-    module.register_handler<python::SimplePython>("SimplePython");
+    module.register_handler<python::SimpleScript>("SimpleScript");
     module.register_handler<python::StructuredScript>("StructuredScript");
 
     return module;

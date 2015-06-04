@@ -57,7 +57,7 @@ void MessageVariables::convert(boost::python::object& target_namespace) const
     /// \todo message.source (with message_properties)
 }
 
-void SimplePython::Variables::convert(boost::python::object& target_namespace) const
+void SimpleScript::Variables::convert(boost::python::object& target_namespace) const
 {
     using namespace boost::python;
     MessageVariables::convert(target_namespace);
@@ -67,7 +67,7 @@ void SimplePython::Variables::convert(boost::python::object& target_namespace) c
 
 void StructuredScript::Variables::convert(boost::python::object& target_namespace) const
 {
-    SimplePython::Variables::convert(target_namespace);
+    SimpleScript::Variables::convert(target_namespace);
     boost::python::dict sett;
     Converter::convert(static_cast<StructuredScript*>(obj)->settings, sett);
     target_namespace["settings"] = sett;

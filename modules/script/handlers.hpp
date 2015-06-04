@@ -27,7 +27,7 @@ namespace python {
 /**
  * \brief Runs a python script
  */
-class SimplePython : public handler::SimpleAction
+class SimpleScript : public handler::SimpleAction
 {
 protected:
     /**
@@ -36,15 +36,15 @@ protected:
      */
     struct Variables : public MessageVariables
     {
-        Variables(SimplePython* obj, network::Message& msg)
+        Variables(SimpleScript* obj, network::Message& msg)
             : MessageVariables(msg), obj(obj) {}
 
         void convert(boost::python::object& target_namespace) const override;
 
-        SimplePython* obj;
+        SimpleScript* obj;
     };
 public:
-    SimplePython(const Settings& settings, MessageConsumer* parent)
+    SimpleScript(const Settings& settings, MessageConsumer* parent)
         : SimpleAction(settings.get("trigger",settings.get("script","")),settings,parent)
     {
         std::string script_rel = settings.get("script","");
@@ -94,25 +94,25 @@ private:
         return string::FormattedString(line);
     }
 
-    std::string script;         ///< Script file path
-    bool discard_error = true;  ///< If \b true, only prints output of scripts that didn't fail
+    std::string script;                         ///< Script file path
+    bool discard_error = true;                  ///< If \b true, only prints output of scripts that didn't fail
     string::Formatter* formatter{nullptr};      ///< Formatter used to parse the output
 };
 
 /**
  * \brief Reads a json file describing the handler
  */
-class StructuredScript : public SimplePython
+class StructuredScript : public SimpleScript
 {
 private:
     /**
      * \brief Exposes \c settings
      * \note A bit ugly, convert is defined in script_variables.cpp
      */
-    struct Variables : public SimplePython::Variables
+    struct Variables : public SimpleScript::Variables
     {
         Variables(StructuredScript* obj, network::Message& msg)
-            : SimplePython::Variables(obj,msg) {}
+            : SimpleScript::Variables(obj,msg) {}
 
         void convert(boost::python::object& target_namespace) const override;
     };
@@ -133,7 +133,7 @@ private:
      * \brief Called by the public constructor to ensure settings are read only once
      */
     StructuredScript(const Settings& read_settings, MessageConsumer* parent, bool)
-        : SimplePython(read_settings,parent)
+        : SimpleScript(read_settings,parent)
     {
         settings = read_settings.get_child("settings",{});
     }
@@ -165,7 +165,7 @@ private:
         return description;
     }
 
-    Settings settings;
+    Settings settings; ///< Script settings, read from the script description and the bot configuration
 };
 
 } // namespace python
