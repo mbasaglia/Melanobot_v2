@@ -28,7 +28,15 @@ except Exception:
 
 try:
     address = message.message.strip()
-    resolved_address = socket.gethostbyaddr(address)[2][0]
+    resolved_address = address
+
+    try:
+        resolved_address = socket.gethostbyaddr(address)[2][0]
+    except Exception:
+        address = message.source.user(address).host
+        if not address:
+            raise
+        resolved_address = socket.gethostbyaddr(address)[2][0]
 
     properties = {};
 
@@ -56,5 +64,5 @@ try:
     print Template(settings["format"]).safe_substitute(properties)
 
 except Exception:
-    print "Unable to locate the given address ("+address+")"
+    print "Unable to locate the given address ("+resolved_address+")"
     raise
