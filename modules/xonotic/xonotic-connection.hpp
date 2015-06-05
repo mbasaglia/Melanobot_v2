@@ -137,6 +137,9 @@ public:
     void update_user(const std::string& local_id,
                      const Properties& properties) override;
 
+    void update_user(const std::string& local_id,
+                     const user::User& updated) override;
+
     user::User get_user(const std::string& local_id) const override;
 
     std::vector<user::User> get_users(const std::string& channel_mask = "") const override;

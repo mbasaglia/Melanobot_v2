@@ -174,6 +174,14 @@ public:
                              const Properties& properties) = 0;
 
     /**
+     * \brief Update the properties of a user by local_id
+     * \param local_id ID of the user as previously seen by the connection
+     * \param updated  New user, all properties of the new user will be overwritten
+     */
+    virtual void update_user(const std::string& local_id,
+                             const user::User& updated) = 0;
+
+    /**
      * \brief Returns a copy of the user object identified by \c local_id
      * \return A copy of the internal record identifying the user or
      *         an empty object if the user is not found.

@@ -180,6 +180,7 @@ void XonoticConnection::disconnect(const std::string& message)
     user_manager.clear();
     lock.unlock();
 }
+
 void XonoticConnection::update_user(const std::string& local_id,
                                     const Properties& properties)
 {
@@ -192,8 +193,23 @@ void XonoticConnection::update_user(const std::string& local_id,
         /// \todo this might not be needed if crypto_id isn't good enough
         auto it = properties.find("global_id");
         if ( it != properties.end() )
-            Log("xon",'!',3) << "Player " << color::dark_cyan << local_id
+            Log("xon",'!',3) << "Player " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << it->second;
+    }
+}
+
+void XonoticConnection::update_user(const std::string& local_id,
+                                   const user::User& updated)
+{
+    Lock lock(mutex);
+    user::User* user = user_manager.user(local_id);
+    if ( user )
+    {
+        *user = updated;
+
+        if ( !updated.global_id.empty() )
+            Log("irc",'!',3) << "User " << color::dark_cyan << user->local_id
+                << color::nocolor << " is authed as " << color::cyan << updated.global_id;
     }
 }
 
@@ -207,6 +223,7 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
     if ( local_id == "0" || local_id == "#0" )
     {
         user::User user;
+        user.origin = const_cast<XonoticConnection*>(this);
         user.local_id = "0";
         user.properties["entity"] = "0";
         user.host = server_.name();
@@ -545,6 +562,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                     [match](const user::User& u) {
                         return u.property("entity") == match[2]; });
                 user::User user;
+                user.origin = this;
                 user.local_id = match[1]; // playerid
                 user.properties["entity"] = match[2]; // entity number
                 if ( match[3] != "bot" )
@@ -814,6 +832,7 @@ void XonoticConnection::check_user(const std::smatch& match)
     {
         /// \todo Send join command
         user::User new_user;
+        new_user.origin = this;
         new_user.update(props);
         user_manager.add_user(new_user);
     }

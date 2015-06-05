@@ -25,6 +25,10 @@
 
 #include "settings.hpp"
 
+namespace network {
+    class Connection;
+} // namespace network
+
 /**
  * \brief Namespace for user handling utilities
  */
@@ -43,8 +47,12 @@ namespace user {
 struct User
 {
     User() = default;
-    User ( std::string name, std::string host = "",
-           std::string local_id = "", std::string global_id = "" )
+    User ( std::string name,
+           std::string host = "",
+           std::string local_id = "",
+           std::string global_id = "",
+           network::Connection* origin = nullptr
+         )
         : name(std::move(name)), host(std::move(host)),
           local_id(std::move(local_id)), global_id(std::move(global_id))
     {}
@@ -87,6 +95,7 @@ struct User
                 return;
         channels.push_back(channel);
     }
+    
     /**
      * \brief Remove a channel
      */
@@ -105,16 +114,10 @@ struct User
      */
     void update(const Properties& props)
     {
-        static std::unordered_map<std::string,std::string (User::*)> attributes = {
-            {"name",&User::name},
-            {"host",&User::host},
-            {"local_id", &User::local_id},
-            {"global_id",&User::global_id}
-        };
         for ( const auto& p : props )
         {
-            auto it = attributes.find(p.first);
-            if ( it != attributes.end() )
+            auto it = string_attributes.find(p.first);
+            if ( it != string_attributes.end() )
                 this->*(it->second) = p.second;
             else
                 properties[p.first] = p.second;
@@ -158,6 +161,17 @@ struct User
      * \brief Whether the user has been checked
      */
     bool checked = true;
+
+    /**
+     * \brief Connection the user belongs to
+     */
+    network::Connection* origin = nullptr;
+
+private:
+    /**
+     * \brief Attributes that can be accessed as properties
+     */
+    static std::unordered_map<std::string,std::string User::*> string_attributes;
 };
 
 } // namespace user

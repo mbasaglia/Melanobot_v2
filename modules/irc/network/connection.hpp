@@ -143,7 +143,11 @@ public:
      */
     void update_user(const std::string& local_id,
                      const Properties& properties) override;
-
+    /**
+     * \thead external \lock data
+     */
+    void update_user(const std::string& local_id,
+                     const user::User& updated) override;
     /**
      * \thead external \lock data
      */

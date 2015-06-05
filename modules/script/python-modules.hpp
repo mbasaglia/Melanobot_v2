@@ -51,6 +51,7 @@ template<class Func>
         return make_function(std::forward<Func>(func),
             return_value_policy<reference_existing_object>());
     }
+
 /**
  * \brief Shothand to make functions that return a reference that should be copied
  */
@@ -61,6 +62,20 @@ template<class Func>
         return make_function(std::forward<Func>(func),
             return_value_policy<return_by_value>());
     }
+
+/**
+ * \brief Creates a shared_ptr to a user which will update it upon destruction
+ */
+inline std::shared_ptr<user::User> make_shared_user(const user::User& user)
+{
+    std::string starting_id = user.local_id;
+    return std::shared_ptr<user::User>(new user::User(user),
+        [starting_id](user::User* ptr) {
+            if ( ptr->origin && !starting_id.empty() )
+                ptr->origin->update_user(starting_id, *ptr);
+            delete ptr;
+        });
+}
 
 /**
  * \brief Namespace corresponding to the python module \c melanobot
@@ -74,10 +89,7 @@ BOOST_PYTHON_MODULE(melanobot)
     def("data_file", &settings::data_file);
     def("data_file", [](const std::string& path) { return settings::data_file(path); } );
 
-    /// \todo Proxy class thak keeps user and pointer to connection,
-    /// and updates the user on write operations
-    /// (or smart pointers that updates upon destructor -> custom deleter)
-    class_<user::User>("User",no_init)
+    class_<user::User, std::shared_ptr<user::User>>("User",no_init)
         .def_readwrite("name",&user::User::name)
         .def_readwrite("host",&user::User::host)
         .def_readonly("local_id",&user::User::local_id)
@@ -97,9 +109,12 @@ BOOST_PYTHON_MODULE(melanobot)
         .def_readwrite("message",&network::Message::message)
         .def_readonly("channels",convert_member(&network::Message::channels))
         .def_readwrite("direct",&network::Message::direct)
-        .def_readonly("user",&network::Message::from)
-        .def_readonly("victim",&network::Message::victim)
-
+        .add_property("user",[](const network::Message& msg){
+            return make_shared_user(msg.from);
+        })
+        .def_readonly("victim",[](const network::Message& msg){
+            return make_shared_user(msg.victim);
+        })
         .def_readonly("source",&network::Message::source)
         .def_readonly("destination",&network::Message::destination)
     ;
@@ -151,7 +166,9 @@ BOOST_PYTHON_MODULE(melanobot)
         .add_property("description",&network::Connection::description)
         .add_property("protocol",&network::Connection::protocol)
         .add_property("formatter",return_pointer(&network::Connection::formatter))
-        .def("user",&network::Connection::get_user)
+        .def("user",[](network::Connection* conn, const std::string& local_id){
+            return make_shared_user(conn->get_user(local_id));
+        })
         /// \todo Expose Command
         .def("command",[](network::Connection* conn,const std::string& command){
             conn->command({command});

@@ -220,7 +220,10 @@ void IrcConnection::handle_message(network::Message msg)
 {
     if ( msg.command.empty() ) return;
 
+    /// \todo non-static parse_prefix with origin (only used here after all)
     msg.from = parse_prefix(msg.from.name);
+    msg.from.origin = this;
+
     user::User *from_user = nullptr;
 
     if ( !std::isdigit(msg.command[0]) )
@@ -299,6 +302,7 @@ void IrcConnection::handle_message(network::Message msg)
                 if ( !found )
                 {
                     user::User new_user;
+                    new_user.origin = this;
                     new_user.name = new_user.local_id = user;
                     found = user_manager.add_user(new_user);
                     Log("irc",'!',2) << "Added user " << color::dark_green << user;
@@ -1015,8 +1019,23 @@ void IrcConnection::update_user(const std::string& local_id,
 
         auto it = properties.find("global_id");
         if ( it != properties.end() )
-            Log("irc",'!',3) << "User " << color::dark_cyan << local_id
+            Log("irc",'!',3) << "User " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << it->second;
+    }
+}
+
+void IrcConnection::update_user(const std::string& local_id,
+                                const user::User& updated)
+{
+    Lock lock(mutex);
+    user::User* user = user_manager.user(local_id);
+    if ( user )
+    {
+        if ( !updated.global_id.empty() && updated.global_id != user->global_id )
+            Log("irc",'!',3) << "User " << color::dark_cyan << updated.local_id
+                << color::nocolor << " is authed as " << color::cyan << updated.global_id;
+
+        *user = updated;
     }
 }
 
@@ -1056,6 +1075,7 @@ user::User IrcConnection::build_user(const std::string& exname) const
         return {};
 
     user::User user;
+    user.origin = const_cast<IrcConnection*>(this);
 
     if ( exname[0] == '!' && exname.size() > 1 )
         user.global_id = exname.substr(1);
