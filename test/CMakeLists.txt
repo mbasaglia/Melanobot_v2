@@ -87,8 +87,11 @@ add_custom_target(coverage
     COMMAND ctest -V
     COMMAND lcov -c -d "${CMAKE_BINARY_DIR}/test" -b "${CMAKE_SOURCE_DIR}" -o ${TRACEFILE} --no-external
     COMMAND genhtml ${TRACEFILE} -o "${CMAKE_BINARY_DIR}/lconv" -p "${CMAKE_SOURCE_DIR}" --demangle-cpp
-    COMMAND xdg-open "${CMAKE_BINARY_DIR}/lconv/index.html"
     DEPENDS ${TEST_TARGETS}
+)
+
+add_custom_target(coverage_view
+    COMMAND xdg-open "${CMAKE_BINARY_DIR}/lconv/index.html"
 )
 
 endif()
