@@ -362,9 +362,9 @@ BOOST_AUTO_TEST_CASE( test_Inflector )
         {"foo", "bar"}
     }, true);
 
-    BOOST_CHECK( infl.inflect_all("foo bar") == "bar bar" );
-    BOOST_CHECK( infl.inflect_all("fu bar") == "fu bar" );
-    BOOST_CHECK( infl.inflect_all("foobarfooo") == "foobarfooo" );
+    BOOST_CHECK( infl2.inflect_all("foo bar") == "bar bar" );
+    BOOST_CHECK( infl2.inflect_all("fu bar") == "fu bar" );
+    BOOST_CHECK( infl2.inflect_all("foobarfooo") == "foobarfooo" );
 }
 
 BOOST_AUTO_TEST_CASE( test_QuickStream )
