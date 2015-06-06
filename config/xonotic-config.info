@@ -1,0 +1,175 @@
+; Example coinfiguration showing various options for Xonotic integration
+; See also full_bot-config.info for a more in-depth explanation
+; see the section labeled "Xonotic Stuff" for xonotic-specific config
+
+; Sets log output options
+log
+{
+    string_format    "ansi-utf8_black"
+    ; logfile        /path/to/log ; Saves a log at the given location
+    verbosity
+    {
+        sys 10  ; Change log verbosity for system information
+                ; 0 Only shows system errors
+                ; 2 [default] Show connection creation
+                ; 3 Show bridge attach/detach messages
+                ; 4 Show exit status when the application ends
+        irc 2   ; Change log verbosity for IRC connections:
+                ; 0 Only shows connection errors
+                ; 1 Shows commands sent/received from the IRC server
+                ; 2 [default] Shows users joining or quitting from the sight of the bot
+                ; 3 Shows detailed user actions:
+                ;       * Joinining/parting channels
+                ;       * Being added to groups
+                ;       * Being recognized as authed
+                ; 4 Shows detailed IRC information:
+                ;       * Outgoing IRC commands being truncated,
+                ;       * Attempting new nicknames on clashes
+        xon 0   ; Change log verbosity for xonotic servers:
+                ; 0 Only shows connection errors
+                ; 1 Shows special commands being sent to the server
+                ; 2 [default] Shows all commands being sent to the servers
+                ; 3 Shows users activity in the server (join, part and similar)
+                ; 4 Shows log from the xonotic server (very spammy)
+                ; 5 Shows rcon challenge requests
+        web 2   ; Change log verbosity for web requests
+                ; 0 Only shows errors
+                ; 2 [default] Shows web requests
+    }
+}
+
+; Defines reusable definitions which can be repeated
+templates
+{
+    #include "config/templates.info"
+}
+; Defines connections and handlers
+bot
+{
+    ; Creates an irc connection (To QuakeNet in this example)
+    ; The connection name (irc_quakenet) is used to recognize the connection
+    ; later on, so give simple meaningful names
+    Connection
+    {
+        name            irc_quakenet ; required, must be unique
+        protocol        irc          ; required
+        nick            MyAwesomeBot ; required IRC Nick
+        string_format   irc_white
+
+        channels        "#channel1 #channel2"  ; Channels to be joined
+        notice          1                       ; If 1 private message are sent as NOTICEs
+        server          irc.quakenet.org:6667   ; Server address
+        ; More explicit server setup:
+        ;server
+        ;{
+        ;    host        irc.quakenet.org
+        ;    port        6667
+        ;    password    "network/bouncer password"
+        ;}
+
+        ; Setting up user roles
+        ; Note that you don't need to define all groups, they will be created as they are used
+        groups
+        {
+            owner       "admin" ; An owner is also an admin
+        }
+        ; Assigning users to groups
+        users
+        {
+            !BotOwner    "owner" ; The nick starts with ! to signify that it would be checked using the logged in name, not the current nick
+            !Someone     "admin"
+            @example.com "admin" ; If it starts with an @ it will be checked using the hostname
+            troll        "banned"; Banned users are completely ignored
+            user         "a b"   ; This user is assigned to 2 groups
+        }
+    }
+
+    ; Allows to control the bot from standard input
+    ; Requires the Posix module to have been enabled explicitly
+    Template
+    {
+        template        Stdin
+    }
+
+    ; This is here to be used with melanobot.sh
+    ; Requires the Posix module to have been enabled explicitly
+    Pipe
+    {
+        type            Template
+        template        Pipe
+    }
+
+    ; Loads the basic IRC functionality
+    Template
+    {
+        template        IrcCore
+        irc             irc_quakenet
+    }
+
+;     ; Q AUTH information
+;     Template
+;     {
+;         template        IrcQuakeNet
+;         irc             irc_quakenet
+;         nick            MyAwesomeBot          ; Can be omitted if the same as the bot's nick
+;         password        "MyAwesomePassword"
+;     }
+;     ; NickServ Identify information
+;     Template
+;     {
+;         template        IrcNickServ
+;         irc             irc_quakenet
+;         nick            MyAwesomeBot          ; Can be omitted if the same as the bot's nick
+;         password        "MyAwesomePassword"
+;     }
+
+;                ============== Xonotic Stuff ==============
+
+    ; Simple bridge, connects a single server to a single channel
+    Template
+    {
+        template        Xonotic
+        name            xon_localhost
+        server          localhost:26000
+        rcon_password   "MyPassword"
+        ; rcon_secure     0
+        ; say_as          modpack ; Uncomment if using the SMB modpack
+        ; stats           http://stats.xonotic.org/server/(your server id)
+        channel         #channel1
+        prefix          xon ; you can remove the prefix or have an empty string if you want
+        ; irc irc_quakenet ; (irc_quakenet is the default)
+    }
+
+    ; Multiple servers in the same channel, with a multicast handler
+    Multi
+    {
+        ; When messages start with the "xonall" prefix
+        ; (or whatever you choose to be), they will be forwarded to all of the
+        ; servers configured inside the Multi.
+        ; Single-server commands work as usual.
+        trigger         xonall
+
+        ; You can put here settings common to all xonotic servers.
+        ; The xonotic server Templates can override these settings
+        rcon_password   "MyPassword"
+        channel         #channel2
+        ; say_as          modpack ; Uncomment if using the SMB modpack
+
+        Template
+        {
+            template    Xonotic
+            name        xon_ctf ; Note: names must be unique
+            server      localhost:26001
+            ; stats           http://stats.xonotic.org/server/(your server id)
+            prefix      ctf
+        }
+        Template
+        {
+            template    Xonotic
+            name        xon_duel
+            server      localhost:26002
+            ; stats           http://stats.xonotic.org/server/(your server id)
+            prefix      duel
+        }
+    }
+}
