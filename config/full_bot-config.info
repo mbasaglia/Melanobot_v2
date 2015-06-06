@@ -15,6 +15,7 @@
 log
 {
     string_format    "ansi-utf8_black"
+    ; logfile        /path/to/log ; Saves a log at the given location
     verbosity
     {
         sys 10  ; Change log verbosity for system information
@@ -152,12 +153,35 @@ bot
         source          irc_quakenet
         help_group      irc_quakenet
 
+        Group           ; Admin Commands
+        {
+            name        administration
+            auth        admin
+
+            ; Geolocation script (host, IRC user or IP address)
+            ; Requires: 
+            ; * MODULE_SCRIPT
+            ; * geoip2 python module
+            ; * GeoIp country or city database
+            StructuredScript {
+                enabled      0            ; Remove or set to 1 to enable
+                id geoip
+                settings {
+                    database "/path/to/GeoLite2-City.mmdb"
+                    format   "Address: %resolved, Country: %country.name (%country.iso_code), City: %city.name"
+                }
+            }
+
+
+        }
+
         ; If you want the bot to say something when it joins a channel
-        ;JoinMessage
-        ;{
-        ;    message             "'sup guys?"
-        ;    discard_others      1
-        ;}
+        JoinMessage
+        {
+            enabled             0            ; Remove or set to 1 to enable
+            message             "'sup guys?"
+            discard_others      1
+        }
 
         ; Misc actions
         Group
@@ -189,11 +213,12 @@ bot
             }
         }
         ; Gives a message when someone is kicked
-        ;KickMessage
-        ;{
-        ;    discard_self 1
-        ;    message     "Good job %kicker, we won't miss %kicked!"
-        ;}
+        KickMessage
+        {
+            enabled             0            ; Remove or set to 1 to enable
+            discard_self 1
+            message     "Good job %kicker, we won't miss %kicked!"
+        }
         ; Joins automatically once kicked
         IrcKickRejoin
         {

@@ -22,8 +22,7 @@ Xonotic
     @admin      admin                   ; User group required to trigger admin functionality
     @show_irc_events    1               ; Show to xonotic players IRC join/parts and similar
 
-    type    Group
-    ;name    @name
+    type        Group
 
     ; Sets up a xonotic connection
     Connection
@@ -153,6 +152,7 @@ Xonotic
     Group
     {
         trigger         "!"
+        source          @name
         help_group      @name
         direct          0
         monitored       @irc
