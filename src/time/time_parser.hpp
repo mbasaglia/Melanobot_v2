@@ -349,6 +349,8 @@ private:
     template <class DurationT>
         static bool is_unit(const std::string& str)
         {
+            if ( std::is_same<DurationT,weeks>::value )
+                return string::is_one_of(str,{"week","weeks","w"});
             if ( std::is_same<DurationT,days>::value )
                 return string::is_one_of(str,{"day","days","d"});
             if ( std::is_same<DurationT,hours>::value )
@@ -405,6 +407,11 @@ private:
                 {
                     scan();
                     return duration_cast(days(ticks));
+                }
+                else if ( is_unit<weeks>(token_val<std::string>()) )
+                {
+                    scan();
+                    return duration_cast(weeks(ticks));
                 }
             }
         }

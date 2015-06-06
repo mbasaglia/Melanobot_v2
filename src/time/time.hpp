@@ -175,6 +175,7 @@ using std::chrono::seconds;
 using std::chrono::minutes;
 using std::chrono::hours;
 using days =  std::chrono::duration<int64_t, std::ratio<(24*3600)>>;
+using weeks =  std::chrono::duration<int64_t, std::ratio<(24*3600*7)>>;
 
 /**
  * \brief Month enum

@@ -428,6 +428,10 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     BOOST_CHECK( parse_duration("123 day") == days(123) );
     BOOST_CHECK( parse_duration("123 days") == days(123) );
 
+    BOOST_CHECK( parse_duration("123w") == weeks(123) );
+    BOOST_CHECK( parse_duration("123 week") == weeks(123) );
+    BOOST_CHECK( parse_duration("123 weeks") == weeks(123) );
+
     // HOUR_OPT
     BOOST_CHECK( parse_duration("43:21") == hours(43)+minutes(21) );
     BOOST_CHECK( parse_duration("43:21:23") == hours(43)+minutes(21)+seconds(23) );
