@@ -357,6 +357,14 @@ BOOST_AUTO_TEST_CASE( test_Inflector )
     BOOST_CHECK( infl.inflect_all("foobar") == "barbar" );
     BOOST_CHECK( infl.inflect_all("fubar") == "fubar" );
     BOOST_CHECK( infl.inflect_all("foobarfooo") == "barbarbaro" );
+
+    string::Inflector infl2 ({
+        {"foo", "bar"}
+    }, true);
+
+    BOOST_CHECK( infl.inflect_all("foo bar") == "bar bar" );
+    BOOST_CHECK( infl.inflect_all("fu bar") == "fu bar" );
+    BOOST_CHECK( infl.inflect_all("foobarfooo") == "foobarfooo" );
 }
 
 BOOST_AUTO_TEST_CASE( test_QuickStream )

@@ -21,6 +21,22 @@
 namespace string {
 
 
+Inflector::Inflector(const std::initializer_list<std::pair<std::string,std::string>>& rules, bool whole_words )
+{
+    auto alter_regex = [whole_words](const std::string& re){
+        return whole_words ? "\\b"+re+"\\b" : re;
+    };
+
+    this->rules.reserve(rules.size());
+    for ( auto& rule : rules )
+    {
+        this->rules.emplace_back(
+            alter_regex(rule.first),
+            std::move(rule.second)
+        );
+    }
+}
+
 std::string English::ordinal_suffix(int i) const
 {
 

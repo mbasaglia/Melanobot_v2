@@ -48,24 +48,10 @@ private:
 
 public:
 
-    Inflector ( const std::initializer_list<Rule>& il )
+    Inflector(const std::initializer_list<Rule>& il)
         : rules(il) {}
 
-    Inflector ( std::vector<std::pair<std::string,std::string>> rules, bool whole_words )
-    {
-        auto alter_regex = [whole_words](std::string&& re){
-            return whole_words ? re : '^'+re+'$';
-        };
-
-        this->rules.reserve(rules.size());
-        for ( auto& rule : rules )
-        {
-            this->rules.emplace_back(
-                alter_regex(std::move(rule.first)),
-                std::move(rule.second)
-            );
-        }
-    }
+    Inflector(const std::initializer_list<std::pair<std::string,std::string>>& rules, bool whole_words);
 
     /**
      * \brief Inflects a phrase

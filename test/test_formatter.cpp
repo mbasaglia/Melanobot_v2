@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE( test_ansi_ascii )
     BOOST_CHECK( cast<AsciiSubstring>(decoded[12]) );
     BOOST_CHECK( cast<AsciiSubstring>(decoded[12])->string() == "$" );
 
-    BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m$" );
+    BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m$" );
 }
 
 BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
     BOOST_CHECK( cast<Unicode>(decoded[12]) );
     BOOST_CHECK( cast<Unicode>(decoded[12])->utf8() == u8"§" );
 
-    BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m§" );
+    BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m§" );
 }
 
 BOOST_AUTO_TEST_CASE( test_irc )
