@@ -29,10 +29,13 @@
 #     }
 #
 
+# Directory of this script file
+SELFDIR=$(dirname $(readlink -se "${BASH_SOURCE[0]}"))
+
 # Directory to run the bot from
 declare MELANOBOT_RUN_DIR="$PWD"
 # Directory with the bot sources
-declare MELANOBOT_SRC_DIR="$PWD"
+declare MELANOBOT_SRC_DIR="$SELFDIR"
 # Directory to compile in
 declare MELANOBOT_BUILD_DIR="$MELANOBOT_SRC_DIR/build"
 # Directory containing the executable
@@ -46,8 +49,6 @@ declare MELANOBOT_BOT_ID="$USER"
 # Tmux session
 declare MELANOBOT_TMUX_SESSION="bot"
 
-# Directory of this script file
-SELFDIR=$(dirname $(readlink -se "${BASH_SOURCE[0]}"))
 
 # Returns the name of the temporary directory for this specific bot instance
 # If it doesn't exists, it gets created
@@ -204,7 +205,7 @@ melanobot_restart()
 # Pulls, compiles and restarts
 melanobot_update()
 {
-    cd "$SELFDIR"
+    cd "$MELANOBOT_SRC_DIR"
     git pull
     melanobot_build
     melanobot_restart
