@@ -19,7 +19,7 @@
 
 #include "bridge.hpp"
 
-namespace handler {
+namespace core {
 
 Bridge::Bridge(const Settings& settings, MessageConsumer* parent)
     : Group(settings,parent)
@@ -143,4 +143,4 @@ bool BridgeAttachChannel::on_handle(network::Message& msg)
     return true;
 }
 
-} // namespace handler
+} // namespace core

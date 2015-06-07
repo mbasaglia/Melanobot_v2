@@ -29,13 +29,13 @@ Melanomodule melanomodule_web()
     module.register_log_type("web",color::dark_blue);
     module.register_service<network::http::HttpService>("web");
 
-    module.register_handler<handler::SearchVideoYoutube>("SearchVideoYoutube");
-    module.register_handler<handler::SearchImageGoogle>("SearchImageGoogle");
-    module.register_handler<handler::UrbanDictionary>("UrbanDictionary");
-    module.register_handler<handler::SearchWebSearx>("SearchWebSearx");
-    module.register_handler<handler::VideoInfo>("VideoInfo");
-    module.register_handler<handler::MediaWiki>("MediaWiki");
-    module.register_handler<handler::MediaWikiTitles>("MediaWikiTitles");
+    module.register_handler<web::SearchVideoYoutube>("SearchVideoYoutube");
+    module.register_handler<web::SearchImageGoogle>("SearchImageGoogle");
+    module.register_handler<web::UrbanDictionary>("UrbanDictionary");
+    module.register_handler<web::SearchWebSearx>("SearchWebSearx");
+    module.register_handler<web::VideoInfo>("VideoInfo");
+    module.register_handler<web::MediaWiki>("MediaWiki");
+    module.register_handler<web::MediaWikiTitles>("MediaWikiTitles");
 
     return module;
 }

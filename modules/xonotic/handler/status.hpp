@@ -30,7 +30,7 @@ namespace xonotic {
 /**
  * \brief Lists players in a xonotic server
  */
-class ListPlayers : public handler::ConnectionMonitor
+class ListPlayers : public core::ConnectionMonitor
 {
 public:
     ListPlayers(const Settings& settings, MessageConsumer* parent)
@@ -71,7 +71,7 @@ protected:
 /**
  * \brief Lists detailed info on server and players
  */
-class XonoticStatus : public handler::ConnectionMonitor
+class XonoticStatus : public core::ConnectionMonitor
 {
 public:
     XonoticStatus(const Settings& settings, MessageConsumer* parent)
@@ -153,7 +153,7 @@ protected:
 /**
  * \brief Lists xonotic maps matching a query
  */
-class XonoticMaps : public handler::ConnectionMonitor
+class XonoticMaps : public core::ConnectionMonitor
 {
 public:
     XonoticMaps(const Settings& settings, MessageConsumer* parent)
@@ -221,7 +221,7 @@ protected:
 /**
  * \brief Manage xonotic bans
  */
-class XonoticBan : public handler::ConnectionMonitor
+class XonoticBan : public core::ConnectionMonitor
 {
 public:
     XonoticBan(const Settings& settings, MessageConsumer* parent)
@@ -425,7 +425,7 @@ private:
 /**
  * \brief Kicks players
  */
-class XonoticKick : public handler::ConnectionMonitor
+class XonoticKick : public core::ConnectionMonitor
 {
 public:
     XonoticKick(const Settings& settings, MessageConsumer* parent)

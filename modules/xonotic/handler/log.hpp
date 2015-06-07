@@ -374,7 +374,7 @@ private:
  * \brief Shows all the votes
  * \note This will inherit SimpleAction, which isn't needed...
  */
-class ShowVotes : public handler::PresetGroup
+class ShowVotes : public core::PresetGroup
 {
 public:
     ShowVotes(const Settings& settings, MessageConsumer* parent)

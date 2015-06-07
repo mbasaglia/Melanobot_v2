@@ -23,12 +23,12 @@
 #ifndef HANDLER_ADMIN_HPP
 #define HANDLER_ADMIN_HPP
 
-namespace handler {
+namespace core {
 
 /**
  * \brief Quits the bot
  */
-class AdminQuit: public SimpleAction
+class AdminQuit: public handler::SimpleAction
 {
 public:
     AdminQuit(const Settings& settings, MessageConsumer* parent)
@@ -128,7 +128,7 @@ private:
 /**
  * \brief Discards messages coming from certain users
  */
-class FilterGroup: public Handler
+class FilterGroup: public handler::Handler
 {
 public:
     FilterGroup(const Settings& settings, MessageConsumer* parent)
@@ -156,7 +156,7 @@ private:
 /**
  * \brief Makes the bot reconnect
  */
-class AdminReconnect: public SimpleAction
+class AdminReconnect: public handler::SimpleAction
 {
 public:
     AdminReconnect(const Settings& settings, MessageConsumer* parent)
@@ -187,7 +187,7 @@ private:
 /**
  * \brief Makes the bot Connect
  */
-class AdminConnect: public SimpleAction
+class AdminConnect: public handler::SimpleAction
 {
 public:
     AdminConnect(const Settings& settings, MessageConsumer* parent)
@@ -207,7 +207,7 @@ protected:
 /**
  * \brief Makes the bot disconnect
  */
-class AdminDisconnect: public SimpleAction
+class AdminDisconnect: public handler::SimpleAction
 {
 public:
     AdminDisconnect(const Settings& settings, MessageConsumer* parent)
@@ -238,7 +238,7 @@ private:
 /**
  * \brief Changes the channel of a message
  */
-class Chanhax: public Handler
+class Chanhax: public handler::Handler
 {
 public:
     Chanhax(const Settings& settings, MessageConsumer* parent)
@@ -285,5 +285,5 @@ private:
     std::regex  regex_chanhax;
 };
 
-} // namespace handler
+} // namespace core
 #endif // HANDLER_ADMIN_HPP

@@ -21,7 +21,7 @@
 
 #include "handler/handler.hpp"
 
-namespace handler {
+namespace core {
 
 /**
  * \brief Base for handlers needing to query a connection while
@@ -101,5 +101,5 @@ protected:
     std::string reply;
 };
 
-} // namespace handler
+} // namespace core
 #endif // CONNECTION_MONITOR_HPP

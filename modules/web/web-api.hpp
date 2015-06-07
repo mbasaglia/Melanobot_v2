@@ -23,12 +23,12 @@
 #include "http.hpp"
 #include "string/json.hpp"
 
-namespace handler {
+namespace web {
 
 /**
  * \brief Simple base class for handlers calling web resources
  */
-class SimpleWebApi : public SimpleAction
+class SimpleWebApi : public handler::SimpleAction
 {
 public:
     SimpleWebApi(const std::string& default_trigger, const Settings& settings,
@@ -116,5 +116,5 @@ protected:
 };
 
 
-} // namespace handler
+} // namespace web
 #endif // HANDLER_WEB_API_HPP

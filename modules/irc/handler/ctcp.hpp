@@ -287,7 +287,7 @@ private:
 /**
  * \brief Preset for basic CTCP actions
  */
-class Ctcp : public ::handler::PresetGroup
+class Ctcp : public core::PresetGroup
 {
 public:
     Ctcp(const Settings& settings, ::MessageConsumer* parent)

@@ -24,7 +24,7 @@
 #include "web-api.hpp"
 #include "time/time_string.hpp"
 
-namespace handler {
+namespace web {
 
 /**
  * \brief Handler searching a video on Youtube
@@ -110,7 +110,7 @@ private:
 /**
  * \brief Shows info on video links
  */
-class VideoInfo : public Handler
+class VideoInfo : public handler::Handler
 {
 public:
     VideoInfo(const Settings& settings, MessageConsumer* parent)
@@ -528,6 +528,6 @@ protected:
     }
 };
 
-} // namespace handler
+} // namespace web
 
 #endif // WEB_API_CONCRETE

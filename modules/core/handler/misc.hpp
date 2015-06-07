@@ -26,13 +26,13 @@
 #include "string/language.hpp"
 #include "time/time_string.hpp"
 
-namespace handler {
+namespace core {
 
 /**
  * \brief Handler showing licensing information
  * \note Must be enabled to comply to the AGPL
  */
-class License : public SimpleAction
+class License : public handler::SimpleAction
 {
 public:
     License(const Settings& settings, MessageConsumer* parent)
@@ -57,7 +57,7 @@ private:
  * \brief Handler showing help on the available handlers
  * \note It is trongly recommended that this is enabled
  */
-class Help : public SimpleAction
+class Help : public handler::SimpleAction
 {
 public:
     Help(const Settings& settings, MessageConsumer* parent)
@@ -242,7 +242,7 @@ private:
 /**
  * \brief Just repeat what it has been told
  */
-class Echo : public SimpleAction
+class Echo : public handler::SimpleAction
 {
 public:
     Echo(const Settings& settings, MessageConsumer* parent)
@@ -263,7 +263,7 @@ protected:
 /**
  * \brief Shows the server the bot is connected to
  */
-class ServerHost : public SimpleAction
+class ServerHost : public handler::SimpleAction
 {
 public:
     ServerHost(const Settings& settings, MessageConsumer* parent)
@@ -281,7 +281,7 @@ protected:
 /**
  * \brief Shows one of the given items, at random
  */
-class Cointoss : public SimpleAction
+class Cointoss : public handler::SimpleAction
 {
 public:
     Cointoss(const Settings& settings, MessageConsumer* parent)
@@ -331,7 +331,7 @@ private:
 /**
  * \brief Fixed reply
  */
-class Reply : public Handler
+class Reply : public handler::Handler
 {
 public:
     Reply(const Settings& settings, MessageConsumer* parent)
@@ -447,7 +447,7 @@ protected:
 /**
  * \brief Performs an action
  */
-class Action : public SimpleAction
+class Action : public handler::SimpleAction
 {
 public:
     Action(const Settings& settings, MessageConsumer* parent)
@@ -510,7 +510,7 @@ private:
 /**
  * \brief Handler showing the time
  */
-class Time : public SimpleAction
+class Time : public handler::SimpleAction
 {
 public:
     Time(const Settings& settings, MessageConsumer* parent)
@@ -532,6 +532,6 @@ private:
     std::string format = "r (\\U\\T\\C)"; ///< Output time format
 };
 
-} // namespace handler
+} // namespace core
 
 #endif // HANDLER_MISC

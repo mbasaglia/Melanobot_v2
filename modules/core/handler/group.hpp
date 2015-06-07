@@ -21,20 +21,15 @@
 
 #include "handler/handler.hpp"
 
-/**
- * \brief Namespace for classes that handle connection messages
- *
- * \see Handler and SimpleAction for base classes.
- */
-namespace handler {
+namespace core {
 
 /**
  * \brief Base class for group-like handlers
  */
-class AbstractGroup : public SimpleAction
+class AbstractGroup : public handler::SimpleAction
 {
 public:
-    using SimpleAction::SimpleAction;
+    using handler::SimpleAction::SimpleAction;
 
     void initialize() override
     {
@@ -164,7 +159,7 @@ protected:
 /**
  * \brief Very basic group with preset handlers, configurable from the config
  */
-class PresetGroup : public handler::AbstractGroup
+class PresetGroup : public AbstractGroup
 {
 public:
     PresetGroup( const std::initializer_list<std::string>& preset,
@@ -218,5 +213,5 @@ public:
     }
 };
 
-} // namespace handler
+} // namespace core
 #endif // HANDLER_SIMPLE_GROUP

@@ -74,7 +74,7 @@ private:
 /**
  * \brief Searches for a Chuck Norris joke
  */
-class ChuckNorris : public handler::SimpleJson
+class ChuckNorris : public web::SimpleJson
 {
 public:
     ChuckNorris(const Settings& settings, MessageConsumer* parent)
@@ -124,7 +124,7 @@ private:
 /**
  * \brief Shows a countdown to the next My Little Pony episode
  */
-class PonyCountDown : public handler::SimpleJson
+class PonyCountDown : public web::SimpleJson
 {
 public:
     PonyCountDown(const Settings& settings, MessageConsumer* parent)
@@ -176,7 +176,7 @@ private:
 /**
  * \brief Shows a pony face
  */
-class PonyFace : public handler::SimpleJson
+class PonyFace : public web::SimpleJson
 {
 public:
     PonyFace(const Settings& settings, MessageConsumer* parent)
@@ -286,10 +286,10 @@ protected:
 /**
  * \brief Like BridgeChat but more colorful
  */
-class RainbowBridgeChat : public handler::BridgeChat
+class RainbowBridgeChat : public core::BridgeChat
 {
 public:
-    using handler::BridgeChat::BridgeChat;
+    using core::BridgeChat::BridgeChat;
 
 protected:
     bool on_handle(network::Message& msg) override;

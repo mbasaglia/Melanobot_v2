@@ -21,7 +21,7 @@
 
 #include "group.hpp"
 
-namespace handler {
+namespace core {
 
 /**
  * \brief Acts as bridge across connections
@@ -58,7 +58,7 @@ protected:
 /**
  * \brief Simply echoes chat messages (to be used in a Bridge group)
  */
-class BridgeChat : public Handler
+class BridgeChat : public handler::Handler
 {
 public:
     BridgeChat(const Settings& settings, MessageConsumer* parent);
@@ -75,7 +75,7 @@ protected:
 /**
  * \brief Attach the parent bridge to the provided connection
  */
-class BridgeAttach : public SimpleAction
+class BridgeAttach : public handler::SimpleAction
 {
 public:
     BridgeAttach(const Settings& settings, MessageConsumer* parent);
@@ -91,7 +91,7 @@ protected:
 /**
  * \brief Attach the parent bridge to the provided channel
  */
-class BridgeAttachChannel : public SimpleAction
+class BridgeAttachChannel : public handler::SimpleAction
 {
 public:
     BridgeAttachChannel(const Settings& settings, MessageConsumer* parent);
@@ -254,5 +254,5 @@ public:
     {}
 };
 
-} // namespace handler
+} // namespace core
 #endif // HANDLER_BRIDGE_HPP

@@ -31,6 +31,11 @@
 #include "string/string_functions.hpp"
 #include "melanobot.hpp"
 
+/**
+ * \brief Namespace for classes that handle connection messages
+ *
+ * \see Handler and SimpleAction for base classes.
+ */
 namespace handler {
 
 /**

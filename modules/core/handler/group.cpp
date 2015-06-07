@@ -20,7 +20,7 @@
  */
 #include "group.hpp"
 
-namespace handler {
+namespace core {
 
 void AbstractGroup::add_children(Settings child_settings,
                     const Settings& default_settings)
@@ -130,7 +130,7 @@ bool Group::on_handle(network::Message& msg)
 /**
  * \brief Used by \c AbstractList to add elements
  */
-class ListInsert : public SimpleAction
+class ListInsert : public handler::SimpleAction
 {
 public:
     ListInsert(std::string trigger, const Settings& settings, MessageConsumer* parent)
@@ -175,7 +175,7 @@ protected:
 /**
  * \brief Used by \c AbstractList to remove elements
  */
-class ListRemove : public SimpleAction
+class ListRemove : public handler::SimpleAction
 {
 public:
     ListRemove(std::string trigger, const Settings& settings, MessageConsumer* parent)
@@ -221,7 +221,7 @@ private:
 /**
  * \brief Used by \c AbstractList to remove all elements
  */
-class ListClear : public SimpleAction
+class ListClear : public handler::SimpleAction
 {
 public:
     ListClear(const Settings& settings, MessageConsumer* parent)
@@ -377,4 +377,4 @@ IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
         Log("sys",'!') << string::FormatterConfig().decode(*message);
 }
 
-} // namespace handler
+} // namespace core

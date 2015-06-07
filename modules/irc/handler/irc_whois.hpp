@@ -156,7 +156,7 @@ private:
 /**
  * \brief Preset for QSendWhois and QGetWhois
  */
-class QWhois : public ::handler::PresetGroup
+class QWhois : public core::PresetGroup
 {
 public:
     QWhois(const Settings& settings, ::MessageConsumer* parent)

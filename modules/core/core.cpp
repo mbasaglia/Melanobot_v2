@@ -33,40 +33,40 @@ Melanomodule melanomodule_core()
 
     module.register_log_type("sys",color::dark_red);
 
-    module.register_handler<handler::AdminQuit>("Quit");
-    module.register_handler<handler::AdminGroup>("AdminGroup");
-    module.register_handler<handler::FilterGroup>("FilterGroup");
-    module.register_handler<handler::AdminReconnect>("Reconnect");
-    module.register_handler<handler::AdminConnect>("Connect");
-    module.register_handler<handler::AdminDisconnect>("Disconnect");
-    module.register_handler<handler::Chanhax>("Chanhax");
+    module.register_handler<core::AdminQuit>("Quit");
+    module.register_handler<core::AdminGroup>("AdminGroup");
+    module.register_handler<core::FilterGroup>("FilterGroup");
+    module.register_handler<core::AdminReconnect>("Reconnect");
+    module.register_handler<core::AdminConnect>("Connect");
+    module.register_handler<core::AdminDisconnect>("Disconnect");
+    module.register_handler<core::Chanhax>("Chanhax");
 
-    module.register_handler<handler::Bridge>("Bridge");
-    module.register_handler<handler::BridgeChat>("BridgeChat");
-    module.register_handler<handler::BridgeAttach>("BridgeAttach");
-    module.register_handler<handler::BridgeAttachChannel>("BridgeAttachChannel");
+    module.register_handler<core::Bridge>("Bridge");
+    module.register_handler<core::BridgeChat>("BridgeChat");
+    module.register_handler<core::BridgeAttach>("BridgeAttach");
+    module.register_handler<core::BridgeAttachChannel>("BridgeAttachChannel");
 
-    module.register_handler<handler::MonitorServerStatus>("MonitorServerStatus");
-    module.register_handler<handler::MonitorReply>("MonitorReply");
+    module.register_handler<core::MonitorServerStatus>("MonitorServerStatus");
+    module.register_handler<core::MonitorReply>("MonitorReply");
 
-    module.register_handler<handler::JoinMessage>("JoinMessage");
-    module.register_handler<handler::PartMessage>("PartMessage");
-    module.register_handler<handler::KickMessage>("KickMessage");
-    module.register_handler<handler::RenameMessage>("RenameMessage");
+    module.register_handler<core::JoinMessage>("JoinMessage");
+    module.register_handler<core::PartMessage>("PartMessage");
+    module.register_handler<core::KickMessage>("KickMessage");
+    module.register_handler<core::RenameMessage>("RenameMessage");
 
-    module.register_handler<handler::License>("License");
-    module.register_handler<handler::Help>("Help");
-    module.register_handler<handler::Echo>("Echo");
-    module.register_handler<handler::ServerHost>("ServerHost");
-    module.register_handler<handler::Cointoss>("Cointoss");
-    module.register_handler<handler::Reply>("Reply");
-    module.register_handler<handler::Action>("Action");
-    module.register_handler<handler::Command>("Command");
-    module.register_handler<handler::Time>("Time");
+    module.register_handler<core::License>("License");
+    module.register_handler<core::Help>("Help");
+    module.register_handler<core::Echo>("Echo");
+    module.register_handler<core::ServerHost>("ServerHost");
+    module.register_handler<core::Cointoss>("Cointoss");
+    module.register_handler<core::Reply>("Reply");
+    module.register_handler<core::Action>("Action");
+    module.register_handler<core::Command>("Command");
+    module.register_handler<core::Time>("Time");
 
-    module.register_handler<handler::Group>("Group");
-    module.register_handler<handler::Multi>("Multi");
-    module.register_handler<handler::IfSet>("IfSet");
+    module.register_handler<core::Group>("Group");
+    module.register_handler<core::Multi>("Multi");
+    module.register_handler<core::IfSet>("IfSet");
 
     return module;
 }
