@@ -69,24 +69,25 @@ public:
     {
         std::string conn_name = settings.get("connection",settings.get("source",""));
         connection = Melanobot::instance().connection(conn_name);
-        if ( !connection )
+        group = settings.get("group","");
+        if ( !connection || group.empty() )
             throw ConfigurationError();
 
-        description = settings.get("description","the "+trigger+" group");
+        description = settings.get("description","the "+group+" group");
         ignore = settings.get("ignore","");
     }
 
     bool add(const std::string& element) override
     {
         if ( ignore.empty() || !connection->user_auth(element, ignore) )
-            return connection->add_to_group(element,trigger);
+            return connection->add_to_group(element,group);
         return false;
     }
 
     bool remove(const std::string& element) override
     {
         if ( ignore.empty() || !connection->user_auth(element, ignore) )
-            return connection->remove_from_group(element,trigger);
+            return connection->remove_from_group(element,group);
         return false;
     }
 
@@ -97,7 +98,7 @@ public:
 
     std::vector<std::string> elements() const override
     {
-        auto users = connection->users_in_group(trigger);
+        auto users = connection->users_in_group(group);
         std::vector<std::string> names;
         for ( const user::User& user : users )
         {
@@ -122,6 +123,7 @@ public:
     }
 private:
     network::Connection*connection{nullptr};///< Managed connection
+    std::string group;       ///< Managed user group
     std::string description; ///< Used as list_name property
     std::string ignore;      ///< Group to be ignored on add/remove
 };
