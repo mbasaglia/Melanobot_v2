@@ -19,6 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "group.hpp"
+#include "melanobot.hpp"
 
 namespace core {
 
@@ -33,7 +34,6 @@ void AbstractGroup::add_children(Settings child_settings,
         {
             settings::merge(p.second,default_settings,false);
             auto hand = handler::HandlerFactory::instance().build(
-                bot(),
                 p.first,
                 p.second,
                 this
@@ -76,7 +76,7 @@ Group::Group(const Settings& settings, MessageConsumer* parent)
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
     {
-        source = bot()->connection(source_name);
+        source = Melanobot::instance().connection(source_name);
         if ( !source )
             throw ConfigurationError();
     }

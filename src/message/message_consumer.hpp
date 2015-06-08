@@ -22,8 +22,6 @@
 #include "settings.hpp"
 #include "network/connection.hpp"
 
-class Melanobot;
-
 namespace handler {
     class Handler;
 } // namespace handler

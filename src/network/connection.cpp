@@ -17,11 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "connection.hpp"
-#include "melanobot.hpp"
 
 namespace network {
 
-void ConnectionFactory::register_connection ( const std::string& protocol_name, const Contructor& function )
+void ConnectionFactory::register_connection(const std::string& protocol_name,
+                                            const Contructor& function)
 {
     if ( factory.count(protocol_name) )
         CRITICAL_ERROR("Re-registering connection protocol "+protocol_name);
@@ -29,7 +29,7 @@ void ConnectionFactory::register_connection ( const std::string& protocol_name, 
 }
 
 std::unique_ptr<Connection> ConnectionFactory::create(
-    Melanobot* bot, const Settings& settings, const std::string& name)
+    const Settings& settings, const std::string& name)
 {
     try {
         std::string protocol = settings.get("protocol",std::string());
@@ -43,7 +43,7 @@ std::unique_ptr<Connection> ConnectionFactory::create(
             }
 
             Log("sys",'!') << "Creating connection " << color::dark_green << name;
-            return it->second(bot, settings, name);
+            return it->second(settings, name);
         }
         ErrorLog ("sys","Connection Error") << ": Unknown connection protocol "+protocol;
     } catch ( const CriticalException& ) {

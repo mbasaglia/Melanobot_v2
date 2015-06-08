@@ -17,10 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "handler.hpp"
+#include "melanobot.hpp"
+
 namespace handler {
 
 std::unique_ptr<Handler> HandlerFactory::build_template(
-    Melanobot*          bot,
     const std::string&  handler_name,
     const Settings&     settings,
     MessageConsumer*    parent) const
@@ -32,7 +33,7 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
                 << ": missing template reference";
         return nullptr;
     }
-    Settings source = bot->get_template(*type);
+    Settings source = Melanobot::instance().get_template(*type);
     Properties arguments;
     for ( const auto& ch : source )
         if ( string::starts_with(ch.first,"@") )
@@ -43,12 +44,11 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
         node.data() = string::replace(node.data(),arguments);
     });
     /// \todo recursion check
-    return build(bot,handler_name,source,parent);
+    return build(handler_name,source,parent);
 }
 
 
 std::unique_ptr<Handler> HandlerFactory::build(
-    Melanobot*          bot,
     const std::string&  handler_name,
     const Settings&     settings,
     MessageConsumer*    parent) const
@@ -63,11 +63,11 @@ std::unique_ptr<Handler> HandlerFactory::build(
 
     if ( type == "Template" )
     {
-        return build_template(bot, handler_name, settings, parent);
+        return build_template(handler_name, settings, parent);
     }
     else if ( type == "Connection" )
     {
-        bot->add_connection(handler_name, settings);
+        Melanobot::instance().add_connection(handler_name, settings);
         return nullptr;
     }
 

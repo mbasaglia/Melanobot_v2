@@ -44,7 +44,7 @@ int main(int argc, char **argv)
             Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
             network::ServiceRegistry::instance().initialize(settings.get_child("services",{}));
             network::ServiceRegistry::instance().start();
-            Melanobot::initialize(settings).run();
+            Melanobot::load(settings).run();
             network::ServiceRegistry::instance().stop();
             /// \todo some way to reload the config and restart the bot
         }

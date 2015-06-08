@@ -29,7 +29,7 @@
 #include "settings.hpp"
 #include "string/logger.hpp"
 #include "string/string_functions.hpp"
-#include "melanobot.hpp"
+#include "message/message_consumer.hpp"
 
 /**
  * \brief Namespace for classes that handle connection messages
@@ -62,8 +62,6 @@ public:
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
     virtual ~Handler() {}
-
-    Melanobot* bot() const { return get_parent<Melanobot>(); }
 
     /**
      * \brief Attempts to handle the message
@@ -323,7 +321,6 @@ public:
      * \return \c nullptr if it could not be created
      */
     std::unique_ptr<Handler> build(
-        Melanobot*              bot,
         const std::string&      handler_name,
         const Settings&         settings,
         MessageConsumer*        parent) const;
@@ -333,7 +330,6 @@ public:
      * \return \c nullptr if it could not be created
      */
     std::unique_ptr<Handler> build_template(
-        Melanobot*              bot,
         const std::string&      handler_name,
         const Settings&         settings,
         MessageConsumer*        parent) const;

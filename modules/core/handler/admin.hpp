@@ -18,10 +18,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "group.hpp"
-
 #ifndef HANDLER_ADMIN_HPP
 #define HANDLER_ADMIN_HPP
+
+#include "group.hpp"
+#include "melanobot.hpp"
 
 namespace core {
 
@@ -49,7 +50,7 @@ protected:
             quit_msg = message;
 
         msg.destination->disconnect(quit_msg);
-        bot()->stop();
+        Melanobot::instance().stop();
         return true;
     }
 
@@ -67,7 +68,7 @@ public:
         : AbstractList(settings.get("group",""),false,settings,parent)
     {
         std::string conn_name = settings.get("connection",settings.get("source",""));
-        connection = bot()->connection(conn_name);
+        connection = Melanobot::instance().connection(conn_name);
         if ( !connection )
             throw ConfigurationError();
 

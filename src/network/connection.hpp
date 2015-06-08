@@ -31,8 +31,6 @@
 #include "user/user_counter.hpp"
 #include "user/user_manager.hpp"
 
-class Melanobot;
-
 namespace network {
 
 /**
@@ -49,7 +47,7 @@ namespace network {
  * It is recommended that you add a static method called \c create in the
  * derived class with the following signature:
  * \code{.cpp}
- *      YourClass* create(Melanobot* bot, const Settings& settings);
+ *      std::unique_ptr<YourClass> create(const Settings& settings, const std::string& name)
  * \endcode
  * to be used with Melanomodule::register_connection().
  *
@@ -259,7 +257,7 @@ class ConnectionFactory
 {
 public:
     using Contructor = std::function<std::unique_ptr<Connection>
-        (Melanobot* bot, const Settings& settings, const std::string&name)>;
+        (const Settings& settings, const std::string&name)>;
 
     /**
      * \brief Singleton instance
@@ -280,8 +278,7 @@ public:
     /**
      * \brief Creates a connection from its settings
      */
-    std::unique_ptr<Connection> create(Melanobot* bot,
-                                       const Settings& settings,
+    std::unique_ptr<Connection> create(const Settings& settings,
                                        const std::string& name
                                       );
 

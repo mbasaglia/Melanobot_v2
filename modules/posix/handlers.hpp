@@ -114,7 +114,7 @@ protected:
     {
         if ( get_action() != "loop" )
             set_action("restart");
-        bot()->stop();
+        Melanobot::instance().stop();
         return true;
     }
 
@@ -136,7 +136,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         set_action("quit");
-        bot()->stop();
+        Melanobot::instance().stop();
         return true;
     }
 

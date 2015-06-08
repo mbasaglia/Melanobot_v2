@@ -27,7 +27,6 @@
 #include "network/udp_io.hpp"
 #include "concurrency/container.hpp"
 #include "user/user_manager.hpp"
-#include "melanobot.hpp"
 #include "xonotic.hpp"
 
 namespace xonotic {
@@ -48,13 +47,14 @@ public:
      * \brief Create from settings
      */
     static std::unique_ptr<XonoticConnection> create(
-        Melanobot* bot, const Settings& settings, const std::string& name);
+        const Settings& settings, const std::string& name);
 
     /**
      * \thread main \lock none
      */
-    XonoticConnection ( Melanobot* bot, const network::Server& server,
-                        const Settings& settings={}, const std::string& name={} );
+    XonoticConnection ( const network::Server&  server,
+                        const Settings&         settings = {},
+                        const std::string&      name = {} );
 
     /**
      * \thread main \lock none
@@ -222,7 +222,6 @@ private:
     AtomicStatus        status_{DISCONNECTED};          ///< Connection status
 
     user::UserManager   user_manager;                   ///< Keeps track of players
-    Melanobot*          bot = nullptr;                  ///< Main bot
 
     network::UdpIo      io;                             ///< Handles networking
 

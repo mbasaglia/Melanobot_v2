@@ -22,8 +22,6 @@
 #include "network/network.hpp"
 #include "user/user.hpp"
 
-class Melanobot;
-
 namespace network {
 
 /**
@@ -128,7 +126,7 @@ struct Message
     /**
      * \brief Set \c source and \c destination and sends to the given bot
      */
-    void send(Connection* from, Melanobot* to);
+    void send(Connection* from);
 
     /**
      * \brief Turns into a CONNECTED message

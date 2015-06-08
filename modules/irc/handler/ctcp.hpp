@@ -25,6 +25,7 @@
 #include "config.hpp"
 #include "irc/network/functions.hpp"
 #include "time/time_string.hpp"
+#include "melanobot.hpp"
 
 namespace irc {
 /**
@@ -236,7 +237,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        bot()->populate_properties({"ctcp","clientinfo","help_group"},props);
+        get_parent<Melanobot>()->populate_properties({"ctcp","clientinfo","help_group"},props);
 
         Properties clientinfo;
         gather(props, clientinfo);

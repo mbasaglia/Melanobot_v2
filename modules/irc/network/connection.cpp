@@ -21,11 +21,12 @@
 #include "string/logger.hpp"
 #include "string/string_functions.hpp"
 #include "irc/network/functions.hpp"
+#include "melanobot.hpp"
 
 namespace irc {
 
 std::unique_ptr<IrcConnection> IrcConnection::create(
-    Melanobot* bot, const Settings& settings, const std::string& name)
+    const Settings& settings, const std::string& name)
 {
     if ( settings.get("protocol",std::string()) != "irc" )
     {
@@ -42,13 +43,16 @@ std::unique_ptr<IrcConnection> IrcConnection::create(
         throw ConfigurationError("IRC connection with no server");
     }
 
-    return New<IrcConnection>(bot, server, settings, name);
+    return New<IrcConnection>(server, settings, name);
 }
 
-IrcConnection::IrcConnection ( Melanobot* bot, const network::Server& server,
-                               const Settings& settings, const std::string& name )
-    : Connection(name), bot(bot), main_server(server), current_server(server),
-    buffer(*this, settings.get_child("buffer",{}))
+IrcConnection::IrcConnection ( const network::Server&   server,
+                               const Settings&          settings,
+                               const std::string&       name )
+    : Connection(name),
+     main_server(server),
+     current_server(server),
+     buffer(*this, settings.get_child("buffer",{}))
 {
     read_settings(settings);
 }
@@ -118,7 +122,7 @@ void IrcConnection::disconnect(const std::string& message)
         buffer.disconnect();
     Lock lock(mutex);
     connection_status = DISCONNECTED;
-    network::Message().disconnected().send(this,bot);
+    network::Message().disconnected().send(this);
     current_nick = "";
     current_server = main_server;
     properties_.erase("005");
@@ -145,7 +149,7 @@ void IrcConnection::error_stop()
 {
     disconnect();
     settings::global_settings.put("exit_code",1);
-    bot->stop(); /// \todo is this the right thing to do? -- maybe have a handler that does this
+    Melanobot::instance().stop(); /// \todo is this the right thing to do? -- maybe have a handler that does this
 }
 
 network::Server IrcConnection::server() const
@@ -663,7 +667,7 @@ void IrcConnection::handle_message(network::Message msg)
      * 502
      */
 
-    msg.send(this,bot);
+    msg.send(this);
 }
 
 void IrcConnection::command(network::Command cmd)

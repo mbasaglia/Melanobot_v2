@@ -29,8 +29,6 @@
 #include "network/connection.hpp"
 #include "irc/network/buffer.hpp"
 
-#include "melanobot.hpp"
-
 /**
  * \brief Namespace contaning classes and functions handling the IRC protocol
  */
@@ -46,13 +44,14 @@ public:
      * \brief Create from settings
      */
     static std::unique_ptr<IrcConnection> create(
-        Melanobot* bot, const Settings& settings, const std::string& name);
+        const Settings& settings, const std::string& name);
 
     /**
      * \thread main \lock none
      */
-    IrcConnection(Melanobot* bot, const network::Server& server,
-                  const Settings& settings = {}, const std::string& name = {});
+    IrcConnection(const network::Server& server,
+                  const Settings&        settings = {},
+                  const std::string&     name = {});
     
     /**
      * \thread main \lock none
@@ -247,8 +246,6 @@ private:
     user::User parse_prefix(const std::string& prefix);
 
     mutable std::mutex mutex;
-
-    Melanobot* bot;
 
     /**
      * \brief IRC server to connect to

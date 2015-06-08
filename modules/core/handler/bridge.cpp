@@ -18,6 +18,7 @@
  */
 
 #include "bridge.hpp"
+#include "melanobot.hpp"
 
 namespace core {
 
@@ -27,7 +28,7 @@ Bridge::Bridge(const Settings& settings, MessageConsumer* parent)
 
     std::string destination_name = settings.get("destination","");
     if ( !destination_name.empty() )
-        destination = bot()->connection(destination_name);
+        destination = Melanobot::instance().connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
 }
 
@@ -113,7 +114,7 @@ void BridgeAttach::initialize()
 
 bool BridgeAttach::on_handle(network::Message& msg)
 {
-    auto conn = bot()->connection(msg.message);
+    auto conn = Melanobot::instance().connection(msg.message);
     if ( conn || detach )
         parent->attach(conn);
     else

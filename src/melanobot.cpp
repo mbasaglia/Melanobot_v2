@@ -20,39 +20,33 @@
 
 #include "handler/handler.hpp"
 
-std::unique_ptr<Melanobot> Melanobot::singleton;
-
-Melanobot& Melanobot::instance()
+Melanobot& Melanobot::load(const Settings& settings)
 {
-    if ( !singleton )
-        CRITICAL_ERROR("Melanobot singleton has not been initialized");
-    return *singleton;
-}
+    static bool loaded = false;
+    if ( loaded )
+        CRITICAL_ERROR("Melanobot settings loaded twice");
+    loaded = true;
 
-Melanobot& Melanobot::initialize(const Settings& settings)
-{
-    if ( singleton )
-        CRITICAL_ERROR("Melanobot singleton initialized twice");
-    singleton = std::make_unique<Melanobot>(settings);
-    return *singleton;
-}
-
-Melanobot::Melanobot(const Settings& settings) : MessageConsumer(nullptr)
-{
-    templates = settings.get_child("templates",{});
+    instance().templates = settings.get_child("templates",{});
 
     for(const auto& pt : settings.get_child("bot",{}))
     {
-        auto hand = handler::HandlerFactory::instance().build(this,pt.first,pt.second,this);
+        auto hand = handler::HandlerFactory::instance().build(pt.first,pt.second,&instance());
         if ( hand )
-            handlers.push_back(std::move(hand));
+            instance().handlers.push_back(std::move(hand));
     }
 
-    if ( connections.empty() )
+    if ( instance().connections.empty() )
     {
         settings::global_settings.put("exit_code",1);
-        ErrorLog("sys") << "Creating a bot with no connections";
+        CRITICAL_ERROR("Creating a bot with no connections");
     }
+
+    return instance();
+}
+
+Melanobot::Melanobot() : MessageConsumer(nullptr)
+{
 }
 
 Melanobot::~Melanobot()
@@ -136,7 +130,7 @@ void Melanobot::add_connection(std::string suggested_name, const Settings& setti
         return;
     }
 
-    auto conn = network::ConnectionFactory::instance().create(this,settings,suggested_name);
+    auto conn = network::ConnectionFactory::instance().create(settings,suggested_name);
 
     if ( conn )
     {

@@ -43,13 +43,13 @@ class StdinConnection : public network::Connection
 {
 public:
     static std::unique_ptr<StdinConnection> create(
-        Melanobot* bot, const Settings& settings, const std::string& name)
+        const Settings& settings, const std::string& name)
     {
-        return New<StdinConnection>(bot,settings, name);
+        return New<StdinConnection>(settings, name);
     }
 
-    StdinConnection(Melanobot* bot, const Settings& settings, const std::string& name)
-        : Connection(name), bot(bot), input{io_service}
+    StdinConnection(const Settings& settings, const std::string& name)
+        : Connection(name),input{io_service}
     {
         std::string filename = settings.get("file","");
         int file = open_file(filename);
@@ -125,7 +125,6 @@ public:
     Properties message_properties() const override { return Properties{}; }
 
 private:
-    Melanobot*                            bot;
     string::Formatter*                    formatter_;
     boost::asio::streambuf                buffer_read;
     boost::asio::io_service               io_service;
@@ -140,7 +139,7 @@ private:
         if ( err )
         {
             ErrorLog("std","Network Error") << err.message();
-            bot->stop();
+            Melanobot::instance().stop(); /// \todo move this in error handler
         }
     }
 
@@ -166,12 +165,10 @@ private:
         Log("std",'<',1) << formatter_->decode(msg.raw);
         std::istringstream socket_stream(msg.raw);
 
-        msg.message = msg.raw;
+        msg.chat(msg.raw);
         msg.from = name();
-        msg.source = this;
-        msg.type = network::Message::CHAT;
 
-        bot->message(msg);
+        msg.send(this);
 
         schedule_read();
     }

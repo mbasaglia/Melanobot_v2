@@ -48,7 +48,7 @@ std::string hmac_md4(const std::string& input, const std::string& key)
 }
 
 std::unique_ptr<XonoticConnection> XonoticConnection::create(
-    Melanobot* bot, const Settings& settings, const std::string& name)
+    const Settings& settings, const std::string& name)
 {
     if ( settings.get("protocol",std::string()) != "xonotic" )
     {
@@ -66,15 +66,14 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
         throw ConfigurationError("Xonotic connection with no server");
     }
 
-    return New<XonoticConnection>(bot, server, settings, name);
+    return New<XonoticConnection>(server, settings, name);
 }
 
-XonoticConnection::XonoticConnection ( Melanobot* bot,
-                                       const network::Server& server,
+XonoticConnection::XonoticConnection ( const network::Server& server,
                                        const Settings& settings,
                                        const std::string& name
                                      )
-    : Connection(name), server_(server), status_(DISCONNECTED), bot(bot)
+    : Connection(name), server_(server), status_(DISCONNECTED)
 {
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));
@@ -521,7 +520,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                     {
                         check_user_end();
                         status_ = CONNECTED;
-                        network::Message().connected().send(this,bot);
+                        network::Message().connected().send(this);
                     }
                     else
                     {
@@ -685,7 +684,7 @@ void XonoticConnection::handle_message(network::Message& msg)
         return; // don't propagate challenge messages
     }
 
-    msg.send(this,bot);
+    msg.send(this);
 }
 
 void XonoticConnection::update_connection()
@@ -778,7 +777,7 @@ void XonoticConnection::close_connection()
     // status: CONNECTED|CHECKING -> DISCONNECTED + message
     // status: * -> DISCONNECTED
     if ( status_ > CONNECTING )
-        network::Message().disconnected().send(this,bot);
+        network::Message().disconnected().send(this);
     status_ = DISCONNECTED;
     if ( io.connected() )
         io.disconnect();

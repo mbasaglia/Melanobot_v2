@@ -25,6 +25,7 @@
 #include "math.hpp"
 #include "string/language.hpp"
 #include "time/time_string.hpp"
+#include "melanobot.hpp"
 
 namespace core {
 
@@ -73,7 +74,8 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        bot()->populate_properties(
+        // AKA get the toplevel parent
+        get_parent<Melanobot>()->populate_properties(
             {"name","help","auth","synopsis","help_group","channels"},
             props);
         

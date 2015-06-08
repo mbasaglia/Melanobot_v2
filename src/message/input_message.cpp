@@ -22,10 +22,10 @@
 
 namespace network {
 
-void Message::send ( Connection* from, Melanobot* to )
+void Message::send(Connection* from)
 {
     source = destination = from;
-    to->message(*this);
+    Melanobot::instance().message(*this);
 }
 
 } // namespace network

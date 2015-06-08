@@ -20,6 +20,7 @@
 #define CONNECTION_MONITOR_HPP
 
 #include "handler/handler.hpp"
+#include "melanobot.hpp"
 
 namespace core {
 
@@ -37,7 +38,7 @@ public:
     {
         std::string monitored_name = settings.get("monitored","");
         if ( !monitored_name.empty() )
-            monitored = bot()->connection(monitored_name);
+            monitored = Melanobot::instance().connection(monitored_name);
         if ( !monitored )
             throw ConfigurationError();
     }
