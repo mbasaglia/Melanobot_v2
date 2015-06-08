@@ -26,10 +26,10 @@ namespace core {
 /**
  * \brief Base class for group-like handlers
  */
-class AbstractGroup : public handler::SimpleAction
+class AbstractGroup : public handler::Handler
 {
 public:
-    using handler::SimpleAction::SimpleAction;
+    using handler::Handler::Handler;
 
     void initialize() override
     {
@@ -43,7 +43,8 @@ public:
             h->finalize();
     }
 
-    void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const override;
+    void populate_properties(const std::vector<std::string>& properties,
+                             PropertyTree& output) const override;
 
 protected:
     bool on_handle(network::Message& msg) override
@@ -64,12 +65,69 @@ protected:
 
 
     std::vector<std::unique_ptr<Handler>> children;  ///< Contained handlers
+
+    friend class AbstractActionGroup;
+};
+
+/**
+ * \brief Base class for handlers which act as a group and as a SimpleAction
+ */
+class AbstractActionGroup : public handler::SimpleAction
+{
+public:
+    AbstractActionGroup(const std::string& default_trigger,
+                        const Settings& settings,
+                        MessageConsumer* parent)
+    : SimpleAction(default_trigger,settings,parent),
+      group({},this) {}
+
+    void initialize() override
+    {
+        group.initialize();
+    }
+
+    void finalize() override
+    {
+        group.finalize();
+    }
+
+    void populate_properties(const std::vector<std::string>& properties,
+                             PropertyTree& output) const override
+    {
+        group.populate_properties(properties,output);
+        SimpleAction::populate_properties(properties,output);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        return group.on_handle(msg);
+    }
+
+    void add_children(Settings child_settings,
+                      const Settings& default_settings={})
+    {
+        group.add_children(child_settings,default_settings);
+    }
+
+    const std::vector<std::unique_ptr<Handler>>& children() const
+    {
+        return group.children;
+    }
+
+    void add_child(std::unique_ptr<Handler>&& ptr)
+    {
+        group.children.push_back(std::move(ptr));
+    }
+
+private:
+    AbstractGroup group;
 };
 
 /**
  * \brief A simple group of actions which share settings
  */
-class Group : public AbstractGroup
+class Group : public AbstractActionGroup
 {
 public:
     Group(const Settings& settings, MessageConsumer* parent);
@@ -85,6 +143,8 @@ public:
     {
         return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
     }
+
+    bool handle(network::Message& msg) override;
 
 protected:
     bool on_handle(network::Message& msg) override;
@@ -112,7 +172,7 @@ protected:
  *       which contains a human-readable name of the list,
  *       used for descriptions of the handler.
  */
-class AbstractList : public AbstractGroup
+class AbstractList : public AbstractActionGroup
 {
 public:
     /**
@@ -164,12 +224,10 @@ class PresetGroup : public AbstractGroup
 public:
     PresetGroup( const std::initializer_list<std::string>& preset,
                  const Settings& settings, MessageConsumer* parent)
-        : AbstractGroup("",settings,parent)
+        : AbstractGroup(settings,parent)
     {
         add_children(settings::merge_copy(settings,
             settings::from_initializer(preset), false));
-        synopsis = "";
-        help = "";
     }
 
     bool can_handle(const network::Message&) const override { return true; }
@@ -179,7 +237,7 @@ public:
  * \brief A group muticasting to its children
  * (which should be SimpleActions with a non-empty trigger)
  */
-class Multi : public Group
+class Multi : public AbstractActionGroup
 {
 public:
     Multi(const Settings& settings, MessageConsumer* parent);

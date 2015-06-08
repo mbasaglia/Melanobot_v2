@@ -63,7 +63,7 @@ void AbstractGroup::populate_properties(const std::vector<std::string>& properti
 }
 
 Group::Group(const Settings& settings, MessageConsumer* parent)
-    : AbstractGroup("",settings,parent)
+    : AbstractActionGroup("",settings,parent)
 {
     // Gather settings
     auth = settings.get("auth",auth);
@@ -109,19 +109,37 @@ std::string Group::get_property ( const std::string& name ) const
         return help_group;
     else if ( name == "channels" )
         return channels;
-    return SimpleAction::get_property(name);
+    return AbstractActionGroup::get_property(name);
 }
 
 bool Group::can_handle(const network::Message& msg) const
 {
     return authorized(msg) && (!source || msg.source == source) &&
-        ( msg.direct || !direct ) && string::starts_with(msg.message,trigger) &&
+        ( msg.direct || !direct ) &&
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));
+}
+
+bool Group::handle(network::Message& msg)
+{
+    if ( can_handle(msg) )
+    {
+        // if it doesn't have a trigger pattern, operate on the original message
+        if ( trigger.empty() )
+            return on_handle(msg);
+
+        std::smatch match;
+        if ( matches_pattern(msg, match) )
+        {
+            auto trimmed_msg = trimmed(msg,match);
+            return on_handle(trimmed_msg);
+        }
+    }
+    return false;
 }
 
 bool Group::on_handle(network::Message& msg)
 {
-    for ( const auto& h : children )
+    for ( const auto& h : children() )
         if ( h->handle(msg) && !pass_through )
             return true;
     return false;
@@ -285,7 +303,7 @@ private:
 
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
                            const Settings& settings, MessageConsumer* parent)
-    : AbstractGroup(default_trigger,settings, parent)
+    : AbstractActionGroup(default_trigger,settings, parent)
 {
 
     Settings child_settings;
@@ -301,34 +319,48 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
     }
 
     /// \todo could be useful to have a single handler accepting two triggers
-    children.push_back(New<ListInsert>("+",child_settings,this));
-    children.push_back(New<ListInsert>("add",child_settings,this));
+    add_child(New<ListInsert>("+",child_settings,this));
+    add_child(New<ListInsert>("add",child_settings,this));
 
-    children.push_back(New<ListRemove>("-",child_settings,this));
-    children.push_back(New<ListRemove>("rm",child_settings,this));
+    add_child(New<ListRemove>("-",child_settings,this));
+    add_child(New<ListRemove>("rm",child_settings,this));
 
     if ( clear )
-        children.push_back(New<ListClear>(child_settings,this));
+        add_child(New<ListClear>(child_settings,this));
 
-    children.push_back(New<ListShow>("list",child_settings,this));
-    children.push_back(New<ListShow>("",child_settings,this));
+    add_child(New<ListShow>("list",child_settings,this));
+    add_child(New<ListShow>("",child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)
 {
-    return AbstractGroup::on_handle(msg);
+    return AbstractActionGroup::on_handle(msg);
 }
 
 Multi::Multi(const Settings& settings, MessageConsumer* parent)
-    : Group(settings,parent)
+    : AbstractActionGroup("",settings,parent)
 {
+    synopsis = "";
+    help = settings.get("help","");
+
+    // Copy relevant defaults to show the children
+    Settings default_settings;
+    for ( const auto& p : settings )
+        if ( !p.second.data().empty() && !string::is_one_of(p.first,{"trigger","type"}) )
+        {
+            default_settings.put(p.first,p.second.data());
+        }
+
+    // Initialize children
+    add_children(settings,default_settings);
+
+
     PropertyTree props;
     populate_properties({"trigger"},props);
 
-    prefixes.resize(children.size());
+    prefixes.resize(children().size());
     auto it = props.begin();
-    ++it;
-    for ( unsigned i = 0; i < children.size() && it != props.end(); ++it, ++i )
+    for ( unsigned i = 0; i < children().size() && it != props.end(); ++it, ++i )
     {
         settings::breakable_recurse(it->second,
         [this,i](const PropertyTree& node){
@@ -345,29 +377,28 @@ Multi::Multi(const Settings& settings, MessageConsumer* parent)
 
 bool Multi::can_handle(const network::Message& msg) const
 {
-    return authorized(msg) && (!source || msg.source == source) &&
-        ( msg.direct || !direct ) &&
-        (channels.empty() || msg.source->channel_mask(msg.channels, channels));
+    return msg.direct || !direct;
 }
 
 bool Multi::on_handle ( network::Message& msg )
 {
     bool handled = false;
-    if ( !trigger.empty() && string::starts_with(msg.message,trigger) )
+    std::smatch match;
+    if ( !trigger.empty() && matches_pattern(msg, match) )
     {
-        network::Message trimmed_msg = trimmed(msg);
+        network::Message trimmed_msg = trimmed(msg, match);
         std::string base_message = trimmed_msg.message;
 
-        for ( unsigned i = 0; i < children.size(); i++ )
+        for ( unsigned i = 0; i < children().size(); i++ )
         {
             trimmed_msg.message = prefixes[i]+' '+base_message;
-            if ( children[i]->handle(trimmed_msg) )
+            if ( children()[i]->handle(trimmed_msg) )
                 handled = true;
         }
     }
     else
     {
-        for ( const auto& h : children )
+        for ( const auto& h : children() )
             if ( h->handle(msg) )
                 handled = true;
     }
@@ -375,7 +406,7 @@ bool Multi::on_handle ( network::Message& msg )
 }
 
 IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
-        : AbstractGroup("",settings,parent)
+        : AbstractGroup(settings,parent)
 {
     std::string key = settings.get("key","");
 

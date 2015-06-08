@@ -210,13 +210,16 @@ public:
      * \param settings        Settings
      * \param bot             Pointer to the bot instance (cannot be null)
      * \throws ConfigurationError If the requirements stated above are not met
-     * \todo flag saying whether there must be a space after the trigger (default true, except groups)
      */
     SimpleAction(const std::string& default_trigger, const Settings& settings,
                  MessageConsumer* parent)
         : Handler(settings,parent)
     {
         trigger      = settings.get("trigger",default_trigger);
+        pattern      = std::regex(
+            "^"+string::regex_escape(trigger)+"\\b\\s*",
+            std::regex::ECMAScript|std::regex::optimize
+        );
         synopsis     = "#gray##-b#"+trigger+"#-##gray#";
         direct       = settings.get("direct",direct);
         public_reply = settings.get("public",public_reply);
@@ -227,8 +230,7 @@ public:
      */
     bool can_handle(const network::Message& msg) const override
     {
-        return msg.type == network::Message::CHAT &&
-            (msg.direct || !direct) && string::starts_with(msg.message,trigger);
+        return msg.type == network::Message::CHAT && (msg.direct || !direct);
     }
 
     /**
@@ -240,10 +242,12 @@ public:
     {
         if ( can_handle(msg) )
         {
-            if ( trigger.empty() )
-                return on_handle(msg);
-            auto trimmed_msg = trimmed(msg);
-            return on_handle(trimmed_msg);
+            std::smatch match;
+            if ( matches_pattern(msg, match) )
+            {
+                auto trimmed_msg = trimmed(msg,match);
+                return on_handle(trimmed_msg);
+            }
         }
         return false;
     }
@@ -258,7 +262,7 @@ public:
      */
     std::string get_property(const std::string& name) const override
     {
-        if ( name == "trigger" || name == "name" )
+        if ( name == "name" || name == "trigger" )
             return trigger;
         else if ( name == "direct" )
             return direct ? "1" : "0";
@@ -270,12 +274,12 @@ public:
     }
 
 protected:
-
-    std::string          trigger;            ///< String identifying the action
-    bool                 direct = false;     ///< Whether the message needs to be direct
-    std::string          synopsis;           ///< Help synopsis (uses FormatterConfig)
-    std::string          help="Undocumented";///< Help string (uses FormatterConfig)
-    bool                 public_reply = true;///< Whether to reply publicly or just to the sender of the message
+    std::string trigger;            ///< String identifying the action
+    std::regex  pattern;            ///< Pattern the message needs to match
+    bool        direct = false;     ///< Whether the message needs to be direct
+    std::string synopsis;           ///< Help synopsis (uses FormatterConfig)
+    std::string help="Undocumented";///< Help string (uses FormatterConfig)
+    bool        public_reply = true;///< Whether to reply publicly or just to the sender of the message
 
     std::string reply_channel(const network::Message& msg) const override
     {
@@ -287,13 +291,17 @@ protected:
         return channel;
     }
 
-    network::Message trimmed(const network::Message& msg)
+    network::Message trimmed(const network::Message& msg, const std::smatch& match_result)
     {
         network::Message trimmed_msg = msg;
-        auto it = trimmed_msg.message.begin()+trigger.size();
-        it = std::find_if(it,trimmed_msg.message.end(),[](char c){return !std::isspace(c);});
-        trimmed_msg.message.erase(trimmed_msg.message.begin(),it);
+        trimmed_msg.message.erase(0, match_result.length());
         return trimmed_msg;
+    }
+
+    bool matches_pattern(const network::Message& msg, std::smatch& result)
+    {
+        return std::regex_search(msg.message, result, pattern,
+                                 std::regex_constants::match_continuous);
     }
 
 };
