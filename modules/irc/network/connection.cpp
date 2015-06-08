@@ -220,9 +220,7 @@ void IrcConnection::handle_message(network::Message msg)
 {
     if ( msg.command.empty() ) return;
 
-    /// \todo non-static parse_prefix with origin (only used here after all)
     msg.from = parse_prefix(msg.from.name);
-    msg.from.origin = this;
 
     user::User *from_user = nullptr;
 
@@ -988,6 +986,7 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
     {
         user.name = user.local_id = match[1].str();
         user.host = match[2].str();
+        user.origin = this;
     }
 
     return user;

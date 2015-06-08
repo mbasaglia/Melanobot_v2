@@ -126,12 +126,6 @@ public:
     std::string name() const override;
 
     /**
-     * \brief Parse :Nick!User@host
-     * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
-     */
-    static user::User parse_prefix(const std::string& prefix);
-
-    /**
      * \brief Get whether a user has the given authorization level
      * \thead external \lock data
      */
@@ -245,6 +239,12 @@ private:
      */
     void remove_from_channel(const std::string& user_id,
                              const std::vector<std::string>& channels);
+
+    /**
+     * \brief Parse :Nick!User@host
+     * \see http://tools.ietf.org/html/rfc2812#section-2.3.1
+     */
+    user::User parse_prefix(const std::string& prefix);
 
     mutable std::mutex mutex;
 
