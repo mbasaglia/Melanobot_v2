@@ -133,9 +133,9 @@ bool Group::on_handle(network::Message& msg)
 class ListInsert : public handler::SimpleAction
 {
 public:
-    ListInsert(std::string trigger, const Settings& settings, MessageConsumer* parent)
+    ListInsert(std::string trigger, const Settings& settings, AbstractList* parent)
     : SimpleAction(trigger,settings,parent),
-        parent(dynamic_cast<AbstractList*>(parent))
+        parent(parent)
     {
         if ( !parent )
             throw ConfigurationError();
@@ -178,9 +178,9 @@ protected:
 class ListRemove : public handler::SimpleAction
 {
 public:
-    ListRemove(std::string trigger, const Settings& settings, MessageConsumer* parent)
+    ListRemove(std::string trigger, const Settings& settings, AbstractList* parent)
     : SimpleAction(trigger,settings,parent),
-        parent(dynamic_cast<AbstractList*>(parent))
+        parent(parent)
     {
         if ( !parent )
             throw ConfigurationError();
@@ -224,9 +224,9 @@ private:
 class ListClear : public handler::SimpleAction
 {
 public:
-    ListClear(const Settings& settings, MessageConsumer* parent)
+    ListClear(const Settings& settings, AbstractList* parent)
     : SimpleAction("clear",settings,parent),
-        parent(dynamic_cast<AbstractList*>(parent))
+        parent(parent)
     {
         if ( !parent )
             throw ConfigurationError();
@@ -247,6 +247,42 @@ protected:
     AbstractList* parent;
 };
 
+/**
+ * \brief Used by \c AbstractList to enumerate elements
+ */
+class ListShow : public handler::SimpleAction
+{
+public:
+    ListShow(std::string trigger, const Settings& settings, AbstractList* parent)
+    : SimpleAction(trigger,settings,parent),
+        parent(parent)
+    {
+        if ( !parent )
+            throw ConfigurationError();
+        help = "Enumerates the elements in the list";
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.message.empty() && SimpleAction::can_handle(msg);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        auto elem = parent->elements();
+        if ( elem.empty() )
+            reply_to(msg,parent->get_property("list_name")+" is empty");
+        else
+            reply_to(msg,parent->get_property("list_name")+": "+string::implode(" ",elem));
+
+        return true;
+    }
+
+private:
+    AbstractList* parent;
+};
+
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
                            const Settings& settings, MessageConsumer* parent)
     : AbstractGroup(default_trigger,settings, parent)
@@ -264,26 +300,22 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
+    /// \todo could be useful to have a single handler accepting two triggers
     children.push_back(New<ListInsert>("+",child_settings,this));
     children.push_back(New<ListInsert>("add",child_settings,this));
+
     children.push_back(New<ListRemove>("-",child_settings,this));
     children.push_back(New<ListRemove>("rm",child_settings,this));
+
     if ( clear )
         children.push_back(New<ListClear>(child_settings,this));
+
+    children.push_back(New<ListShow>("list",child_settings,this));
+    children.push_back(New<ListShow>("",child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)
 {
-    /// \todo Maybe this can be made into a ListShow handler or something
-    if ( msg.message.empty() )
-    {
-        auto elem = elements();
-        if ( elem.empty() )
-            reply_to(msg,get_property("list_name")+" is empty");
-        else
-            reply_to(msg,get_property("list_name")+": "+string::implode(" ",elem));
-        return true;
-    }
     return AbstractGroup::on_handle(msg);
 }
 
