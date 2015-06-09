@@ -206,23 +206,33 @@ class SimpleAction : public Handler
 public:
     /**
      * \brief Sets up the trigger
-     * \param default_trigger Default value for \c trigger (must not be empty)
+     * \param default_trigger Default value for \c trigger
      * \param settings        Settings
-     * \param bot             Pointer to the bot instance (cannot be null)
-     * \throws ConfigurationError If the requirements stated above are not met
+     * \param parent          Parent object
      */
-    SimpleAction(const std::string& default_trigger, const Settings& settings,
-                 MessageConsumer* parent)
-        : Handler(settings,parent)
+    SimpleAction(const std::string& default_trigger,
+                 const Settings&    settings,
+                 MessageConsumer*   parent)
+        : Handler(settings,parent),
+          trigger(default_trigger)
     {
-        trigger      = settings.get("trigger",default_trigger);
+        load_settings(settings);
         pattern      = std::regex(
-            "^"+string::regex_escape(trigger)+"\\b\\s*",
+            string::regex_escape(trigger)+"\\b\\s*",
             std::regex::ECMAScript|std::regex::optimize
         );
-        synopsis     = "#gray##-b#"+trigger+"#-##gray#";
-        direct       = settings.get("direct",direct);
-        public_reply = settings.get("public",public_reply);
+    }
+
+
+    SimpleAction(const std::string& default_trigger,
+                 const std::string& pattern,
+                 const Settings&    settings,
+                 MessageConsumer*   parent)
+        : Handler(settings,parent),
+          trigger(default_trigger),
+          pattern(pattern,std::regex::ECMAScript|std::regex::optimize)
+    {
+        load_settings(settings);
     }
 
     /**
@@ -291,6 +301,11 @@ protected:
         return channel;
     }
 
+    /**
+     * \brief Trims the trigger pattern off the message
+     * \param msg               Message to be trimmed
+     * \param match_result      Result from matches_pattern()
+     */
     network::Message trimmed(const network::Message& msg, const std::smatch& match_result)
     {
         network::Message trimmed_msg = msg;
@@ -298,10 +313,26 @@ protected:
         return trimmed_msg;
     }
 
+    /**
+     * \brief Checks if a message matches the pattern
+     * \param msg               Message to check
+     * \param result[out]       Output from the regex check
+     */
     bool matches_pattern(const network::Message& msg, std::smatch& result)
     {
         return std::regex_search(msg.message, result, pattern,
                                  std::regex_constants::match_continuous);
+    }
+
+    /**
+     * \brief Loads settings
+     */
+    void load_settings(const Settings& settings)
+    {
+        trigger      = settings.get("trigger",trigger);
+        synopsis     = "#gray##-b#"+trigger+"#-##gray#";
+        direct       = settings.get("direct",direct);
+        public_reply = settings.get("public",public_reply);
     }
 
 };

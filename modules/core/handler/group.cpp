@@ -151,8 +151,9 @@ bool Group::on_handle(network::Message& msg)
 class ListInsert : public handler::SimpleAction
 {
 public:
-    ListInsert(std::string trigger, const Settings& settings, AbstractList* parent)
-    : SimpleAction(trigger,settings,parent),
+    ListInsert(const Settings& settings,
+               AbstractList* parent)
+    : SimpleAction("+|add","(?:\\+|add)\\s+",settings,parent),
         parent(parent)
     {
         if ( !parent )
@@ -196,8 +197,9 @@ protected:
 class ListRemove : public handler::SimpleAction
 {
 public:
-    ListRemove(std::string trigger, const Settings& settings, AbstractList* parent)
-    : SimpleAction(trigger,settings,parent),
+    ListRemove(const Settings& settings,
+               AbstractList* parent)
+    : SimpleAction("-|rm","(?:-|rm)\\s+",settings,parent),
         parent(parent)
     {
         if ( !parent )
@@ -271,18 +273,13 @@ protected:
 class ListShow : public handler::SimpleAction
 {
 public:
-    ListShow(std::string trigger, const Settings& settings, AbstractList* parent)
-    : SimpleAction(trigger,settings,parent),
+    ListShow(const Settings& settings, AbstractList* parent)
+    : SimpleAction("list","(?:list\\b)?\\s*",settings,parent),
         parent(parent)
     {
         if ( !parent )
             throw ConfigurationError();
         help = "Enumerates the elements in the list";
-    }
-
-    bool can_handle(const network::Message& msg) const override
-    {
-        return msg.message.empty() && SimpleAction::can_handle(msg);
     }
 
 protected:
@@ -318,18 +315,13 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
-    /// \todo could be useful to have a single handler accepting two triggers
-    add_child(New<ListInsert>("+",child_settings,this));
-    add_child(New<ListInsert>("add",child_settings,this));
-
-    add_child(New<ListRemove>("-",child_settings,this));
-    add_child(New<ListRemove>("rm",child_settings,this));
+    add_child(New<ListInsert>(child_settings,this));
+    add_child(New<ListRemove>(child_settings,this));
 
     if ( clear )
         add_child(New<ListClear>(child_settings,this));
 
-    add_child(New<ListShow>("list",child_settings,this));
-    add_child(New<ListShow>("",child_settings,this));
+    add_child(New<ListShow>(child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)
