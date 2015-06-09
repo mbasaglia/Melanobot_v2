@@ -46,8 +46,9 @@ struct JsonError : public LocatableException
  * it reads arrays element with their numeric index, is a bit forgiving
  * about syntax errors and allows simple unquoted strings
  */
-struct JsonParser
+class JsonParser
 {
+public:
     /**
      * \brief Parse the stream
      * \param stream      Input stream
@@ -61,8 +62,6 @@ struct JsonParser
         this->stream_name = stream_name;
         line = 1;
         parse_json_root();
-        if ( !context.empty() )
-            error("Abrupt ending");
         return ptree;
     }
 
@@ -80,8 +79,6 @@ struct JsonParser
             error("Cannot open file");
         this->stream.rdbuf(&buf);
         parse_json_root();
-        if ( !context.empty() )
-            error("Abrupt ending");
         return ptree;
     }
 
@@ -132,7 +129,7 @@ private:
     /**
      * \brief Throws an exception pointing to the current line
      */
-    void error [[noreturn]] (const std::string& message)
+    void error /*[[noreturn]]*/ (const std::string& message)
     {
         throw JsonError(stream_name,line,message);
     }
@@ -151,10 +148,6 @@ private:
             try {
                 parse_json_root_throw();
             } catch ( const JsonError& err ) {
-                ErrorLog errlog("web","JSON Error");
-                if ( settings::global_settings.get("debug",0) )
-                    errlog << err.file << ':' << err.line << ": ";
-                errlog << err.what();
                 error_flag = true;
             }
         }
@@ -172,6 +165,9 @@ private:
             parse_json_array();
         else
             parse_json_object();
+
+        if ( !context.empty() )
+            error("Abrupt ending");
     }
 
     /**
@@ -416,16 +412,49 @@ private:
      */
     char get_skipws()
     {
-        /// \todo possibly skip comments
         char c;
         do
         {
             c = stream.get();
+            if ( c == '/' )
+            {
+                // single line comments
+                if ( stream.peek() == '/' )
+                {
+                    while ( stream && c != '\n' )
+                        c = stream.get();
+                }
+                // multi-line comments
+                else if ( stream.peek() == '*' )
+                {
+                    stream.ignore();
+                    skip_comment();
+                    c = stream.get();
+                }
+            }
             if ( c == '\n' )
                 line++;
         }
         while ( stream && std::isspace(c) );
         return c;
+    }
+
+    /**
+     * \brief Skips all characters until * /
+     */
+    void skip_comment()
+    {
+        char c;
+        do
+        {
+            c = stream.get();
+            if ( c == '*' && stream.peek() == '/' )
+            {
+                stream.get();
+                break;
+            }
+        }
+        while ( stream );
     }
 
     /**
@@ -435,7 +464,7 @@ private:
     {
         switch ( c )
         {
-            case 'b': case 'f': case 'r': case 't': case 'n':
+            case '\b': case '\f': case '\r': case '\t': case '\n':
             case '\\': case '\"': case '/':
                 return true;
         }

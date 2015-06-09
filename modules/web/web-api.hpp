@@ -89,13 +89,16 @@ protected:
     {
         Settings ptree;
         JsonParser parser;
-        parser.throws(false);
-        ptree = parser.parse_string(response.contents,response.origin);
-
-        if ( parser.error() )
-            json_failure(msg);
-        else
+        try {
+            ptree = parser.parse_string(response.contents,response.origin);
             json_success(msg,ptree);
+        } catch ( const JsonError& err ) {
+            ErrorLog errlog("web","JSON Error");
+            if ( settings::global_settings.get("debug",0) )
+                errlog << err.file << ':' << err.line << ": ";
+            errlog << err.what();
+            json_failure(msg);
+        }
     }
 
     void http_failure(const network::Message& msg, const network::Response&) override

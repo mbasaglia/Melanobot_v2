@@ -75,6 +75,12 @@ add_executable(test_formatter EXCLUDE_FROM_ALL test_formatter.cpp
 )
 melanotest(test_formatter)
 
+add_executable(test_json EXCLUDE_FROM_ALL test_json.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
+    ${CMAKE_SOURCE_DIR}/src/string/encoding.cpp
+)
+melanotest(test_json)
+
 # Coverage
 add_custom_target(test_all
     DEPENDS ${TEST_TARGETS}
