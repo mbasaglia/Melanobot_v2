@@ -47,8 +47,8 @@ public:
     ConnectionEvents( const Settings& settings, MessageConsumer* parent )
         : Handler(settings, parent)
     {
-        connect = settings.get("connect","Server #2#%host#-# connected.");
-        disconnect = settings.get("connect","#-b#Warning!#-# Server #1#%host#-# disconnected.");
+        connect = settings.get("connect","Server #2#%sv_host#-# connected.");
+        disconnect = settings.get("connect","#-b#Warning!#-# Server #1#%sv_host#-# disconnected.");
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -61,13 +61,10 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormatterConfig fmt;
-        /// \todo Should the host property be returned from description()?
-        Properties props = {
-            {"host",msg.source->encode_to(msg.source->properties().get("host"),fmt)},
-            {"server",msg.source->server().name()}
-        };
-        const std::string& str = msg.type == network::Message::CONNECTED ? connect : disconnect;
-        reply_to(msg,fmt.decode(string::replace(str,props,"%")));
+        const std::string& str =
+            msg.type == network::Message::CONNECTED ? connect : disconnect;
+        reply_to(msg,fmt.decode(
+            string::replace(str,msg.source->message_properties(),"%")));
         return true;
     }
 
