@@ -177,6 +177,18 @@ BOOST_PYTHON_MODULE(melanobot)
         .def("connect",&network::Connection::connect)
         .def("disconnect",&network::Connection::disconnect)
         .def("reconnect",&network::Connection::reconnect)
+        .def("__getattr__",[](network::Connection* conn, const std::string& name){
+            auto props = conn->pretty_properties();
+            auto it = props.find(name);
+            if ( it != props.end() )
+                return it->second;
+            return conn->properties().get(name);
+        })
+        .def("__setattr__",[](network::Connection* conn,
+                              const std::string&   name,
+                              const std::string&   value ){
+            conn->properties().put(name, value);
+        })
     ;
 
 }
