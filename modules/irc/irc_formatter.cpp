@@ -192,8 +192,8 @@ std::string FormatterIrcWhite::color(const color::Color12& color) const
         {
             case 0b1011: // yellow -> dark yellow
                 return FormatterIrc::color(color::dark_yellow);
-            case 0b1111: // white -> black
-                return FormatterIrc::color(color::black);
+            case 0b1111: // white -> nocolor
+                return FormatterIrc::color(color::nocolor);
         }
     }
     return FormatterIrc::color(color);
