@@ -270,7 +270,7 @@ LockedProperties XonoticConnection::properties()
     return LockedProperties(&mutex,&properties_);
 }
 
-Properties XonoticConnection::message_properties() const
+Properties XonoticConnection::pretty_properties() const
 {
     string::FormatterConfig fmt;
 

@@ -122,7 +122,7 @@ public:
     void command (network::Command) override {}
     user::UserCounter count_users(const std::string& channel = {}) const override { return {}; }
     // maybe could be given some actual functionality:
-    Properties message_properties() const override { return Properties{}; }
+    Properties pretty_properties() const override { return Properties{}; }
 
 private:
     string::Formatter*                    formatter_;

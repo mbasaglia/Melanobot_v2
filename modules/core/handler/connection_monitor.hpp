@@ -95,7 +95,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormatterConfig fmt;
-        reply_to(msg,fmt.decode(string::replace(reply,monitored->message_properties(),"%")));
+        reply_to(msg,fmt.decode(string::replace(reply,monitored->pretty_properties(),"%")));
         return true;
     }
 

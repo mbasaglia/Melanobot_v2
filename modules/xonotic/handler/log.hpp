@@ -26,11 +26,11 @@ namespace xonotic {
 /**
  * \brief Message properties adding properties of the user
  */
-inline Properties message_properties(network::Connection* source,
+inline Properties pretty_properties(network::Connection* source,
                                      const user::User& user)
 {
     string::FormatterConfig fmt;
-    Properties props =  source->message_properties();
+    Properties props =  source->pretty_properties();
     props.insert({
         {"name",    source->encode_to(user.name,fmt)},
         {"ip",      user.host},
@@ -64,7 +64,7 @@ protected:
         const std::string& str =
             msg.type == network::Message::CONNECTED ? connect : disconnect;
         reply_to(msg,fmt.decode(
-            string::replace(str,msg.source->message_properties(),"%")));
+            string::replace(str,msg.source->pretty_properties(),"%")));
         return true;
     }
 
@@ -99,7 +99,7 @@ protected:
     {
         // Get all of the user properties and message properties
         Properties props = msg.from.properties;
-        auto overprops = message_properties(msg.source,msg.from);
+        auto overprops = pretty_properties(msg.source,msg.from);
         props.insert(overprops.begin(),overprops.end());
 
         // Select the right message
@@ -138,7 +138,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormatterConfig fmt;
-        Properties props = msg.source->message_properties();
+        Properties props = msg.source->pretty_properties();
 
         if ( empty || msg.source->count_users().users )
             reply_to(msg,fmt.decode(string::replace(message,props,"%")));
@@ -200,10 +200,10 @@ public:
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
-        // Uses message_properties with user + "vote"
+        // Uses pretty_properties with user + "vote"
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = message_properties(msg.source,user);
+        Properties props = pretty_properties(msg.source,user);
         props["vote"] = msg.source->encode_to(match[2],fmt);
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
         return true;
@@ -235,7 +235,7 @@ protected:
     {
         // Message properties
         string::FormatterConfig fmt;
-        Properties props = msg.source->message_properties();
+        Properties props = msg.source->pretty_properties();
         // result: yes, no, timeout
         props["result"] = match[1];
         // yes: # of players who voted yes
@@ -305,7 +305,7 @@ protected:
     {
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = message_properties(msg.source,user);
+        Properties props = pretty_properties(msg.source,user);
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
         return true;
     }
@@ -331,7 +331,7 @@ protected:
     {
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = message_properties(msg.source,user);
+        Properties props = pretty_properties(msg.source,user);
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
         return true;
     }
@@ -357,7 +357,7 @@ protected:
     {
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = message_properties(msg.source,user);
+        Properties props = pretty_properties(msg.source,user);
         props["vote"] = msg.source->encode_to(match[2], fmt);
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
         return true;
@@ -469,7 +469,7 @@ protected:
     void handle_end(const network::Message& msg, const std::smatch& match)
     {
         string::FormatterConfig fmt;
-        Properties props = msg.source->message_properties();
+        Properties props = msg.source->pretty_properties();
 
         // End match message
         reply_to(msg,fmt.decode(string::replace(message,props,"%")));
@@ -667,7 +667,7 @@ protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
         string::FormatterConfig fmt;
-        auto props = msg.source->message_properties();
+        auto props = msg.source->pretty_properties();
         props["connection"] = msg.source->config_name();
         props["message"] = msg.source->encode_to(match[1], fmt);
         for ( const auto& admin : msg.destination->real_users_in_group(notify) )

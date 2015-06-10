@@ -193,7 +193,7 @@ public:
     /*
      * \thead external \lock data
      */
-    Properties message_properties() const override;
+    Properties pretty_properties() const override;
 
     /**
      * \thead external \lock data

@@ -54,7 +54,7 @@ void MessageVariables::convert(boost::python::object& target_namespace) const
 {
     boost::python::import("melanobot");
     target_namespace["message"] = boost::ref(message);
-    /// \todo message.source (with message_properties)
+    /// \todo message.source (with pretty_properties)
 }
 
 void SimpleScript::Variables::convert(boost::python::object& target_namespace) const

@@ -44,7 +44,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         auto users = monitored->get_users();
-        Properties props = monitored->message_properties();
+        Properties props = monitored->pretty_properties();
 
         string::FormatterConfig fmt;
 
@@ -110,7 +110,7 @@ protected:
             "Players: #1#%active#-# active, #1#%spectators#-# spectators, #1#%bots#-# bots, #1#%players#-#/#1#%max#-# total",
             "Map: #1#%map#-#, Game: #1#%gametype#-#, Mutators: %mutators",
         };
-        auto props = monitored->message_properties();
+        auto props = monitored->pretty_properties();
         int active = 0;
         int spectators = 0;
         for ( const auto& user : users )

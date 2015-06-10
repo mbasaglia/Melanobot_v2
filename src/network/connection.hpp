@@ -239,7 +239,7 @@ public:
      * \brief Returns a list of properties used to message formatting
      * \note Returned properties should be formatted using the FormatterConfig
      */
-    virtual Properties message_properties() const = 0;
+    virtual Properties pretty_properties() const = 0;
 
     /**
      * \brief Returns the name of the connection as used in the config

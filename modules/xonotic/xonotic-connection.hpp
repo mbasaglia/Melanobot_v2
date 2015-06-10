@@ -152,7 +152,7 @@ public:
     /**
      * \thread external \lock data
      */
-    Properties message_properties() const override;
+    Properties pretty_properties() const override;
 
     /**
      * \brief Adds a command that needs to be sent regularly to the server
