@@ -21,7 +21,7 @@
 
 namespace handler {
 
-std::unique_ptr<Handler> HandlerFactory::build_template(
+void HandlerFactory::build_template(
     const std::string&  handler_name,
     const Settings&     settings,
     MessageConsumer*    parent) const
@@ -31,7 +31,7 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
     {
         ErrorLog("sys") << "Error creating " << handler_name
                 << ": missing template reference";
-        return nullptr;
+        return;
     }
     Settings source = Melanobot::instance().get_template(*type);
     Properties arguments;
@@ -44,11 +44,11 @@ std::unique_ptr<Handler> HandlerFactory::build_template(
         node.data() = string::replace(node.data(),arguments);
     });
     /// \todo recursion check
-    return build(handler_name,source,parent);
+    build(handler_name,source,parent);
 }
 
 
-std::unique_ptr<Handler> HandlerFactory::build(
+void HandlerFactory::build(
     const std::string&  handler_name,
     const Settings&     settings,
     MessageConsumer*    parent) const
@@ -58,33 +58,34 @@ std::unique_ptr<Handler> HandlerFactory::build(
     if ( !settings.get("enabled",true) )
     {
         Log("sys",'!') << "Skipping disabled handler " << color::red << handler_name;
-        return nullptr;
+        return;
     }
 
     if ( type == "Template" )
     {
-        return build_template(handler_name, settings, parent);
+        build_template(handler_name, settings, parent);
     }
     else if ( type == "Connection" )
     {
         Melanobot::instance().add_connection(handler_name, settings);
-        return nullptr;
     }
-
-    auto it = factory.find(type);
-    if ( it != factory.end() )
+    else
     {
-        try {
-            return it->second(settings, parent);
-        } catch ( const ConfigurationError& error )
+        auto it = factory.find(type);
+        if ( it != factory.end() )
         {
-            ErrorLog("sys") << "Error creating " << handler_name << ": "
-                << error.what();
-            return nullptr;
+            try {
+                parent->add_handler(it->second(settings, parent));
+            } catch ( const ConfigurationError& error ) {
+                ErrorLog("sys") << "Error creating " << handler_name << ": "
+                    << error.what();
+            }
+        }
+        else
+        {
+            ErrorLog("sys") << "Unknown handler type: " << handler_name;
         }
     }
-    ErrorLog("sys") << "Unknown handler type: " << handler_name;
-    return nullptr;
 }
 
 } // namespace handler

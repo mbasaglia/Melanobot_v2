@@ -46,6 +46,12 @@ public:
     void populate_properties(const std::vector<std::string>& properties,
                              PropertyTree& output) const override;
 
+
+    void add_handler(std::unique_ptr<handler::Handler>&& handler) override
+    {
+        children.push_back(std::move(handler));
+    }
+
 protected:
     bool on_handle(network::Message& msg) override
     {
@@ -115,9 +121,9 @@ protected:
         return group.children;
     }
 
-    void add_child(std::unique_ptr<Handler>&& ptr)
+    void add_handler(std::unique_ptr<handler::Handler>&& handler) override
     {
-        group.children.push_back(std::move(ptr));
+        group.children.push_back(std::move(handler));
     }
 
 private:

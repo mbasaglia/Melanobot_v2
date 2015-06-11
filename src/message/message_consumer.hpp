@@ -48,6 +48,12 @@ public:
      */
     virtual bool handle(network::Message& msg) = 0;
 
+    /**
+     * \brief Adds a child handler
+     * \pre \c handler points to a valid object (ie: not nullptr)
+     */
+    virtual void add_handler(std::unique_ptr<handler::Handler>&& handler) = 0;
+
 protected:
     /**
      * \brief Find the parent with the given type

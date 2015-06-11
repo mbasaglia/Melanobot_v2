@@ -83,6 +83,8 @@ public:
      */
     void add_connection(std::string suggested_name, const Settings& settings);
 
+    void add_handler(std::unique_ptr<handler::Handler>&& handler) override;
+
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
     /**

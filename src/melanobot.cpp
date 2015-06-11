@@ -31,9 +31,7 @@ Melanobot& Melanobot::load(const Settings& settings)
 
     for(const auto& pt : settings.get_child("bot",{}))
     {
-        auto hand = handler::HandlerFactory::instance().build(pt.first,pt.second,&instance());
-        if ( hand )
-            instance().handlers.push_back(std::move(hand));
+        handler::HandlerFactory::instance().build(pt.first,pt.second,&instance());
     }
 
     if ( instance().connections.empty() )
@@ -137,6 +135,11 @@ void Melanobot::add_connection(std::string suggested_name, const Settings& setti
         Log("sys",'!') << "Created connection " << color::green << suggested_name;
         connections[suggested_name] = std::move(conn);
     }
+}
+
+void Melanobot::add_handler(std::unique_ptr<handler::Handler> && handler)
+{
+    instance().handlers.push_back(std::move(handler));
 }
 
 void Melanobot::populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const

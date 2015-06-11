@@ -124,6 +124,11 @@ public:
                 output.put(p,value);
         }
     }
+    
+    /**
+     * \brief Noop, by default handlers don't have children
+     */
+    void add_handler(std::unique_ptr<handler::Handler>&&) override {}
 
 protected:
     /**
@@ -356,19 +361,21 @@ public:
     }
 
     /**
-     * \brief Build a handler from its name and settings
-     * \return \c nullptr if it could not be created
+     * \brief Builds a handler from its name and settings
+     *
+     * Inserts the created handler into \c parent
      */
-    std::unique_ptr<Handler> build(
+    void build(
         const std::string&      handler_name,
         const Settings&         settings,
         MessageConsumer*        parent) const;
 
     /**
-     * \brief Build a handler from a template
-     * \return \c nullptr if it could not be created
+     * \brief Builds a handler from a template
+     *
+     * Inserts the created handler into \c parent
      */
-    std::unique_ptr<Handler> build_template(
+    void build_template(
         const std::string&      handler_name,
         const Settings&         settings,
         MessageConsumer*        parent) const;

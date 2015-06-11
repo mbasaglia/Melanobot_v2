@@ -33,13 +33,11 @@ void AbstractGroup::add_children(Settings child_settings,
         if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
             settings::merge(p.second,default_settings,false);
-            auto hand = handler::HandlerFactory::instance().build(
+            handler::HandlerFactory::instance().build(
                 p.first,
                 p.second,
                 this
             );
-            if ( hand )
-                children.push_back(std::move(hand));
         }
     }
 }
@@ -315,13 +313,13 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
-    add_child(New<ListInsert>(child_settings,this));
-    add_child(New<ListRemove>(child_settings,this));
+    add_handler(New<ListInsert>(child_settings,this));
+    add_handler(New<ListRemove>(child_settings,this));
 
     if ( clear )
-        add_child(New<ListClear>(child_settings,this));
+        add_handler(New<ListClear>(child_settings,this));
 
-    add_child(New<ListShow>(child_settings,this));
+    add_handler(New<ListShow>(child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)
