@@ -22,6 +22,7 @@
 #include "network/async_service.hpp"
 #include "melanomodule.hpp"
 #include "melanomodules.hpp"
+#include "storage.hpp"
 
 int main(int argc, char **argv)
 {
@@ -31,6 +32,13 @@ int main(int argc, char **argv)
 
     std::vector<Melanomodule> modules;
     string::Formatter::registry(); // ensures the default formatters get loaded
+
+    /// \todo   Storage should be on a separate module.
+    ///         When that is done, set to auto-load
+    ///         and provive database storage as an alternative module
+    ///         which registers a service with the same name
+    Storage storage;
+    network::ServiceRegistry::instance().register_service("storage",&storage);
 
     MELANOMODULES_INIT
 
