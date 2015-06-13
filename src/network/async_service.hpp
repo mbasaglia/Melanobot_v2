@@ -38,9 +38,9 @@ namespace network {
  */
 struct Request
 {
-    std::string location;
-    std::string command;
-    std::string parameters;
+    std::string resource;       ///< Name/identifier for the requested resource
+    std::string command;        ///< Protocol-specific command
+    std::vector<std::string> parameters; ///< Parameters for the request
 };
 
 /**
@@ -48,9 +48,9 @@ struct Request
  */
 struct Response
 {
-    std::string error_message; ///< Message in the case of error, if empty not an error
-    std::string contents;      ///< Message contents
-    std::string origin;        ///< Originating URL
+    std::string error_message;  ///< Message in the case of error, if empty not an error
+    std::string contents;       ///< Response contents
+    std::string resource;       ///< Name/identifier for the requested resource
 };
 
 /**
@@ -118,7 +118,7 @@ protected:
     {
         Response r;
         r.contents = contents;
-        r.origin = origin.location;
+        r.resource = origin.resource;
         return r;
     }
     /**
@@ -128,7 +128,7 @@ protected:
     {
         Response r;
         r.error_message = error_message;
-        r.origin = origin.location;
+        r.resource = origin.resource;
         return r;
     }
 };

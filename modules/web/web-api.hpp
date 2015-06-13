@@ -90,7 +90,7 @@ protected:
         Settings ptree;
         JsonParser parser;
         try {
-            ptree = parser.parse_string(response.contents,response.origin);
+            ptree = parser.parse_string(response.contents,response.resource);
             json_success(msg,ptree);
         } catch ( const JsonError& err ) {
             ErrorLog errlog("web","JSON Error");

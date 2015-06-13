@@ -66,16 +66,18 @@ Request get(const std::string& url, const Parameters& params)
 {
     Request r;
 
-    r.location = url;
+    r.resource = url;
     r.command = "GET";
 
     if ( !params.empty() )
     {
+        std::string encoded_param;
         if ( url.find('?') == std::string::npos )
-            r.parameters += '?';
+            encoded_param += '?';
         else
-            r.parameters += '&';
-        r.parameters += build_query(params);
+            encoded_param += '&';
+        encoded_param += build_query(params);
+        r.parameters = {encoded_param};
     }
 
     return r;
@@ -85,9 +87,9 @@ Request post(const std::string& url, const Parameters& params)
 {
     Request r;
 
-    r.location = url;
+    r.resource = url;
     r.command = "POST";
-    r.parameters = build_query(params);
+    r.parameters = {build_query(params)};
 
     return r;
 }
@@ -105,7 +107,7 @@ Response HttpService::query (const Request& request)
 {
     try {
         curlpp::Easy netrequest;
-        std::string url = request.location;
+        std::string url = request.resource;
 
         netrequest.setOpt(curlpp::options::UserAgent(user_agent));
         if ( max_redirs )
@@ -114,17 +116,19 @@ Response HttpService::query (const Request& request)
             netrequest.setOpt(curlpp::options::FollowLocation(true));
         }
 
+        std::string parameters = request.parameters.empty() ? "" : request.parameters[0];
+
         if ( request.command == "GET" )
         {
-            url += request.parameters;
+            url += parameters;
         }
         else if ( request.command == "POST" )
         {
-            netrequest.setOpt(curlpp::options::PostFields(request.parameters));
+            netrequest.setOpt(curlpp::options::PostFields(parameters));
         }
         else if ( request.command == "PUT" )
         {
-            netrequest.setOpt(curlpp::options::PostFields(request.parameters));
+            netrequest.setOpt(curlpp::options::PostFields(parameters));
             netrequest.setOpt(curlpp::options::Put(true));
         }
         else if ( request.command == "HEAD" )
@@ -134,14 +138,14 @@ Response HttpService::query (const Request& request)
 
         netrequest.setOpt(curlpp::options::Url(url));
 
-        Log("web",'<') << request.command << ' ' << request.location;
+        Log("web",'<') << request.command << ' ' << request.resource;
         std::stringstream ss;
         ss << netrequest;
 
         return ok(ss.str(),request);
 
     } catch (std::exception & e) {
-        ErrorLog("web") << "Error processing " << request.location;
+        ErrorLog("web") << "Error processing " << request.resource;
         return error(e.what(),request);
     }
 }

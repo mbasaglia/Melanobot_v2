@@ -58,7 +58,7 @@ bool VideoInfo::on_handle(network::Message& msg)
                     Settings ptree;
                     JsonParser parser;
                     try {
-                        ptree = parser.parse_string(response.contents,response.origin);
+                        ptree = parser.parse_string(response.contents,response.resource);
                         (this->*found_func)(msg,ptree);
                     } catch ( const JsonError& err ) {
                         ErrorLog errlog("web","JSON Error");

@@ -379,7 +379,7 @@ bool AnswerQuestions::on_handle(network::Message& msg)
 
         JsonParser parser;
         parser.throws(false);
-        Settings ptree = parser.parse_string(response.contents,response.origin);
+        Settings ptree = parser.parse_string(response.contents,response.resource);
 
         std::string address = ptree.get("results.0.formatted_address","I don't know");
         network::http::Parameters params {{"q",match[2]}};
