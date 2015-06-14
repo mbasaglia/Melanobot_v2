@@ -508,7 +508,6 @@ private:
     std::string auth;
 };
 
-
 /**
  * \brief Handler showing the time
  */

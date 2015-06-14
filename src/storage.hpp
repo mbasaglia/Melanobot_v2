@@ -24,6 +24,26 @@
 
 /**
  * \brief Storage system
+ *
+ * \section store_prot Storage Protocol
+ *
+ * \par get \e key
+ * Returns the value associtated with \b key,
+ * or an error if \b key doesn't exists
+ *
+ * \par maybe_get \e key \e default
+ * If \b key has been already defined, returns its value,
+ * otherwise returns \b default.
+ *
+ * \par put \e key \e value
+ * Assigns \b value to \b key, returns \b value.
+ *
+ * \par maybe_put put \e key \e value
+ * Assigns \b value to \b key only if \b key has not already been defined.
+ * Returns the final value of \b key.
+ *
+ * \par delete \e key
+ * Removes \e key. Returns an error if \b key wasn't defined.
  */
 class Storage : public network::ThreadedAsyncService
 {
