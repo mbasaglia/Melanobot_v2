@@ -25,6 +25,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include "string/string_functions.hpp"
+#include "string/json.hpp"
 
 void Storage::initialize (const Settings& settings)
 {
@@ -79,7 +80,7 @@ void Storage::load()
         if ( format == settings::FileFormat::XML )
             boost::property_tree::read_xml(file, data);
         else
-            boost::property_tree::read_json(file, data);
+            data = JsonParser().parse_file(filename);
     }
 }
 
@@ -187,6 +188,15 @@ network::Response Storage::query(const network::Request& request)
     {
         /// \todo Log error?
         resp.error_message = err.what();
+    }
+    catch ( const JsonError& err )
+    {
+        ErrorLog errlog("web","JSON Error");
+        if ( settings::global_settings.get("debug",0) )
+            errlog << err.file << ':' << err.line << ": ";
+        errlog << err.what();
+
+        resp.error_message = "Malformed file";
     }
 
     return resp;
