@@ -207,7 +207,8 @@ melanobot_update()
 {
     cd "$MELANOBOT_SRC_DIR"
     git pull
-    melanobot_build
+    melanobot_configure
+    melanobot_build $@
     melanobot_restart
 }
 
