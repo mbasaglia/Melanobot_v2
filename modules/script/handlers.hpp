@@ -43,6 +43,16 @@ protected:
 
         SimpleScript* obj;
     };
+
+    /**
+     * \brief What kind of action to take when the script generates an error
+     */
+    enum class OnError {
+        DISCARD_INPUT,  ///< Discard input message
+        DISCARD_OUTPUT, ///< Discard script output, but still mark the message as handled
+        IGNORE,         ///< Ignore the error, show script output
+    };
+
 public:
     SimpleScript(const Settings& settings, MessageConsumer* parent)
         : SimpleAction(settings.get("trigger",settings.get("script","")),settings,parent)
@@ -58,7 +68,7 @@ public:
 
         synopsis += settings.get("synopsis","");
         help = settings.get("help", "Runs "+script_rel);
-        discard_error = settings.get("discard_error", discard_error);
+        on_error = onerror_from_string(settings.get("error", onerror_to_string(on_error)));
 
         auto formatter_name = settings.get_optional<std::string>("formatter");
         if ( formatter_name )
@@ -71,11 +81,11 @@ protected:
         /// \todo Timeout
         auto env = environment(msg);
         auto output = python::PythonEngine::instance().exec_file(script,*env);
-        if ( output.success || !discard_error )
+        if ( output.success || on_error == OnError::IGNORE )
             for ( const auto& line : output.output )
                 reply_to(msg,format(line));
 
-        return true;
+        return output.success || on_error != OnError::DISCARD_INPUT;
     }
 
     /**
@@ -84,6 +94,34 @@ protected:
     virtual std::unique_ptr<MessageVariables> environment(network::Message& msg)
     {
         return std::make_unique<Variables>(this,msg);
+    }
+
+    /**
+     * \brief Converts an OnError to a string
+     */
+    static std::string onerror_to_string(OnError err)
+    {
+        switch(err)
+        {
+            case OnError::DISCARD_INPUT: return "discard_input";
+            case OnError::DISCARD_OUTPUT:return "discard_output";
+            case OnError::IGNORE:        return "ignore";
+            default:                     return "";
+        }
+    }
+
+    /**
+     * \brief Converts astring to an OnError
+     */
+    static OnError onerror_from_string(const std::string& err)
+    {
+        if ( err == "discard_input" )
+            return OnError::DISCARD_INPUT;
+        if ( err == "discard_output" )
+            return OnError::DISCARD_OUTPUT;
+        if ( err == "ignore" )
+            return OnError::IGNORE;
+        return OnError::DISCARD_OUTPUT;
     }
 
 private:
@@ -95,7 +133,7 @@ private:
     }
 
     std::string script;                         ///< Script file path
-    bool discard_error = true;                  ///< If \b true, only prints output of scripts that didn't fail
+    OnError on_error = OnError::DISCARD_OUTPUT; ///< Script error policy
     string::Formatter* formatter{nullptr};      ///< Formatter used to parse the output
 };
 
