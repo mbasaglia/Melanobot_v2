@@ -223,7 +223,7 @@ public:
     {
         load_settings(settings);
         pattern      = std::regex(
-            string::regex_escape(trigger)+"\\b\\s*",
+            string::regex_escape(trigger)+"(?:$|\\s+|\\b\\s*)",
             std::regex::ECMAScript|std::regex::optimize
         );
     }
