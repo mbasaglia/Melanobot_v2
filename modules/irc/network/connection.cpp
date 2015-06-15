@@ -1065,9 +1065,9 @@ std::vector<user::User> IrcConnection::get_users(const std::string& channel) con
     if ( channel.empty() )
         list = user_manager.users();
     else if ( channel[0] == '#' )
-        list = user_manager.channel_users(channel);
+        list = user_manager.channel_users(strtolower(channel));
     else
-        list = { *user_manager.user(channel) };
+        list = { *user_manager.user(strtolower(channel)) };
 
     return std::vector<user::User>(list.begin(),list.end());
 }
