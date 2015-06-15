@@ -371,6 +371,7 @@ bool AnswerQuestions::on_handle(network::Message& msg)
         else if ( string::ends_with(question,"will") )
             answers.push_back(&category_when_will);
     }
+    /// \todo move where to some other handler (in the web module)
     else if ( string::starts_with(question,"where") )
     {
         static std::string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
@@ -395,9 +396,16 @@ bool AnswerQuestions::on_handle(network::Message& msg)
     else if ( string::starts_with(question,"who") && !msg.channels.empty() && msg.source )
     {
         auto users = msg.source->get_users(msg.channels[0]);
-        auto user = users[math::random(users.size()-1)];
-        reply_to(msg,user.name == msg.source->name() ? "Not me!" : user.name);
-        return true;
+        if ( !users.empty() )
+        {
+            const auto& name = users[math::random(users.size()-1)].name;
+            reply_to(msg,name == msg.source->name() ? "Not me!" : name);
+            return true;
+        }
+        else
+        {
+            answers.push_back(&category_dunno);
+        }
     }
     else if ( question == "what" || question == "how" )
     {
