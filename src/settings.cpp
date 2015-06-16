@@ -285,18 +285,28 @@ struct DataPathInfo
     std::string best_match=".";     ///< Preferred path
 };
 
-std::string settings::data_file(const std::string& rel_path, bool check)
+std::string settings::data_file(const std::string& rel_path, FileCheck check)
 {
+    using namespace boost::filesystem;
+
     static DataPathInfo paths;
 
-    if ( !check )
-        return boost::filesystem::absolute(paths.best_match+"/"+rel_path).string();
+    if ( check == FileCheck::NO_CHECK )
+        return absolute(paths.best_match+"/"+rel_path).string();
 
     for ( const auto& dir : paths.paths )
     {
         std::string full = dir+"/"+rel_path;
-        if ( boost::filesystem::exists(full) )
-            return boost::filesystem::canonical(full).string();
+        if ( exists(full) )
+            return canonical(full).string();
+    }
+
+    if ( check == FileCheck::CREATE )
+    {
+        create_directory(paths.best_match);
+        std::string file = absolute(paths.best_match+"/"+rel_path).string();
+        std::ofstream{file};
+        return file;
     }
 
     return {};

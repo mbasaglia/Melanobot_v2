@@ -47,6 +47,16 @@ namespace settings
     };
 
     /**
+     * \brief File checking policy
+     */
+    enum class FileCheck
+    {
+        NO_CHECK, ///< Don't check if the file exists or not
+        EXISTING, ///< The file must be already existing
+        CREATE,   ///< The file must be created if not found
+    };
+
+    /**
      * \brief Settings with global information
      */
     extern Settings global_settings;
@@ -141,9 +151,9 @@ namespace settings
      * \param path      Path relative to the data directory
      * \param check     Whether to check that the path exists
      * \return The path to the requested file or an empty string
-     *         if \c check is \b true and the file doesn't exist
+     *         if \c check is \b EXISTING and the file doesn't exist
      */
-    std::string data_file(const std::string& path, bool check = true);
+    std::string data_file(const std::string& path, FileCheck check = FileCheck::EXISTING);
 }
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
