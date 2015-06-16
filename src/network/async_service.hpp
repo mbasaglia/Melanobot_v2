@@ -38,8 +38,8 @@ namespace network {
  */
 struct Request
 {
-    std::string resource;       ///< Name/identifier for the requested resource
     std::string command;        ///< Protocol-specific command
+    std::string resource;       ///< Name/identifier for the requested resource
     std::vector<std::string> parameters; ///< Parameters for the request
 };
 
@@ -210,8 +210,7 @@ public:
     {
         if ( ServiceRegistry().instance().services.count(name) )
             ErrorLog("sys") << "Overwriting service " << name;
-        ServiceRegistry().instance().services[name] =
-            {object, object->auto_load()};
+        ServiceRegistry().instance().services[name] = {object, false};
     }
 
     static ServiceRegistry& instance()
@@ -239,6 +238,13 @@ public:
                 it->second.loaded = true;
             }
         }
+
+        for ( auto& p : services )
+            if ( !p.second.loaded && p.second.service->auto_load() )
+            {
+                p.second.service->initialize({});
+                p.second.loaded = true;
+            }
     }
 
     /**
