@@ -160,6 +160,8 @@ private:
     void parse_json_root_throw()
     {
         char c = get_skipws();
+        if ( stream.eof() )
+            return;
         stream.unget();
         if ( c == '[' )
             parse_json_array();
