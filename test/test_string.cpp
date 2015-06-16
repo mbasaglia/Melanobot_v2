@@ -239,11 +239,21 @@ BOOST_AUTO_TEST_CASE( test_split )
     v hw {"hello","world"};
     v h_w {"hello","","world"};
     v hwb {"hello","world!"};
+
     BOOST_CHECK( string::regex_split("hello, world!","[, !]") == hw );
     BOOST_CHECK( string::regex_split("hello, world!",std::regex("[, !]")) == hw );
     BOOST_CHECK( string::regex_split("hello, world!","[, !]",false) == h_w );
+
     BOOST_CHECK( string::comma_split("hello, world!") == hwb );
     BOOST_CHECK( string::comma_split("hello,,  world",false) == h_w );
+    BOOST_CHECK( string::comma_split("") == v{} );
+
+    BOOST_CHECK( string::char_split("hello:world",':') == hw );
+    BOOST_CHECK( string::char_split("hello::world",':') == hw );
+    BOOST_CHECK( string::char_split("hello::world",':',false) == h_w );
+    BOOST_CHECK( string::char_split("",':') == v{} );
+    BOOST_CHECK( string::char_split("foo:",':') == v{"foo"} );
+    BOOST_CHECK( string::char_split(":foo",':') == v{"foo"} );
 }
 
 BOOST_AUTO_TEST_CASE( test_similarity )

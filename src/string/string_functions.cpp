@@ -104,6 +104,25 @@ std::vector<std::string> regex_split(const std::string& input,
     return out;
 }
 
+std::vector<std::string> char_split(const std::string& input,
+                                    char separator,
+                                    bool skip_empty)
+{
+    std::vector<std::string> out;
+
+    auto begin = input.begin();
+    while (true)
+    {
+        auto next = std::find(begin, input.end(),separator);
+        if ( !skip_empty || next > begin+1 )
+            out.emplace_back(begin,next);
+        if ( next == input.end() )
+            break;
+        begin = next+1;
+    }
+    return out;
+}
+
 std::string::size_type similarity(const std::string& s1, const std::string& s2)
 {
     /**

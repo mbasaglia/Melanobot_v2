@@ -184,6 +184,13 @@ inline std::vector<std::string> regex_split(const std::string& input,
     return regex_split ( input, std::regex(pattern), skip_empty );
 }
 
+/**
+ * \brief Separate the string into components separated by \c separator
+ */
+std::vector<std::string> char_split(const std::string& input,
+                                    char separator,
+                                    bool skip_empty = true);
+
 
 /**
  * \brief Split a string of element separated by commas and spaces
