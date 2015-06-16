@@ -37,7 +37,8 @@ void Storage::initialize (const Settings& settings)
     else
         throw ConfigurationError("Wrong storage format");
 
-    filename = settings.get("file",settings::data_file("storage.json"));
+    filename = settings.get("file",
+        settings::data_file("storage.json", settings::FileCheck::CREATE));
     if ( filename.empty() )
         throw ConfigurationError("Wrong storage file name");
 

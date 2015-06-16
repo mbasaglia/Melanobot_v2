@@ -65,7 +65,7 @@ public:
 
     network::Response query (const network::Request& request) override;
 
-    bool auto_load() const override { return false; }
+    bool auto_load() const override { return true; }
 
     /**
      * \brief Get the value of the given key
