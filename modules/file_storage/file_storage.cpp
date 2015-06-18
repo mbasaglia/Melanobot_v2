@@ -21,7 +21,7 @@
 #include "storage.hpp"
 
 /**
- * \brief Initializes the ToDo module
+ * \brief Initializes the file storage module
  */
 Melanomodule melanomodule_file_storage()
 {

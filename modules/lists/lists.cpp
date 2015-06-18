@@ -21,7 +21,7 @@
 #include "melanomodule.hpp"
 
 /**
- * \brief Initializes the ToDo module
+ * \brief Initializes the lists module
  */
 Melanomodule melanomodule_lists()
 {
