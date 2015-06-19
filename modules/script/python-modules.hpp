@@ -20,11 +20,14 @@
 #define PYTHON_MODULES_HPP
 
 #include "boost-python.hpp"
+#include <boost/python/exception_translator.hpp>
+
 #include "settings.hpp"
 #include "message/input_message.hpp"
 #include "script_variables.hpp"
 #include "melanobot.hpp"
 #include "network/connection.hpp"
+#include "network/async_service.hpp"
 
 namespace python {
 
@@ -38,6 +41,17 @@ template<class Class, class Member>
             boost::python::object out;
             Converter::convert(obj.*member, out);
             return out;
+        };
+    }
+
+/**
+ * \brief Return a functor converting a pointer to member using Converter::convert
+ */
+template<class Class, class Member>
+    auto convert_member_setter(Member Class::*member)
+    {
+        return [member](Class& obj, const boost::python::object& input) {
+            Converter::convert(input, obj.*member);
         };
     }
 
@@ -82,24 +96,27 @@ inline std::shared_ptr<user::User> make_shared_user(const user::User& user)
  */
 namespace melanobot {
 
-BOOST_PYTHON_MODULE(melanobot)
+/**
+ * \brief Defines symbols in the \c melanobot.network Python module
+ * \param module_top Parent module object
+ */
+void module_melanobot_network(boost::python::scope& module_top)
 {
     using namespace boost::python;
 
-    def("data_file", &settings::data_file);
-    def("data_file", [](const std::string& path) { return settings::data_file(path); } );
+    // Name of the parent scope
+    std::string module_parent_name = extract<std::string>(module_top.attr("__name__"));
 
-    class_<user::User, std::shared_ptr<user::User>>("User",no_init)
-        .def_readwrite("name",&user::User::name)
-        .def_readwrite("host",&user::User::host)
-        .def_readonly("local_id",&user::User::local_id)
-        .def_readwrite("global_id",&user::User::global_id)
-        .add_property("channels",convert_member(&user::User::channels))
-        .def("__getattr__",&user::User::property)
-        .def("__setattr__",[](user::User& user, const std::string& property, object val) {
-            user.properties[property] = extract<std::string>(val);
-        })
-    ;
+    // Name of the current module
+    std::string module_name = "network";
+    // Fully qualified name for the current module
+    std::string module_full_name = module_parent_name + '.' + module_name;
+    // Create the module using the C API and get a boost wrapper
+    object module_object(borrowed(PyImport_AddModule(module_full_name.c_str())));
+    // Update the parent scope object
+    module_top.attr(module_name.c_str()) = module_object;
+    // Change scope for the next declarations
+    scope module_scope = module_object;
 
     /// \todo readonly or readwrite?
     class_<network::Message>("Message",no_init)
@@ -117,6 +134,98 @@ BOOST_PYTHON_MODULE(melanobot)
         })
         .def_readonly("source",&network::Message::source)
         .def_readonly("destination",&network::Message::destination)
+    ;
+
+    class_<network::Connection,network::Connection*,boost::noncopyable>("Connection",no_init)
+        .add_property("name",return_copy(&network::Connection::config_name))
+        .add_property("description",&network::Connection::description)
+        .add_property("protocol",&network::Connection::protocol)
+        .add_property("formatter",return_pointer(&network::Connection::formatter))
+        .def("user",[](network::Connection* conn, const std::string& local_id){
+            return make_shared_user(conn->get_user(local_id));
+        })
+        /// \todo Expose Command
+        .def("command",[](network::Connection* conn,const std::string& command){
+            conn->command({command});
+        })
+        /// \todo Expose OutputMessage and say()
+        .def("connect",&network::Connection::connect)
+        .def("disconnect",&network::Connection::disconnect)
+        .def("reconnect",&network::Connection::reconnect)
+        .def("__getattr__",[](network::Connection* conn, const std::string& name){
+            auto props = conn->pretty_properties();
+            auto it = props.find(name);
+            if ( it != props.end() )
+                return it->second;
+            return conn->properties().get(name);
+        })
+        .def("__setattr__",[](network::Connection* conn,
+                              const std::string&   name,
+                              const std::string&   value ){
+            conn->properties().put(name, value);
+        })
+    ;
+
+    class_<network::Request>("Request")
+        .def("__init__",make_constructor(
+            [](const std::string& command, const std::string& resource, list parameters) {
+                std::vector<std::string> params;
+                Converter::convert(parameters,params);
+                return std::shared_ptr<network::Request>(
+                    new network::Request(command, resource, params));
+        }))
+        .def_readwrite("command",&network::Request::command)
+        .def_readwrite("resource",&network::Request::resource)
+        .add_property("parameters",
+                      convert_member(&network::Request::parameters),
+                      convert_member_setter(&network::Request::parameters))
+    ;
+
+    class_<network::Response>("Response")
+        .def_readwrite("error_message",&network::Response::error_message)
+        .def_readwrite("contents",&network::Response::contents)
+        .def_readwrite("resource",&network::Response::resource)
+    ;
+
+    class_<network::AsyncService,network::AsyncService*,boost::noncopyable>("Service",no_init)
+        .def("query",[](network::AsyncService* serv, const network::Request& request)
+            { return serv->query(request); })
+    ;
+
+    def("service",return_pointer(&network::require_service));
+}
+
+/**
+ * \brief Defines symbols in the \c melanobot Python module
+ */
+BOOST_PYTHON_MODULE(melanobot)
+{
+    using namespace boost::python;
+
+    // Scope representing the current module
+    scope module_top;
+
+    // Register exceptions
+    register_exception_translator<ConfigurationError>(
+        [](const ConfigurationError& err){
+            PyErr_SetString(PyExc_RuntimeError, err.what());
+    });
+
+    // def data_file(path, check)
+    def("data_file", &settings::data_file);
+    // def data_file(path)
+    def("data_file", [](const std::string& path) { return settings::data_file(path); } );
+
+    class_<user::User, std::shared_ptr<user::User>>("User",no_init)
+        .def_readwrite("name",&user::User::name)
+        .def_readwrite("host",&user::User::host)
+        .def_readonly("local_id",&user::User::local_id)
+        .def_readwrite("global_id",&user::User::global_id)
+        .add_property("channels",convert_member(&user::User::channels))
+        .def("__getattr__",&user::User::property)
+        .def("__setattr__",[](user::User& user, const std::string& property, object val) {
+            user.properties[property] = extract<std::string>(val);
+        })
     ;
 
     class_<Melanobot,Melanobot*,boost::noncopyable>("Melanobot",no_init)
@@ -161,36 +270,7 @@ BOOST_PYTHON_MODULE(melanobot)
         })
     ;
 
-    class_<network::Connection,network::Connection*,boost::noncopyable>("Connection",no_init)
-        .add_property("name",return_copy(&network::Connection::config_name))
-        .add_property("description",&network::Connection::description)
-        .add_property("protocol",&network::Connection::protocol)
-        .add_property("formatter",return_pointer(&network::Connection::formatter))
-        .def("user",[](network::Connection* conn, const std::string& local_id){
-            return make_shared_user(conn->get_user(local_id));
-        })
-        /// \todo Expose Command
-        .def("command",[](network::Connection* conn,const std::string& command){
-            conn->command({command});
-        })
-        /// \todo Expose OutputMessage and say()
-        .def("connect",&network::Connection::connect)
-        .def("disconnect",&network::Connection::disconnect)
-        .def("reconnect",&network::Connection::reconnect)
-        .def("__getattr__",[](network::Connection* conn, const std::string& name){
-            auto props = conn->pretty_properties();
-            auto it = props.find(name);
-            if ( it != props.end() )
-                return it->second;
-            return conn->properties().get(name);
-        })
-        .def("__setattr__",[](network::Connection* conn,
-                              const std::string&   name,
-                              const std::string&   value ){
-            conn->properties().put(name, value);
-        })
-    ;
-
+    module_melanobot_network(module_top);
 }
 
 } // namespace melanobot

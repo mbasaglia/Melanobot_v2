@@ -52,6 +52,11 @@ public:
      * \brief Converts a vector of strings
      */
     static void convert(const std::vector<std::string>& input, boost::python::object& output);
+
+    /**
+     * \brief Converts a vector of strings
+     */
+    static void convert(const boost::python::object& input, std::vector<std::string>& output);
 };
 
 /**

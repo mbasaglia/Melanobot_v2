@@ -43,20 +43,21 @@ public:
     /**
      * \brief Function visible from python
      */
-    void write(const std::string& msg)
+    void write(std::string msg)
     {
         auto newline = msg.find('\n');
 
-        if ( newline != std::string::npos )
+        while ( newline != std::string::npos )
         {
             if ( print )
                 print(line+msg.substr(0,newline));
-            line = msg.substr(newline+1);
+            line.clear();
+
+            msg.erase(0,newline+1);
+            newline = msg.find('\n');
         }
-        else
-        {
-            line += msg;
-        }
+
+        line += msg;
     }
 
     void write_unicode(const boost::python::object& unicode)

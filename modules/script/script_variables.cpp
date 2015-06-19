@@ -50,6 +50,14 @@ void Converter::convert(const std::vector<std::string>& input, boost::python::ob
     output = result;
 }
 
+void Converter::convert(const boost::python::object& input, std::vector<std::string>& output)
+{
+    using namespace boost::python;
+    output.resize(len(input));
+    for ( int i = 0; i < len(input); i++ )
+        output[i] = extract<std::string>(input[i]);
+}
+
 void MessageVariables::convert(boost::python::object& target_namespace) const
 {
     boost::python::import("melanobot");

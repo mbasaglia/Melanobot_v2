@@ -38,6 +38,13 @@ namespace network {
  */
 struct Request
 {
+    Request() = default;
+    Request(std::string command, std::string resource, std::vector<std::string> parameters)
+        : command(std::move(command)),
+          resource(std::move(resource)),
+          parameters(std::move(parameters))
+    {}
+
     std::string command;        ///< Protocol-specific command
     std::string resource;       ///< Name/identifier for the requested resource
     std::vector<std::string> parameters; ///< Parameters for the request
