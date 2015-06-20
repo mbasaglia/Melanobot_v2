@@ -28,6 +28,8 @@ Melanomodule melanomodule_lists()
     Melanomodule module{"lists","Manage ToDo Lists and similar"};
 
     module.register_handler<lists::FixedList>("FixedList");
+    module.register_handler<lists::DynamicReply>("DynamicReply");
+    module.register_handler<lists::DynamicReplyManager>("DynamicReplyManager");
 
     return module;
 }

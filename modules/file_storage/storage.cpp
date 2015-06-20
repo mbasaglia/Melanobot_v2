@@ -23,22 +23,25 @@
 
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/info_parser.hpp>
 
 #include "string/string_functions.hpp"
 #include "string/json.hpp"
 
 void Storage::initialize (const Settings& settings)
 {
-    std::string formatstring = string::strtolower(settings.get("format","json"));
+    std::string formatstring = string::strtolower(settings.get("format","info"));
     if ( formatstring == "xml" )
         format = settings::FileFormat::XML;
     else if ( formatstring == "json" )
         format = settings::FileFormat::JSON;
+    else if ( formatstring == "info" )
+        format = settings::FileFormat::INFO;
     else
         throw ConfigurationError("Wrong storage format");
 
     filename = settings.get("file",
-        settings::data_file("storage.json", settings::FileCheck::CREATE));
+        settings::data_file("storage."+formatstring, settings::FileCheck::CREATE));
     if ( filename.empty() )
         throw ConfigurationError("Wrong storage file name");
 
@@ -47,7 +50,7 @@ void Storage::initialize (const Settings& settings)
 
     lazy_save = settings.get("lazy",lazy_save);
 
-    cache_policy = cache::Policy(settings.get_child("cache",{}));
+    cache_policy = cache::Policy(settings);
 }
 
 void Storage::start()
@@ -78,7 +81,9 @@ void Storage::load()
     if ( std::ifstream file{filename} )
     {
         Log("sys",'!',4) << "Loading settings from " << filename;
-        if ( format == settings::FileFormat::XML )
+        if ( format ==  settings::FileFormat::INFO )
+            boost::property_tree::read_info(file, data);
+        else if ( format == settings::FileFormat::XML )
             boost::property_tree::read_xml(file, data);
         else
             data = JsonParser().parse_file(filename);
@@ -97,7 +102,10 @@ void Storage::save()
     {
         cache_policy.mark_clean();
         Log("sys",'!',4) << "Writing settings to " << filename;
-        if ( format == settings::FileFormat::XML )
+
+        if ( format == settings::FileFormat::INFO )
+            boost::property_tree::write_info(file, data);
+        else if ( format == settings::FileFormat::XML )
             boost::property_tree::write_xml(file, data);
         else
             boost::property_tree::write_json(file, data);
@@ -141,6 +149,17 @@ std::string Storage::maybe_put(const std::string& key, const std::string& value)
     return *var;
 }
 
+
+std::string Storage::append(const std::string& key,
+                            const std::string& value,
+                            const std::string& separator)
+{
+    std::string var = data.get(key,"");
+    if ( var.empty() )
+        return put(key,value);
+    return put(key, var+separator+value);
+}
+
 void Storage::erase(const std::string& key)
 {
     if ( !data.erase(key) )
@@ -179,6 +198,14 @@ network::Response Storage::query(const network::Request& request)
                 throw Error("Missing argument");
 
             resp.contents = maybe_put(request.resource, request.parameters[0]);
+        }
+        else if ( request.command == "append" )
+        {
+            if ( request.parameters.empty() )
+                throw Error("Missing argument");
+
+            resp.contents = append(request.resource, request.parameters[0],
+                request.parameters.size() < 2 ? "\n" : request.parameters[1]);
         }
         else if ( request.command == "delete" )
         {

@@ -42,6 +42,11 @@
  * Assigns \b value to \b key only if \b key has not already been defined.
  * Returns the final value of \b key.
  *
+ * \par append \e key \e value \e separator
+ * If \b key has a non-empty value, appends both \b separator and \b value to
+ * the existsing contents, otherwise assigns \b value.
+ * Returns the final value of \b key.
+ *
  * \par delete \e key
  * Removes \e key. Returns an error if \b key wasn't defined.
  */
@@ -90,6 +95,18 @@ public:
      *          with the given key
      */
     std::string maybe_put(const std::string& key, const std::string& value);
+
+    /**
+     * \brief Append an element/string to the given key
+     *
+     * If \b key has a non-empty value, appends both \b separator and \b value to
+     * the existsing contents, otherwise assigns \b value.
+     * 
+     * \returns the final value of \b key.
+     */
+    std::string append(const std::string& key,
+                       const std::string& value,
+                       const std::string& separator = "\n");
 
     /**
      * \brief Erases a key
