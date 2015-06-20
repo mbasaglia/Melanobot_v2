@@ -95,9 +95,9 @@ XonoticConnection::XonoticConnection ( const network::Server& server,
     rcon_secure = settings.get("rcon_secure",rcon_secure);
     rcon_password = settings.get("rcon_password",rcon_password);
 
-    cmd_say = settings.get("say","say %message");
+    cmd_say = settings.get("say","say %prefix%message");
     cmd_say_as = settings.get("say_as", "say \"%prefix%from^7: %message\"");
-    cmd_say_action = settings.get("cmd_say_action", "say \"^4* ^3%prefix%from^3 %message\"");
+    cmd_say_action = settings.get("say_action", "say \"^4* ^3%prefix%from^3 %message\"");
 
     // Preset templates
     if ( cmd_say_as == "modpack" )
@@ -110,7 +110,7 @@ XonoticConnection::XonoticConnection ( const network::Server& server,
     {
         cmd_say =   "Melanobot_nick_push;"
                     "set sv_adminnick \"^3%prefix^3\";"
-                    "say ^7%message;"
+                    "say ^7%prefix%message;"
                     "Melanobot_nick_pop";
 
         cmd_say_as ="Melanobot_nick_push;"

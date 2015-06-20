@@ -37,6 +37,8 @@ public:
         : ConnectionMonitor("who", settings, parent)
     {
         bots = settings.get("bots", bots);
+        reply = settings.get("reply", reply);
+        reply_empty = settings.get("reply_empty", reply_empty);
         help = "Shows the players on the server";
     }
 

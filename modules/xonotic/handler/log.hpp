@@ -35,6 +35,7 @@ inline Properties pretty_properties(network::Connection* source,
         {"name",    source->encode_to(user.name,fmt)},
         {"ip",      user.host},
     });
+    props.insert(user.properties.begin(), user.properties.end());
     return props;
 }
 
@@ -48,7 +49,7 @@ public:
         : Handler(settings, parent)
     {
         connect = settings.get("connect","Server #2#%sv_host#-# connected.");
-        disconnect = settings.get("connect","#-b#Warning!#-# Server #1#%sv_host#-# disconnected.");
+        disconnect = settings.get("disconnect","#-b#Warning!#-# Server #1#%sv_host#-# disconnected.");
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -98,9 +99,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         // Get all of the user properties and message properties
-        Properties props = msg.from.properties;
-        auto overprops = pretty_properties(msg.source,msg.from);
-        props.insert(overprops.begin(),overprops.end());
+        Properties props = pretty_properties(msg.source,msg.from);
 
         // Select the right message
         const std::string& message = msg.type == network::Message::JOIN ? join : part;
@@ -427,6 +426,7 @@ public:
     {
         message = settings.get("message",message);
         empty = settings.get("empty",empty);
+        show_spectators = settings.get("empty",show_spectators);
     }
 
     /**
