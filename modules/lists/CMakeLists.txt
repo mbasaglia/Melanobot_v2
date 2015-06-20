@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-melanomodule(lists "Manage ToDo Lists and similar" ON)
+melanomodule(lists "Manage ToDo Lists and similar" OFF)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
