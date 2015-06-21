@@ -59,25 +59,68 @@ public:
         DISCARD = 3,    ///< Don't write at all
     };
 
+    /**
+     * \brief Converts policy to string
+     */
+    static std::string to_string(Read read)
+    {
+        switch ( read )
+        {
+            default:
+            case Read::ONCE:    return "once";
+            case Read::LAZY:    return "lazy";
+            case Read::DYNAMIC: return "dynamic";
+        }
+    }
+    static std::string to_string(Write read)
+    {
+        switch ( read )
+        {
+            default:
+            case Write::ONCE:    return "once";
+            case Write::DISCARD: return "discard";
+            case Write::DYNAMIC: return "dynamic";
+        }
+    }
+    /**
+     * \brief Converts a string to a read policy
+     */
+    static Read to_read_policy(std::string read_policy)
+    {
+        read_policy = string::strtolower(read_policy);
+        if ( read_policy == "once" )
+            return Read::ONCE;
+        else if ( read_policy == "lazy" )
+            return Read::LAZY;
+        else if ( read_policy == "dynamic" )
+            return Read::DYNAMIC;
+        return Read::ONCE;
+    }
+    /**
+     * \brief Converts a string to a write policy
+     */
+    static Write to_write_policy(std::string write_policy)
+    {
+        write_policy = string::strtolower(write_policy);
+        if ( write_policy == "once" )
+            return Write::ONCE;
+        else if ( write_policy == "dynamic" )
+            return Write::DYNAMIC;
+        else if ( write_policy == "discard" )
+            return Write::DISCARD;
+        return Write::ONCE;
+    }
+
     constexpr Policy() noexcept = default;
     constexpr Policy(Read read, Write write) noexcept : read_(read), write_(write) {}
 
-    Policy(const Settings& settings)
+    /**
+     * \brief Set read/write policies from settings
+     */
+    void load_settings(const Settings& settings)
     {
-        std::string read_policy = string::strtolower(settings.get("read","once"));
-        if ( read_policy == "once" )
-            read_ = Read::ONCE;
-        else if ( read_policy == "lazy" )
-            read_ = Read::LAZY;
-        else if ( read_policy == "dynamic" )
-            read_ = Read::DYNAMIC;
-
-        std::string write_policy = string::strtolower(settings.get("write","once"));
-        if ( write_policy == "once" )
-            write_ = Write::ONCE;
-        else if ( write_policy == "dynamic" )
-            write_ = Write::DYNAMIC;
-
+        read_ = to_read_policy(settings.get("read",to_string(read_)));
+        write_ = to_write_policy(settings.get("write",to_string(write_)));
     }
 
     /**

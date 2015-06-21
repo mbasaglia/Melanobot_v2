@@ -28,6 +28,11 @@
 #include "string/string_functions.hpp"
 #include "string/json.hpp"
 
+Storage::Storage()
+    : cache_policy{cache::Policy::Read::ONCE,cache::Policy::Write::DYNAMIC}
+{
+}
+
 void Storage::initialize (const Settings& settings)
 {
     std::string formatstring = string::strtolower(settings.get("format","info"));
@@ -48,9 +53,7 @@ void Storage::initialize (const Settings& settings)
     if ( filename[0] != '/' )
         filename = settings::data_file(filename);
 
-    lazy_save = settings.get("lazy",lazy_save);
-
-    cache_policy = cache::Policy(settings);
+    cache_policy.load_settings(settings);
 }
 
 void Storage::start()

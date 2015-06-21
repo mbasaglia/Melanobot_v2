@@ -62,6 +62,8 @@ public:
         using std::invalid_argument::invalid_argument;
     };
 
+    Storage();
+
     void initialize(const Settings& settings) override;
 
     void start() override;
@@ -137,7 +139,6 @@ private:
     PropertyTree         data;          ///< Stored data
     std::string          filename;      ///< File to store the data in
     settings::FileFormat format;        ///< Storage file format (JSON or XML only)
-    bool                 lazy_save{0};  ///< If \b true, save only on stop()
     cache::Policy        cache_policy;  ///< Cache policy
 };
 
