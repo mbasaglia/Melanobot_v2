@@ -27,7 +27,7 @@
 /**
  * \brief Initializes the Xonotic module
  */
-Melanomodule melanomodule_xonotic()
+Melanomodule melanomodule_xonotic(const Settings&)
 {
     Melanomodule module{"xonotic","Xonotic integration"};
     module.register_formatter<xonotic::Formatter>();

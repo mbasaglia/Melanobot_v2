@@ -23,7 +23,7 @@
 /**
  * \brief Initializes the web module
  */
-Melanomodule melanomodule_web()
+Melanomodule melanomodule_web(const Settings&)
 {
     Melanomodule module{"web","Web services"};
     module.register_log_type("web",color::dark_blue);

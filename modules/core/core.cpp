@@ -27,7 +27,7 @@
 /**
  * \brief Defines the core module
  */
-Melanomodule melanomodule_core()
+Melanomodule melanomodule_core(const Settings&)
 {
     Melanomodule module {"core", "Core module"};
 

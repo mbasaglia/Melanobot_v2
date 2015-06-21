@@ -27,7 +27,7 @@
 /**
  * \brief Initializes the IRC module
  */
-Melanomodule melanomodule_irc()
+Melanomodule melanomodule_irc(const Settings&)
 {
     Melanomodule module{"irc","IRC integration"};
     module.register_connection<irc::IrcConnection>("irc");

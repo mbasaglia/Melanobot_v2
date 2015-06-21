@@ -23,7 +23,7 @@
 /**
  * \brief Initializes the lists module
  */
-Melanomodule melanomodule_lists()
+Melanomodule melanomodule_lists(const Settings&)
 {
     Melanomodule module{"lists","Manage ToDo Lists and similar"};
 

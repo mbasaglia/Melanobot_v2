@@ -24,7 +24,7 @@
  * \brief Scripting module initialization
  * \todo Have the Python version available somewhere
  */
-Melanomodule melanomodule_script()
+Melanomodule melanomodule_script(const Settings&)
 {
     Melanomodule module{"script","Scripting interface"};
     module.register_log_type("py",color::dark_yellow);

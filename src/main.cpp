@@ -32,12 +32,12 @@ int main(int argc, char **argv)
     std::vector<Melanomodule> modules;
     string::Formatter::registry(); // ensures the default formatters get loaded
 
-    MELANOMODULES_INIT
-
     try {
         Settings settings = settings::initialize(argc,argv);
 
         Logger::instance().load_settings(settings.get_child("log",{}));
+
+        MELANOMODULES_INIT
 
         if ( !settings.empty() )
         {

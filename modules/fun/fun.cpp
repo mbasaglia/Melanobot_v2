@@ -22,7 +22,7 @@
 /**
  * \brief Registers the fun handlers
  */
-Melanomodule melanomodule_fun()
+Melanomodule melanomodule_fun(const Settings&)
 {
     Melanomodule module{"fun","Fun handlers"};
     module.register_handler<fun::AnswerQuestions>("AnswerQuestions");

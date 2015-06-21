@@ -23,7 +23,7 @@
 /**
  * \brief Initializes the file storage module
  */
-Melanomodule melanomodule_file_storage()
+Melanomodule melanomodule_file_storage(const Settings&)
 {
     Melanomodule module{"file_storage","Plain file-based storage"};
 

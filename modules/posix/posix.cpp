@@ -23,7 +23,7 @@
 /**
  * \brief POSIX module initialization
  */
-Melanomodule melanomodule_posix()
+Melanomodule melanomodule_posix(const Settings&)
 {
     Melanomodule module{"posix","POSIX extensions"};
     module.register_connection<posix::StdinConnection>("stdin");

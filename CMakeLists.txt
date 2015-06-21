@@ -87,9 +87,9 @@ macro(melanomodule name description default)
     if (${${OPTION_NAME}})
         set_property(GLOBAL APPEND PROPERTY MELANOMODULES ${MODULE_NAME})
         set_property(GLOBAL APPEND_STRING PROPERTY MELANOMODULES_DECLARE "
-Melanomodule ${MODULE_NAME}();")
+Melanomodule ${MODULE_NAME}(const Settings&);")
         set_property(GLOBAL APPEND_STRING PROPERTY MELANOMODULES_INIT "\\
-    modules.push_back(${MODULE_NAME}());")
+    modules.push_back(${MODULE_NAME}(settings));")
         message(STATUS "Enabled module ${name}: ${description}")
     endif()
 endmacro()
