@@ -92,10 +92,10 @@ struct Melanomodule
 
 
     /**
-    * \brief Registers a Handler to the HandlerFactory
-    * \tparam HandlerT  Handler to be registered
-    * \param  name      Name to be used in the configuration
-    */
+     * \brief Registers a Handler to the HandlerFactory
+     * \tparam HandlerT  Handler to be registered
+     * \param  name      Name to be used in the configuration
+     */
     template<class HandlerT>
         void register_handler(const std::string& name)
         {
