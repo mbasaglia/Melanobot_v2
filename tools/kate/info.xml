@@ -23,6 +23,7 @@
         </context>
         
         <context name="Key" lineEndContext="#pop" attribute="Style_Key">
+            <DetectChar char="&quot;"  context="String_Key" attribute="Style_Key" />
             <DetectSpaces context="Value" attribute="Style_Normal" />
             <IncludeRules context="Object" />
         </context>
