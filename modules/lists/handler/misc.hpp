@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LISTS_HANDLERS_HPP
-#define LISTS_HANDLERS_HPP
+#ifndef LISTS_HANDLER_MISC_HPP
+#define LISTS_HANDLER_MISC_HPP
 
 #include "core/handler/group.hpp"
 #include "storage_base.hpp"
@@ -30,6 +30,7 @@ namespace lists {
 
 /**
  * \brief Simple manager for a fixed list
+ * \todo Items with spaces should be a single element
  */
 class FixedList : public core::AbstractList
 {
@@ -185,4 +186,4 @@ private:
 };
 
 } // namespace lists
-#endif // LISTS_HANDLERS_HPP
+#endif // LISTS_HANDLER_MISC_HPP

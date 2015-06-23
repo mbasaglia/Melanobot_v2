@@ -17,8 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "handlers.hpp"
 #include "melanomodule.hpp"
+#include "handler/misc.hpp"
+#include "handler/inventory.hpp"
 
 /**
  * \brief Initializes the lists module
@@ -30,6 +31,9 @@ Melanomodule melanomodule_lists(const Settings&)
     module.register_handler<lists::FixedList>("FixedList");
     module.register_handler<lists::DynamicReply>("DynamicReply");
     module.register_handler<lists::DynamicReplyManager>("DynamicReplyManager");
+
+    module.register_handler<lists::InventoryList>("InventoryList");
+    module.register_handler<lists::InventoryPut>("InventoryPut");
 
     return module;
 }
