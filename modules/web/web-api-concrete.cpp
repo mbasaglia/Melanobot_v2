@@ -49,6 +49,11 @@ bool VideoInfo::on_handle(network::Message& msg)
                 {"fields", "id,title,channel,duration,description"},
             });
         }
+        else if ( match[4].matched )
+        {
+            found_func = &VideoInfo::vidme_found;
+            request = network::http::get(vidme_api_url+std::string(match[4]));
+        }
 
         network::service("web")->async_query(request,
             [this,msg,found_func](const network::Response& response)

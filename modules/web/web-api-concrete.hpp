@@ -195,6 +195,26 @@ protected:
     }
 
     /**
+     * \brief Found a Vid.me video
+     */
+    void vidme_found(const network::Message& msg, const Settings& parsed)
+    {
+        if ( parsed.get_child_optional("error") )
+            return;
+        string::FormatterConfig fmt;
+        string::FormatterUtf8   f8;
+        send_message(msg,{
+            {"videoId",parsed.get("video.video_id","")},
+            {"title",f8.decode(parsed.get("video.title","")).encode(fmt)},
+            {"channelTitle",f8.decode(parsed.get("user.username","")).encode(fmt)},
+            {"description",f8.decode(parsed.get("video.description","")).encode(fmt)},
+            {"duration",timer::duration_string_short(
+                timer::seconds(int(parsed.get("video.duration",0.0)))
+            )}
+        });
+    }
+
+    /**
      * \brief Send message with the video info
      */
     void send_message(const network::Message& msg, Properties properties)
@@ -216,7 +236,8 @@ private:
     std::regex regex{
         R"regex((?:(?:youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+)))regex"
         R"regex(|(?:vimeo\.com/([0-9]+)))regex"
-        R"regex(|(?:dailymotion\.com/video/([0-9a-zA-Z]+)))regex",
+        R"regex(|(?:dailymotion\.com/video/([0-9a-zA-Z]+)))regex"
+        R"regex(|(?:vid.me/([0-9a-zA-Z]+)))regex",
         std::regex::ECMAScript|std::regex::optimize
     };
     /**
@@ -239,6 +260,10 @@ private:
      * \brief Dailymotion API URL
      */
     std::string dm_api_url = "https://api.dailymotion.com/video/";
+    /**
+     * \brief Vid.me API URL
+     */
+    std::string vidme_api_url = "https://api.vid.me/videoByUrl/";
 };
 
 /**
