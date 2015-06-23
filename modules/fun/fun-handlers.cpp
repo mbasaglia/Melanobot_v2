@@ -269,7 +269,7 @@ bool ChuckNorris::on_handle(network::Message& msg)
     network::http::Parameters params;
     std::smatch match;
 
-    if ( std::regex_match(msg.message, match, regex_name) )
+    if ( std::regex_match(msg.message, match, regex_name) && match.length() > 0 )
     {
         params["firstName"] = match[1];
         params["lastName"]  = match[2];
