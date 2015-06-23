@@ -83,6 +83,10 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::string item = msg.message.substr(action.size()+msg.source->name().size()+2);
+
+        if ( item.empty() )
+            return false;
+
         item = string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
         std::string reply = "takes "+item;
 
@@ -101,7 +105,7 @@ protected:
             }
             reply += " and drops "+string::implode(", ",dropped);
         }
-        
+
         inventory.push_back(item);
         storage::storage().put(list_id, inventory);
         reply_to(msg,network::OutputMessage(string::FormattedString(reply), true));
