@@ -2,8 +2,18 @@ Melanobot v2
 ============
 
 A not so simple IRC bot.
+
+This bot aims to be extremely flexible in its capabilities and act not only as
+a simple bot but also as a group of bots contained in a single process.
+It tries to provide a wide variety of available functionality and great room
+for extensibility.
+
 For more detailed information on the bot and how to set up an instance,
 see https://wiki.evil-ant-colony.org/doku.php?id=melanobot:melanobot
+
+Note: The v2 is to distinguish it from a previous implementation of a similar
+concept. This core components project are still being development
+and interfaces are not yet to be considered stable.
 
 Contacts
 --------
