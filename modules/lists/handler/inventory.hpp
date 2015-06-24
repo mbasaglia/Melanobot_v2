@@ -88,9 +88,17 @@ protected:
             return false;
 
         item = string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
-        std::string reply = "takes "+item;
 
         auto inventory = storage::storage().maybe_get_sequence(list_id);
+        // Check that item isn't already in the inventory
+        if ( std::find(inventory.begin(), inventory.end(), item) != inventory.end())
+        {
+            reply_to(msg,network::OutputMessage("already had "+item, true));
+            return true;
+        }
+
+        std::string reply = "takes "+item;
+        // Remove extra items
         if ( max_items > 0 && inventory.size() >= max_items )
         {
             std::vector<std::string> dropped(inventory.size()-max_items+1);
