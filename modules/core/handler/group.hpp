@@ -150,8 +150,6 @@ public:
         return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
     }
 
-    bool handle(network::Message& msg) override;
-
 protected:
     bool on_handle(network::Message& msg) override;
 

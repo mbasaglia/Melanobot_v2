@@ -260,8 +260,10 @@ public:
             std::smatch match;
             if ( matches_pattern(msg, match) )
             {
-                auto trimmed_msg = trimmed(msg,match);
-                return on_handle(trimmed_msg);
+                msg.message.erase(0, match.length());
+                auto ret = on_handle(msg);
+                msg.message = match.str()+msg.message;
+                return ret;
             }
         }
         return false;
@@ -304,18 +306,6 @@ protected:
         else if ( !msg.channels.empty() )
             channel = msg.channels[0];
         return channel;
-    }
-
-    /**
-     * \brief Trims the trigger pattern off the message
-     * \param msg               Message to be trimmed
-     * \param match_result      Result from matches_pattern()
-     */
-    network::Message trimmed(const network::Message& msg, const std::smatch& match_result)
-    {
-        network::Message trimmed_msg = msg;
-        trimmed_msg.message.erase(0, match_result.length());
-        return trimmed_msg;
     }
 
     /**

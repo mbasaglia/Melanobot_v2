@@ -117,24 +117,6 @@ bool Group::can_handle(const network::Message& msg) const
         (channels.empty() || msg.source->channel_mask(msg.channels, channels));
 }
 
-bool Group::handle(network::Message& msg)
-{
-    if ( can_handle(msg) )
-    {
-        // if it doesn't have a trigger pattern, operate on the original message
-        if ( trigger.empty() )
-            return on_handle(msg);
-
-        std::smatch match;
-        if ( matches_pattern(msg, match) )
-        {
-            auto trimmed_msg = trimmed(msg,match);
-            return on_handle(trimmed_msg);
-        }
-    }
-    return false;
-}
-
 bool Group::on_handle(network::Message& msg)
 {
     for ( const auto& h : children() )
@@ -376,7 +358,8 @@ bool Multi::on_handle ( network::Message& msg )
     std::smatch match;
     if ( !trigger.empty() && matches_pattern(msg, match) )
     {
-        network::Message trimmed_msg = trimmed(msg, match);
+        network::Message trimmed_msg = msg;
+        trimmed_msg.message.erase(0, match.length());
         std::string base_message = trimmed_msg.message;
 
         for ( unsigned i = 0; i < children().size(); i++ )
