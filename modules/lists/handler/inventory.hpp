@@ -19,7 +19,7 @@
 #ifndef LISTS_HANDLER_INVENTORY_HPP
 #define LISTS_HANDLER_INVENTORY_HPP
 
-#include "handler/handler.hpp"
+#include "core/handler/group.hpp"
 #include "storage_base.hpp"
 #include "string/language.hpp"
 #include "math.hpp"
@@ -27,15 +27,15 @@
 namespace lists {
 
 /**
- * \brief Shows the items in the inventory
+ * \brief Used by \c InventoryManager to show the items in the inventory
  */
 class InventoryList : public handler::SimpleAction
 {
 public:
-    InventoryList(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("inventory", settings, parent)
+    InventoryList(std::string list_id, const Settings& settings, MessageConsumer* parent)
+        : SimpleAction("list","(?:list\\b)?\\s*", settings, parent),
+          list_id(std::move(list_id))
     {
-        list_id = "lists."+settings.get("list",trigger);
         help = "Shows the inventory";
     }
 
@@ -44,14 +44,74 @@ protected:
     {
         auto elements = storage::storage().maybe_get_sequence(list_id);
         if ( elements.empty() )
-            reply_to(msg,network::OutputMessage(string::FormattedString("is empty"),true));
+            reply_to(msg,network::OutputMessage("is empty",true));
         else
-            reply_to(msg,network::OutputMessage(string::FormattedString("has "+string::implode(", ",elements)),true));
+            reply_to(msg,network::OutputMessage("has "+string::implode(", ",elements),true));
         return true;
     }
 
 private:
     std::string list_id;        ///< List name in the storage system
+};
+
+/**
+ * \brief Used by \c InventoryManager to remove all elements of the inventory
+ */
+class InventoryClear : public handler::SimpleAction
+{
+public:
+    InventoryClear(std::string list_id, std::string auth,
+                   const Settings& settings, MessageConsumer* parent)
+    : SimpleAction("clear",settings,parent),
+          list_id(std::move(list_id)),
+          auth(std::move(auth))
+    {
+        help = "Removes all elements from the inventory";
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return handler::SimpleAction::can_handle(msg) &&
+            ( auth.empty() || msg.source->user_auth(msg.from.local_id, auth) );
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        auto elements = storage::storage().maybe_get_sequence(list_id);
+        if ( elements.empty() )
+        {
+            reply_to(msg,network::OutputMessage("was already empty",true));
+        }
+        else
+        {
+            elements.clear();
+            storage::storage().put(list_id, elements);
+            reply_to(msg,network::OutputMessage("is now empty",true));
+        }
+        return true;
+    }
+
+private:
+    std::string list_id;        ///< List name in the storage system
+    std::string auth;           ///< User group with the rights to use this handler
+};
+
+/**
+ * \brief Shows the items in the inventory
+ * \todo Handle string formatting in the inventory handlers
+ */
+class InventoryManager : public core::AbstractActionGroup
+{
+public:
+    InventoryManager(const Settings& settings, MessageConsumer* parent)
+        : AbstractActionGroup("inventory", settings, parent)
+    {
+        std::string list_id = "lists."+settings.get("list",trigger);
+        help = "Shows the inventory";
+        add_handler(New<InventoryClear>(list_id,settings.get("clear","admin"),Settings{},this));
+        add_handler(New<InventoryList>(list_id,Settings{},this));
+    }
 };
 
 /**

@@ -32,7 +32,7 @@ Melanomodule melanomodule_lists(const Settings&)
     module.register_handler<lists::DynamicReply>("DynamicReply");
     module.register_handler<lists::DynamicReplyManager>("DynamicReplyManager");
 
-    module.register_handler<lists::InventoryList>("InventoryList");
+    module.register_handler<lists::InventoryManager>("InventoryManager");
     module.register_handler<lists::InventoryPut>("InventoryPut");
     module.register_handler<lists::InventoryTake>("InventoryTake");
 
