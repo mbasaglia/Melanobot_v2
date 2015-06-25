@@ -116,7 +116,7 @@ protected:
 
         inventory.push_back(item);
         storage::storage().put(list_id, inventory);
-        reply_to(msg,network::OutputMessage(string::FormattedString(reply), true));
+        reply_to(msg,network::OutputMessage(reply, true));
         return true;
     }
 
@@ -124,6 +124,61 @@ private:
     std::string list_id = "inventory";  ///< List name in the storage system
     std::string action = "gives";       ///< Action the user must perform
     unsigned    max_items = 6;          ///< If more than this many items are insterted, it will drop some items
+};
+
+
+/**
+ * \brief Removes an item from the inventory via an action
+ */
+class InventoryTake : public handler::Handler
+{
+public:
+    InventoryTake(const Settings& settings, MessageConsumer* parent)
+        : Handler(settings, parent)
+    {
+        list_id = "lists."+settings.get("list",list_id);
+        action = settings.get("action",action);
+        /// \todo help and synopsis (as get_property)
+    }
+
+public:
+    bool can_handle(const network::Message& message) const override
+    {
+        return message.type == network::Message::ACTION &&
+            string::starts_with(
+                string::strtolower(message.message),
+                string::strtolower(action+' '+message.source->name()+' ')
+            );
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string item = msg.message.substr(action.size()+msg.source->name().size()+2);
+
+        if ( item.empty() )
+            return false;
+
+        item = string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
+        auto inventory = storage::storage().maybe_get_sequence(list_id);
+
+        auto iter = std::find(inventory.begin(), inventory.end(), item);
+        if ( iter != inventory.end())
+        {
+            // swap + pop to avoid moving items around for no reason
+            std::swap(*iter, inventory.back());
+            inventory.pop_back();
+            storage::storage().put(list_id, inventory);
+            reply_to(msg,network::OutputMessage("gives "+msg.from.name+" "+item, true));
+            return true;
+        }
+        reply_to(msg,network::OutputMessage("doesn't have "+item, true));
+        return true;
+    }
+
+private:
+    std::string list_id = "inventory";  ///< List name in the storage system
+    std::string action = "takes from";  ///< Action the user must perform
 };
 
 } // namespace lists

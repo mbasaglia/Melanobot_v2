@@ -34,6 +34,7 @@ Melanomodule melanomodule_lists(const Settings&)
 
     module.register_handler<lists::InventoryList>("InventoryList");
     module.register_handler<lists::InventoryPut>("InventoryPut");
+    module.register_handler<lists::InventoryTake>("InventoryTake");
 
     return module;
 }
