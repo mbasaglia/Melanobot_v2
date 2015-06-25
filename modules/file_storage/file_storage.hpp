@@ -19,7 +19,7 @@
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
-#include "storage_base.hpp"
+#include "storage.hpp"
 #include "cache_policy.hpp"
 
 namespace storage {

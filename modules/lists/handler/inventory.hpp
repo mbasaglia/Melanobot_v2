@@ -20,7 +20,7 @@
 #define LISTS_HANDLER_INVENTORY_HPP
 
 #include "core/handler/group.hpp"
-#include "storage_base.hpp"
+#include "storage.hpp"
 #include "string/language.hpp"
 #include "math.hpp"
 

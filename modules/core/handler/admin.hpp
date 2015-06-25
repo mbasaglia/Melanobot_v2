@@ -23,7 +23,7 @@
 
 #include "group.hpp"
 #include "melanobot.hpp"
-#include "storage_base.hpp"
+#include "storage.hpp"
 
 namespace core {
 
