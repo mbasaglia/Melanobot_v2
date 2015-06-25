@@ -56,6 +56,9 @@ void Logger::load_settings(const Settings& settings)
         auto type_it = log_types.find(p.first);
         if ( type_it != log_types.end() )
             type_it->second.verbosity = p.second.get_value(type_it->second.verbosity);
+        else
+            log_types.insert({p.first,
+                LogType{color::nocolor,p.second.get_value(2)}});
     }
     /// \todo maybe should use different a formatter (ie: plain utf8) for log files
     std::string output = settings.get("logfile","");
