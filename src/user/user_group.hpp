@@ -39,8 +39,10 @@ public:
      * In order of priority, it will look for: \c global_id, \c host, \c name
      *
      * If a previously added user matches \c user, it won't be inserted
+     *
+     * \return \b true if the user has been inserted
      */
-    void add_user ( const User& user );
+    bool add_user ( const User& user );
 
     /**
      * \brief Remove the user from the group

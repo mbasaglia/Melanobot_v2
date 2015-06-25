@@ -35,16 +35,28 @@ public:
      * \brief Adds an user to a set of groups
      *
      * If any of the groups doesn't exists, it will be created
+     *
+     * \returns The number of groups the user has been added to
      */
-    void add_user(const User& user, const std::vector<std::string>& groups)
+    int add_user(const User& user, const std::vector<std::string>& groups)
     {
+        int ret = 0;
         for ( const auto& g : groups )
-            add_user(user,g);
+            if ( add_user(user,g) )
+                ret++;
+        return ret;
     }
 
-    void add_user(const User& user, const std::string& group)
+    /**
+     * \brief Adds an user to a group
+     *
+     * If the group doesn't exists, it will be created
+     *
+     * \returns Whether the user has been inserted successfully
+     */
+    bool add_user(const User& user, const std::string& group)
     {
-        user_groups[group].add_user(user);
+        return user_groups[group].add_user(user);
     }
 
     /**

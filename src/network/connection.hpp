@@ -196,7 +196,8 @@ public:
      * \brief Adds a user identified by \c user to the group \c group
      * \param user  The user \c local_id, derived classes may perform some
      *              parsing to interpret it as a host or global_id
-     * \param group Group name
+     * \param group Group name or CSV list of names
+     * \return whether the insertion was successful
      */
     virtual bool add_to_group(const std::string& user, const std::string& group) = 0;
 
@@ -214,7 +215,7 @@ public:
     virtual std::vector<user::User> users_in_group(const std::string& group) const = 0;
 
     /**
-     * \brief Get a vector with the users in the given group (currently connected
+     * \brief Get a vector with the users in the given group (currently connected)
      */
     virtual std::vector<user::User> real_users_in_group(const std::string& group) const = 0;
 

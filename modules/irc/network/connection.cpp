@@ -1107,9 +1107,8 @@ bool IrcConnection::add_to_group( const std::string& username, const std::string
                         { return auth_system.in_group(user,str); }),
                     groups.end()
         );
-        if ( !groups.empty() )
+        if ( !groups.empty() && auth_system.add_user(user,groups) )
         {
-            auth_system.add_user(user,groups);
             Log("irc",'!',3) << "Registered user " << color::cyan
                 << username << color::nocolor << " in "
                 << string::implode(", ",groups);

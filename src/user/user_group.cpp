@@ -21,12 +21,13 @@
 
 namespace user {
 
-void UserGroup::add_user ( const User& user )
+bool UserGroup::add_user ( const User& user )
 {
     for ( const User& u : users )
         if ( u.matches(user) )
-            return;
+            return false;
     users.push_back(user);
+    return true;
 }
 
 void UserGroup::remove_user ( const User& user )
