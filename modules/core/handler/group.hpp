@@ -218,6 +218,8 @@ public:
 
 protected:
     bool on_handle(network::Message& msg) override;
+
+    std::string edit; ///< User group allowed to edit the list
 };
 
 /**

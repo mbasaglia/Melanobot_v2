@@ -283,14 +283,14 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
     : AbstractActionGroup(default_trigger,settings, parent)
 {
 
+    edit = settings.get("edit","");
+
     Settings child_settings;
     for ( const auto& p : settings )
     {
         if ( !p.second.data().empty() )
         {
-            if ( p.first == "edit" )
-                child_settings.put("auth",p.second.data());
-            else if ( p.first != "trigger" && p.first != "auth" && p.first != "name" )
+            if ( p.first != "trigger" &&  p.first != "name" )
                 child_settings.put(p.first,p.second.data());
         }
     }
@@ -306,7 +306,9 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
 
 bool AbstractList::on_handle(network::Message& msg)
 {
-    return AbstractActionGroup::on_handle(msg);
+    if ( edit.empty() || msg.source->user_auth(msg.from.local_id, edit) )
+        return AbstractActionGroup::on_handle(msg);
+    return children().back()->handle(msg);
 }
 
 Multi::Multi(const Settings& settings, MessageConsumer* parent)
