@@ -164,11 +164,6 @@ protected:
     {
         reply_to(msg, {text,false});
     }
-    void reply_to(const network::Message& msg, const std::string& text) const
-    {
-        reply_to(msg, network::OutputMessage(
-            string::FormattedString(string::Formatter::formatter("utf8")) << text));
-    }
 
     /**
      * \brief Message priority

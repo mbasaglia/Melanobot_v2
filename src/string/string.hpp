@@ -259,6 +259,8 @@ public:
         if ( !ascii_string.empty() )
             append<AsciiSubstring>(std::move(ascii_string));
     }
+    FormattedString(const char* ascii_string)
+        : FormattedString(std::string(ascii_string)) {}
     FormattedString() = default;
     FormattedString(const FormattedString&) = default;
     FormattedString(FormattedString&&) noexcept = default;
