@@ -40,8 +40,15 @@ public:
 
     /**
      * \brief Recursively converts a PropertyTree to a dict
+     * \todo Maybe rename these to to_python and from_python,
+     *       also try to figure how the boost::python custom converters should work
      */
     static void convert(const PropertyTree& input, boost::python::object& output);
+
+    /**
+     * \brief Converts a map to a dict
+     */
+    static void convert(const Properties& input, boost::python::object& output);
 
     /**
      * \brief Converts a string
@@ -54,9 +61,19 @@ public:
     static void convert(const std::vector<std::string>& input, boost::python::object& output);
 
     /**
-     * \brief Converts a vector of strings
+     * \brief Converts a Python list
      */
     static void convert(const boost::python::object& input, std::vector<std::string>& output);
+
+    /**
+     * \brief Converts a Python dict
+     */
+    static void convert(const boost::python::object& input, Properties& output);
+
+    /**
+     * \brief Converts a Python object to string
+     */
+    static std::string to_string(const boost::python::object& input);
 };
 
 /**

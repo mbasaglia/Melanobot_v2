@@ -37,6 +37,13 @@ void Converter::convert(const PropertyTree& input, boost::python::object& output
     }
 }
 
+
+void Converter::convert(const Properties& input, boost::python::object& output)
+{
+    for ( const auto& child : input )
+        output[py_str(child.first)] = py_str(child.second);
+}
+
 void Converter::convert(const std::string& input, boost::python::object& output)
 {
     output = py_str(input);
@@ -55,7 +62,20 @@ void Converter::convert(const boost::python::object& input, std::vector<std::str
     using namespace boost::python;
     output.resize(len(input));
     for ( int i = 0; i < len(input); i++ )
-        output[i] = extract<std::string>(input[i]);
+        output[i] = to_string(input[i]);
+}
+
+void Converter::convert(const boost::python::object& input, Properties& output)
+{
+    using namespace boost::python;
+    output.clear();
+    auto keys = input.attr("keys")();
+    auto keylen = len(keys);
+    for ( int i = 0; i < keylen; i++ )
+    {
+        auto key = keys[i];
+        output[to_string(key)] = to_string(input[key]);
+    }
 }
 
 void MessageVariables::convert(boost::python::object& target_namespace) const
@@ -78,6 +98,11 @@ void StructuredScript::Variables::convert(boost::python::object& target_namespac
     boost::python::dict sett;
     Converter::convert(static_cast<StructuredScript*>(obj)->settings, sett);
     target_namespace["settings"] = sett;
+}
+
+std::string Converter::to_string(const boost::python::object& input)
+{
+    return boost::python::extract<std::string>(input.attr("__str__")());
 }
 
 } // namespace python
