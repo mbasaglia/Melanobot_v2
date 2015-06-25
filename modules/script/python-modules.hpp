@@ -28,6 +28,7 @@
 #include "melanobot.hpp"
 #include "network/connection.hpp"
 #include "network/async_service.hpp"
+#include "storage.hpp"
 
 namespace python {
 
@@ -195,6 +196,108 @@ void module_melanobot_network(boost::python::scope& module_top)
     def("service",return_pointer(&network::require_service));
 }
 
+void module_melanobot_storage(boost::python::scope& module_top)
+{
+    using namespace boost::python;
+    using sequence      = storage::StorageBase::sequence;
+    using table         = storage::StorageBase::table;
+    using key_type      = storage::StorageBase::key_type;
+    using value_type    = storage::StorageBase::value_type;
+
+    // Name of the parent scope
+    std::string module_parent_name = extract<std::string>(module_top.attr("__name__"));
+
+    // Name of the current module
+    std::string module_name = "storage";
+    // Fully qualified name for the current module
+    std::string module_full_name = module_parent_name + '.' + module_name;
+    // Create the module using the C API and get a boost wrapper
+    object module_object(borrowed(PyImport_AddModule(module_full_name.c_str())));
+    // Update the parent scope object
+    module_top.attr(module_name.c_str()) = module_object;
+    // Change scope for the next declarations
+    scope module_scope = module_object;
+
+    register_exception_translator<storage::Error>(
+        [](const storage::Error& err){
+            PyErr_SetString(PyExc_RuntimeError, err.what());
+    });
+
+    def("get_value",[](const key_type& path) {
+        return storage::storage().get_value(path);
+    });
+    def("get_sequence",[](const key_type& path) {
+        list out;
+        Converter::convert(storage::storage().get_sequence(path), out);
+        return out;
+    });
+    def("get_map",[](const key_type& path) {
+        dict out;
+        Converter::convert(storage::storage().get_map(path), out);
+        return out;
+    });
+
+    def("maybe_get_value",[](const key_type& path, const value_type& def) {
+        return storage::storage().maybe_get_value(path, def);
+    });
+    def("maybe_get_sequence",[](const key_type& path) {
+        list out;
+        Converter::convert(storage::storage().maybe_get_sequence(path), out);
+        return out;
+    });
+    def("maybe_get_map",[](const key_type& path) {
+        dict out;
+        Converter::convert(storage::storage().maybe_get_map(path), out);
+        return out;
+    });
+
+    def("put", [](const key_type& path, const value_type& value) {
+        storage::storage().put(path, value);
+    });
+    def("put", [](const std::string& path, const list& value) {
+        sequence seq;
+        Converter::convert(value, seq);
+        storage::storage().put(path, seq);
+    });
+    def("put", [](const std::string& path, const dict& value) {
+        table map;
+        Converter::convert(value, map);
+        storage::storage().put(path, map);
+    });
+    def("put", [](const key_type& path, const key_type& key, const value_type& value) {
+        storage::storage().put(path, key, value);
+    });
+
+    def("append", [](const key_type& path, const value_type& value) {
+        storage::storage().append(path, value);
+    });
+
+    def("erase", [](const key_type& path) {
+        return storage::storage().erase(path);
+    });
+    def("erase", [](const key_type& path, const key_type& key) {
+        return storage::storage().erase(path, key);
+    });
+
+    def("maybe_put", [](const key_type& path, const value_type& value) {
+        return storage::storage().maybe_put(path, value);
+    });
+    def("maybe_put", [](const std::string& path, const list& value) {
+        sequence seq;
+        Converter::convert(value, seq);
+        list out;
+        Converter::convert(storage::storage().maybe_put(path, seq), out);
+        return out;
+    });
+    def("maybe_put", [](const std::string& path, const dict& value) {
+        table map;
+        Converter::convert(value, map);
+        dict out;
+        Converter::convert(storage::storage().maybe_put(path, map), out);
+        return out;
+    });
+}
+
 /**
  * \brief Defines symbols in the \c melanobot Python module
  */
@@ -271,6 +374,8 @@ BOOST_PYTHON_MODULE(melanobot)
     ;
 
     module_melanobot_network(module_top);
+    module_melanobot_storage(module_top);
+
 }
 
 } // namespace melanobot
