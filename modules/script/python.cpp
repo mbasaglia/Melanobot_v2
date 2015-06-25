@@ -29,19 +29,26 @@ ScriptOutput PythonEngine::exec(const std::string& python_code, const Converter&
         return ScriptOutput{};
 
     ScriptOutput output;
-
     try {
         ScriptEnvironment env(output);
-        vars.convert(env.main_namespace());
-        boost::python::exec(py_str(python_code), env.main_namespace());
-        output.success = true;
-    } catch (const boost::python::error_already_set&) {
-        ErrorLog("py") << "Exception from python script";
+        try {
+            vars.convert(env.main_namespace());
+            boost::python::exec(py_str(python_code), env.main_namespace());
+            output.success = true;
+        } catch (const boost::python::error_already_set&) {
+            ErrorLog("py") << "Exception from python script";
 
-        if (PyErr_ExceptionMatches(PyExc_SystemExit))
-            Log("py",'!',3) << "Called sys.exit";
-        else
-            PyErr_Print();
+            if (PyErr_ExceptionMatches(PyExc_SystemExit))
+                Log("py",'!',3) << "Called sys.exit";
+            else
+                PyErr_Print();
+            // PyErr_Print will use the stderr as defined in ScriptEnvironment
+            // therefore it needs to still be alive in this catch
+        }
+    } catch (const boost::python::error_already_set&) {
+        // This external try/catch block is because ScriptEnvironment
+        // executes some Python code which might throw exceptions
+        ErrorLog("py") << "Exception on python script initialization";
     }
 
     return output;
@@ -53,19 +60,26 @@ ScriptOutput PythonEngine::exec_file(const std::string& file, const Converter& v
         return ScriptOutput{};
 
     ScriptOutput output;
-
     try {
         ScriptEnvironment env(output);
-        vars.convert(env.main_namespace());
-        boost::python::exec_file(py_str(file), env.main_namespace());
-        output.success = true;
+        try {
+            vars.convert(env.main_namespace());
+            boost::python::exec_file(py_str(file), env.main_namespace());
+            output.success = true;
+        } catch (const boost::python::error_already_set&) {
+            ErrorLog("py") << "Exception from python script";
+
+            if (PyErr_ExceptionMatches(PyExc_SystemExit))
+                Log("py",'!',3) << "Called sys.exit";
+            else
+                PyErr_Print();
+            // PyErr_Print will use the stderr as defined in ScriptEnvironment
+            // therefore it needs to still be alive in this catch
+        }
     } catch (const boost::python::error_already_set&) {
-        ErrorLog("py") << "Exception from python script";
-        
-        if (PyErr_ExceptionMatches(PyExc_SystemExit))
-            Log("py",'!',3) << "Called sys.exit";
-        else
-            PyErr_Print();
+        // This external try/catch block is because ScriptEnvironment
+        // executes some Python code which might throw exceptions
+        ErrorLog("py") << "Exception on python script initialization";
     }
 
     return output;
