@@ -35,9 +35,9 @@ int main(int argc, char **argv)
     try {
         Settings settings = settings::initialize(argc,argv);
 
-        Logger::instance().load_settings(settings.get_child("log",{}));
-
         MELANOMODULES_INIT
+
+        Logger::instance().load_settings(settings.get_child("log",{}));
 
         if ( !settings.empty() )
         {
