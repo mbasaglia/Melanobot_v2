@@ -22,7 +22,6 @@
 #include <boost/asio.hpp>
 
 #include "network.hpp"
-#include "string/logger.hpp"
 #include "functional.hpp"
 
 namespace network {
