@@ -452,11 +452,14 @@ void XonoticConnection::read(const std::string& datagram)
     while (socket_stream)
     {
         std::getline(socket_stream,line);
-        if (socket_stream.eof() && !line.empty())
+        if (socket_stream.eof())
         {
-            lock.lock();
-            line_buffer = line;
-            lock.unlock();
+            if (!line.empty())
+            {
+                lock.lock();
+                line_buffer = line;
+                lock.unlock();
+            }
             break;
         }
         network::Message msg;
