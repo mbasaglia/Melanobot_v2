@@ -27,7 +27,7 @@
 
 #include "c++-compat.hpp"
 #include "string/string.hpp"
-
+#include "error.hpp"
 
 using PropertyTree = boost::property_tree::ptree;
 using Settings = PropertyTree;
@@ -170,15 +170,5 @@ using Properties = std::unordered_map<std::string,std::string>;
  */
 PropertyTree properties_to_tree(const Properties& properties);
 
-/**
- * \brief Class representing an error occurring during configuration
- */
-class ConfigurationError : public std::runtime_error
-{
-public:
-    ConfigurationError(const std::string& msg = "Invalid configuration parameters")
-        : std::runtime_error(msg)
-    {}
-};
 
 #endif // SETTINGS_HPP

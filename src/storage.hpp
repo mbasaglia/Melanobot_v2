@@ -20,20 +20,21 @@
 #define STORAGE_BASE_HPP
 
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <vector>
 #include <unordered_map>
+
+#include "error.hpp"
 
 namespace storage {
 
 /**
  * \brief Error arising from StorageBase function calls
  */
-class Error : public std::invalid_argument
+class Error : public MelanobotError
 {
 public:
-    using std::invalid_argument::invalid_argument;
+    using MelanobotError::MelanobotError;
 };
 
 class StorageBase
