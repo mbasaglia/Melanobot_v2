@@ -21,8 +21,8 @@
 
 #include <boost/asio.hpp>
 
-#include "network.hpp"
 #include "functional.hpp"
+#include "server.hpp"
 
 namespace network {
 

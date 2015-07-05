@@ -70,6 +70,16 @@ struct Server
         ss << host << ':' << port;
         return ss.str();
     }
+
+    bool operator==(const Server& server) const
+    {
+        return host == server.host && port == server.port;
+    }
+
+    bool operator!=(const Server& server) const
+    {
+        return host != server.host || port != server.port;
+    }
 };
 } // namespace network
 #endif // NETWORK_HPP

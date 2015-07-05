@@ -868,22 +868,5 @@ DateTime::Duration parse_duration(const std::string& text);
 
 } // namespace time
 
-namespace network {
-    /**
-     * \brief A reliable clock
-     */
-    using Clock     = std::chrono::steady_clock;
-    /**
-     * \brief Time point for network::Clock
-     */
-    using Time      = Clock::time_point;
-    /**
-     * \brief Duration for network::Clock
-     */
-    using Duration  = Clock::duration;
-    /**
-     * \brief Timer using network::Clock
-     */
-    using Timer = timer::basic_timer<Clock>;
-} // namespace network
+
 #endif // TIME_HPP

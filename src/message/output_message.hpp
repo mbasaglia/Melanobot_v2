@@ -19,7 +19,8 @@
 #ifndef OUTPUT_MESSAGE_HPP
 #define OUTPUT_MESSAGE_HPP
 
-#include "network/network.hpp"
+#include "network/server.hpp"
+#include "network/time.hpp"
 
 namespace network {
 

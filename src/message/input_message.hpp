@@ -19,7 +19,7 @@
 #ifndef INPUT_MESSAGE_HPP
 #define INPUT_MESSAGE_HPP
 
-#include "network/network.hpp"
+#include "network/server.hpp"
 #include "user/user.hpp"
 
 namespace network {
