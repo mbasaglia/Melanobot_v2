@@ -66,34 +66,22 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
         throw ConfigurationError("Xonotic connection with no server");
     }
 
-    return New<XonoticConnection>(server, settings, name);
+    ConnectionDetails details(server,
+        settings.get("rcon_password",""),
+        ConnectionDetails::Secure(settings.get("rcon_secure",0))
+    );
+
+    return New<XonoticConnection>(details, settings, name);
 }
 
-XonoticConnection::XonoticConnection ( const network::Server& server,
-                                       const Settings& settings,
-                                       const std::string& name
+XonoticConnection::XonoticConnection ( const ConnectionDetails& server,
+                                       const Settings&          settings,
+                                       const std::string&       name
                                      )
-    : Connection(name), server_(server), status_(DISCONNECTED)
+    : Connection(name), Darkplaces(server), status_(DISCONNECTED)
 {
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));
-    io.max_datagram_size(settings.get("datagram_size",1400));
-    io.on_error = [this](const std::string& msg)
-    {
-        ErrorLog("xon","Network Error") << msg;
-        close_connection();
-    };
-    io.on_async_receive = [this](const std::string& datagram)
-    {
-        read(datagram);
-    };
-    io.on_failure = [this]()
-    {
-        stop();
-    };
-
-    rcon_secure = settings.get("rcon_secure",rcon_secure);
-    rcon_password = settings.get("rcon_password",rcon_password);
 
     cmd_say = settings.get("say","say %prefix%message");
     cmd_say_as = settings.get("say_as", "say \"%prefix%from^7: %message\"");
@@ -132,41 +120,32 @@ XonoticConnection::XonoticConnection ( const network::Server& server,
 
 void XonoticConnection::connect()
 {
-    if ( !io.connected() )
+    if ( !Darkplaces::connected() )
     {
         // status: DISCONNECTED -> WAITING
         status_ = WAITING;
 
-        if ( io.connect(server_) )
-        {
-            if ( thread_input.get_id() == std::this_thread::get_id() )
-                CRITICAL_ERROR("XonoticConnection::connect() called from the wrong thread");
+        // Just connected, clear all
+        Lock lock(mutex);
+            properties_.erase("cvar");// cvars might have changed
+            clear_match();
+            user_manager.clear();
+        lock.unlock();
 
-            if ( thread_input.joinable() )
-                thread_input.join();
-
-            thread_input = std::move(std::thread([this]{
-                // Just connected, clear all
-                Lock lock(mutex);
-                    rcon_buffer.clear();     // don't run old rcon_secure 2 commands
-                    properties_.erase("cvar");// cvars might have changed
-                    clear_match();
-                    user_manager.clear();
-                lock.unlock();
-                update_connection();
-
-                io.run_input();
-            }));
-        }
+        Darkplaces::connect();
     }
+}
 
+void XonoticConnection::on_connect()
+{
+    update_connection();
 }
 
 void XonoticConnection::disconnect(const std::string& message)
 {
     // status: * -> DISCONNECTED
     status_polling.stop();
-    if ( io.connected() )
+    if ( Darkplaces::connected() )
     {
         if ( !message.empty() && status_ > CONNECTING )
             say({message});
@@ -174,7 +153,6 @@ void XonoticConnection::disconnect(const std::string& message)
     }
     close_connection();
     Lock lock(mutex);
-    rcon_buffer.clear();
     clear_match();
     user_manager.clear();
     lock.unlock();
@@ -225,7 +203,7 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
         user.origin = const_cast<XonoticConnection*>(this);
         user.local_id = "0";
         user.properties["entity"] = "0";
-        user.host = server_.name();
+        user.host = details().server.name();
         user.name = properties_.get("cvar.sv_adminnick","");
         if ( user.name.empty() )
             user.name = "(Server Admin)";
@@ -354,34 +332,15 @@ void XonoticConnection::command ( network::Command cmd )
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
 
-        std::string rcon_command = string::implode(" ",cmd.parameters);
-        if ( rcon_command.empty() )
+        std::string command = string::implode(" ",cmd.parameters);
+        if ( command.empty() )
         {
             ErrorLog("xon") << "Empty rcon command";
             return;
         }
 
-        if ( rcon_secure <= 0 )
-        {
-            Log("xon",'<',2) << decode(rcon_command);
-            write("rcon "+rcon_password+' '+rcon_command);
-        }
-        else if ( rcon_secure == 1 )
-        {
-            Log("xon",'<',2) << decode(rcon_command);
-            std::string argbuf = (boost::format("%ld.%06d %s")
-                % std::time(nullptr) % math::random(1000000)
-                % rcon_command).str();
-            std::string key = hmac_md4(argbuf,rcon_password);
-            write("srcon HMAC-MD4 TIME "+key+' '+argbuf);
-        }
-        else
-        {
-            Lock lock(mutex);
-            rcon_buffer.push_back(rcon_command);
-            lock.unlock();
-            request_challenge();
-        }
+        rcon_command(command);
+        /// \todo Log("xon",'<',2) << decode(rcon_command); when actually being executed
     }
     else
     {
@@ -390,88 +349,41 @@ void XonoticConnection::command ( network::Command cmd )
     }
 }
 
-void XonoticConnection::request_challenge()
+void XonoticConnection::on_network_error(const std::string& message)
 {
-    Lock lock(mutex);
-    if ( !rcon_buffer.empty() && !rcon_buffer.front().challenged )
-    {
-        rcon_buffer.front().challenged = true;
-        /// \todo timeout from settings
-        rcon_buffer.front().timeout = network::Clock::now() + std::chrono::seconds(5);
-        Log("xon",'<',5) << "getchallenge";
-        write("getchallenge");
-    }
+    ErrorLog("xon","Network Error") << message;
+    return;
 }
 
-void XonoticConnection::write(std::string line)
+void XonoticConnection::on_network_input(const std::string&)
 {
-    line.erase(std::remove_if(line.begin(), line.end(),
-        [](char c){return c == '\n' || c == '\0' || c == '\xff';}),
-        line.end());
-
-    io.write(header+line);
-}
-
-void XonoticConnection::read(const std::string& datagram)
-{
-    if ( datagram.empty() && status_ == DISCONNECTED )
-        return;
-
-    if ( datagram.size() < 5 || !string::starts_with(datagram,"\xff\xff\xff\xff") )
-    {
-        ErrorLog("xon","Network Error") << "Invalid datagram: " << datagram;
-        return;
-    }
-
     // status: WAITING -> CONNECTING
     if ( status_ == WAITING )
         status_ = CONNECTING;
+}
 
-    if ( datagram[4] != 'n' )
-    {
-        network::Message msg;
-        std::istringstream socket_stream(datagram.substr(4));
-        socket_stream >> msg.command; // info, status et all
-        msg.raw = datagram;
-        if ( socket_stream.peek() == ' ' )
-            socket_stream.ignore(1);
-        msg.params.emplace_back();
-        std::getline(socket_stream,msg.params.back());
-        Log("xon",'>',4) << formatter_->decode(msg.raw);
-        handle_message(msg);
-        return;
-    }
+void XonoticConnection::on_receive(const std::string& command,
+                                   const std::string& message)
+{
 
-    Lock lock(mutex);
-    std::istringstream socket_stream(line_buffer+datagram.substr(5));
-    line_buffer.clear();
-    lock.unlock();
+    network::Message msg;
+    msg.command = command;
+    msg.raw = msg.command+' '+message;
+    msg.params.push_back(message);
+    handle_message(msg);
+}
 
-    // convert the datagram into lines
-    std::string line;
-    while (socket_stream)
-    {
-        std::getline(socket_stream,line);
-        if (socket_stream.eof())
-        {
-            if (!line.empty())
-            {
-                lock.lock();
-                line_buffer = line;
-                lock.unlock();
-            }
-            break;
-        }
-        network::Message msg;
-        msg.command = "n"; // log
-        msg.raw = line;
-        Log("xon",'>',4) << formatter_->decode(msg.raw); // 4 'cause spams
-        handle_message(msg);
-    }
+void XonoticConnection::on_receive_log(const std::string& line)
+{
+    network::Message msg;
+    msg.command = "n"; // log
+    msg.raw = line;
+    handle_message(msg);
 }
 
 void XonoticConnection::handle_message(network::Message& msg)
 {
+    Log("xon",'>',4) << formatter_->decode(msg.raw); // 4 'cause spams
     if ( msg.raw.empty() )
         return;
 
@@ -515,7 +427,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                     // status: INVALID    -> CONNECTING
                     // status: CONNECTING -> CONNECTED + message
                     // status: CHECKING   -> CONNECTED
-                    if ( cvar_value != io.local_endpoint().name() )
+                    if ( cvar_value != local_endpoint().name() )
                     {
                         update_connection();
                     }
@@ -655,38 +567,6 @@ void XonoticConnection::handle_message(network::Message& msg)
             }
         }
     }
-    else if ( msg.command == "challenge" )
-    {
-        Lock lock(mutex);
-        if ( msg.params.size() != 1 || rcon_buffer.empty() )
-        {
-            ErrorLog("xon") << "Got an odd challenge from the server";
-            return;
-        }
-
-        auto rcon_command = rcon_buffer.front();
-        if ( !rcon_command.challenged || rcon_command.timeout < network::Clock::now() )
-        {
-            lock.unlock();
-            rcon_command.challenged = false;
-            request_challenge();
-            return;
-        }
-
-        rcon_buffer.pop_front();
-        lock.unlock();
-
-        Log("xon",'<',2) << decode(rcon_command.command);
-        std::string challenge = msg.params[0].substr(0,11);
-        std::string challenge_command = challenge+' '+rcon_command.command;
-        std::string key = hmac_md4(challenge_command, rcon_password);
-        write("srcon HMAC-MD4 CHALLENGE "+key+' '+challenge_command);
-
-        request_challenge();
-
-        return; // don't propagate challenge messages
-    }
-
     msg.send(this);
 }
 
@@ -697,7 +577,7 @@ void XonoticConnection::update_connection()
     {
         status_ = WAITING;
 
-        command({"rcon",{"set","log_dest_udp",io.local_endpoint().name()},1024});
+        command({"rcon",{"set","log_dest_udp",local_endpoint().name()},1024});
 
         command({"rcon",{"set", "sv_eventlog", "1"},1024});
 
@@ -709,7 +589,7 @@ void XonoticConnection::update_connection()
 
         // status: WAITING -> CONNECTING
         if ( status_ == WAITING )
-            read(io.read());
+            sync_read();
 
         // Make sure the connection is being checked
         if ( !status_polling.running() )
@@ -737,11 +617,10 @@ void XonoticConnection::cleanup_connection()
     command({"rcon",{"set", "log_dest_udp", ""},1024});
 
     // try to actually clear log_dest_udp when challenges are required
-    if ( rcon_secure >= 2 )
-        read(io.read());
+    if ( details().rcon_secure >= ConnectionDetails::CHALLENGE )
+        sync_read();
 
     Lock lock(mutex);
-    rcon_buffer.clear();
     properties_.erase("cvar");
     clear_match();
 }
@@ -782,11 +661,8 @@ void XonoticConnection::close_connection()
     if ( status_ > CONNECTING )
         network::Message().disconnected().send(this);
     status_ = DISCONNECTED;
-    if ( io.connected() )
-        io.disconnect();
-    if ( thread_input.joinable() &&
-            thread_input.get_id() != std::this_thread::get_id() )
-        thread_input.join();
+    if ( Darkplaces::connected() )
+        Darkplaces::disconnect();
 }
 
 void XonoticConnection::clear_match()

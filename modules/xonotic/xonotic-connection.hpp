@@ -21,26 +21,19 @@
 
 #include <thread>
 
-#include <boost/asio.hpp>
-
 #include "network/connection.hpp"
-#include "network/udp_io.hpp"
 #include "concurrency/container.hpp"
 #include "user/user_manager.hpp"
 #include "xonotic.hpp"
+#include "xonotic/darkplaces.hpp"
 
 namespace xonotic {
-
-
-/**
- * \brief Compute the MD4 HMAC of the given input with the given key
- */
-std::string hmac_md4(const std::string& input, const std::string& key);
 
 /**
  * \brief Creates a connection to a Xonotic server
  */
-class XonoticConnection : public network::Connection {
+class XonoticConnection : public network::Connection, protected Darkplaces
+{
 
 public:
     /**
@@ -52,9 +45,9 @@ public:
     /**
      * \thread main \lock none
      */
-    XonoticConnection ( const network::Server&  server,
-                        const Settings&         settings = {},
-                        const std::string&      name = {} );
+    XonoticConnection ( const ConnectionDetails&  server,
+                        const Settings&           settings = {},
+                        const std::string&        name = {} );
 
     /**
      * \thread main \lock none
@@ -70,7 +63,7 @@ public:
      */
     network::Server server() const override
     {
-        return server_;
+        return details().server;
     }
 
     /**
@@ -78,7 +71,7 @@ public:
      */
     std::string description() const override
     {
-        return server_.name();
+        return details().server.name();
     }
 
     /**
@@ -192,55 +185,30 @@ public:
         return {};
     }
 
-private:
-    /**
-     * \brief A command to be used with rcon_secure >= 2
-     */
-    struct SecureRconCommand
-    {
-        std::string     command;        ///< Raw command string
-        bool            challenged;     ///< Whether a challenge has been sent
-        network::Time   timeout;        ///< Challenge timeout
-        SecureRconCommand(std::string command)
-            : command(std::move(command)), challenged(false) {}
-    };
+protected:
+    void on_connect() override;
+    void on_network_error(const std::string& message) override;
+    void on_network_input(const std::string&) override;
+    void on_receive(const std::string& command, const std::string& message) override;
+    void on_receive_log(const std::string& line) override;
 
-    std::string         line_buffer;                    ///< Buffer used for truncated lines
+private:
+
     string::Formatter*  formatter_{nullptr};            ///< String formatter
 
-    std::string         header{"\xff\xff\xff\xff"};     ///< Connection message header
-    std::string         rcon_password;                  ///< Rcon Password
-    int                 rcon_secure{0};                 ///< Rcon secure protocol
     std::string         cmd_say;                        ///< Command used to say messages
     std::string         cmd_say_as;                     ///< Command used to say messages as another user
     std::string         cmd_say_action;                 ///< Command used to show actions
     PropertyTree        properties_;                     ///< Misc properties (eg: map, gametype)
-    std::list<SecureRconCommand>rcon_buffer;            ///< Buffer for rcon secure commands
 
-
-    network::Server     server_;                        ///< Connection server
     AtomicStatus        status_{DISCONNECTED};          ///< Connection status
 
     user::UserManager   user_manager;                   ///< Keeps track of players
 
-    network::UdpIo      io;                             ///< Handles networking
-
-    std::thread         thread_input;   ///< Thread handling input
     mutable std::mutex  mutex;          ///< Guard data races
     network::Timer      status_polling; ///< Timer used to gether the connection status
     std::vector<network::Command> polling_match; ///< Commands to send on match start
     std::vector<network::Command> polling_status; ///< Commands to send on status_polling
-
-    /**
-     * \brief Writes a raw line to the socket
-     * \thread any \lock none
-     */
-    void write(std::string line);
-    /**
-     * \brief Async hook on network input
-     * \thread xon_input \lock none
-     */
-    void read(const std::string& datagram);
 
     /**
      * \brief Interprets a message and sends it to the bot
@@ -259,12 +227,6 @@ private:
      * \thread external (disconnect) \lock data
      */
     void cleanup_connection();
-
-    /**
-     * \brief If there are commands needing a challenge, ask for it
-     * \thread any \lock data
-     */
-    void request_challenge();
 
     /**
      * \brief Sends the commands needed to determine the connection status
