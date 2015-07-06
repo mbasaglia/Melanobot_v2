@@ -21,6 +21,27 @@
 
 namespace handler {
 
+bool SimpleAction::handle(network::Message& msg)
+{
+    if ( can_handle(msg) )
+    {
+        if ( trigger.empty() )
+            return on_handle(msg);
+
+        std::smatch match;
+        if ( matches_pattern(msg, match) )
+        {
+            std::string old = msg.message;
+            msg.message.erase(0, match.length());
+            auto ret = on_handle(msg);
+            msg.message = old;
+            return ret;
+        }
+    }
+    return false;
+}
+
+
 void HandlerFactory::build_template(
     const std::string&  handler_name,
     const Settings&     settings,

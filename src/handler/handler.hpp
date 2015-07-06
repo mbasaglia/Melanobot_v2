@@ -217,7 +217,7 @@ public:
           trigger(default_trigger)
     {
         load_settings(settings);
-        pattern      = std::regex(
+        pattern = std::regex(
             string::regex_escape(trigger)+"(?:$|\\s+|\\b\\s*)",
             std::regex::ECMAScript|std::regex::optimize
         );
@@ -248,21 +248,7 @@ public:
      * then creates a new message which will have the trigger stripped off
      * and calls on_handle() with that.
      */
-    virtual bool handle(network::Message& msg) override
-    {
-        if ( can_handle(msg) )
-        {
-            std::smatch match;
-            if ( matches_pattern(msg, match) )
-            {
-                msg.message.erase(0, match.length());
-                auto ret = on_handle(msg);
-                msg.message = match.str()+msg.message;
-                return ret;
-            }
-        }
-        return false;
-    }
+    virtual bool handle(network::Message& msg) override;
 
     /**
      * Extra properties:
