@@ -154,8 +154,8 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
     using namespace color;
 
     static std::regex regex = std::regex( "\3?([0-9]{1,2})",
-        std::regex_constants::syntax_option_type::optimize |
-        std::regex_constants::syntax_option_type::ECMAScript
+        std::regex_constants::optimize |
+        std::regex_constants::ECMAScript
     );
 
     std::smatch match;

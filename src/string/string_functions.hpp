@@ -198,8 +198,8 @@ std::vector<std::string> char_split(const std::string& input,
 inline std::vector<std::string> comma_split(const std::string& input,bool skip_empty = true)
 {
     static std::regex regex_commaspace ( "(,\\s*)|(\\s+)",
-        std::regex_constants::syntax_option_type::optimize |
-        std::regex_constants::syntax_option_type::ECMAScript );
+        std::regex_constants::optimize |
+        std::regex_constants::ECMAScript );
     return string::regex_split(input,regex_commaspace,skip_empty);
 }
 

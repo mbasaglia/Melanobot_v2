@@ -25,8 +25,8 @@ namespace fun {
 bool Morse::on_handle(network::Message& msg)
 {
     static std::regex regex_morse ("^[-. ]+$",
-            std::regex_constants::syntax_option_type::optimize |
-            std::regex_constants::syntax_option_type::ECMAScript);
+            std::regex_constants::optimize |
+            std::regex_constants::ECMAScript);
 
     std::string result;
     if ( std::regex_match(msg.message,regex_morse) )
@@ -263,8 +263,8 @@ std::unordered_map<char,std::string> ReverseText::reverse_ascii {
 bool ChuckNorris::on_handle(network::Message& msg)
 {
     static std::regex regex_name("(?:([^ ]+)\\s+)?(.*)",
-            std::regex_constants::syntax_option_type::optimize |
-            std::regex_constants::syntax_option_type::ECMAScript);
+            std::regex_constants::optimize |
+            std::regex_constants::ECMAScript);
 
     network::http::Parameters params;
     std::smatch match;

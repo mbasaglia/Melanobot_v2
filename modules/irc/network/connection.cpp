@@ -369,8 +369,8 @@ void IrcConnection::handle_message(network::Message msg)
         if ( msg.message[0] == '\1' )
         {
             static std::regex regex_ctcp("\1([^ \1]+)(?: ([^\1]+))?\1",
-                std::regex_constants::syntax_option_type::optimize |
-                std::regex_constants::syntax_option_type::ECMAScript);
+                std::regex_constants::optimize |
+                std::regex_constants::ECMAScript);
             std::smatch match;
             std::regex_match(msg.message,match,regex_ctcp);
             msg.message.clear();
@@ -979,8 +979,8 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
 {
     /// \note the real regex would be stricter
     static std::regex regex_prefix{":?([^!@ ]+)(?:![^@ ]+)?(?:@(\\S+))?",
-        std::regex_constants::syntax_option_type::optimize |
-        std::regex_constants::syntax_option_type::ECMAScript };
+        std::regex_constants::optimize |
+        std::regex_constants::ECMAScript };
 
     std::smatch match;
 

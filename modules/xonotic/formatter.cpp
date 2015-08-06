@@ -146,8 +146,8 @@ color::Color12 Formatter::color_from_string(std::string color)
 }
 
 std::regex Formatter::regex_xoncolor( "([[:digit:]]|x([[:xdigit:]]{3}))",
-    std::regex_constants::syntax_option_type::optimize |
-    std::regex_constants::syntax_option_type::extended
+    std::regex_constants::optimize |
+    std::regex_constants::extended
 );
 color::Color12 Formatter::color_from_match(const std::smatch& match)
 {

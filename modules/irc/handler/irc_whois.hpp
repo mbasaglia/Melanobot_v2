@@ -114,18 +114,18 @@ protected:
     {
         static std::regex regex_qwhois (
             "-Information for user (\\S+) \\(using account ([^)]+)\\):",
-            std::regex_constants::syntax_option_type::optimize |
-            std::regex_constants::syntax_option_type::ECMAScript );
+            std::regex_constants::optimize |
+            std::regex_constants::ECMAScript );
 
         static std::regex regex_startusers (
             "Users currently on #[^]+:",
-            std::regex_constants::syntax_option_type::optimize |
-            std::regex_constants::syntax_option_type::ECMAScript );
+            std::regex_constants::optimize |
+            std::regex_constants::ECMAScript );
 
         static std::regex regex_users (
             R"([ @+](\S+)\s+(\S+)\s+(?:\+[a-z]+)?\s+\([^@]+@[^)]+\))",
-            std::regex_constants::syntax_option_type::optimize |
-            std::regex_constants::syntax_option_type::ECMAScript );
+            std::regex_constants::optimize |
+            std::regex_constants::ECMAScript );
 
         std::smatch match;
         if ( std::regex_match(msg.params[1],match,regex_qwhois) || (
