@@ -21,6 +21,7 @@ Xonotic
     @prefix                             ; Prefix shown on IRC
     @admin      admin                   ; User group required to trigger admin functionality
     @show_irc_events    1               ; Show to xonotic players IRC join/parts and similar
+    @show_connection_events 1           ; Shows when the server connected or disconnected
 
     type        Group
 
@@ -179,7 +180,11 @@ Xonotic
         {
             timeout     10
         }
-        ConnectionEvents                ; Shows when the server connected or disconnected
+        IfSet                           ; Shows when the server connected or disconnected
+        {
+            value       @show_connection_events
+            ConnectionEvents
+        }
         XonoticJoinPart                 ; Shows join/part messages
         XonoticMatchStart               ; Shows a message on match start
         RenameMessage                   ; Shows player name changes
