@@ -407,7 +407,7 @@ bool AnswerQuestions::on_handle(network::Message& msg)
             answers.push_back(&category_dunno);
         }
     }
-    else if ( question == "what" || question == "how" )
+    else if ( question == "what" || question == "how" || question == "why" )
     {
         answers.push_back(&category_dunno);
     }
