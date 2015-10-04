@@ -257,6 +257,8 @@ Properties XonoticConnection::pretty_properties() const
     Lock lock(mutex);
 
     std::string gt = properties_.get("match.gametype","?");
+    if ( count.max == 2 )
+        gt = "duel";
 
     std::string host;
     if ( auto opt = properties_.get_optional<std::string>("host") )
