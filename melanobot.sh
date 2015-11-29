@@ -108,7 +108,7 @@ melanobot_run()
     while :
     do
         # Run the bot
-        "$MELANOBOT_BIN_DIR/$MELANOBOT_EXECUTABLE" $@ \
+        LC_ALL=C "$MELANOBOT_BIN_DIR/$MELANOBOT_EXECUTABLE" $@ \
             --settings.melanobot_sh=1 \
             --settings.tmp_dir="$(tmp_dir)" \
             --bot.Pipe.file="$input"
