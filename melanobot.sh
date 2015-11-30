@@ -33,21 +33,21 @@
 SELFDIR=$(dirname $(readlink -se "${BASH_SOURCE[0]}"))
 
 # Directory to run the bot from
-declare MELANOBOT_RUN_DIR="$PWD"
+: ${MELANOBOT_RUN_DIR:="$PWD"}
 # Directory with the bot sources
-declare MELANOBOT_SRC_DIR="$SELFDIR"
+: ${MELANOBOT_SRC_DIR:="$SELFDIR"}
 # Directory to compile in
-declare MELANOBOT_BUILD_DIR="$MELANOBOT_SRC_DIR/build"
+: ${MELANOBOT_BUILD_DIR:="$MELANOBOT_SRC_DIR/build"}
 # Directory containing the executable
-declare MELANOBOT_BIN_DIR="$MELANOBOT_BUILD_DIR/bin"
+: ${MELANOBOT_BIN_DIR:="$MELANOBOT_BUILD_DIR/bin"}
 # Executable name, relative to BIN_DIR
-declare MELANOBOT_EXECUTABLE="melanobot"
+: ${MELANOBOT_EXECUTABLE:="melanobot"}
 # Directory for temporary files
-declare MELANOBOT_TMP_DIR="/tmp/.melanobot"
+: ${MELANOBOT_TMP_DIR:="/tmp/.melanobot"}
 # Bot identifier
-declare MELANOBOT_BOT_ID="$USER"
+: ${MELANOBOT_BOT_ID:="$USER"}
 # Tmux session
-declare MELANOBOT_TMUX_SESSION="bot"
+: ${MELANOBOT_TMUX_SESSION:="bot"}
 
 
 # Returns the name of the temporary directory for this specific bot instance
