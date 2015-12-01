@@ -161,8 +161,16 @@ melanobot_start()
         shift
         melanobot_loop
     fi
-
-    # TODO pass on the MELANOBOT_* variables
+    
+    export MELANOBOT_RUN_DIR
+    export MELANOBOT_SRC_DIR
+    export MELANOBOT_BUILD_DIR
+    export MELANOBOT_BIN_DIR
+    export MELANOBOT_EXECUTABLE
+    export MELANOBOT_TMP_DIR
+    export MELANOBOT_BOT_ID
+    export MELANOBOT_TMUX_SESSION
+    
     if tmux new -d -s "$MELANOBOT_TMUX_SESSION" "\"$0\" run $@"
     then
         echo "Bot started"
