@@ -378,6 +378,13 @@ BOOST_PYTHON_MODULE(melanobot)
 
 }
 
+#if PY_VERSION_HEX >= 0x03000000
+    PyObject* initmelanobot()
+    {
+        PyInit_melanobot();
+    }
+#endif
+
 } // namespace melanobot
 } // namespace python
 #endif // PYTHON_MODULES_HPP

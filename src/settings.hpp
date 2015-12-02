@@ -85,7 +85,7 @@ namespace settings
      */
     inline bool has_child ( const Settings& s, const Settings::path_type& path )
     {
-        return s.get_child_optional(path);
+        return bool(s.get_child_optional(path));
     }
 
     /**

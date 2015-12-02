@@ -21,6 +21,7 @@
 
 #include <chrono>
 #include <functional>
+#include <cstdint>
 
 #include "functional.hpp"
 #include "concurrency/concurrency.hpp"

@@ -24,7 +24,7 @@ target_link_libraries(${MODULE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 
 # CPython
-find_package(PythonLibs)
+find_package(PythonLibs 2.7 EXACT REQUIRED)
 target_link_libraries(${MODULE_NAME} ${PYTHON_LIBRARIES})
 include_directories (${PYTHON_INCLUDE_DIRS})
 
