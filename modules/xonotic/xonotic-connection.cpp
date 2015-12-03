@@ -354,6 +354,7 @@ void XonoticConnection::command ( network::Command cmd )
 void XonoticConnection::on_network_error(const std::string& message)
 {
     ErrorLog("xon","Network Error") << message;
+    close_connection();
     return;
 }
 
