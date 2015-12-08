@@ -12,14 +12,29 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-melanomodule(web        "Web stuff (HTTP and friends)"          ON)
+melanomodule(web "Web stuff (HTTP and friends)" ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
 add_library(${MODULE_NAME} ${SOURCES})
 
-# cURLpp
-find_package (cURLpp REQUIRED)
-target_link_libraries(${MODULE_NAME} ${cURLpp_LIBRARIES})
-include_directories (${cURLpp_INCLUDE_DIRS})
+# cpr
+# set(CPR_VERSION 1.2.0)
+include(ExternalProject)
+ExternalProject_Add(cpr
+    PREFIX lib
+    GIT_REPOSITORY https://github.com/whoshuu/cpr.git
+#    GIT_TAG ${CPR_VERSION}
+    GIT_SUBMODULES opt/mongoose
+    CMAKE_ARGS -DBUILD_CPR_TESTS=OFF -DUSE_SYSTEM_CURL=ON -DBUILD_CURL_TESTS=OFF
+    INSTALL_COMMAND ""
+)
+set(CPR_ROOT ${CMAKE_CURRENT_BINARY_DIR}/lib/src/cpr)
+include_directories(${CPR_ROOT}/include)
+target_link_libraries(${MODULE_NAME} ${CPR_ROOT}-build/lib/libcpr.a)
 
+
+# cURL
+find_package (cURL REQUIRED)
+target_link_libraries(${MODULE_NAME} ${cURL_LIBRARIES})
+include_directories (${cURL_INCLUDE_DIRS})

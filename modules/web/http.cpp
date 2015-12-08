@@ -22,10 +22,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
-#include <curlpp/Exception.hpp>
+#include <cpr/cpr.h>
+#include <cpr/util.h>
 
 #include "string/logger.hpp"
 #include "config.hpp"
@@ -35,31 +33,24 @@ namespace network {
 
 namespace http {
 
-std::string urlencode ( const std::string& text )
+std::string urlencode(const std::string& text)
 {
-    std::ostringstream ss;
-    ss << std::hex << std::uppercase;
-    for ( char c : text )
-    {
-        if ( std::isalnum(c) || c == '-' || c == '.' || c == '_' || c == '~' )
-            ss << c;
-        else
-            ss << '%' << std::setw(2) << std::setfill('0') << int(c);
-    }
-    return ss.str();
+    return cpr::util::urlEncode(text);
 }
 
-std::string build_query ( const Parameters& params )
+cpr::Parameters cpr_parameters(const Parameters& params)
 {
-    std::ostringstream ss;
-    auto last = params.end(); --last;
-    for ( auto it = params.begin(); it != params.end(); ++it )
+    cpr::Parameters parameters;
+    for ( const auto & param : params )
     {
-        ss << urlencode(it->first) << '=' << urlencode(it->second);
-        if ( it != last )
-            ss << '&';
+        parameters.AddParameter({param.first, param.second});
     }
-    return ss.str();
+    return parameters;
+}
+
+std::string build_query(const Parameters& params)
+{
+    return cpr_parameters(params).content;
 }
 
 Request get(const std::string& url, const Parameters& params)
@@ -98,56 +89,77 @@ void HttpService::initialize(const Settings& settings)
 {
     if ( user_agent.empty() )
         user_agent = PROJECT_NAME "/" PROJECT_VERSION " (" PROJECT_WEBSITE ") "
-                     "cURLpp/" LIBCURLPP_VERSION ;
+                     "cpr";
     user_agent = settings.get("user_agent", user_agent );
-    max_redirs = settings.get("redirects",max_redirs);
+    max_redirs = settings.get("redirects", max_redirs);
 }
 
 Response HttpService::query (const Request& request)
 {
-    try {
-        curlpp::Easy netrequest;
-        std::string url = request.resource;
+    std::string url = request.resource;
 
-        netrequest.setOpt(curlpp::options::UserAgent(user_agent));
-        if ( max_redirs )
-        {
-            netrequest.setOpt(curlpp::options::MaxRedirs(max_redirs));
-            netrequest.setOpt(curlpp::options::FollowLocation(true));
-        }
+    cpr::Session session;
+    cpr::Response response;
 
-        std::string parameters = request.parameters.empty() ? "" : request.parameters[0];
 
-        if ( request.command == "GET" )
-        {
-            url += parameters;
-        }
-        else if ( request.command == "POST" )
-        {
-            netrequest.setOpt(curlpp::options::PostFields(parameters));
-        }
-        else if ( request.command == "PUT" )
-        {
-            netrequest.setOpt(curlpp::options::PostFields(parameters));
-            netrequest.setOpt(curlpp::options::Put(true));
-        }
-        else if ( request.command == "HEAD" )
-        {
-            netrequest.setOpt(curlpp::options::NoBody(true));
-        }
-
-        netrequest.setOpt(curlpp::options::Url(url));
-
-        Log("web",'<') << request.command << ' ' << request.resource;
-        std::stringstream ss;
-        ss << netrequest;
-
-        return ok(ss.str(),request);
-
-    } catch (std::exception & e) {
-        ErrorLog("web") << "Error processing " << request.resource;
-        return error(e.what(),request);
+    session.SetUrl(cpr::Url(url));
+    session.SetHeader({
+        {"User-Agent", user_agent}
+    });
+    if ( max_redirs )
+    {
+        session.SetMaxRedirects(max_redirs);
+        session.SetRedirect(true);
     }
+    else
+    {
+        session.SetMaxRedirects(0);
+        session.SetRedirect(false);
+    }
+    /// TODO SetTimeout
+
+    if ( request.command == "GET" )
+    {
+        if ( !request.parameters.empty() )
+        {
+            session.SetUrl(cpr::Url(url+request.parameters[0]));
+        }
+        response = session.Get();
+    }
+    else if ( request.command == "POST" )
+    {
+        if ( !request.parameters.empty() )
+        {
+            cpr::Payload payload{};
+            payload.content = request.parameters[0];
+            session.SetPayload(payload);
+        }
+        response = session.Post();
+    }
+    else if ( request.command == "PUT" )
+    {
+        if ( !request.parameters.empty() )
+        {
+            cpr::Payload payload{};
+            payload.content = request.parameters[0];
+            session.SetPayload(payload);
+        }
+        response = session.Put();
+    }
+    else if ( request.command == "HEAD" )
+    {
+        response = session.Head();
+    }
+
+    Log("web",'<') << request.command << ' ' << request.resource;
+
+    if ( response.error )
+    {
+        ErrorLog("web") << "Error processing " << request.resource;
+        return error(response.error.message, request);
+    }
+
+    return ok(response.text, request);
 }
 
 } // namespace network::http
