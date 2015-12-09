@@ -44,7 +44,8 @@ Dependencies
     * program_options
     * property_tree
     * python (MODULE_SCRIPT)
-* [cURLpp](http://jpbarrette.github.io/curlpp/) (MODULE_WEB)
+* [cURL](http://curl.haxx.se/libcurl/) (MODULE_WEB)
+* [git](http://git-scm.com/) (MODULE_WEB, used to download external dependencies)
 * [OpenSSL](http://openssl.org/) (MODULE_XONOTIC)
 * [CPython API](https://www.python.org/) (MODULE_SCRIPT)
 
