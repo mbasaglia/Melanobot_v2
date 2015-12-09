@@ -30,6 +30,8 @@ if(Iconv_FOUND)
     add_definitions(-DHAS_ICONV)
 endif()
 
+target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS})
+
 if (MELANOMODULES)
     target_link_libraries(${EXECUTABLE_NAME} ${MELANOMODULES})
 endif()
