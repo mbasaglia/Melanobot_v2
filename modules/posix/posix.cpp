@@ -23,13 +23,16 @@
 /**
  * \brief POSIX module initialization
  */
-Melanomodule melanomodule_posix(const Settings&)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_posix_metadata()
 {
-    Melanomodule module{"posix","POSIX extensions"};
-    module.register_connection<posix::StdinConnection>("stdin");
-    module.register_handler<posix::MelanobotShAction>("MelanobotShAction");
-    module.register_handler<posix::MelanobotShRestart>("MelanobotShRestart");
-    module.register_handler<posix::MelanobotShQuit>("MelanobotShQuit");
-    module.register_log_type("std",color::white);
-    return module;
+    return {"posix","POSIX extensions"};
+}
+
+MELANOMODULE_ENTRY_POINT void melanomodule_posix_initialize(const Settings&)
+{
+    module::register_connection<posix::StdinConnection>("stdin");
+    module::register_handler<posix::MelanobotShAction>("MelanobotShAction");
+    module::register_handler<posix::MelanobotShRestart>("MelanobotShRestart");
+    module::register_handler<posix::MelanobotShQuit>("MelanobotShQuit");
+    module::register_log_type("std",color::white);
 }

@@ -27,37 +27,39 @@
 /**
  * \brief Initializes the IRC module
  */
-Melanomodule melanomodule_irc(const Settings&)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_irc_metadata()
 {
-    Melanomodule module{"irc","IRC integration"};
-    module.register_connection<irc::IrcConnection>("irc");
-    module.register_log_type("irc",color::dark_magenta);
-    module.register_formatter<irc::FormatterIrc>();
-    module.register_formatter<irc::FormatterIrcWhite>();
+    return {"irc","IRC integration"};
+}
 
-    module.register_handler<irc::handler::CtcpVersion>("CtcpVersion");
-    module.register_handler<irc::handler::CtcpSource>("CtcpSource");
-    module.register_handler<irc::handler::CtcpUserInfo>("CtcpUserInfo");
-    module.register_handler<irc::handler::CtcpPing>("CtcpPing");
-    module.register_handler<irc::handler::CtcpTime>("CtcpTime");
-    module.register_handler<irc::handler::CtcpClientInfo>("CtcpClientInfo");
-    module.register_handler<irc::handler::Ctcp>("Ctcp");
+MELANOMODULE_ENTRY_POINT void melanomodule_irc_initialize(const Settings&)
+{
+    module::register_connection<irc::IrcConnection>("irc");
+    module::register_log_type("irc",color::dark_magenta);
+    module::register_formatter<irc::FormatterIrc>();
+    module::register_formatter<irc::FormatterIrcWhite>();
 
-    module.register_handler<irc::handler::IrcKickRejoin>("IrcKickRejoin");
+    module::register_handler<irc::handler::CtcpVersion>("CtcpVersion");
+    module::register_handler<irc::handler::CtcpSource>("CtcpSource");
+    module::register_handler<irc::handler::CtcpUserInfo>("CtcpUserInfo");
+    module::register_handler<irc::handler::CtcpPing>("CtcpPing");
+    module::register_handler<irc::handler::CtcpTime>("CtcpTime");
+    module::register_handler<irc::handler::CtcpClientInfo>("CtcpClientInfo");
+    module::register_handler<irc::handler::Ctcp>("Ctcp");
 
-    module.register_handler<irc::handler::AdminNick>("Nick");
-    module.register_handler<irc::handler::AdminJoin>("Join");
-    module.register_handler<irc::handler::AdminPart>("Part");
-    module.register_handler<irc::handler::AcceptInvite>("AcceptInvite");
-    module.register_handler<irc::handler::AdminRaw>("Raw");
-    module.register_handler<irc::handler::ClearBuffer>("ClearBuffer");
+    module::register_handler<irc::handler::IrcKickRejoin>("IrcKickRejoin");
 
-    module.register_handler<irc::handler::Whois330>("Whois330");
-    module.register_handler<irc::handler::QSendWhois>("QSendWhois");
-    module.register_handler<irc::handler::QGetWhois>("QGetWhois");
-    module.register_handler<irc::handler::QWhois>("QWhois");
-    module.register_handler<irc::handler::WhoisCheckMe>("WhoisCheckMe");
-    module.register_handler<irc::handler::IrcIdentify>("IrcIdentify");
+    module::register_handler<irc::handler::AdminNick>("Nick");
+    module::register_handler<irc::handler::AdminJoin>("Join");
+    module::register_handler<irc::handler::AdminPart>("Part");
+    module::register_handler<irc::handler::AcceptInvite>("AcceptInvite");
+    module::register_handler<irc::handler::AdminRaw>("Raw");
+    module::register_handler<irc::handler::ClearBuffer>("ClearBuffer");
 
-    return module;
+    module::register_handler<irc::handler::Whois330>("Whois330");
+    module::register_handler<irc::handler::QSendWhois>("QSendWhois");
+    module::register_handler<irc::handler::QGetWhois>("QGetWhois");
+    module::register_handler<irc::handler::QWhois>("QWhois");
+    module::register_handler<irc::handler::WhoisCheckMe>("WhoisCheckMe");
+    module::register_handler<irc::handler::IrcIdentify>("IrcIdentify");
 }

@@ -16,4 +16,6 @@ melanomodule(lists "Manage ToDo Lists and similar" OFF)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
+add_library(${MODULE_NAME} MODULE ${SOURCES})
+
+target_link_libraries(${MODULE_NAME} melanomodule_core)

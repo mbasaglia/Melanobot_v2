@@ -20,8 +20,7 @@
 #include "string/logger.hpp"
 #include "settings.hpp"
 #include "network/async_service.hpp"
-#include "melanomodule.hpp"
-#include "melanomodules.hpp"
+#include "load_module.hpp"
 
 int main(int argc, char **argv)
 {
@@ -29,14 +28,19 @@ int main(int argc, char **argv)
     Logger::instance().register_direction('>',color::dark_yellow);
     Logger::instance().register_direction('!',color::dark_blue);
 
-    std::vector<Melanomodule> modules;
     string::Formatter::registry(); // ensures the default formatters get loaded
 
     try {
-        Settings settings = settings::initialize(argc,argv);
+        Settings settings = settings::initialize(argc, argv);
+        Logger::instance().load_settings(settings.get_child("log",{}));
 
-        MELANOMODULES_INIT
+        auto lib_path = settings::global_settings.get("path.library", "");
 
+        auto modules =
+            module::initialize_modules<const Settings&>({lib_path}, settings);
+
+        // Load log settings again to ensure log types defined by modules
+        // are handled correctly
         Logger::instance().load_settings(settings.get_child("log",{}));
 
         if ( !settings.empty() )

@@ -16,5 +16,5 @@ melanomodule(core       "Core module, should always be enabled" ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
+add_library(${MODULE_NAME} MODULE ${SOURCES})
 

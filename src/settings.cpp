@@ -49,13 +49,20 @@ Settings settings::initialize ( int argc, char** argv )
 
     // Find system paths
     boost::system::error_code err;
+
     // Executable name and path
     boost::filesystem::path path = argv[0];
     global_settings.put("executable", path.filename().empty() ?
         std::string(PROJECT_SHORTNAME) : path.filename().string() );
-    std::string exe_dir = boost::filesystem::canonical(path.parent_path(),err).string();
+    auto exe_dir = boost::filesystem::canonical(
+        boost::filesystem::system_complete(path).parent_path(), err);
     if ( !err )
-        global_settings.put("path.executable",exe_dir);
+    {
+        global_settings.put("path.executable", exe_dir.string());
+        global_settings.put("path.library", (exe_dir.parent_path()/"lib").string());
+    }
+
+
     // Home
     path = std::getenv("HOME");
     std::string home_dir = boost::filesystem::canonical(path,err).string();

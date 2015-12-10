@@ -16,4 +16,4 @@ melanomodule(posix      "Extra features for POSIX systems"      OFF)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
+add_library(${MODULE_NAME} MODULE ${SOURCES})

@@ -31,7 +31,3 @@ if(Iconv_FOUND)
 endif()
 
 target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS})
-
-if (MELANOMODULES)
-    target_link_libraries(${EXECUTABLE_NAME} ${MELANOMODULES})
-endif()

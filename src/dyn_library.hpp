@@ -39,12 +39,21 @@ enum LoadFlagsEnum
     ExportLocal = 0x0000, ///< Don't make symbols in the library available to other libraries
     DeepBind    = 0x0008, ///< Prefer library symbol definitions over clashing global symbols
     NoUnload    = 0x1000, ///< Don't unload the library when it's closed
+    LoadThrows  = 0x0010, ///< Loading a library throws an exception on error
 };
 
-struct SymbolNotFoundError : public std::runtime_error
+struct LibraryError : public std::runtime_error
+{
+    LibraryError(const std::string& message, std::string library_file)
+        : runtime_error(message), library_file(std::move(library_file)) {}
+
+    std::string library_file;
+};
+
+struct SymbolNotFoundError : LibraryError
 {
     SymbolNotFoundError(const std::string& symbol, const std::string& library)
-        : runtime_error(library + ": " + "could not resolve \"" + symbol + '\"')
+        : LibraryError("could not resolve \"" + symbol + '\"', library)
     {}
 };
 
@@ -54,17 +63,22 @@ struct SymbolNotFoundError : public std::runtime_error
 class Library
 {
 public:
-    static constexpr LoadFlags default_load_flags = LoadLazy|ExportLocal|DeepBind;
 
     /**
      * \brief Loads the given library
      */
-    explicit Library(const std::string& library_file, library::LoadFlags flags = default_load_flags);
+    explicit Library(const std::string& library_file, library::LoadFlags flags);
+
 
     /**
      * \brief Closes the library
      */
     ~Library();
+
+    /**
+     * \brief Closes and -re opens the library
+     */
+    void reload(library::LoadFlags flags) const;
 
     /**
      * \brief Name of the file this library has been loaded from

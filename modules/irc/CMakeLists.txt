@@ -12,9 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-melanomodule(irc        "Internet Relay Chat support"           ON)
+melanomodule(irc "Internet Relay Chat support" ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
+add_library(${MODULE_NAME} MODULE ${SOURCES})
 
+target_link_libraries(${MODULE_NAME} melanomodule_core)

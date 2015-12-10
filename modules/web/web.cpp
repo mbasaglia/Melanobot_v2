@@ -23,19 +23,21 @@
 /**
  * \brief Initializes the web module
  */
-Melanomodule melanomodule_web(const Settings&)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_web_metadata()
 {
-    Melanomodule module{"web","Web services"};
-    module.register_log_type("web",color::dark_blue);
-    module.register_service<network::http::HttpService>("web");
+    return {"web","Web services"};
+}
 
-    module.register_handler<web::SearchVideoYoutube>("SearchVideoYoutube");
-    module.register_handler<web::SearchImageGoogle>("SearchImageGoogle");
-    module.register_handler<web::UrbanDictionary>("UrbanDictionary");
-    module.register_handler<web::SearchWebSearx>("SearchWebSearx");
-    module.register_handler<web::VideoInfo>("VideoInfo");
-    module.register_handler<web::MediaWiki>("MediaWiki");
-    module.register_handler<web::MediaWikiTitles>("MediaWikiTitles");
+MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
+{
+    module::register_log_type("web",color::dark_blue);
+    module::register_service<network::http::HttpService>("web");
 
-    return module;
+    module::register_handler<web::SearchVideoYoutube>("SearchVideoYoutube");
+    module::register_handler<web::SearchImageGoogle>("SearchImageGoogle");
+    module::register_handler<web::UrbanDictionary>("UrbanDictionary");
+    module::register_handler<web::SearchWebSearx>("SearchWebSearx");
+    module::register_handler<web::VideoInfo>("VideoInfo");
+    module::register_handler<web::MediaWiki>("MediaWiki");
+    module::register_handler<web::MediaWikiTitles>("MediaWikiTitles");
 }

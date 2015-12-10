@@ -24,17 +24,18 @@
 /**
  * \brief Initializes the lists module
  */
-Melanomodule melanomodule_lists(const Settings&)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_lists_metadata()
 {
-    Melanomodule module{"lists","Manage ToDo Lists and similar"};
+    return {"lists", "Manage ToDo Lists and similar"};
+}
 
-    module.register_handler<lists::FixedList>("FixedList");
-    module.register_handler<lists::DynamicReply>("DynamicReply");
-    module.register_handler<lists::DynamicReplyManager>("DynamicReplyManager");
+MELANOMODULE_ENTRY_POINT void melanomodule_lists_initialize(const Settings&)
+{
+    module::register_handler<lists::FixedList>("FixedList");
+    module::register_handler<lists::DynamicReply>("DynamicReply");
+    module::register_handler<lists::DynamicReplyManager>("DynamicReplyManager");
 
-    module.register_handler<lists::InventoryManager>("InventoryManager");
-    module.register_handler<lists::InventoryPut>("InventoryPut");
-    module.register_handler<lists::InventoryTake>("InventoryTake");
-
-    return module;
+    module::register_handler<lists::InventoryManager>("InventoryManager");
+    module::register_handler<lists::InventoryPut>("InventoryPut");
+    module::register_handler<lists::InventoryTake>("InventoryTake");
 }

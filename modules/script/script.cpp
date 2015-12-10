@@ -24,13 +24,15 @@
  * \brief Scripting module initialization
  * \todo Have the Python version available somewhere
  */
-Melanomodule melanomodule_script(const Settings&)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_script_metadata()
 {
-    Melanomodule module{"script","Scripting interface"};
-    module.register_log_type("py",color::dark_yellow);
+    return {"script", "Scripting interface"};
+}
 
-    module.register_handler<python::SimpleScript>("SimpleScript");
-    module.register_handler<python::StructuredScript>("StructuredScript");
+MELANOMODULE_ENTRY_POINT void melanomodule_script_initialize(const Settings&)
+{
+    module::register_log_type("py",color::dark_yellow);
 
-    return module;
+    module::register_handler<python::SimpleScript>("SimpleScript");
+    module::register_handler<python::StructuredScript>("StructuredScript");
 }

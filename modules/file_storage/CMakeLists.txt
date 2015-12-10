@@ -16,4 +16,4 @@ melanomodule(file_storage "Plain file-based storage" OFF)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
+add_library(${MODULE_NAME} MODULE ${SOURCES})

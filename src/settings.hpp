@@ -170,5 +170,4 @@ using Properties = std::unordered_map<std::string,std::string>;
  */
 PropertyTree properties_to_tree(const Properties& properties);
 
-
 #endif // SETTINGS_HPP

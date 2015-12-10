@@ -81,18 +81,12 @@ include_directories("${CMAKE_BINARY_DIR}/src")
 
 #Melano modules
 set_property(GLOBAL PROPERTY MELANOMODULES "")
-set_property(GLOBAL PROPERTY MELANOMODULES_INIT "")
-set_property(GLOBAL PROPERTY MELANOMODULES_DECLARE "")
 macro(melanomodule name description default)
     string(TOUPPER "MODULE_${name}" OPTION_NAME)
     option (${OPTION_NAME} ${description} ${default})
     set(MODULE_NAME "melanomodule_${name}")
     if (${${OPTION_NAME}})
         set_property(GLOBAL APPEND PROPERTY MELANOMODULES ${MODULE_NAME})
-        set_property(GLOBAL APPEND_STRING PROPERTY MELANOMODULES_DECLARE "
-Melanomodule ${MODULE_NAME}(const Settings&);")
-        set_property(GLOBAL APPEND_STRING PROPERTY MELANOMODULES_INIT "\\
-    modules.push_back(${MODULE_NAME}(settings));")
         message(STATUS "Enabled module ${name}: ${description}")
     endif()
 endmacro()
@@ -100,16 +94,11 @@ endmacro()
 add_subdirectory(modules lib)
 
 get_property(MELANOMODULES GLOBAL PROPERTY MELANOMODULES)
-get_property(MELANOMODULES_INIT GLOBAL PROPERTY MELANOMODULES_INIT)
-get_property(MELANOMODULES_DECLARE GLOBAL PROPERTY MELANOMODULES_DECLARE)
 if (NOT MELANOMODULES)
     message(STATUS "No modules enabled")
 else()
     message(STATUS "Loaded Modules: ${MELANOMODULES}")
 endif()
-
-set(MELANOMODULE_HEADER "${PROJECT_BINARY_DIR}/src/melanomodules.hpp")
-configure_file ("${PROJECT_SOURCE_DIR}/src/melanomodules.hpp.in" ${MELANOMODULE_HEADER})
 
 # Binary
 add_subdirectory(src bin)

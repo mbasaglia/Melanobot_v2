@@ -37,21 +37,45 @@ public:
     {
         error_string = dlerror();
     }
+
+    void close()
+    {
+        dlclose(handle);
+    }
+
+    void open(LoadFlags flags)
+    {
+        bool throws = flags & LoadThrows;
+        flags &= ~LoadThrows;
+        handle = dlopen(filename.c_str(), flags);
+        if ( !handle )
+        {
+            gather_error();
+            if ( throws )
+                throw LibraryError(filename, error_string);
+        }
+    }
+
+    void* resolve(const std::string& symbol)
+    {
+        auto ret = dlsym(handle, symbol.c_str());
+        if ( !ret )
+            gather_error();
+        return ret;
+    }
 };
 
 Library::Library(const std::string& library_file, LoadFlags flags)
     : p(std::make_shared<Private>())
 {
     p->filename = library_file;
-    p->handle = dlopen(library_file.c_str(), flags);
-    if ( !p->handle )
-        p->gather_error();
+    p->open(flags);
 }
 
 Library::~Library()
 {
-    if ( p.unique() && p->handle )
-        dlclose(p->handle);
+    if ( p.unique() )
+        p->close();
 }
 
 bool Library::error() const
@@ -71,10 +95,14 @@ std::string Library::filename() const
 
 void* Library::resolve_raw(const std::string& name) const
 {
-    auto ret = dlsym(p->handle, name.c_str());
-    if ( !ret )
-        p->gather_error();
-    return ret;
+    return p->resolve(name);
+}
+
+
+void Library::reload(library::LoadFlags flags) const
+{
+    p->close();
+    p->open(flags);
 }
 
 } // namespace library

@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 include_directories("${CMAKE_SOURCE_DIR}/modules")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+link_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB SUBDIRS RELATIVE "${CMAKE_SOURCE_DIR}/modules" ${CMAKE_SOURCE_DIR}/modules/*)
 foreach(subdir ${SUBDIRS})
@@ -21,3 +23,5 @@ foreach(subdir ${SUBDIRS})
         add_subdirectory(${subdir})
     endif()
 endforeach()
+
+target_link_libraries(${MODULE_NAME} melanomodule_core)

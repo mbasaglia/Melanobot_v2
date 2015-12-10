@@ -22,20 +22,22 @@
 /**
  * \brief Registers the fun handlers
  */
-Melanomodule melanomodule_fun(const Settings&)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_fun_metadata()
 {
-    Melanomodule module{"fun","Fun handlers"};
-    module.register_handler<fun::AnswerQuestions>("AnswerQuestions");
-    module.register_handler<fun::ChuckNorris>("ChuckNorris");
-    module.register_handler<fun::ReverseText>("ReverseText");
-    module.register_handler<fun::Morse>("Morse");
-    module.register_handler<fun::RainbowBridgeChat>("RainbowBridgeChat");
-    module.register_handler<fun::Slap>("Slap");
-    module.register_handler<fun::Discord>("Discord");
+    return {"fun", "Fun handlers", 0, {{"web"}, {"core"}}};
+}
 
+MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
+{
+    module::register_handler<fun::AnswerQuestions>("AnswerQuestions");
+    module::register_handler<fun::ChuckNorris>("ChuckNorris");
+    module::register_handler<fun::ReverseText>("ReverseText");
+    module::register_handler<fun::Morse>("Morse");
+    module::register_handler<fun::RainbowBridgeChat>("RainbowBridgeChat");
+    module::register_handler<fun::Slap>("Slap");
+    module::register_handler<fun::Discord>("Discord");
 
-    module.register_handler<fun::RenderPony>("RenderPony");
-    module.register_handler<fun::PonyCountDown>("PonyCountDown");
-    module.register_handler<fun::PonyFace>("PonyFace");
-    return module;
+    module::register_handler<fun::RenderPony>("RenderPony");
+    module::register_handler<fun::PonyCountDown>("PonyCountDown");
+    module::register_handler<fun::PonyFace>("PonyFace");
 }

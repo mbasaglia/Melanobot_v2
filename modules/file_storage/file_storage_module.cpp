@@ -23,14 +23,15 @@
 /**
  * \brief Initializes the file storage module
  */
-Melanomodule melanomodule_file_storage(const Settings& settings)
+MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_file_storage_metadata()
 {
-    Melanomodule module{"file_storage","Plain file-based storage"};
+    return {"file_storage","Plain file-based storage"};
+}
 
+MELANOMODULE_ENTRY_POINT void melanomodule_file_storage_initialize(const Settings& settings)
+{
     storage::set_storage(std::make_unique<storage::file::Storage>(
         settings.get_child("storage",{})
     ));
-
-    return module;
 }
 

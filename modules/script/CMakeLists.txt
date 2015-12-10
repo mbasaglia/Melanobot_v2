@@ -16,7 +16,7 @@ melanomodule(script "Scripting interface" ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
+add_library(${MODULE_NAME} MODULE ${SOURCES})
 
 # Boost
 find_package (Boost COMPONENTS python REQUIRED)

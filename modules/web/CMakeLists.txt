@@ -16,23 +16,30 @@ melanomodule(web "Web stuff (HTTP and friends)" ON)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${MODULE_NAME} ${SOURCES})
 
 # cpr
 # set(CPR_VERSION 1.2.0)
 include(ExternalProject)
-ExternalProject_Add(cpr
+ExternalProject_Add(cpr_sources
     PREFIX lib
     GIT_REPOSITORY https://github.com/whoshuu/cpr.git
 #    GIT_TAG ${CPR_VERSION}
     GIT_SUBMODULES opt/mongoose
-    CMAKE_ARGS -DBUILD_CPR_TESTS=OFF -DUSE_SYSTEM_CURL=ON -DBUILD_CURL_TESTS=OFF
+    CMAKE_ARGS -DBUILD_CPR_TESTS=OFF -DUSE_SYSTEM_CURL=ON -DBUILD_CURL_TESTS=OFF -DCMAKE_CXX_FLAGS=-fPIC
     INSTALL_COMMAND ""
 )
-set(CPR_ROOT ${CMAKE_CURRENT_BINARY_DIR}/lib/src/cpr)
+set(CPR_ROOT ${CMAKE_CURRENT_BINARY_DIR}/lib/src/cpr_sources)
 include_directories(${CPR_ROOT}/include)
-target_link_libraries(${MODULE_NAME} ${CPR_ROOT}-build/lib/libcpr.a)
+link_directories(${CPR_ROOT}-build/lib)
 
+
+add_library(${MODULE_NAME} MODULE ${SOURCES})
+
+
+# cpr [cont]
+# target_link_libraries(${MODULE_NAME} cpr)
+target_link_libraries(${MODULE_NAME} ${CPR_ROOT}-build/lib/libcpr.a)
+add_dependencies(${MODULE_NAME} cpr_sources)
 
 # cURL
 find_package (cURL REQUIRED)
