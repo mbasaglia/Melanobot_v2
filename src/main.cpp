@@ -36,8 +36,10 @@ int main(int argc, char **argv)
 
         auto lib_path = settings::global_settings.get("path.library", "");
 
-        auto modules =
-            module::initialize_modules<const Settings&>({lib_path}, settings);
+        auto modules = module::initialize_modules<const Settings&>(
+            string::char_split(lib_path, ':'),
+            settings
+        );
 
         // Load log settings again to ensure log types defined by modules
         // are handled correctly

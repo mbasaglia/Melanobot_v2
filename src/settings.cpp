@@ -59,9 +59,18 @@ Settings settings::initialize ( int argc, char** argv )
     if ( !err )
     {
         global_settings.put("path.executable", exe_dir.string());
-        global_settings.put("path.library", (exe_dir.parent_path()/"lib").string());
     }
 
+    // Library paths
+    std::vector<std::string> library_path;
+    boost::filesystem::path dir("/lib/melanobot");
+    library_path.push_back("/usr"+dir.string());
+    library_path.push_back("/usr/local"+dir.string());
+    if ( !err )
+    {
+        library_path.push_back((exe_dir.parent_path()/dir).string());
+    }
+    global_settings.put("path.library", string::implode(":", library_path));
 
     // Home
     path = std::getenv("HOME");

@@ -34,10 +34,11 @@ void gather_metadata(const std::string& search_path,
     static std::regex regex(R"re(lib(melanomodule_[-_.a-zA-Z0-9]+).so)re",
                             std::regex::optimize|std::regex::extended);
 
-    boost::filesystem::path path(search_path);
+    if ( !boost::filesystem::exists(search_path) )
+        return;
 
     using diriter = boost::filesystem::directory_iterator;
-    boost::iterator_range<diriter> range{diriter(path), diriter{}};
+    boost::iterator_range<diriter> range{diriter(search_path), diriter{}};
 
     for ( const auto& entry : range )
     {
