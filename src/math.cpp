@@ -22,7 +22,7 @@
 
 namespace math {
 
-static std::random_device random_device;  ///< PRNG device
+thread_local static std::random_device random_device;  ///< PRNG device
 
 long random()
 {
@@ -41,7 +41,7 @@ long random(long min, long max)
 
 double random_real()
 {
-    static std::uniform_real_distribution<double> dist;
+    thread_local static std::uniform_real_distribution<double> dist;
     return dist(random_device);
 }
 
