@@ -18,6 +18,7 @@
  */
 #ifndef USER_COUNTER_HPP
 #define USER_COUNTER_HPP
+
 namespace user {
 
 /**
@@ -35,4 +36,5 @@ struct UserCounter
 };
 
 } // namespace user
+
 #endif // USER_COUNTER_HPP

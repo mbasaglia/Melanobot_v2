@@ -21,8 +21,8 @@
 
 #include <sstream>
 
-#include "string/string_functions.hpp"
-#include "time/time.hpp"
+#include "melanolib/string/stringutils.hpp"
+#include "melanolib/time/time.hpp"
 
 namespace network {
 
@@ -48,7 +48,7 @@ struct Server
         auto p = server.find(':');
         host = server.substr(0,p);
         if ( p != std::string::npos && p < server.size()-1 && std::isdigit(server[p+1]) )
-            port = string::to_uint(server.substr(p+1));
+            port = melanolib::string::to_uint(server.substr(p+1));
     }
 
     /**

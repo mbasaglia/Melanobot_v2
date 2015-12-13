@@ -18,7 +18,7 @@
  */
 #include "formatter.hpp"
 
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 
 namespace xonotic {
 
@@ -29,7 +29,7 @@ std::string Formatter::ascii(char c) const
 }
 std::string Formatter::ascii(const std::string& input) const
 {
-    return string::replace(input,"^","^^");
+    return melanolib::string::replace(input,"^","^^");
 }
 std::string Formatter::color(const color::Color12& color) const
 {

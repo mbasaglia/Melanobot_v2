@@ -18,8 +18,8 @@
  */
 #include "language.hpp"
 
+namespace melanolib {
 namespace string {
-
 
 Inflector::Inflector(const std::initializer_list<std::pair<std::string,std::string>>& rules, bool whole_words )
 {
@@ -140,5 +140,5 @@ Inflector English::infl_plural = {
 };
 
 
-
 } // namespace string
+} // namespace melanolib

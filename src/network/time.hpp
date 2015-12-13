@@ -18,8 +18,11 @@
  */
 #ifndef NETWORK_TIME_HPP
 #define NETWORK_TIME_HPP
-#include "time/time.hpp"
+
+#include "melanolib/time/time.hpp"
+
 namespace network {
+
     /**
      * \brief A reliable clock
      */
@@ -35,6 +38,8 @@ namespace network {
     /**
      * \brief Timer using network::Clock
      */
-    using Timer = timer::basic_timer<Clock>;
+    using Timer = melanolib::time::basic_timer<Clock>;
+
 } // namespace network
+
 #endif // NETWORK_TIME_HPP

@@ -70,7 +70,7 @@ protected:
     {
         std::vector<std::string> channels;
         if ( !msg.message.empty() )
-            channels = string::comma_split(msg.message);
+            channels = melanolib::string::comma_split(msg.message);
         else if ( !msg.channels.empty() )
             channels = msg.channels;
         else

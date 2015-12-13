@@ -21,7 +21,7 @@
 
 #include "core/handler/group.hpp"
 #include "storage.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/time/time_string.hpp"
 
 /**
  * \brief Namespace for handlers managing lists
@@ -91,7 +91,7 @@ public:
         list_id = "lists."+settings.get("list","dynamic_reply");
 
         std::string separator = settings.get("separator","->");
-        regex_reply = std::regex("(.+)\\s+"+string::regex_escape(separator)+"(\\s+(.+))?",
+        regex_reply = std::regex("(.+)\\s+"+melanolib::string::regex_escape(separator)+"(\\s+(.+))?",
                                  std::regex::ECMAScript|std::regex::optimize);
 
         help = "Adds a dynamic reply";
@@ -115,7 +115,7 @@ protected:
                 reply_to(msg, "Removed the given reply");
             }
             storage::storage().put(list_id+".last_updated",
-                                   timer::format_char(timer::DateTime(),'c'));
+                                   melanolib::time::format_char(melanolib::time::DateTime(),'c'));
         }
         else
         {

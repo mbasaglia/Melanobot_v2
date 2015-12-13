@@ -24,7 +24,7 @@
 
 #include <openssl/hmac.h>
 
-#include "math.hpp"
+#include "melanolib/math.hpp"
 
 namespace xonotic {
 
@@ -71,7 +71,7 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
         ConnectionDetails::Secure(settings.get("rcon_secure",0))
     );
 
-    return New<XonoticConnection>(details, settings, name);
+    return melanolib::New<XonoticConnection>(details, settings, name);
 }
 
 XonoticConnection::XonoticConnection ( const ConnectionDetails& server,
@@ -115,7 +115,7 @@ XonoticConnection::XonoticConnection ( const ConnectionDetails& server,
     add_polling_command({"rcon",{"status 1"},1024},true);
     add_polling_command({"rcon",{"log_dest_udp"},1024},true);
     status_polling = network::Timer{[this]{request_status();},
-        timer::seconds(settings.get("status_delay",60))};
+        melanolib::time::seconds(settings.get("status_delay",60))};
 }
 
 void XonoticConnection::connect()
@@ -299,12 +299,12 @@ void XonoticConnection::say ( const network::OutputMessage& message )
         //{"message_quoted",      quote_string(contents)},
     };
 
-    auto expl = string::regex_split(
+    auto expl = melanolib::string::regex_split(
         message.action ? cmd_say_action :
             ( message.from.empty() ? cmd_say : cmd_say_as ),
         ";\\s*");
     for ( const auto & cmd : expl )
-        command({"rcon", { string::replace(cmd,message_properties,"%")},
+        command({"rcon", { melanolib::string::replace(cmd,message_properties,"%")},
                 message.priority, message.timeout});
 }
 
@@ -334,7 +334,7 @@ void XonoticConnection::command ( network::Command cmd )
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
 
-        std::string command = string::implode(" ",cmd.parameters);
+        std::string command = melanolib::string::implode(" ",cmd.parameters);
         if ( command.empty() )
         {
             ErrorLog("xon") << "Empty rcon command";
@@ -531,7 +531,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             else if ( std::regex_match(msg.raw,match,regex_mutators) )
             {
                 Lock lock(mutex);
-                properties_.put("match.mutators", string::replace(match[1],":",", "));
+                properties_.put("match.mutators", melanolib::string::replace(match[1],":",", "));
             }
         }
         // status reply

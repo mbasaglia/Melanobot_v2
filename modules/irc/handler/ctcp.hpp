@@ -24,7 +24,7 @@
 #include "core/handler/group.hpp"
 #include "config.hpp"
 #include "irc/network/functions.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/time/time_string.hpp"
 #include "melanobot.hpp"
 
 namespace irc {
@@ -210,7 +210,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,timer::format(format));
+        reply_to(msg,melanolib::time::format(format));
         return true;
     }
 
@@ -258,7 +258,7 @@ protected:
                     ctcp.push_back(p.first);
                 std::sort(ctcp.begin(),ctcp.end());
 
-                reply_to(msg,string::implode(" ",ctcp));
+                reply_to(msg, melanolib::string::implode(" ", ctcp));
             }
         }
 

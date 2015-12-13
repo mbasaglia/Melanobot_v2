@@ -49,7 +49,7 @@ protected:
     {
         msg.destination->command({"JOIN",msg.channels,priority});
         if ( !message.empty() )
-            reply_to(msg,string::replace(message,{
+            reply_to(msg, melanolib::string::replace(message,{
                 {"channel", msg.channels[0]},
                 {"kicker", msg.from.name},
                 {"message", msg.params.size() > 1 ? msg.params.back() : "" }

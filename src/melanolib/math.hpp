@@ -16,10 +16,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MATH_HPP
-#define MATH_HPP
+#ifndef MELANOLIB_MATH_HPP
+#define MELANOLIB_MATH_HPP
 
 #include <algorithm>
+
+namespace melanolib {
 
 /**
  * \brief Namespace for math utilities
@@ -92,4 +94,6 @@ template<class Argument, class Arg2=Argument>
     }
 
 } // namespace math
-#endif // MATH_HPP
+} // namespace melanolib
+
+#endif // MELANOLIB_MATH_HPP

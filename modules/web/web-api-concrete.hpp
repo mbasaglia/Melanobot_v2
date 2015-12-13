@@ -22,7 +22,7 @@
 #define WEB_API_CONCRETE
 
 #include "web-api.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/time/time_string.hpp"
 
 namespace web {
 
@@ -76,7 +76,7 @@ protected:
             {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
             {"description",f8.decode(parsed.get("items.0.snippet.description","")).encode(fmt)},
         };
-        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(reply,prop,"%")));
     }
 
 private:
@@ -147,8 +147,8 @@ protected:
             {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
             {"description",f8.decode(parsed.get("items.0.snippet.description","")).encode(fmt)},
             {"duration",
-                timer::duration_string_short(
-                    timer::parse_duration(
+                melanolib::time::duration_string_short(
+                    melanolib::time::parse_duration(
                         parsed.get("items.0.contentDetails.duration","")
                 ))}
         });
@@ -167,8 +167,8 @@ protected:
             {"channelTitle",f8.decode(parsed.get("0.user_name","")).encode(fmt)},
             {"description",f8.decode(parsed.get("0.description","")).encode(fmt)},
             {"duration",
-                timer::duration_string_short(
-                    timer::seconds(
+                melanolib::time::duration_string_short(
+                    melanolib::time::seconds(
                         parsed.get("0.duration",0)
                 ))}
         });
@@ -189,8 +189,8 @@ protected:
             {"channelTitle",f8.decode(parsed.get("cannel","")).encode(fmt)},
             {"description",f8.decode(parsed.get("description","")).encode(fmt)},
             {"duration",
-                timer::duration_string_short(
-                    timer::seconds(
+                melanolib::time::duration_string_short(
+                    melanolib::time::seconds(
                         parsed.get("duration",0)
                 ))}
         });
@@ -210,8 +210,8 @@ protected:
             {"title",f8.decode(parsed.get("video.title","")).encode(fmt)},
             {"channelTitle",f8.decode(parsed.get("user.username","")).encode(fmt)},
             {"description",f8.decode(parsed.get("video.description","")).encode(fmt)},
-            {"duration",timer::duration_string_short(
-                timer::seconds(int(parsed.get("video.duration",0.0)))
+            {"duration",melanolib::time::duration_string_short(
+                melanolib::time::seconds(int(parsed.get("video.duration",0.0)))
             )}
         });
     }
@@ -223,12 +223,12 @@ protected:
     {
         string::FormatterConfig fmt;
         properties.insert({
-            {"channel",string::implode(", ",msg.channels)},
+            {"channel", melanolib::string::implode(", ",msg.channels)},
             {"name", msg.source->encode_to(msg.from.name,fmt)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id},
         });
-        reply_to(msg,fmt.decode(string::replace(reply,properties,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(reply,properties,"%")));
     }
 
 private:
@@ -294,7 +294,7 @@ protected:
     {
         std::string result = parsed.get("responseData.results.0.unescapedUrl","");
         if ( result.empty() )
-            result = string::replace(not_found_reply,{
+            result = melanolib::string::replace(not_found_reply,{
                 {"search", msg.message},
                 {"user", msg.from.name}
             }, "%");
@@ -332,12 +332,15 @@ protected:
         std::string result = parsed.get("list.0.definition","");
 
         if ( result.empty() )
-            result = string::replace(not_found_reply,{
+            result = melanolib::string::replace(not_found_reply,{
                 {"search", msg.message},
                 {"user", msg.from.name}
             }, "%");
         else
-            result = string::elide( string::collapse_spaces(result), 400 );
+            result = melanolib::string::elide(
+                melanolib::string::collapse_spaces(result),
+                400
+            );
 
         reply_to(msg,result);
     }
@@ -380,12 +383,12 @@ protected:
             reply_to(msg,title);
 
             std::string result = parsed.get("results.0.content","");
-            result = string::elide( string::collapse_spaces(result), 400 );
+            result = melanolib::string::elide( melanolib::string::collapse_spaces(result), 400 );
             reply_to(msg,result);
         }
         else
         {
-            std::string result = string::replace(not_found_reply,{
+            std::string result = melanolib::string::replace(not_found_reply,{
                 {"search", msg.message},
                 {"user", msg.from.name}
             }, "%");
@@ -439,14 +442,14 @@ protected:
 
         if ( !result )
         {
-            reply_to(msg,fmt.decode(string::replace(not_found_reply,prop,"%")));
+            reply_to(msg,fmt.decode(melanolib::string::replace(not_found_reply,prop,"%")));
             return;
         }
         prop["title"] = result->get("title","");
         /// \todo Transform snippet to plaintext
         prop["snippet"] = result->get("snippet","");
 
-        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(reply,prop,"%")));
     }
 
 protected:
@@ -503,7 +506,7 @@ protected:
 
         if ( !result || !settings::has_child(*result,"revisions.0.*") )
         {
-            reply_to(msg,fmt.decode(string::replace(not_found_reply,prop,"%")));
+            reply_to(msg,fmt.decode(melanolib::string::replace(not_found_reply,prop,"%")));
             return;
         }
 
@@ -511,7 +514,7 @@ protected:
         /// \todo Transform snippet to plaintext
         prop["snippet"] = result->get("revisions.0.*","");
 
-        reply_to(msg,fmt.decode(string::replace(reply,prop,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(reply,prop,"%")));
     }
 };
 

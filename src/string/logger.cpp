@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "logger.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/time/time_string.hpp"
 
 void Logger::log (const std::string& type, char direction,
     const string::FormattedString& message, int verbosity)
@@ -33,7 +33,7 @@ void Logger::log (const std::string& type, char direction,
     if ( !timestamp.empty() )
     {
         log_destination <<  formatter->color(color::yellow) <<
-            timer::format(timestamp) << formatter->clear();
+            melanolib::time::format(timestamp) << formatter->clear();
     }
 
     if ( type_it != log_types.end() )

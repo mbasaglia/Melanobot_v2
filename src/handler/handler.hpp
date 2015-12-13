@@ -28,7 +28,7 @@
 #include "network/connection.hpp"
 #include "settings.hpp"
 #include "string/logger.hpp"
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 #include "message/message_consumer.hpp"
 
 /**
@@ -218,7 +218,7 @@ public:
     {
         load_settings(settings);
         pattern = std::regex(
-            string::regex_escape(trigger)+"(?:$|\\s+|\\b\\s*)",
+            melanolib::string::regex_escape(trigger)+"(?:$|\\s+|\\b\\s*)",
             std::regex::ECMAScript|std::regex::optimize
         );
     }

@@ -57,12 +57,12 @@ void HandlerFactory::build_template(
     Settings source = Melanobot::instance().get_template(*type);
     Properties arguments;
     for ( const auto& ch : source )
-        if ( string::starts_with(ch.first,"@") )
+        if ( melanolib::string::starts_with(ch.first,"@") )
         {
             arguments[ch.first] = settings.get(ch.first.substr(1),ch.second.data());
         }
     ::settings::recurse(source,[arguments](Settings& node){
-        node.data() = string::replace(node.data(),arguments);
+        node.data() = melanolib::string::replace(node.data(),arguments);
     });
     /// \todo recursion check
     build(handler_name,source,parent);

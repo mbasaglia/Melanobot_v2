@@ -21,7 +21,6 @@
 
 namespace string {
 
-
 Formatter::Registry::Registry()
 {
     add_formatter(default_formatter = new FormatterUtf8);

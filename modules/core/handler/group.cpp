@@ -88,7 +88,8 @@ Group::Group(const Settings& settings, MessageConsumer* parent)
     Settings default_settings;
     for ( const auto& p : settings )
         if ( !p.second.data().empty() &&
-                !string::is_one_of(p.first,{"trigger","auth","name","type","prefix"}) )
+                !melanolib::string::is_one_of(p.first,
+                    {"trigger","auth","name","type","prefix"}) )
         {
             default_settings.put(p.first,p.second.data());
         }
@@ -148,13 +149,13 @@ protected:
         std::vector<std::string> ok;
         std::vector<std::string> ko;
 
-        for ( const auto& s : string::comma_split(msg.message) )
+        for ( const auto& s : melanolib::string::comma_split(msg.message) )
             ( parent->add(s) ? ok : ko ).push_back(s);
 
         if ( !ok.empty() )
             reply_to(msg,string::FormattedString() <<
                 "Added to "+parent->get_property("list_name")
-                +": " << color::green << string::implode(" ",ok));
+                +": " << color::green << melanolib::string::implode(" ",ok));
         else if ( ko.empty() )
             reply_to(msg,"No items were added to "
                 +parent->get_property("list_name"));
@@ -163,7 +164,7 @@ protected:
             reply_to(msg,string::FormattedString() <<
                 string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
                 " added to "+parent->get_property("list_name")
-                    +": " << color::dark_yellow << string::implode(" ",ko));
+                    +": " << color::dark_yellow << melanolib::string::implode(" ",ko));
 
         return true;
     }
@@ -194,13 +195,13 @@ protected:
         std::vector<std::string> ok;
         std::vector<std::string> ko;
 
-        for ( const auto& s : string::comma_split(msg.message) )
+        for ( const auto& s : melanolib::string::comma_split(msg.message) )
             ( parent->remove(s) ? ok : ko ).push_back(s);
 
         if ( !ok.empty() )
             reply_to(msg,string::FormattedString() <<
                 "Removed from "+parent->get_property("list_name")
-                +": " << color::red << string::implode(" ",ok));
+                +": " << color::red << melanolib::string::implode(" ",ok));
         else if ( ko.empty() )
             reply_to(msg,"No items were removed from "
                 +parent->get_property("list_name"));
@@ -209,7 +210,7 @@ protected:
             reply_to(msg,string::FormattedString() <<
                 string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
                 " removed from "+parent->get_property("list_name")
-                    +": " << color::dark_yellow << string::implode(" ",ko));
+                    +": " << color::dark_yellow << melanolib::string::implode(" ",ko));
 
         return true;
     }
@@ -267,9 +268,10 @@ protected:
     {
         auto elem = parent->elements();
         if ( elem.empty() )
-            reply_to(msg,parent->get_property("list_name")+" is empty");
+            reply_to(msg, parent->get_property("list_name")+" is empty");
         else
-            reply_to(msg,parent->get_property("list_name")+": "+string::implode(" ",elem));
+            reply_to(msg, parent->get_property("list_name")+": "+
+                            melanolib::string::implode(" ",elem));
 
         return true;
     }
@@ -295,13 +297,13 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         }
     }
 
-    add_handler(New<ListInsert>(child_settings,this));
-    add_handler(New<ListRemove>(child_settings,this));
+    add_handler(melanolib::New<ListInsert>(child_settings,this));
+    add_handler(melanolib::New<ListRemove>(child_settings,this));
 
     if ( clear )
-        add_handler(New<ListClear>(child_settings,this));
+        add_handler(melanolib::New<ListClear>(child_settings,this));
 
-    add_handler(New<ListShow>(child_settings,this));
+    add_handler(melanolib::New<ListShow>(child_settings,this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)
@@ -320,7 +322,8 @@ Multi::Multi(const Settings& settings, MessageConsumer* parent)
     // Copy relevant defaults to show the children
     Settings default_settings;
     for ( const auto& p : settings )
-        if ( !p.second.data().empty() && !string::is_one_of(p.first,{"trigger","type"}) )
+        if ( !p.second.data().empty() &&
+            !melanolib::string::is_one_of(p.first,{"trigger","type"}) )
         {
             default_settings.put(p.first,p.second.data());
         }
@@ -386,7 +389,7 @@ IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
     std::string key = settings.get("key","");
 
     bool active = false;
-    Optional<std::string> message;
+    melanolib::Optional<std::string> message;
 
     if ( !key.empty() )
     {

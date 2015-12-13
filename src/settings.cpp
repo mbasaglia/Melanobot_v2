@@ -70,7 +70,7 @@ Settings settings::initialize ( int argc, char** argv )
     {
         library_path.push_back((exe_dir.parent_path()/dir).string());
     }
-    global_settings.put("path.library", string::implode(":", library_path));
+    global_settings.put("path.library", melanolib::string::implode(":", library_path));
 
     // Home
     path = std::getenv("HOME");
@@ -148,7 +148,7 @@ Settings settings::initialize ( int argc, char** argv )
     {
         if ( opt.unregistered && !opt.value.empty() )
         {
-            if ( string::starts_with(opt.string_key,"settings.") )
+            if ( melanolib::string::starts_with(opt.string_key,"settings.") )
                 global_settings.put(opt.string_key,opt.value.front());
             else
                 settings.put(opt.string_key,opt.value.front());

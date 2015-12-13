@@ -16,15 +16,14 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef TRIE_HPP
-#define TRIE_HPP
+#ifndef MELANOLIB_STRING_TRIE_HPP
+#define MELANOLIB_STRING_TRIE_HPP
 
 #include <algorithm>
 #include <type_traits>
 #include <unordered_map>
 
-#include <boost/optional.hpp>
-
+namespace melanolib {
 namespace string {
 
 /**
@@ -543,4 +542,5 @@ template<class Container, class = void, class = std::enable_if_t<std::is_convert
     }
 
 } // namespace string
-#endif // TRIE_HPP
+} // namespace melanolib
+#endif // MELANOLIB_STRING_TRIE_HPP

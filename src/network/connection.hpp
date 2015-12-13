@@ -26,7 +26,6 @@
 #include "message/input_message.hpp"
 #include "message/output_message.hpp"
 #include "string/logger.hpp"
-#include "string/string_functions.hpp"
 #include "user/auth_system.hpp"
 #include "user/user_counter.hpp"
 #include "user/user_manager.hpp"

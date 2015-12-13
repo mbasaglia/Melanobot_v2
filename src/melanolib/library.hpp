@@ -18,15 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_LIBRARY_HPP
-#define MELANOBOT_LIBRARY_HPP
+#ifndef MELANOLIB_LIBRARY_HPP
+#define MELANOLIB_LIBRARY_HPP
 
 #include <string>
 #include <stdexcept>
 #include <memory>
 
-#include "utils.hpp"
+#include "melanolib/utils.hpp"
 
+namespace melanolib {
 namespace library {
 
 using LoadFlags = int;
@@ -121,10 +122,10 @@ public:
      * \throws SymbolNotFoundError if \p name cannot be resolved
      */
     template<class T>
-        utils::FunctionPointer<T> resolve_function(const std::string& name) const
+        FunctionPointer<T> resolve_function(const std::string& name) const
         {
             if ( void* ptr = resolve_raw(name) )
-                return reinterpret_cast<utils::FunctionPointer<T>>(ptr);
+                return reinterpret_cast<melanolib::FunctionPointer<T>>(ptr);
             throw SymbolNotFoundError(name, filename());
         }
 
@@ -152,4 +153,6 @@ private:
 };
 
 } // namespace library
-#endif // MELANOBOT_LIBRARY_HPP
+} // namespace melanolib
+
+#endif // MELANOLIB_LIBRARY_HPP

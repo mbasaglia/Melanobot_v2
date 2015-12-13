@@ -25,7 +25,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/info_parser.hpp>
 
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 #include "string/json.hpp"
 
 namespace storage {
@@ -64,7 +64,7 @@ PropertyTree Storage::node_from_map(const table& value)
 Storage::Storage(const Settings& settings)
     : cache_policy{cache::Policy::Read::ONCE,cache::Policy::Write::DYNAMIC}
 {
-    std::string formatstring = string::strtolower(settings.get("format","info"));
+    std::string formatstring = melanolib::string::strtolower(settings.get("format","info"));
     if ( formatstring == "xml" )
         format = settings::FileFormat::XML;
     else if ( formatstring == "json" )

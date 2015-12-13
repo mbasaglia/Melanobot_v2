@@ -19,7 +19,7 @@
 #include "irc/network/connection.hpp"
 
 #include "string/logger.hpp"
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 #include "irc/network/functions.hpp"
 #include "melanobot.hpp"
 
@@ -43,7 +43,7 @@ std::unique_ptr<IrcConnection> IrcConnection::create(
         throw ConfigurationError("IRC connection with no server");
     }
 
-    return New<IrcConnection>(server, settings, name);
+    return melanolib::New<IrcConnection>(server, settings, name);
 }
 
 IrcConnection::IrcConnection ( const network::Server&   server,
@@ -78,7 +78,7 @@ void IrcConnection::read_settings(const Settings& settings)
 
     private_notice = settings.get("notice",private_notice);
 
-    auto channels = string::comma_split(settings.get("channels",""));
+    auto channels = melanolib::string::comma_split(settings.get("channels",""));
     for ( const auto& chan : channels )
         command({"JOIN",{chan},1024});
 
@@ -92,7 +92,7 @@ void IrcConnection::read_settings(const Settings& settings)
         for ( const auto pt: *groups )
         {
             auth_system.add_group(pt.first);
-            auto inherits = string::comma_split(pt.second.data());
+            auto inherits = melanolib::string::comma_split(pt.second.data());
             for ( const auto& inh : inherits )
                 auth_system.grant_access(inh,pt.first);
         }
@@ -214,7 +214,7 @@ void IrcConnection::remove_from_channel(const std::string& user_id,
             {
                 Log("irc",'!',3) << "User " << color::dark_cyan << found->name
                     << color::dark_red << " parted " << color::nocolor
-                    << string::implode(", ",channels);
+                    << melanolib::string::implode(", ",channels);
             }
         }
     }
@@ -289,7 +289,7 @@ void IrcConnection::handle_message(network::Message msg)
         std::string channel = msg.params[2];
         msg.channels = { channel };
 
-        std::vector<std::string> users = string::regex_split(msg.params[3],"\\s+");
+        std::vector<std::string> users = melanolib::string::regex_split(msg.params[3],"\\s+");
 
         {
             Lock lock(mutex);
@@ -393,7 +393,7 @@ void IrcConnection::handle_message(network::Message msg)
         {
             Lock lock(mutex);
                 /// \todo Case-Insensitive?
-                std::regex regex_direct(string::regex_escape(current_nick)+":\\s*(.*)");
+                std::regex regex_direct(melanolib::string::regex_escape(current_nick)+":\\s*(.*)");
             lock.unlock();
             std::smatch match;
             if ( std::regex_match(msg.message,match,regex_direct) )
@@ -440,13 +440,13 @@ void IrcConnection::handle_message(network::Message msg)
 
         Log("irc",'!',3) << "User " << color::dark_cyan << msg.from.name
             << color::dark_green << " joined " << color::nocolor
-            << string::implode(", ",msg.channels);
+            << melanolib::string::implode(", ",msg.channels);
     }
     else if ( msg.command == "PART" )
     {
         if ( msg.params.size() >= 1 )
         {
-            msg.channels = string::comma_split(msg.params[0]);
+            msg.channels = melanolib::string::comma_split(msg.params[0]);
             remove_from_channel(msg.from.name,msg.channels);
             if ( msg.params.size() > 1 )
                 msg.message = msg.params[1];
@@ -504,7 +504,7 @@ void IrcConnection::handle_message(network::Message msg)
     {
         if ( msg.params.size() < 2 )
             return;
-        msg.channels = string::comma_split(msg.params[0]);
+        msg.channels = melanolib::string::comma_split(msg.params[0]);
         /// \note Assumes a single victim
         msg.victim = get_user(msg.params[1]);
         if ( msg.params.size() > 2 )
@@ -826,7 +826,7 @@ void IrcConnection::command(network::Command cmd)
         if ( channels.empty() )
             return;
 
-        cmd.parameters = { string::implode(",",cmd.parameters) };
+        cmd.parameters = { melanolib::string::implode(",",cmd.parameters) };
         /// \todo keep track of too many channels,
         /// check that channel names are ok
         /// http://tools.ietf.org/html/rfc2812#section-3.2.1
@@ -940,7 +940,7 @@ string::Formatter* IrcConnection::formatter() const
 bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
                                  const std::string& mask) const
 {
-    std::vector<std::string> masks = string::comma_split(strtolower(mask));
+    std::vector<std::string> masks = melanolib::string::comma_split(strtolower(mask));
     for ( const auto& m : masks )
     {
         bool match = false;
@@ -953,7 +953,7 @@ bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
         else
         {
             for ( const auto& chan : channels )
-                if ( string::simple_wildcard(strtolower(chan),m) )
+                if ( melanolib::string::simple_wildcard(strtolower(chan),m) )
                 {
                     match = true;
                     break;
@@ -1092,7 +1092,7 @@ user::User IrcConnection::build_user(const std::string& exname) const
 
 bool IrcConnection::add_to_group( const std::string& username, const std::string& group )
 {
-    std::vector<std::string> groups = string::comma_split(group);
+    std::vector<std::string> groups = melanolib::string::comma_split(group);
 
     if ( groups.empty() || username.empty() )
         return false;
@@ -1111,7 +1111,7 @@ bool IrcConnection::add_to_group( const std::string& username, const std::string
         {
             Log("irc",'!',3) << "Registered user " << color::cyan
                 << username << color::nocolor << " in "
-                << string::implode(", ",groups);
+                << melanolib::string::implode(", ", groups);
             return true;
         }
     }

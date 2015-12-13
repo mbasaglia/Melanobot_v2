@@ -95,9 +95,9 @@ protected:
         Properties props {
             {"name",msg.source->encode_to(msg.from.name,fmt)},
             {"local_id",msg.from.local_id},
-            {"channel",string::implode(", ",msg.channels)}
+            {"channel", melanolib::string::implode(", ",msg.channels)}
         };
-        std::string call_nick = string::replace(nick, props, "%");
+        std::string call_nick = melanolib::string::replace(nick, props, "%");
         call_nick = fmt.decode(call_nick).encode(msg.destination->formatter());
         rcon_adminnick(msg.destination,{"vcall",msg.message},call_nick);
         return true;
@@ -129,9 +129,9 @@ protected:
         Properties props {
             {"name",msg.source->encode_to(msg.from.name,fmt)},
             {"local_id",msg.from.local_id},
-            {"channel",string::implode(", ",msg.channels)}
+            {"channel", melanolib::string::implode(", ", msg.channels)}
         };
-        std::string call_nick = string::replace(nick, props, "%");
+        std::string call_nick = melanolib::string::replace(nick, props, "%");
         call_nick = fmt.decode(call_nick).encode(msg.destination->formatter());
         rcon_adminnick(msg.destination,{"vstop",msg.message},call_nick);
         return true;

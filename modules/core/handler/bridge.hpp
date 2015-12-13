@@ -39,7 +39,7 @@ public:
     /**
      * \brief Attach to the given channel
      */
-    void attach_channel(Optional<std::string> channel);
+    void attach_channel(melanolib::Optional<std::string> channel);
 
 protected:
     bool on_handle(network::Message& msg) override;
@@ -52,7 +52,7 @@ protected:
     }
 
     network::Connection*  destination{nullptr};  ///< Message destination
-    Optional<std::string> dst_channel;           ///< Message destination channel
+    melanolib::Optional<std::string> dst_channel;           ///< Message destination channel
 };
 
 /**
@@ -69,7 +69,7 @@ protected:
 
     network::Duration timeout{network::Duration::zero()};///< Output message timeout
     bool              ignore_self{true};                 ///< Ignore bot messages
-    Optional<std::string> from;                   ///< Override from
+    melanolib::Optional<std::string> from;                   ///< Override from
 };
 
 /**
@@ -143,7 +143,7 @@ protected:
     {
         string::FormatterConfig fmt;
         auto from = msg.source->decode(msg.from.name);
-        auto str = string::replace(message,message_replacements(msg),"%");
+        auto str = melanolib::string::replace(message,message_replacements(msg),"%");
         reply_to(msg,network::OutputMessage(
             fmt.decode(str),
             action,
@@ -163,7 +163,7 @@ protected:
         string::FormatterConfig fmt;
         auto from = msg.source->decode(msg.from.name);
         return {
-            {"channel",string::implode(", ",msg.channels)},
+            {"channel", melanolib::string::implode(", ",msg.channels)},
             {"name", from.encode(fmt)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id},
@@ -226,7 +226,7 @@ protected:
     {
         string::FormatterConfig fmt;
         return {
-            {"channel",string::implode(", ",msg.channels)},
+            {"channel", melanolib::string::implode(", ",msg.channels)},
             {"message",msg.message},
 
             {"kicker", msg.source->encode_to(msg.from.name,fmt)},

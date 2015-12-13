@@ -25,8 +25,8 @@
 #include "network/connection.hpp"
 #include "network/async_service.hpp"
 #include "handler/handler.hpp"
-#include "dyn_library.hpp"
-#include "c++-compat.hpp"
+#include "melanolib/library.hpp"
+#include "melanolib/c++-compat.hpp"
 
 namespace module {
 
@@ -96,7 +96,7 @@ struct Melanomodule
     std::vector<Dependency> dependencies;
 
     /// \todo Make this an implementation detail if possible
-    Optional<::library::Library> library; ///< Set at runtime
+    melanolib::Optional<melanolib::library::Library> library; ///< Set at runtime
 
     bool dependencies_satisfied(const std::vector<Melanomodule>& modules) const
     {
@@ -195,7 +195,7 @@ template<class HandlerT>
         handler::HandlerFactory::instance().register_handler( name,
             [] ( const Settings& settings, MessageConsumer* parent )
                     -> std::unique_ptr<handler::Handler> {
-                return New<HandlerT>(settings,parent);
+                return melanolib::New<HandlerT>(settings,parent);
         });
     }
 

@@ -20,10 +20,11 @@
  *
  */
 
-#include "dyn_library.hpp"
+#include "library.hpp"
 
 #include <dlfcn.h>
 
+namespace melanolib {
 namespace library {
 
 class Library::Private
@@ -106,3 +107,4 @@ void Library::reload(library::LoadFlags flags) const
 }
 
 } // namespace library
+} // namespace melanolib

@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef STRING_FUNCTIONS_HPP
-#define STRING_FUNCTIONS_HPP
+#ifndef MELANOLIB_STRING_UTILS_HPP
+#define MELANOLIB_STRING_UTILS_HPP
 
 #include <algorithm>
 #include <iterator>
@@ -25,9 +25,9 @@
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include <unordered_map>
 
-#include "settings.hpp"
-
+namespace melanolib {
 namespace string {
 
 /**
@@ -144,7 +144,9 @@ std::string replace(const std::string& input, const std::string& from, const std
  * \param map     Term/replacement map
  * \param prefix  (Optional) prefix to prepend to all terms
  */
-std::string replace(const std::string& subject, const Properties& map, const std::string& prefix = {});
+std::string replace(const std::string& subject,
+                    const std::unordered_map<std::string,std::string>& map,
+                    const std::string& prefix = {});
 
 /**
  * \brief Checks if \c text matches the wildcard \c pattern
@@ -266,4 +268,5 @@ template<class T>
     }
 
 } // namespace string
-#endif // STRING_FUNCTIONS_HPP
+} // namespace melanolib
+#endif // MELANOLIB_STRING_UTILS_HPP

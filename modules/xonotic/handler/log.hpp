@@ -65,7 +65,7 @@ protected:
         const std::string& str =
             msg.type == network::Message::CONNECTED ? connect : disconnect;
         reply_to(msg,fmt.decode(
-            string::replace(str,msg.source->pretty_properties(),"%")));
+            melanolib::string::replace(str,msg.source->pretty_properties(),"%")));
         return true;
     }
 
@@ -105,7 +105,7 @@ protected:
         const std::string& message = msg.type == network::Message::JOIN ? join : part;
         // Format the message and send it
         string::FormatterConfig fmt;
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -140,7 +140,7 @@ protected:
         Properties props = msg.source->pretty_properties();
 
         if ( empty || msg.source->count_users().users )
-            reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+            reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -204,7 +204,7 @@ protected:
         user::User user = msg.source->get_user(match[1]);
         Properties props = pretty_properties(msg.source,user);
         props["vote"] = msg.source->encode_to(match[2],fmt);
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -254,21 +254,21 @@ protected:
 
         // Sets message_result to one of message_yes, message_no or message_timeout
         if ( props["result"] == "yes" )
-            props["message_result"] = string::replace(message_yes,props,"%");
+            props["message_result"] = melanolib::string::replace(message_yes,props,"%");
         else if ( props["result"] == "no" )
-            props["message_result"] = string::replace(message_no,props,"%");
+            props["message_result"] = melanolib::string::replace(message_no,props,"%");
         else
-            props["message_result"] = string::replace(message_timeout,props,"%");
+            props["message_result"] = melanolib::string::replace(message_timeout,props,"%");
 
         // message_abstain is set only if abstain_total is > 0
         props["message_abstain"] = abstain_total <= 0 ? "" :
-            string::replace(message_abstain,props,"%");
+            melanolib::string::replace(message_abstain,props,"%");
 
         // message_abstain is set only if min is > 0
         props["message_min"] = min <= 0 ? "" :
-            string::replace(message_min,props,"%");
+            melanolib::string::replace(message_min,props,"%");
 
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -305,7 +305,7 @@ protected:
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
         Properties props = pretty_properties(msg.source,user);
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -331,7 +331,7 @@ protected:
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
         Properties props = pretty_properties(msg.source,user);
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -358,7 +358,7 @@ protected:
         user::User user = msg.source->get_user(match[1]);
         Properties props = pretty_properties(msg.source,user);
         props["vote"] = msg.source->encode_to(match[2], fmt);
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
 
@@ -472,7 +472,7 @@ protected:
         Properties props = msg.source->pretty_properties();
 
         // End match message
-        reply_to(msg,fmt.decode(string::replace(message,props,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
 
         // Shows scores only if there are some scores to show
         if ( !player_scores.empty() || !team_scores.empty() )
@@ -581,7 +581,7 @@ protected:
      */
     void handle_team(const std::smatch& match)
     {
-        team_scores[string::to_int(match[4])] = string::to_int(match[3]);
+        team_scores[melanolib::string::to_int(match[4])] = melanolib::string::to_int(match[3]);
     }
 
     /**
@@ -590,8 +590,8 @@ protected:
     void handle_player(network::Connection* conn, const std::smatch& match)
     {
         // Team number (-1 = no team, -2 = spectator)
-        int team = string::to_int(match[8],10,SPECTATORS);
-        int score = string::to_int(match[6]);
+        int team = melanolib::string::to_int(match[8],10,SPECTATORS);
+        int score = melanolib::string::to_int(match[6]);
 
         if ( team == NO_TEAM && score == 0 && conn->properties().get("gametype") == "lms" )
             team = SPECTATORS;
@@ -599,7 +599,7 @@ protected:
         player_scores[team].emplace_back(
             match[10],                     // name
             score,
-            string::to_int(match[9])       // id
+            melanolib::string::to_int(match[9])       // id
         );
     }
 
@@ -672,7 +672,7 @@ protected:
         props["message"] = msg.source->encode_to(match[1], fmt);
         for ( const auto& admin : msg.destination->real_users_in_group(notify) )
         {
-            network::OutputMessage out(fmt.decode(string::replace(message,props,"%")));
+            network::OutputMessage out(fmt.decode(melanolib::string::replace(message,props,"%")));
             out.target = admin.local_id;
             deliver(msg.destination,out);
         }

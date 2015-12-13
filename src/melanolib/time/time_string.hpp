@@ -19,11 +19,12 @@
 #ifndef TIME_STRING_HPP
 #define TIME_STRING_HPP
 
-#include "time.hpp"
-#include "string/language.hpp"
-#include "string/string_functions.hpp"
+#include "melanolib/time/time.hpp"
+#include "melanolib/string/language.hpp"
+#include "melanolib/string/stringutils.hpp"
 
-namespace timer {
+namespace melanolib {
+namespace time {
 
 /**
  * \brief Full month name in English
@@ -38,7 +39,7 @@ std::string month_shortname(Month month);
 /**
  * \brief Month from English name
  */
-Optional<Month> month_from_name(const std::string& name);
+melanolib::Optional<Month> month_from_name(const std::string& name);
 
 /**
  * \brief Full weekday name in English
@@ -53,7 +54,7 @@ std::string weekday_shortname(WeekDay day);
 /**
  * \brief Weekday from English name
  */
-Optional<WeekDay> weekday_from_name(const std::string& name);
+melanolib::Optional<WeekDay> weekday_from_name(const std::string& name);
 
 /**
  * \brief Returns a string from a time format character
@@ -136,4 +137,6 @@ template<class Rep, class Period>
 }
 
 } // namespace timer
+} // namespace melanolib
+
 #endif // TIME_STRING_HPP

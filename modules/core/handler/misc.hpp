@@ -22,9 +22,9 @@
 #define HANDLER_MISC
 
 #include "handler/handler.hpp"
-#include "math.hpp"
-#include "string/language.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/math.hpp"
+#include "melanolib/string/language.hpp"
+#include "melanolib/time/time_string.hpp"
 #include "melanobot.hpp"
 
 namespace core {
@@ -100,7 +100,7 @@ protected:
                     std::sort(names.begin(),names.end());
                     if ( !synopsis.empty() )
                         synopsis << ": ";
-                    synopsis << string::implode(" ",names);
+                    synopsis << melanolib::string::implode(" ", names);
                 }
 
                 std::string synopsis_string = queried->get("synopsis","");
@@ -172,9 +172,9 @@ private:
     /**
      * \brief removes all internal nodes which don't have a name key
      */
-    Optional<PropertyTree> restructure ( const PropertyTree& input, PropertyTree* parent ) const
+    melanolib::Optional<PropertyTree> restructure ( const PropertyTree& input, PropertyTree* parent ) const
     {
-        Optional<PropertyTree> ret;
+        melanolib::Optional<PropertyTree> ret;
 
         if ( input.get_optional<std::string>("name") )
         {
@@ -291,7 +291,7 @@ public:
     {
         auto items = settings.get_optional<std::string>("items");
         if ( items )
-            default_items = string::regex_split(*items,",\\s*");
+            default_items = melanolib::string::regex_split(*items,",\\s*");
         customizable = settings.get("customizable",customizable);
 
         help = "Get a random element out of ";
@@ -312,7 +312,7 @@ protected:
         std::vector<std::string> item_vector;
         if ( customizable )
         {
-            item_vector = string::comma_split(msg.message);
+            item_vector = melanolib::string::comma_split(msg.message);
             if ( item_vector.size() < 2 )
                 item_vector = default_items;
         }
@@ -320,7 +320,7 @@ protected:
             item_vector = default_items;
 
         if ( !item_vector.empty() )
-            reply_to(msg,item_vector[math::random(item_vector.size()-1)]);
+            reply_to(msg,item_vector[melanolib::math::random(item_vector.size()-1)]);
 
         return true;
     }
@@ -392,11 +392,11 @@ protected:
             {
                 Properties map = {
                     {"sender", msg.from.name},
-                    {"channel", string::implode(",",msg.channels)},
+                    {"channel", melanolib::string::implode(",", msg.channels)},
                 };
                 for ( unsigned i = 0; i < match.size(); i++ )
                     map[std::to_string(i)] = match[i];
-                on_handle(msg,string::replace(reply,map,"%"));
+                on_handle(msg, melanolib::string::replace(reply,map,"%"));
                 return true;
             }
         }
@@ -406,7 +406,7 @@ protected:
             return true;
         }
         else if ( !case_sensitive &&
-            string::strtolower(msg.message) == string::strtolower(trigger) )
+            melanolib::string::strtolower(msg.message) == melanolib::string::strtolower(trigger) )
         {
             on_handle(msg,reply);
             return true;
@@ -479,7 +479,7 @@ protected:
             return true;
         }
 
-        string::English engl;
+        melanolib::string::English engl;
         // should match \S+|(?:don't be) but it's ambiguous
         static std::regex regex_imperative (
             R"(\s*(\S+(?: be)?)\s*(.*))",
@@ -525,7 +525,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,timer::format(timer::parse_time(msg.message), format));
+        reply_to(msg,melanolib::time::format(melanolib::time::parse_time(msg.message), format));
         return true;
     }
 

@@ -16,26 +16,36 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "time.hpp"
-#include "time_parser.hpp"
+#include "melanolib/math.hpp"
 
-#include <sstream>
+#include <random>
 
-namespace timer {
+namespace melanolib {
+namespace math {
 
+thread_local static std::random_device random_device;  ///< PRNG device
 
-DateTime parse_time(const std::string& text)
+long random()
 {
-    std::istringstream ss(text);
-    TimeParser parser(ss);
-    return parser.parse_time_point();
+    return std::uniform_int_distribution<long>()(random_device);
 }
 
-DateTime::Duration parse_duration(const std::string& text)
+long random(long max)
 {
-    std::istringstream ss(text);
-    TimeParser parser(ss);
-    return parser.parse_duration();
+    return random(0,max);
 }
 
-} // namespace timer
+long random(long min, long max)
+{
+    return std::uniform_int_distribution<long>(min,max)(random_device);
+}
+
+double random_real()
+{
+    thread_local static std::uniform_real_distribution<double> dist;
+    return dist(random_device);
+}
+
+} // namespace math
+
+} // namespace melanolib

@@ -353,12 +353,12 @@ public:
         int before = count * align;
         if ( before )
             elements.insert(elements.begin(),
-                New<string::AsciiSubstring>(
+                melanolib::New<string::AsciiSubstring>(
                     std::string(before,fill)
             ));
         if ( count-before )
             elements.push_back(
-                New<string::AsciiSubstring>(
+                melanolib::New<string::AsciiSubstring>(
                     std::string(count-before,fill)
             ));
 

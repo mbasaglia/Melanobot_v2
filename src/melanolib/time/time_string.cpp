@@ -18,10 +18,11 @@
  */
 #include "time_string.hpp"
 
-#include "string/string_functions.hpp"
-#include "string/language.hpp"
+#include "melanolib/string/stringutils.hpp"
+#include "melanolib/string/language.hpp"
 
-namespace timer {
+namespace melanolib {
+namespace time {
 
 static std::vector<std::string> month_names =
 {
@@ -93,7 +94,7 @@ std::string month_shortname(Month month)
 /**
  * \brief Month from English name
  */
-Optional<Month> month_from_name(const std::string& name)
+melanolib::Optional<Month> month_from_name(const std::string& name)
 {
     for ( unsigned i = 0; i < month_names.size(); i++ )
         if ( string::icase_equal(name,month_names[i]) )
@@ -126,7 +127,7 @@ std::string weekday_shortname(WeekDay day)
 /**
  * \brief Weekday from English name
  */
-Optional<WeekDay> weekday_from_name(const std::string& name)
+melanolib::Optional<WeekDay> weekday_from_name(const std::string& name)
 {
     for ( unsigned i = 0; i < weekday_names.size(); i++ )
         if ( string::icase_equal(name,weekday_names[i]) )
@@ -243,4 +244,5 @@ std::string format(const DateTime& date_time, const std::string& fmt)
     return result;
 }
 
-} // namespace timer
+} // namespace time
+} // namespace melanolib

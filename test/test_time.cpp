@@ -20,10 +20,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "time/time.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/time/time.hpp"
+#include "melanolib/time/time_string.hpp"
 
-using namespace timer;
+using namespace melanolib::time;
 
 BOOST_AUTO_TEST_CASE( test_Month )
 {

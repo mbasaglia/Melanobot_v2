@@ -21,7 +21,7 @@
 
 #include <regex>
 
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 
 namespace irc {
 
@@ -51,7 +51,7 @@ std::string FormatterIrc::color(const color::Color12& color) const
         case 0b1110: ircn = 11; break; // cyan
         case 0b1111: ircn =  0; break; // white
     }
-    return '\3'+string::to_string(ircn,2);
+    return '\3'+melanolib::string::to_string(ircn,2);
 }
 std::string FormatterIrc::format_flags(string::FormatFlags flags) const
 {
@@ -162,7 +162,7 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
     if ( !std::regex_match(color,match,regex) )
         return Color12();
 
-    switch ( string::to_uint(match[1].str()) )
+    switch ( melanolib::string::to_uint(match[1].str()) )
     {
         case  0: return white;
         case  1: return black;

@@ -52,7 +52,7 @@ void Bridge::attach(network::Connection* connection)
         Log("sys",'!',3) << "Bridge detached";
 }
 
-void Bridge::attach_channel(Optional<std::string> channel)
+void Bridge::attach_channel(melanolib::Optional<std::string> channel)
 {
     dst_channel = channel;
     if ( channel )

@@ -32,6 +32,7 @@ template<class... InitArgs>
     std::vector<module::Melanomodule>
         initialize_modules(const std::vector<std::string>& paths, InitArgs&&... init_args)
 {
+    using namespace melanolib::library;
     std::vector<module::Melanomodule> modules = find_modules(paths);
 
     if ( modules.empty() )
@@ -43,7 +44,7 @@ template<class... InitArgs>
     {
         try
         {
-            mod.library->reload(library::ExportGlobal|library::LoadNow|library::LoadThrows);
+            mod.library->reload(ExportGlobal|LoadNow|LoadThrows);
             mod.library->call_function<void, InitArgs...>(
                 "melanomodule_"+mod.name+"_initialize",
                 std::forward<InitArgs>(init_args)...
@@ -52,7 +53,7 @@ template<class... InitArgs>
             Log("sys",'!') << "\tLoaded module "
                             << mod.name << ' ' << mod.version;
         }
-        catch ( const library::LibraryError& error )
+        catch ( const LibraryError& error )
         {
             ErrorLog errlog("sys","Module Error");
             if ( settings::global_settings.get("debug", 0) )

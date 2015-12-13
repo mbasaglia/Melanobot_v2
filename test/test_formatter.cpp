@@ -394,11 +394,11 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     }
 
     // Insert
-    s.push_back(New<AsciiSubstring>("bar"));
+    s.push_back(melanolib::New<AsciiSubstring>("bar"));
     BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
-    s.insert(s.begin()+2,New<Color>(color::blue));
+    s.insert(s.begin()+2,melanolib::New<Color>(color::blue));
     BOOST_CHECK( cast<Color>(s[2]) );
-    s.insert(s.begin()+2,3,New<Format>(FormatFlags()));
+    s.insert(s.begin()+2,3,melanolib::New<Format>(FormatFlags()));
     for ( int i = 2; i < 5; i++ )
         BOOST_CHECK( cast<Format>(s[i]) );
     {
@@ -409,8 +409,8 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         BOOST_CHECK( cast<AsciiSubstring>(s[4]) );
     }
     s.insert(s.begin(),{
-        New<AsciiSubstring>("bar"),
-        New<Color>(color::red)
+        melanolib::New<AsciiSubstring>("bar"),
+        melanolib::New<Color>(color::red)
     });
     BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
     BOOST_CHECK( cast<Color>(s[1]) );
@@ -422,7 +422,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     BOOST_CHECK( s.size() == 2 );
 
     // Assign
-    s.assign(5,New<Color>(color::green));
+    s.assign(5,melanolib::New<Color>(color::green));
     BOOST_CHECK( s.size() == 5 );
     {
         FormattedString s2;
@@ -431,8 +431,8 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         BOOST_CHECK( s.size() == 3 );
     }
     s.assign({
-        New<AsciiSubstring>("bar"),
-        New<Color>(color::red)
+        melanolib::New<AsciiSubstring>("bar"),
+        melanolib::New<Color>(color::red)
     });
     BOOST_CHECK( s.size() == 2 );
 
@@ -441,7 +441,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
     s.append<AsciiSubstring>(std::string("hello"));
     s.pop_back();
-    s.append(New<Color>(color::white));
+    s.append(melanolib::New<Color>(color::white));
     BOOST_CHECK( cast<Color>(s[3]) );
     {
         FormattedString s2;

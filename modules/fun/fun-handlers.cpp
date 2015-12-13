@@ -31,7 +31,7 @@ bool Morse::on_handle(network::Message& msg)
     std::string result;
     if ( std::regex_match(msg.message,regex_morse) )
     {
-        auto morse_array = string::regex_split(msg.message," ",false);
+        auto morse_array = melanolib::string::regex_split(msg.message," ",false);
         for ( const auto& mc : morse_array )
         {
             if ( mc.empty() )
@@ -53,14 +53,14 @@ bool Morse::on_handle(network::Message& msg)
     else
     {
         std::vector<std::string> morse_string;
-        std::string param_string = string::strtolower(msg.message);
+        std::string param_string = melanolib::string::strtolower(msg.message);
         for ( unsigned i = 0; i < param_string.size(); i++ )
         {
             auto it = morse.find(param_string[i]);
             if ( it != morse.end() )
                 morse_string.push_back(it->second);
         }
-        result = string::implode(" ",morse_string);
+        result = melanolib::string::implode(" ", morse_string);
     }
 
     if ( !result.empty() )
@@ -304,7 +304,7 @@ bool RenderPony::on_handle(network::Message& msg)
                 else
                 {
                     // get how similar the query is to the file name
-                    int local_score = string::similarity(
+                    int local_score = melanolib::string::similarity(
                         dir_iter->path().filename().string(), pony_search );
 
                     if ( local_score > score )
@@ -326,7 +326,7 @@ bool RenderPony::on_handle(network::Message& msg)
         if ( !files.empty() )
         {
             // open a random one
-            std::fstream file(files[math::random(files.size()-1)]);
+            std::fstream file(files[melanolib::math::random(files.size()-1)]);
             // I guess if not is_open and we have other possible ponies
             // we could select a different one (random_shuffle and iterate)
             // but whatever
@@ -360,19 +360,19 @@ bool AnswerQuestions::on_handle(network::Message& msg)
     std::smatch match;
 
     std::regex_match(msg.message,match,regex_question);
-    std::string question = string::strtolower(match[1]);
+    std::string question = melanolib::string::strtolower(match[1]);
         std::vector<std::vector<std::string>*> answers;
 
-    if ( string::starts_with(question,"when") )
+    if ( melanolib::string::starts_with(question,"when") )
     {
         answers.push_back(&category_when);
-        if ( string::ends_with(question,"did") )
+        if ( melanolib::string::ends_with(question,"did") )
             answers.push_back(&category_when_did);
-        else if ( string::ends_with(question,"will") )
+        else if ( melanolib::string::ends_with(question,"will") )
             answers.push_back(&category_when_will);
     }
     /// \todo move where to some other handler (in the web module)
-    else if ( string::starts_with(question,"where") )
+    else if ( melanolib::string::starts_with(question,"where") )
     {
         static std::string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
         network::Response response =  network::service("web")->query(
@@ -393,12 +393,12 @@ bool AnswerQuestions::on_handle(network::Message& msg)
 
         return true;
     }
-    else if ( string::starts_with(question,"who") && !msg.channels.empty() && msg.source )
+    else if ( melanolib::string::starts_with(question,"who") && !msg.channels.empty() && msg.source )
     {
         auto users = msg.source->get_users(msg.channels[0]);
         if ( !users.empty() )
         {
-            const auto& name = users[math::random(users.size()-1)].name;
+            const auto& name = users[melanolib::math::random(users.size()-1)].name;
             reply_to(msg,name == msg.source->name() ? "Not me!" : name);
             return true;
         }
@@ -429,7 +429,7 @@ void AnswerQuestions::random_answer(network::Message& msg,
     for ( const auto& cat : categories )
         n += cat->size();
 
-    n = math::random(n-1);
+    n = melanolib::math::random(n-1);
 
     for ( const auto& cat : categories )
     {
@@ -496,7 +496,7 @@ std::vector<std::string> AnswerQuestions::category_when_will {
 
 bool RainbowBridgeChat::on_handle(network::Message& msg)
 {
-    FormatterRainbow formatter(math::random_real(),0.6,1);
+    FormatterRainbow formatter(melanolib::math::random_real(),0.6,1);
 
     auto from = formatter.decode(
         msg.source->encode_to(msg.from.name,formatter));

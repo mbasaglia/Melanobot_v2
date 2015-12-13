@@ -29,7 +29,7 @@
 #include <boost/iterator/iterator_concepts.hpp>
 
 #include "logger.hpp"
-#include "string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 #include "encoding.hpp"
 
 namespace string {
@@ -161,7 +161,7 @@ std::string FormatterAnsi::format_flags(FormatFlags flags) const
     codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
     codes.push_back( flags & FormatFlags::UNDERLINE ? 4 : 24 );
     codes.push_back( flags & FormatFlags::ITALIC ? 3 : 23 );
-    return  "\x1b["+implode(";",codes)+"m";
+    return  "\x1b["+melanolib::string::implode(";",codes)+"m";
 }
 std::string FormatterAnsi::clear() const
 {
@@ -347,7 +347,7 @@ std::string FormatterConfig::ascii(char input) const
 }
 std::string FormatterConfig::ascii(const std::string& input) const
 {
-    return string::replace(input,"#","##");
+    return melanolib::string::replace(input,"#","##");
 }
 FormattedString FormatterConfig::decode(const std::string& source) const
 {

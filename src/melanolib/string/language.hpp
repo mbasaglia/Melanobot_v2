@@ -23,6 +23,7 @@
 #include <regex>
 #include <unordered_map>
 
+namespace melanolib {
 namespace string {
 
 /**
@@ -166,4 +167,6 @@ private:
 };
 
 } // namespace string
+} // namespace melanolib
+
 #endif // STRING_LANGUAGE_HPP

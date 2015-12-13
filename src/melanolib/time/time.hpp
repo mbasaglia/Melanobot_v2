@@ -15,26 +15,29 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * \todo Split classes into separate files
  */
-#ifndef TIME_HPP
-#define TIME_HPP
+#ifndef MELANOLIB_TIME_HPP
+#define MELANOLIB_TIME_HPP
 
 #include <chrono>
 #include <functional>
 #include <cstdint>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+#include <thread>
 
 #include "functional.hpp"
-#include "concurrency/concurrency.hpp"
-#include "c++-compat.hpp"
-#include "math.hpp"
+#include "melanolib/c++-compat.hpp"
+#include "melanolib/math.hpp"
 
+namespace melanolib {
 /**
  * \brief Namespace for time utilities
- * \note It would have been called \c time if it weren't for the fact
- *       that the C library defines time() as a function and doesn't
- *       have namespaces.
  */
-namespace timer {
+namespace time {
 
 /**
  * \brief A timer which performs a task after some time on a separate thread
@@ -156,7 +159,7 @@ template<class Clock>
             active = true;
             while ( active && repeating )
             {
-                Lock lock(mutex);
+                std::unique_lock<std::mutex> lock(mutex);
                 condition.wait_until(lock,clock_type::now()+timeout,[this]{return !active;});
                 if ( active )
                     action();
@@ -326,8 +329,8 @@ public:
     constexpr DateTime(int32_t year, Month month, days day, hours hour, minutes minute,
              seconds second = seconds(0), milliseconds millisecond = milliseconds(0))
     : year_(year),
-      month_(math::bound(Month::JANUARY,month,Month::DECEMBER)),
-      day_(math::bound(1,day.count(),month_days(year,math::bound(Month::JANUARY,month,Month::DECEMBER)))),
+      month_(melanolib::math::bound(Month::JANUARY,month,Month::DECEMBER)),
+      day_(melanolib::math::bound(1,day.count(),month_days(year,melanolib::math::bound(Month::JANUARY,month,Month::DECEMBER)))),
       hour_(hour.count() % 24),
       minute_(minute.count() % 60),
       second_(second.count() % 60),
@@ -519,7 +522,7 @@ public:
     SUPER_CONSTEXPR void set_date(int32_t year, Month month, days day) noexcept
     {
         set_year(year);
-        month_ = math::bound(Month::JANUARY, month, Month::DECEMBER);
+        month_ = melanolib::math::bound(Month::JANUARY, month, Month::DECEMBER);
         set_day(day.count());
     }
     /**
@@ -527,7 +530,7 @@ public:
      */
     SUPER_CONSTEXPR void set_date(Month month, days day) noexcept
     {
-        month_ = math::bound(Month::JANUARY, month, Month::DECEMBER);
+        month_ = melanolib::math::bound(Month::JANUARY, month, Month::DECEMBER);
         set_day(day.count());
     }
 
@@ -544,7 +547,7 @@ public:
      */
     SUPER_CONSTEXPR void set_month(Month month) noexcept
     {
-        month_ = math::bound(Month::JANUARY, month, Month::DECEMBER);
+        month_ = melanolib::math::bound(Month::JANUARY, month, Month::DECEMBER);
         set_day(day_);
     }
     /**
@@ -552,7 +555,7 @@ public:
      */
     SUPER_CONSTEXPR void set_day(int day) noexcept
     {
-        day_ = math::bound(1, day, month_days(month_));
+        day_ = melanolib::math::bound(1, day, month_days(month_));
     }
     /**
      * \brief Sets the hour of the day [0,23]
@@ -868,6 +871,6 @@ DateTime parse_time(const std::string& text);
 DateTime::Duration parse_duration(const std::string& text);
 
 } // namespace time
+} // namespace melanolib
 
-
-#endif // TIME_HPP
+#endif // MELANOLIB_TIME_HPP

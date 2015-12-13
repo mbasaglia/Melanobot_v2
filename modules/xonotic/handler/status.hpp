@@ -20,7 +20,7 @@
 #define XONOTIC_HANDLER_STATUS_HPP
 
 #include <sstream>
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 #include "xonotic/xonotic.hpp"
 #include "core/handler/connection_monitor.hpp"
 #include "xonotic/xonotic-connection.hpp"
@@ -56,10 +56,10 @@ protected:
                 list.push_back(monitored->decode(user.name));
 
         if ( list.empty() )
-            reply_to(msg,fmt.decode(string::replace(reply_empty, props, "%")));
+            reply_to(msg,fmt.decode(melanolib::string::replace(reply_empty, props, "%")));
         else
-            reply_to(msg,fmt.decode(string::replace(reply, props, "%"))
-                << string::implode(string::FormattedString(", "),list));
+            reply_to(msg,fmt.decode(melanolib::string::replace(reply, props, "%"))
+                << string::implode(string::FormattedString(", "), list));
 
         return true;
     }
@@ -129,7 +129,7 @@ protected:
         props["spectators"] = std::to_string(spectators);
 
         for ( const auto& info : server_info )
-            reply_to(msg, fmt.decode(string::replace(info,props,"%")));
+            reply_to(msg, fmt.decode(melanolib::string::replace(info,props,"%")));
 
         return true;
     }
@@ -176,7 +176,7 @@ public:
 protected:
     bool on_handle(network::Message& msg)
     {
-        auto maps = string::regex_split(monitored->properties().get("cvar.g_maplist"),"\\s+");
+        auto maps = melanolib::string::regex_split(monitored->properties().get("cvar.g_maplist"),"\\s+");
         int total = maps.size();
         if ( !msg.message.empty() )
         {
@@ -210,7 +210,7 @@ protected:
         auto r = string::Color(color::red).to_string(*msg.destination->formatter());
         auto nc = string::Color(color::nocolor).to_string(*msg.destination->formatter());
         if ( max_print >= 0 && int(maps.size()) <= max_print && !maps.empty())
-            reply_to(msg,r+string::implode(nc+", "+r,maps));
+            reply_to(msg, r + melanolib::string::implode(nc + ", " + r, maps));
 
         return true;
     }
@@ -254,7 +254,7 @@ protected:
             show_bans(msg);
             return true;
         }
-        else if ( string::starts_with(msg.message,"rm ") )
+        else if ( melanolib::string::starts_with(msg.message,"rm ") )
         {
             unban(msg);
             return true;
@@ -290,7 +290,7 @@ private:
     /**
      * \brief Finds a user to kickban
      */
-    static Optional<user::User> find_user(network::Connection*monitored, const std::smatch& match)
+    static melanolib::Optional<user::User> find_user(network::Connection*monitored, const std::smatch& match)
     {
         std::vector<user::User> users = monitored->get_users();
         auto kicked = users.end();
@@ -332,8 +332,8 @@ private:
             if ( match[4].matched )
             {
                 params.push_back(std::to_string(
-                    std::chrono::duration_cast<timer::seconds>(
-                        timer::parse_duration(match[4])
+                    std::chrono::duration_cast<melanolib::time::seconds>(
+                        melanolib::time::parse_duration(match[4])
                 ).count()));
                 notice << " for "+params[2]+" seconds";
                 if ( match[5].matched )
@@ -359,8 +359,8 @@ private:
         if ( match[4].matched )
         {
             params.push_back(std::to_string(
-                std::chrono::duration_cast<timer::seconds>(
-                    timer::parse_duration(match[4])
+                std::chrono::duration_cast<melanolib::time::seconds>(
+                    melanolib::time::parse_duration(match[4])
                 ).count()));
             notice += " for "+params[2]+" seconds";
             if ( match[5].matched )

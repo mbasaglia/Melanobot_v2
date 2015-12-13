@@ -22,8 +22,8 @@
 #include <cstdint>
 #include <string>
 
-#include "math.hpp"
-#include "c++-compat.hpp"
+#include "melanolib/math.hpp"
+#include "melanolib/c++-compat.hpp"
 
 /**
  * \brief Namespace for color operations
@@ -120,9 +120,9 @@ public:
         */
     static SUPER_CONSTEXPR Color12 blend(Color12 c1, Color12 c2, double factor)
     {
-        return Color12(math::round(c1.r*(1-factor) + c2.r*factor),
-                       math::round(c1.g*(1-factor) + c2.g*factor),
-                       math::round(c1.b*(1-factor) + c2.b*factor));
+        return Color12(melanolib::math::round(c1.r*(1-factor) + c2.r*factor),
+                       melanolib::math::round(c1.g*(1-factor) + c2.g*factor),
+                       melanolib::math::round(c1.b*(1-factor) + c2.b*factor));
     }
 
     /**

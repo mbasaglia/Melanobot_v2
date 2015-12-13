@@ -18,6 +18,7 @@
  */
 #ifndef FORMAT_FLAGS_HPP
 #define FORMAT_FLAGS_HPP
+
 namespace string {
 
 /**

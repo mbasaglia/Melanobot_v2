@@ -26,6 +26,8 @@
 #include <boost/range/istream_range.hpp>
 #include <regex>
 
+using namespace melanolib::library;
+
 namespace module {
 
 void gather_metadata(const std::string& search_path,
@@ -51,8 +53,8 @@ void gather_metadata(const std::string& search_path,
             Log("sys",'!') << "\tLoading library " << entry;
             try
             {
-                library::Library lib(entry.path().native(),
-                    library::ExportLocal|library::LoadLazy|library::NoUnload|library::LoadThrows);
+                Library lib(entry.path().native(),
+                            ExportLocal|LoadLazy|NoUnload|LoadThrows);
                 auto module = lib.call_function<module::Melanomodule>(
                     match[1].str()+"_metadata");
                 module.library = lib;
@@ -60,7 +62,7 @@ void gather_metadata(const std::string& search_path,
                 Log("sys",'!') << "\tFound module "
                                 << module.name << ' ' << module.version;
             }
-            catch ( const library::LibraryError& error )
+            catch ( const LibraryError& error )
             {
                 ErrorLog errlog("sys","Module Error");
                 if ( settings::global_settings.get("debug", 0) )

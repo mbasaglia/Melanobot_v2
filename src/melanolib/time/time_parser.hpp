@@ -19,11 +19,12 @@
 #ifndef TIME_PARSER_HPP
 #define TIME_PARSER_HPP
 
-#include "string/string_functions.hpp"
-#include "time/time.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/string/stringutils.hpp"
+#include "melanolib/time/time.hpp"
+#include "melanolib/time/time_string.hpp"
 
-namespace timer {
+namespace melanolib {
+namespace time {
 /**
  * \brief Parses a time description
  */
@@ -599,5 +600,9 @@ private:
         out.set_time(hour,mins,second,millisecond);
     }
 };
+
+    
 } // namespace timer
+} // namespace melanolib
+
 #endif // TIME_PARSER_HPP

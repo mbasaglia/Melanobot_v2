@@ -20,7 +20,7 @@
 #define CACHE_POLICY_HPP
 
 #include "settings.hpp"
-#include "string/string_functions.hpp"
+#include "melanolib/string/stringutils.hpp"
 
 namespace cache {
 
@@ -87,7 +87,7 @@ public:
      */
     static Read to_read_policy(std::string read_policy)
     {
-        read_policy = string::strtolower(read_policy);
+        read_policy = melanolib::string::strtolower(read_policy);
         if ( read_policy == "once" )
             return Read::ONCE;
         else if ( read_policy == "lazy" )
@@ -101,7 +101,7 @@ public:
      */
     static Write to_write_policy(std::string write_policy)
     {
-        write_policy = string::strtolower(write_policy);
+        write_policy = melanolib::string::strtolower(write_policy);
         if ( write_policy == "once" )
             return Write::ONCE;
         else if ( write_policy == "dynamic" )

@@ -26,8 +26,8 @@
 
 #include "core/handler/bridge.hpp"
 #include "web/web-api.hpp"
-#include "math.hpp"
-#include "time/time_string.hpp"
+#include "melanolib/math.hpp"
+#include "melanolib/time/time_string.hpp"
 
 namespace fun {
 
@@ -150,16 +150,16 @@ protected:
 
         Properties map;
         map["title"] = parsed.get("name","");
-        map["season"] = string::to_string(parsed.get("season",0),2);
-        map["episode"] = string::to_string(parsed.get("episode",0),2);
+        map["season"] = melanolib::string::to_string(parsed.get("season",0),2);
+        map["episode"] = melanolib::string::to_string(parsed.get("episode",0),2);
         map["duration"] = parsed.get("duration","");
-        timer::DateTime time = timer::parse_time(parsed.get("time",""));
-        timer::DateTime now;
+        melanolib::time::DateTime time = melanolib::time::parse_time(parsed.get("time",""));
+        melanolib::time::DateTime now;
         auto delta = time > now ? time - now : now - time;
-        map["time_delta"] = timer::duration_string(delta);
+        map["time_delta"] = melanolib::time::duration_string(delta);
 
         string::FormatterConfig fmt;
-        reply_to(msg,fmt.decode(string::replace(reply,map,"%")));
+        reply_to(msg,fmt.decode(melanolib::string::replace(reply,map,"%")));
     }
 
     void json_failure(const network::Message& msg) override
@@ -204,7 +204,7 @@ protected:
         if ( faces.empty() )
             return json_failure(msg);
 
-        reply_to(msg,faces.get(std::to_string(math::random(faces.size()-1))+".image",not_found));
+        reply_to(msg,faces.get(std::to_string(melanolib::math::random(faces.size()-1))+".image",not_found));
     }
 
     void json_failure(const network::Message& msg) override
@@ -318,7 +318,7 @@ protected:
         static std::vector<std::string> season_names {
             "Chaos", "Discord", "Confusion", "Bureaucracy", "The Aftermath"};
 
-        timer::DateTime dt = timer::parse_time(msg.message);
+        melanolib::time::DateTime dt = melanolib::time::parse_time(msg.message);
         int day = dt.year_day();
         int year = dt.year() + 1166;
         if ( year % 4 == 2 && day >= 59 )
@@ -326,13 +326,13 @@ protected:
 
         Properties discord {
             {"day_name", day_names[day%day_names.size()]},
-            {"season_day", std::to_string(day%73+1)+string::English().ordinal_suffix(day%73+1)},
+            {"season_day", std::to_string(day%73+1)+melanolib::string::English().ordinal_suffix(day%73+1)},
             {"season", season_names[(day/73)%season_names.size()]},
             {"yold", std::to_string(year)}
         };
 
         reply_to(msg,string::FormatterConfig().decode(
-            string::replace(format,discord,"%") ));
+            melanolib::string::replace(format,discord,"%") ));
         return true;
     }
 

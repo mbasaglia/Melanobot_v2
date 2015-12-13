@@ -193,7 +193,7 @@ private:
      * \todo Less useful if Connection functions took a User object instead of a string
      * \see IrcConnection::build_user()
      */
-    static Optional<std::string> user_string(const user::User& user)
+    static melanolib::Optional<std::string> user_string(const user::User& user)
     {
         if ( !user.global_id.empty() )
             return '!'+user.global_id;
@@ -334,7 +334,7 @@ public:
         : Handler(settings,parent),
         trigger(settings.get("trigger","chanhax")),
         regex_chanhax (
-            "(.+)\\s*"+string::regex_escape(trigger)+"\\s+(\\S+)",
+            "(.+)\\s*"+melanolib::string::regex_escape(trigger)+"\\s+(\\S+)",
             std::regex::ECMAScript|std::regex::optimize
         )
     {

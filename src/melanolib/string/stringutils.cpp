@@ -16,9 +16,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "string_functions.hpp"
+#include "stringutils.hpp"
 #include "trie.hpp"
 
+namespace melanolib {
 namespace string {
 
 std::string elide ( std::string text, int length )
@@ -178,7 +179,9 @@ std::string::size_type similarity(const std::string& s1, const std::string& s2)
     return result;
 }
 
-std::string replace(const std::string& subject, const Properties& map, const std::string& prefix)
+std::string replace(const std::string& subject,
+                    const std::unordered_map<std::string,std::string>& map,
+                    const std::string& prefix)
 {
     std::string output;
 
@@ -236,3 +239,4 @@ std::string replace(const std::string& subject, const Properties& map, const std
 }
 
 } // namespace string
+} // namespace melanolib

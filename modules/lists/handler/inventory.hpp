@@ -21,8 +21,8 @@
 
 #include "core/handler/group.hpp"
 #include "storage.hpp"
-#include "string/language.hpp"
-#include "math.hpp"
+#include "melanolib/string/language.hpp"
+#include "melanolib/math.hpp"
 
 namespace lists {
 
@@ -46,7 +46,7 @@ protected:
         if ( elements.empty() )
             reply_to(msg,network::OutputMessage("is empty",true));
         else
-            reply_to(msg,network::OutputMessage("has "+string::implode(", ",elements),true));
+            reply_to(msg,network::OutputMessage("has "+melanolib::string::implode(", ",elements),true));
         return true;
     }
 
@@ -109,8 +109,8 @@ public:
     {
         std::string list_id = "lists."+settings.get("list",trigger);
         help = "Shows the inventory";
-        add_handler(New<InventoryClear>(list_id,settings.get("clear","admin"),Settings{},this));
-        add_handler(New<InventoryList>(list_id,Settings{},this));
+        add_handler(melanolib::New<InventoryClear>(list_id,settings.get("clear","admin"),Settings{},this));
+        add_handler(melanolib::New<InventoryList>(list_id,Settings{},this));
     }
 };
 
@@ -133,9 +133,9 @@ public:
     bool can_handle(const network::Message& message) const override
     {
         return message.type == network::Message::ACTION &&
-            string::starts_with(
-                string::strtolower(message.message),
-                string::strtolower(action+' '+message.source->name()+' ')
+            melanolib::string::starts_with(
+                melanolib::string::strtolower(message.message),
+                melanolib::string::strtolower(action+' '+message.source->name()+' ')
             );
     }
 
@@ -147,7 +147,7 @@ protected:
         if ( item.empty() )
             return false;
 
-        item = string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
+        item = melanolib::string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
 
         auto inventory = storage::storage().maybe_get_sequence(list_id);
         // Check that item isn't already in the inventory
@@ -164,14 +164,14 @@ protected:
             std::vector<std::string> dropped(inventory.size()-max_items+1);
             for ( auto& drop : dropped )
             {
-                int rand = math::random(inventory.size()-1);
+                int rand = melanolib::math::random(inventory.size()-1);
                 auto it = inventory.begin()+rand;
                 drop = *it;
                 // swap + pop to avoid moving items around for no reason
                 std::swap(*it,inventory.back());
                 inventory.pop_back();
             }
-            reply += " and drops "+string::implode(", ",dropped);
+            reply += " and drops "+melanolib::string::implode(", ", dropped);
         }
 
         inventory.push_back(item);
@@ -205,9 +205,9 @@ public:
     bool can_handle(const network::Message& message) const override
     {
         return message.type == network::Message::ACTION &&
-            string::starts_with(
-                string::strtolower(message.message),
-                string::strtolower(action+' '+message.source->name()+' ')
+            melanolib::string::starts_with(
+                melanolib::string::strtolower(message.message),
+                melanolib::string::strtolower(action+' '+message.source->name()+' ')
             );
     }
 
@@ -219,7 +219,7 @@ protected:
         if ( item.empty() )
             return false;
 
-        item = string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
+        item = melanolib::string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
         auto inventory = storage::storage().maybe_get_sequence(list_id);
 
         auto iter = std::find(inventory.begin(), inventory.end(), item);

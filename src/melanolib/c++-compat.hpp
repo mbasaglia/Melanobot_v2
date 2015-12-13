@@ -17,8 +17,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CXX_COMPAT_HPP
-#define CXX_COMPAT_HPP
+#ifndef MELANOLIB_CXX_COMPAT_HPP
+#define MELANOLIB_CXX_COMPAT_HPP
 
 
 #if defined(__cpp_constexpr) && __cpp_constexpr >= 201304
@@ -32,35 +32,44 @@
 /*#if __has_include(<optional>)
 #    include<optional>
     template<class T>
-        using Optional = std::optional<T>;
+        using melanolib::Optional = std::optional<T>;
 #  elif __has_include(<experimental/optional>)
 #    include <experimental/optional>
     template<class T>
-        using Optional = std::experimental::optional<T>;
+        using melanolib::Optional = std::experimental::optional<T>;
 #  elif __has_include(<boost/optional.hpp>)*/
 #  if __has_include(<boost/optional.hpp>)
 #    include <boost/optional.hpp>
-    template<class T>
-        using Optional = boost::optional<T>;
+    namespace melanolib {
+        template<class T>
+            using Optional = boost::optional<T>;
+    } // namespace melanolib
 #  else
 #     error "Missing <optional>"
 #  endif
 // any
 #if __has_include(<any>)
 #    include<any>
-     using Any = std::any;
+    namespace melanolib {
+        using Any = std::any;
+    } // namespace melanolib
 // #  elif __has_include(<experimental/any>)
 // #    include <experimental/any>
 //     using Any = std::experimental::any;
 #  elif __has_include(<boost/any.hpp>)
 #    include <boost/any.hpp>
-    using Any = boost::any;
+    namespace melanolib {
+        using Any = boost::any;
+    } // namespace melanolib
 #  else
 #     error "Missing <any>"
 #  endif
 #endif // __has_include
 
 #include <memory>
+
+namespace melanolib {
+
 /**
  * \brief Just a shorter version of std::make_unique
  */
@@ -70,4 +79,6 @@ auto New (Args&&... args)
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
-#endif // CXX_COMPAT_HPP
+} // namespace melanolib
+
+#endif // MELANOLIB_CXX_COMPAT_HPP

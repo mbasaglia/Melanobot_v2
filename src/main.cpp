@@ -37,7 +37,7 @@ int main(int argc, char **argv)
         auto lib_path = settings::global_settings.get("path.library", "");
 
         auto modules = module::initialize_modules<const Settings&>(
-            string::char_split(lib_path, ':'),
+            melanolib::string::char_split(lib_path, ':'),
             settings
         );
 

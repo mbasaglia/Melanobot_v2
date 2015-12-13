@@ -20,10 +20,13 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "string/string_functions.hpp"
-#include "string/trie.hpp"
-#include "string/language.hpp"
+#include "
+string/stringutils.hpp"
+#include "melanolib/string/trie.hpp"
+#include "melanolib/string/language.hpp"
 #include "string/quickstream.hpp"
+
+using namespace melanolib;
 
 BOOST_AUTO_TEST_CASE( test_trie_insert )
 {

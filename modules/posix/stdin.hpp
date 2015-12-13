@@ -45,7 +45,7 @@ public:
     static std::unique_ptr<StdinConnection> create(
         const Settings& settings, const std::string& name)
     {
-        return New<StdinConnection>(settings, name);
+        return melanolib::New<StdinConnection>(settings, name);
     }
 
     StdinConnection(const Settings& settings, const std::string& name)

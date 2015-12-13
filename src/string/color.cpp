@@ -169,9 +169,9 @@ Color12 Color12::hsv(double h, double s, double v)
     if ( h < 0 )
         h = 0;
     else if ( h > 1 )
-        h = math::fractional(h);
-    s = math::bound(0,s,1);
-    v = math::bound(0,v,1);
+        h = melanolib::math::fractional(h);
+    s = melanolib::math::bound(0,s,1);
+    v = melanolib::math::bound(0,v,1);
 
     h *= 6;
     auto c = v*s;
@@ -183,10 +183,10 @@ Color12 Color12::hsv(double h, double s, double v)
     auto n = v - c * f;
     auto k = v - c * (1 - f);
 
-    v = math::round(v*0xf);
-    m = math::round(m*0xf);
-    n = math::round(n*0xf);
-    k = math::round(k*0xf);
+    v = melanolib::math::round(v*0xf);
+    m = melanolib::math::round(m*0xf);
+    n = melanolib::math::round(n*0xf);
+    k = melanolib::math::round(k*0xf);
 
     switch (h1)
     {

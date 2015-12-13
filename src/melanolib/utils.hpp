@@ -18,9 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_UTILS_HPP
-#define MELANOBOT_UTILS_HPP
-namespace utils {
+#ifndef MELANOLIB_UTILS_HPP
+#define MELANOLIB_UTILS_HPP
+namespace melanolib {
 
 /**
  * \brief Template to retrieve information about a function signature
@@ -50,5 +50,5 @@ template<class Ret, class...Args>
 template<class T>
     using FunctionPointer = typename FunctionSignature<T>::pointer_type;
 
-} // namespace utils
-#endif // MELANOBOT_UTILS_HPP
+} // namespace melanolib
+#endif // MELANOLIB_UTILS_HPP

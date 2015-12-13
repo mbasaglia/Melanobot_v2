@@ -46,16 +46,16 @@ function(melanotest test_name)
 endfunction(melanotest)
 
 add_executable(test_string EXCLUDE_FROM_ALL test_string.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/language.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/stringutils.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/language.cpp
 )
 melanotest(test_string)
 
 add_executable(test_time EXCLUDE_FROM_ALL test_time.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/language.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
-    ${CMAKE_SOURCE_DIR}/src/time/time.cpp
-    ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/language.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/stringutils.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/time/time.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/time/time_string.cpp
 )
 melanotest(test_time)
 
@@ -65,18 +65,18 @@ add_executable(test_formatter EXCLUDE_FROM_ALL test_formatter.cpp
     ${CMAKE_SOURCE_DIR}/modules/irc/irc_formatter.cpp
     ${CMAKE_SOURCE_DIR}/modules/fun/rainbow.cpp
     ${CMAKE_SOURCE_DIR}/src/string/color.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/stringutils.cpp
     ${CMAKE_SOURCE_DIR}/src/string/logger.cpp
-    ${CMAKE_SOURCE_DIR}/src/time/time.cpp
-    ${CMAKE_SOURCE_DIR}/src/time/time_string.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/language.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/time/time.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/time/time_string.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/language.cpp
     ${CMAKE_SOURCE_DIR}/src/string/encoding.cpp
     ${CMAKE_SOURCE_DIR}/src/string/formatter.cpp
 )
 melanotest(test_formatter)
 
 add_executable(test_json EXCLUDE_FROM_ALL test_json.cpp
-    ${CMAKE_SOURCE_DIR}/src/string/string_functions.cpp
+    ${CMAKE_SOURCE_DIR}/src/melanolib/string/stringutils.cpp
     ${CMAKE_SOURCE_DIR}/src/string/encoding.cpp
 )
 melanotest(test_json)
