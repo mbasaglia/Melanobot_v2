@@ -81,11 +81,12 @@ include_directories("${CMAKE_BINARY_DIR}/src")
 
 #Melano modules
 set_property(GLOBAL PROPERTY MELANOMODULES "")
+option (MODULE_ALL "Enable all modules" OFF)
 macro(melanomodule name description default)
     string(TOUPPER "MODULE_${name}" OPTION_NAME)
     option (${OPTION_NAME} ${description} ${default})
     set(MODULE_NAME "melanomodule_${name}")
-    if (${${OPTION_NAME}})
+    if (${${OPTION_NAME}} OR ${MODULE_ALL})
         set_property(GLOBAL APPEND PROPERTY MELANOMODULES ${MODULE_NAME})
         message(STATUS "Enabled module ${name}: ${description}")
     endif()
