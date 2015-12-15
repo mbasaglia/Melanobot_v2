@@ -14,7 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 melanomodule(xonotic "Xonotic integration" ON)
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+xonotic.cpp
+darkplaces.cpp
+formatter.cpp
+xonotic-connection.cpp
+)
 
 add_library(${MODULE_NAME} MODULE ${SOURCES})
 

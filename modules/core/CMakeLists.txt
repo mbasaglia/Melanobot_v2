@@ -12,9 +12,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-melanomodule(core       "Core module, should always be enabled" ON)
+melanomodule(core "Core module" ON)
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+handler/bridge.cpp
+handler/group.cpp
+core.cpp
+)
 
-add_library(${MODULE_NAME} MODULE ${SOURCES})
+add_library(${MODULE_NAME} SHARED ${SOURCES})
 

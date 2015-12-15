@@ -14,6 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 melanomodule(file_storage "Plain file-based storage" OFF)
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+file_storage.cpp
+file_storage_module.cpp
+)
 
 add_library(${MODULE_NAME} MODULE ${SOURCES})

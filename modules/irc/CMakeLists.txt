@@ -14,7 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 melanomodule(irc "Internet Relay Chat support" ON)
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+irc_formatter.cpp
+irc.cpp
+network/connection.cpp
+network/buffer.cpp
+)
 
 add_library(${MODULE_NAME} MODULE ${SOURCES})
 

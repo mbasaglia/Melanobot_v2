@@ -14,7 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 melanomodule(fun "Possibly useless yet silly stuff" ON)
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+fun.cpp
+rainbow.cpp
+fun-handlers.cpp
+)
 
 add_library(${MODULE_NAME} MODULE ${SOURCES})
 

@@ -14,7 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 melanomodule(script "Scripting interface" ON)
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+python.cpp
+script_variables.cpp
+script.cpp
+)
 
 add_library(${MODULE_NAME} MODULE ${SOURCES})
 

@@ -12,8 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-melanomodule(posix      "Extra features for POSIX systems"      OFF)
+melanomodule(posix "Extra features for POSIX systems" ${UNIX})
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+posix.cpp
+)
 
 add_library(${MODULE_NAME} MODULE ${SOURCES})

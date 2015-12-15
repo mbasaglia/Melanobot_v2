@@ -13,7 +13,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-file(GLOB_RECURSE SOURCES *.cpp)
+set(SOURCES
+message/input_message.cpp
+user/user.cpp
+user/user_group.cpp
+user/user_manager.cpp
+storage.cpp
+melanolib/library.cpp
+melanolib/time/time_string.cpp
+melanolib/time/time.cpp
+melanolib/math.cpp
+melanolib/string/language.cpp
+melanolib/string/stringutils.cpp
+load_module.cpp
+handler/handler.cpp
+settings.cpp
+main.cpp
+melanobot.cpp
+string/encoding.cpp
+string/formatter.cpp
+string/string.cpp
+string/logger.cpp
+string/color.cpp
+network/connection.cpp
+)
 
 set(EXECUTABLE_NAME melanobot) # repeated otherwise kdevelop messes up
 

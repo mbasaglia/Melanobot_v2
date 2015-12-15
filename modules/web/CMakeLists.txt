@@ -14,8 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 melanomodule(web "Web stuff (HTTP and friends)" ON)
 
-file(GLOB_RECURSE SOURCES *.cpp)
-
+set(SOURCES
+http.cpp
+web.cpp
+web-api-concrete.cpp
+)
 
 # cpr
 # set(CPR_VERSION 1.2.0)
