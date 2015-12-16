@@ -22,12 +22,10 @@
 
 #include "library.hpp"
 
+#if __has_include(<dlfcn.h>)
 #include <dlfcn.h>
 
-namespace melanolib {
-namespace library {
-
-class Library::Private
+class melanolib::library::Library::Private
 {
 public:
     void* handle = nullptr;
@@ -64,7 +62,47 @@ public:
             gather_error();
         return ret;
     }
+
+    bool has_handle() const
+    {
+        return handle;
+    }
 };
+
+#else
+
+class melanolib::library::Library::Private
+{
+public:
+    void* handle = nullptr;
+    const char* error_string = "Dynamic library loading has not been implemented for this system";
+    std::string filename;
+
+    void close()
+    {
+    }
+
+    void open(LoadFlags flags)
+    {
+        if ( flags & LoadThrows )
+            throw LibraryError(filename, error_string);
+    }
+
+    void* resolve(const std::string& symbol)
+    {
+        return nullptr;
+    }
+
+    bool has_handle() const
+    {
+        return false;
+    }
+};
+
+#endif
+
+namespace melanolib {
+namespace library {
 
 Library::Library(const std::string& library_file, LoadFlags flags)
     : p(std::make_shared<Private>())
@@ -81,7 +119,7 @@ Library::~Library()
 
 bool Library::error() const
 {
-    return !p->handle || p->error_string;
+    return !p->has_handle() || p->error_string;
 }
 
 std::string Library::error_string() const
