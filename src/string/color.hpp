@@ -54,7 +54,7 @@ public:
     Color12& operator=(Color12&&) noexcept = default;
 
     SUPER_CONSTEXPR Color12(BitMask mask)
-        : valid(true), r((mask>>4)&0xf), g((mask>>4)&0xf), b(mask&0xf) {}
+        : valid(true), r((mask>>8)&0xf), g((mask>>4)&0xf), b(mask&0xf) {}
 
     /**
      * \brief Creates a color from its rgb components
