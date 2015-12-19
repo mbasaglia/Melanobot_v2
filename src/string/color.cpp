@@ -54,7 +54,9 @@ Color12::Color12(const std::string& s)
         b = component_from_hex(s[2]);
     }
     else
+    {
         *this = color::Color12::from_name(s);
+    }
 }
 
 Color12::Component Color12::to_4bit() const

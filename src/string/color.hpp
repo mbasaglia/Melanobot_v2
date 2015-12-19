@@ -46,6 +46,16 @@ public:
      */
     using BitMask = uint16_t;
 
+    /**
+     * \brief Number of bits a channel is shifted by in masks
+     */
+    static constexpr BitMask channel_shift = 4;
+
+    /**
+     * \brief Bit patters that masks only the least significant
+     */
+    static constexpr BitMask channel_mask = (1 << channel_shift) - 1;
+
 
     Color12() = default;
     Color12(const Color12&) = default;
@@ -54,7 +64,11 @@ public:
     Color12& operator=(Color12&&) noexcept = default;
 
     SUPER_CONSTEXPR Color12(BitMask mask)
-        : valid(true), r((mask>>8)&0xf), g((mask>>4)&0xf), b(mask&0xf) {}
+        : valid(true),
+          r((mask >> channel_shift*2 ) & channel_mask),
+          g((mask >> channel_shift) & channel_mask),
+          b(mask & channel_mask)
+    {}
 
     /**
      * \brief Creates a color from its rgb components
@@ -76,7 +90,7 @@ public:
      */
     SUPER_CONSTEXPR BitMask to_bit_mask() const
     {
-        return (r << 8) | (g << 4) | b;
+        return (r << channel_shift*2) | (g << channel_shift) | b;
     }
 
     /**
@@ -140,7 +154,10 @@ public:
     }
 
 private:
-    static SUPER_CONSTEXPR Component validate(Component c) { return c > 0xf ? 0xf : c; }
+    static constexpr Component validate(Component c)
+    {
+        return c > channel_mask ? channel_mask : c;
+    }
     static SUPER_CONSTEXPR Component component_from_hex(char c)
     {
         if ( c <= '9' && c >= '0' )
@@ -151,7 +168,10 @@ private:
             return c - 'A' + 0xa;
         return 0;
     }
-    static SUPER_CONSTEXPR char component_to_hex(Component c) { return c < 0xa ? c+'0' : c-0xa+'a'; }
+    static constexpr char component_to_hex(Component c)
+    {
+        return c < 0xa ? c+'0' : c-0xa+'a';
+    }
 
     bool valid  = false;
     Component r = 0;
