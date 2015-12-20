@@ -32,6 +32,8 @@ int main(int argc, char **argv)
 
     try {
         Settings settings = settings::initialize(argc, argv);
+
+        Logger::instance().register_log_type("sys",color::dark_red);
         Logger::instance().load_settings(settings.get_child("log",{}));
 
         auto lib_path = settings::global_settings.get("path.library", "");
@@ -40,10 +42,6 @@ int main(int argc, char **argv)
             melanolib::string::char_split(lib_path, ':'),
             settings
         );
-
-        // Load log settings again to ensure log types defined by modules
-        // are handled correctly
-        Logger::instance().load_settings(settings.get_child("log",{}));
 
         if ( !settings.empty() )
         {

@@ -35,8 +35,6 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_core_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_core_initialize(const Settings&)
 {
-    module::register_log_type("sys",color::dark_red);
-
     module::register_handler<core::AdminQuit>("Quit");
     module::register_handler<core::AdminGroup>("AdminGroup");
     module::register_handler<core::FilterGroup>("FilterGroup");

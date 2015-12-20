@@ -50,7 +50,7 @@ void gather_metadata(const std::string& search_path,
         std::string basename = entry.path().filename().string();
         if ( std::regex_match(basename, match, regex) )
         {
-            Log("sys",'!') << "\tLoading library " << entry;
+            Log("sys",'!',4) << "\tLoading library " << entry;
             try
             {
                 Library lib(entry.path().native(),
@@ -59,7 +59,7 @@ void gather_metadata(const std::string& search_path,
                     match[1].str()+"_metadata");
                 module.library = lib;
                 modules.push_back(module);
-                Log("sys",'!') << "\tFound module "
+                Log("sys",'!',3) << "\tFound module "
                                 << module.name << ' ' << module.version;
             }
             catch ( const LibraryError& error )
@@ -134,7 +134,7 @@ std::vector<module::Melanomodule> find_modules(const std::vector<std::string>& p
     if ( paths.empty() )
         return {};
 
-    Log("sys",'!') << "Searching for modules";
+    Log("sys",'!',3) << "Searching for modules";
     std::vector<module::Melanomodule> modules;
     for ( const auto& path : paths )
         gather_metadata(path, modules);

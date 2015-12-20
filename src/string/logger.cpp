@@ -46,6 +46,24 @@ void Logger::log (const std::string& type, char direction,
         << formatter->clear() << std::endl;
 }
 
+
+void Logger::register_log_type(const std::string& name, color::Color12 color)
+{
+    if ( log_type_length < name.size() )
+        log_type_length = name.size();
+    log_types[name].color = color;
+}
+
+void Logger::register_direction(char name, color::Color12 color)
+{
+    log_directions[name] = color;
+}
+
+void Logger::set_log_verbosity(const std::string& name, int level)
+{
+    log_types[name].verbosity = level;
+}
+
 void Logger::load_settings(const Settings& settings)
 {
     std::string format = settings.get("string_format","ansi-utf8");
@@ -55,10 +73,16 @@ void Logger::load_settings(const Settings& settings)
     {
         auto type_it = log_types.find(p.first);
         if ( type_it != log_types.end() )
+        {
             type_it->second.verbosity = p.second.get_value(type_it->second.verbosity);
+        }
         else
+        {
+            if ( log_type_length < p.first.size() )
+                log_type_length = p.first.size();
             log_types.insert({p.first,
                 LogType{color::nocolor,p.second.get_value(2)}});
+        }
     }
     /// \todo maybe should use different a formatter (ie: plain utf8) for log files
     std::string output = settings.get("logfile","");

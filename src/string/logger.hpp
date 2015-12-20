@@ -53,10 +53,7 @@ public:
      * A direction is a simple identifier showing what kind of message
      * has been logged
      */
-    void register_direction(char name, color::Color12 color)
-    {
-        log_directions[name] = color;
-    }
+    void register_direction(char name, color::Color12 color);
 
     /**
      * \brief Register a log type
@@ -65,22 +62,14 @@ public:
      * Better to keep it short, 3 letters should do.
      * The default verbosity is 2
      */
-    void register_log_type(const std::string& name, color::Color12 color)
-    {
-        if ( log_type_length < name.size() )
-            log_type_length = name.size();
-        log_types[name] = {color,2};
-    }
+    void register_log_type(const std::string& name, color::Color12 color);
 
     /**
      * \brief Change verbosity level for a given log type
      *
      * Messages of that type with higher verbisity will be discarded
      */
-    void set_log_verbosity(const std::string& name, int level)
-    {
-        log_types[name].verbosity = level;
-    }
+    void set_log_verbosity(const std::string& name, int level);
 
     /**
      * \brief Log a message
@@ -98,7 +87,7 @@ private:
     struct LogType
     {
         color::Color12 color;
-        int verbosity;
+        int verbosity = 2;
     };
 
     Logger()
