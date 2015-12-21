@@ -155,8 +155,10 @@ public:
 class ErrorLog : public Log
 {
 public:
-    ErrorLog(const std::string& type, const std::string& error = "Error" )
-        : Log(type,'!',0)
+    ErrorLog(const std::string& type,
+             const std::string& error = "Error",
+             int verbosity = 0 )
+        : Log(type,'!',verbosity)
     {
         stream << string::FormatFlags::BOLD << color::red << error
             << string::ClearFormatting() << ": ";
