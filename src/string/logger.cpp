@@ -18,6 +18,7 @@
  */
 #include "logger.hpp"
 #include "melanolib/time/time_string.hpp"
+#include "concurrency/concurrency.hpp"
 
 void Logger::log (const std::string& type, char direction,
     const string::FormattedString& message, int verbosity)
@@ -25,11 +26,12 @@ void Logger::log (const std::string& type, char direction,
     if ( !formatter )
         formatter = new string::FormatterAnsi(true); // This happens when everything else has failed and will leak
 
+    std::lock_guard<std::mutex> lock(mutex);
+
     auto type_it = log_types.find(type);
     if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
         return;
 
-    std::lock_guard<std::mutex> lock(mutex);
     if ( !timestamp.empty() )
     {
         log_destination <<  formatter->color(color::yellow) <<
@@ -49,6 +51,7 @@ void Logger::log (const std::string& type, char direction,
 
 void Logger::register_log_type(const std::string& name, color::Color12 color)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if ( log_type_length < name.size() )
         log_type_length = name.size();
     log_types[name].color = color;
@@ -56,16 +59,20 @@ void Logger::register_log_type(const std::string& name, color::Color12 color)
 
 void Logger::register_direction(char name, color::Color12 color)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     log_directions[name] = color;
 }
 
 void Logger::set_log_verbosity(const std::string& name, int level)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     log_types[name].verbosity = level;
 }
 
 void Logger::load_settings(const Settings& settings)
 {
+    std::lock_guard<std::mutex> lock(mutex);
+
     std::string format = settings.get("string_format","ansi-utf8");
     formatter = string::Formatter::formatter(format);
     timestamp = settings.get("timestamp",timestamp);
