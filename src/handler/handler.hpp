@@ -316,20 +316,13 @@ protected:
 /**
  * \brief Handler Factory
  */
-class HandlerFactory
+class HandlerFactory : public melanolib::Singleton<HandlerFactory>
 {
 public:
     /**
      * \brief Function object type used to create instances
      */
     using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,MessageConsumer*)>;
-
-
-    static HandlerFactory& instance()
-    {
-        static HandlerFactory singleton;
-        return singleton;
-    }
 
     /**
      * \brief Builds a handler from its name and settings
@@ -358,14 +351,14 @@ public:
      */
     void register_handler(const std::string& name, const CreateFunction& func)
     {
-        if ( handler::HandlerFactory().instance().factory.count(name) )
+        if ( factory.count(name) )
             ErrorLog("sys") << "Overwriting handler " << name;
-        handler::HandlerFactory().instance().factory[name] = func;
+        factory[name] = func;
     }
 
 private:
     HandlerFactory() {}
-    HandlerFactory(const HandlerFactory&) = delete;
+    friend ParentSingleton;
 
     std::unordered_map<std::string,CreateFunction> factory;
 };

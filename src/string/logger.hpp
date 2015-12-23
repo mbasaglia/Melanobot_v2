@@ -34,18 +34,9 @@
  * \brief Singleton class handling logs
  * \see Log for a nicer interface
  */
-class Logger
+class Logger : public melanolib::Singleton<Logger>
 {
 public:
-
-    /**
-     * \brief Singleton instance
-     */
-    static Logger& instance()
-    {
-        static Logger singleton;
-        return singleton;
-    }
 
     /**
      * \brief Register a log "direction"
@@ -94,10 +85,7 @@ private:
     {
         log_buffer.push_buffer(std::cout.rdbuf());
     }
-    Logger(const Logger&) = delete;
-    Logger(Logger&&) = delete;
-    Logger& operator=(const Logger&) = delete;
-    Logger& operator=(Logger&&) = delete;
+    friend ParentSingleton;
 
     Multibuf     log_buffer;
     std::ostream log_destination {&log_buffer};

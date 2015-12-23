@@ -205,7 +205,7 @@ private:
 /**
  * \brief Class storing the service objects
  */
-class ServiceRegistry
+class ServiceRegistry : public melanolib::Singleton<ServiceRegistry>
 {
 public:
 
@@ -218,12 +218,6 @@ public:
         if ( ServiceRegistry().instance().services.count(name) )
             ErrorLog("sys") << "Overwriting service " << name;
         ServiceRegistry().instance().services[name] = {object, false};
-    }
-
-    static ServiceRegistry& instance()
-    {
-        static ServiceRegistry singleton;
-        return singleton;
     }
 
     /**
@@ -308,10 +302,7 @@ private:
     std::unordered_map<std::string,Entry> services;
 
     ServiceRegistry(){}
-    ServiceRegistry(const ServiceRegistry&) = delete;
-    ServiceRegistry(ServiceRegistry&&) = delete;
-    ServiceRegistry& operator=(const ServiceRegistry&) = delete;
-    ServiceRegistry& operator=(ServiceRegistry&&) = delete;
+    friend ParentSingleton;
 };
 
 /**

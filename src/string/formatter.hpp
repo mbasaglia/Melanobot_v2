@@ -24,6 +24,7 @@
 #include "format_flags.hpp"
 #include "color.hpp"
 #include "encoding.hpp"
+#include "melanolib/singleton.hpp"
 
 namespace string {
 
@@ -47,14 +48,9 @@ public:
      * Also note that this doesn't really create objects since they don't need
      * any data, so the objects are created only once.
      */
-    class Registry
+    class Registry : public melanolib::Singleton<Registry>
     {
     public:
-        static Registry& instance()
-        {
-            static Registry factory;
-            return factory;
-        }
 
         ~Registry()
         {
@@ -77,10 +73,7 @@ public:
         Formatter* default_formatter = nullptr;
     private:
         Registry();
-        Registry(const Registry&) = delete;
-        Registry(Registry&&) = delete;
-        Registry& operator=(const Registry&) = delete;
-        Registry& operator=(Registry&&) = delete;
+        friend ParentSingleton;
     };
 
     Formatter() = default;

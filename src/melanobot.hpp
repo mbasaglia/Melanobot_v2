@@ -33,19 +33,10 @@
 /**
  * \brief Main bot class
  */
-class Melanobot : public MessageConsumer
+class Melanobot : public MessageConsumer, public melanolib::Singleton<Melanobot>
 {
 public:
     ~Melanobot();
-
-    /**
-     * \brief Returns the singleton instance
-     */
-    static Melanobot& instance()
-    {
-        static Melanobot singleton;
-        return singleton;
-    }
 
     /**
      * \brief Loads the bot settings
@@ -94,10 +85,7 @@ public:
 
 private:
     explicit Melanobot();
-    Melanobot(const Melanobot&) = delete;
-    Melanobot(Melanobot&&) = delete;
-    Melanobot& operator=(const Melanobot&) = delete;
-    Melanobot& operator=(Melanobot&&) = delete;
+    friend ParentSingleton;
     
     bool handle(network::Message& msg) override;
 

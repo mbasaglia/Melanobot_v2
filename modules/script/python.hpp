@@ -40,7 +40,7 @@ struct ScriptOutput
 /**
  * \brief Scripting engine for python
  */
-class PythonEngine
+class PythonEngine : public melanolib::Singleton<PythonEngine>
 {
 public:
     /**
@@ -57,18 +57,9 @@ public:
      */
     ScriptOutput exec_file(const std::string& file, const Converter& vars = {});
 
-    /**
-     * \brief Singleton instance
-     */
-    static PythonEngine& instance()
-    {
-        static PythonEngine singleton;
-        return singleton;
-    }
-
 private:
     PythonEngine() {}
-    PythonEngine(const PythonEngine&) = delete;
+    friend ParentSingleton;
 
     /**
      * \brief Initializes the interpreter

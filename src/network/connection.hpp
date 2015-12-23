@@ -253,20 +253,11 @@ private:
 /**
  * \brief Creates connections from settings
  */
-class ConnectionFactory
+class ConnectionFactory : public melanolib::Singleton<ConnectionFactory>
 {
 public:
     using Contructor = std::function<std::unique_ptr<Connection>
         (const Settings& settings, const std::string&name)>;
-
-    /**
-     * \brief Singleton instance
-     */
-    static ConnectionFactory& instance()
-    {
-        static ConnectionFactory singleton;
-        return singleton;
-    };
 
     /**
      * \brief Registers a connection type
@@ -284,10 +275,7 @@ public:
 
 private:
     ConnectionFactory(){}
-    ConnectionFactory(const ConnectionFactory&) = delete;
-    ConnectionFactory(ConnectionFactory&&) = delete;
-    ConnectionFactory& operator=(const ConnectionFactory&) = delete;
-    ConnectionFactory& operator=(ConnectionFactory&&) = delete;
+    friend ParentSingleton;
 
     std::unordered_map<std::string,Contructor> factory;
 };

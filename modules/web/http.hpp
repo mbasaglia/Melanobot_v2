@@ -59,20 +59,17 @@ Request post(const std::string& url, const Parameters& params = Parameters());
 /**
  * \brief HTTP Service
  */
-class HttpService : public ThreadedAsyncService
+class HttpService : public ThreadedAsyncService, public melanolib::Singleton<HttpService>
 {
 public:
     Response query (const Request& request) override;
     void initialize(const Settings& settings) override;
     bool auto_load() const override { return true; }
 
-    static HttpService& instance()
-    {
-        static HttpService singleton;
-        return singleton;
-    }
-
 private:
+    HttpService(){}
+    friend ParentSingleton;
+
     std::string user_agent;
     int         max_redirs = 3;
 };
