@@ -30,8 +30,6 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_file_storage_metadata
 
 MELANOMODULE_ENTRY_POINT void melanomodule_file_storage_initialize(const Settings& settings)
 {
-    storage::set_storage(std::make_unique<storage::file::Storage>(
-        settings.get_child("storage",{})
-    ));
+    module::register_storage<storage::file::Storage>("file");
 }
 

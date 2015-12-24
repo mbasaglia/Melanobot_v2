@@ -21,21 +21,31 @@
 #include "settings.hpp"
 #include "network/async_service.hpp"
 #include "load_module.hpp"
+#include "storage.hpp"
 
 int main(int argc, char **argv)
 {
+    // Initialize static components
     Logger::instance().register_direction('<',color::dark_green);
     Logger::instance().register_direction('>',color::dark_yellow);
     Logger::instance().register_direction('!',color::dark_blue);
 
+    Logger::instance().register_log_type("sys",color::dark_red);
+
     string::Formatter::registry(); // ensures the default formatters get loaded
 
     try {
+        // Load settings and environment
         Settings settings = settings::initialize(argc, argv);
 
-        Logger::instance().register_log_type("sys",color::dark_red);
+
+        if ( settings.empty() )
+            throw ConfigurationError("Missing configuration");
+
+        // Log configuration
         Logger::instance().load_settings(settings.get_child("log",{}));
 
+        // Load module
         auto lib_path = settings::global_settings.get("path.library", "");
 
         auto modules = module::initialize_modules<const Settings&>(
@@ -43,16 +53,20 @@ int main(int argc, char **argv)
             settings
         );
 
-        if ( !settings.empty() )
-        {
-            Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
-            network::ServiceRegistry::instance().initialize(settings.get_child("services",{}));
-            network::ServiceRegistry::instance().start();
-            Melanobot::load(settings).run();
-            network::ServiceRegistry::instance().stop();
-            /// \todo some way to reload the config and restart the bot
-        }
+        // Initialize storage
+        storage::StorageFactory::instance().initilize_global_storage(
+            settings.get_child("storage",{})
+        );
 
+        // Load and run all services and the bot
+        Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
+        network::ServiceRegistry::instance().initialize(settings.get_child("services",{}));
+        network::ServiceRegistry::instance().start();
+        Melanobot::load(settings).run();
+        network::ServiceRegistry::instance().stop();
+        /// \todo some way to reload the config and restart the bot
+
+        // Finalize for a clean exit
         int exit_code = settings::global_settings.get("exit_code",0);
         Log("sys",'!',4) << "Exiting with status " << exit_code;
         return exit_code;

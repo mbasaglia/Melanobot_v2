@@ -25,6 +25,7 @@
 #include <unordered_map>
 
 #include "error.hpp"
+#include "settings.hpp"
 
 namespace storage {
 
@@ -133,6 +134,36 @@ public:
      * \brief Ensures all chached data is refreshed
      */
     virtual void load() = 0;
+};
+
+/**
+ * \brief Class used to create storage object and initialize the global storage
+ */
+class StorageFactory : public melanolib::Singleton<StorageFactory>
+{
+public:
+    /// Function type used to create storage objects
+    using Constructor = std::function<std::unique_ptr<StorageBase>(const Settings&)>;
+
+    /**
+     * \brief Creates a storage object based on the settings
+     */
+    std::unique_ptr<StorageBase> create(const Settings& settings) const;
+    /**
+     * \brief Registers a new storage type
+     */
+    void register_type(const std::string& name, const Constructor& ctor);
+    /**
+     * \brief Sets the global storage to the result of create()
+     */
+    void initilize_global_storage(const Settings& settings) const;
+
+private:
+    StorageFactory(){}
+    friend ParentSingleton;
+
+    std::map<std::string, Constructor> constructors;
+
 };
 
 /**

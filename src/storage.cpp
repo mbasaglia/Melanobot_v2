@@ -46,5 +46,31 @@ bool has_storage()
     return bool(storage_pointer);
 }
 
+std::unique_ptr<StorageBase> StorageFactory::create(const Settings& settings) const
+{
+    auto name = settings.get_optional<std::string>("type");
+    if ( name )
+    {
+        auto it = constructors.find(*name);
+        if ( it != constructors.end() )
+            return it->second(settings);
+    }
+
+    return {};
+}
+
+void StorageFactory::initilize_global_storage(const Settings& settings) const
+{
+    set_storage(create(settings));
+}
+
+void StorageFactory::register_type(const std::string& name, const Constructor& ctor)
+{
+    if ( constructors.count(name) )
+        throw Error(name+" is already a registered type of storage");
+
+    constructors[name] = ctor;
+}
+
 
 } // namespace storage

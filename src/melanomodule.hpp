@@ -27,6 +27,7 @@
 #include "handler/handler.hpp"
 #include "melanolib/library.hpp"
 #include "melanolib/c++-compat.hpp"
+#include "storage.hpp"
 
 namespace module {
 
@@ -190,12 +191,28 @@ template<class ServiceT>
 template<class HandlerT>
     void register_handler(const std::string& name)
     {
-        static_assert(std::is_base_of<handler::Handler,HandlerT>::value,
+        static_assert(std::is_base_of<handler::Handler, HandlerT>::value,
                         "Expected handler::Handler type");
         handler::HandlerFactory::instance().register_handler( name,
             [] ( const Settings& settings, MessageConsumer* parent )
                     -> std::unique_ptr<handler::Handler> {
                 return melanolib::New<HandlerT>(settings,parent);
+        });
+    }
+
+/**
+ * \brief Registers a file storage back-end
+ * \tparam StorageT  Storage to be registered
+ * \param  name      Name to be used in the configuration
+ */
+template<class StorageT>
+    void register_storage(const std::string& name)
+    {
+        static_assert(std::is_base_of<storage::StorageBase, StorageT>::value,
+                        "Expected storage::StorageBase type");
+        storage::StorageFactory::instance().register_type( name,
+            [] ( const Settings& settings ) {
+                return melanolib::New<StorageT>(settings);
         });
     }
 
