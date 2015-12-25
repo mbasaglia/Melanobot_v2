@@ -236,7 +236,14 @@ bot
 ;             {
 ;                 yt_api_key "Your YouTube Data API Key"
 ;             }
-            SearchImageGoogle   ; "image" Searches for an image using Google
+            SearchWebSearx      ; "image" Searches for an image using Searx
+            {
+                trigger     image
+                reply       "%image"
+                not_found   "Didn't find any image of %search"
+                category    images
+                description 0
+            }
             UrbanDictionary     ; "define" Searches on Urban Dictionary
             SearchWebSearx      ; "search" Searches for web pages with Searx
             Time                ; "time" Shows the current time (UTC)

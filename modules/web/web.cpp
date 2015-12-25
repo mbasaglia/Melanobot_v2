@@ -34,7 +34,6 @@ MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
     module::register_service<network::http::HttpService>("web");
 
     module::register_handler<web::SearchVideoYoutube>("SearchVideoYoutube");
-    module::register_handler<web::SearchImageGoogle>("SearchImageGoogle");
     module::register_handler<web::UrbanDictionary>("UrbanDictionary");
     module::register_handler<web::SearchWebSearx>("SearchWebSearx");
     module::register_handler<web::VideoInfo>("VideoInfo");

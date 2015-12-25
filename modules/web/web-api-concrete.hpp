@@ -269,43 +269,6 @@ private:
 };
 
 /**
- * \brief Handler searching images with Google
- */
-class SearchImageGoogle : public SimpleJson
-{
-public:
-    SearchImageGoogle(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("image",settings,parent)
-    {
-        synopsis += "Term...";
-        help = "Search an image using Google";
-        not_found_reply = settings.get("not_found", not_found_reply );
-    }
-
-protected:
-    bool on_handle(network::Message& msg) override
-    {
-        std::string url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=1";
-        request_json(msg,network::http::get(url,{{"q",msg.message}}));
-        return true;
-    }
-
-    void json_success(const network::Message& msg, const Settings& parsed) override
-    {
-        std::string result = parsed.get("responseData.results.0.unescapedUrl","");
-        if ( result.empty() )
-            result = melanolib::string::replace(not_found_reply,{
-                {"search", msg.message},
-                {"user", msg.from.name}
-            }, "%");
-        reply_to(msg,result);
-    }
-
-private:
-    std::string not_found_reply = "Didn't find any image of %search";
-};
-
-/**
  * \brief Handler searching a definition on Urban Dictionary
  */
 class UrbanDictionary : public SimpleJson
@@ -348,7 +311,6 @@ private:
     std::string not_found_reply = "I don't know what %search means";
 };
 
-
 /**
  * \brief Handler searching a web page using Searx
  */
@@ -358,48 +320,92 @@ public:
     SearchWebSearx(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("search",settings,parent)
     {
-        synopsis += "Term...";
-        help = "Search the web using Searx";
+        synopsis += " Term...";
         api_url = settings.get("url",api_url);
         not_found_reply = settings.get("not_found", not_found_reply );
+        found_reply = settings.get("reply", found_reply );
+        category = settings.get("category", category );
+        description_maxlen = settings.get("description", description_maxlen );
+
+
+        std::string what = category;
+        if ( what == "general" || what.empty() )
+            what = "the web";
+        help = "Search "+what+" using Searx";
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url,{{"format","json"},{"q",msg.message}}));
+        request_json(msg,network::http::get(api_url,{
+            {"format", "json"},
+            {"q", msg.message},
+            {"categories", category}
+        }));
         return true;
     }
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
+        using namespace melanolib::string;
+        string::FormatterConfig fmt;
+
         if ( settings::has_child(parsed,"results.0.title") )
         {
-            string::FormatterUtf8 fmt;
-            string::FormattedString title(&fmt);
-            title << string::FormatFlags::BOLD << parsed.get("results.0.title","")
-                  << string::FormatFlags::NO_FORMAT << ": "
-                  << parsed.get("results.0.url","");
-            reply_to(msg,title);
+            Properties props = {
+                {"title",  parsed.get("results.0.title","")},
+                {"url", parsed.get("results.0.url","")},
+                {"image", parsed.get("results.0.img_src","")},
+                {"longitude", parsed.get("results.0.longitude","")},
+                {"latitude", parsed.get("results.0.latitude","")},
+            };
 
-            std::string result = parsed.get("results.0.content","");
-            result = melanolib::string::elide( melanolib::string::collapse_spaces(result), 400 );
-            reply_to(msg,result);
+            reply_to(msg, fmt.decode(replace(found_reply, props, "%")));
+
+            if ( description_maxlen )
+            {
+                std::string result = parsed.get("results.0.content","");
+                if ( description_maxlen > 0 )
+                    result = elide( collapse_spaces(result), description_maxlen );
+                reply_to(msg,result);
+            }
         }
         else
         {
-            std::string result = melanolib::string::replace(not_found_reply,{
+            Properties props = {
                 {"search", msg.message},
                 {"user", msg.from.name}
-            }, "%");
-            reply_to(msg,result);
+            };
+
+            reply_to(msg, fmt.decode(replace(not_found_reply, props, "%")));
         }
 
     }
-private:
 
+private:
+    /// Base url for the searx installation
     std::string api_url = "https://searx.me/";
+    /**
+     * \brief Reply to give on a successful call.
+     * Expands: title, url, image, longitude, latitude
+     */
+    std::string found_reply = "#-b#%title#-#: %url";
+    /**
+     * \brief Length of the content description
+     *
+     * Longer conent is elided, if 0 no description, if negative unelided
+     */
+    int description_maxlen = 400;
+    /**
+     * \brief Reply given when no results were found
+     *
+     * Expands: search, user
+     */
     std::string not_found_reply = "Didn't find anything about %search";
+    /**
+     * \brief Search categry
+     */
+    std::string category = "general";
 };
 
 /**
