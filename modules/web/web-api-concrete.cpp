@@ -79,4 +79,59 @@ bool VideoInfo::on_handle(network::Message& msg)
     return false;
 }
 
+
+SearchWebSearx::SearchWebSearx(const Settings& settings, MessageConsumer* parent)
+    : SimpleJson("search",settings,parent)
+{
+    synopsis += " Term...";
+    api_url = settings.get("url",api_url);
+    not_found_reply = settings.get("not_found", not_found_reply );
+    found_reply = settings.get("reply", found_reply );
+    category = settings.get("category", category );
+    description_maxlen = settings.get("description", description_maxlen );
+
+
+    std::string what = category;
+    if ( what == "general" || what.empty() )
+        what = "the web";
+    help = "Search "+what+" using Searx";
+}
+
+void SearchWebSearx::json_success(const network::Message& msg, const Settings& parsed)
+{
+    using namespace melanolib::string;
+    string::FormatterConfig fmt;
+
+    if ( settings::has_child(parsed,"results.0.title") )
+    {
+        Properties props = {
+            {"title",  parsed.get("results.0.title","")},
+            {"url", parsed.get("results.0.url","")},
+            {"image", parsed.get("results.0.img_src","")},
+            {"longitude", parsed.get("results.0.longitude","")},
+            {"latitude", parsed.get("results.0.latitude","")},
+        };
+
+        reply_to(msg, fmt.decode(replace(found_reply, props, "%")));
+
+        if ( description_maxlen )
+        {
+            std::string result = parsed.get("results.0.content","");
+            if ( description_maxlen > 0 )
+                result = elide( collapse_spaces(result), description_maxlen );
+            reply_to(msg,result);
+        }
+    }
+    else
+    {
+        Properties props = {
+            {"search", msg.message},
+            {"user", msg.from.name}
+        };
+
+        reply_to(msg, fmt.decode(replace(not_found_reply, props, "%")));
+    }
+
+}
+
 } // namespace web
