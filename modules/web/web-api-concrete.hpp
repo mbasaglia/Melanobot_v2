@@ -239,7 +239,7 @@ private:
         R"regex((?:(?:youtube\.com/watch\?v=|youtu\.be/)([-_0-9a-zA-Z]+)))regex"
         R"regex(|(?:vimeo\.com/([0-9]+)))regex"
         R"regex(|(?:dailymotion\.com/video/([0-9a-zA-Z]+)))regex"
-        R"regex(|(?:vid.me/([0-9a-zA-Z]+)))regex",
+        R"regex(|(?:vid.me/(?:e/)?([0-9a-zA-Z]+)))regex",
         std::regex::ECMAScript|std::regex::optimize
     };
     /**
