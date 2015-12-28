@@ -46,7 +46,11 @@ log
                 ; 2 [default] Shows web requests
     }
 }
-
+; Enables file-based storage for persistent data
+storage
+{
+    type file
+}
 ; Defines reusable definitions which can be repeated
 templates
 {
