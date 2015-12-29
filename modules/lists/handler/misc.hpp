@@ -95,7 +95,7 @@ public:
                                  std::regex::ECMAScript|std::regex::optimize);
 
         help = "Adds a dynamic reply";
-        synopsis += "trigger "+separator+" reply";
+        synopsis += " trigger "+separator+" reply";
     }
 
 protected:

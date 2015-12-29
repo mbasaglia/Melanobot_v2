@@ -35,7 +35,7 @@ public:
     SearchVideoYoutube(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("video",settings,parent)
     {
-        synopsis += "Term...";
+        synopsis += " Term...";
         help = "Search a video on YouTube";
         yt_api_key = settings.get("yt_api_key", "");
         order = settings.get("order", order);
@@ -277,7 +277,7 @@ public:
     UrbanDictionary(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("define",settings,parent)
     {
-        synopsis += "Term...";
+        synopsis += " Term...";
         help = "Search a definition on Urban Dictionary";
         not_found_reply = settings.get("not_found", not_found_reply );
     }
@@ -367,7 +367,7 @@ public:
     MediaWiki(const Settings& settings, MessageConsumer* parent)
         : SimpleJson("wiki",settings,parent)
     {
-        synopsis += "Term...";
+        synopsis += " Term...";
         help = "Search a page on a wiki";
         api_url = settings.get("url",api_url);
         reply = settings.get("reply",reply);

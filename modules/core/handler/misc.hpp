@@ -518,7 +518,7 @@ public:
         : SimpleAction("time",settings,parent)
     {
         format = settings.get("format",format);
-        synopsis += "[time]";
+        synopsis += " [time]";
         help = "Shows the time";
     }
 
