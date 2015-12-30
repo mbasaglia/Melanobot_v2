@@ -33,8 +33,8 @@ namespace module {
 void gather_metadata(const std::string& search_path,
                      std::vector<module::Melanomodule>& modules)
 {
-    static std::regex regex(R"re(lib(melanomodule_[-_.a-zA-Z0-9]+).so)re",
-                            std::regex::optimize|std::regex::extended);
+    static std::regex regex(R"re(lib(melanomodule_(?:-|[_.a-zA-Z0-9])+).so)re",
+                            std::regex::optimize|std::regex::ECMAScript);
 
     if ( !boost::filesystem::exists(search_path) )
         return;

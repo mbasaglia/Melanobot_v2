@@ -77,6 +77,10 @@ private:
      */
     struct LogType
     {
+
+        LogType(color::Color12 color = {},  int verbosity = 2)
+            : color(color), verbosity(verbosity) {}
+
         color::Color12 color;
         int verbosity = 2;
     };

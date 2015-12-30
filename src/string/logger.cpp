@@ -88,7 +88,7 @@ void Logger::load_settings(const Settings& settings)
             if ( log_type_length < p.first.size() )
                 log_type_length = p.first.size();
             log_types.insert({p.first,
-                LogType{color::nocolor,p.second.get_value(2)}});
+                LogType(color::nocolor,p.second.get_value(2))});
         }
     }
     /// \todo maybe should use different a formatter (ie: plain utf8) for log files
