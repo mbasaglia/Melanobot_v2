@@ -261,6 +261,7 @@ IrcCore
         WhoisCheckMe                    ; "checkme" Makes the bot check if you are logged in
         License                         ; "license" Shows license info (Note: Required by the AGPL
         Help { public 0 }               ; "help" Shows help on available commands
+        Help { trigger "public help" }  ; "public help" Shows help on available commands to everyone, not just the one who requested it
     }
 }
 
