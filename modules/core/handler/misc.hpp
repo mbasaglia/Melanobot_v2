@@ -98,6 +98,10 @@ protected:
                 if ( !names.empty() )
                 {
                     std::sort(names.begin(),names.end());
+                    for ( auto& name : names )
+                        if ( name.find(' ') != std::string::npos )
+                            name = '"' + name + '"';
+
                     if ( !synopsis.empty() )
                         synopsis << ": ";
                     synopsis << melanolib::string::implode(" ", names);
