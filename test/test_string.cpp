@@ -311,7 +311,7 @@ BOOST_AUTO_TEST_CASE( test_is_one_of )
 
 BOOST_AUTO_TEST_CASE( test_English )
 {
-    string::English english;
+    using string::english;
 
     // genitive
     BOOST_CHECK( english.genitive("Melano") == "Melano's" );

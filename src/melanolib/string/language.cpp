@@ -173,6 +173,7 @@ Inflector English::infl_plural = {
     {"(.+)$", "$1s"},
 };
 
+English english;
 
 } // namespace string
 } // namespace melanolib

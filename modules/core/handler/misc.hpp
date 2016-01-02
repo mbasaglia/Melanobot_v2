@@ -483,7 +483,7 @@ protected:
             return true;
         }
 
-        melanolib::string::English engl;
+        using melanolib::string::english;
         // should match \S+|(?:don't be) but it's ambiguous
         static std::regex regex_imperative (
             R"(\s*(\S+(?: be)?)\s*(.*))",
@@ -494,8 +494,8 @@ protected:
         if ( std::regex_match(msg.message, match, regex_imperative) )
         {
             reply_to(msg,network::OutputMessage(
-                engl.imperate(match[1])+" "+
-                engl.pronoun_to3rd(match[2],msg.from.name,msg.source->name()),
+                english.imperate(match[1])+" "+
+                english.pronoun_to3rd(match[2],msg.from.name,msg.source->name()),
                 true
             ));
         }

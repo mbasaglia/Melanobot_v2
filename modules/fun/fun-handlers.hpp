@@ -325,7 +325,7 @@ protected:
 
         Properties discord {
             {"day_name", day_names[day%day_names.size()]},
-            {"season_day", std::to_string(day%73+1)+melanolib::string::English().ordinal_suffix(day%73+1)},
+            {"season_day", std::to_string(day%73+1)+melanolib::string::english.ordinal_suffix(day%73+1)},
             {"season", season_names[(day/73)%season_names.size()]},
             {"yold", std::to_string(year)}
         };

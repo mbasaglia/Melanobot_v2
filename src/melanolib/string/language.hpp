@@ -186,6 +186,8 @@ private:
     static Inflector infl_plural;  ///< Inflector for the English plural
 };
 
+extern English english;
+
 } // namespace string
 } // namespace melanolib
 

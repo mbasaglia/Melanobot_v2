@@ -147,7 +147,7 @@ protected:
         if ( item.empty() )
             return false;
 
-        item = melanolib::string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
+        item = melanolib::string::english.pronoun_to3rd(item,msg.from.name,msg.source->name());
 
         auto inventory = storage::storage().maybe_get_sequence(list_id);
         // Check that item isn't already in the inventory
@@ -219,7 +219,7 @@ protected:
         if ( item.empty() )
             return false;
 
-        item = melanolib::string::English().pronoun_to3rd(item,msg.from.name,msg.source->name());
+        item = melanolib::string::english.pronoun_to3rd(item,msg.from.name,msg.source->name());
         auto inventory = storage::storage().maybe_get_sequence(list_id);
 
         auto iter = std::find(inventory.begin(), inventory.end(), item);

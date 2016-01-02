@@ -158,7 +158,7 @@ std::string format_char(const DateTime& date_time, char c)
         case 'N':
             return std::to_string(int(date_time.week_day()));
         case 'S':
-            return string::English().ordinal_suffix(date_time.day());
+            return string::english.ordinal_suffix(date_time.day());
         case 'w':
             return std::to_string(int(date_time.week_day()) % 7);
         case 'z':

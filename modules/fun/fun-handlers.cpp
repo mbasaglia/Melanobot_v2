@@ -605,12 +605,10 @@ static WordList amounts {
     "bag",
     "bucket",
     "bucketful",
-    "buckets",
     "bunch",
     "bundle",
     "buttload",
     "cloud",
-    "countless",
     "crapload",
     "dozen",
     "fuckload",
@@ -624,7 +622,6 @@ static WordList amounts {
     "mound",
     "multitude",
     "myriad",
-    "oodles",
     "pile",
     "plate",
     "puddle",
@@ -735,9 +732,8 @@ Insult::Insult(const Settings& settings, MessageConsumer* parent)
 bool Insult::on_handle(network::Message& msg)
 {
     using namespace melanolib::string;
-    English eng;
 
-    std::string subject = eng.pronoun_1stto3rd(msg.message, msg.from.name);
+    std::string subject = english.pronoun_1stto3rd(msg.message, msg.from.name);
 
     if ( icase_equal(subject, msg.source->name()) )
         subject = msg.from.name;
@@ -753,7 +749,7 @@ bool Insult::on_handle(network::Message& msg)
         + random_word(animal_part)
     ;
     reply_to(msg, subject + " as " + random_word(adjectives) + " as " +
-        eng.indefinite_article(insult) + insult);
+        english.indefinite_article(insult) + insult);
 
     return true;
 }

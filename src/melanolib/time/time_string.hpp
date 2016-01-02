@@ -88,26 +88,26 @@ template<class Rep, class Period>
     auto dursec = std::chrono::duration_cast<seconds>(duration).count();
     std::vector<std::string> durtext;
     durtext.reserve(5);
-    string::English English;
+    using string::english;
 
     if ( dursec % 60 )
-        durtext.push_back(English.pluralize_with_number(dursec%60, "second"));
+        durtext.push_back(english.pluralize_with_number(dursec%60, "second"));
 
     dursec /= 60;
     if ( dursec )
-        durtext.push_back(English.pluralize_with_number(dursec%60, "minute"));
+        durtext.push_back(english.pluralize_with_number(dursec%60, "minute"));
 
     dursec /= 60;
     if ( dursec )
-        durtext.push_back(English.pluralize_with_number(dursec%24, "hour"));
+        durtext.push_back(english.pluralize_with_number(dursec%24, "hour"));
 
     dursec /= 24;
     if ( dursec % 7 )
-        durtext.push_back(English.pluralize_with_number(dursec%7, "day"));
+        durtext.push_back(english.pluralize_with_number(dursec%7, "day"));
 
     dursec /= 7;
     if ( dursec )
-        durtext.push_back(English.pluralize_with_number(dursec, "week"));
+        durtext.push_back(english.pluralize_with_number(dursec, "week"));
 
     std::reverse(durtext.begin(),durtext.end());
     return string::implode(" ",durtext);
@@ -118,7 +118,7 @@ template<class Rep, class Period>
 {
     auto dursec = std::chrono::duration_cast<seconds>(duration).count();
     std::string durtext;
-    string::English English;
+    using string::english;
 
     durtext = string::to_string(dursec%60,2) + durtext;
 
@@ -131,7 +131,7 @@ template<class Rep, class Period>
 
     dursec /= 24;
     if ( dursec % 7 )
-        durtext = English.pluralize_with_number(dursec%7, "day")+' '+durtext;
+        durtext = english.pluralize_with_number(dursec%7, "day")+' '+durtext;
 
     return durtext;
 }
