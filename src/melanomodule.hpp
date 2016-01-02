@@ -91,13 +91,16 @@ struct Melanomodule
         }
     };
 
-    std::string name;
-    std::string description;
-    int         version = 0;
-    std::vector<Dependency> dependencies;
-
-    /// \todo Make this an implementation detail if possible
-    melanolib::Optional<melanolib::library::Library> library; ///< Set at runtime
+    Melanomodule(
+        std::string name,
+        std::string description = {},
+        int version = 0,
+        std::vector<Dependency> dependencies = {}
+    ) : name(std::move(name)),
+        description(std::move(description)),
+        version(version),
+        dependencies(std::move(dependencies))
+    {}
 
     bool dependencies_satisfied(const std::vector<Melanomodule>& modules) const
     {
@@ -127,6 +130,14 @@ struct Melanomodule
         auto cmp = a.name.compare(b.name);
         return cmp < 0 || ( cmp == 0 && a.version > b.version );
     }
+
+    std::string name;
+    std::string description;
+    int         version = 0;
+    std::vector<Dependency> dependencies;
+
+    /// \todo Make this an implementation detail if possible
+    melanolib::Optional<melanolib::library::Library> library; ///< Set at runtime
 };
 
 /**
