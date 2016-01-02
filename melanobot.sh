@@ -173,7 +173,13 @@ melanobot_start()
     
     if tmux new -d -s "$MELANOBOT_TMUX_SESSION" "\"$0\" run $@"
     then
-        echo "Bot started"
+        sleep 1
+        if is_running
+        then
+            echo "Bot started"
+        else
+            echo "Bot started but exited"
+        fi
     else
         error "Bot starting failed"
     fi
