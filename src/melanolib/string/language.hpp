@@ -121,6 +121,16 @@ public:
                                  const std::string& me,
                                  const std::string& you) const = 0;
 
+
+    /**
+     * \brief Converts a sentence from 1st to 3rd person singular
+     * \param sentence  Sentence to be transformed
+     * \param me        Name considered to replace the first person
+     * \param you       Name considered to replace the second person
+     */
+    virtual std::string pronoun_1stto3rd(const std::string& sentence,
+                                 const std::string& me) const = 0;
+
     /**
      * \brief Transform a verb from its imperative form
      *        to 3rd person singular (present tense)
@@ -137,6 +147,11 @@ public:
      *        (The output shall contain the number)
      */
     virtual std::string pluralize_with_number(int number, const std::string& noun) const = 0;
+
+    /**
+     * \brief Returns a string to be prepended to \p subject
+     */
+    virtual std::string indefinite_article(const std::string& subject) const = 0;
 };
 
 /**
@@ -154,11 +169,16 @@ public:
                               const std::string& me,
                               const std::string& you) const override;
 
+    std::string pronoun_1stto3rd(const std::string& sentence,
+                                 const std::string& me) const override;
+
     std::string imperate(const std::string& verb) const override;
 
     std::string pluralize(int number, const std::string& noun) const override;
 
     std::string pluralize_with_number(int number, const std::string& noun) const override;
+
+    std::string indefinite_article(const std::string& subject) const override;
 
 private:
     static Inflector infl_imperate;///< Inflector for imperative to 3rd person

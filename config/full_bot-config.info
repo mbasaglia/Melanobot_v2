@@ -213,6 +213,7 @@ bot
                 Action { auth admin }
                 Cointoss
                 Discord
+                Insult
                 AnswerQuestions
             }
         }

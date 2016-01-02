@@ -92,6 +92,23 @@ std::string English::pronoun_to3rd(const std::string& sentence,
     return pronoun_swap.inflect_all(sentence);
 
 }
+std::string English::pronoun_1stto3rd(const std::string& sentence,
+                                   const std::string& me) const
+{
+    auto my = genitive(me);
+
+    Inflector pronoun_swap ( {
+        {"am",          "is"},
+        {"I\'m",        me+" is"},
+        {"I",           me},
+        {"me",          me},
+        {"myself",      me},
+        {"my",          my},
+        {"mine",        my},
+    }, true );
+    return pronoun_swap.inflect_all(sentence);
+
+}
 
 std::string English::imperate(const std::string& verb) const
 {
@@ -111,6 +128,23 @@ std::string English::pluralize(int number, const std::string& noun) const
 std::string English::pluralize_with_number(int number, const std::string& noun) const
 {
     return std::to_string(number)+" "+pluralize(number,noun);
+}
+
+std::string English::indefinite_article(const std::string& subject) const
+{
+    auto it = std::find_if(subject.begin(), subject.end(),
+        [](char c){return std::isalpha(c);}
+    );
+    if ( it == subject.end() )
+        return {};
+
+    switch ( *it )
+    {
+        case 'a': case 'e': case 'i': case 'o': case 'u':
+            return "an ";
+        default:
+            return "a ";
+    }
 }
 
 Inflector English::infl_imperate({

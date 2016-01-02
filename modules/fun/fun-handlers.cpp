@@ -18,6 +18,7 @@
  */
 #include "fun-handlers.hpp"
 #include "rainbow.hpp"
+#include <set>
 
 namespace fun {
 
@@ -515,6 +516,245 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
             network::Time::max() :
             network::Clock::now() + timeout
     ));
+    return true;
+}
+
+
+using WordList = std::vector<std::string>;
+
+static WordList adjectives {
+    "anal",
+    "annoying",
+    "atrocious",
+    "awful",
+    "bad",
+    "boring",
+    "clumsy",
+    "corrupt",
+    "craptacular",
+    "crazy",
+    "decaying",
+    "dastardly",
+    "deplorable",
+    "deformed",
+    "despicable",
+    "detrimental",
+    "dirty",
+    "diseased",
+    "disgusting",
+    "dishonorable",
+    "dreadful",
+    "faulty",
+    "filthy",
+    "foul",
+    "ghastly",
+    "gross",
+    "grotesque",
+    "gruesome",
+    "hideous",
+    "horrible",
+    "hostile",
+    "inferior",
+    "ignorant",
+    "ill",
+    "infernal",
+    "moldy",
+    "monstrous",
+    "nasty",
+    "naughty",
+    "noxious",
+    "obnoxious",
+    "odious",
+    "petty",
+    "questionable",
+    "repellent",
+    "repulsive",
+    "repugnant",
+    "revolting",
+    "rotten",
+    "rude",
+    "sad",
+    "savage",
+    "sick",
+    "sickening",
+    "slimy",
+    "smelly",
+    "sorry",
+    "spiteful",
+    "sticky",
+    "stinky",
+    "stupid",
+    "terrible",
+    "terrifying",
+    "toxic",
+    "ugly",
+    "unpleasant",
+    "unsatisfactory",
+    "unwanted",
+    "vicious",
+    "vile",
+    "wicked",
+    "worthless",
+    "yucky",
+};
+
+static WordList amounts {
+    "accumulation",
+    "ass-full",
+    "assload",
+    "bag",
+    "bucket",
+    "bucketful",
+    "buckets",
+    "bunch",
+    "bundle",
+    "buttload",
+    "cloud",
+    "countless",
+    "crapload",
+    "dozen",
+    "fuckload",
+    "fuckton",
+    "heap",
+    "horde",
+    "horseload",
+    "legion",
+    "load",
+    "mass",
+    "mound",
+    "multitude",
+    "myriad",
+    "oodles",
+    "pile",
+    "plate",
+    "puddle",
+    "shitload",
+    "stack",
+    "ton",
+    "zillion",
+};
+
+static WordList animal {
+    "anglerfish",
+    "bat",
+    "bug",
+    "cat",
+    "chicken",
+    "cockroach",
+    "dog",
+    "donkey",
+    "eel",
+    "horse",
+    "leech",
+    "lizard",
+    "maggot",
+    "monkey",
+    "pig",
+    "pony",
+    "rat",
+    "skunk",
+    "slug",
+    "snake",
+    "toad",
+};
+
+static WordList animal_part {
+    "assholes",
+    "balls",
+    "dicks",
+    "droppings",
+    "dung",
+    "excretions",
+    "farts",
+    "goo",
+    "guts",
+    "intestines",
+    "ooze",
+    "orifices",
+    "piss",
+    "poop",
+    "puke",
+    "pus",
+    "skins",
+    "shit",
+    "slime",
+    "snot",
+    "spit",
+    "stench",
+    "toenails",
+    "urine",
+    "vomit",
+};
+
+static std::string random_word(const WordList& words)
+{
+    if ( words.empty() )
+        return {};
+
+    return words[melanolib::math::random(words.size()-1)];
+}
+
+static WordList random_words(const WordList& words, WordList::size_type count)
+{
+    if ( words.empty() || count == 0 )
+        return {};
+
+    std::set<WordList::size_type> used;
+    WordList out_words;
+    while ( out_words.size() < count )
+    {
+        WordList::size_type n;
+        do
+            n = melanolib::math::random(words.size()-1);
+        while ( used.count(n) );
+        out_words.push_back(words[n]);
+    }
+    return out_words;
+}
+
+std::string Insult::random_adjectives() const
+{
+    using melanolib::math::random;
+    using namespace melanolib::string;
+
+    return implode(" ",
+        random_words(adjectives, random(min_adjectives, max_adjectives)));
+}
+
+Insult::Insult(const Settings& settings, MessageConsumer* parent)
+    : SimpleAction("insult",settings,parent)
+{
+    synopsis += " [something]";
+    help = "Gives a true statement about the subject";
+
+    min_adjectives = settings.get("min_adjectives", min_adjectives);
+    max_adjectives = settings.get("min_adjectives", max_adjectives);
+    // Todo read list of words from storage
+}
+
+bool Insult::on_handle(network::Message& msg)
+{
+    using namespace melanolib::string;
+    English eng;
+
+    std::string subject = eng.pronoun_1stto3rd(msg.message, msg.from.name);
+
+    if ( icase_equal(subject, msg.source->name()) )
+        subject = msg.from.name;
+
+    if ( subject.empty() )
+        subject = "You are";
+    else
+        subject += " is";
+
+    std::string insult =
+        random_adjectives() + ' ' + random_word(amounts) + " of "
+        + random_adjectives() + ' ' + random_word(animal) + ' '
+        + random_word(animal_part)
+    ;
+    reply_to(msg, subject + " as " + random_word(adjectives) + " as " +
+        eng.indefinite_article(insult) + insult);
+
     return true;
 }
 

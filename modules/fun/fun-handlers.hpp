@@ -295,7 +295,6 @@ protected:
     bool on_handle(network::Message& msg) override;
 };
 
-
 /**
  * \brief Discordian Calendar
  */
@@ -339,6 +338,25 @@ protected:
 private:
     std::string format = "%day_name, the %season_day day of %season in the YOLD %yold";
 };
+
+/**
+ * \brief Very polite remarks
+ */
+class Insult : public handler::SimpleAction
+{
+public:
+    Insult(const Settings& settings, MessageConsumer* parent);
+
+protected:
+    bool on_handle(network::Message& msg) override;
+
+private:
+    std::string random_adjectives() const;
+
+    int min_adjectives = 1;
+    int max_adjectives = 3;
+};
+
 
 } // namespace fun
 #endif // FUN_HANDLERS_HPP
