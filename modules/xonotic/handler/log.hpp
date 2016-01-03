@@ -24,22 +24,6 @@
 namespace xonotic {
 
 /**
- * \brief Message properties adding properties of the user
- */
-inline Properties pretty_properties(network::Connection* source,
-                                     const user::User& user)
-{
-    string::FormatterConfig fmt;
-    Properties props =  source->pretty_properties();
-    props.insert({
-        {"name",    source->encode_to(user.name,fmt)},
-        {"ip",      user.host},
-    });
-    props.insert(user.properties.begin(), user.properties.end());
-    return props;
-}
-
-/**
  * \brief Show server connect/disconnect messages
  */
 class ConnectionEvents : public handler::Handler
@@ -99,7 +83,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         // Get all of the user properties and message properties
-        Properties props = pretty_properties(msg.source,msg.from);
+        Properties props = msg.source->pretty_properties(msg.from);
 
         // Select the right message
         const std::string& message = msg.type == network::Message::JOIN ? join : part;
@@ -202,7 +186,7 @@ protected:
         // Uses pretty_properties with user + "vote"
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = pretty_properties(msg.source,user);
+        Properties props = msg.source->pretty_properties(user);
         props["vote"] = msg.source->encode_to(match[2],fmt);
         reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
@@ -304,7 +288,7 @@ protected:
     {
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = pretty_properties(msg.source,user);
+        Properties props = msg.source->pretty_properties(user);
         reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
@@ -330,7 +314,7 @@ protected:
     {
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = pretty_properties(msg.source,user);
+        Properties props = msg.source->pretty_properties(user);
         reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;
     }
@@ -356,7 +340,7 @@ protected:
     {
         string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = pretty_properties(msg.source,user);
+        Properties props = msg.source->pretty_properties(user);
         props["vote"] = msg.source->encode_to(match[2], fmt);
         reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
         return true;

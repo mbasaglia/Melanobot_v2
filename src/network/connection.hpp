@@ -242,6 +242,24 @@ public:
     virtual Properties pretty_properties() const = 0;
 
     /**
+     * \brief Returns a list of properties used to message formatting
+     * \note Returned properties should be formatted using the FormatterConfig
+     */
+    virtual Properties pretty_properties(const user::User& user) const
+    {
+        string::FormatterConfig fmt;
+        Properties props = pretty_properties();
+        props.insert({
+            {"name",    encode_to(user.name,fmt)},
+            {"ip",      user.host},
+            {"local_id",user.local_id},
+            {"global_id",user.global_id},
+        });
+        props.insert(user.properties.begin(), user.properties.end());
+        return props;
+    }
+
+    /**
      * \brief Returns the name of the connection as used in the config
      */
     const std::string& config_name() const { return config_name_; }
