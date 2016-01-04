@@ -39,7 +39,7 @@ namespace posix {
 /**
  * \brief Acts as a network connection to handle standard input (or any file)
  */
-class StdinConnection : public network::Connection
+class StdinConnection : public network::SingleUnitConnection
 {
 public:
     static std::unique_ptr<StdinConnection> create(
@@ -49,7 +49,7 @@ public:
     }
 
     StdinConnection(const Settings& settings, const std::string& name)
-        : Connection(name),input{io_service}
+        : SingleUnitConnection(name),input{io_service}
     {
         std::string filename = settings.get("file","");
         int file = open_file(filename);
@@ -89,7 +89,6 @@ public:
 
 
     std::string protocol() const override { return "stdin"; }
-    std::string name() const override { return "stdin"; }
     network::Server server() const override { return {"stdin",0}; }
     std::string description() const override { return  "stdin"; }
 
@@ -109,18 +108,8 @@ public:
     void connect() override {}
     void disconnect(const std::string&) override {}
     void reconnect(const std::string&) override {}
-    bool channel_mask(const std::vector<std::string>&,  const std::string&) const override { return true; }
-    bool user_auth(const std::string&, const std::string&) const override { return true; }
-    void update_user(const std::string&, const Properties& ) override {}
-    void update_user(const std::string&, const user::User& ) override {}
-    user::User get_user(const std::string&) const override { return {}; }
-    std::vector<user::User> get_users( const std::string& ) const override  { return {}; }
-    bool add_to_group(const std::string&, const std::string&) override { return false; }
-    bool remove_from_group(const std::string&, const std::string& ) override { return false; }
-    std::vector<user::User> users_in_group(const std::string&) const override { return {}; }
-    std::vector<user::User> real_users_in_group(const std::string& group) const override { return {}; }
+
     void command (network::Command) override {}
-    user::UserCounter count_users(const std::string& channel = {}) const override { return {}; }
     // maybe could be given some actual functionality:
     Properties pretty_properties() const override { return Properties{}; }
 

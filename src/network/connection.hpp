@@ -269,6 +269,29 @@ private:
 };
 
 /**
+ * \brief Base class for connections with a single user and channel
+ */
+class SingleUnitConnection : public Connection
+{
+public:
+    using Connection::Connection;
+
+
+    bool channel_mask(const std::vector<std::string>&,  const std::string&) const override { return true; }
+    bool user_auth(const std::string&, const std::string&) const override { return true; }
+    void update_user(const std::string&, const Properties& ) override {}
+    void update_user(const std::string&, const user::User& ) override {}
+    user::User get_user(const std::string&) const override { return {}; }
+    std::vector<user::User> get_users( const std::string& ) const override  { return {}; }
+    bool add_to_group(const std::string&, const std::string&) override { return false; }
+    bool remove_from_group(const std::string&, const std::string& ) override { return false; }
+    std::vector<user::User> users_in_group(const std::string&) const override { return {}; }
+    std::vector<user::User> real_users_in_group(const std::string& group) const override { return {}; }
+    user::UserCounter count_users(const std::string& channel = {}) const override { return {}; }
+    std::string name() const override { return protocol(); }
+};
+
+/**
  * \brief Creates connections from settings
  */
 class ConnectionFactory : public melanolib::Singleton<ConnectionFactory>

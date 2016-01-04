@@ -64,6 +64,7 @@ template<class Clock>
         basic_timer(const basic_timer& rhs)
             : timeout(rhs.timeout), repeating(rhs.repeating), action(rhs.action)
         {}
+
         basic_timer& operator=(const basic_timer& rhs)
         {
             timeout = rhs.timeout;
@@ -101,9 +102,10 @@ template<class Clock>
         {
             if ( running() || !action )
                 return false;
-            if ( timeout == duration_type::zero() )
+            if ( timeout <= duration_type::zero() )
                 callback(action);
-            thread = std::move(std::thread([this]{run();}));
+            else
+                thread = std::move(std::thread([this]{run();}));
             return running();
         }
 
@@ -138,7 +140,7 @@ template<class Clock>
                 try {
                     thread.join();
                 // catch in the case the thread joined early
-                }catch(const std::invalid_argument&) {}
+                } catch(const std::invalid_argument&) {}
             }
         }
 
