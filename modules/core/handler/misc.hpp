@@ -486,7 +486,7 @@ protected:
         using melanolib::string::english;
         // should match \S+|(?:don't be) but it's ambiguous
         static std::regex regex_imperative (
-            R"(\s*(\S+(?: be)?)\s*(.*))",
+            R"(\s*(\S+(?: be\b)?)\s*(.*))",
             std::regex::ECMAScript|std::regex::optimize|std::regex::icase
         );
 
