@@ -20,15 +20,17 @@ script_variables.cpp
 script.cpp
 )
 
-add_library(${MODULE_NAME} MODULE ${SOURCES})
+if(${MODULE_ENABLED})
+    add_library(${MODULE_NAME} MODULE ${SOURCES})
 
-# Boost
-find_package (Boost COMPONENTS python REQUIRED)
-target_link_libraries(${MODULE_NAME} ${Boost_LIBRARIES})
-include_directories (${Boost_INCLUDE_DIRS})
+    # Boost
+    find_package (Boost COMPONENTS python REQUIRED)
+    target_link_libraries(${MODULE_NAME} ${Boost_LIBRARIES})
+    include_directories (${Boost_INCLUDE_DIRS})
 
-# CPython
-find_package(PythonLibs 2.7 REQUIRED)
-target_link_libraries(${MODULE_NAME} ${PYTHON_LIBRARIES})
-include_directories (${PYTHON_INCLUDE_DIRS})
+    # CPython
+    find_package(PythonLibs 2.7 REQUIRED)
+    target_link_libraries(${MODULE_NAME} ${PYTHON_LIBRARIES})
+    include_directories (${PYTHON_INCLUDE_DIRS})
+endif()
 

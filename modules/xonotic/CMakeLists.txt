@@ -21,10 +21,12 @@ formatter.cpp
 xonotic-connection.cpp
 )
 
-add_library(${MODULE_NAME} MODULE ${SOURCES})
+if(${MODULE_ENABLED})
+    add_library(${MODULE_NAME} MODULE ${SOURCES})
 
-find_package(OpenSSL REQUIRED)
-target_link_libraries(${MODULE_NAME} ${OPENSSL_CRYPTO_LIBRARY})
-include_directories (${OpenSSL_INCLUDE_DIRS})
+    find_package(OpenSSL REQUIRED)
+    target_link_libraries(${MODULE_NAME} ${OPENSSL_CRYPTO_LIBRARY})
+    include_directories (${OpenSSL_INCLUDE_DIRS})
 
-target_link_libraries(${MODULE_NAME} melanomodule_core)
+    target_link_libraries(${MODULE_NAME} melanomodule_core)
+endif()

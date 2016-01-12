@@ -19,4 +19,6 @@ file_storage.cpp
 file_storage_module.cpp
 )
 
-add_library(${MODULE_NAME} MODULE ${SOURCES})
+if(${MODULE_ENABLED})
+    add_library(${MODULE_NAME} MODULE ${SOURCES})
+endif()

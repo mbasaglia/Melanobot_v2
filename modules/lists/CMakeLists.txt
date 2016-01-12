@@ -18,6 +18,7 @@ set(SOURCES
 lists.cpp
 )
 
-add_library(${MODULE_NAME} MODULE ${SOURCES})
-
-target_link_libraries(${MODULE_NAME} melanomodule_core)
+if(${MODULE_ENABLED})
+    add_library(${MODULE_NAME} MODULE ${SOURCES})
+    target_link_libraries(${MODULE_NAME} melanomodule_core)
+endif()
