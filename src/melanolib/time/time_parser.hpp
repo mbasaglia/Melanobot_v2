@@ -47,6 +47,7 @@ public:
      *  NOW_TIME        ::= now
      *                  |   now + DURATION
      *                  |   now - DURATION
+     *                  |   in DURATION
      * \endcode
      */
     DateTime parse_time_point()
@@ -65,6 +66,11 @@ public:
                     now -= parse_duration();
             }
             return now;
+        }
+        else if ( lookahead.type == Token::IN )
+        {
+            scan();
+            return DateTime() + parse_duration();
         }
         return parse_date_time();
     }
@@ -140,6 +146,7 @@ private:
             MONTH,      ///< Month name         January...      Month
             WEEK_DAY,   ///< Week day name      Saturday...     WeekDay
             AMPM,       ///< am/pm              am|pm           bool (pm)
+            IN,         ///< In                 in              void
         };
         Type            type{INVALID};  ///< Token type
         std::string     lexeme;         ///< Corresponding string
@@ -185,6 +192,8 @@ private:
             return {Token::AMPM, id, false};
         if ( lower == "pm" )
             return {Token::AMPM, id, true};
+        if ( lower == "in" )
+            return {Token::IN, id};
 
         auto maybe_month = month_from_name(lower);
         if ( maybe_month )

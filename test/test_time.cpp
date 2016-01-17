@@ -460,6 +460,7 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     BOOST_CHECK( nowcheck(parse_time("now"),now) );
     BOOST_CHECK( nowcheck(parse_time("now + 3 hours"),now+hours(3)) );
     BOOST_CHECK( nowcheck(parse_time("now - 3 hours"),now-hours(3)) );
+    BOOST_CHECK( nowcheck(parse_time("in 3 hours"),now+hours(3)) );
 
     // DAY
     BOOST_CHECK( parse_time("2015-04-03 00:00") == DateTime(2015,Month::APRIL,days(03)) );
@@ -486,15 +487,15 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     check.set_time(hours(12),minutes(34));
     BOOST_CHECK( parse_time("12:34") == check );
 
-    BOOST_CHECK( parse_time("2015-04-04 14:50") == DateTime(now.year(),Month::APRIL,days(04),hours(14),minutes(50)) );
-    BOOST_CHECK( parse_time("2015-04-04 02:50 pm") == DateTime(now.year(),Month::APRIL,days(04),hours(14),minutes(50)) );
-    BOOST_CHECK( parse_time("2015-04-04 02:50 am") == DateTime(now.year(),Month::APRIL,days(04),hours(02),minutes(50)) );
-    BOOST_CHECK( parse_time("2015-04-04 12:00 am") == DateTime(now.year(),Month::APRIL,days(04),hours(00),minutes(00)) );
-    BOOST_CHECK( parse_time("2015-04-04 12:00 pm") == DateTime(now.year(),Month::APRIL,days(04),hours(12),minutes(00)) );
+    BOOST_CHECK( parse_time("2015-04-04 14:50") == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(50)) );
+    BOOST_CHECK( parse_time("2015-04-04 02:50 pm") == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(50)) );
+    BOOST_CHECK( parse_time("2015-04-04 02:50 am") == DateTime(2015,Month::APRIL,days(04),hours(02),minutes(50)) );
+    BOOST_CHECK( parse_time("2015-04-04 12:00 am") == DateTime(2015,Month::APRIL,days(04),hours(00),minutes(00)) );
+    BOOST_CHECK( parse_time("2015-04-04 12:00 pm") == DateTime(2015,Month::APRIL,days(04),hours(12),minutes(00)) );
 
     // DATE_TIME
-    BOOST_CHECK( parse_time("2015-04-04T15:00") == DateTime(now.year(),Month::APRIL,days(04),hours(15),minutes(00)) );
-    BOOST_CHECK( parse_time("2015-04-04 at 15:00") == DateTime(now.year(),Month::APRIL,days(04),hours(15),minutes(00)) );
+    BOOST_CHECK( parse_time("2015-04-04T15:00") == DateTime(2015,Month::APRIL,days(04),hours(15),minutes(00)) );
+    BOOST_CHECK( parse_time("2015-04-04 at 15:00") == DateTime(2015,Month::APRIL,days(04),hours(15),minutes(00)) );
 
     // Failures
     now = DateTime();
