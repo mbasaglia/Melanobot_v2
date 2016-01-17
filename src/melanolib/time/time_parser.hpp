@@ -146,18 +146,26 @@ private:
             MONTH,      ///< Month name         January...      Month
             WEEK_DAY,   ///< Week day name      Saturday...     WeekDay
             AMPM,       ///< am/pm              am|pm           bool (pm)
-            IN,         ///< In                 in              void
+            IN,         ///< "in"               in              void
+            AT,         ///< "at"               at              void
         };
         Type            type{INVALID};  ///< Token type
         std::string     lexeme;         ///< Corresponding string
         boost::any      value;          ///< Associated value
 
         Token(){};
+
         Token(Type type, std::string lexeme)
             : type(type), lexeme(std::move(lexeme)) {}
+
         template<class T>
             Token(Type type, std::string lexeme, T&& val)
                 : type(type), lexeme(std::move(lexeme)), value(std::forward<T>(val)) {}
+
+        bool is_identifier(const char* str) const
+        {
+            return type == IDENTIFIER && lexeme == str;
+        }
     };
 
     Token        lookahead;     ///< Last read token
@@ -194,6 +202,8 @@ private:
             return {Token::AMPM, id, true};
         if ( lower == "in" )
             return {Token::IN, id};
+        if ( lower == "at" )
+            return {Token::AT, id};
 
         auto maybe_month = month_from_name(lower);
         if ( maybe_month )
@@ -432,18 +442,51 @@ private:
     /**
      * \brief Parses a date and (optionally) a time
      * \code
-     *  DATE_TIME       ::= DAY OPT_TIME
-     *  OPT_TIME        ::= (eps) | at TIME | TIME | "T" TIME
+     *  DATE_TIME       ::= DAY OPT_TIME | AT_TIME
+     *  OPT_TIME        ::= (eps) | at HOUR | TIME | "T" TIME
      * \endcode
      */
     DateTime parse_date_time()
     {
+        if ( lookahead.type == Token::AT )
+        {
+            return parse_at_time();
+        }
+
         DateTime day = parse_day();
-        if ( lookahead.type == Token::IDENTIFIER && (
-                token_val<std::string>() == "at" || lookahead.lexeme == "T" ) )
+        if ( lookahead.type == Token::AT )
+        {
             scan();
+            parse_hour(day);
+            return day;
+        }
+        else if ( lookahead.is_identifier("T") )
+        {
+            scan();
+        }
         parse_time(day);
         return day;
+    }
+
+    /**
+     * \code
+     * AT_TIME  ::= at TIME [DAY]
+     * \endcode
+     */
+    DateTime parse_at_time()
+    {
+        scan();
+
+        DateTime time;
+        parse_hour(time);
+
+        if ( lookahead.type != Token::INVALID )
+        {
+            time.set_date(parse_day());
+        }
+
+        return time;
+
     }
 
     /**
@@ -573,6 +616,27 @@ private:
     /**
      * \brief Parses a time and writes it to \c out
      * \code
+     *  HOUR ::= TIME | number | number AMPM
+     * \endcode
+     */
+    void parse_hour(DateTime& out)
+    {
+        if ( lookahead.type == Token::NUMBER )
+        {
+            hours hour(token_val<uint32_t>());
+            scan();
+            apply_am_pm(hour);
+            out.set_time(hour, minutes(0));
+        }
+        else if ( lookahead.type == Token::TIME )
+        {
+            parse_time(out);
+        }
+    }
+
+    /**
+     * \brief Parses a time and writes it to \c out
+     * \code
      *  TIME    ::= time | time AMPM
      * \endcode
      */
@@ -596,6 +660,13 @@ private:
         milliseconds millisecond = std::chrono::duration_cast<milliseconds>(time);
 
         scan();
+        apply_am_pm(hour);
+
+        out.set_time(hour,mins,second,millisecond);
+    }
+
+    void apply_am_pm(hours& hour)
+    {
         if ( hour.count() < 13 && lookahead.type == Token::AMPM )
         {
             bool pm = token_val<bool>();
@@ -605,8 +676,6 @@ private:
             else if ( !pm && hour.count() == 12 )
                 hour = hours(0); // or 24? O_o
         }
-
-        out.set_time(hour,mins,second,millisecond);
     }
 };
 

@@ -519,6 +519,17 @@ public:
     }
 
     /**
+     * \brief Set the time without changing the date
+     */
+    SUPER_CONSTEXPR void set_time(const DateTime& time) noexcept
+    {
+        set_hour(time.hour_);
+        set_minute(time.minute_);
+        set_second(time.second_);
+        set_millisecond(time.milliseconds_);
+    }
+
+    /**
      * \brief Set the date without changing the time
      */
     SUPER_CONSTEXPR void set_date(int32_t year, Month month, days day) noexcept
@@ -527,6 +538,7 @@ public:
         month_ = melanolib::math::bound(Month::JANUARY, month, Month::DECEMBER);
         set_day(day.count());
     }
+
     /**
      * \brief Set the date without changing the year or the time
      */
@@ -534,6 +546,16 @@ public:
     {
         month_ = melanolib::math::bound(Month::JANUARY, month, Month::DECEMBER);
         set_day(day.count());
+    }
+
+    /**
+     * \brief Set the date without changing the time
+     */
+    SUPER_CONSTEXPR void set_date(const DateTime& date) noexcept
+    {
+        set_year(date.year_);
+        set_month(date.month_);
+        set_day(date.day_);
     }
 
     /**

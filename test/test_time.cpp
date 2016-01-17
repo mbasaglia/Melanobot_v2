@@ -462,6 +462,13 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     BOOST_CHECK( nowcheck(parse_time("now - 3 hours"),now-hours(3)) );
     BOOST_CHECK( nowcheck(parse_time("in 3 hours"),now+hours(3)) );
 
+    // at
+    DateTime at;
+    at.set_time(hours(17), minutes(0));
+    BOOST_CHECK( nowcheck(parse_time("at 5 pm"), at) );
+    BOOST_CHECK( nowcheck(parse_time("at 17"), at) );
+    BOOST_CHECK( nowcheck(parse_time("at 17:00"), at) );
+
     // DAY
     BOOST_CHECK( parse_time("2015-04-03 00:00") == DateTime(2015,Month::APRIL,days(03)) );
     now = DateTime();
@@ -490,6 +497,8 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     BOOST_CHECK( parse_time("2015-04-04 14:50") == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(50)) );
     BOOST_CHECK( parse_time("2015-04-04 02:50 pm") == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(50)) );
     BOOST_CHECK( parse_time("2015-04-04 02:50 am") == DateTime(2015,Month::APRIL,days(04),hours(02),minutes(50)) );
+    BOOST_CHECK( parse_time("2015-04-04 at 02:50 pm") == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(50)) );
+    BOOST_CHECK( parse_time("2015-04-04 at 2 pm") == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(00)) );
     BOOST_CHECK( parse_time("2015-04-04 12:00 am") == DateTime(2015,Month::APRIL,days(04),hours(00),minutes(00)) );
     BOOST_CHECK( parse_time("2015-04-04 12:00 pm") == DateTime(2015,Month::APRIL,days(04),hours(12),minutes(00)) );
 
