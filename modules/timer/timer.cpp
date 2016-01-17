@@ -29,5 +29,4 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_timer_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_timer_initialize(const Settings&)
 {
-    module::register_connection<timer::TimerConnection>("timer");
 }

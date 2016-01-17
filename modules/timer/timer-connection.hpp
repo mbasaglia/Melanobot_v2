@@ -30,8 +30,14 @@ using namespace network;
 class TimerItem
 {
 public:
-    Time        timeout;
-    std::string message;
+    Time timeout;                 ///< Time at which the item will be executed
+    std::function<void()> action; ///< Action to be executed
+    void* owner = nullptr;        ///< Pointer to an object that owns the action
+
+    TimerItem(Time timeout, std::function<void()> action, void* owner = nullptr)
+        : timeout(timeout), action(std::move(action)), owner(owner)
+    {
+    }
 
     /**
      * \brief Comparator used to create the heap
@@ -42,55 +48,50 @@ public:
     }
 };
 
-class TimerConnection : public network::SingleUnitConnection
+class TimerQueue : public melanolib::Singleton<TimerQueue>
 {
 public:
-
-    static std::unique_ptr<TimerConnection> create(
-        const Settings& settings, const std::string& name)
+    void push(TimerItem&& item)
     {
-        return melanolib::New<TimerConnection>(name);
+        EditLock lock(this);
+        items.emplace_back(std::move(item));
+        std::push_heap(items.begin(), items.end());
     }
 
-    explicit TimerConnection(const std::string& name)
-        : SingleUnitConnection(name), timer{[this]{tick();}}
-    {}
+    template<class... Args>
+        void push(Args&&... args)
+        {
+            push(TimerItem(std::forward<Args>(args)...));
+        }
 
-    ~TimerConnection()
+    /**
+     * \brief Removes all items owned by the given object
+     */
+    void remove(void* owner)
+    {
+        EditLock lock(this);
+        items.erase(
+            std::remove_if(items.begin(), items.end(),
+                [owner](const TimerItem& item) { return item.owner == owner; }
+            ),
+            items.end()
+        );
+    }
+
+private:
+    friend ParentSingleton;
+
+    TimerQueue()
+    {
+        start();
+    }
+
+    ~TimerQueue()
     {
         stop();
     }
 
-    Server server() const override { return {}; }
-
-    std::string description() const override
-    {
-        return protocol();
-    }
-
-    void command ( Command cmd ) override
-    {
-        if ( cmd.parameters.empty() )
-            return;
-        push({cmd.timeout, cmd.parameters[0]});
-    }
-
-    void say ( const OutputMessage& message ) override
-    {
-        push({message.timeout, message.message.encode(formatter())});
-    }
-
-    Status status() const override { return CONNECTED; }
-
-    std::string protocol() const override { return "timer"; }
-
-    void connect() override {}
-
-    void disconnect(const std::string& message = {}) override {}
-
-    void reconnect(const std::string& quit_message = {}) {}
-
-    void stop() override
+    void stop()
     {
         if ( thread.joinable() )
         {
@@ -100,7 +101,7 @@ public:
         }
     }
 
-    void start() override
+    void start()
     {
         if ( !thread.joinable() )
         {
@@ -109,23 +110,6 @@ public:
         }
     }
 
-    string::Formatter* formatter() const override
-    {
-        return string::Formatter::formatter("config");
-    }
-
-    LockedProperties properties() override
-    {
-        static PropertyTree props;
-        return {nullptr, &props};
-    }
-
-    Properties pretty_properties() const override
-    {
-        return {};
-    }
-
-private:
     void run()
     {
         std::mutex condition_mutex;
@@ -136,9 +120,9 @@ private:
 
             {
                 Lock lock_events(events_mutex);
-                empty = events.empty();
+                empty = items.empty();
                 if ( !empty )
-                    timeout = events[0].timeout;
+                    timeout = items[0].timeout;
             }
 
             std::unique_lock<std::mutex> lock(condition_mutex);
@@ -162,34 +146,22 @@ private:
     void tick()
     {
         Lock lock(events_mutex);
-        if ( events.empty() )
+        if ( items.empty() )
             return;
         // Handle spurious wake ups
-        if ( events[0].timeout > Clock::now() )
+        if ( items[0].timeout > Clock::now() )
             return;
 
-        std::pop_heap(events.begin(), events.end());
+        std::pop_heap(items.begin(), items.end());
 
-        TimerItem cmd = std::move(events.back());
-        events.pop_back();
+        TimerItem item = std::move(items.back());
+        items.pop_back();
         lock.unlock();
 
-        /// \todo send message
+        item.action();
     }
 
-    void push(TimerItem&& item)
-    {
-        timer_status = Noop;
-        condition.notify_one();
-        Lock lock(events_mutex);
-        events.emplace_back(std::move(item));
-        std::push_heap(events.begin(), events.end());
-        lock.unlock();
-        timer_status = Tick;
-        condition.notify_one();
-    }
-
-    std::vector<TimerItem> events;
+    std::vector<TimerItem> items;
     Timer timer;
     std::condition_variable condition;       ///< Wait condition
     std::mutex events_mutex;
@@ -201,6 +173,30 @@ private:
     };
 
     std::atomic<TimerStatus> timer_status;
+
+    /**
+     * \brief RAII object for editing the items in the queue
+     */
+    struct EditLock
+    {
+        TimerQueue* subject;
+        Lock lock;
+
+        explicit EditLock(TimerQueue* subject)
+            : subject(subject)
+        {
+            subject->timer_status = Noop;
+            subject->condition.notify_one();
+            lock = Lock(subject->events_mutex);
+        }
+
+        ~EditLock()
+        {
+            lock.unlock();
+            subject->timer_status = Tick;
+            subject->condition.notify_one();
+        }
+    };
 };
 
 } // namespace timer
