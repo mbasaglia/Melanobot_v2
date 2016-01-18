@@ -22,6 +22,7 @@
 
 #include "melanolib/time/time.hpp"
 #include "melanolib/time/time_string.hpp"
+#include "melanolib/time/time_parser.hpp"
 
 using namespace melanolib::time;
 
@@ -511,6 +512,13 @@ BOOST_AUTO_TEST_CASE( test_TimeParser )
     BOOST_CHECK( nowcheck(parse_time("?"),now) );
     BOOST_CHECK( nowcheck(parse_time("2015-05"),now) );
     BOOST_CHECK( nowcheck(parse_time("2015-13-01"),now) );
+
+    // get_remainder
+    std::stringstream stream("2015-04-04 14:50 lol");
+    TimeParser parser(stream);
+    BOOST_CHECK( parser.parse_time_point() == DateTime(2015,Month::APRIL,days(04),hours(14),minutes(50)) );
+    BOOST_CHECK( parser.get_remainder() == "lol" );
+    BOOST_CHECK( parser.get_remainder().empty() );
 }
 
 BOOST_AUTO_TEST_CASE( test_duration_string )

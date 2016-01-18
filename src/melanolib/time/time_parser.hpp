@@ -35,7 +35,7 @@ public:
     using Time     = typename Clock::time_point;
     using Duration = typename Clock::duration;
 
-    TimeParser(std::istream& input) : input(input.rdbuf())
+    TimeParser(std::istream& input) : input(input)
     {
         scan();
     }
@@ -72,6 +72,7 @@ public:
             scan();
             return DateTime() + parse_duration();
         }
+
         return parse_date_time();
     }
 
@@ -125,6 +126,17 @@ public:
         return duration;
     }
 
+    /**
+     * \brief Returns everything after the last parsed token
+     * \note After reading it once, the last token will be cleared
+     */
+    std::string get_remainder()
+    {
+        unget_last_token();
+        lookahead = {};
+        return std::string(std::istreambuf_iterator<char>(input), {});
+    }
+
 private:
     /**
      * \brief Parsed token
@@ -168,9 +180,23 @@ private:
         }
     };
 
-    Token        lookahead;     ///< Last read token
-    std::istream input;         ///< Input stream
+    Token           lookahead;  ///< Last read token
+    std::istream&   input;      ///< Input stream
 
+    /**
+     * \brief Step back if the last token wasn't read
+     */
+    void unget_last_token()
+    {
+        if ( !lookahead.lexeme.empty() )
+        {
+            input.clear();
+            for ( auto it = lookahead.lexeme.rbegin(); it != lookahead.lexeme.rend(); ++it )
+            {
+                input.unget();
+            }
+        }
+    }
 
     /**
      * \brief Lex an identifier
@@ -335,7 +361,7 @@ private:
         else if ( c == '\'' || c == '"' ) // minute/second unit
             return {Token::IDENTIFIER, std::string(1,c), std::string(1,c)};
 
-        return {};
+        return {Token::INVALID, std::string(1,c)};
     }
     /**
      * \brief Reads the next token into \c lookahead
