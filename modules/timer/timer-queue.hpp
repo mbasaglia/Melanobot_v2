@@ -25,16 +25,17 @@
 #include "concurrency/concurrency.hpp"
 
 namespace timer {
-using namespace network;
 
 class TimerItem
 {
 public:
-    Time timeout;                 ///< Time at which the item will be executed
+    network::Time timeout;        ///< Time at which the item will be executed
     std::function<void()> action; ///< Action to be executed
-    void* owner = nullptr;        ///< Pointer to an object that owns the action
+    const void* owner = nullptr;  ///< Pointer to an object that owns the action
 
-    TimerItem(Time timeout, std::function<void()> action, void* owner = nullptr)
+    TimerItem(network::Time timeout,
+              std::function<void()> action,
+              const void* owner = nullptr)
         : timeout(timeout), action(std::move(action)), owner(owner)
     {
     }
@@ -67,7 +68,7 @@ public:
     /**
      * \brief Removes all items owned by the given object
      */
-    void remove(void* owner)
+    void remove(const void* owner)
     {
         EditLock lock(this);
         items.erase(
@@ -116,7 +117,7 @@ private:
         while ( true )
         {
             bool empty = true;
-            Time timeout;
+            network::Time timeout;
 
             {
                 Lock lock_events(events_mutex);
@@ -133,8 +134,6 @@ private:
 
             switch( timer_status )
             {
-                case Noop:
-                    condition.wait(lock);
                 case Tick:
                     tick();
                 case Die:
@@ -149,7 +148,7 @@ private:
         if ( items.empty() )
             return;
         // Handle spurious wake ups
-        if ( items[0].timeout > Clock::now() )
+        if ( items[0].timeout > network::Clock::now() )
             return;
 
         std::pop_heap(items.begin(), items.end());
@@ -162,14 +161,16 @@ private:
     }
 
     std::vector<TimerItem> items;
-    Timer timer;
+    network::Timer timer;
     std::condition_variable condition;       ///< Wait condition
     std::mutex events_mutex;
     std::thread thread;
 
     enum TimerStatus
     {
-        Noop, Tick, Die
+        //Noop,
+        Tick,
+        Die
     };
 
     std::atomic<TimerStatus> timer_status;
@@ -185,16 +186,20 @@ private:
         explicit EditLock(TimerQueue* subject)
             : subject(subject)
         {
-            subject->timer_status = Noop;
-            subject->condition.notify_one();
-            lock = Lock(subject->events_mutex);
+            if ( subject->thread.joinable() )
+            {
+                lock = Lock(subject->events_mutex);
+            }
         }
 
         ~EditLock()
         {
-            lock.unlock();
-            subject->timer_status = Tick;
-            subject->condition.notify_one();
+            if ( subject->thread.joinable() )
+            {
+                lock.unlock();
+                subject->timer_status = Tick;
+                subject->condition.notify_one();
+            }
         }
     };
 };

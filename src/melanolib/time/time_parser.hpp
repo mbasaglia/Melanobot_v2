@@ -706,7 +706,7 @@ private:
 };
 
     
-} // namespace timer
+} // namespace time
 } // namespace melanolib
 
 #endif // TIME_PARSER_HPP

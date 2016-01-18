@@ -18,6 +18,7 @@
  */
 #include "timer-queue.hpp"
 #include "melanomodule.hpp"
+#include "handlers.hpp"
 
 /**
  * \brief Initializes the timer module
@@ -29,4 +30,5 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_timer_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_timer_initialize(const Settings&)
 {
+    module::register_handler<timer::Remind>("Remind");
 }
