@@ -116,40 +116,47 @@ private:
         std::mutex condition_mutex;
         while ( true )
         {
-            bool empty = true;
-            network::Time timeout;
+            Lock lock(events_mutex);
 
+            if ( !items.empty() )
             {
-                Lock lock_events(events_mutex);
-                empty = items.empty();
-                if ( !empty )
-                    timeout = items[0].timeout;
+                if ( tick(lock) )
+                    continue;
+                condition.wait_until(lock, items[0].timeout);
             }
-
-            std::unique_lock<std::mutex> lock(condition_mutex);
-            if ( !empty )
-                condition.wait_until(lock, timeout);
             else
+            {
                 condition.wait(lock);
+            }
 
             switch( timer_status )
             {
                 case Tick:
-                    tick();
+                    tick(lock);
+                    break;
                 case Die:
                     return;
+                case Noop:
+                    lock.unlock();
+                    std::this_thread::yield();
+                    break;
             }
         }
     }
 
-    void tick()
+    /**
+     * \brief Tries to execute the top item
+     * \param lock Lock for events_mutex, will be released if an action is executed
+     * \return \b true if the top item has been executed
+     */
+    bool tick(Lock& lock)
     {
-        Lock lock(events_mutex);
         if ( items.empty() )
-            return;
+            return false;
+
         // Handle spurious wake ups
         if ( items[0].timeout > network::Clock::now() )
-            return;
+            return false;
 
         std::pop_heap(items.begin(), items.end());
 
@@ -158,17 +165,18 @@ private:
         lock.unlock();
 
         item.action();
+        return true;
     }
 
     std::vector<TimerItem> items;
     network::Timer timer;
-    std::condition_variable condition;       ///< Wait condition
+    std::condition_variable condition;
     std::mutex events_mutex;
     std::thread thread;
 
     enum TimerStatus
     {
-        //Noop,
+        Noop,
         Tick,
         Die
     };
@@ -188,6 +196,8 @@ private:
         {
             if ( subject->thread.joinable() )
             {
+                subject->timer_status = Noop;
+                subject->condition.notify_one();
                 lock = Lock(subject->events_mutex);
             }
         }

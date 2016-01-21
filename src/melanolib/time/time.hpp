@@ -894,6 +894,17 @@ DateTime parse_time(const std::string& text);
  */
 DateTime::Duration parse_duration(const std::string& text);
 
+
+
+/**
+ * \brief Converts between time points belongong to different clocks
+ */
+template<class TimeTo, class TimeFrom>
+    TimeTo time_point_convert(TimeFrom&& tp)
+{
+    return TimeTo::clock::now() + (tp - TimeFrom::clock::now());
+}
+
 } // namespace time
 } // namespace melanolib
 

@@ -71,12 +71,9 @@ private:
             to = msg.from.name;
 
         melanolib::time::TimeParser parser(stream);
-        network::Time time( std::chrono::duration_cast<network::Duration>(
-            parser.parse_time_point().time_point().time_since_epoch()
-        ));
-
-        if ( !stream )
-            return false;
+        network::Time time = melanolib::time::time_point_convert<network::Time>(
+            parser.parse_time_point().time_point()
+        );
 
         std::string message = parser.get_remainder();
         if ( message.empty() )
