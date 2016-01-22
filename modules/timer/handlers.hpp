@@ -19,6 +19,7 @@
 #ifndef MELANOBOT_MODULES_TIMER_HANDLER_HPP
 #define MELANOBOT_MODULES_TIMER_HANDLER_HPP
 
+#include <list>
 #include "handler/handler.hpp"
 #include "timer-queue.hpp"
 #include "melanolib/time/time_parser.hpp"
@@ -35,17 +36,21 @@ public:
         help = "Sends a message at the given time";
         reply_ok = settings.get("reply_ok", reply_ok);
         reply_no = settings.get("reply_no", reply_no);
+        storage_id = settings.get("storage_id", storage_id);
+
+        load_items();
     }
 
     ~Remind()
     {
         TimerQueue::instance().remove(this);
+        store_items();
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        if ( parse(msg) )
+        if ( schedule_reply(msg) )
             reply_to(msg, reply_ok);
         else
             reply_to(msg, reply_no);
@@ -53,67 +58,29 @@ protected:
     }
 
 private:
+
+    struct Item
+    {
+        std::string message;
+        std::string connection;
+        std::string target;
+        melanolib::time::DateTime timeout;
+    };
+
     std::string reply_ok = "Got it!";
     std::string reply_no = "Forget it!";
-    std::string reply = "<%from.name> %to, remember %message";
+    std::string reply = "<%from> %to, remember %message";
+    std::string storage_id = "remind"; ///< ID used in storage
+    std::list<Item> items;
+    std::mutex mutex;
 
-    bool parse(const network::Message& msg) const
-    {
-        std::stringstream stream(msg.message);
+    void load_items();
+    void store_items();
+    void schedule_item(const Item& item);
 
-        std::string to;
-        stream >> to;
+    bool schedule_reply(const network::Message& msg);
+    Properties replacements(const network::Message& src, const std::string& to, const std::string& message) const;
 
-        if ( to.empty() || !stream )
-            return false;
-
-        if ( melanolib::string::icase_equal(to, "me") )
-            to = msg.from.name;
-
-        melanolib::time::TimeParser parser(stream);
-        network::Time time = melanolib::time::time_point_convert<network::Time>(
-            parser.parse_time_point().time_point()
-        );
-
-        std::string message = parser.get_remainder();
-        if ( message.empty() )
-            return false;
-
-        TimerQueue::instance().push(
-            time,
-            [this, to, src=msg, message]() {
-                remind(src, to, message);
-            },
-            this
-        );
-
-        return true;
-    }
-
-
-    Properties replacements(const network::Message& src, const std::string& to, const std::string& message) const
-    {
-        string::FormatterConfig fmt;
-        Properties props = src.destination->pretty_properties();
-        props.insert({
-            {"channel", melanolib::string::implode(", ", src.channels)},
-            {"message", message},
-
-            {"from", src.source->encode_to(src.from.name, fmt)},
-            {"from.host", src.from.host},
-            {"from.global_id", src.from.global_id},
-            {"from.local_id", src.from.local_id},
-
-            {"to", src.source->encode_to(to, fmt)},
-        });
-        return props;
-    }
-
-    void remind(const network::Message& src, const std::string& to, const std::string& msg) const
-    {
-        auto str = melanolib::string::replace(reply, replacements(src, to, msg), "%");
-        reply_to(src, str);
-    }
 };
 
 } // namespace timer

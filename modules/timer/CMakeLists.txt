@@ -15,6 +15,7 @@
 melanomodule(timer "Timer service" ON)
 
 set(SOURCES
+handlers.cpp
 timer.cpp
 )
 
