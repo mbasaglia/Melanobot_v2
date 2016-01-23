@@ -210,12 +210,17 @@ std::string format_char(const DateTime& date_time, char c)
     // Timezone
         /// \todo Timezone(?)
         case 'e':
+            return "UTC";
         case 'I':
+            return "0";
         case 'O':
+            return "+0000";
         case 'P':
+            return "+00:00";
         case 'T':
+            return "UTC";
         case 'Z':
-            return "(unimplemented)";
+            return "0";
     // Full Date/Time
         case 'c':
             return format(date_time,"Y-m-d\\TH:i:s"); /// \todo timezone %P
@@ -244,7 +249,11 @@ std::string format(const DateTime& date_time, const std::string& fmt)
     return result;
 }
 
-
+/**
+ * \todo Looks like at least in PHP, the format characters
+ * for date() and strftime() are different meanings.
+ * Check which are the most common ones and use them uniformly
+ */
 std::string strftime(const DateTime& date_time, const std::string& fmt)
 {
     std::string result;
