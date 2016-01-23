@@ -19,7 +19,7 @@
 #ifndef MELANOBOT_MODULES_TIMER_CONNECTION
 #define MELANOBOT_MODULES_TIMER_CONNECTION
 
-#include "network/connection.hpp"
+#include "network/async_service.hpp"
 #include "network/time.hpp"
 #include "functional.hpp"
 #include "concurrency/concurrency.hpp"
@@ -55,7 +55,7 @@ public:
 /**
  * \brief Asynchronous queue that executes functions at given times
  */
-class TimerQueue : public melanolib::Singleton<TimerQueue>
+class TimerQueue : public AsyncService, public melanolib::Singleton<TimerQueue>
 {
 public:
     /**
@@ -74,28 +74,30 @@ public:
      */
     void remove(const void* owner);
 
+
+    /**
+     * \brief Stops the thread
+     */
+    void stop() override;
+
+    /**
+     * \brief Starts the thread
+     */
+    void start() override;
+
+    void initialize(const Settings& settings) override {}
+
 private:
     friend ParentSingleton;
 
     TimerQueue()
     {
-        start();
     }
 
     ~TimerQueue()
     {
         stop();
     }
-
-    /**
-     * \brief Stops the thread
-     */
-    void stop();
-
-    /**
-     * \brief Starts the thread
-     */
-    void start();
 
     /**
      * \brief Thread function

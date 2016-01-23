@@ -30,9 +30,8 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_timer_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_timer_initialize(const Settings&)
 {
+    module::register_service<timer::TimerQueue>("timer");
+
     module::register_handler<timer::Remind>("Remind");
     module::register_handler<timer::Defer>("Defer");
-    
-    // ensure the queue object is contructed soon (and destructed late)
-    timer::TimerQueue::instance();
 }
