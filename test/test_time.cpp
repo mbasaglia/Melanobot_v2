@@ -396,9 +396,11 @@ BOOST_AUTO_TEST_CASE( test_format )
     // Custom formats
     BOOST_CHECK( format(time, "Y-m-d H:i:s.u") == "2015-04-04 15:00:00.005000" );
     BOOST_CHECK( format(time, "l, F \\t\\h\\e jS, g:i a") == "Saturday, April the 4th, 3:00 pm" );
+    BOOST_CHECK( strftime(time, "%l, %F the %j%S, %g:%i %a %%") == "Saturday, April the 4th, 3:00 pm %" );
 
     DateTime dt;
     BOOST_CHECK( format(dt, "Y-m-d") == format("Y-m-d") );
+    BOOST_CHECK( strftime(dt, "%Y-%m-%d") == strftime("%Y-%m-%d") );
 }
 
 BOOST_AUTO_TEST_CASE( test_TimeParser )

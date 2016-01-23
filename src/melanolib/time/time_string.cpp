@@ -244,5 +244,21 @@ std::string format(const DateTime& date_time, const std::string& fmt)
     return result;
 }
 
+
+std::string strftime(const DateTime& date_time, const std::string& fmt)
+{
+    std::string result;
+
+    for ( std::string::size_type i = 0; i < fmt.size(); i++ )
+    {
+        if ( fmt[i] == '%' && i+1 < fmt.size() )
+            result += format_char(date_time, fmt[++i]);
+        else
+            result += fmt[i];
+    }
+
+    return result;
+}
+
 } // namespace time
 } // namespace melanolib

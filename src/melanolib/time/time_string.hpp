@@ -79,6 +79,21 @@ inline std::string format(const std::string& fmt)
 }
 
 /**
+ * \brief Format a string from DateTime with the given format
+ *
+ * Similar to format() but special characters must be preceded by %
+ */
+std::string strftime(const DateTime& date_time, const std::string& fmt);
+
+/**
+ * \brief Equivalent to format(DateTime(),fmt)
+ */
+inline std::string strftime(const std::string& fmt)
+{
+    return strftime(DateTime(),fmt);
+}
+
+/**
  * \brief Converts a duration to a string
  * \todo Unit test
  */
