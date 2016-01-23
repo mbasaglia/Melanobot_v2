@@ -61,12 +61,7 @@ public:
     /**
      * \brief Adds an item to the queue
      */
-    void push(TimerItem&& item)
-    {
-        EditLock lock(this);
-        items.emplace_back(std::move(item));
-        std::push_heap(items.begin(), items.end());
-    }
+    void push(TimerItem&& item);
 
     template<class... Args>
         void push(Args&&... args)
@@ -77,17 +72,7 @@ public:
     /**
      * \brief Removes all items owned by the given object
      */
-    void remove(const void* owner)
-    {
-        EditLock lock(this);
-        items.erase(
-            std::remove_if(items.begin(), items.end(),
-                [owner](const TimerItem& item) { return item.owner == owner; }
-            ),
-            items.end()
-        );
-        std::make_heap(items.begin(), items.end());
-    }
+    void remove(const void* owner);
 
 private:
     friend ParentSingleton;
@@ -105,87 +90,24 @@ private:
     /**
      * \brief Stops the thread
      */
-    void stop()
-    {
-        if ( thread.joinable() )
-        {
-            timer_action = TimerAction::Die;
-            condition.notify_one();
-            thread.join();
-        }
-    }
+    void stop();
 
     /**
      * \brief Starts the thread
      */
-    void start()
-    {
-        if ( !thread.joinable() )
-        {
-            timer_action = TimerAction::Tick;
-            thread = std::thread([this]{run();});
-        }
-    }
+    void start();
 
     /**
      * \brief Thread function
      */
-    void run()
-    {
-        std::mutex condition_mutex;
-        while ( true )
-        {
-            Lock lock(events_mutex);
-
-            if ( !items.empty() )
-            {
-                if ( tick(lock) )
-                    continue;
-                condition.wait_until(lock, items[0].timeout);
-            }
-            else
-            {
-                condition.wait(lock);
-            }
-
-            switch( timer_action )
-            {
-                case TimerAction::Tick:
-                    tick(lock);
-                    break;
-                case TimerAction::Die:
-                    return;
-                case TimerAction::Noop:
-                    lock.unlock();
-                    std::this_thread::yield();
-                    break;
-            }
-        }
-    }
+    void run();
 
     /**
      * \brief Tries to execute the top item
      * \param lock Lock for events_mutex, will be released if an action is executed
      * \return \b true if the top item has been executed
      */
-    bool tick(Lock& lock)
-    {
-        if ( items.empty() )
-            return false;
-
-        // Handle spurious wake ups
-        if ( items[0].timeout > network::Clock::now() )
-            return false;
-
-        std::pop_heap(items.begin(), items.end());
-
-        TimerItem item = std::move(items.back());
-        items.pop_back();
-        lock.unlock();
-
-        item.action();
-        return true;
-    }
+    bool tick(Lock& lock);
 
     std::vector<TimerItem> items;       ///< Items (heap)
     std::condition_variable condition;  ///< Activated on timeout of the next items or when the item heap changes
@@ -204,35 +126,7 @@ private:
 
     std::atomic<TimerAction> timer_action;
 
-    /**
-     * \brief RAII object for editing the items in the queue
-     */
-    struct EditLock
-    {
-        TimerQueue* subject;
-        Lock lock;
-
-        explicit EditLock(TimerQueue* subject)
-            : subject(subject)
-        {
-            if ( subject->thread.joinable() )
-            {
-                subject->timer_action = TimerAction::Noop;
-                subject->condition.notify_one();
-                lock = Lock(subject->events_mutex);
-            }
-        }
-
-        ~EditLock()
-        {
-            if ( subject->thread.joinable() )
-            {
-                lock.unlock();
-                subject->timer_action = TimerAction::Tick;
-                subject->condition.notify_one();
-            }
-        }
-    };
+    struct EditLock;
 };
 
 } // namespace timer
