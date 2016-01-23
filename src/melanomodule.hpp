@@ -186,9 +186,9 @@ template <class FormatterT, class... Args>
 template<class ServiceT>
     void register_service(const std::string& name)
     {
-        static_assert(std::is_base_of<network::AsyncService,ServiceT>::value,
-                        "Expected network::AsyncService type");
-        network::ServiceRegistry::instance()
+        static_assert(std::is_base_of<AsyncService,ServiceT>::value,
+                        "Expected AsyncService type");
+        ServiceRegistry::instance()
             .register_service(name,&ServiceT::instance());
     }
 

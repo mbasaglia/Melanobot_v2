@@ -26,44 +26,6 @@
 #include "string/logger.hpp"
 #include "concurrency/container.hpp"
 
-/**
- * \brief Namespace for network operations
- *
- * This includes asyncronous calls and network protocol operations
- */
-namespace network {
-
-/**
- * \brief A network request
- */
-struct Request
-{
-    Request() = default;
-    Request(std::string command, std::string resource, std::vector<std::string> parameters)
-        : command(std::move(command)),
-          resource(std::move(resource)),
-          parameters(std::move(parameters))
-    {}
-
-    std::string command;        ///< Protocol-specific command
-    std::string resource;       ///< Name/identifier for the requested resource
-    std::vector<std::string> parameters; ///< Parameters for the request
-};
-
-/**
- * \brief Result of a request
- */
-struct Response
-{
-    std::string error_message;  ///< Message in the case of error, if empty not an error
-    std::string contents;       ///< Response contents
-    std::string resource;       ///< Name/identifier for the requested resource
-};
-
-/**
- * \brief Callback used by asyncronous calls
- */
-using AsyncCallback = std::function<void(const Response&)>;
 
 /**
  * \brief Base class for external services that might take some time to execute.
@@ -78,7 +40,9 @@ class AsyncService
 {
 public:
 
-    virtual ~AsyncService() {}
+    virtual ~AsyncService()
+    {
+    }
 
     /**
      * \brief Loads the service settings
@@ -95,111 +59,6 @@ public:
      * \brief Stops the service
      */
     virtual void stop() = 0;
-
-    /**
-     * \brief Asynchronous query
-     */
-    virtual void async_query (const Request& request, const AsyncCallback& callback) = 0;
-
-    /**
-     * \brief Synchronous query
-     */
-    virtual Response query (const Request& request) = 0;
-
-    /**
-     * \brief Whether the service should be loaded without explicit configuration
-     */
-    virtual bool auto_load() const = 0;
-
-protected:
-    AsyncService() = default;
-    AsyncService(const AsyncService&) = delete;
-    AsyncService(AsyncService&&) = delete;
-    AsyncService& operator=(const AsyncService&) = delete;
-    AsyncService& operator=(AsyncService&&) = delete;
-
-    /**
-     * \brief Quick way to create a successful response
-     */
-    Response ok(const std::string& contents, const Request& origin)
-    {
-        Response r;
-        r.contents = contents;
-        r.resource = origin.resource;
-        return r;
-    }
-    /**
-     * \brief Quick way to create a failure response
-     */
-    Response error(const std::string& error_message, const Request& origin)
-    {
-        Response r;
-        r.error_message = error_message;
-        r.resource = origin.resource;
-        return r;
-    }
-};
-
-/**
- * \brief An AsyncService implemented with a separate thread.
- *
- * Handles asynchronous calls as a queue of synchronous calls performed
- * sequentially in a separate thread.
- *
- * Derived classes only need to override query() and auto_load().
- */
-class ThreadedAsyncService : public AsyncService
-{
-public:
-
-    ~ThreadedAsyncService() override
-    {
-        stop();
-    }
-
-    void start() override
-    {
-        requests.start();
-        if ( !thread.joinable() )
-            thread = std::move(std::thread([this]{run();}));
-    }
-
-    void stop() override
-    {
-        requests.stop();
-        if ( thread.joinable() )
-            thread.join();
-    }
-
-    void async_query (const Request& request, const AsyncCallback& callback) override
-    {
-        requests.push({request,callback});
-    }
-
-private:
-    /**
-     * \brief Internal request record
-     */
-    struct Item
-    {
-        Request       request;
-        AsyncCallback callback;
-    };
-
-    ConcurrentQueue<Item> requests;
-    std::thread thread;
-
-    void run()
-    {
-        while ( requests.active() )
-        {
-            Item item;
-            requests.pop(item);
-            if ( !requests.active() )
-                break;
-            item.callback(query(item.request));
-        }
-    }
 };
 
 /**
@@ -208,6 +67,9 @@ private:
 class ServiceRegistry : public melanolib::Singleton<ServiceRegistry>
 {
 public:
+    ~ServiceRegistry()
+    {
+    }
 
     /**
      * \brief Registers a service object
@@ -241,7 +103,7 @@ public:
         }
 
         for ( auto& p : services )
-            if ( !p.second.loaded && p.second.service->auto_load() )
+            if ( !p.second.loaded )
             {
                 p.second.service->initialize({});
                 p.second.loaded = true;
@@ -299,31 +161,10 @@ private:
         bool loaded;
     };
 
-    std::unordered_map<std::string,Entry> services;
+    std::unordered_map<std::string, Entry> services;
 
     ServiceRegistry(){}
     friend ParentSingleton;
 };
 
-/**
- * \brief Get service by name (less verbose than through ServiceRegistry)
- */
-inline AsyncService* service(const std::string& name)
-{
-   return ServiceRegistry::instance().service(name);
-}
-
-/**
- * \brief Returns a pointer to the service object or throws an exception
- * \throws ConfigurationError if the service is not active
- */
-inline AsyncService* require_service(const std::string& name)
-{
-   if ( AsyncService* serv =  ServiceRegistry::instance().service(name) )
-       return serv;
-   throw ConfigurationError("Missing required service :"+name);
-}
-
-
-} // namespace network
 #endif // ASYNC_SERVICE_HPP

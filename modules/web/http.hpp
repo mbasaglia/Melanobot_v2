@@ -23,17 +23,72 @@
 
 #include <map>
 
-namespace network {
-
-/**
- * \brief HTTP networking utilities
- */
-namespace http {
+namespace web {
 
 /**
  * \brief Request parameters
  */
 using Parameters = std::map<std::string,std::string>;
+
+/**
+ * \brief A network request
+ */
+struct Request
+{
+    Request() = default;
+    Request(std::string command,
+            std::string resource,
+            Parameters parameters = {},
+            std::string body = {}
+           )
+        : command(std::move(command)),
+          resource(std::move(resource)),
+          parameters(std::move(parameters)),
+          body(std::move(body))
+    {}
+
+    std::string command;    ///< Protocol-specific command
+    std::string resource;   ///< Name/identifier for the requested resource
+    Parameters  parameters; ///< GET query parameters
+    std::string body;       ///< POST/PUT body
+
+    /**
+     * \brief Resource + query
+     */
+    std::string full_url() const;
+};
+
+/**
+ * \brief Result of a request
+ */
+struct Response
+{
+    std::string contents;       ///< Response contents
+    std::string resource;       ///< Name/identifier for the requested resource
+    int status_code = 200;
+    std::string error_message;  ///< Message in the case of error, if empty not an error
+
+    Response(
+        std::string contents,
+        std::string resource,
+        int status_code = 200,
+        std::string error_message = {}
+    ) : contents(std::move(contents)),
+        resource(std::move(resource)),
+        status_code(status_code),
+        error_message(std::move(error_message))
+    {}
+
+    bool success() const
+    {
+        return status_code < 400;
+    }
+};
+
+/**
+ * \brief Callback used by asyncronous calls
+ */
+using AsyncCallback = std::function<void(const Response&)>;
 
 /**
  * \brief Encode a string to make it fit to be used in a url
@@ -48,32 +103,68 @@ std::string urlencode ( const std::string& text );
 std::string build_query ( const Parameters& params );
 
 /**
- * \brief Creates a GET request
- */
-Request get(const std::string& url, const Parameters& params = Parameters());
-/**
- * \brief Creates a simple POST request
- */
-Request post(const std::string& url, const Parameters& params = Parameters());
-
-/**
  * \brief HTTP Service
  */
-class HttpService : public ThreadedAsyncService, public melanolib::Singleton<HttpService>
+class HttpService : public AsyncService, public melanolib::Singleton<HttpService>
 {
 public:
-    Response query (const Request& request) override;
+    Response query (const Request& request);
     void initialize(const Settings& settings) override;
-    bool auto_load() const override { return true; }
+
+
+    void start() override
+    {
+        requests.start();
+        if ( !thread.joinable() )
+            thread = std::move(std::thread([this]{run();}));
+    }
+
+    void stop() override
+    {
+        requests.stop();
+        if ( thread.joinable() )
+            thread.join();
+    }
+
+    void async_query (const Request& request, const AsyncCallback& callback)
+    {
+        requests.push({request, callback});
+    }
 
 private:
     HttpService(){}
+    ~HttpService()
+    {
+        stop();
+    }
     friend ParentSingleton;
 
     std::string user_agent;
     int         max_redirs = 3;
+    /**
+     * \brief Internal request record
+     */
+    struct Item
+    {
+        Request       request;
+        AsyncCallback callback;
+    };
+
+    ConcurrentQueue<Item> requests;
+    std::thread thread;
+
+    void run()
+    {
+        while ( requests.active() )
+        {
+            Item item;
+            requests.pop(item);
+            if ( !requests.active() )
+                break;
+            item.callback(query(item.request));
+        }
+    }
 };
 
-} // namespace network::http
-} // namespace network
+} // namespace web
 #endif // HTTP_HPP

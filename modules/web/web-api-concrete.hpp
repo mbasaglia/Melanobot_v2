@@ -23,6 +23,7 @@
 
 #include "web-api.hpp"
 #include "melanolib/time/time_string.hpp"
+#include "melanolib/utils.hpp"
 
 namespace web {
 
@@ -49,7 +50,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url,{
+        request_json(msg, web::Request("GET", api_url,{
             {"part", "snippet"},
             {"type", "video" },
             {"maxResults","1"},
@@ -120,7 +121,6 @@ public:
     {
         yt_api_key = settings.get("yt_api_key", "");
         reply = settings.get("reply", reply);
-        network::require_service("web");
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -130,6 +130,9 @@ public:
 
 protected:
     bool on_handle(network::Message& msg) override;
+
+    using FoundFunction = void (VideoInfo::*)(const network::Message&,const Settings&);
+    std::pair<FoundFunction, web::Request> request_from_match(const std::smatch& match) const;
 
     /**
      * \brief Found youtube video
@@ -286,7 +289,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::string url = "http://api.urbandictionary.com/v0/define";
-        request_json(msg,network::http::get(url,{{"term",msg.message}}));
+        request_json(msg, web::Request("GET", url, {{"term",msg.message}}));
         return true;
     }
 
@@ -322,7 +325,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url,{
+        request_json(msg, web::Request("GET", api_url,{
             {"format", "json"},
             {"q", msg.message},
             {"categories", category}
@@ -377,7 +380,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url,{
+        request_json(msg, web::Request("GET", api_url,{
             {"format",  "json"},
             {"action",  "query"},
             {"list",    "search"},
@@ -436,7 +439,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url,{
+        request_json(msg, web::Request("GET", api_url,{
             {"format",  "json"},
             {"action",  "query"},
             {"prop",    "revisions"},

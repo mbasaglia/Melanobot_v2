@@ -60,10 +60,10 @@ int main(int argc, char **argv)
 
         // Load and run all services and the bot
         Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
-        network::ServiceRegistry::instance().initialize(settings.get_child("services",{}));
-        network::ServiceRegistry::instance().start();
+        ServiceRegistry::instance().initialize(settings.get_child("services",{}));
+        ServiceRegistry::instance().start();
         Melanobot::load(settings).run();
-        network::ServiceRegistry::instance().stop();
+        ServiceRegistry::instance().stop();
         /// \todo some way to reload the config and restart the bot
 
         // Finalize for a clean exit

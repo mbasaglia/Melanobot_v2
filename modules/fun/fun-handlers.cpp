@@ -267,7 +267,7 @@ bool ChuckNorris::on_handle(network::Message& msg)
             std::regex_constants::optimize |
             std::regex_constants::ECMAScript);
 
-    network::http::Parameters params;
+    web::Parameters params;
     std::smatch match;
 
     if ( std::regex_match(msg.message, match, regex_name) && match.length() > 0 )
@@ -276,7 +276,7 @@ bool ChuckNorris::on_handle(network::Message& msg)
         params["lastName"]  = match[2];
     }
 
-    request_json(msg,network::http::get(api_url,params));
+    request_json(msg, web::Request("GET", api_url, params));
     return true;
 }
 
@@ -376,21 +376,21 @@ bool AnswerQuestions::on_handle(network::Message& msg)
     else if ( melanolib::string::starts_with(question,"where") )
     {
         static std::string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
-        network::Response response =  network::service("web")->query(
-            network::http::get(url,{{"address",match[2]}}) );
+        auto response =  web::HttpService::instance().query(
+            web::Request("GET", url, {{"address",match[2]}})
+        );
 
         JsonParser parser;
         parser.throws(false);
         Settings ptree = parser.parse_string(response.contents,response.resource);
 
         std::string address = ptree.get("results.0.formatted_address","I don't know");
-        network::http::Parameters params {{"q",match[2]}};
+        web::Parameters params {{"q",match[2]}};
         auto location = ptree.get_child_optional("results.0.geometry.location");
         if ( location )
             params["ll"] = location->get("lat","")+","+location->get("lng","");
 
-        reply_to(msg,address+": https://maps.google.com/?"+
-            network::http::build_query(params));
+        reply_to(msg, address+": https://maps.google.com/?"+web::build_query(params));
 
         return true;
     }

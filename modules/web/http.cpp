@@ -29,16 +29,29 @@
 #include "config.hpp"
 
 
-namespace network {
+namespace web {
 
-namespace http {
+std::string Request::full_url() const
+{
+    if ( !parameters.empty() )
+    {
+        std::string url = resource;
+        if ( url.find('?') == std::string::npos )
+            url += '?';
+        else
+            url += '&';
+        url += build_query(parameters);
+        return url;
+    }
+    return resource;
+}
 
 std::string urlencode(const std::string& text)
 {
     return cpr::util::urlEncode(text);
 }
 
-cpr::Parameters cpr_parameters(const Parameters& params)
+static cpr::Parameters cpr_parameters(const Parameters& params)
 {
     cpr::Parameters parameters;
     for ( const auto & param : params )
@@ -53,38 +66,6 @@ std::string build_query(const Parameters& params)
     return cpr_parameters(params).content;
 }
 
-Request get(const std::string& url, const Parameters& params)
-{
-    Request r;
-
-    r.resource = url;
-    r.command = "GET";
-
-    if ( !params.empty() )
-    {
-        std::string encoded_param;
-        if ( url.find('?') == std::string::npos )
-            encoded_param += '?';
-        else
-            encoded_param += '&';
-        encoded_param += build_query(params);
-        r.parameters = {encoded_param};
-    }
-
-    return r;
-}
-
-Request post(const std::string& url, const Parameters& params)
-{
-    Request r;
-
-    r.resource = url;
-    r.command = "POST";
-    r.parameters = {build_query(params)};
-
-    return r;
-}
-
 void HttpService::initialize(const Settings& settings)
 {
     if ( user_agent.empty() )
@@ -96,7 +77,7 @@ void HttpService::initialize(const Settings& settings)
 
 Response HttpService::query (const Request& request)
 {
-    std::string url = request.resource;
+    std::string url = request.full_url();
 
     cpr::Session session;
     cpr::Response response;
@@ -120,30 +101,20 @@ Response HttpService::query (const Request& request)
 
     if ( request.command == "GET" )
     {
-        if ( !request.parameters.empty() )
-        {
-            session.SetUrl(cpr::Url(url+request.parameters[0]));
-        }
         response = session.Get();
     }
     else if ( request.command == "POST" )
     {
-        if ( !request.parameters.empty() )
-        {
-            cpr::Payload payload{};
-            payload.content = request.parameters[0];
-            session.SetPayload(payload);
-        }
+        cpr::Payload payload{};
+        payload.content = request.body;
+        session.SetPayload(payload);
         response = session.Post();
     }
     else if ( request.command == "PUT" )
     {
-        if ( !request.parameters.empty() )
-        {
-            cpr::Payload payload{};
-            payload.content = request.parameters[0];
-            session.SetPayload(payload);
-        }
+        cpr::Payload payload{};
+        payload.content = request.body;
+        session.SetPayload(payload);
         response = session.Put();
     }
     else if ( request.command == "HEAD" )
@@ -156,11 +127,9 @@ Response HttpService::query (const Request& request)
     if ( response.error )
     {
         ErrorLog("web") << "Error processing " << request.resource;
-        return error(response.error.message, request);
     }
 
-    return ok(response.text, request);
+    return Response(response.text, response.url, response.status_code, response.error.message );
 }
 
-} // namespace network::http
-} // namespace network
+} // namespace web

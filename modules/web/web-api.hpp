@@ -35,7 +35,6 @@ public:
                  MessageConsumer* parent)
         : SimpleAction(default_trigger, settings, parent)
     {
-        network::require_service("web");
     }
 
 protected:
@@ -43,10 +42,10 @@ protected:
      * \brief Sends an asynchronous http request
      * \note Not yet asynchronous
      */
-    void request_http(const network::Message& msg, const network::Request& request)
+    void request_http(const network::Message& msg, const web::Request& request)
     {
-        network::service("web")->async_query(request,
-            [this,msg](const network::Response& resp)
+        web::HttpService::instance().async_query(request,
+            [this,msg](const web::Response& resp)
             {
                 if ( resp.error_message.empty() )
                     http_success(msg,resp);
@@ -58,13 +57,13 @@ protected:
     /**
      * \brief Called when request_http() gets a successfult response
      */
-    virtual void http_success(const network::Message& msg, const network::Response& response) = 0;
+    virtual void http_success(const network::Message& msg, const web::Response& response) = 0;
 
 
     /**
      * \brief Called when request_http() fails
      */
-    virtual void http_failure(const network::Message&, const network::Response&) {}
+    virtual void http_failure(const network::Message&, const web::Response&) {}
 
 };
 
@@ -80,12 +79,12 @@ protected:
     /**
      * \brief Sends an asynchronous http request
      */
-    void request_json(const network::Message& msg, const network::Request& request)
+    void request_json(const network::Message& msg, const web::Request& request)
     {
-        request_http(msg,request);
+        request_http(msg, request);
     }
 
-    void http_success(const network::Message& msg, const network::Response& response) override
+    void http_success(const network::Message& msg, const web::Response& response) override
     {
         Settings ptree;
         JsonParser parser;
@@ -101,7 +100,7 @@ protected:
         }
     }
 
-    void http_failure(const network::Message& msg, const network::Response&) override
+    void http_failure(const network::Message& msg, const web::Response&) override
     {
         json_failure(msg);
     }

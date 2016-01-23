@@ -19,44 +19,61 @@
 #include "web-api-concrete.hpp"
 namespace web {
 
+std::pair<VideoInfo::FoundFunction, web::Request>
+    VideoInfo::request_from_match(const std::smatch& match) const
+{
+    if ( match[1].matched )
+    {
+        return {
+            &VideoInfo::yt_found,
+            web::Request("GET", yt_api_url,
+            {
+                {"part", "snippet,contentDetails"},
+                {"maxResults", "1"},
+                {"key", yt_api_key},
+                {"id", match[1]},
+            })
+        };
+    }
+    else if ( match[2].matched )
+    {
+        return {
+            &VideoInfo::vimeo_found,
+            web::Request("GET", vimeo_api_url+std::string(match[2])+".json")
+        };
+    }
+    else if ( match[3].matched )
+    {
+        return {
+            &VideoInfo::dm_found,
+            web::Request("GET", dm_api_url+std::string(match[3]),
+            {
+                {"fields", "id,title,channel,duration,description"},
+            })
+        };
+    }
+    else if ( match[4].matched )
+    {
+        return {
+            &VideoInfo::vidme_found,
+            web::Request("GET", vidme_api_url+std::string(match[4]))
+        };
+    }
+
+    return {nullptr, {}};
+}
+
 bool VideoInfo::on_handle(network::Message& msg)
 {
     std::smatch match;
     if ( std::regex_search(msg.message,match,regex) )
     {
-        network::Request request;
-        void (VideoInfo::*found_func)(const network::Message&,const Settings&) = nullptr;
+        web::Request request;
+        FoundFunction found_func;
+        std::tie(found_func, request) = request_from_match(match);
 
-        if ( match[1].matched )
-        {
-            found_func = &VideoInfo::yt_found;
-            request = network::http::get(yt_api_url,{
-                {"part", "snippet,contentDetails"},
-                {"maxResults","1"},
-                {"key",yt_api_key},
-                {"id",match[1]},
-            });
-        }
-        else if ( match[2].matched )
-        {
-            found_func = &VideoInfo::vimeo_found;
-            request = network::http::get(vimeo_api_url+std::string(match[2])+".json");
-        }
-        else if ( match[3].matched )
-        {
-            found_func = &VideoInfo::dm_found;
-            request = network::http::get(dm_api_url+std::string(match[3]),{
-                {"fields", "id,title,channel,duration,description"},
-            });
-        }
-        else if ( match[4].matched )
-        {
-            found_func = &VideoInfo::vidme_found;
-            request = network::http::get(vidme_api_url+std::string(match[4]));
-        }
-
-        network::service("web")->async_query(request,
-            [this,msg,found_func](const network::Response& response)
+        web::HttpService::instance().async_query(request,
+            [this, msg, found_func](const web::Response& response)
             {
                 if ( response.error_message.empty() )
                 {

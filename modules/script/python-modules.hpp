@@ -167,7 +167,7 @@ void module_melanobot_network(boost::python::scope& module_top)
         })
     ;
 
-    class_<network::Request>("Request")
+    /*class_<network::Request>("Request")
         .def("__init__",make_constructor(
             [](const std::string& command, const std::string& resource, list parameters) {
                 std::vector<std::string> params;
@@ -193,7 +193,7 @@ void module_melanobot_network(boost::python::scope& module_top)
             { return serv->query(request); })
     ;
 
-    def("service",return_pointer(&network::require_service));
+    def("service",return_pointer(&network::require_service));*/
 }
 
 void module_melanobot_storage(boost::python::scope& module_top)

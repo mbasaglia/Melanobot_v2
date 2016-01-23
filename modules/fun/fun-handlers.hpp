@@ -139,7 +139,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url));
+        request_json(msg, web::Request("GET", api_url));
         return true;
     }
 
@@ -190,8 +190,8 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg,network::http::get(api_url+"tag:"+
-            network::http::urlencode(msg.message)
+        request_json(msg, web::Request("GET",
+            api_url+"tag:"+web::urlencode(msg.message)
         ));
         return true;
     }
