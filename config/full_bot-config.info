@@ -214,6 +214,7 @@ bot
                 Cointoss
                 Discord
                 Insult
+                Remind              ; "remind" Schedules a message
                 AnswerQuestions
             }
         }
@@ -252,7 +253,6 @@ bot
             UrbanDictionary     ; "define" Searches on Urban Dictionary
             SearchWebSearx      ; "search" Searches for web pages with Searx
             Time                ; "time" Shows the current time (UTC)
-            Remind              ; "remind" Schedules a message
         }
         VideoInfo           ; This shows info (Like title and similar) on video links
         {                   ; Supports Dailymotion, Vimeo and YouTube

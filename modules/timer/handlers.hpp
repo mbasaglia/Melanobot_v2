@@ -26,6 +26,9 @@
 
 namespace timer {
 
+/**
+ * \brief Sends a message at the specified time
+ */
 class Remind : public handler::SimpleAction
 {
 public:
@@ -59,26 +62,51 @@ protected:
 
 private:
 
+    /**
+     * \brief Message information
+     *
+     * Useful to serialize the pending messages into storage and to
+     * not depend on the connection object having continuous lifetime
+     */
     struct Item
     {
-        std::string message;
-        std::string connection;
-        std::string target;
-        melanolib::time::DateTime timeout;
+        std::string message;    ///< Message text (already formatted as for \p reply
+        std::string connection; ///< Name of the connection as from Melanobot
+        std::string target;     ///< Message target (channel or user)
+        melanolib::time::DateTime timeout; ///< Time at which the message should be delivered
     };
 
-    std::string reply_ok = "Got it!";
-    std::string reply_no = "Forget it!";
-    std::string reply = "<%from> %to, remember %message";
+    std::string reply_ok = "Got it!";   ///< Reply acknowledging the message will be processed
+    std::string reply_no = "Forget it!";///< Reply given when a message has been discarded
+    std::string reply = "<%from> %to, remember %message"; ///< Message formatting
     std::string storage_id = "remind"; ///< ID used in storage
-    std::list<Item> items;
-    std::mutex mutex;
+    std::list<Item> items; ///< List of stored messages
+    std::mutex mutex; ///< Mutex guarding \p items
 
+    /**
+     * \brief Loads items from storage
+     */
     void load_items();
+
+    /**
+     * \brief Saves items to storage
+     */
     void store_items();
+
+    /**
+     * \brief Schedules an item into the timer service
+     */
     void schedule_item(const Item& item);
 
+    /**
+     * \brief Extracts an Item from the message and schedules it
+     * \returns \b false if the message cannot be processed
+     */
     bool schedule_reply(const network::Message& msg);
+
+    /**
+     * \brief Returns the replacements used by \p reply
+     */
     Properties replacements(const network::Message& src, const std::string& to, const std::string& message) const;
 
 };

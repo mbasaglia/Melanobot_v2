@@ -26,6 +26,9 @@
 
 namespace timer {
 
+/**
+ * \brief Item for TimerQueue
+ */
 class TimerItem
 {
 public:
@@ -49,9 +52,15 @@ public:
     }
 };
 
+/**
+ * \brief Asynchronous queue that executes functions at given times
+ */
 class TimerQueue : public melanolib::Singleton<TimerQueue>
 {
 public:
+    /**
+     * \brief Adds an item to the queue
+     */
     void push(TimerItem&& item)
     {
         EditLock lock(this);
@@ -77,6 +86,7 @@ public:
             ),
             items.end()
         );
+        std::make_heap(items.begin(), items.end());
     }
 
 private:
@@ -92,25 +102,34 @@ private:
         stop();
     }
 
+    /**
+     * \brief Stops the thread
+     */
     void stop()
     {
         if ( thread.joinable() )
         {
-            timer_status = Die;
+            timer_action = TimerAction::Die;
             condition.notify_one();
             thread.join();
         }
     }
 
+    /**
+     * \brief Starts the thread
+     */
     void start()
     {
         if ( !thread.joinable() )
         {
-            timer_status = Tick;
+            timer_action = TimerAction::Tick;
             thread = std::thread([this]{run();});
         }
     }
 
+    /**
+     * \brief Thread function
+     */
     void run()
     {
         std::mutex condition_mutex;
@@ -129,14 +148,14 @@ private:
                 condition.wait(lock);
             }
 
-            switch( timer_status )
+            switch( timer_action )
             {
-                case Tick:
+                case TimerAction::Tick:
                     tick(lock);
                     break;
-                case Die:
+                case TimerAction::Die:
                     return;
-                case Noop:
+                case TimerAction::Noop:
                     lock.unlock();
                     std::this_thread::yield();
                     break;
@@ -168,20 +187,22 @@ private:
         return true;
     }
 
-    std::vector<TimerItem> items;
-    network::Timer timer;
-    std::condition_variable condition;
-    std::mutex events_mutex;
-    std::thread thread;
+    std::vector<TimerItem> items;       ///< Items (heap)
+    std::condition_variable condition;  ///< Activated on timeout of the next items or when the item heap changes
+    std::mutex events_mutex;            ///< Protects \p items, locked by \p condition
+    std::thread thread;                 ///< Thread for run()
 
-    enum TimerStatus
+    /**
+     * \brief Type of action to perform when \p condition awakens
+     */
+    enum class TimerAction
     {
-        Noop,
-        Tick,
-        Die
+        Noop,   ///< No action, release execution. For when items might have changed
+        Tick,   ///< Execute the top item
+        Die     ///< Terminate the thread
     };
 
-    std::atomic<TimerStatus> timer_status;
+    std::atomic<TimerAction> timer_action;
 
     /**
      * \brief RAII object for editing the items in the queue
@@ -196,7 +217,7 @@ private:
         {
             if ( subject->thread.joinable() )
             {
-                subject->timer_status = Noop;
+                subject->timer_action = TimerAction::Noop;
                 subject->condition.notify_one();
                 lock = Lock(subject->events_mutex);
             }
@@ -207,7 +228,7 @@ private:
             if ( subject->thread.joinable() )
             {
                 lock.unlock();
-                subject->timer_status = Tick;
+                subject->timer_action = TimerAction::Tick;
                 subject->condition.notify_one();
             }
         }
