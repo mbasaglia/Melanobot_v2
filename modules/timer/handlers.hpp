@@ -22,7 +22,6 @@
 #include <list>
 #include "handler/handler.hpp"
 #include "timer-queue.hpp"
-#include "melanolib/time/time_parser.hpp"
 
 namespace timer {
 
@@ -109,6 +108,44 @@ private:
      */
     Properties replacements(const network::Message& src, const std::string& to, const std::string& message) const;
 
+};
+
+/**
+ * \brief Defers a command
+ */
+class Defer : public handler::SimpleAction
+{
+public:
+    Defer(const Settings& settings, MessageConsumer* parent)
+        : SimpleAction("defer", settings, parent)
+    {
+        synopsis += "time command...";
+        help = "Executes a command at the given time";
+        reply_ok = settings.get("reply_ok", reply_ok);
+        reply_no = settings.get("reply_no", reply_no);
+    }
+
+    ~Defer()
+    {
+        TimerQueue::instance().remove(this);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        if ( schedule_message(msg) )
+            reply_to(msg, reply_ok);
+        else
+            reply_to(msg, reply_no);
+        return true;
+    }
+
+private:
+    std::string reply_ok = "Got it!";   ///< Reply acknowledging the message will be processed
+    std::string reply_no = "Forget it!";///< Reply given when a message has been discarded
+
+
+    bool schedule_message(network::Message msg);
 };
 
 } // namespace timer

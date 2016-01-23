@@ -20,6 +20,7 @@
 #include "handlers.hpp"
 #include "storage.hpp"
 #include "melanobot.hpp"
+#include "melanolib/time/time_parser.hpp"
 
 namespace timer {
 
@@ -163,5 +164,27 @@ void Remind::schedule_item(const Item& item)
     );
 }
 
+bool Defer::schedule_message(network::Message msg)
+{
+    std::stringstream stream(msg.message);
+    melanolib::time::TimeParser parser(stream);
+    auto date_time = parser.parse_time_point();
+
+    msg.message = parser.get_remainder();
+    if ( msg.message.empty() )
+        return false;
+
+    network::Time time = melanolib::time::time_point_convert<network::Time>(
+        date_time.time_point()
+    );
+
+    TimerQueue::instance().push(
+        time,
+        [msg](){Melanobot::instance().message(msg);},
+        this
+    );
+
+    return true;
+}
 
 } // namespace timer
