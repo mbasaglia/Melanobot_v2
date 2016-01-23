@@ -131,21 +131,11 @@ public:
     }
 
 protected:
-    bool on_handle(network::Message& msg) override
-    {
-        if ( schedule_message(msg) )
-            reply_to(msg, reply_ok);
-        else
-            reply_to(msg, reply_no);
-        return true;
-    }
+    bool on_handle(network::Message& msg);
 
 private:
-    std::string reply_ok = "Got it!";   ///< Reply acknowledging the message will be processed
+    std::string reply_ok = "Got it! (%c %e)";   ///< Reply acknowledging the message will be processed
     std::string reply_no = "Forget it!";///< Reply given when a message has been discarded
-
-
-    bool schedule_message(network::Message msg);
 };
 
 } // namespace timer

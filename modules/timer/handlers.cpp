@@ -164,15 +164,20 @@ void Remind::schedule_item(const Item& item)
     );
 }
 
-bool Defer::schedule_message(network::Message msg)
+bool Defer::on_handle(network::Message& src)
 {
+    auto msg = src;
+
     std::stringstream stream(msg.message);
     melanolib::time::TimeParser parser(stream);
     auto date_time = parser.parse_time_point();
 
     msg.message = parser.get_remainder();
     if ( msg.message.empty() )
-        return false;
+    {
+        reply_to(msg, reply_no);
+        return true;
+    }
 
     network::Time time = melanolib::time::time_point_convert<network::Time>(
         date_time.time_point()
@@ -183,6 +188,9 @@ bool Defer::schedule_message(network::Message msg)
         [msg](){Melanobot::instance().message(msg);},
         this
     );
+
+
+    reply_to(msg, melanolib::time::strftime(date_time, reply_ok));
 
     return true;
 }
