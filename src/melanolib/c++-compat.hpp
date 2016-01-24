@@ -2,7 +2,7 @@
  * \file
  * \brief This file defined some compatibility for features of C++14 and beyond
  * \author Mattia Basaglia
- * \copyright Copyright 2015 Mattia Basaglia
+ * \copyright Copyright 2015-2016 Mattia Basaglia
  * \section License
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by

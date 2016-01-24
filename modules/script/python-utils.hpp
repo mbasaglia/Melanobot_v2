@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright 2015 Mattia Basaglia
+ * \copyright Copyright 2015-2016 Mattia Basaglia
  * \brief Low-level utilities interfacing directly to boost python
  * \section License
  *  This program is free software: you can redistribute it and/or modify

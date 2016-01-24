@@ -1,7 +1,7 @@
 /**
  * \file
  * \author Mattia Basaglia
- * \copyright Copyright 2015 Mattia Basaglia
+ * \copyright Copyright 2015-2016 Mattia Basaglia
  * \license
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -31,11 +31,7 @@ namespace web {
 class SimpleWebApi : public handler::SimpleAction
 {
 public:
-    SimpleWebApi(const std::string& default_trigger, const Settings& settings,
-                 MessageConsumer* parent)
-        : SimpleAction(default_trigger, settings, parent)
-    {
-    }
+    using SimpleAction::SimpleAction;
 
 protected:
     /**
