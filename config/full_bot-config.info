@@ -213,10 +213,15 @@ bot
                 Cointoss
                 Discord
                 Insult
+                InventoryManager
                 Remind              ; "remind" Schedules a message
                 AnswerQuestions
             }
         }
+
+        InventoryPut
+        InventoryTake
+
         ; Gives a message when someone is kicked
         KickMessage
         {
