@@ -334,7 +334,7 @@ public:
         : Handler(settings,parent),
         trigger(settings.get("trigger","chanhax")),
         regex_chanhax (
-            "(.+)\\s*"+melanolib::string::regex_escape(trigger)+"\\s+(\\S+)",
+            "(.+)\\s+"+melanolib::string::regex_escape(trigger)+"\\s+(\\S+)",
             std::regex::ECMAScript|std::regex::optimize
         )
     {
