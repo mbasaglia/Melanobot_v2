@@ -84,9 +84,11 @@ Response HttpService::query (const Request& request)
 
 
     session.SetUrl(cpr::Url(url));
-    session.SetHeader({
-        {"User-Agent", user_agent}
-    });
+
+    auto headers = request.headers;
+    headers["User-Agent"] = user_agent;
+    session.SetHeader(cpr::Header(headers.begin(), headers.end()));
+
     if ( max_redirs )
     {
         session.SetMaxRedirects(max_redirs);
@@ -129,7 +131,13 @@ Response HttpService::query (const Request& request)
         ErrorLog("web") << "Error processing " << request.resource;
     }
 
-    return Response(response.text, response.url, response.status_code, response.error.message );
+    return Response(
+        response.text,
+        response.url,
+        response.status_code,
+        response.error.message,
+        Headers(response.header.begin(), response.header.end())
+    );
 }
 
 } // namespace web

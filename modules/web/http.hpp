@@ -30,6 +30,8 @@ namespace web {
  */
 using Parameters = std::map<std::string,std::string>;
 
+using Headers = std::map<std::string,std::string>;
+
 /**
  * \brief A network request
  */
@@ -38,24 +40,80 @@ struct Request
     Request() = default;
     Request(std::string command,
             std::string resource,
-            Parameters parameters = {},
-            std::string body = {}
+            Parameters  parameters = {},
+            std::string body = {},
+            Headers     headers = {}
            )
         : command(std::move(command)),
           resource(std::move(resource)),
           parameters(std::move(parameters)),
-          body(std::move(body))
+          body(std::move(body)),
+          headers(std::move(headers))
     {}
 
-    std::string command;    ///< Protocol-specific command
-    std::string resource;   ///< Name/identifier for the requested resource
-    Parameters  parameters; ///< GET query parameters
-    std::string body;       ///< POST/PUT body
+    Request& get(std::string url)
+    {
+        return method_get().set_url(std::move(url));
+    }
+
+    Request& method_get()
+    {
+        command = "GET";
+        return *this;
+    }
+
+    Request& method_post()
+    {
+        command = "GET";
+        return *this;
+    }
+
+    Request& set_param(const std::string& name, const std::string& value)
+    {
+        parameters[name] = value;
+        return *this;
+    }
+
+    Request& set_params(Parameters params)
+    {
+        std::swap(parameters, params);
+        return *this;
+    }
+
+    Request& set_header(const std::string& name, const std::string& value)
+    {
+        headers[name] = value;
+        return *this;
+    }
+
+    Request& set_headers(Headers new_headers)
+    {
+        std::swap(headers, new_headers);
+        return *this;
+    }
+
+    Request& set_body(std::string contents)
+    {
+        std::swap(body, contents);
+        return *this;
+    }
+
+    Request& set_url(std::string url)
+    {
+        std::swap(resource, url);
+        return *this;
+    }
 
     /**
      * \brief Resource + query
      */
     std::string full_url() const;
+
+    std::string command;    ///< Protocol-specific command
+    std::string resource;   ///< Name/identifier for the requested resource
+    Parameters  parameters; ///< GET query parameters
+    std::string body;       ///< POST/PUT body
+    Headers     headers;    ///< Headers
 };
 
 /**
@@ -63,26 +121,29 @@ struct Request
  */
 struct Response
 {
-    std::string contents;       ///< Response contents
-    std::string resource;       ///< Name/identifier for the requested resource
-    int status_code = 200;
-    std::string error_message;  ///< Message in the case of error, if empty not an error
-
     Response(
         std::string contents,
         std::string resource,
         int status_code = 200,
-        std::string error_message = {}
+        std::string error_message = {},
+        Headers     headers = {}
     ) : contents(std::move(contents)),
         resource(std::move(resource)),
         status_code(status_code),
-        error_message(std::move(error_message))
+        error_message(std::move(error_message)),
+        headers(std::move(headers))
     {}
 
     bool success() const
     {
         return status_code < 400;
     }
+
+    std::string contents;       ///< Response contents
+    std::string resource;       ///< Name/identifier for the requested resource
+    int         status_code = 200;
+    std::string error_message;  ///< Message in the case of error, if empty not an error
+    Headers     headers;        ///< Headers
 };
 
 /**
