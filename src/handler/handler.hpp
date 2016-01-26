@@ -320,16 +320,22 @@ class HandlerFactory : public melanolib::Singleton<HandlerFactory>
 {
 public:
     /**
-     * \brief Function object type used to create instances
+     * \brief Function object type used to create Handler instances
      */
-    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&,MessageConsumer*)>;
+    using CreateFunction = std::function<std::unique_ptr<Handler>(const Settings&, MessageConsumer*)>;
+    /**
+     * \brief Function object used for pseudo handler construction
+     */
+    using PseudoHandlerFunction = std::function<bool (const std::string&, const Settings&, MessageConsumer*)>;
 
     /**
      * \brief Builds a handler from its name and settings
      *
      * Inserts the created handler into \c parent
+     *
+     * \returns \b true on success
      */
-    void build(
+    bool build(
         const std::string&      handler_name,
         const Settings&         settings,
         MessageConsumer*        parent) const;
@@ -339,7 +345,7 @@ public:
      *
      * Inserts the created handler into \c parent
      */
-    void build_template(
+    bool build_template(
         const std::string&      handler_name,
         const Settings&         settings,
         MessageConsumer*        parent) const;
@@ -349,18 +355,23 @@ public:
      * \param name Public name
      * \param fun  Function creating an object and returning a unique_ptr
      */
-    void register_handler(const std::string& name, const CreateFunction& func)
-    {
-        if ( factory.count(name) )
-            ErrorLog("sys") << "Overwriting handler " << name;
-        factory[name] = func;
-    }
+    void register_handler(const std::string& name, const CreateFunction& func);
+
+    void register_pseudo_handler(const std::string& name,
+                                 const PseudoHandlerFunction& func);
 
 private:
-    HandlerFactory() {}
+    /**
+     * \brief Checks if a name is already registered and prints an error
+     * \returns \b true if \p name is not already registered
+     */
+    bool avoid_duplicate(const std::string& name) const;
+
+    HandlerFactory();
     friend ParentSingleton;
 
-    std::unordered_map<std::string,CreateFunction> factory;
+    std::unordered_map<std::string, CreateFunction> factory;
+    std::unordered_map<std::string, PseudoHandlerFunction> pseudo_factory;
 };
 
 } // namespace handler

@@ -42,7 +42,7 @@ bool SimpleAction::handle(network::Message& msg)
 }
 
 
-void HandlerFactory::build_template(
+bool HandlerFactory::build_template(
     const std::string&  handler_name,
     const Settings&     settings,
     MessageConsumer*    parent) const
@@ -52,7 +52,7 @@ void HandlerFactory::build_template(
     {
         ErrorLog("sys") << "Error creating " << handler_name
                 << ": missing template reference";
-        return;
+        return false;
     }
     Settings source = Melanobot::instance().get_template(*type);
     Properties arguments;
@@ -65,11 +65,11 @@ void HandlerFactory::build_template(
         node.data() = melanolib::string::replace(node.data(),arguments);
     });
     /// \todo recursion check
-    build(handler_name,source,parent);
+    return build(handler_name,source,parent);
 }
 
 
-void HandlerFactory::build(
+bool HandlerFactory::build(
     const std::string&  handler_name,
     const Settings&     settings,
     MessageConsumer*    parent) const
@@ -79,34 +79,82 @@ void HandlerFactory::build(
     if ( !settings.get("enabled",true) )
     {
         Log("sys",'!') << "Skipping disabled handler " << color::red << handler_name;
-        return;
+        return false;
     }
 
-    if ( type == "Template" )
-    {
-        build_template(handler_name, settings, parent);
-    }
-    else if ( type == "Connection" )
-    {
-        Melanobot::instance().add_connection(handler_name, settings);
-    }
-    else
+    try
     {
         auto it = factory.find(type);
         if ( it != factory.end() )
         {
-            try {
-                parent->add_handler(it->second(settings, parent));
-            } catch ( const ConfigurationError& error ) {
-                ErrorLog("sys") << "Error creating " << handler_name << ": "
-                    << error.what();
-            }
+            parent->add_handler(it->second(settings, parent));
+            return true;
         }
-        else
+
+        auto pit = pseudo_factory.find(type);
+        if ( pit != pseudo_factory.end() )
         {
-            ErrorLog("sys") << "Unknown handler type: " << handler_name;
+            return pit->second(handler_name, settings, parent);
         }
+
+        ErrorLog("sys") << "Unknown handler type: " << handler_name;
+
     }
+    catch ( const ConfigurationError& error )
+    {
+        ErrorLog("sys") << "Error creating " << handler_name << ": "
+            << error.what();
+    }
+
+    return false;
 }
+
+void HandlerFactory::register_handler(const std::string& name,
+                                      const CreateFunction& func)
+{
+    if ( avoid_duplicate(name) )
+        factory[name] = func;
+}
+
+void HandlerFactory::register_pseudo_handler(const std::string& name,
+                                             const PseudoHandlerFunction& func)
+{
+    if ( avoid_duplicate(name) )
+        pseudo_factory[name] = func;
+}
+
+bool HandlerFactory::avoid_duplicate(const std::string& name) const
+{
+    if ( factory.count(name) || pseudo_factory.count(name) )
+    {
+        ErrorLog("sys") << name
+            << " has already been registered to the handler factory";
+        return false;
+    }
+    return true;
+}
+
+HandlerFactory::HandlerFactory()
+{
+    register_pseudo_handler("Template",
+        [this](const std::string&  handler_name,
+               const Settings&     settings,
+               MessageConsumer*    parent)
+        {
+            return build_template(handler_name, settings, parent);
+        }
+    );
+
+    register_pseudo_handler("Connection",
+        [this](const std::string&  handler_name,
+               const Settings&     settings,
+               MessageConsumer*    parent)
+        {
+            Melanobot::instance().add_connection(handler_name, settings);
+            return true;
+        }
+    );
+}
+
 
 } // namespace handler
