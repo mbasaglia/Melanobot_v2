@@ -120,9 +120,12 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                     "([0-9]{1,2})(?:,[0-9]{1,2})?",
                     std::regex::optimize|std::regex::ECMAScript);
                 std::smatch match;
-                parser.input.get_regex(regex_irc_color,match);
+                parser.input.get_regex(regex_irc_color, match);
                 push_flags(true);
-                str.append<string::Color>(FormatterIrc::color_from_string(match[1]));
+                color::Color12 color;
+                if ( match.ready() )
+                    color = FormatterIrc::color_from_string(match[1]);
+                str.append<string::Color>(color);
                 break;
             }
             case '\x16':

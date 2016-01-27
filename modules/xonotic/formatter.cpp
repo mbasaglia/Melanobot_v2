@@ -19,6 +19,7 @@
 #include "formatter.hpp"
 
 #include "melanolib/string/stringutils.hpp"
+#include "string/encoding.hpp"
 
 namespace xonotic {
 
