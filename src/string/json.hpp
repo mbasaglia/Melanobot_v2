@@ -29,6 +29,8 @@
 
 #include "string/logger.hpp"
 #include "melanolib/string/stringutils.hpp"
+#include "string.hpp"
+#include "string/encoding.hpp"
 
 
 /**

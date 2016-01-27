@@ -22,6 +22,7 @@
 #include <string>
 #include <regex>
 
+namespace melanolib {
 namespace string {
 
 /**
@@ -272,4 +273,5 @@ private:
 using QuickStream = BasicQuickStream<char>;
 
 } // namespace string
+} // namespace melanolib
 #endif // QUICKSTREAM_HPP

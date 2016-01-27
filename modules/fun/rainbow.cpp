@@ -18,6 +18,7 @@
  */
 
 #include "rainbow.hpp"
+#include "string/encoding.hpp"
 
 namespace fun {
 

@@ -20,11 +20,12 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "
-string/stringutils.hpp"
+#include <unordered_map>
+
+#include "melanolib/string/stringutils.hpp"
 #include "melanolib/string/trie.hpp"
 #include "melanolib/string/language.hpp"
-#include "string/quickstream.hpp"
+#include "melanolib/string/quickstream.hpp"
 
 using namespace melanolib;
 
@@ -209,12 +210,12 @@ BOOST_AUTO_TEST_CASE( test_replace )
 
     BOOST_CHECK( string::replace(foxy,{{"fox","dog"}, {"dog","fox"}}) == "the quick brown dog jumps over the lazy fox" );
     std::string template_string = "%animol the quick brown %animal_2 %action over the lazy %animal_";
-    Properties replace{{"animal","dog"},{"action","jumps"},{"animal_2","fox"}};
+    std::unordered_map<std::string, std::string> replace{{"animal","dog"},{"action","jumps"},{"animal_2","fox"}};
     BOOST_CHECK( string::replace(template_string,replace,"%") == "%animol "+foxy+'_' );
     template_string += "%anim";
     BOOST_CHECK( string::replace(template_string,replace,"%") == "%animol "+foxy+"_%anim" );
 
-    BOOST_CHECK( string::replace(foxy,Properties()) == foxy );
+    BOOST_CHECK( string::replace(foxy,std::unordered_map<std::string,std::string>()) == foxy );
 
 }
 

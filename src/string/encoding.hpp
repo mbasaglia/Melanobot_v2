@@ -19,7 +19,7 @@
 #ifndef STRING_ENCODING_HPP
 #define STRING_ENCODING_HPP
 
-#include "quickstream.hpp"
+#include "melanolib/string/quickstream.hpp"
 #include "functional.hpp"
 
 namespace string {
@@ -37,7 +37,7 @@ public:
     std::function<void(const std::string&)>          callback_invalid;
     std::function<void()>                            callback_end;
 
-    QuickStream input;
+    melanolib::string::QuickStream input;
 
     /**
      * \brief Parse the string

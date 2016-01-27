@@ -23,7 +23,6 @@
 
 #include "format_flags.hpp"
 #include "color.hpp"
-#include "encoding.hpp"
 #include "melanolib/singleton.hpp"
 
 namespace string {

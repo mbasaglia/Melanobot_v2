@@ -22,6 +22,7 @@
 #include <regex>
 
 #include "melanolib/string/stringutils.hpp"
+#include "string/encoding.hpp"
 
 namespace irc {
 
