@@ -78,11 +78,6 @@ public:
 
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
-    /**
-     * \brief Returns handler template from name
-     */
-    Settings get_template(const std::string& name) const;
-
 private:
     explicit Melanobot();
     friend ParentSingleton;
@@ -95,9 +90,6 @@ private:
 
     /// Message Queue
     ConcurrentQueue<network::Message> messages;
-
-    /// Settings containing configuration template definitions
-    Settings templates;
 };
 
 

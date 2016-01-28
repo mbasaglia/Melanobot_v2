@@ -24,10 +24,10 @@
 #include "string/logger.hpp"
 #include "network/connection.hpp"
 #include "network/async_service.hpp"
-#include "handler/handler.hpp"
 #include "melanolib/library.hpp"
 #include "melanolib/c++-compat.hpp"
 #include "storage.hpp"
+#include "config_factory.hpp"
 
 namespace module {
 
@@ -195,21 +195,24 @@ template<class ServiceT>
 
 
 /**
- * \brief Registers a Handler to the HandlerFactory
+ * \brief Registers a Handler to the ConfigFactory
  * \tparam HandlerT  Handler to be registered
  * \param  name      Name to be used in the configuration
  */
 template<class HandlerT>
     void register_handler(const std::string& name)
-    {
-        static_assert(std::is_base_of<handler::Handler, HandlerT>::value,
-                        "Expected handler::Handler type");
-        handler::HandlerFactory::instance().register_handler( name,
-            [] ( const Settings& settings, MessageConsumer* parent )
-                    -> std::unique_ptr<handler::Handler> {
-                return melanolib::New<HandlerT>(settings,parent);
-        });
-    }
+{
+    static_assert(std::is_base_of<handler::Handler, HandlerT>::value,
+                    "Expected handler::Handler type");
+
+    melanobot::ConfigFactory::instance().register_item( name,
+        [](const std::string&  handler_name, const Settings& settings, MessageConsumer* parent)
+        {
+            parent->add_handler(melanolib::New<HandlerT>(settings, parent));
+            return true;
+        }
+    );
+}
 
 /**
  * \brief Registers a file storage back-end

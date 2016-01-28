@@ -18,6 +18,7 @@
  */
 #include "melanobot.hpp"
 
+#include "config_factory.hpp"
 #include "handler/handler.hpp"
 
 Melanobot& Melanobot::load(const Settings& settings)
@@ -27,12 +28,9 @@ Melanobot& Melanobot::load(const Settings& settings)
         CRITICAL_ERROR("Melanobot settings loaded twice");
     loaded = true;
 
-    instance().templates = settings.get_child("templates",{});
-
-    for(const auto& pt : settings.get_child("bot",{}))
-    {
-        handler::HandlerFactory::instance().build(pt.first,pt.second,&instance());
-    }
+    /// \todo All this could be moved to main()
+    melanobot::ConfigFactory::instance().load_templates(settings.get_child("templates",{}));
+    melanobot::ConfigFactory::instance().build(settings.get_child("bot",{}), &instance());
 
     if ( instance().connections.empty() )
     {
@@ -50,11 +48,6 @@ Melanobot::Melanobot() : MessageConsumer(nullptr)
 Melanobot::~Melanobot()
 {
     stop();
-}
-
-Settings Melanobot::get_template(const std::string& name) const
-{
-    return templates.get_child(name,{});
 }
 
 void Melanobot::stop()

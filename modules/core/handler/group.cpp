@@ -20,6 +20,7 @@
  */
 #include "group.hpp"
 #include "melanobot.hpp"
+#include "config_factory.hpp"
 
 namespace core {
 
@@ -33,7 +34,7 @@ void AbstractGroup::add_children(Settings child_settings,
         if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
             settings::merge(p.second,default_settings,false);
-            handler::HandlerFactory::instance().build(
+            melanobot::ConfigFactory::instance().build(
                 p.first,
                 p.second,
                 this

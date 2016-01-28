@@ -30,6 +30,7 @@ handler/handler.cpp
 settings.cpp
 main.cpp
 melanobot.cpp
+config_factory.cpp
 string/encoding.cpp
 string/formatter.cpp
 string/string.cpp
