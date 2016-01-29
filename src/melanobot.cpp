@@ -52,9 +52,16 @@ Melanobot::~Melanobot()
 
 void Melanobot::stop()
 {
+    if ( !messages.active() )
+        return;
+
     messages.stop();
     for ( auto &conn : connections )
+    {
+
+        Log("sys", '!') << "Disconnecting " << color::magenta << conn.first;
         conn.second->stop();
+    }
 }
 
 void Melanobot::run()
@@ -62,11 +69,15 @@ void Melanobot::run()
     if ( connections.empty() )
         return;
     
+    Log("sys", '!') << "Initializing handlers";
     for ( const auto& handler : handlers )
         handler->initialize();
     
     for ( auto &conn : connections )
+    {
+        Log("sys", '!') << "Connecting " << color::magenta << conn.first;
         conn.second->start();
+    }
 
     while ( messages.active() )
     {
@@ -86,6 +97,7 @@ void Melanobot::run()
         handle(msg);
     }
 
+    Log("sys", '!') << "Finalizing handlers";
     for ( const auto& handler : handlers )
         handler->finalize();
 }
