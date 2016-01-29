@@ -21,7 +21,7 @@
 
 #include <boost/asio.hpp>
 
-#include "functional.hpp"
+#include "melanolib/functional.hpp"
 #include "server.hpp"
 
 namespace network {
@@ -84,8 +84,8 @@ public:
                 io_service.reset();
             return true;
         } catch ( const boost::system::system_error& err ) {
-            callback(on_error,err.what());
-            callback(on_failure);
+            melanolib::callback(on_error,err.what());
+            melanolib::callback(on_failure);
             return false;
         }
     }
@@ -100,7 +100,7 @@ public:
             boost::system::error_code ec;
             socket.close(ec);
             if ( ec )
-                callback(on_error,ec.message());
+                melanolib::callback(on_error,ec.message());
             io_service.stop();
         }
     }
@@ -126,7 +126,7 @@ public:
             socket.send(boost::asio::buffer(datagram));
             return true;
         } catch ( const boost::system::system_error& err ) {
-            callback(on_error,err.what());
+            melanolib::callback(on_error,err.what());
             return false;
         }
     }
@@ -145,7 +145,7 @@ public:
             datagram.resize(len);
             return datagram;
         } catch ( const boost::system::system_error& err ) {
-            callback(on_error,err.what());
+            melanolib::callback(on_error,err.what());
             return {};
         }
     }
@@ -160,8 +160,8 @@ public:
         io_service.run(err);
         if ( err )
         {
-            callback(on_error,err.message());
-            callback(on_failure);
+            melanolib::callback(on_error,err.message());
+            melanolib::callback(on_failure);
         }
     }
 
@@ -213,10 +213,10 @@ private:
     {
         if (error)
         {
-            callback(on_error,error.message());
+            melanolib::callback(on_error,error.message());
             return;
         }
-        callback(on_async_receive,receive_buffer.substr(0,nbytes));
+        melanolib::callback(on_async_receive,receive_buffer.substr(0,nbytes));
         schedule_read();
     }
 

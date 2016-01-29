@@ -21,11 +21,11 @@
 #ifndef HANDLER_MISC
 #define HANDLER_MISC
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 #include "melanolib/math.hpp"
 #include "melanolib/string/language.hpp"
 #include "melanolib/time/time_string.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace core {
 
@@ -33,7 +33,7 @@ namespace core {
  * \brief Handler showing licensing information
  * \note Must be enabled to comply to the AGPL
  */
-class License : public handler::SimpleAction
+class License : public melanobot::SimpleAction
 {
 public:
     License(const Settings& settings, MessageConsumer* parent)
@@ -58,7 +58,7 @@ private:
  * \brief Handler showing help on the available handlers
  * \note It is trongly recommended that this is enabled
  */
-class Help : public handler::SimpleAction
+class Help : public melanobot::SimpleAction
 {
 public:
     Help(const Settings& settings, MessageConsumer* parent)
@@ -75,7 +75,7 @@ protected:
     {
         PropertyTree props;
         // AKA get the toplevel parent
-        get_parent<Melanobot>()->populate_properties(
+        get_parent<melanobot::Melanobot>()->populate_properties(
             {"name","help","auth","synopsis","help_group","channels"},
             props);
         
@@ -248,7 +248,7 @@ private:
 /**
  * \brief Just repeat what it has been told
  */
-class Echo : public handler::SimpleAction
+class Echo : public melanobot::SimpleAction
 {
 public:
     Echo(const Settings& settings, MessageConsumer* parent)
@@ -269,7 +269,7 @@ protected:
 /**
  * \brief Shows the server the bot is connected to
  */
-class ServerHost : public handler::SimpleAction
+class ServerHost : public melanobot::SimpleAction
 {
 public:
     ServerHost(const Settings& settings, MessageConsumer* parent)
@@ -287,7 +287,7 @@ protected:
 /**
  * \brief Shows one of the given items, at random
  */
-class Cointoss : public handler::SimpleAction
+class Cointoss : public melanobot::SimpleAction
 {
 public:
     Cointoss(const Settings& settings, MessageConsumer* parent)
@@ -337,7 +337,7 @@ private:
 /**
  * \brief Fixed reply
  */
-class Reply : public handler::Handler
+class Reply : public melanobot::Handler
 {
 public:
     Reply(const Settings& settings, MessageConsumer* parent)
@@ -351,7 +351,7 @@ public:
         help            = settings.get("help",help);
 
         if ( trigger.empty() || reply.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
 
         if ( regex )
         {
@@ -453,7 +453,7 @@ protected:
 /**
  * \brief Performs an action
  */
-class Action : public handler::SimpleAction
+class Action : public melanobot::SimpleAction
 {
 public:
     Action(const Settings& settings, MessageConsumer* parent)
@@ -515,7 +515,7 @@ private:
 /**
  * \brief Handler showing the time
  */
-class Time : public handler::SimpleAction
+class Time : public melanobot::SimpleAction
 {
 public:
     Time(const Settings& settings, MessageConsumer* parent)

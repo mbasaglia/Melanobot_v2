@@ -16,12 +16,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 #include "string/logger.hpp"
 #include "settings.hpp"
 #include "network/async_service.hpp"
-#include "load_module.hpp"
-#include "storage.hpp"
+#include "module/load_module.hpp"
+#include "melanobot/storage.hpp"
 
 int main(int argc, char **argv)
 {
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
 
         if ( settings.empty() )
-            throw ConfigurationError("Missing configuration");
+            throw melanobot::ConfigurationError("Missing configuration");
 
         // Log configuration
         Logger::instance().load_settings(settings.get_child("log",{}));
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
         );
 
         // Initialize storage
-        storage::StorageFactory::instance().initilize_global_storage(
+        melanobot::StorageFactory::instance().initilize_global_storage(
             settings.get_child("storage",{})
         );
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
         Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
         ServiceRegistry::instance().initialize(settings.get_child("services",{}));
         ServiceRegistry::instance().start();
-        Melanobot::load(settings).run();
+        melanobot::Melanobot::load(settings).run();
         ServiceRegistry::instance().stop();
         /// \todo some way to reload the config and restart the bot
 
@@ -71,14 +71,14 @@ int main(int argc, char **argv)
         Log("sys",'!',4) << "Exiting with status " << exit_code;
         return exit_code;
 
-    } catch ( const CriticalException& exc ) {
+    } catch ( const melanobot::CriticalException& exc ) {
         /// \todo policy on how to handle exceptions (quit/restart)
         ErrorLog errlog("sys","Critical Error");
         if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": in " << exc.function << "(): ";
         errlog  << exc.what();
         return 1;
-    } catch ( const LocatableException& exc ) {
+    } catch ( const melanobot::LocatableException& exc ) {
         ErrorLog errlog("sys","Critical Error");
         if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": ";

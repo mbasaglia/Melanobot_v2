@@ -18,7 +18,7 @@
  */
 
 #include "stdin.hpp"
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 #include "handlers.hpp"
 /**
  * \brief POSIX module initialization

@@ -20,7 +20,7 @@
 #define LISTS_HANDLER_MISC_HPP
 
 #include "core/handler/group.hpp"
-#include "storage.hpp"
+#include "melanobot/storage.hpp"
 #include "melanolib/time/time_string.hpp"
 
 /**
@@ -42,29 +42,29 @@ public:
 
     bool add(const std::string& element) override
     {
-        storage::storage().append(list_id, element);
+        melanobot::storage().append(list_id, element);
         return true;
     }
 
     std::vector<std::string> elements() const override
     {
-        return storage::storage().maybe_get_sequence(list_id);
+        return melanobot::storage().maybe_get_sequence(list_id);
     }
 
     bool remove(const std::string& element) override
     {
-        auto list = storage::storage().maybe_get_sequence(list_id);
+        auto list = melanobot::storage().maybe_get_sequence(list_id);
         auto it = std::remove(list.begin(), list.end(), element);
         if ( it == list.end() )
             return false;
         list.erase(it, list.end());
-        storage::storage().put(list_id, list);
+        melanobot::storage().put(list_id, list);
         return true;
     }
 
     bool clear() override
     {
-        storage::storage().erase(list_id);
+        melanobot::storage().erase(list_id);
         return true;
     }
 
@@ -82,7 +82,7 @@ private:
 /**
  * \brief Manages replies for a DynamicReply
  */
-class DynamicReplyManager : public handler::SimpleAction
+class DynamicReplyManager : public melanobot::SimpleAction
 {
 public:
     DynamicReplyManager(const Settings& settings, MessageConsumer* parent)
@@ -106,15 +106,15 @@ protected:
         {
             if ( match[2].matched )
             {
-                storage::storage().put(list_id+".map", match[1], match[3]);
+                melanobot::storage().put(list_id+".map", match[1], match[3]);
                 reply_to(msg, "Added the given reply");
             }
             else
             {
-                storage::storage().erase(list_id+".map", match[1]);
+                melanobot::storage().erase(list_id+".map", match[1]);
                 reply_to(msg, "Removed the given reply");
             }
-            storage::storage().put(list_id+".last_updated",
+            melanobot::storage().put(list_id+".last_updated",
                                    melanolib::time::format_char(melanolib::time::DateTime(),'c'));
         }
         else
@@ -133,7 +133,7 @@ private:
 /**
  * \brief Reports back a dynamic reply
  */
-class DynamicReply : public handler::Handler
+class DynamicReply : public melanobot::Handler
 {
 public:
     DynamicReply(const Settings& settings, MessageConsumer* parent)
@@ -171,12 +171,12 @@ private:
     void load_replies()
     {
         last_updated = timestamp();
-        replies = storage::storage().maybe_get_map(list_id+".map");
+        replies = melanobot::storage().maybe_get_map(list_id+".map");
     }
 
     std::string timestamp()
     {
-        return storage::storage().maybe_get_value(list_id+".last_updated");
+        return melanobot::storage().maybe_get_value(list_id+".last_updated");
     }
 
     std::string list_id;        ///< List name in the storage system

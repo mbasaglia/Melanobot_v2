@@ -19,7 +19,7 @@
 #ifndef HANDLER_WEB_API_HPP
 #define HANDLER_WEB_API_HPP
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 #include "http.hpp"
 #include "string/json.hpp"
 
@@ -28,7 +28,7 @@ namespace web {
 /**
  * \brief Simple base class for handlers calling web resources
  */
-class SimpleWebApi : public handler::SimpleAction
+class SimpleWebApi : public melanobot::SimpleAction
 {
 public:
     using SimpleAction::SimpleAction;

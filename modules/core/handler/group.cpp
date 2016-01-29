@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "group.hpp"
-#include "melanobot.hpp"
-#include "config_factory.hpp"
+#include "melanobot/melanobot.hpp"
+#include "melanobot/config_factory.hpp"
 
 namespace core {
 
@@ -75,9 +75,9 @@ Group::Group(const Settings& settings, MessageConsumer* parent)
     std::string source_name = settings.get("source","");
     if ( !source_name.empty() )
     {
-        source = Melanobot::instance().connection(source_name);
+        source = melanobot::Melanobot::instance().connection(source_name);
         if ( !source )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
     synopsis = "";
     help = settings.get("help","");
@@ -130,7 +130,7 @@ bool Group::on_handle(network::Message& msg)
 /**
  * \brief Used by \c AbstractList to add elements
  */
-class ListInsert : public handler::SimpleAction
+class ListInsert : public melanobot::SimpleAction
 {
 public:
     ListInsert(const Settings& settings,
@@ -139,7 +139,7 @@ public:
         parent(parent)
     {
         if ( !parent )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
         synopsis += " element...";
         help = "Add elements to the list";
     }
@@ -176,7 +176,7 @@ protected:
 /**
  * \brief Used by \c AbstractList to remove elements
  */
-class ListRemove : public handler::SimpleAction
+class ListRemove : public melanobot::SimpleAction
 {
 public:
     ListRemove(const Settings& settings,
@@ -185,7 +185,7 @@ public:
         parent(parent)
     {
         if ( !parent )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
         synopsis += " element...";
         help = "Remove elements from the list";
     }
@@ -223,7 +223,7 @@ private:
 /**
  * \brief Used by \c AbstractList to remove all elements
  */
-class ListClear : public handler::SimpleAction
+class ListClear : public melanobot::SimpleAction
 {
 public:
     ListClear(const Settings& settings, AbstractList* parent)
@@ -231,7 +231,7 @@ public:
         parent(parent)
     {
         if ( !parent )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
         help = "Removes all elements from the list";
     }
 
@@ -252,7 +252,7 @@ protected:
 /**
  * \brief Used by \c AbstractList to enumerate elements
  */
-class ListShow : public handler::SimpleAction
+class ListShow : public melanobot::SimpleAction
 {
 public:
     ListShow(const Settings& settings, AbstractList* parent)
@@ -260,7 +260,7 @@ public:
         parent(parent)
     {
         if ( !parent )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
         help = "Enumerates the elements in the list";
     }
 

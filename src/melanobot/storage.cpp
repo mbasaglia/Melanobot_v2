@@ -20,7 +20,7 @@
 
 #include "settings.hpp"
 
-namespace storage {
+namespace melanobot {
 
 /**
  * \brief Object used by storage() and set_storage()
@@ -67,10 +67,10 @@ void StorageFactory::initilize_global_storage(const Settings& settings) const
 void StorageFactory::register_type(const std::string& name, const Constructor& ctor)
 {
     if ( constructors.count(name) )
-        throw Error(name+" is already a registered type of storage");
+        throw StorageError(name+" is already a registered type of storage");
 
     constructors[name] = ctor;
 }
 
 
-} // namespace storage
+} // namespace melanobot

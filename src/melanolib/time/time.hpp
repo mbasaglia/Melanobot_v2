@@ -29,7 +29,7 @@
 #include <condition_variable>
 #include <thread>
 
-#include "functional.hpp"
+#include "melanolib/functional.hpp"
 #include "melanolib/c++-compat.hpp"
 #include "melanolib/math.hpp"
 

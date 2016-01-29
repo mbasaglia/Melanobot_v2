@@ -18,7 +18,7 @@
  */
 
 #include "config_factory.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace melanobot {
 
@@ -34,7 +34,7 @@ ConfigFactory::ConfigFactory()
     register_item("Connection",
         [this](const std::string& handler_name, const Settings& settings, MessageConsumer*)
         {
-            Melanobot::instance().add_connection(handler_name, settings);
+            melanobot::Melanobot::instance().add_connection(handler_name, settings);
             return true;
         }
     );

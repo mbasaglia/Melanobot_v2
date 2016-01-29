@@ -14,29 +14,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(SOURCES
-message/input_message.cpp
-user/user.cpp
-user/user_group.cpp
-user/user_manager.cpp
-storage.cpp
+main.cpp
+melanobot/config_factory.cpp
+melanobot/handler.cpp
+melanobot/melanobot.cpp
+melanobot/storage.cpp
 melanolib/library.cpp
-melanolib/time/time_string.cpp
-melanolib/time/time.cpp
 melanolib/math.cpp
 melanolib/string/language.cpp
 melanolib/string/stringutils.cpp
-load_module.cpp
-handler/handler.cpp
+melanolib/time/time.cpp
+melanolib/time/time_string.cpp
+message/input_message.cpp
+module/load_module.cpp
+network/connection.cpp
 settings.cpp
-main.cpp
-melanobot.cpp
-config_factory.cpp
+string/color.cpp
 string/encoding.cpp
 string/formatter.cpp
-string/string.cpp
 string/logger.cpp
-string/color.cpp
-network/connection.cpp
+string/string.cpp
+user/user.cpp
+user/user_group.cpp
+user/user_manager.cpp
 )
 
 set(EXECUTABLE_NAME melanobot) # repeated otherwise kdevelop messes up

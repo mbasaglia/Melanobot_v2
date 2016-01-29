@@ -22,15 +22,15 @@
 #define HANDLER_ADMIN_HPP
 
 #include "group.hpp"
-#include "melanobot.hpp"
-#include "storage.hpp"
+#include "melanobot/melanobot.hpp"
+#include "melanobot/storage.hpp"
 
 namespace core {
 
 /**
  * \brief Quits the bot
  */
-class AdminQuit: public handler::SimpleAction
+class AdminQuit: public melanobot::SimpleAction
 {
 public:
     AdminQuit(const Settings& settings, MessageConsumer* parent)
@@ -51,7 +51,7 @@ protected:
             quit_msg = message;
 
         msg.destination->disconnect(quit_msg);
-        Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop();
         return true;
     }
 
@@ -69,10 +69,10 @@ public:
         : AbstractList(settings.get("group",""),true,settings,parent)
     {
         std::string conn_name = settings.get("connection",settings.get("source",""));
-        connection = Melanobot::instance().connection(conn_name);
+        connection = melanobot::Melanobot::instance().connection(conn_name);
         group = settings.get("group","");
         if ( !connection || group.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
 
         description = settings.get("description","the "+group+" group");
         ignore = settings.get("ignore","");
@@ -83,10 +83,10 @@ public:
 
     void initialize() override
     {
-        if ( storage && storage::has_storage() )
+        if ( storage && melanobot::has_storage() )
         {
             auto config_users = elements();
-            auto storage_users = storage::storage().maybe_put(storage_name,config_users);
+            auto storage_users = melanobot::storage().maybe_put(storage_name,config_users);
 
             // Add elements from the storage
             for ( const auto& user : storage_users )
@@ -175,8 +175,8 @@ private:
      */
     void save_in_storage()
     {
-        if ( storage && storage::has_storage() )
-            storage::storage().put(storage_name,elements());
+        if ( storage && melanobot::has_storage() )
+            melanobot::storage().put(storage_name,elements());
     }
 
     /**
@@ -217,7 +217,7 @@ private:
 /**
  * \brief Discards messages coming from certain users
  */
-class FilterGroup: public handler::Handler
+class FilterGroup: public melanobot::Handler
 {
 public:
     FilterGroup(const Settings& settings, MessageConsumer* parent)
@@ -225,7 +225,7 @@ public:
     {
         ignore = settings.get("ignore",ignore);
         if ( ignore.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -245,7 +245,7 @@ private:
 /**
  * \brief Makes the bot reconnect
  */
-class AdminReconnect: public handler::SimpleAction
+class AdminReconnect: public melanobot::SimpleAction
 {
 public:
     AdminReconnect(const Settings& settings, MessageConsumer* parent)
@@ -276,7 +276,7 @@ private:
 /**
  * \brief Makes the bot Connect
  */
-class AdminConnect: public handler::SimpleAction
+class AdminConnect: public melanobot::SimpleAction
 {
 public:
     AdminConnect(const Settings& settings, MessageConsumer* parent)
@@ -296,7 +296,7 @@ protected:
 /**
  * \brief Makes the bot disconnect
  */
-class AdminDisconnect: public handler::SimpleAction
+class AdminDisconnect: public melanobot::SimpleAction
 {
 public:
     AdminDisconnect(const Settings& settings, MessageConsumer* parent)
@@ -327,7 +327,7 @@ private:
 /**
  * \brief Changes the channel of a message
  */
-class Chanhax: public handler::Handler
+class Chanhax: public melanobot::Handler
 {
 public:
     Chanhax(const Settings& settings, MessageConsumer* parent)

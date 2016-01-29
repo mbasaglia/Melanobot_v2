@@ -62,7 +62,7 @@ PropertyTree Storage::node_from_map(const table& value)
 }
 
 Storage::Storage(const Settings& settings)
-    : cache_policy{cache::Policy::Read::ONCE,cache::Policy::Write::DYNAMIC}
+    : cache_policy{melanobot::CachePolicy::Read::ONCE, melanobot::CachePolicy::Write::DYNAMIC}
 {
     std::string formatstring = melanolib::string::strtolower(settings.get("format","info"));
     if ( formatstring == "xml" )
@@ -72,12 +72,12 @@ Storage::Storage(const Settings& settings)
     else if ( formatstring == "info" )
         format = settings::FileFormat::INFO;
     else
-        throw ConfigurationError("Wrong storage format");
+        throw melanobot::ConfigurationError("Wrong storage format");
 
     filename = settings.get("file",
         settings::data_file("storage."+formatstring, settings::FileCheck::CREATE));
     if ( filename.empty() )
-        throw ConfigurationError("Wrong storage file name");
+        throw melanobot::ConfigurationError("Wrong storage file name");
 
     if ( filename[0] != '/' )
         filename = settings::data_file(filename);
@@ -148,21 +148,21 @@ Storage::value_type Storage::get_value(const key_type& path)
     maybe_load();
     if ( auto var = data.get_optional<value_type>(path) )
         return *var;
-    throw Error("Not found");
+    throw melanobot::StorageError("Not found");
 }
 Storage::sequence Storage::get_sequence(const key_type& path)
 {
     maybe_load();
     if ( auto child = data.get_child_optional(path) )
         return node_to_sequence(*child);
-    throw Error("Not found");
+    throw melanobot::StorageError("Not found");
 }
 Storage::table Storage::get_map(const key_type& path)
 {
     maybe_load();
     if ( auto child = data.get_child_optional(path) )
         return node_to_map(*child);
-    throw Error("Not found");
+    throw melanobot::StorageError("Not found");
 }
 
 Storage::value_type Storage::maybe_get_value(const key_type& path,

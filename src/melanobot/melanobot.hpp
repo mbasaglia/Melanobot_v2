@@ -30,6 +30,8 @@
 #include "settings.hpp"
 #include "message/message_consumer.hpp"
 
+namespace melanobot {
+
 /**
  * \brief Main bot class
  */
@@ -74,7 +76,7 @@ public:
      */
     void add_connection(std::string suggested_name, const Settings& settings);
 
-    void add_handler(std::unique_ptr<handler::Handler>&& handler) override;
+    void add_handler(std::unique_ptr<melanobot::Handler>&& handler) override;
 
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
 
@@ -86,11 +88,11 @@ private:
 
     /// \todo allow dynamic connection/handler creation (requires locking)
     std::unordered_map<std::string,std::unique_ptr<network::Connection>> connections;
-    std::vector<std::unique_ptr<handler::Handler>> handlers;
+    std::vector<std::unique_ptr<melanobot::Handler>> handlers;
 
     /// Message Queue
     ConcurrentQueue<network::Message> messages;
 };
 
-
+} // namespace melanobot
 #endif // MELANOBOT_HPP

@@ -26,8 +26,8 @@
 #include "network/async_service.hpp"
 #include "melanolib/library.hpp"
 #include "melanolib/c++-compat.hpp"
-#include "storage.hpp"
-#include "config_factory.hpp"
+#include "melanobot/storage.hpp"
+#include "melanobot/config_factory.hpp"
 
 namespace module {
 
@@ -202,8 +202,8 @@ template<class ServiceT>
 template<class HandlerT>
     void register_handler(const std::string& name)
 {
-    static_assert(std::is_base_of<handler::Handler, HandlerT>::value,
-                    "Expected handler::Handler type");
+    static_assert(std::is_base_of<melanobot::Handler, HandlerT>::value,
+                    "Expected melanobot::Handler type");
 
     melanobot::ConfigFactory::instance().register_item( name,
         [](const std::string&  handler_name, const Settings& settings, MessageConsumer* parent)
@@ -222,9 +222,9 @@ template<class HandlerT>
 template<class StorageT>
     void register_storage(const std::string& name)
     {
-        static_assert(std::is_base_of<storage::StorageBase, StorageT>::value,
-                        "Expected storage::StorageBase type");
-        storage::StorageFactory::instance().register_type( name,
+        static_assert(std::is_base_of<melanobot::StorageBase, StorageT>::value,
+                        "Expected melanobot::StorageBase type");
+        melanobot::StorageFactory::instance().register_type( name,
             [] ( const Settings& settings ) {
                 return melanolib::New<StorageT>(settings);
         });

@@ -18,7 +18,7 @@
  */
 
 #include "formatter.hpp"
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 #include "xonotic-connection.hpp"
 #include "handler/rcon.hpp"
 #include "handler/status.hpp"

@@ -21,7 +21,6 @@
 
 #include "network/async_service.hpp"
 #include "network/time.hpp"
-#include "functional.hpp"
 #include "concurrency/concurrency.hpp"
 
 namespace timer {

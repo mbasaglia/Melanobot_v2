@@ -25,7 +25,7 @@
 #include "config.hpp"
 #include "irc/network/functions.hpp"
 #include "melanolib/time/time_string.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace irc {
 /**
@@ -37,7 +37,7 @@ namespace handler {
  * \brief Base class for handling CTCP requests
  * \see http://www.irchelp.org/irchelp/rfc/ctcpspec.html
  */
-class CtcpBase : public ::handler::Handler
+class CtcpBase : public melanobot::Handler
 {
 public:
 
@@ -45,7 +45,7 @@ public:
         : Handler(settings,parent), ctcp(irc::strtoupper(ctcp))
     {
         if ( ctcp.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -237,7 +237,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        get_parent<Melanobot>()->populate_properties({"ctcp","clientinfo","help_group"},props);
+        get_parent<melanobot::Melanobot>()->populate_properties({"ctcp","clientinfo","help_group"},props);
 
         Properties clientinfo;
         gather(props, clientinfo);

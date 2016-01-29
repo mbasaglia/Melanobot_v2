@@ -20,7 +20,7 @@
 #define LISTS_HANDLER_INVENTORY_HPP
 
 #include "core/handler/group.hpp"
-#include "storage.hpp"
+#include "melanobot/storage.hpp"
 #include "melanolib/string/language.hpp"
 #include "melanolib/math.hpp"
 
@@ -29,7 +29,7 @@ namespace lists {
 /**
  * \brief Used by \c InventoryManager to show the items in the inventory
  */
-class InventoryList : public handler::SimpleAction
+class InventoryList : public melanobot::SimpleAction
 {
 public:
     InventoryList(std::string list_id, const Settings& settings, MessageConsumer* parent)
@@ -42,7 +42,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        auto elements = storage::storage().maybe_get_sequence(list_id);
+        auto elements = melanobot::storage().maybe_get_sequence(list_id);
         if ( elements.empty() )
             reply_to(msg,network::OutputMessage("is empty",true));
         else
@@ -57,7 +57,7 @@ private:
 /**
  * \brief Used by \c InventoryManager to remove all elements of the inventory
  */
-class InventoryClear : public handler::SimpleAction
+class InventoryClear : public melanobot::SimpleAction
 {
 public:
     InventoryClear(std::string list_id, std::string auth,
@@ -71,14 +71,14 @@ public:
 
     bool can_handle(const network::Message& msg) const override
     {
-        return handler::SimpleAction::can_handle(msg) &&
+        return melanobot::SimpleAction::can_handle(msg) &&
             ( auth.empty() || msg.source->user_auth(msg.from.local_id, auth) );
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        auto elements = storage::storage().maybe_get_sequence(list_id);
+        auto elements = melanobot::storage().maybe_get_sequence(list_id);
         if ( elements.empty() )
         {
             reply_to(msg,network::OutputMessage("was already empty",true));
@@ -86,7 +86,7 @@ protected:
         else
         {
             elements.clear();
-            storage::storage().put(list_id, elements);
+            melanobot::storage().put(list_id, elements);
             reply_to(msg,network::OutputMessage("is now empty",true));
         }
         return true;
@@ -117,7 +117,7 @@ public:
 /**
  * \brief Adds an item to the inventory via an action
  */
-class InventoryPut : public handler::Handler
+class InventoryPut : public melanobot::Handler
 {
 public:
     InventoryPut(const Settings& settings, MessageConsumer* parent)
@@ -149,7 +149,7 @@ protected:
 
         item = melanolib::string::english.pronoun_to3rd(item,msg.from.name,msg.source->name());
 
-        auto inventory = storage::storage().maybe_get_sequence(list_id);
+        auto inventory = melanobot::storage().maybe_get_sequence(list_id);
         // Check that item isn't already in the inventory
         if ( std::find(inventory.begin(), inventory.end(), item) != inventory.end())
         {
@@ -175,7 +175,7 @@ protected:
         }
 
         inventory.push_back(item);
-        storage::storage().put(list_id, inventory);
+        melanobot::storage().put(list_id, inventory);
         reply_to(msg,network::OutputMessage(reply, true));
         return true;
     }
@@ -190,7 +190,7 @@ private:
 /**
  * \brief Removes an item from the inventory via an action
  */
-class InventoryTake : public handler::Handler
+class InventoryTake : public melanobot::Handler
 {
 public:
     InventoryTake(const Settings& settings, MessageConsumer* parent)
@@ -220,7 +220,7 @@ protected:
             return false;
 
         item = melanolib::string::english.pronoun_to3rd(item,msg.from.name,msg.source->name());
-        auto inventory = storage::storage().maybe_get_sequence(list_id);
+        auto inventory = melanobot::storage().maybe_get_sequence(list_id);
 
         auto iter = std::find(inventory.begin(), inventory.end(), item);
         if ( iter != inventory.end())
@@ -228,7 +228,7 @@ protected:
             // swap + pop to avoid moving items around for no reason
             std::swap(*iter, inventory.back());
             inventory.pop_back();
-            storage::storage().put(list_id, inventory);
+            melanobot::storage().put(list_id, inventory);
             reply_to(msg,network::OutputMessage("gives "+msg.from.name+" "+item, true));
             return true;
         }

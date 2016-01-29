@@ -21,7 +21,7 @@
 #ifndef MELANOBOT_LOAD_MODULE_HPP
 #define MELANOBOT_LOAD_MODULE_HPP
 
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 
 namespace module {
 

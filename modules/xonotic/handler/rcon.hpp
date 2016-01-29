@@ -19,7 +19,7 @@
 #ifndef XONOTIC_HANDLER_RCON_HPP
 #define XONOTIC_HANDLER_RCON_HPP
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 #include "xonotic/xonotic.hpp"
 
 namespace xonotic {
@@ -40,7 +40,7 @@ inline void rcon_adminnick(network::Connection* destination,
 /**
  * \brief Send a fixed rcon command to a Xonotic connection
  */
-class RconCommand : public handler::SimpleAction
+class RconCommand : public melanobot::SimpleAction
 {
 public:
     RconCommand(const Settings& settings, MessageConsumer* parent)
@@ -49,7 +49,7 @@ public:
         /// \note it allows the command to be specified in the top-level data
         command = settings.get("command",settings.data());
         if ( command.empty() )
-            throw ConfigurationError{};
+            throw melanobot::ConfigurationError{};
         arguments = settings.get("arguments",arguments);
         if ( arguments )
             synopsis += " argument...";
@@ -77,7 +77,7 @@ private:
  * \brief Calls a vote on the server, changing the admin name
  *        to that of the user calling the vote
  */
-class XonoticVCall : public handler::SimpleAction
+class XonoticVCall : public melanobot::SimpleAction
 {
 public:
     XonoticVCall(const Settings& settings, MessageConsumer* parent)
@@ -111,7 +111,7 @@ private:
  * \brief Stop a vote on the server, changing the admin name
  *        to that of the user calling the vote
  */
-class XonoticVStop : public handler::SimpleAction
+class XonoticVStop : public melanobot::SimpleAction
 {
 public:
     XonoticVStop(const Settings& settings, MessageConsumer* parent)

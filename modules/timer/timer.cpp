@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "timer-queue.hpp"
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 #include "handlers.hpp"
 
 /**

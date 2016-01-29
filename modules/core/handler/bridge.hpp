@@ -58,7 +58,7 @@ protected:
 /**
  * \brief Simply echoes chat messages (to be used in a Bridge group)
  */
-class BridgeChat : public handler::Handler
+class BridgeChat : public melanobot::Handler
 {
 public:
     BridgeChat(const Settings& settings, MessageConsumer* parent);
@@ -75,7 +75,7 @@ protected:
 /**
  * \brief Attach the parent bridge to the provided connection
  */
-class BridgeAttach : public handler::SimpleAction
+class BridgeAttach : public melanobot::SimpleAction
 {
 public:
     BridgeAttach(const Settings& settings, MessageConsumer* parent);
@@ -91,7 +91,7 @@ protected:
 /**
  * \brief Attach the parent bridge to the provided channel
  */
-class BridgeAttachChannel : public handler::SimpleAction
+class BridgeAttachChannel : public melanobot::SimpleAction
 {
 public:
     BridgeAttachChannel(const Settings& settings, MessageConsumer* parent);
@@ -106,7 +106,7 @@ protected:
 /**
  * \brief Base class for JoinMessage and similar
  */
-class EventMessageBase: public ::handler::Handler
+class EventMessageBase: public melanobot::Handler
 {
 public:
     EventMessageBase(network::Message::Type type,
@@ -119,7 +119,7 @@ public:
         discard_self = settings.get("discard_self",discard_self);
         discard_others=settings.get("discard_others",discard_others);
         if ( message.empty() ||  (discard_others && discard_self) )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
 
         int timeout_seconds = settings.get("timeout",0);
         if ( timeout_seconds > 0 )

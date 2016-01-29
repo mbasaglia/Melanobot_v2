@@ -16,10 +16,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 #include "config_factory.hpp"
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
+
+namespace melanobot {
 
 Melanobot& Melanobot::load(const Settings& settings)
 {
@@ -142,7 +144,7 @@ void Melanobot::add_connection(std::string suggested_name, const Settings& setti
     }
 }
 
-void Melanobot::add_handler(std::unique_ptr<handler::Handler> && handler)
+void Melanobot::add_handler(std::unique_ptr<melanobot::Handler> && handler)
 {
     instance().handlers.push_back(std::move(handler));
 }
@@ -171,3 +173,5 @@ bool Melanobot::handle ( network::Message& msg )
             return true;
     return false;
 }
+
+} // namespace melanobot

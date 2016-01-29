@@ -22,6 +22,8 @@
 #include <functional>
 #include <utility>
 
+namespace melanolib {
+
 /**
  * \brief Call a std::function when it is properly initialized
  * \tparam Functor  Callable which can be converted to bool
@@ -35,4 +37,6 @@ template<class Functor, class... CallArgs>
         if ( function )
             function(std::forward<CallArgs>(args)...);
     }
+
+} // namespace melanolib
 #endif // FUNCTIONAL_HPP

@@ -18,14 +18,14 @@
  */
 
 #include "input_message.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace network {
 
 void Message::send(Connection* from)
 {
     source = destination = from;
-    Melanobot::instance().message(*this);
+    melanobot::Melanobot::instance().message(*this);
 }
 
 } // namespace network

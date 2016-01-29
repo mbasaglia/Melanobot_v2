@@ -19,8 +19,8 @@
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
-#include "storage.hpp"
-#include "cache_policy.hpp"
+#include "melanobot/storage.hpp"
+#include "melanobot/cache_policy.hpp"
 
 namespace storage {
 namespace file {
@@ -53,7 +53,7 @@ namespace file {
  * \par delete \e key
  * Removes \e key. Returns an error if \b key wasn't defined.
  */
-class Storage : public StorageBase
+class Storage : public melanobot::StorageBase
 {
 public:
 
@@ -175,10 +175,10 @@ protected:
     static PropertyTree node_from_map(const table& value);
 
 private:
-    PropertyTree         data;          ///< Stored data
-    std::string          filename;      ///< File to store the data in
-    settings::FileFormat format;        ///< Storage file format (JSON or XML only)
-    cache::Policy        cache_policy;  ///< Cache policy
+    PropertyTree            data;           ///< Stored data
+    std::string             filename;       ///< File to store the data in
+    settings::FileFormat    format;         ///< Storage file format (JSON or XML only)
+    melanobot::CachePolicy  cache_policy;   ///< Cache policy
 };
 
 

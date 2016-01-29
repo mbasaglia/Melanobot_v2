@@ -25,10 +25,10 @@
 #include "settings.hpp"
 #include "message/input_message.hpp"
 #include "script_variables.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 #include "network/connection.hpp"
 #include "network/async_service.hpp"
-#include "storage.hpp"
+#include "melanobot/storage.hpp"
 
 namespace python {
 
@@ -95,7 +95,7 @@ inline std::shared_ptr<user::User> make_shared_user(const user::User& user)
 /**
  * \brief Namespace corresponding to the python module \c melanobot
  */
-namespace melanobot {
+namespace py_melanobot {
 
 /**
  * \brief Defines symbols in the \c melanobot.network Python module
@@ -199,10 +199,10 @@ void module_melanobot_network(boost::python::scope& module_top)
 void module_melanobot_storage(boost::python::scope& module_top)
 {
     using namespace boost::python;
-    using sequence      = storage::StorageBase::sequence;
-    using table         = storage::StorageBase::table;
-    using key_type      = storage::StorageBase::key_type;
-    using value_type    = storage::StorageBase::value_type;
+    using sequence      = melanobot::StorageBase::sequence;
+    using table         = melanobot::StorageBase::table;
+    using key_type      = melanobot::StorageBase::key_type;
+    using value_type    = melanobot::StorageBase::value_type;
 
     // Name of the parent scope
     std::string module_parent_name = extract<std::string>(module_top.attr("__name__"));
@@ -218,82 +218,82 @@ void module_melanobot_storage(boost::python::scope& module_top)
     // Change scope for the next declarations
     scope module_scope = module_object;
 
-    register_exception_translator<storage::Error>(
-        [](const storage::Error& err){
+    register_exception_translator<melanobot::StorageError>(
+        [](const melanobot::StorageError& err){
             PyErr_SetString(PyExc_RuntimeError, err.what());
     });
 
     def("get_value",[](const key_type& path) {
-        return storage::storage().get_value(path);
+        return melanobot::storage().get_value(path);
     });
     def("get_sequence",[](const key_type& path) {
         list out;
-        Converter::convert(storage::storage().get_sequence(path), out);
+        Converter::convert(melanobot::storage().get_sequence(path), out);
         return out;
     });
     def("get_map",[](const key_type& path) {
         dict out;
-        Converter::convert(storage::storage().get_map(path), out);
+        Converter::convert(melanobot::storage().get_map(path), out);
         return out;
     });
 
     def("maybe_get_value",[](const key_type& path, const value_type& def) {
-        return storage::storage().maybe_get_value(path, def);
+        return melanobot::storage().maybe_get_value(path, def);
     });
     def("maybe_get_sequence",[](const key_type& path) {
         list out;
-        Converter::convert(storage::storage().maybe_get_sequence(path), out);
+        Converter::convert(melanobot::storage().maybe_get_sequence(path), out);
         return out;
     });
     def("maybe_get_map",[](const key_type& path) {
         dict out;
-        Converter::convert(storage::storage().maybe_get_map(path), out);
+        Converter::convert(melanobot::storage().maybe_get_map(path), out);
         return out;
     });
 
     def("put", [](const key_type& path, const value_type& value) {
-        storage::storage().put(path, value);
+        melanobot::storage().put(path, value);
     });
     def("put", [](const std::string& path, const list& value) {
         sequence seq;
         Converter::convert(value, seq);
-        storage::storage().put(path, seq);
+        melanobot::storage().put(path, seq);
     });
     def("put", [](const std::string& path, const dict& value) {
         table map;
         Converter::convert(value, map);
-        storage::storage().put(path, map);
+        melanobot::storage().put(path, map);
     });
     def("put", [](const key_type& path, const key_type& key, const value_type& value) {
-        storage::storage().put(path, key, value);
+        melanobot::storage().put(path, key, value);
     });
 
     def("append", [](const key_type& path, const value_type& value) {
-        storage::storage().append(path, value);
+        melanobot::storage().append(path, value);
     });
 
     def("erase", [](const key_type& path) {
-        return storage::storage().erase(path);
+        return melanobot::storage().erase(path);
     });
     def("erase", [](const key_type& path, const key_type& key) {
-        return storage::storage().erase(path, key);
+        return melanobot::storage().erase(path, key);
     });
 
     def("maybe_put", [](const key_type& path, const value_type& value) {
-        return storage::storage().maybe_put(path, value);
+        return melanobot::storage().maybe_put(path, value);
     });
     def("maybe_put", [](const std::string& path, const list& value) {
         sequence seq;
         Converter::convert(value, seq);
         list out;
-        Converter::convert(storage::storage().maybe_put(path, seq), out);
+        Converter::convert(melanobot::storage().maybe_put(path, seq), out);
         return out;
     });
     def("maybe_put", [](const std::string& path, const dict& value) {
         table map;
         Converter::convert(value, map);
         dict out;
-        Converter::convert(storage::storage().maybe_put(path, map), out);
+        Converter::convert(melanobot::storage().maybe_put(path, map), out);
         return out;
     });
 }
@@ -309,8 +309,8 @@ BOOST_PYTHON_MODULE(melanobot)
     scope module_top;
 
     // Register exceptions
-    register_exception_translator<ConfigurationError>(
-        [](const ConfigurationError& err){
+    register_exception_translator<melanobot::ConfigurationError>(
+        [](const melanobot::ConfigurationError& err){
             PyErr_SetString(PyExc_RuntimeError, err.what());
     });
 
@@ -331,9 +331,9 @@ BOOST_PYTHON_MODULE(melanobot)
         })
     ;
 
-    class_<Melanobot,Melanobot*,boost::noncopyable>("Melanobot",no_init)
-        .def("stop",&Melanobot::stop)
-        .def("connection",return_pointer(&Melanobot::connection))
+    class_<melanobot::Melanobot, melanobot::Melanobot*, boost::noncopyable>("Melanobot",no_init)
+        .def("stop",&melanobot::Melanobot::stop)
+        .def("connection",return_pointer(&melanobot::Melanobot::connection))
     ;
 
     class_<color::Color12>("Color")
@@ -385,6 +385,6 @@ BOOST_PYTHON_MODULE(melanobot)
     }
 #endif
 
-} // namespace melanobot
+} // namespace py_melanobot
 } // namespace python
 #endif // PYTHON_MODULES_HPP

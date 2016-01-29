@@ -18,7 +18,7 @@
  */
 
 #include "encoding.hpp"
-#include "functional.hpp"
+#include "melanolib/functional.hpp"
 
 #ifdef HAS_ICONV
 #       include <iconv.h>
@@ -65,7 +65,7 @@ void Utf8Parser::parse(const std::string& string)
         if ( byte < 0b1000'0000 )
         {
             check_valid();
-            callback(callback_ascii,byte);
+            melanolib::callback(callback_ascii,byte);
         }
         // 11.. .... => Begin multibyte
         else if ( (byte & 0b1100'0000) == 0b1100'0000 )
@@ -92,7 +92,7 @@ void Utf8Parser::parse(const std::string& string)
             unicode |= byte&0b0011'1111; //'
             if ( utf8.size() == length )
             {
-                callback(callback_utf8,unicode,utf8);
+                melanolib::callback(callback_utf8,unicode,utf8);
                 unicode = 0;
                 length = 0;
                 utf8.clear();
@@ -100,7 +100,7 @@ void Utf8Parser::parse(const std::string& string)
         }
     }
     check_valid();
-    callback(callback_end);
+    melanolib::callback(callback_end);
 }
 
 std::string Utf8Parser::encode(uint32_t value)
@@ -136,7 +136,7 @@ void Utf8Parser::check_valid()
     if ( length != 0 )
     {
         // premature end of a multi-byte character
-        callback(callback_invalid,utf8);
+        melanolib::callback(callback_invalid,utf8);
         length = 0;
         utf8.clear();
         unicode = 0;

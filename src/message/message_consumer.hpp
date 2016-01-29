@@ -22,9 +22,9 @@
 #include "settings.hpp"
 #include "network/connection.hpp"
 
-namespace handler {
+namespace melanobot {
     class Handler;
-} // namespace handler
+} // namespace melanobot
 
 /**
  * \brief Base for classes which consume input messages
@@ -52,7 +52,7 @@ public:
      * \brief Adds a child handler
      * \pre \c handler points to a valid object (ie: not nullptr)
      */
-    virtual void add_handler(std::unique_ptr<handler::Handler>&& handler) = 0;
+    virtual void add_handler(std::unique_ptr<melanobot::Handler>&& handler) = 0;
 
 protected:
     /**

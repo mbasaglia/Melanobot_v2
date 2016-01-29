@@ -22,7 +22,7 @@
 #ifndef IRC_HANDLER_ADMIN
 #define IRC_HANDLER_ADMIN
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 
 namespace irc {
 namespace handler {
@@ -30,7 +30,7 @@ namespace handler {
 /**
  * \brief Changes the bot nick (IRC)
  */
-class AdminNick: public ::handler::SimpleAction
+class AdminNick: public melanobot::SimpleAction
 {
 public:
     AdminNick(const Settings& settings, ::MessageConsumer* parent)
@@ -55,7 +55,7 @@ protected:
 /**
  * \brief Makes the bot join channels (IRC)
  */
-class AdminJoin: public ::handler::SimpleAction
+class AdminJoin: public melanobot::SimpleAction
 {
 public:
     AdminJoin(const Settings& settings, ::MessageConsumer* parent)
@@ -83,7 +83,7 @@ protected:
 /**
  * \brief Makes the bot part channels (IRC)
  */
-class AdminPart: public ::handler::SimpleAction
+class AdminPart: public melanobot::SimpleAction
 {
 public:
     AdminPart(const Settings& settings, ::MessageConsumer* parent)
@@ -115,7 +115,7 @@ protected:
  * \brief Makes the bot join channels (IRC)
  * \note Use this inside a group
  */
-class AcceptInvite: public ::handler::Handler
+class AcceptInvite: public melanobot::Handler
 {
 public:
     AcceptInvite(const Settings& settings, ::MessageConsumer* parent)
@@ -138,7 +138,7 @@ protected:
 /**
  * \brief Makes the bot execute a raw command (IRC)
  */
-class AdminRaw: public ::handler::SimpleAction
+class AdminRaw: public melanobot::SimpleAction
 {
 public:
     AdminRaw(const Settings& settings, ::MessageConsumer* parent)
@@ -182,7 +182,7 @@ protected:
 /**
  * \brief Clears the IRC buffer
  */
-class ClearBuffer: public ::handler::SimpleAction
+class ClearBuffer: public melanobot::SimpleAction
 {
 public:
     ClearBuffer(const Settings& settings, ::MessageConsumer* parent)

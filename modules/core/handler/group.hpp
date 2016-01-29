@@ -19,17 +19,17 @@
 #ifndef HANDLER_SIMPLE_GROUP_HPP
 #define HANDLER_SIMPLE_GROUP_HPP
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 
 namespace core {
 
 /**
  * \brief Base class for group-like handlers
  */
-class AbstractGroup : public handler::Handler
+class AbstractGroup : public melanobot::Handler
 {
 public:
-    using handler::Handler::Handler;
+    using melanobot::Handler::Handler;
 
     void initialize() override
     {
@@ -47,7 +47,7 @@ public:
                              PropertyTree& output) const override;
 
 
-    void add_handler(std::unique_ptr<handler::Handler>&& handler) override
+    void add_handler(std::unique_ptr<melanobot::Handler>&& handler) override
     {
         children.push_back(std::move(handler));
     }
@@ -78,7 +78,7 @@ protected:
 /**
  * \brief Base class for handlers which act as a group and as a SimpleAction
  */
-class AbstractActionGroup : public handler::SimpleAction
+class AbstractActionGroup : public melanobot::SimpleAction
 {
 public:
     AbstractActionGroup(const std::string& default_trigger,
@@ -121,7 +121,7 @@ protected:
         return group.children;
     }
 
-    void add_handler(std::unique_ptr<handler::Handler>&& handler) override
+    void add_handler(std::unique_ptr<melanobot::Handler>&& handler) override
     {
         group.children.push_back(std::move(handler));
     }

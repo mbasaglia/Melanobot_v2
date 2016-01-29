@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 #include "handler/admin.hpp"
 #include "handler/bridge.hpp"
 #include "handler/misc.hpp"

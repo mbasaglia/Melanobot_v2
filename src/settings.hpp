@@ -27,7 +27,7 @@
 
 #include "melanolib/c++-compat.hpp"
 #include "string/string.hpp"
-#include "error.hpp"
+#include "melanobot/error.hpp"
 
 using PropertyTree = boost::property_tree::ptree;
 using Settings = PropertyTree;

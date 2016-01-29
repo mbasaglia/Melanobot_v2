@@ -44,7 +44,7 @@ public:
         reply = settings.get("reply", reply);
         not_found_reply = settings.get("not_found", not_found_reply );
         if ( yt_api_key.empty() || api_url.empty() || reply.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
 protected:
@@ -113,7 +113,7 @@ private:
 /**
  * \brief Shows info on video links
  */
-class VideoInfo : public handler::Handler
+class VideoInfo : public melanobot::Handler
 {
 public:
     VideoInfo(const Settings& settings, MessageConsumer* parent)

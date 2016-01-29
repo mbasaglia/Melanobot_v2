@@ -19,7 +19,7 @@
 #ifndef SCRIPT_HANDLERS_HPP
 #define SCRIPT_HANDLERS_HPP
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 #include "python.hpp"
 
 namespace python {
@@ -27,7 +27,7 @@ namespace python {
 /**
  * \brief Runs a python script
  */
-class SimpleScript : public handler::SimpleAction
+class SimpleScript : public melanobot::SimpleAction
 {
 protected:
     /**
@@ -59,12 +59,12 @@ public:
     {
         std::string script_rel = settings.get("script","");
         if ( script_rel.empty() )
-            throw ConfigurationError("Missing script file");
+            throw melanobot::ConfigurationError("Missing script file");
 
         /// \todo check for absolute path
         script = settings::data_file("scripts/"+script_rel);
         if ( script.empty() )
-            throw ConfigurationError("Script file not found: "+script_rel);
+            throw melanobot::ConfigurationError("Script file not found: "+script_rel);
 
         synopsis += settings.get("synopsis","");
         help = settings.get("help", "Runs "+script_rel);
@@ -186,17 +186,17 @@ private:
     {
         std::string relfile = input.get("id","");
         if ( relfile.empty() )
-            throw ConfigurationError("Missing id file");
+            throw melanobot::ConfigurationError("Missing id file");
 
         std::string descriptor = settings::data_file("scripts/"+relfile+"/"+relfile+".json");
         if ( descriptor.empty() )
-            throw ConfigurationError("Id file not found: "+relfile);
+            throw melanobot::ConfigurationError("Id file not found: "+relfile);
 
         Settings description;
         try {
             description = settings::load(descriptor,settings::FileFormat::JSON);
-        } catch ( const CriticalException& exc ) {
-            throw ConfigurationError(exc.what());
+        } catch ( const melanobot::CriticalException& exc ) {
+            throw melanobot::ConfigurationError(exc.what());
         }
 
         settings::merge(description, input, true);

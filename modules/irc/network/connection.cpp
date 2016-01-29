@@ -21,7 +21,7 @@
 #include "string/logger.hpp"
 #include "melanolib/string/stringutils.hpp"
 #include "irc/network/functions.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace irc {
 
@@ -30,7 +30,7 @@ std::unique_ptr<IrcConnection> IrcConnection::create(
 {
     if ( settings.get("protocol",std::string()) != "irc" )
     {
-        throw ConfigurationError("Wrong protocol for IRC connection");
+        throw melanobot::ConfigurationError("Wrong protocol for IRC connection");
     }
 
     network::Server server ( settings.get("server",std::string()) );
@@ -40,7 +40,7 @@ std::unique_ptr<IrcConnection> IrcConnection::create(
     server.port = settings.get("server.port",server.port);
     if ( server.host.empty() || !server.port )
     {
-        throw ConfigurationError("IRC connection with no server");
+        throw melanobot::ConfigurationError("IRC connection with no server");
     }
 
     return melanolib::New<IrcConnection>(server, settings, name);
@@ -149,7 +149,7 @@ void IrcConnection::error_stop()
 {
     disconnect();
     settings::global_settings.put("exit_code",1);
-    Melanobot::instance().stop(); /// \todo is this the right thing to do? -- maybe have a handler that does this
+    melanobot::Melanobot::instance().stop(); /// \todo is this the right thing to do? -- maybe have a handler that does this
 }
 
 network::Server IrcConnection::server() const

@@ -20,7 +20,7 @@
 #define MELANOBOT_MODULES_TIMER_HANDLER_HPP
 
 #include <list>
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 #include "timer-queue.hpp"
 
 namespace timer {
@@ -28,7 +28,7 @@ namespace timer {
 /**
  * \brief Sends a message at the specified time
  */
-class Remind : public handler::SimpleAction
+class Remind : public melanobot::SimpleAction
 {
 public:
     Remind(const Settings& settings, MessageConsumer* parent)
@@ -113,7 +113,7 @@ private:
 /**
  * \brief Defers a command
  */
-class Defer : public handler::SimpleAction
+class Defer : public melanobot::SimpleAction
 {
 public:
     Defer(const Settings& settings, MessageConsumer* parent)

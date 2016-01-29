@@ -28,12 +28,12 @@
 #include "error.hpp"
 #include "settings.hpp"
 
-namespace storage {
+namespace melanobot {
 
 /**
  * \brief Error arising from StorageBase function calls
  */
-class Error : public MelanobotError
+class StorageError : public MelanobotError
 {
 public:
     using MelanobotError::MelanobotError;
@@ -187,5 +187,5 @@ void set_storage(std::unique_ptr<StorageBase>&& pointer);
  */
 bool has_storage();
 
-} // namespace storage
+} // namespace melanobot
 #endif // STORAGE_BASE_HPP

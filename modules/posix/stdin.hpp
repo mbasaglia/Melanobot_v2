@@ -32,7 +32,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 #include "network/connection.hpp"
 
 namespace posix {
@@ -54,7 +54,7 @@ public:
         std::string filename = settings.get("file","");
         int file = open_file(filename);
         if ( file < 0 )
-            throw ConfigurationError("Cannot open "+filename);
+            throw melanobot::ConfigurationError("Cannot open "+filename);
         input = boost::asio::posix::stream_descriptor(io_service,file);
         formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("utf8")));
     }
@@ -128,7 +128,7 @@ private:
         if ( err )
         {
             ErrorLog("std","Network Error") << err.message();
-            Melanobot::instance().stop(); /// \todo move this in error handler
+            melanobot::Melanobot::instance().stop(); /// \todo move this in error handler
         }
     }
 

@@ -19,8 +19,8 @@
 #ifndef CONNECTION_MONITOR_HPP
 #define CONNECTION_MONITOR_HPP
 
-#include "handler/handler.hpp"
-#include "melanobot.hpp"
+#include "melanobot/handler.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace core {
 
@@ -28,7 +28,7 @@ namespace core {
  * \brief Base for handlers needing to query a connection while
  * sending and receiving messages from a different connection
  */
-class ConnectionMonitor : public handler::SimpleAction
+class ConnectionMonitor : public melanobot::SimpleAction
 {
 public:
     ConnectionMonitor(const std::string& default_trigger,
@@ -38,9 +38,9 @@ public:
     {
         std::string monitored_name = settings.get("monitored","");
         if ( !monitored_name.empty() )
-            monitored = Melanobot::instance().connection(monitored_name);
+            monitored = melanobot::Melanobot::instance().connection(monitored_name);
         if ( !monitored )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
 protected:
@@ -87,7 +87,7 @@ public:
     {
         reply = settings.get("reply", reply);
         if ( reply.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
         help = settings.get("help", help);
     }
 

@@ -22,13 +22,13 @@
 #include "settings.hpp"
 #include "melanolib/string/stringutils.hpp"
 
-namespace cache {
+namespace melanobot {
 
 /**
  * \brief Policy to handle cached data
  * \todo Handle DISCARD correctly
  */
-class Policy
+class CachePolicy
 {
 private:
     /**
@@ -111,8 +111,8 @@ public:
         return Write::ONCE;
     }
 
-    constexpr Policy() noexcept = default;
-    constexpr Policy(Read read, Write write) noexcept : read_(read), write_(write) {}
+    constexpr CachePolicy() noexcept = default;
+    constexpr CachePolicy(Read read, Write write) noexcept : read_(read), write_(write) {}
 
     /**
      * \brief Set read/write policies from settings
@@ -217,5 +217,5 @@ private:
     Status status_= Status::INITIALIZING;///< Whether cached data has been loaded
 };
 
-} // namespace cache
+} // namespace melanobot
 #endif // CACHE_POLICY_HPP

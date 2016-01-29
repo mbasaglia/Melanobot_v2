@@ -31,12 +31,7 @@
 #include "melanolib/string/stringutils.hpp"
 #include "message/message_consumer.hpp"
 
-/**
- * \brief Namespace for classes that handle connection messages
- *
- * \see Handler and SimpleAction for base classes.
- */
-namespace handler {
+namespace melanobot {
 
 /**
  * \brief Message handler abstract base class
@@ -128,7 +123,7 @@ public:
     /**
      * \brief Noop, by default handlers don't have children
      */
-    void add_handler(std::unique_ptr<handler::Handler>&&) override {}
+    void add_handler(std::unique_ptr<melanobot::Handler>&&) override {}
 
 protected:
     /**
@@ -177,7 +172,7 @@ protected:
  *
  * Follows the most basic example to define a SimpleAction handler:
  * \code{.cpp}
-class MyAction : public handler::SimpleAction
+class MyAction : public melanobot::SimpleAction
 {
 public:
     MyAction(const Settings& settings, MessageConsumer* parent)
@@ -312,5 +307,5 @@ protected:
     }
 };
 
-} // namespace handler
+} // namespace melanobot
 #endif // HANDLER_HPP

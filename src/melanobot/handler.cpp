@@ -18,7 +18,7 @@
  */
 #include "handler.hpp"
 
-namespace handler {
+namespace melanobot {
 
 bool SimpleAction::handle(network::Message& msg)
 {
@@ -40,4 +40,4 @@ bool SimpleAction::handle(network::Message& msg)
     return false;
 }
 
-} // namespace handler
+} // namespace melanobot

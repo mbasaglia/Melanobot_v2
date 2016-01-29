@@ -46,10 +46,10 @@ std::unique_ptr<Connection> ConnectionFactory::create(
             return it->second(settings, name);
         }
         ErrorLog ("sys","Connection Error") << ": Unknown connection protocol "+protocol;
-    } catch ( const CriticalException& ) {
+    } catch ( const melanobot::CriticalException& ) {
         throw;
     }
-    catch ( const LocatableException& exc ) {
+    catch ( const melanobot::LocatableException& exc ) {
         ErrorLog errlog("sys","Connection Error");
         if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": ";

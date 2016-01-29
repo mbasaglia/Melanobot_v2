@@ -21,14 +21,14 @@
 
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 
 namespace posix {
 
 /**
  * \brief Base for handlers that affect the loop in melanobot.sh
  */
-class MelanobotShBase : public handler::SimpleAction
+class MelanobotShBase : public melanobot::SimpleAction
 {
 public:
     MelanobotShBase(const std::string& default_trigger,
@@ -37,7 +37,7 @@ public:
         : SimpleAction(default_trigger,settings,parent)
     {
         if ( !settings::global_settings.get_child_optional("settings.tmp_dir") )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
 protected:
@@ -81,7 +81,7 @@ public:
     {
         action = settings.get("action",action);
         if ( action.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
         help = "Changes the quit action to "+action;
     }
 
@@ -114,7 +114,7 @@ protected:
     {
         if ( get_action() != "loop" )
             set_action("restart");
-        Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop();
         return true;
     }
 
@@ -136,7 +136,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         set_action("quit");
-        Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop();
         return true;
     }
 

@@ -90,7 +90,7 @@ bool PythonEngine::initialize()
     if ( !Py_IsInitialized() )
     {
         /// \todo custom module factory
-        PyImport_AppendInittab( "melanobot", &python::melanobot::initmelanobot );
+        PyImport_AppendInittab( "melanobot", &py_melanobot::initmelanobot );
         Py_Initialize();
     }
 

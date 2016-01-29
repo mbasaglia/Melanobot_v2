@@ -22,7 +22,7 @@
 #include "irc/handler/irc_actions.hpp"
 #include "irc/handler/irc_admin.hpp"
 #include "irc/handler/irc_whois.hpp"
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 
 /**
  * \brief Initializes the IRC module

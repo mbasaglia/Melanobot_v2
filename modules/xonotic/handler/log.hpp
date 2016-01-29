@@ -26,7 +26,7 @@ namespace xonotic {
 /**
  * \brief Show server connect/disconnect messages
  */
-class ConnectionEvents : public handler::Handler
+class ConnectionEvents : public melanobot::Handler
 {
 public:
     ConnectionEvents( const Settings& settings, MessageConsumer* parent )
@@ -61,7 +61,7 @@ private:
 /**
  * \brief Shows player join/part messages
  */
-class XonoticJoinPart : public handler::Handler
+class XonoticJoinPart : public melanobot::Handler
 {
 public:
     XonoticJoinPart( const Settings& settings, MessageConsumer* parent )
@@ -102,7 +102,7 @@ private:
 /**
  * \brief Shows match start messages
  */
-class XonoticMatchStart : public handler::Handler
+class XonoticMatchStart : public melanobot::Handler
 {
 public:
     XonoticMatchStart( const Settings& settings, MessageConsumer* parent )
@@ -138,7 +138,7 @@ private:
  *
  * It defines a new on_handle which accepts a std::match_result
  */
-class ParseEventlog : public handler::Handler
+class ParseEventlog : public melanobot::Handler
 {
 public:
     ParseEventlog(std::string regex, const Settings& settings, MessageConsumer* parent)
@@ -643,7 +643,7 @@ public:
         message = settings.get("message",message);
         notify = settings.get("notify",notify);
         if ( notify.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
 

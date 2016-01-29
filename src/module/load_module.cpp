@@ -20,7 +20,7 @@
  *
  */
 
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/range/istream_range.hpp>

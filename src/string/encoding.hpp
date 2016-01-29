@@ -20,7 +20,6 @@
 #define STRING_ENCODING_HPP
 
 #include "melanolib/string/quickstream.hpp"
-#include "functional.hpp"
 
 namespace string {
 

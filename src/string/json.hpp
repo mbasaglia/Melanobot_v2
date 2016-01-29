@@ -36,7 +36,7 @@
 /**
  * \brief Error encountered when parsing JSON
  */
-struct JsonError : public LocatableException
+struct JsonError : public melanobot::LocatableException
 {
     using LocatableException::LocatableException;
 };

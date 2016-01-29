@@ -34,7 +34,7 @@ namespace fun {
 /**
  * \brief Handler translating between morse and latin
  */
-class Morse : public handler::SimpleAction
+class Morse : public melanobot::SimpleAction
 {
 public:
     Morse(const Settings& settings, MessageConsumer* parent)
@@ -54,7 +54,7 @@ private:
 /**
  * \brief Turns ASCII characters upside-down
  */
-class ReverseText : public handler::SimpleAction
+class ReverseText : public melanobot::SimpleAction
 {
 public:
     ReverseText(const Settings& settings, MessageConsumer* parent)
@@ -103,7 +103,7 @@ private:
  * \note Even more useful to see pretty ponies ;-)
  * \see https://github.com/mbasaglia/ASCII-Pony
  */
-class RenderPony : public handler::SimpleAction
+class RenderPony : public melanobot::SimpleAction
 {
 public:
     RenderPony(const Settings& settings, MessageConsumer* parent)
@@ -220,7 +220,7 @@ private:
 /**
  * \brief Answers direct questions
  */
-class AnswerQuestions : public handler::Handler
+class AnswerQuestions : public melanobot::Handler
 {
 public:
     AnswerQuestions(const Settings& settings, MessageConsumer* parent)
@@ -262,7 +262,7 @@ private:
 /**
  * \brief Slaps someone
  */
-class Slap : public handler::SimpleAction
+class Slap : public melanobot::SimpleAction
 {
 public:
     Slap(const Settings& settings, MessageConsumer* parent)
@@ -298,7 +298,7 @@ protected:
 /**
  * \brief Discordian Calendar
  */
-class Discord : public handler::SimpleAction
+class Discord : public melanobot::SimpleAction
 {
 public:
     Discord(const Settings& settings, MessageConsumer* parent)
@@ -342,7 +342,7 @@ private:
 /**
  * \brief Very polite remarks
  */
-class Insult : public handler::SimpleAction
+class Insult : public melanobot::SimpleAction
 {
 public:
     Insult(const Settings& settings, MessageConsumer* parent);

@@ -21,7 +21,7 @@
 #ifndef IRC_HANDLER_IRC_ACTIONS
 #define IRC_HANDLER_IRC_ACTIONS
 
-#include "handler/handler.hpp"
+#include "melanobot/handler.hpp"
 
 namespace irc {
 namespace handler {
@@ -29,7 +29,7 @@ namespace handler {
 /**
  * \brief Joins again once kicked
  */
-class IrcKickRejoin: public ::handler::Handler
+class IrcKickRejoin: public melanobot::Handler
 {
 public:
     IrcKickRejoin(const Settings& settings, ::MessageConsumer* parent)

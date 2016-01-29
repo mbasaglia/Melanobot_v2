@@ -53,7 +53,7 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
     if ( settings.get("protocol",std::string()) != "xonotic" )
     {
         /// \todo accept similar protocols? eg: nexuiz
-        throw ConfigurationError("Wrong protocol for Xonotic connection");
+        throw melanobot::ConfigurationError("Wrong protocol for Xonotic connection");
     }
 
     network::Server server ( settings.get("server",std::string()) );
@@ -63,7 +63,7 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
     server.port = settings.get("server.port",server.port);
     if ( server.host.empty() || !server.port )
     {
-        throw ConfigurationError("Xonotic connection with no server");
+        throw melanobot::ConfigurationError("Xonotic connection with no server");
     }
 
     ConnectionDetails details(server,

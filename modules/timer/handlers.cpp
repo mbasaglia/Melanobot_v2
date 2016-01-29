@@ -18,8 +18,8 @@
  */
 
 #include "handlers.hpp"
-#include "storage.hpp"
-#include "melanobot.hpp"
+#include "melanobot/storage.hpp"
+#include "melanobot/melanobot.hpp"
 #include "melanolib/time/time_parser.hpp"
 
 namespace timer {
@@ -84,20 +84,20 @@ void Remind::load_items()
         items.clear();
     }
     
-    if ( !storage::has_storage() )
+    if ( !melanobot::has_storage() )
         return;
 
     std::string path = "remind."+storage_id;
 
     unsigned count = melanolib::string::to_uint(
-        storage::storage().maybe_get_value(path+".count", "0")
+        melanobot::storage().maybe_get_value(path+".count", "0")
     );
 
     if ( count > 0 )
     {
         for ( unsigned i = 0; i < count; i++ )
         {
-            auto map = storage::storage().get_map(path+"."+melanolib::string::to_string(i));
+            auto map = melanobot::storage().get_map(path+"."+melanolib::string::to_string(i));
             schedule_item({
                 map["message"],
                 map["connection"],
@@ -107,7 +107,7 @@ void Remind::load_items()
         }
     }
 
-    storage::storage().erase(path);
+    melanobot::storage().erase(path);
 }
 
 void Remind::store_items()
@@ -115,18 +115,18 @@ void Remind::store_items()
     Lock lock(mutex);
     std::string path = "remind."+storage_id;
 
-    storage::storage().put(path, "count", melanolib::string::to_string(items.size()));
+    melanobot::storage().put(path, "count", melanolib::string::to_string(items.size()));
 
     unsigned i = 0;
     for ( const auto& item : items )
     {
-        storage::StorageBase::table map{
+        melanobot::StorageBase::table map{
             {"message", item.message},
             {"connection", item.connection},
             {"target", item.target},
             {"timeout", melanolib::time::format_char(item.timeout, 'c')}
         };
-        storage::storage().put(path+"."+melanolib::string::to_string(i), map);
+        melanobot::storage().put(path+"."+melanolib::string::to_string(i), map);
         i++;
     }
 }
@@ -146,7 +146,7 @@ void Remind::schedule_item(const Item& item)
     TimerQueue::instance().push(
         time,
         [this, item, iterator]() {
-            network::Connection* destination = Melanobot::instance().connection(item.connection);
+            network::Connection* destination = melanobot::Melanobot::instance().connection(item.connection);
             if ( !destination )
                 return;
             string::FormatterConfig fmt;
@@ -185,7 +185,7 @@ bool Defer::on_handle(network::Message& src)
 
     TimerQueue::instance().push(
         time,
-        [msg](){Melanobot::instance().message(msg);},
+        [msg](){melanobot::Melanobot::instance().message(msg);},
         this
     );
 

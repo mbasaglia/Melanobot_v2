@@ -21,6 +21,8 @@
 
 #include <stdexcept>
 
+namespace melanobot {
+
 /**
  * \brief Generic Melanobot-related errors
  */
@@ -84,6 +86,7 @@ inline void error [[noreturn]] (const std::string& file, int line,
  * \throws CriticalException
  */
 #define CRITICAL_ERROR(msg) \
-        error(__FILE__,__LINE__,__func__,msg)
+        ::melanobot::error(__FILE__,__LINE__,__func__,msg)
 
+} // namespace melanobot
 #endif // ERROR_HPP

@@ -29,7 +29,7 @@ namespace handler {
 /**
  * \brief Sets the global id based on a 330 reply from whois (IRC)
  */
-class Whois330 : public ::handler::Handler
+class Whois330 : public melanobot::Handler
 {
 public:
     Whois330(const Settings& settings, ::MessageConsumer* parent)
@@ -55,7 +55,7 @@ protected:
  * \note This will only work if the bot has a Q account, and USERS requires +k
  *       or better on the channel.
  */
-class QSendWhois : public ::handler::Handler
+class QSendWhois : public melanobot::Handler
 {
 public:
     QSendWhois(const Settings& settings, ::MessageConsumer* parent)
@@ -93,7 +93,7 @@ private:
 /**
  * \brief Parses responses from Q WHOIS and USER (IRC)
  */
-class QGetWhois : public ::handler::Handler
+class QGetWhois : public melanobot::Handler
 {
 public:
     QGetWhois(const Settings& settings, ::MessageConsumer* parent)
@@ -166,7 +166,7 @@ public:
 /**
  * \brief Sends a WHOIS about the message sender
  */
-class WhoisCheckMe : public ::handler::SimpleAction
+class WhoisCheckMe : public melanobot::SimpleAction
 {
 public:
     WhoisCheckMe(const Settings& settings, ::MessageConsumer* parent)
@@ -193,7 +193,7 @@ private:
 /**
  * \brief Log in to an authentication service on connect
  */
-class IrcIdentify : public ::handler::Handler
+class IrcIdentify : public melanobot::Handler
 {
 public:
     IrcIdentify(const Settings& settings, ::MessageConsumer* parent)
@@ -207,7 +207,7 @@ public:
         command     = settings.get("command",command);
         modes       = settings.get("modes",modes);
         if ( password.empty() || service.empty() || command.empty() )
-            throw ConfigurationError();
+            throw melanobot::ConfigurationError();
     }
 
     bool can_handle(const network::Message& msg) const override

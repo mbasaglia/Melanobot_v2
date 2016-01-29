@@ -18,7 +18,7 @@
  */
 #include "web-api-concrete.hpp"
 #include "http.hpp"
-#include "melanomodule.hpp"
+#include "module/melanomodule.hpp"
 
 /**
  * \brief Initializes the web module

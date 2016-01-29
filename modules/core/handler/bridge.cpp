@@ -18,7 +18,7 @@
  */
 
 #include "bridge.hpp"
-#include "melanobot.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace core {
 
@@ -28,7 +28,7 @@ Bridge::Bridge(const Settings& settings, MessageConsumer* parent)
 
     std::string destination_name = settings.get("destination","");
     if ( !destination_name.empty() )
-        destination = Melanobot::instance().connection(destination_name);
+        destination = melanobot::Melanobot::instance().connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
 }
 
@@ -109,12 +109,12 @@ void BridgeAttach::initialize()
 {
     // This ensures we aren't in Group constructor when called
     if ( !(this->parent = get_parent<Bridge>()) )
-        throw ConfigurationError{};
+        throw melanobot::ConfigurationError{};
 }
 
 bool BridgeAttach::on_handle(network::Message& msg)
 {
-    auto conn = Melanobot::instance().connection(msg.message);
+    auto conn = melanobot::Melanobot::instance().connection(msg.message);
     if ( conn || detach )
         parent->attach(conn);
     else
@@ -131,7 +131,7 @@ void BridgeAttachChannel::initialize()
 {
     // This ensures we aren't in Group constructor when called
     if ( !(this->parent = get_parent<Bridge>()) )
-        throw ConfigurationError{};
+        throw melanobot::ConfigurationError{};
 }
 
 bool BridgeAttachChannel::on_handle(network::Message& msg)
