@@ -393,10 +393,11 @@ void IrcConnection::handle_message(network::Message msg)
         {
             Lock lock(mutex);
                 /// \todo Case-Insensitive?
-                std::regex regex_direct(melanolib::string::regex_escape(current_nick)+":\\s*(.*)");
+                /// \todo Update only on nick changes
+                std::regex regex_direct(melanolib::string::regex_escape(current_nick)+"[:,]?\\s+(.+)");
             lock.unlock();
             std::smatch match;
-            if ( std::regex_match(msg.message,match,regex_direct) )
+            if ( std::regex_match(msg.message, match, regex_direct) )
             {
                 msg.direct = true;
                 msg.message = match[1];
