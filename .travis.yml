@@ -31,16 +31,16 @@ before_install:
 script:
   - mkdir -p build
   - cd build
-  - test "$CXX" = "g++"     && export CXX="g++-5" CC="gcc-5"
-  - test "$CXX" = "clang++" && export CXX="clang++-3.7" CC="clang-3.7"
+  - if [ "$CXX" = "g++" ];     then export CXX="g++-5" CC="gcc-5";           fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - $CXX --version
   - cmake --version
   - cmake -DMODULE_ALL=ON ..
-  - test "$BUILD_TYPE" = "Compile" && make
-  - test "$BUILD_TYPE" = "Test" && make test_all && make coverage
+  - if [ "$BUILD_TYPE" = "Compile" ]; then make;                            fi
+  - if [ "$BUILD_TYPE" = "Test" ];    then make test_all && make coverage;  fi
 
 after_success:
-  - test "$BUILD_TYPE" = "Test" && codecov
+  - if [ "$BUILD_TYPE" = "Test" ]; then codecov; fi
 
 notifications:
   irc:
