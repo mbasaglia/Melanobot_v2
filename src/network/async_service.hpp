@@ -72,89 +72,27 @@ public:
      * \brief Registers a service object
      * \note It is assumed that the registered objects will clean up after themselves
      */
-    void register_service(const std::string& name, AsyncService* object)
-    {
-        if ( ServiceRegistry().instance().services.count(name) )
-            ErrorLog("sys") << "Overwriting service " << name;
-        ServiceRegistry().instance().services[name] = {object, false, false};
-    }
+    void register_service(const std::string& name, AsyncService* object);
 
     /**
      * \brief Loads the service settings
      */
-    void initialize(const Settings& settings)
-    {
-        for ( const auto& p : settings )
-        {
-            auto it = services.find(p.first);
-            if ( it == services.end() )
-            {
-                ErrorLog("sys") << "Trying to load an unknown service: " << p.first;
-            }
-            else
-            {
-                load_service(*it, p.second);
-            }
-        }
-
-        for ( auto& p : services )
-            load_service(p, {});
-    }
+    void initialize(const Settings& settings);
 
     /**
      * \brief Starts all services
      */
-    void start()
-    {
-        for ( auto& p : services )
-            if ( p.second.loaded )
-            {
-                try
-                {
-                    p.second.service->start();
-                    p.second.started = true;
-                }
-                catch (const melanobot::MelanobotError& err)
-                {
-                    ErrorLog("sys") << "Failed starting service " << p.first
-                        << ": " << err.what();
-                }
-            }
-    }
+    void start();
 
     /**
      * \brief Stops all services
      */
-    void stop()
-    {
-        for ( auto& p : services )
-            if ( p.second.started )
-            {
-                p.second.service->stop();
-                p.second.started = false;
-            }
-    }
+    void stop();
 
     /**
      * \brief Get service by name
      */
-    AsyncService* service(const std::string& name) const
-    {
-        auto it = services.find(name);
-        if ( it == services.end() )
-        {
-            ErrorLog("sys") << "Trying to access unknown service: " << name;
-            return nullptr;
-        }
-
-        if ( !it->second.loaded )
-        {
-            ErrorLog("sys") << "Trying to access an unloaded service: " << name;
-            return nullptr;
-        }
-
-        return it->second.service;
-    }
+    AsyncService* service(const std::string& name) const;
 
 private:
     /**
@@ -162,7 +100,11 @@ private:
      */
     struct Entry
     {
-        AsyncService* service = nullptr;
+        explicit Entry(AsyncService* service)
+            : service(service)
+        {}
+
+        AsyncService* service;
         bool loaded = false;
         bool started = false;
     };
@@ -177,19 +119,7 @@ private:
         stop();
     }
 
-    void load_service(EntryMap::value_type& entry, const Settings& settings)
-    {
-        Log("sys",'!') << "Loading service: " << entry.first;
-        try
-        {
-            entry.second.service->initialize(settings);
-            entry.second.loaded = true;
-        }
-        catch ( const melanobot::MelanobotError& err )
-        {
-            ErrorLog("sys") << "Service " << entry.first << " failed: " << err.what();
-        }
-    }
+    void load_service(EntryMap::value_type& entry, const Settings& settings);
 
     EntryMap services;
 };

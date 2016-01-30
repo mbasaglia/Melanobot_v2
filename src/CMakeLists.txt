@@ -28,6 +28,7 @@ melanolib/time/time_string.cpp
 message/input_message.cpp
 module/load_module.cpp
 network/connection.cpp
+network/async_service.cpp
 settings.cpp
 string/color.cpp
 string/encoding.cpp
