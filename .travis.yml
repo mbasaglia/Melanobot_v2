@@ -1,0 +1,37 @@
+language:
+  - cpp
+
+os:
+  - linux
+
+compiler:
+  - clang
+  - gcc
+
+env:
+  - BUILD_TYPE=Compile
+  - BUILD_TYPE=Test
+
+before_install:
+  - sudo pip install codecov
+  - sudo apt-get update -qq
+  - sudo apt-get -qq install
+    cmake
+    g++-5
+    clang-3.7
+    libboost-all-dev
+    libcurl4-openssl-dev
+    libssl-dev
+
+script:
+  - mkdir -p build
+  - cd build
+  - test "$CXX" = "g++"     && export CXX="g++-5" CC="gcc-5"
+  - test "$CXX" = "clang++" && export CXX="clang++-3.7" CC="clang-3.7"
+  - cmake --version
+  - cmake -DMODULE_ALL=ON ..
+  - test "$BUILD_TYPE" = "Compile" && make
+  - test "$BUILD_TYPE" = "Test" && make test_all && make coverage
+
+after_success:
+  - test "$BUILD_TYPE" = "Test" && codecov
