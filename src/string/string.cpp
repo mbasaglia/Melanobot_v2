@@ -56,7 +56,10 @@ std::vector<std::string> QFont::qfont_table = {
 std::string FormattedString::encode(Formatter* formatter) const
 {
     if ( !formatter )
-        CRITICAL_ERROR("Trying to encode a string without formatter");
+    {
+        ErrorLog("sys") << "Trying to encode a string without formatter";
+        return {};
+    }
     return encode(*formatter);
 }
 

@@ -54,37 +54,46 @@ void Melanobot::run()
         throw melanobot::ConfigurationError("Creating a bot with no connections");
     }
     
-    Log("sys", '!') << "Initializing handlers";
-    for ( const auto& handler : handlers )
-        handler->initialize();
-    
-    for ( auto &conn : connections )
+    try
     {
-        Log("sys", '!') << "Connecting " << color::magenta << conn.first;
-        conn.second->start();
-    }
+        Log("sys", '!') << "Initializing handlers";
+        for ( const auto& handler : handlers )
+            handler->initialize();
 
-    while ( messages.active() )
-    {
-        network::Message msg;
-        messages.pop(msg);
-        if ( !messages.active() )
-            break;
-
-        if ( !msg.source )
+        for ( auto &conn : connections )
         {
-            ErrorLog("sys") << "Received a message without source";
-            continue;
+            Log("sys", '!') << "Connecting " << color::magenta << conn.first;
+            conn.second->start();
         }
-        if ( !msg.destination )
-            msg.destination = msg.source;
 
-        handle(msg);
+        while ( messages.active() )
+        {
+            network::Message msg;
+            messages.pop(msg);
+            if ( !messages.active() )
+                break;
+
+            if ( !msg.source )
+            {
+                ErrorLog("sys") << "Received a message without source";
+                continue;
+            }
+
+            if ( !msg.destination )
+                msg.destination = msg.source;
+
+            handle(msg);
+        }
+
+        Log("sys", '!') << "Finalizing handlers";
+        for ( const auto& handler : handlers )
+            handler->finalize();
     }
-
-    Log("sys", '!') << "Finalizing handlers";
-    for ( const auto& handler : handlers )
-        handler->finalize();
+    catch ( const melanobot::MelanobotError& err )
+    {
+        ErrorLog("sys") << err.what();
+        settings::global_settings.put("exit_code", 1);
+    }
 }
 
 void Melanobot::message(const network::Message& msg)

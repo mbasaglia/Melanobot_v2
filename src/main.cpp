@@ -86,12 +86,9 @@ void load_services(const Settings& settings)
  */
 void build_bot(const Settings& settings)
 {
-    // Load handlers
-    melanobot::ConfigFactory::instance().load_templates(settings.get_child("templates",{}));
-    melanobot::ConfigFactory::instance().build(
-        settings.get_child("bot",{}),
-        &melanobot::Melanobot::instance()
-    );
+    auto& factory = melanobot::ConfigFactory::instance();
+    factory.load_templates(settings.get_child("templates",{}));
+    factory.build(settings.get_child("bot",{}), &melanobot::Melanobot::instance());
 }
 
 int main(int argc, char **argv)
@@ -99,6 +96,7 @@ int main(int argc, char **argv)
     try
     {
         auto settings = initialize_global(argc, argv);
+
         load_services(settings);
         build_bot(settings);
 
@@ -108,7 +106,7 @@ int main(int argc, char **argv)
         /// \todo some way to reload the config and restart the bot
 
         // Finalize for a clean exit
-        int exit_code = settings::global_settings.get("exit_code",0);
+        int exit_code = settings::global_settings.get("exit_code", 0);
         Log("sys",'!',4) << "Exiting with status " << exit_code;
         return exit_code;
     }
@@ -116,14 +114,6 @@ int main(int argc, char **argv)
     {
         /// \todo policy on how to handle exceptions (quit/restart)
         ErrorLog ("sys","Unhandled Error") << exc.what();
-        return 1;
-    }
-    catch ( const melanobot::CriticalException& exc )
-    {
-        ErrorLog errlog("sys","Critical Error");
-        if ( settings::global_settings.get("debug",0) )
-            errlog << exc.file << ':' << exc.line << ": ";
-        errlog  << exc.what();
         return 1;
     }
     catch ( const std::exception& exc )

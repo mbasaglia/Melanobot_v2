@@ -398,7 +398,6 @@ public:
 
     /**
      * \brief Encode the string using the given formatter
-     * \throws CriticalException if the formatter is invalid
      */
     std::string encode(const std::string& format) const
     {
@@ -407,7 +406,6 @@ public:
 
     /**
      * \brief Encode the string using the given formatter
-     * \throws CriticalException if the formatter is invalid
      */
     std::string encode(Formatter* formatter) const;
 

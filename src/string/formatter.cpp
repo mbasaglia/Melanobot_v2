@@ -38,9 +38,7 @@ Formatter* Formatter::Registry::formatter(const std::string& name)
     if ( it == formatters.end() )
     {
         ErrorLog("sys") << "Invalid formatter: " << name;
-        if ( default_formatter )
-            return default_formatter;
-        CRITICAL_ERROR("Trying to access an invalid formatter");
+        return default_formatter;
     }
     return it->second;
 }

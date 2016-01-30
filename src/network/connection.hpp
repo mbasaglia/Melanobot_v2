@@ -302,7 +302,7 @@ public:
 
     /**
      * \brief Registers a connection type
-     * \throws CriticalException If a protocol is defined twice
+     * \throws ConfigurationError If a protocol is defined twice
      */
     void register_connection ( const std::string& protocol_name,
                                const Contructor& function );

@@ -76,7 +76,6 @@ namespace settings
 
     /**
      * \brief Load settings from file
-     * \throw CriticalException If \c file_name isn't valid
      */
     Settings load( const std::string& file_name, FileFormat format = FileFormat::AUTO );
 

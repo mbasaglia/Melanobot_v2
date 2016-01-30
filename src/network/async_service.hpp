@@ -67,9 +67,6 @@ public:
 class ServiceRegistry : public melanolib::Singleton<ServiceRegistry>
 {
 public:
-    ~ServiceRegistry()
-    {
-    }
 
     /**
      * \brief Registers a service object
@@ -96,18 +93,12 @@ public:
             }
             else
             {
-                Log("sys",'!') << "Loading service: " << p.first;
-                it->second.service->initialize(p.second);
-                it->second.loaded = true;
+                load_service(*it, p.second);
             }
         }
 
         for ( auto& p : services )
-            if ( !p.second.loaded )
-            {
-                p.second.service->initialize({});
-                p.second.loaded = true;
-            }
+            load_service(p, {});
     }
 
     /**
@@ -115,9 +106,20 @@ public:
      */
     void start()
     {
-        for ( const auto& p : services )
+        for ( auto& p : services )
             if ( p.second.loaded )
-                p.second.service->start();
+            {
+                try
+                {
+                    p.second.service->start();
+                    p.second.started = true;
+                }
+                catch (const melanobot::MelanobotError& err)
+                {
+                    ErrorLog("sys") << "Failed starting service " << p.first
+                        << ": " << err.what();
+                }
+            }
     }
 
     /**
@@ -125,9 +127,12 @@ public:
      */
     void stop()
     {
-        for ( const auto& p : services )
-            if ( p.second.loaded )
+        for ( auto& p : services )
+            if ( p.second.started )
+            {
                 p.second.service->stop();
+                p.second.started = false;
+            }
     }
 
     /**
@@ -157,14 +162,36 @@ private:
      */
     struct Entry
     {
-        AsyncService* service;
-        bool loaded;
+        AsyncService* service = nullptr;
+        bool loaded = false;
+        bool started = false;
     };
 
-    std::unordered_map<std::string, Entry> services;
+    using EntryMap = std::unordered_map<std::string, Entry>;
 
     ServiceRegistry(){}
     friend ParentSingleton;
+    
+    ~ServiceRegistry()
+    {
+        stop();
+    }
+
+    void load_service(EntryMap::value_type& entry, const Settings& settings)
+    {
+        Log("sys",'!') << "Loading service: " << entry.first;
+        try
+        {
+            entry.second.service->initialize(settings);
+            entry.second.loaded = true;
+        }
+        catch ( const melanobot::MelanobotError& err )
+        {
+            ErrorLog("sys") << "Service " << entry.first << " failed: " << err.what();
+        }
+    }
+
+    EntryMap services;
 };
 
 #endif // ASYNC_SERVICE_HPP

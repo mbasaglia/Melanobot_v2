@@ -59,7 +59,6 @@ public:
 
         /**
          * \brief Get a registered formatter
-         * \throws CriticalException If the formatter doesn't exist
          */
         Formatter* formatter(const std::string& name);
 
@@ -68,11 +67,12 @@ public:
          */
         void add_formatter(Formatter* instance);
 
-        std::unordered_map<std::string,Formatter*> formatters;
-        Formatter* default_formatter = nullptr;
     private:
         Registry();
         friend ParentSingleton;
+
+        std::unordered_map<std::string,Formatter*> formatters;
+        Formatter* default_formatter = nullptr;
     };
 
     Formatter() = default;

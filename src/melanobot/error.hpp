@@ -43,44 +43,5 @@ public:
     {}
 };
 
-/**
- * \brief Critical error exception
- *
- * Class representing an error that cannot be recovered from or that
- * doesn't allow any meaningful continuation of the program
- */
-struct CriticalException : public std::logic_error
-{
-    std::string file;     ///< Source file name originating the error
-    int         line;     ///< Source line number originating the error
-    std::string function; ///< Source function name originating the error
-
-    CriticalException( std::string file,
-                        int line,
-                        std::string function,
-                        std::string msg )
-        : std::logic_error(msg),
-        file(std::move(file)),
-        line(line),
-        function(std::move(function))
-    {}
-};
-
-/**
- * \brief Throws an exception with a standardized format
- * \throws CriticalException
- */
-inline void error [[noreturn]] (const std::string& file, int line,
-                         const std::string& function, const std::string& msg )
-{
-    throw CriticalException(file,line,function,msg);
-}
-/**
- * \brief Throws an exception pointing to the call line
- * \throws CriticalException
- */
-#define CRITICAL_ERROR(msg) \
-        ::melanobot::error(__FILE__,__LINE__,__func__,msg)
-
 } // namespace melanobot
 #endif // ERROR_HPP

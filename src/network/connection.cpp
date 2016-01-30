@@ -24,7 +24,7 @@ void ConnectionFactory::register_connection(const std::string& protocol_name,
                                             const Contructor& function)
 {
     if ( factory.count(protocol_name) )
-        CRITICAL_ERROR("Re-registering connection protocol "+protocol_name);
+        throw melanobot::ConfigurationError("Re-registering connection protocol "+protocol_name);
     factory[protocol_name] = function;
 }
 

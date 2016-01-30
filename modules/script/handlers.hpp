@@ -192,12 +192,9 @@ private:
         if ( descriptor.empty() )
             throw melanobot::ConfigurationError("Id file not found: "+relfile);
 
-        Settings description;
-        try {
-            description = settings::load(descriptor,settings::FileFormat::JSON);
-        } catch ( const melanobot::CriticalException& exc ) {
-            throw melanobot::ConfigurationError(exc.what());
-        }
+        Settings description = settings::load(descriptor, settings::FileFormat::JSON);
+        if ( description.empty() )
+            throw melanobot::ConfigurationError("Invalid configuration file: " + descriptor);
 
         settings::merge(description, input, true);
         return description;

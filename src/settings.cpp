@@ -175,7 +175,10 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
     boost::system::error_code err;
     auto status = boost::filesystem::status(file_name,err);
     if ( status.type() != boost::filesystem::regular_file || err )
-        CRITICAL_ERROR("Cannot load config file: "+file_name);
+    {
+        ErrorLog("sys") << "Cannot load config file: " << file_name;
+        return {};
+    }
 
     Settings ptree;
     switch ( format )
@@ -196,7 +199,8 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
             boost::property_tree::xml_parser::read_xml(file_name,ptree);
             break;
         case FileFormat::AUTO:
-            CRITICAL_ERROR("Cannot detect file format for "+file_name);
+            ErrorLog("sys") << "Cannot detect file format for " << file_name;
+            return {};
     }
     return ptree;
 }
