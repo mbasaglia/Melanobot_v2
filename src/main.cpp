@@ -22,10 +22,13 @@
 #include "network/async_service.hpp"
 #include "module/load_module.hpp"
 #include "melanobot/storage.hpp"
+#include "melanobot/config_factory.hpp"
 
-int main(int argc, char **argv)
+/**
+ * \brief Initializes static components
+ */
+void initialize_static()
 {
-    // Initialize static components
     Logger::instance().register_direction('<',color::dark_green);
     Logger::instance().register_direction('>',color::dark_yellow);
     Logger::instance().register_direction('!',color::dark_blue);
@@ -33,36 +36,74 @@ int main(int argc, char **argv)
     Logger::instance().register_log_type("sys",color::dark_red);
 
     string::Formatter::registry(); // ensures the default formatters get loaded
+}
 
-    try {
-        // Load settings and environment
-        Settings settings = settings::initialize(argc, argv);
+/**
+ * \brief Initializes global components
+ */
+Settings initialize_global(int argc, char **argv)
+{
+    initialize_static();
 
+    // Load settings and environment
+    Settings settings = settings::initialize(argc, argv);
 
-        if ( settings.empty() )
-            throw melanobot::ConfigurationError("Missing configuration");
+    if ( settings.empty() )
+        throw melanobot::ConfigurationError("Missing configuration");
 
-        // Log configuration
-        Logger::instance().load_settings(settings.get_child("log",{}));
+    Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
 
-        // Load module
-        auto lib_path = settings::global_settings.get("path.library", "");
+    // Log configuration
+    Logger::instance().load_settings(settings.get_child("log",{}));
 
-        auto modules = module::initialize_modules<const Settings&>(
-            melanolib::string::char_split(lib_path, ':'),
-            settings
-        );
+    // Load modules
+    auto lib_path = settings::global_settings.get("path.library", "");
 
-        // Initialize storage
-        melanobot::StorageFactory::instance().initilize_global_storage(
-            settings.get_child("storage",{})
-        );
+    auto modules = module::initialize_modules<const Settings&>(
+        melanolib::string::char_split(lib_path, ':'),
+        settings
+    );
 
-        // Load and run all services and the bot
-        Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
-        ServiceRegistry::instance().initialize(settings.get_child("services",{}));
-        ServiceRegistry::instance().start();
-        melanobot::Melanobot::load(settings).run();
+    // Initialize storage
+    melanobot::StorageFactory::instance().initilize_global_storage(
+        settings.get_child("storage",{})
+    );
+
+    return settings;
+}
+
+/**
+ * \brief Loads and starts all services
+ */
+void load_services(const Settings& settings)
+{
+    ServiceRegistry::instance().initialize(settings.get_child("services",{}));
+    ServiceRegistry::instance().start();
+}
+
+/**
+ * \brief Builds all the behaviour objects
+ */
+void build_bot(const Settings& settings)
+{
+    // Load handlers
+    melanobot::ConfigFactory::instance().load_templates(settings.get_child("templates",{}));
+    melanobot::ConfigFactory::instance().build(
+        settings.get_child("bot",{}),
+        &melanobot::Melanobot::instance()
+    );
+}
+
+int main(int argc, char **argv)
+{
+    try
+    {
+        auto settings = initialize_global(argc, argv);
+        load_services(settings);
+        build_bot(settings);
+
+        melanobot::Melanobot::instance().run();
+
         ServiceRegistry::instance().stop();
         /// \todo some way to reload the config and restart the bot
 
@@ -70,23 +111,29 @@ int main(int argc, char **argv)
         int exit_code = settings::global_settings.get("exit_code",0);
         Log("sys",'!',4) << "Exiting with status " << exit_code;
         return exit_code;
-
-    } catch ( const melanobot::CriticalException& exc ) {
+    }
+    catch ( const melanobot::MelanobotError& exc )
+    {
         /// \todo policy on how to handle exceptions (quit/restart)
-        ErrorLog errlog("sys","Critical Error");
-        if ( settings::global_settings.get("debug",0) )
-            errlog << exc.file << ':' << exc.line << ": in " << exc.function << "(): ";
-        errlog  << exc.what();
+        ErrorLog ("sys","Unhandled Error") << exc.what();
         return 1;
-    } catch ( const melanobot::LocatableException& exc ) {
+    }
+    catch ( const melanobot::CriticalException& exc )
+    {
         ErrorLog errlog("sys","Critical Error");
         if ( settings::global_settings.get("debug",0) )
             errlog << exc.file << ':' << exc.line << ": ";
         errlog  << exc.what();
         return 1;
-    } catch ( const std::exception& exc ) {
+    }
+    catch ( const std::exception& exc )
+    {
         ErrorLog ("sys","Critical Error") << exc.what();
         return 1;
     }
-
+    catch ( ... )
+    {
+        ErrorLog ("sys","Unexpected Error");
+        return 1;
+    }
 }

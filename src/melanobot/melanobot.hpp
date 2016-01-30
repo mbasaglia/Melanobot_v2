@@ -41,11 +41,6 @@ public:
     ~Melanobot();
 
     /**
-     * \brief Loads the bot settings
-     */
-    static Melanobot& load(const Settings& settings);
-
-    /**
      * \brief Runs the bot
      * \thread main \lock messages(not continuous)
      */
@@ -87,7 +82,7 @@ private:
     bool handle(network::Message& msg) override;
 
     /// \todo allow dynamic connection/handler creation (requires locking)
-    std::unordered_map<std::string,std::unique_ptr<network::Connection>> connections;
+    std::unordered_map<std::string, std::unique_ptr<network::Connection>> connections;
     std::vector<std::unique_ptr<melanobot::Handler>> handlers;
 
     /// Message Queue

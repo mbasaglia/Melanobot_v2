@@ -36,9 +36,16 @@
 /**
  * \brief Error encountered when parsing JSON
  */
-struct JsonError : public melanobot::LocatableException
+struct JsonError : public std::runtime_error
 {
-    using LocatableException::LocatableException;
+    std::string file;     ///< file name originating the error
+    int         line;     ///< line number originating the error
+
+    JsonError(std::string file, int line, std::string msg)
+        : std::runtime_error(msg),
+        file(std::move(file)),
+        line(line)
+    {}
 };
 
 /**

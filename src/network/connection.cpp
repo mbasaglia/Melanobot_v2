@@ -29,9 +29,11 @@ void ConnectionFactory::register_connection(const std::string& protocol_name,
 }
 
 std::unique_ptr<Connection> ConnectionFactory::create(
-    const Settings& settings, const std::string& name)
+    const Settings& settings,
+    const std::string& name)
 {
-    try {
+    try
+    {
         std::string protocol = settings.get("protocol",std::string());
         auto it = factory.find(protocol);
         if ( it != factory.end() )
@@ -46,15 +48,9 @@ std::unique_ptr<Connection> ConnectionFactory::create(
             return it->second(settings, name);
         }
         ErrorLog ("sys","Connection Error") << ": Unknown connection protocol "+protocol;
-    } catch ( const melanobot::CriticalException& ) {
-        throw;
     }
-    catch ( const melanobot::LocatableException& exc ) {
-        ErrorLog errlog("sys","Connection Error");
-        if ( settings::global_settings.get("debug",0) )
-            errlog << exc.file << ':' << exc.line << ": ";
-        errlog  << exc.what();
-    } catch ( const std::exception& exc ) {
+    catch ( const melanobot::MelanobotError& exc )
+    {
         ErrorLog ("sys","Connection Error") << exc.what();
     }
 

@@ -23,26 +23,6 @@
 
 namespace melanobot {
 
-Melanobot& Melanobot::load(const Settings& settings)
-{
-    static bool loaded = false;
-    if ( loaded )
-        CRITICAL_ERROR("Melanobot settings loaded twice");
-    loaded = true;
-
-    /// \todo All this could be moved to main()
-    melanobot::ConfigFactory::instance().load_templates(settings.get_child("templates",{}));
-    melanobot::ConfigFactory::instance().build(settings.get_child("bot",{}), &instance());
-
-    if ( instance().connections.empty() )
-    {
-        settings::global_settings.put("exit_code",1);
-        CRITICAL_ERROR("Creating a bot with no connections");
-    }
-
-    return instance();
-}
-
 Melanobot::Melanobot() : MessageConsumer(nullptr)
 {
 }
@@ -69,7 +49,10 @@ void Melanobot::stop()
 void Melanobot::run()
 {
     if ( connections.empty() )
-        return;
+    {
+        settings::global_settings.put("exit_code",1);
+        throw melanobot::ConfigurationError("Creating a bot with no connections");
+    }
     
     Log("sys", '!') << "Initializing handlers";
     for ( const auto& handler : handlers )
