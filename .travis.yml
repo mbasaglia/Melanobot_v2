@@ -14,7 +14,7 @@ env:
 
 before_install:
   - sudo pip install codecov
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo -E apt-add-repository -y "deb http://llvm.org/apt/precise/llvm-toolchain-precise main"
   - sudo add-apt-repository ppa:llvm-toolchain-precise -y
   - sudo apt-get update -qq
   - sudo apt-get -qq install
@@ -38,3 +38,8 @@ script:
 
 after_success:
   - test "$BUILD_TYPE" = "Test" && codecov
+
+notifications:
+  irc:
+    - "irc.quakenet.org#eac-admin"
+    - "irc.quakenet.org#melanosuchus"
