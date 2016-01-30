@@ -76,7 +76,7 @@ public:
     {
         if ( ServiceRegistry().instance().services.count(name) )
             ErrorLog("sys") << "Overwriting service " << name;
-        ServiceRegistry().instance().services[name] = {object, false};
+        ServiceRegistry().instance().services[name] = {object, false, false};
     }
 
     /**

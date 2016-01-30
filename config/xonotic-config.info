@@ -86,38 +86,28 @@ bot
 
     ; Allows to control the bot from standard input
     ; Requires the Posix module to have been enabled explicitly
-    Template
-    {
-        template        Stdin
-    }
+    Stdin
 
     ; This is here to be used with melanobot.sh
     ; Requires the Posix module to have been enabled explicitly
     Pipe
-    {
-        type            Template
-        template        Pipe
-    }
 
     ; Loads the basic IRC functionality
-    Template
+    IrcCore
     {
-        template        IrcCore
         irc             irc_quakenet
     }
 
 ;     ; Q AUTH information
-;     Template
+;     IrcQuakeNet
 ;     {
-;         template        IrcQuakeNet
 ;         irc             irc_quakenet
 ;         nick            MyAwesomeBot          ; Can be omitted if the same as the bot's nick
 ;         password        "MyAwesomePassword"
 ;     }
 ;     ; NickServ Identify information
-;     Template
+;     IrcNickServ
 ;     {
-;         template        IrcNickServ
 ;         irc             irc_quakenet
 ;         nick            MyAwesomeBot          ; Can be omitted if the same as the bot's nick
 ;         password        "MyAwesomePassword"
@@ -126,9 +116,8 @@ bot
 ;                ============== Xonotic Stuff ==============
 
     ; Simple bridge, connects a single server to a single channel
-    Template
+    Xonotic
     {
-        template        Xonotic
         name            xon_localhost
         server          localhost:26000
         rcon_password   "MyPassword"
@@ -155,17 +144,15 @@ bot
         channel         #channel2
         ; say_as          modpack ; Uncomment if using the SMB modpack
 
-        Template
+        Xonotic
         {
-            template    Xonotic
             name        xon_ctf ; Note: names must be unique
             server      localhost:26001
             ; stats           http://stats.xonotic.org/server/(your server id)
             prefix      ctf
         }
-        Template
+        Xonotic
         {
-            template    Xonotic
             name        xon_duel
             server      localhost:26002
             ; stats           http://stats.xonotic.org/server/(your server id)

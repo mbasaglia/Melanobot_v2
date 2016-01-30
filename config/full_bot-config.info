@@ -99,23 +99,15 @@ bot
 
     ; Allows to control the bot from standard input
     ; Requires the Posix module to have been enabled explicitly
-    Template
-    {
-        template        Stdin
-    }
+    Stdin
 
     ; This is here to be used with melanobot.sh
     ; Requires the Posix module to have been enabled explicitly
     Pipe
-    {
-        type            Template
-        template        Pipe
-    }
 
     ; Loads the basic IRC functionality
-    Template
+    IrcCore
     {
-        template        IrcCore
         irc             irc_quakenet
     }
 
@@ -137,9 +129,8 @@ bot
 ;     }
 
     ; Creates a bridge between IRC and a Xonotic server
-    Template
+    Xonotic
     {
-        template        Xonotic
         name            xon_localhost
         server          localhost:26000
         rcon_password   "MyPassword"

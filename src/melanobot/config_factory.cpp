@@ -27,7 +27,16 @@ ConfigFactory::ConfigFactory()
     register_item("Template",
         [this](const std::string& handler_name, const Settings& settings, MessageConsumer* parent)
         {
-            return build_template(handler_name, settings, parent);
+            auto type = settings.get_optional<std::string>("template");
+            if ( type )
+            {
+                auto source = templates.get_child_optional(*type);
+                if ( source )
+                    return build_template(handler_name, settings, parent, *source);
+            }
+            ErrorLog("sys") << "Error creating " << handler_name
+                    << ": missing template reference";
+            return false;
         }
     );
 
@@ -43,27 +52,20 @@ ConfigFactory::ConfigFactory()
 bool ConfigFactory::build_template(
     const std::string&  handler_name,
     const Settings&     settings,
-    MessageConsumer*    parent) const
+    MessageConsumer*    parent,
+    Settings            template_source) const
 {
-    auto type = settings.get_optional<std::string>("template");
-    if ( !type )
-    {
-        ErrorLog("sys") << "Error creating " << handler_name
-                << ": missing template reference";
-        return false;
-    }
-    Settings source = templates.get_child(*type, {});
     Properties arguments;
-    for ( const auto& ch : source )
+    for ( const auto& ch : template_source )
         if ( melanolib::string::starts_with(ch.first,"@") )
         {
             arguments[ch.first] = settings.get(ch.first.substr(1),ch.second.data());
         }
-    ::settings::recurse(source,[arguments](Settings& node){
-        node.data() = melanolib::string::replace(node.data(),arguments);
+    ::settings::recurse(template_source, [arguments](Settings& node){
+        node.data() = melanolib::string::replace(node.data(), arguments);
     });
     /// \todo recursion check
-    return build(handler_name,source,parent);
+    return build(handler_name, template_source, parent);
 }
 
 bool ConfigFactory::build(
@@ -119,6 +121,18 @@ void ConfigFactory::load_templates(const Settings& settings)
 {
     /// \todo It could register templates by name
     templates = settings;
+
+
+    for ( const auto &pair : templates )
+    {
+
+        register_item(pair.first,
+            [this, &pair](const std::string& handler_name, const Settings& settings, MessageConsumer* parent)
+            {
+                return build_template(handler_name, settings, parent, pair.second);
+            }
+        );
+    }
 }
 
 } // namespace melanobot

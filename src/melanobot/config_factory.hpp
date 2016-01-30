@@ -60,16 +60,6 @@ public:
     void load_templates(const Settings& settings);
 
     /**
-     * \brief Builds a handler from a template
-     *
-     * Inserts the created handler into \c parent
-     */
-    bool build_template(
-        const std::string&      handler_name,
-        const Settings&         settings,
-        MessageConsumer*        parent) const;
-
-    /**
      * \brief Registers a config item
      */
     void register_item(const std::string& name, const CreateFunction& func);
@@ -78,6 +68,17 @@ private:
 
     ConfigFactory();
     friend ParentSingleton;
+
+    /**
+     * \brief Builds a handler from a template
+     *
+     * Inserts the created handler into \c parent
+     */
+    bool build_template(
+        const std::string&  handler_name,
+        const Settings&     settings,
+        MessageConsumer*    parent,
+        Settings            template_source) const;
 
     std::unordered_map<std::string, CreateFunction> factory;
 
