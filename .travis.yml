@@ -50,12 +50,6 @@ script:
   - if [ "$BUILD_TYPE" = "Compile" ]; then make; fi
   - if [ "$BUILD_TYPE" = "Test" ]; then make test_all && cd test && ctest -V && lcov -c -d "$PWD" -b .. -o "coverage.info";  fi
 
-TRACEFILE "${CMAKE_BINARY_DIR}/test/coverage.info")
-add_custom_target(coverage
-    COMMAND cd "${CMAKE_BINARY_DIR}/test"
-    COMMAND ctest -V
-    COMMAND lcov -c -d "${CMAKE_BINARY_DIR}/test" -b "${CMAKE_SOURCE_DIR}" -o ${TRACEFILE} --no-external
-
 after_success:
   - if [ "$BUILD_TYPE" = "Test" ]; then codecov; fi
 
