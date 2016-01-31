@@ -28,39 +28,50 @@ namespace github {
 class Repository
 {
 public:
-    enum EventType
-    {
-        NoEvent = 0x00,
-        Events  = 0x01,
-        Issues  = 0x02,
-    };
 
     using ListenerFunctor = std::function<void(const PropertyTree&)>;
+    using PollTime = melanolib::time::DateTime::Time;
 
 private:
     struct RepoListener
     {
-        EventType event_type;
+        std::string event_type;
         ListenerFunctor callback;
     };
 
 public:
     Repository(std::string name);
 
+    Repository(Repository&& repo)
+        : name_(std::move(repo.name_)),
+          etag_(std::move(repo.etag_)),
+          listeners_(std::move(repo.listeners_))
+    {}
+
+    Repository& operator=(Repository&& repo)
+    {
+        name_ = std::move(repo.name_);
+        etag_ = std::move(repo.etag_);
+        listeners_ = std::move(repo.listeners_);
+        return *this;
+    }
+
+
     const std::string& name() const;
 
-    void add_listener(EventType event_type, const ListenerFunctor& listener);
+    void add_listener(const std::string& event_type, const ListenerFunctor& listener);
 
     void poll_events(const std::string& api_url);
 
 private:
-    void dispatch_event(EventType event_type, const web::Response& response) const;
+    void dispatch_events(const web::Response& response);
 
     std::string name_;
-    int event_types_ = NoEvent;
     std::string etag_;
-    melanolib::time::DateTime last_poll_;
     std::vector<RepoListener> listeners_;
+    PollTime last_poll_;
+    PollTime current_poll_;
+    std::mutex mutex;
 };
 
 

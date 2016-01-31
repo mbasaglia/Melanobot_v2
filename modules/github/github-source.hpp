@@ -21,6 +21,7 @@
 
 #include "github-listeners.hpp"
 #include "network/async_service.hpp"
+#include "repository.hpp"
 
 namespace github {
 

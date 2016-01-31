@@ -30,11 +30,10 @@ Repository::Repository(std::string name)
 {
     if ( melanobot::has_storage() )
     {
-        auto poll_str = melanobot::storage().maybe_get_value("github."+name_+".last_poll", "");
-        if ( !poll_str.empty() )
-            last_poll_ = melanolib::time::parse_time(poll_str);
-
         etag_ = melanobot::storage().maybe_get_value("github."+name_+".etag", "");
+        auto last_poll = melanobot::storage().maybe_get_value("github."+name_+".last_poll", "");
+        if ( !last_poll.empty() )
+            last_poll_ = melanolib::time::parse_time(last_poll).time_point();
     }
 }
 
@@ -43,56 +42,44 @@ const std::string& Repository::name() const
     return name_;
 }
 
-void Repository::add_listener(EventType event_type, const ListenerFunctor& listener)
+void Repository::add_listener(const std::string& event_type, const ListenerFunctor& listener)
 {
-    if ( !event_type )
+    if ( event_type.empty() )
         return;
 
-    event_types_ |= event_type;
     listeners_.push_back({event_type, listener});
 }
 
 void Repository::poll_events(const std::string& api_url)
 {
     std::string url = api_url + "/repos/" + name_;
-    if ( event_types_ & Issues )
-    {
-        auto since = melanolib::time::format(last_poll_, "Y-m-d\\TH:i:s\\z");
-        last_poll_ = melanolib::time::DateTime();
-        web::HttpService::instance().async_query(
-            web::Request().get(url+"/issues").set_param("since", since),
-            [this](const web::Response& response) {
-                dispatch_event(Issues, response);
-            }
-        );
 
-        if ( melanobot::has_storage() )
-        {
-            melanobot::storage().put(
-                "github."+name_+".last_poll",
-                melanolib::time::format_char(last_poll_, 'c')
-            );
-        }
+    auto request = web::Request().get(url+"/events");
+    {
+        Lock lock(mutex);
+        if ( !etag_.empty() )
+            request.set_header("If-None-Match", etag_);
+        current_poll_ = PollTime::clock::now();
     }
 
-    if ( event_types_ & Events )
-    {
-        web::HttpService::instance().async_query(
-            web::Request().get(url+"/events").set_header("ETag", etag_),
-            [this](const web::Response& response) {
-                auto it = response.headers.find("ETag");
-                if ( it != response.headers.end() )
-                {
-                    etag_ = it->second;
+    web::HttpService::instance().async_query(
+        request,
+        [this](const web::Response& response) {
+            /// \todo Handle X-Poll-Interval
+            auto it = response.headers.find("ETag");
+            if ( it != response.headers.end() )
+            {
+                Lock lock(mutex);
+                etag_ = it->second;
+                if ( melanobot::has_storage() )
                     melanobot::storage().put("github."+name_+".etag", etag_);
-                }
-                dispatch_event(Events, response);
             }
-        );
-    }
+            dispatch_events(response);
+        }
+    );
 }
 
-void Repository::dispatch_event(EventType event_type, const web::Response& response) const
+void Repository::dispatch_events(const web::Response& response)
 {
     if ( !response.success() )
         return;
@@ -103,10 +90,32 @@ void Repository::dispatch_event(EventType event_type, const web::Response& respo
     if ( parser.error() )
         return;
 
+    melanolib::time::DateTime::Time poll_time;
+    {
+        Lock lock(mutex);
+        poll_time = last_poll_;
+        last_poll_ = current_poll_;
+        if ( melanobot::has_storage() )
+            melanobot::storage().put(
+                "github."+name_+".last_poll",
+                melanolib::time::format_char(last_poll_, 'c')
+            );
+    }
+
+    std::map<std::string, PropertyTree> events;
+    for ( const auto& event : json )
+    {
+        auto type = event.second.get("type", "");
+        auto time = melanolib::time::parse_time(event.second.get("created_at", "")).time_point();
+        if ( !type.empty() && time > poll_time )
+            events[type].add_child("event", std::move(event.second));
+    }
+
     for ( const auto& listener : listeners_ )
     {
-        if ( listener.event_type == event_type )
-            listener.callback(json);
+        auto it = events.find(listener.event_type);
+        if ( it != events.end() )
+            listener.callback(it->second);
     }
 }
 

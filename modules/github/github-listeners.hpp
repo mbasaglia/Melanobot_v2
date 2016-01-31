@@ -19,7 +19,6 @@
 #ifndef MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
 #define MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
 
-#include "repository.hpp"
 #include "melanobot/melanobot.hpp"
 
 namespace github {
@@ -69,7 +68,7 @@ public:
 
     virtual ~GitHubEventListener() {}
 
-    virtual Repository::EventType event_type() const = 0;
+    virtual std::string event_type() const = 0;
 
     virtual void handle_event(const PropertyTree& event) = 0;
 
@@ -142,9 +141,9 @@ public:
         limit = settings.get("limit", limit);
     }
 
-    Repository::EventType event_type() const override
+    std::string event_type() const override
     {
-        return Repository::Issues;
+        return "IssuesEvent";
     }
 
     void handle_event(const PropertyTree& event) override
@@ -154,13 +153,12 @@ public:
         {
             if ( ++i >= limit )
                 break;
-            if ( issue.second.get("state", "") == "open" )
-                send_message(reply_template, issue.second);
+            send_message(reply_template, issue.second);
         }
     }
 
 private:
-    std::string reply_template = "#blue#%user.login#-# opened issue #-b###%number#-#: #-i#%title#-# %html_url";
+    std::string reply_template = "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# %payload.action issue #-b###%payload.issue.number#-#: #-i#%payload.issue.title#-# %payload.issue.html_url";
     int limit = 5;
 };
 
