@@ -28,6 +28,7 @@
 #include "melanolib/c++-compat.hpp"
 #include "melanobot/storage.hpp"
 #include "melanobot/config_factory.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace module {
 
@@ -146,12 +147,12 @@ struct Melanomodule
  */
 template<class ConnectionT>
     void register_connection(const std::string& name)
-    {
-        static_assert(std::is_base_of<network::Connection,ConnectionT>::value,
-                    "Expected network::Connection class");
-        network::ConnectionFactory::instance()
-            .register_connection(name, &ConnectionT::create);
-    }
+{
+    static_assert(std::is_base_of<network::Connection,ConnectionT>::value,
+                "Expected network::Connection class");
+    network::ConnectionFactory::instance()
+        .register_connection(name, &ConnectionT::create);
+}
 
 /**
  * \brief Registers a log type
@@ -170,29 +171,50 @@ inline void register_log_type(const std::string& name, color::Color12 color)
  */
 template <class FormatterT, class... Args>
     void register_formatter(Args&&... args)
-    {
-        static_assert(std::is_base_of<string::Formatter,FormatterT>::value,
-                        "Expected string::Formatter type");
-        string::Formatter::registry()
-            .add_formatter(new FormatterT(std::forward<Args>(args)...));
-    }
-
+{
+    static_assert(std::is_base_of<string::Formatter,FormatterT>::value,
+                    "Expected string::Formatter type");
+    string::Formatter::registry()
+        .add_formatter(new FormatterT(std::forward<Args>(args)...));
+}
 
 /**
- * \brief Registers a service to ServiceRegistry
+ * \brief Registers a global service to ServiceRegistry
+ * \note This is intended to be used for singleton service classes
  * \tparam ServiceT Name of the service class (must be a singleton)
  * \param name      Service identifier
  */
 template<class ServiceT>
     void register_service(const std::string& name)
-    {
-        static_assert(std::is_base_of<AsyncService,ServiceT>::value,
-                        "Expected AsyncService type");
-        ServiceRegistry::instance()
-            .register_service(name,&ServiceT::instance());
-    }
+{
+    static_assert(std::is_base_of<AsyncService,ServiceT>::value,
+                    "Expected AsyncService type");
+    ServiceRegistry::instance()
+        .register_service(name,&ServiceT::instance());
+}
 
+/**
+ * \brief Registers an instantiable service
+ * \note This is intended to be used for service classes for which you can create objects
+ * \tparam ServiceT Name of the service class
+ * \param name      Service identifier
+ */
+template<class ServiceT>
+    void register_instantiable_service(const std::string& name)
+{
+    static_assert(std::is_base_of<AsyncService, ServiceT>::value,
+                    "Expected AsyncService type");
 
+    melanobot::ConfigFactory::instance().register_item(name,
+        [](const std::string&, const Settings& settings, MessageConsumer*)
+        {
+            auto service = melanolib::New<ServiceT>();
+            service->initialize(settings);
+            melanobot::Melanobot::instance().add_service(std::move(service));
+            return true;
+        }
+    );
+}
 
 /**
  * \brief Registers a Handler to the ConfigFactory

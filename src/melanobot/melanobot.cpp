@@ -44,28 +44,39 @@ void Melanobot::stop()
         Log("sys", '!') << "Disconnecting " << color::magenta << conn.first;
         conn.second->stop();
     }
+
+    for ( const auto& service : services )
+        service->stop();
 }
 
-void Melanobot::run()
+void Melanobot::start()
 {
     if ( connections.empty() )
     {
         settings::global_settings.put("exit_code",1);
         throw melanobot::ConfigurationError("Creating a bot with no connections");
     }
+
+    Log("sys", '!') << "Initializing handlers";
+    for ( const auto& handler : handlers )
+        handler->initialize();
+
+    for ( auto &conn : connections )
+    {
+        Log("sys", '!') << "Connecting " << color::magenta << conn.first;
+        conn.second->start();
+    }
+
+    for ( const auto& service : services )
+        service->start();
+
+}
+
+void Melanobot::run()
+{
     
     try
     {
-        Log("sys", '!') << "Initializing handlers";
-        for ( const auto& handler : handlers )
-            handler->initialize();
-
-        for ( auto &conn : connections )
-        {
-            Log("sys", '!') << "Connecting " << color::magenta << conn.first;
-            conn.second->start();
-        }
-
         while ( messages.active() )
         {
             network::Message msg;
@@ -164,6 +175,14 @@ bool Melanobot::handle ( network::Message& msg )
         if ( handler->handle(msg) )
             return true;
     return false;
+}
+
+void Melanobot::add_service(std::unique_ptr<AsyncService> service)
+{
+    /// \todo Right now the add_*() methods are only called on initialization
+    ///       but it would be wiser to lock to make them callable
+    ///       from other threads
+    services.emplace_back(std::move(service));
 }
 
 } // namespace melanobot

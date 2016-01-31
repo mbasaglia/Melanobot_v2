@@ -29,6 +29,7 @@
 #include "concurrency/container.hpp"
 #include "settings.hpp"
 #include "message/message_consumer.hpp"
+#include "network/async_service.hpp"
 
 namespace melanobot {
 
@@ -41,8 +42,15 @@ public:
     ~Melanobot();
 
     /**
+     * \brief Starts connections and services
+     * \thread main \lock none
+     */
+    void start();
+
+    /**
      * \brief Runs the bot
      * \thread main \lock messages(not continuous)
+     * \pre Called after start()
      */
     void run();
 
@@ -74,6 +82,8 @@ public:
     void add_handler(std::unique_ptr<melanobot::Handler>&& handler) override;
 
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
+    
+    void add_service(std::unique_ptr<AsyncService> service);
 
 private:
     explicit Melanobot();
@@ -84,6 +94,7 @@ private:
     /// \todo allow dynamic connection/handler creation (requires locking)
     std::unordered_map<std::string, std::unique_ptr<network::Connection>> connections;
     std::vector<std::unique_ptr<melanobot::Handler>> handlers;
+    std::vector<std::unique_ptr<AsyncService>> services;
 
     /// Message Queue
     ConcurrentQueue<network::Message> messages;
