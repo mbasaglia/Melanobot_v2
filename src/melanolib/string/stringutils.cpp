@@ -17,7 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "stringutils.hpp"
-#include "trie.hpp"
 
 namespace melanolib {
 namespace string {
@@ -183,11 +182,16 @@ std::string replace(const std::string& subject,
                     const std::unordered_map<std::string,std::string>& map,
                     const std::string& prefix)
 {
-    std::string output;
 
     /// \todo could add a failure function to the trie data for less backtracking
     StringTrie trie = make_trie(map);
     trie.prepend(prefix);
+    return replace(subject, trie);
+}
+
+std::string replace(const std::string& subject, const StringTrie& trie)
+{
+    std::string output;
     if ( trie.empty() )
         return subject;
 
@@ -236,6 +240,7 @@ std::string replace(const std::string& subject,
     }
 
     return output;
+
 }
 
 } // namespace string

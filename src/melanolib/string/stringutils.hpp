@@ -27,6 +27,8 @@
 #include <type_traits>
 #include <unordered_map>
 
+#include "trie.hpp"
+
 namespace melanolib {
 namespace string {
 
@@ -147,6 +149,13 @@ std::string replace(const std::string& input, const std::string& from, const std
 std::string replace(const std::string& subject,
                     const std::unordered_map<std::string,std::string>& map,
                     const std::string& prefix = {});
+
+/**
+ * \brief Replaces the keys of \c trie to the respective values in \c subject
+ * \param subject The string to be searched in
+ * \param trie    Term/replacement map
+ */
+std::string replace(const std::string& subject, const StringTrie& trie);
 
 /**
  * \brief Checks if \c text matches the wildcard \c pattern

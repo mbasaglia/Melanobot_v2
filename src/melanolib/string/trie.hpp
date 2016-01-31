@@ -516,7 +516,7 @@ using StringTrie = BasicTrie<std::string>;
  *         AssocContainer::mapped_type is used as parameter for BasicTrie
  */
 template<class AssocContainer, class = std::enable_if_t<std::is_convertible<typename AssocContainer::key_type, std::string>::value>>
-   auto make_trie(const AssocContainer& container)
+    auto make_trie(const AssocContainer& container)
     {
         BasicTrie<typename AssocContainer::mapped_type> trie;
 
@@ -540,6 +540,7 @@ template<class Container, class = void, class = std::enable_if_t<std::is_convert
 
         return trie;
     }
+
 
 } // namespace string
 } // namespace melanolib

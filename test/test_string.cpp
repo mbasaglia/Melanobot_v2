@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE( test_replace )
     BOOST_CHECK( string::replace(foxy,"the","a") == "a quick brown fox jumps over a lazy dog" );
     BOOST_CHECK( string::replace(foxy," ","") == "thequickbrownfoxjumpsoverthelazydog" );
 
-    BOOST_CHECK( string::replace(foxy,{{"fox","dog"}, {"dog","fox"}}) == "the quick brown dog jumps over the lazy fox" );
+    BOOST_CHECK( string::replace(foxy, {{"fox","dog"}, {"dog","fox"}}, "") == "the quick brown dog jumps over the lazy fox" );
     std::string template_string = "%animol the quick brown %animal_2 %action over the lazy %animal_";
     std::unordered_map<std::string, std::string> replace{{"animal","dog"},{"action","jumps"},{"animal_2","fox"}};
     BOOST_CHECK( string::replace(template_string,replace,"%") == "%animol "+foxy+'_' );
