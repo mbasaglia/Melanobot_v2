@@ -12,18 +12,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+melanomodule(github "GitHub integration" ON)
 
-include_directories("${CMAKE_SOURCE_DIR}/modules")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/melanobot")
+set(SOURCES
+github.cpp
+github-source.cpp
+repository.cpp
+)
 
-add_subdirectory(core)
-add_subdirectory(file_storage)
-add_subdirectory(fun)
-add_subdirectory(github)
-add_subdirectory(irc)
-add_subdirectory(lists)
-add_subdirectory(posix)
-add_subdirectory(script)
-add_subdirectory(timer)
-add_subdirectory(web)
-add_subdirectory(xonotic)
+if(${MODULE_ENABLED})
+    add_library(${MODULE_NAME} MODULE ${SOURCES})
+    target_link_libraries(${MODULE_NAME} melanomodule_web)
+endif()
+
