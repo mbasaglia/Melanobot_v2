@@ -148,21 +148,21 @@ Storage::value_type Storage::get_value(const key_type& path)
     maybe_load();
     if ( auto var = data.get_optional<value_type>(path) )
         return *var;
-    throw melanobot::StorageError("Not found");
+    throw melanobot::StorageError("Storage key not found: " + path);
 }
 Storage::sequence Storage::get_sequence(const key_type& path)
 {
     maybe_load();
     if ( auto child = data.get_child_optional(path) )
         return node_to_sequence(*child);
-    throw melanobot::StorageError("Not found");
+    throw melanobot::StorageError("Storage key not found: " + path);
 }
 Storage::table Storage::get_map(const key_type& path)
 {
     maybe_load();
     if ( auto child = data.get_child_optional(path) )
         return node_to_map(*child);
-    throw melanobot::StorageError("Not found");
+    throw melanobot::StorageError("Storage key not found: " + path);
 }
 
 Storage::value_type Storage::maybe_get_value(const key_type& path,
