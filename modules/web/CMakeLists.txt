@@ -46,7 +46,7 @@ if(${MODULE_ENABLED})
     link_directories(${CPR_LIB})
 
 
-    add_library(${MODULE_NAME} MODULE ${SOURCES})
+    add_library(${MODULE_NAME} SHARED ${SOURCES})
 
 
     # cpr [cont]
