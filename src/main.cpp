@@ -72,23 +72,39 @@ Settings initialize_global(int argc, char **argv)
     return settings;
 }
 
-/**
- * \brief Loads and starts all services
- */
-void load_services(const Settings& settings)
-{
-    ServiceRegistry::instance().initialize(settings.get_child("services",{}));
-    ServiceRegistry::instance().start();
-}
-
-/**
- * \brief Builds all the behaviour objects
- */
-void build_bot(const Settings& settings)
+void run_bot(const Settings& settings)
+try
 {
     auto& factory = melanobot::ConfigFactory::instance();
     factory.load_templates(settings.get_child("templates",{}));
     factory.build(settings.get_child("bot",{}), &melanobot::Melanobot::instance());
+
+    melanobot::Melanobot::instance().start();
+    melanobot::Melanobot::instance().run();
+    melanobot::Melanobot::instance().stop();
+    /// \todo some way to reload the config and restart the bot
+}
+catch ( const melanobot::MelanobotError& exc )
+{
+    /// \todo policy on how to handle exceptions (quit/restart)
+    ErrorLog ("sys","Unhandled Error") << exc.what();
+    settings::global_settings.get("exit_code", 1);
+}
+
+void run_services(const Settings& settings)
+try
+{
+    ServiceRegistry::instance().initialize(settings.get_child("services",{}));
+    ServiceRegistry::instance().start();
+
+    run_bot(settings);
+
+    ServiceRegistry::instance().stop();
+}
+catch ( const melanobot::MelanobotError& exc )
+{
+    ErrorLog ("sys","Service Initialization Error") << exc.what();
+    settings::global_settings.get("exit_code", 1);
 }
 
 int main(int argc, char **argv)
@@ -96,25 +112,12 @@ int main(int argc, char **argv)
     try
     {
         auto settings = initialize_global(argc, argv);
-
-        load_services(settings);
-        build_bot(settings);
-
-        melanobot::Melanobot::instance().run();
-
-        ServiceRegistry::instance().stop();
-        /// \todo some way to reload the config and restart the bot
+        run_services(settings);
 
         // Finalize for a clean exit
         int exit_code = settings::global_settings.get("exit_code", 0);
         Log("sys",'!',4) << "Exiting with status " << exit_code;
         return exit_code;
-    }
-    catch ( const melanobot::MelanobotError& exc )
-    {
-        /// \todo policy on how to handle exceptions (quit/restart)
-        ErrorLog ("sys","Unhandled Error") << exc.what();
-        return 1;
     }
     catch ( const std::exception& exc )
     {
