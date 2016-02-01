@@ -65,7 +65,7 @@ void Repository::poll_events(const std::string& api_url)
     web::HttpService::instance().async_query(
         request,
         [this](const web::Response& response) {
-            /// \todo Handle X-Poll-Interval
+            /// \todo Handle X-Poll-Interval (and rate limit stuff)
             auto it = response.headers.find("ETag");
             if ( it != response.headers.end() )
             {

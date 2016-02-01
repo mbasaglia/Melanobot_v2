@@ -53,12 +53,13 @@ void GitHubEventSource::initialize(const Settings& settings)
                 auto listen = ListenerFactory::instance().build(listener.first, listener.second);
                 auto listener_ptr = listen.get();
                 listeners.emplace_back(std::move(listen));
-                repo_iter->add_listener(
-                    listener_ptr->event_type(),
-                    [listener_ptr](const PropertyTree& json){
-                        listener_ptr->handle_event(json);
-                    }
-                );
+                for ( const auto& event_type : listener_ptr->event_types() )
+                    repo_iter->add_listener(
+                        event_type,
+                        [listener_ptr](const PropertyTree& json){
+                            listener_ptr->handle_event(json);
+                        }
+                    );
             }
             catch ( const melanobot::MelanobotError& err )
             {
