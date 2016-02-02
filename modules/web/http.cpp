@@ -85,6 +85,9 @@ Response HttpService::query (const Request& request)
 
     session.SetUrl(cpr::Url(url));
 
+    if ( request.auth )
+        session.SetAuth({request.auth->first, request.auth->second});
+
     auto headers = request.headers;
     headers["User-Agent"] = user_agent;
     session.SetHeader(cpr::Header(headers.begin(), headers.end()));
@@ -101,30 +104,30 @@ Response HttpService::query (const Request& request)
     }
     /// TODO SetTimeout
 
-    if ( request.command == "GET" )
+    if ( request.method == "GET" )
     {
         response = session.Get();
     }
-    else if ( request.command == "POST" )
+    else if ( request.method == "POST" )
     {
         cpr::Payload payload{};
         payload.content = request.body;
         session.SetPayload(payload);
         response = session.Post();
     }
-    else if ( request.command == "PUT" )
+    else if ( request.method == "PUT" )
     {
         cpr::Payload payload{};
         payload.content = request.body;
         session.SetPayload(payload);
         response = session.Put();
     }
-    else if ( request.command == "HEAD" )
+    else if ( request.method == "HEAD" )
     {
         response = session.Head();
     }
 
-    Log("web",'<') << request.command << ' ' << request.resource;
+    Log("web",'<') << request.method << ' ' << request.resource;
 
     if ( response.error )
     {

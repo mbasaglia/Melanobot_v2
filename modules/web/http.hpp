@@ -19,9 +19,8 @@
 #ifndef HTTP_HPP
 #define HTTP_HPP
 
-#include "network/async_service.hpp"
-
 #include <map>
+#include "network/async_service.hpp"
 
 namespace web {
 
@@ -38,13 +37,13 @@ using Headers = std::map<std::string,std::string>;
 struct Request
 {
     Request() = default;
-    Request(std::string command,
+    Request(std::string method,
             std::string resource,
             Parameters  parameters = {},
             std::string body = {},
             Headers     headers = {}
            )
-        : command(std::move(command)),
+        : method(std::move(method)),
           resource(std::move(resource)),
           parameters(std::move(parameters)),
           body(std::move(body)),
@@ -58,13 +57,13 @@ struct Request
 
     Request& method_get()
     {
-        command = "GET";
+        method = "GET";
         return *this;
     }
 
     Request& method_post()
     {
-        command = "GET";
+        method = "POST";
         return *this;
     }
 
@@ -104,16 +103,26 @@ struct Request
         return *this;
     }
 
+    Request& set_auth(const std::string& username, const std::string& password)
+    {
+        auth = {username, password};
+        return *this;
+    }
+
     /**
      * \brief Resource + query
      */
     std::string full_url() const;
 
-    std::string command;    ///< Protocol-specific command
+private:
+    std::string method;    ///< Protocol-specific command
     std::string resource;   ///< Name/identifier for the requested resource
     Parameters  parameters; ///< GET query parameters
     std::string body;       ///< POST/PUT body
     Headers     headers;    ///< Headers
+    melanolib::Optional<std::pair<std::string, std::string>> auth; ///< Optional username/password pair
+
+    friend class HttpService;
 };
 
 /**
