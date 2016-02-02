@@ -217,6 +217,15 @@ BOOST_AUTO_TEST_CASE( test_replace )
 
     BOOST_CHECK( string::replace(foxy,std::unordered_map<std::string,std::string>()) == foxy );
 
+    string::StringTrie trie;
+    trie.insert("prefix", "P");
+    trie.insert("prefix_suffix", "S");
+    BOOST_CHECK( string::replace("Here is a prefix and a prefix_suffix", trie) == "Here is a P and a S" );
+
+
+    string::StringTrie trie2{"prefix/", "prefix/infix/", "prefix/other/"};
+    BOOST_CHECK( string::replace("Here is a prefix/thing and a prefix/infix/thing", trie2) == "Here is a thing and a thing" );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_wildcard )
