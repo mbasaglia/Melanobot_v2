@@ -30,6 +30,9 @@ void GitHubEventSource::initialize(const Settings& settings)
     if ( api_url.back() == '/' )
         api_url.pop_back();
 
+    username = settings.get("username", "");
+    password = settings.get("password", "");
+
     for ( const auto& repo : settings )
     {
         if ( repo.first.find('/') == std::string::npos )
@@ -88,7 +91,7 @@ void GitHubEventSource::poll()
 {
     for ( auto& repo : repositories )
     {
-        repo.poll_events(api_url);
+        repo.poll_events(*this);
     }
 }
 
@@ -102,6 +105,15 @@ void GitHubEventSource::start()
 {
     poll();
     timer.start();
+}
+
+
+web::Request GitHubEventSource::request(const std::string& url) const
+{
+    auto request = web::Request("GET", api_url+url);
+    if ( !username.empty() && !password.empty() )
+        request.set_auth(username, password);
+    return request;
 }
 
 } // namespace github

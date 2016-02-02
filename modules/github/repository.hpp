@@ -61,7 +61,7 @@ public:
 
     void add_listener(const std::string& event_type, const ListenerFunctor& listener);
 
-    void poll_events(const std::string& api_url);
+    void poll_events(const class GitHubEventSource& source);
 
 private:
     void dispatch_events(const web::Response& response);

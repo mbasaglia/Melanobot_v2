@@ -21,6 +21,7 @@
 #include "melanolib/time/time_string.hpp"
 #include "melanobot/storage.hpp"
 #include "string/json.hpp"
+#include "github-source.hpp"
 
 namespace github {
 
@@ -50,11 +51,9 @@ void Repository::add_listener(const std::string& event_type, const ListenerFunct
     listeners_.push_back({event_type, listener});
 }
 
-void Repository::poll_events(const std::string& api_url)
+void Repository::poll_events(const GitHubEventSource& source)
 {
-    std::string url = api_url + "/repos/" + name_;
-
-    auto request = web::Request().get(url+"/events");
+    auto request = source.request("/repos/" + name_ +"/events" );
     {
         Lock lock(mutex);
         if ( !etag_.empty() )

@@ -19,9 +19,10 @@
 #ifndef MELANOBOT_MODULE_GITHUB_CONNECTION_HPP
 #define MELANOBOT_MODULE_GITHUB_CONNECTION_HPP
 
-#include "github-listeners.hpp"
 #include "network/async_service.hpp"
+#include "github-listeners.hpp"
 #include "repository.hpp"
+
 
 namespace github {
 
@@ -40,6 +41,11 @@ public:
 
     void start() override;
 
+    /**
+     * \brief Builds a request for the relative \p url
+     */
+    web::Request request(const std::string& url) const;
+
 
 private:
     void poll();
@@ -48,6 +54,8 @@ private:
     std::string api_url = "https://api.github.com";
     melanolib::time::Timer timer; ///< Polling timer
     std::vector<std::unique_ptr<GitHubEventListener>> listeners;
+    std::string username; ///< Username for basic auth
+    std::string password; ///< Password / OAuth personal access token
 };
 
 } // namespace github
