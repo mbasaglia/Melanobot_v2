@@ -64,6 +64,11 @@ private:
         void copy_data(const TrieNodeData& other) { data = other.data; }
 
         /**
+         * \brief Move assigns \c data
+         */
+        void move_data(TrieNodeData&& other) { data = std::move(other.data); }
+
+        /**
          * \brief Returns \c data
          */
         const MappedType& get_data() const { return data; }
@@ -107,6 +112,9 @@ private:
          */
         void deepen(int amount)
         {
+            if ( amount == 0 )
+                return;
+
             depth += amount;
             for (auto& pair : children)
             {
@@ -170,6 +178,57 @@ private:
             {
                 delete it->second;
                 children.erase(it);
+            }
+        }
+
+        /**
+         * \brief Will append all of the nodes from \p other
+         * \complexity O(number of children in \p other)
+         * \pre other->depth == this->depth
+         */
+        void recursive_append(const TrieNode* other)
+        {
+            if ( other->marks_end && !marks_end )
+            {
+                marks_end = true;
+                this->copy_data(*other);
+            }
+
+            for ( auto& child : other->children )
+            {
+                auto it = children.find(child.first);
+                if ( it != children.end() )
+                    it->second->recursive_append(child.second);
+                else
+                    children.insert({child.first, child.second->deep_copy()});
+            }
+        }
+
+        /**
+         * \brief Will steal all of the nodes in \p other
+         * \complexity O(number of children in \p other)
+         * \pre other->depth == this->depth
+         */
+        void recursive_steal(TrieNode* other)
+        {
+            if ( other->marks_end && !marks_end )
+            {
+                marks_end = true;
+                this->move_data(std::move(*other));
+            }
+
+            for ( auto& child : other->children )
+            {
+                auto it = children.find(child.first);
+                if ( it != children.end() )
+                {
+                    it->second->recursive_append(child.second);
+                }
+                else
+                {
+                    children.insert(child);
+                    child.second = nullptr;
+                }
             }
         }
     };
@@ -311,6 +370,40 @@ public:
     }
 
     /**
+     * \brief Adds the elements of another trie
+     * \complexity O(number of nodes in \c other)
+     */
+    BasicTrie& operator+= (const BasicTrie& other)
+    {
+        if ( this == &other )
+            return *this;
+
+        if ( !root_ )
+            return *this = other;
+
+        root_->recursive_append(other.root_);
+
+        return *this;
+    }
+
+    /**
+     * \brief Adds the elements of another trie
+     * \complexity O(number of nodes in \c other)
+     */
+    BasicTrie& operator+= (BasicTrie&& other)
+    {
+        if ( this == &other )
+            return *this;
+
+        if ( !root_ )
+            return *this = std::move(other);
+
+        root_->recursive_steal(other.root_);
+
+        return *this;
+    }
+
+    /**
      * \brief Returns \b true if the trie doesn't have any meaningful node
      */
     bool empty() const
@@ -414,7 +507,7 @@ public:
      * \brief Returns an iterator to the root
      * \complexity O(word.size())
      */
-    iterator find( const std::string& word) const
+    iterator find(const std::string& word) const
     {
         return iterator(find_node(word));
     }
@@ -496,7 +589,8 @@ class BasicTrie<void>::TrieNodeData
 {
 public:
     void get_data() {}
-    void copy_data(const TrieNodeData& ) {}
+    void copy_data(const TrieNodeData&) {}
+    void move_data(TrieNodeData&&) {}
 };
 
 /**

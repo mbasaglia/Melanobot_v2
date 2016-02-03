@@ -143,6 +143,52 @@ BOOST_AUTO_TEST_CASE( test_trie_iterator )
 
 }
 
+BOOST_AUTO_TEST_CASE( test_trie_add )
+{
+    string::StringTrie trie1;
+    trie1.insert("pony", "awesome");
+    trie1.insert("princess", "twilight");
+
+    string::StringTrie trie2;
+    trie2.insert("pony", "little");
+    trie2.insert("pretty", "good");
+    trie2.insert("fun", "pink");
+
+    trie1 += trie2;
+
+    BOOST_CHECK ( trie1.find("pony").data() == "awesome" );
+    BOOST_CHECK ( trie1.find("princess").data() == "twilight" );
+    BOOST_CHECK ( trie1.find("pretty").data() == "good" );
+    BOOST_CHECK ( trie1.find("fun").data() == "pink" );
+    BOOST_CHECK ( trie1.contains("pony") );
+    BOOST_CHECK ( trie1.contains("princess") );
+    BOOST_CHECK ( trie1.contains("pretty") );
+    BOOST_CHECK ( trie1.contains("fun") );
+
+
+    string::StringTrie trie3;
+    trie3.insert("pony", "awesome");
+    trie3.insert("princess", "twilight");
+    trie3 += trie3;
+
+    BOOST_CHECK ( trie3.find("pony").data() == "awesome" );
+    BOOST_CHECK ( trie3.find("princess").data() == "twilight" );
+    BOOST_CHECK ( trie3.contains("pony") );
+    BOOST_CHECK ( trie3.contains("princess") );
+
+    trie3 += std::move(trie2);
+
+    BOOST_CHECK ( trie3.find("pony").data() == "awesome" );
+    BOOST_CHECK ( trie3.find("princess").data() == "twilight" );
+    BOOST_CHECK ( trie3.find("pretty").data() == "good" );
+    BOOST_CHECK ( trie3.find("fun").data() == "pink" );
+    BOOST_CHECK ( trie3.contains("pony") );
+    BOOST_CHECK ( trie3.contains("princess") );
+    BOOST_CHECK ( trie3.contains("pretty") );
+    BOOST_CHECK ( trie3.contains("fun") );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_implode )
 {
     using Container = std::vector<std::string>;
