@@ -165,6 +165,14 @@ BOOST_AUTO_TEST_CASE( test_trie_add )
     BOOST_CHECK ( trie1.contains("pretty") );
     BOOST_CHECK ( trie1.contains("fun") );
 
+    BOOST_CHECK ( trie2.find("pony").data() == "little" );
+    BOOST_CHECK ( trie2.find("pretty").data() == "good" );
+    BOOST_CHECK ( trie2.find("fun").data() == "pink" );
+    BOOST_CHECK ( trie2.contains("pony") );
+    BOOST_CHECK ( !trie2.contains("princess") );
+    BOOST_CHECK ( trie2.contains("pretty") );
+    BOOST_CHECK ( trie2.contains("fun") );
+
 
     string::StringTrie trie3;
     trie3.insert("pony", "awesome");

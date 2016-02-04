@@ -58,6 +58,7 @@ inline melanolib::string::StringTrie tree_to_trie(const PropertyTree& tree,
 inline std::string ref_to_branch(const std::string& ref)
 {
     static melanolib::string::StringTrie unref{
+        "refs/",
         "refs/head/",
         "refs/remotes/",
     };
@@ -231,10 +232,18 @@ public:
     {
     }
 
+protected:
+    melanolib::string::StringTrie replacements(const PropertyTree& json) override
+    {
+        auto trie = tree_to_trie(json);
+        trie.insert("%short_sha", short_sha(json.get("payload.comment.commit_id", "")));
+        return trie;
+    }
+
 private:
     static const char* default_message()
     {
-        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# commented on commit #-b#%payload.comment.commit_id#-#: %payload.comment.html_url";
+        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# commented on commit #-b#%short_sha#-#: %payload.comment.html_url";
     }
 };
 
@@ -250,15 +259,24 @@ protected:
     melanolib::string::StringTrie replacements(const PropertyTree& json) override
     {
         auto trie = tree_to_trie(json);
-        std::string action = json.get("type", "") == "DeleteEvent" ? "deleted" : "created";
-        trie.insert("%action", action);
+        std::string action;
+        if ( json.get("type", "") == "DeleteEvent" )
+        {
+            trie.insert("%action", "deleted" );
+            trie.insert("%color", "#red#" );
+        }
+        else
+        {
+            trie.insert("%action", "created" );
+            trie.insert("%color", "#dark_green#" );
+        }
         return trie;
     }
 
 private:
     static const char* default_message()
     {
-        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# %action %payload.ref_type #-b#%payload.ref#-#";
+        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# %color%action#-# %payload.ref_type #-b#%payload.ref#-#";
     }
 };
 
@@ -289,15 +307,19 @@ protected:
     void handle_event(const PropertyTree& event) override
     {
         int n_pages = 0;
-        for ( const auto& push : event )
+        for ( const auto& gollum : event )
         {
-            auto page_event = push.second;
-            for ( const auto& page : push.second.get_child("pages", {}) )
+            auto event_nopages = gollum.second;
+            event_nopages.get_child("payload").erase("pages");
+            auto trie_nopages = replacements(event_nopages);
+
+            for ( const auto& page : gollum.second.get_child("payload.pages", {}) )
             {
                 if ( n_pages++ >= event_limit() )
                     break;
-                page_event.put_child("page", page.second);
-                send_message(reply_template(), replacements(push.second));
+                auto trie = tree_to_trie(page.second, "%page.");
+                trie += trie_nopages;
+                send_message(reply_template(), trie);
             }
         }
     }
@@ -305,7 +327,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# %page.action #-##%page.title#-#: %page.html_url";
+        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# %page.action #-b#%page.title#-#: https://github.com/%page.html_url";
     }
 };
 
@@ -320,7 +342,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# commented on issue #-b###%payload.issue.number#-# (#-i#%payload.issue.title#-#): %payload.comment.html_url";
+        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# commented on issue #-b###%payload.issue.number#-# #-i#%payload.issue.title#-#: %payload.comment.html_url";
     }
 };
 
@@ -437,6 +459,7 @@ public:
 protected:
     void handle_event(const PropertyTree& event)
     {
+        /// \todo Merge consecutive events from the same person to the same branch
         int n_pushes = 0;
         for ( const auto& push : event )
         {
@@ -472,10 +495,10 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# pushed #-b#%payload.size#-# %commit_pluralized on #magenta#%branch#-#: https://github.com/%payload.repo.name/compare/%short_before...%short_head";
+        return "[#dark_magenta#%repo.name#-#] #blue#%actor.login#-# pushed #-b#%payload.size#-# %commit_pluralized on #magenta#%branch#-#: https://github.com/%repo.name/compare/%short_before...%short_head";
     }
 
-    std::string commit_reply_template = "[#dark_magenta#%short_sha#-#] #blue#%author.name#-# %message";
+    std::string commit_reply_template = " * [#dark_magenta#%short_sha#-#] #blue#%author.name#-# %message";
     int commit_limit = 3;
 };
 
