@@ -52,6 +52,7 @@ public:
      * \brief Returns the number of visible characters used to represent the element
      */
     virtual int char_count() const { return 0; }
+
 };
 
 /**
@@ -237,7 +238,7 @@ private:
 /**
  * \brief A formatted string
  */
-class FormattedString
+class FormattedString : public Element
 {
 public:
     using container      = std::vector<std::shared_ptr<const Element>>;
@@ -262,9 +263,9 @@ public:
     FormattedString(const char* ascii_string)
         : FormattedString(std::string(ascii_string)) {}
     FormattedString() = default;
-    FormattedString(const FormattedString&) = default;
+    FormattedString(const FormattedString&) = delete;
     FormattedString(FormattedString&&) noexcept = default;
-    FormattedString& operator=(const FormattedString&) = default;
+    FormattedString& operator=(const FormattedString&) = delete;
     FormattedString& operator=(FormattedString&&) noexcept = default;
 
     iterator        begin()       { return elements.begin();}
@@ -366,17 +367,6 @@ public:
     }
 
     /**
-     * \brief Counts the number of characters
-     */
-    int char_count() const
-    {
-        int c = 0;
-        for ( const auto& p : elements )
-            c += p->char_count();
-        return c;
-    }
-
-    /**
      * \brief Append an element
      */
     template<class ElementType, class... Args>
@@ -417,9 +407,35 @@ public:
         return s;
     }
 
+    FormattedString copy() const
+    {
+        FormattedString c;
+        c.elements = elements;
+        return c;
+    }
+
+    // Element overrides
+
+
+    /**
+     * \brief Counts the number of characters
+     */
+    int char_count() const final
+    {
+        int c = 0;
+        for ( const auto& p : elements )
+            c += p->char_count();
+        return c;
+    }
+
+    std::string to_string(const Formatter& formatter) const final
+    {
+        return encode(formatter);
+    }
+
     // stream-like operations
 
-    FormattedString& operator<< ( const std::string& text )
+    FormattedString& operator<< ( const std::string& text ) &
     {
         if ( !text.empty() )
         {
@@ -430,47 +446,53 @@ public:
         }
         return *this;
     }
-    FormattedString& operator<< ( const char* text )
+    FormattedString& operator<< ( const char* text ) &
     {
         return *this << std::string(text);
     }
-    FormattedString& operator<< ( const color::Color12& color )
+    FormattedString& operator<< ( const color::Color12& color ) &
     {
         append(std::make_shared<Color>(color));
         return *this;
     }
-    FormattedString& operator<< ( const FormatFlags& format_flags )
+    FormattedString& operator<< ( const FormatFlags& format_flags ) &
     {
         append(std::make_shared<Format>(format_flags));
         return *this;
     }
-    FormattedString& operator<< ( FormatFlags::FormatFlagsEnum format_flags )
+    FormattedString& operator<< ( FormatFlags::FormatFlagsEnum format_flags ) &
     {
         append(std::make_shared<Format>(format_flags));
         return *this;
     }
-    FormattedString& operator<< ( ClearFormatting )
+    FormattedString& operator<< ( ClearFormatting ) &
     {
         append(std::make_shared<ClearFormatting>());
         return *this;
     }
-    FormattedString& operator<< ( char c )
+    FormattedString& operator<< ( char c ) &
     {
         append(std::make_shared<Character>(c));
         return *this;
     }
-    FormattedString& operator<< ( const FormattedString& string )
+    FormattedString& operator<< ( const FormattedString& string ) &
     {
         if ( !string.empty() )
             append(string);
         return *this;
     }
     template <class T>
-        FormattedString& operator<< ( const T& obj )
+        FormattedString& operator<< ( const T& obj ) &
         {
             std::ostringstream ss;
             ss << obj;
             return *this << ss.str();
+        }
+    template <class T>
+        FormattedString&& operator<< ( T&& obj ) &&
+        {
+            static_cast<FormattedString&>(*this) << std::forward<T>(obj);
+            return std::move(*this);
         }
 
 private:

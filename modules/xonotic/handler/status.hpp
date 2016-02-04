@@ -205,7 +205,7 @@ protected:
         string::FormattedString str;
         str << color::red << maps.size() << color::nocolor << "/"
             << color::red << total << color::nocolor << " maps match";
-        reply_to(msg,str);
+        reply_to(msg, std::move(str));
 
         auto r = string::Color(color::red).to_string(*msg.destination->formatter());
         auto nc = string::Color(color::nocolor).to_string(*msg.destination->formatter());
@@ -339,7 +339,7 @@ private:
                 if ( match[5].matched )
                     params.push_back(match[5]);
             }
-            reply_to(msg, notice);
+            reply_to(msg, std::move(notice));
             monitored->command({"rcon", params, priority});
             refresh();
         }
@@ -472,7 +472,7 @@ private:
             string::FormattedString notice;
             notice << "Kicking #" << kicked->property("entity") << " "
                 << kicked->host << " " << monitored->decode(kicked->name);
-            reply_to(msg, notice);
+            reply_to(msg, std::move(notice));
             monitored->command({"rcon", params, priority});
         }
         else

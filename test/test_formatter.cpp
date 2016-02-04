@@ -366,7 +366,6 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     {
         FormattedString foo("foo");
         foo << "bar";
-        BOOST_CHECK( FormattedString(foo).size() == 2 );
         BOOST_CHECK( !foo.empty() );
         FormattedString s1 = std::move(foo);
         BOOST_CHECK( s1.size() == 2 );
@@ -387,7 +386,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
     BOOST_CHECK( cast<Color>(s[1]) );
     {
-        const FormattedString s2 = s;
+        const FormattedString& s2 = s;
         BOOST_CHECK( s2.begin() == s2.cbegin() );
         BOOST_CHECK( s2.end() == s2.cend() );
         BOOST_CHECK( cast<AsciiSubstring>(s2[0]) );

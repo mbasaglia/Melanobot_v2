@@ -519,7 +519,7 @@ protected:
                 out << ", ";
         }
 
-        reply_to(msg, out);
+        reply_to(msg, std::move(out));
     }
 
     /**

@@ -126,10 +126,10 @@ protected:
                     help.clear();
                 }
 
-                reply_to(msg,synopsis);
+                reply_to(msg, synopsis.copy());
 
                 if ( !help.empty() )
-                    reply_to(msg,help);
+                    reply_to(msg, help.copy());
             }
             else
             {

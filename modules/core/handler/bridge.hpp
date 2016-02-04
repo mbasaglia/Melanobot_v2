@@ -149,7 +149,7 @@ protected:
             action,
             reply_channel(msg),
             priority,
-            action ? from : string::FormattedString(),
+            action ? std::move(from) : string::FormattedString(),
             {},
             timeout == network::Duration::zero() ?
                 network::Time::max() :

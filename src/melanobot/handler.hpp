@@ -155,9 +155,9 @@ protected:
         output.priority = priority;
         deliver(input.destination,output);
     }
-    void reply_to(const network::Message& msg, const string::FormattedString& text) const
+    void reply_to(const network::Message& msg, string::FormattedString&& text) const
     {
-        reply_to(msg, {text,false});
+        reply_to(msg, {std::move(text), false});
     }
 
     /**

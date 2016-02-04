@@ -127,11 +127,11 @@ protected:
     void send_message(const string::FormattedString& str) const
     {
         destination->say(network::OutputMessage(
-            str,
+            str.copy(),
             action,
             target,
             priority,
-            from
+            from.copy()
         ));
     }
 

@@ -506,11 +506,11 @@ bool RainbowBridgeChat::on_handle(network::Message& msg)
         msg.source->encode_to(msg.message,formatter));
 
     reply_to(msg,network::OutputMessage(
-        message,
+        std::move(message),
         msg.type == network::Message::ACTION,
         {},
         priority,
-        from,
+        std::move(from),
         {},
         timeout == network::Duration::zero() ?
             network::Time::max() :
