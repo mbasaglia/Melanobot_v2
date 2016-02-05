@@ -262,7 +262,7 @@ Properties XonoticConnection::pretty_properties() const
 
     std::string host;
     if ( auto opt = properties_.get_optional<std::string>("host") )
-        host = formatter_->decode(*opt).encode(&fmt);
+        host = formatter_->decode(*opt).encode(fmt);
     else
         host = "(unconnected) " + server().name();
 
@@ -288,9 +288,9 @@ void XonoticConnection::say ( const network::OutputMessage& message )
         prefix_stream << message.prefix << ' ' << color::nocolor;
 
     auto nocolor = string::Color(color::nocolor).to_string(*formatter_);
-    std::string prefix   = prefix_stream.encode(formatter_);
-    std::string from     = message.from.encode(formatter_)+nocolor;
-    std::string contents = message.message.encode(formatter_)+nocolor;
+    std::string prefix   = prefix_stream.encode(*formatter_);
+    std::string from     = message.from.encode(*formatter_)+nocolor;
+    std::string contents = message.message.encode(*formatter_)+nocolor;
     Properties message_properties = {
         {"prefix",              prefix},
         {"from",                from},

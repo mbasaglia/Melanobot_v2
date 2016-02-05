@@ -913,7 +913,7 @@ void IrcConnection::say ( const network::OutputMessage& message )
             str << '<' << message.from << color::nocolor << "> ";
     }
     str << message.message;
-    std::string text = str.encode(formatter_);
+    std::string text = str.encode(*formatter_);
     if ( message.action && message.from.empty() )
         text = "\1ACTION "+text+'\1';
 

@@ -76,7 +76,7 @@ protected:
         string::FormattedString s;
         s << '\1' << ctcp << ' ' << output.message << '\1';
         msg.destination->command({"NOTICE",
-            {msg.from.name,s.encode(msg.destination->formatter())}, priority});
+            {msg.from.name,s.encode(*msg.destination->formatter())}, priority});
     }
     using Handler::reply_to;
 

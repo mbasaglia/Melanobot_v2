@@ -98,7 +98,7 @@ protected:
             {"channel", melanolib::string::implode(", ",msg.channels)}
         };
         std::string call_nick = melanolib::string::replace(nick, props, "%");
-        call_nick = fmt.decode(call_nick).encode(msg.destination->formatter());
+        call_nick = fmt.decode(call_nick).encode(*msg.destination->formatter());
         rcon_adminnick(msg.destination,{"vcall",msg.message},call_nick);
         return true;
     }
@@ -132,7 +132,7 @@ protected:
             {"channel", melanolib::string::implode(", ", msg.channels)}
         };
         std::string call_nick = melanolib::string::replace(nick, props, "%");
-        call_nick = fmt.decode(call_nick).encode(msg.destination->formatter());
+        call_nick = fmt.decode(call_nick).encode(*msg.destination->formatter());
         rcon_adminnick(msg.destination,{"vstop",msg.message},call_nick);
         return true;
     }

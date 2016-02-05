@@ -53,6 +53,8 @@ public:
      */
     virtual int char_count() const { return 0; }
 
+    virtual std::unique_ptr<Element> clone() const = 0;
+
 };
 
 /**
@@ -64,6 +66,11 @@ public:
     std::string to_string(const Formatter& formatter) const override
     {
         return formatter.clear();
+    }
+
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<ClearFormatting>();
     }
 };
 
@@ -86,6 +93,11 @@ public:
      * \brief Returns the character
      */
     char character() const noexcept { return c; }
+
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<Character>(c);
+    }
 
 private:
     char c;
@@ -111,6 +123,11 @@ public:
      */
     const std::string& string() const noexcept { return s; }
 
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<AsciiSubstring>(s);
+    }
+
 private:
     std::string s;
 };
@@ -121,7 +138,7 @@ private:
 class Color : public Element
 {
 public:
-    Color ( color::Color12  color ) : color_(std::move(color)) {}
+    Color(color::Color12 color) : color_(std::move(color)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
@@ -133,6 +150,11 @@ public:
      */
     color::Color12 color() const noexcept { return color_; }
 
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<Color>(color_);
+    }
+
 private:
     color::Color12 color_;
 };
@@ -143,7 +165,7 @@ private:
 class Format : public Element
 {
 public:
-    Format ( FormatFlags  flags ) : flags_(std::move(flags)) {}
+    Format(FormatFlags  flags) : flags_(std::move(flags)) {}
 
     std::string to_string(const Formatter& formatter) const override
     {
@@ -153,6 +175,11 @@ public:
      * \brief Returns the format flags
      */
     FormatFlags flags() const noexcept { return flags_; }
+
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<Format>(flags_);
+    }
 
 private:
     FormatFlags flags_;
@@ -164,7 +191,7 @@ private:
 class Unicode : public Element
 {
 public:
-    Unicode ( std::string utf8, uint32_t point )
+    Unicode(std::string utf8, uint32_t point)
         : utf8_(std::move(utf8)), point_(point) {}
 
     std::string to_string(const Formatter& formatter) const override
@@ -183,6 +210,11 @@ public:
      */
     uint32_t point() const { return point_; }
 
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<Unicode>(*this);
+    }
+
 private:
     std::string utf8_;
     uint32_t    point_;
@@ -194,7 +226,7 @@ private:
 class QFont : public Element
 {
 public:
-    explicit QFont ( unsigned index ) : index_(index) {}
+    explicit QFont(unsigned index) : index_(index) {}
 
     /**
      * \brief Returns the qfont index
@@ -227,6 +259,11 @@ public:
         return 0xE000 | index_;
     }
 
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<QFont>(index_);
+    }
+
 private:
     /**
      * \brief Maps weird characters to ASCII strings
@@ -240,20 +277,88 @@ private:
  */
 class FormattedString : public Element
 {
+private:
+    template<class T> class Tag {};
+
 public:
-    using container      = std::vector<std::shared_ptr<const Element>>;
-    using value_type     =  container::value_type;
-    using reference      = container::reference;
-    using const_reference= container::const_reference;
-    using iterator       = container::iterator;
-    using const_iterator = container::const_iterator;
-    using difference_type= container::difference_type;
-    using size_type      = container::size_type;
+
+    /**
+     * \brief Move-only object that contains a dynamic instance of \c Element
+     */
+    class value_type
+    {
+    public:
+
+        value_type(std::unique_ptr<Element> ptr)
+            : ptr(std::move(ptr))
+        {}
+
+        template<class Y>
+            value_type(std::unique_ptr<Y> ptr)
+            : ptr(std::move(ptr))
+        {}
+
+        template<class E, class... Args>
+            value_type(Tag<E>, Args&&... args)
+            : ptr(melanolib::New<E>(std::forward<Args>(args)...))
+        {}
+
+        /*value_type(const value_type& oth)
+        {
+            ptr = oth.clone();
+        }
+
+        value_type(value_type&&) = default;
+
+        value_type& operator=(const value_type& oth)
+        {
+            ptr = oth.clone();
+            return *this;
+        }
+
+        value_type& operator=(value_type&&) = default;*/
+
+        value_type clone() const
+        {
+            return ptr->clone();
+        }
+
+        const Element* operator->() const
+        {
+            return ptr.get();
+        }
+
+        const Element& operator*() const
+        {
+            return *ptr;
+        }
+
+        Element* operator->()
+        {
+            return ptr.get();
+        }
+
+        Element& operator*()
+        {
+            return *ptr;
+        }
+
+    private:
+        std::unique_ptr<Element> ptr;
+    };
+
+    using container         = std::vector<value_type>;
+    using reference         = container::reference;
+    using const_reference   = container::const_reference;
+    using iterator          = container::iterator;
+    using const_iterator    = container::const_iterator;
+    using difference_type   = container::difference_type;
+    using size_type         = container::size_type;
 
     template<class Iterator>
         FormattedString( const Iterator& i, const Iterator& j )
             : elements(i,j) {}
-    explicit FormattedString(Formatter* formatter)
+    explicit FormattedString(Formatter* formatter) /// \todo remove
         : input_formatter(formatter) {}
     FormattedString(std::string ascii_string)
     {
@@ -281,28 +386,28 @@ public:
     size_type size()  const { return elements.size(); }
     bool      empty() const { return elements.empty(); }
 
-    void push_back( const_reference r )
+    void push_back(value_type r)
     {
-        elements.push_back(r);
+        elements.push_back(std::move(r));
     }
 
-    iterator insert(const const_iterator& p, const value_type& t)
+    iterator insert(const const_iterator& p, value_type t)
     {
-        return elements.insert(p,t);
+        return elements.insert(p, std::move(t));
     }
-    iterator insert(const const_iterator& p, size_type n, const value_type& t)
+    /*iterator insert(const const_iterator& p, size_type n, const value_type& t)
     {
         return elements.insert(p, n, t);
-    }
+    }*/
     template<class InputIterator>
         iterator insert(const const_iterator& p, const InputIterator& i, const InputIterator& j )
         {
             return elements.insert(p, i, j);
         }
-    iterator insert(const const_iterator& p, const std::initializer_list<value_type>& il )
+    /*iterator insert(const const_iterator& p, const std::initializer_list<value_type>& il )
     {
-        return elements.insert(p,il);
-    }
+        return elements.insert(p, il);
+    }*/
 
     void pop_back()
     {
@@ -315,26 +420,26 @@ public:
     }
     iterator erase(const const_iterator& p, const const_iterator& q)
     {
-        return elements.erase(p,q);
+        return elements.erase(p, q);
     }
     void clear()
     {
         elements.clear();
     }
 
-    void assign(size_type n, const value_type& t)
+    /*void assign(size_type n, const value_type& t)
     {
         elements.assign(n, t);
-    }
+    }*/
     template<class InputIterator>
         void assign(const InputIterator& i, const InputIterator& j )
         {
             elements.assign(i, j);
         }
-    void assign(const std::initializer_list<value_type>& il )
+    /*void assign(const std::initializer_list<value_type>& il )
     {
         elements.assign(il);
-    }
+    }*/
 
 // Non-C++ container methods
 
@@ -353,15 +458,15 @@ public:
 
         int before = count * align;
         if ( before )
-            elements.insert(elements.begin(),
-                melanolib::New<string::AsciiSubstring>(
-                    std::string(before,fill)
-            ));
+            elements.emplace(elements.begin(),
+                Tag<string::AsciiSubstring>(),
+                std::string(before,fill)
+            );
         if ( count-before )
-            elements.push_back(
-                melanolib::New<string::AsciiSubstring>(
-                    std::string(count-before,fill)
-            ));
+            elements.emplace_back<>(
+                Tag<string::AsciiSubstring>(),
+                std::string(count-before,fill)
+            );
 
         return *this;
     }
@@ -370,35 +475,27 @@ public:
      * \brief Append an element
      */
     template<class ElementType, class... Args>
-        void append ( Args&&... args )
+        void append(Args&&... args)
         {
-            elements.push_back(std::make_shared<ElementType>(std::forward<Args>(args)...));
+            elements.emplace_back(Tag<ElementType>(), std::forward<Args>(args)...);
         }
 
-    void append ( const_reference element )
+    void append(value_type element)
     {
-        elements.push_back(element);
+        elements.push_back(std::move(element));
     }
 
 
-    void append ( const FormattedString& string )
+    void append(const FormattedString& string)
     {
-        elements.insert(elements.end(),string.begin(),string.end());
-    }
-
-    /**
-     * \brief Encode the string using the given formatter
-     */
-    std::string encode(const std::string& format) const
-    {
-        return encode(Formatter::formatter(format));
+        elements.reserve(size() + string.size());
+        for ( const auto& element : string )
+            elements.emplace_back(element.clone());
     }
 
     /**
      * \brief Encode the string using the given formatter
      */
-    std::string encode(Formatter* formatter) const;
-
     std::string encode(const Formatter& formatter) const
     {
         std::string s;
@@ -407,15 +504,19 @@ public:
         return s;
     }
 
+    /**
+     * \brief Deep copy
+     */
     FormattedString copy() const
     {
         FormattedString c;
-        c.elements = elements;
+        c.elements.reserve(elements.size());
+        for ( const auto& element : *this )
+            c.elements.emplace_back(element.clone());
         return c;
     }
 
     // Element overrides
-
 
     /**
      * \brief Counts the number of characters
@@ -433,49 +534,54 @@ public:
         return encode(formatter);
     }
 
-    // stream-like operations
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<FormattedString>(copy());
+    }
 
-    FormattedString& operator<< ( const std::string& text ) &
+    // Stream-like operations
+
+    FormattedString& operator<<(const std::string& text) &
     {
         if ( !text.empty() )
         {
             if ( input_formatter )
                 append(input_formatter->decode(text));
             else
-                append(std::make_shared<AsciiSubstring>(text));
+                elements.emplace_back(Tag<AsciiSubstring>(), text);
         }
         return *this;
     }
-    FormattedString& operator<< ( const char* text ) &
+    FormattedString& operator<<(const char* text) &
     {
         return *this << std::string(text);
     }
-    FormattedString& operator<< ( const color::Color12& color ) &
+    FormattedString& operator<<(const color::Color12& color) &
     {
-        append(std::make_shared<Color>(color));
+        elements.emplace_back(Tag<Color>(), color);
         return *this;
     }
-    FormattedString& operator<< ( const FormatFlags& format_flags ) &
+    FormattedString& operator<<(const FormatFlags& format_flags) &
     {
-        append(std::make_shared<Format>(format_flags));
+        elements.emplace_back(Tag<Format>(), format_flags);
         return *this;
     }
-    FormattedString& operator<< ( FormatFlags::FormatFlagsEnum format_flags ) &
+    FormattedString& operator<<(FormatFlags::FormatFlagsEnum format_flags) &
     {
-        append(std::make_shared<Format>(format_flags));
+        elements.emplace_back(Tag<Format>(), format_flags);
         return *this;
     }
-    FormattedString& operator<< ( ClearFormatting ) &
+    FormattedString& operator<<(ClearFormatting) &
     {
-        append(std::make_shared<ClearFormatting>());
+        elements.emplace_back(Tag<ClearFormatting>());
         return *this;
     }
-    FormattedString& operator<< ( char c ) &
+    FormattedString& operator<<(char c) &
     {
-        append(std::make_shared<Character>(c));
+        elements.emplace_back(Tag<Character>(), c);
         return *this;
     }
-    FormattedString& operator<< ( const FormattedString& string ) &
+    FormattedString& operator<<(const FormattedString& string) &
     {
         if ( !string.empty() )
             append(string);
@@ -488,8 +594,9 @@ public:
             ss << obj;
             return *this << ss.str();
         }
+
     template <class T>
-        FormattedString&& operator<< ( T&& obj ) &&
+        FormattedString&& operator<<(T&& obj) &&
         {
             static_cast<FormattedString&>(*this) << std::forward<T>(obj);
             return std::move(*this);

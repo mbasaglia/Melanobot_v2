@@ -63,7 +63,7 @@ public:
     void write_unicode(const boost::python::object& unicode)
     {
         using namespace boost::python;
-        write(extract<std::string>(str(unicode).encode("utf-8")));
+        write(extract<std::string>(str(unicode).encode(string::FormatterUtf8())));
     }
 
 private:

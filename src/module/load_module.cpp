@@ -50,7 +50,7 @@ void gather_metadata(const std::string& search_path,
         std::string basename = entry.path().filename().string();
         if ( std::regex_match(basename, match, regex) )
         {
-            Log("sys",'!',4) << "\tLoading library " << entry;
+            Log("sys",'!',4) << "\tLoading library " << entry.path().string();
             try
             {
                 Library lib(entry.path().native(),

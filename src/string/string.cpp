@@ -53,16 +53,6 @@ std::vector<std::string> QFont::qfont_table = {
     "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "{",  "|",  "}",  "~",  "<"   // 15
 };
 
-std::string FormattedString::encode(Formatter* formatter) const
-{
-    if ( !formatter )
-    {
-        ErrorLog("sys") << "Trying to encode a string without formatter";
-        return {};
-    }
-    return encode(*formatter);
-}
-
 std::string FormatterUtf8::ascii(char c) const
 {
     return std::string(1,c);

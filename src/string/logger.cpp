@@ -44,7 +44,7 @@ void Logger::log (const std::string& type, char direction,
 
     log_destination << formatter->color(log_directions[direction]) << direction;
 
-    log_destination << formatter->clear() << message.encode(formatter)
+    log_destination << formatter->clear() << message.encode(*formatter)
         << formatter->clear() << std::endl;
 }
 
