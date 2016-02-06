@@ -20,6 +20,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <map>
+
 #include "string/string.hpp"
 #include "string/logger.hpp"
 #include "xonotic/formatter.hpp"
