@@ -36,7 +36,7 @@ public:
     AdminQuit(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("quit",settings,parent)
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message", "Bye!");
         synopsis += " [message]";
         help = "Shuts down the bot";
     }
@@ -44,19 +44,19 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        std::string quit_msg;
+        string::FormattedString quit_msg;
         if ( !msg.message.empty() )
             quit_msg = msg.message;
         else
-            quit_msg = message;
+            quit_msg = message.copy();
 
-        msg.destination->disconnect(quit_msg);
+        msg.destination->disconnect(std::move(quit_msg));
         melanobot::Melanobot::instance().stop();
         return true;
     }
 
 private:
-    std::string message = "Bye!";
+    string::FormattedString message;
 };
 
 /**
@@ -251,7 +251,7 @@ public:
     AdminReconnect(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("reconnect",settings,parent)
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message", "Reconnecting...");
         synopsis += " [message]";
         help = "Reconnects bot";
     }
@@ -259,7 +259,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        std::string quit_msg;
+        string::FormattedString quit_msg;
         if ( !msg.message.empty() )
             quit_msg = msg.message;
         else
@@ -270,7 +270,7 @@ protected:
     }
 
 private:
-    std::string message = "Reconnecting...";
+    string::FormattedString message;
 };
 
 /**
@@ -302,7 +302,7 @@ public:
     AdminDisconnect(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("disconnect",settings,parent)
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message", "Disconnecting...");
         synopsis += " [message]";
         help = "Disconnects bot";
     }
@@ -310,18 +310,18 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        std::string quit_msg;
+        string::FormattedString quit_msg;
         if ( !msg.message.empty() )
             quit_msg = msg.message;
         else
             quit_msg = message;
 
-        msg.destination->disconnect(quit_msg);
+        msg.destination->disconnect(std::move(quit_msg));
         return true;
     }
 
 private:
-    std::string message = "Disconnecting...";
+    string::FormattedString message;
 };
 
 /**

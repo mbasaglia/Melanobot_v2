@@ -71,6 +71,7 @@ public:
     }
 
 protected:
+    /// \todo Synopsis/help as formatted strings
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
@@ -261,7 +262,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,msg.source->decode(msg.message));
+        reply_to(msg, msg.source->decode(msg.message));
         return true;
     }
 };
@@ -279,7 +280,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,msg.source->description());
+        reply_to(msg, msg.source->description());
         return true;
     }
 };
@@ -296,7 +297,7 @@ public:
         auto items = settings.get_optional<std::string>("items");
         if ( items )
             default_items = melanolib::string::regex_split(*items,",\\s*");
-        customizable = settings.get("customizable",customizable);
+        customizable = settings.get("customizable", customizable);
 
         help = "Get a random element out of ";
         if ( customizable )
@@ -344,11 +345,11 @@ public:
         : Handler(settings,parent)
     {
         trigger         = settings.get("trigger","");
-        reply           = settings.get("reply","");
+        reply           = read_string(settings, "reply","");
         regex           = settings.get("regex",0);
         case_sensitive  = settings.get("case_sensitive",1);
         direct          = settings.get("direct",1);
-        help            = settings.get("help",help);
+        help            = settings.get("help", help);
 
         if ( trigger.empty() || reply.empty() )
             throw melanobot::ConfigurationError();
@@ -394,40 +395,39 @@ protected:
             std::smatch match;
             if ( std::regex_match(msg.message,match,trigger_regex) )
             {
-                Properties map = {
-                    {"sender", msg.from.name},
+                string::FormattedProperties map = {
+                    {"sender", msg.source->decode(msg.from.name)},
                     {"channel", melanolib::string::implode(",", msg.channels)},
                 };
                 for ( unsigned i = 0; i < match.size(); i++ )
-                    map[std::to_string(i)] = match[i];
-                on_handle(msg, melanolib::string::replace(reply,map,"%"));
+                    map[std::to_string(i)] = match[i].str();
+                on_handle(msg, reply.replaced(map));
                 return true;
             }
         }
         else if ( msg.message == trigger )
         {
-            on_handle(msg,reply);
+            on_handle(msg, reply.copy());
             return true;
         }
         else if ( !case_sensitive &&
             melanolib::string::strtolower(msg.message) == melanolib::string::strtolower(trigger) )
         {
-            on_handle(msg,reply);
+            on_handle(msg, reply.copy());
             return true;
         }
 
         return false;
     }
 
-    virtual void on_handle(const network::Message& msg, const std::string& reply) const
+    virtual void on_handle(const network::Message& msg, string::FormattedString&& reply) const
     {
-        string::FormatterConfig cfg;
-        reply_to(msg,cfg.decode(reply));
+        reply_to(msg, reply);
     }
 
 private:
     std::string trigger;                ///< Trigger pattern
-    std::string reply;                  ///< Reply string
+    string::FormattedString reply;      ///< Reply string
     bool        regex{false};           ///< Whether the trigger is a regex
     bool        case_sensitive{true};   ///< Whether matches are case sensitive
     bool        direct{true};           ///< Whether the input message must be direct
@@ -444,9 +444,10 @@ public:
     using Reply::Reply;
 
 protected:
-    virtual void on_handle(const network::Message& msg, const std::string& reply) const
+    virtual void on_handle(const network::Message& msg, string::FormattedString&& reply) const
     {
-        msg.source->command(network::Command(reply,{},priority));
+        msg.destination->command(network::Command(
+            reply.encode(*msg.destination->formatter()), {}, priority));
     }
 };
 
@@ -461,8 +462,8 @@ public:
     {
         help = "Make the bot perform a chat action (Roleplay)";
         synopsis += " Action...";
-        unauthorized = settings.get("unauthorized",unauthorized);
-        empty = settings.get("empty",empty);
+        unauthorized = read_string(settings, "unauthorized", "Won't do!");
+        empty = read_string(settings, "empty", "Please what?");
         auth = settings.get("auth",auth);
     }
 
@@ -479,7 +480,7 @@ protected:
     {
         if ( !auth.empty() && !msg.source->user_auth(msg.from.local_id,auth) )
         {
-            reply_to(msg,unauthorized);
+            reply_to(msg, unauthorized);
             return true;
         }
 
@@ -501,14 +502,14 @@ protected:
         }
         else
         {
-            reply_to(msg,empty);
+            reply_to(msg, empty);
         }
         return true;
     }
 
 private:
-    std::string unauthorized = "Won't do!";
-    std::string empty = "Please what?";
+    string::FormattedString unauthorized;
+    string::FormattedString empty;
     std::string auth;
 };
 
@@ -529,12 +530,12 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,melanolib::time::format(melanolib::time::parse_time(msg.message), format));
+        reply_to(msg,melanolib::time::strftime(melanolib::time::parse_time(msg.message), format));
         return true;
     }
 
 private:
-    std::string format = "r (\\U\\T\\C)"; ///< Output time format
+    std::string format = "%r (UTC)"; ///< Output time format
 };
 
 } // namespace core

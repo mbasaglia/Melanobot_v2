@@ -113,12 +113,12 @@ public:
     /**
      * \brief Close the connection
      */
-    virtual void disconnect(const std::string& message = {}) = 0;
+    virtual void disconnect(const string::FormattedString& message = {}) = 0;
 
     /**
      * \brief Disconnect and connect again
      */
-    virtual void reconnect(const std::string& quit_message = {}) = 0;
+    virtual void reconnect(const string::FormattedString& quit_message = {}) = 0;
 
     /**
      * \brief Disconnect and stop all processing
@@ -239,18 +239,17 @@ public:
      * \brief Returns a list of properties used to message formatting
      * \note Returned properties should be formatted using the FormatterConfig
      */
-    virtual Properties pretty_properties() const = 0;
+    virtual string::FormattedProperties pretty_properties() const = 0;
 
     /**
      * \brief Returns a list of properties used to message formatting
      * \note Returned properties should be formatted using the FormatterConfig
      */
-    virtual Properties pretty_properties(const user::User& user) const
+    virtual string::FormattedProperties pretty_properties(const user::User& user) const
     {
-        string::FormatterConfig fmt;
-        Properties props = pretty_properties();
+        string::FormattedProperties props = pretty_properties();
         props.insert({
-            {"name",    encode_to(user.name,fmt)},
+            {"name",    decode(user.name)},
             {"ip",      user.host},
             {"local_id",user.local_id},
             {"global_id",user.global_id},

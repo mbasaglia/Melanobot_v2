@@ -35,6 +35,11 @@
  */
 namespace string {
 
+
+using ReplacementFunctor = std::function<
+    melanolib::Optional<class FormattedString> (const std::string&)
+    >;
+
 /**
  * \brief Generic element of a string
  */
@@ -54,6 +59,8 @@ public:
     virtual int char_count() const { return 0; }
 
     virtual std::unique_ptr<Element> clone() const = 0;
+
+    virtual void replace(const ReplacementFunctor& func) {}
 
 };
 
@@ -283,18 +290,20 @@ private:
 public:
 
     /**
-     * \brief Move-only object that contains a dynamic instance of \c Element
+     * \brief Object that contains a dynamic instance of \c Element
+     *
+     * Copying this object performs a deep copy of the contained value
      */
     class value_type
     {
     public:
 
-        value_type(std::unique_ptr<Element> ptr)
+        value_type(std::unique_ptr<Element> ptr) noexcept
             : ptr(std::move(ptr))
         {}
 
         template<class Y>
-            value_type(std::unique_ptr<Y> ptr)
+            value_type(std::unique_ptr<Y> ptr) noexcept
             : ptr(std::move(ptr))
         {}
 
@@ -303,20 +312,20 @@ public:
             : ptr(melanolib::New<E>(std::forward<Args>(args)...))
         {}
 
-        /*value_type(const value_type& oth)
+        value_type(const value_type& oth)
         {
-            ptr = oth.clone();
+            ptr = oth->clone();
         }
 
-        value_type(value_type&&) = default;
+        value_type(value_type&&) noexcept = default;
 
         value_type& operator=(const value_type& oth)
         {
-            ptr = oth.clone();
+            ptr = oth->clone();
             return *this;
         }
 
-        value_type& operator=(value_type&&) = default;*/
+        value_type& operator=(value_type&&) noexcept = default;
 
         value_type clone() const
         {
@@ -368,9 +377,9 @@ public:
     FormattedString(const char* ascii_string)
         : FormattedString(std::string(ascii_string)) {}
     FormattedString() = default;
-    FormattedString(const FormattedString&) = delete;
+    FormattedString(const FormattedString&) = default;
     FormattedString(FormattedString&&) noexcept = default;
-    FormattedString& operator=(const FormattedString&) = delete;
+    FormattedString& operator=(const FormattedString&) = default;
     FormattedString& operator=(FormattedString&&) noexcept = default;
 
     iterator        begin()       { return elements.begin();}
@@ -395,19 +404,19 @@ public:
     {
         return elements.insert(p, std::move(t));
     }
-    /*iterator insert(const const_iterator& p, size_type n, const value_type& t)
+    iterator insert(const const_iterator& p, size_type n, const value_type& t)
     {
         return elements.insert(p, n, t);
-    }*/
+    }
     template<class InputIterator>
         iterator insert(const const_iterator& p, const InputIterator& i, const InputIterator& j )
         {
             return elements.insert(p, i, j);
         }
-    /*iterator insert(const const_iterator& p, const std::initializer_list<value_type>& il )
+    iterator insert(const const_iterator& p, const std::initializer_list<value_type>& il )
     {
         return elements.insert(p, il);
-    }*/
+    }
 
     void pop_back()
     {
@@ -427,19 +436,19 @@ public:
         elements.clear();
     }
 
-    /*void assign(size_type n, const value_type& t)
+    void assign(size_type n, const value_type& t)
     {
         elements.assign(n, t);
-    }*/
+    }
     template<class InputIterator>
         void assign(const InputIterator& i, const InputIterator& j )
         {
             elements.assign(i, j);
         }
-    /*void assign(const std::initializer_list<value_type>& il )
+    void assign(const std::initializer_list<value_type>& il )
     {
         elements.assign(il);
-    }*/
+    }
 
 // Non-C++ container methods
 
@@ -490,7 +499,7 @@ public:
     {
         elements.reserve(size() + string.size());
         for ( const auto& element : string )
-            elements.emplace_back(element.clone());
+            elements.emplace_back(element/*.clone()*/);
     }
 
     /**
@@ -512,11 +521,60 @@ public:
         FormattedString c;
         c.elements.reserve(elements.size());
         for ( const auto& element : *this )
-            c.elements.emplace_back(element.clone());
+            c.elements.emplace_back(element/*.clone()*/);
         return c;
     }
 
-    // Element overrides
+    /**
+     * \brief Replace placeholders based on a map
+     */
+    template<class Map, class = typename Map::iterator>
+        void replace(const Map& map)
+        {
+            replace(
+                [&map](const std::string& id)
+                    -> melanolib::Optional<FormattedString>
+                {
+                    auto it = map.find(id);
+                    if ( it != map.end() )
+                        return FormattedString(it->second);
+                    return {};
+                }
+            );
+        }
+
+    void replace(const std::string& placeholder, const FormattedString& string)
+    {
+        replace(
+            [&string, &placeholder](const std::string& id)
+                -> melanolib::Optional<FormattedString>
+            {
+                if ( id == placeholder )
+                    return string.copy();
+                return {};
+            }
+        );
+    }
+
+    /**
+     * \brief Replace placeholders based on a map
+     */
+    template<class Map, class = typename Map::iterator>
+        FormattedString replaced(const Map& map) const
+        {
+            FormattedString str = copy();
+            str.replace(map);
+            return str;
+        }
+
+    FormattedString replaced(const ReplacementFunctor& func) const
+    {
+        FormattedString str = copy();
+        str.replace(func);
+        return str;
+    }
+
+// Element overrides
 
     /**
      * \brief Counts the number of characters
@@ -539,7 +597,13 @@ public:
         return melanolib::New<FormattedString>(copy());
     }
 
-    // Stream-like operations
+    void replace(const ReplacementFunctor& func) override
+    {
+        for ( auto& element : elements )
+            element->replace(func);
+    }
+
+// Stream-like operations
 
     FormattedString& operator<<(const std::string& text) &
     {
@@ -610,6 +674,44 @@ private:
      * If it's \b nullptr, it will be interpreted as an ASCII string
      */
     Formatter *input_formatter{nullptr};
+};
+
+/**
+ * \brief Element that is used for replacements
+ */
+class Placeholder : public Element
+{
+public:
+    Placeholder(std::string identifier, FormattedString replacement = {})
+        : identifier(std::move(identifier)),
+          replacement(std::move(replacement))
+    {}
+
+    std::string to_string(const Formatter& formatter) const override
+    {
+        return replacement.encode(formatter);
+    }
+
+    int char_count() const override
+    {
+        return replacement.char_count();
+    }
+
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<Placeholder>(identifier, replacement.copy());
+    }
+
+    void replace(const ReplacementFunctor& func) override
+    {
+        auto rep = func(identifier);
+        if ( rep )
+            replacement = std::move(*rep);
+    }
+
+private:
+    std::string identifier;
+    FormattedString replacement;
 };
 
 /**
@@ -706,13 +808,13 @@ public:
  *
  * Style formatting:
  *      * ##            #
- *      * #-#           clear all formatting
- *      * #-b#          bold
- *      * #-u#          underline
- *      * #1#           red
- *      * #xf00#        red
- *      * #red#         red
- *      * #nocolor#     no color
+ *      * $(-)           clear all formatting
+ *      * $(-b)          bold
+ *      * $(-u)          underline
+ *      * $(1)           red
+ *      * $(xf00)        red
+ *      * $(red)         red
+ *      * $(nocolor)     no color
  */
 class FormatterConfig : public FormatterUtf8
 {
@@ -728,6 +830,8 @@ public:
     std::string name() const override;
 
 };
+
+using FormattedProperties = std::unordered_map<std::string, FormattedString>;
 
 } // namespace string
 

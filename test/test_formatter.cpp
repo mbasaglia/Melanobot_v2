@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE( test_ascii )
 BOOST_AUTO_TEST_CASE( test_config )
 {
     FormatterConfig fmt;
-    std::string utf8 = u8"Foo bar è$ç";
+    std::string utf8 = u8"Foo bar è#ç";
     auto decoded = fmt.decode(utf8);
     BOOST_CHECK( decoded.size() == 4 );
     BOOST_CHECK( cast<AsciiSubstring>(decoded[0]));
@@ -90,9 +90,9 @@ BOOST_AUTO_TEST_CASE( test_config )
     BOOST_CHECK( cast<Unicode>(decoded[3]));
     BOOST_CHECK( decoded.encode(fmt) == utf8 );
 
-    std::string formatted = "Hello #1#World #-bu#test#-###1#green#green#x00f#blue§";
+    std::string formatted = "Hello $(1)World $(-bu)test$(-)#1$(green)green$(x00f)blue§$$(1)";
     decoded = fmt.decode(formatted);
-    BOOST_CHECK( decoded.size() == 12 );
+    BOOST_CHECK( decoded.size() == 13 );
     // "Hello "
     BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
     BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
@@ -129,8 +129,12 @@ BOOST_AUTO_TEST_CASE( test_config )
     BOOST_CHECK( cast<Unicode>(decoded[11]) );
     BOOST_CHECK( cast<Unicode>(decoded[11])->utf8() == u8"§" );
     BOOST_CHECK( cast<Unicode>(decoded[11])->point() == 0x00A7 );
+    // "$(1)"
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[12]) );
+    BOOST_CHECK( cast<AsciiSubstring>(decoded[12])->string() == "$(1)" );
 
-    BOOST_CHECK( decoded.encode(fmt) == "Hello #1#World #-bu#test#-###1#2#green#4#blue§" );
+
+    BOOST_CHECK( decoded.encode(fmt) == "Hello $(1)World $(-bu)test$(-)#1$(2)green$(4)blue§$$(1)" );
 }
 
 BOOST_AUTO_TEST_CASE( test_ansi_ascii )
@@ -398,7 +402,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
     s.insert(s.begin()+2,melanolib::New<Color>(color::blue));
     BOOST_CHECK( cast<Color>(s[2]) );
-    /*s.insert(s.begin()+2,3,melanolib::New<Format>(FormatFlags()));
+    s.insert(s.begin()+2,3,melanolib::New<Format>(FormatFlags()));
     for ( int i = 2; i < 5; i++ )
         BOOST_CHECK( cast<Format>(s[i]) );
     {
@@ -413,16 +417,16 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         melanolib::New<Color>(color::red)
     });
     BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
-    BOOST_CHECK( cast<Color>(s[1]) );*/
+    BOOST_CHECK( cast<Color>(s[1]) );
 
     // Erase
     s.erase(s.begin()+1);
-    BOOST_CHECK( cast<Color>(s[1]) );
+    BOOST_CHECK( cast<AsciiSubstring>(s[1]) );
     s.erase(s.begin()+1,s.end()-1);
     BOOST_CHECK( s.size() == 2 );
 
     // Assign
-    /*s.assign(5,melanolib::New<Color>(color::green));
+    s.assign(5,melanolib::New<Color>(color::green));
     BOOST_CHECK( s.size() == 5 );
     {
         FormattedString s2;
@@ -434,7 +438,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         melanolib::New<AsciiSubstring>("bar"),
         melanolib::New<Color>(color::red)
     });
-    BOOST_CHECK( s.size() == 2 );*/
+    BOOST_CHECK( s.size() == 2 );
 
     // Append
     s.append<AsciiSubstring>("hello");
@@ -510,5 +514,30 @@ BOOST_AUTO_TEST_CASE( test_Utf8Parser )
     BOOST_CHECK( Utf8Parser::encode(0x00A7) == u8"§" );
     BOOST_CHECK( Utf8Parser::encode(0x110E) == u8"ᄎ" );
     BOOST_CHECK( Utf8Parser::encode(0x26060) == u8"𦁠" );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_Replacements )
+{
+    FormatterConfig cfg;
+    FormatterAscii ascii;
+    auto string = cfg.decode("$(red)$hellooo$hello,${hello}oo");
+    std::map<std::string, std::string> replacements = {
+        {"hello", "world"}
+    };
+    string.replace(replacements);
+    replacements["hello"].append("!!");
+    BOOST_CHECK( string.encode(ascii) == "world,worldoo" );
+
+    BOOST_CHECK( string.replaced(replacements).encode(ascii) == "world!!,world!!oo" );
+
+    std::map<std::string, FormattedString> replacements2 = {
+        {"hello", "world"}
+    };
+    string.replace(replacements2);
+    replacements2["hello"].append("!!");
+    BOOST_CHECK( string.encode(ascii) == "world,worldoo" );
+
+    BOOST_CHECK( string.replaced(replacements2).encode(ascii) == "world!!,world!!oo" );
 
 }

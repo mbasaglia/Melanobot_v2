@@ -114,11 +114,11 @@ public:
                      ::MessageConsumer* parent)
         : Handler(settings,parent), type(type)
     {
-        message = settings.get("message",message);
-        action  = settings.get("action",action);
-        discard_self = settings.get("discard_self",discard_self);
-        discard_others=settings.get("discard_others",discard_others);
-        if ( message.empty() ||  (discard_others && discard_self) )
+        message = read_string(settings, "message", "");
+        action  = settings.get("action", action);
+        discard_self = settings.get("discard_self", discard_self);
+        discard_others = settings.get("discard_others", discard_others);
+        if ( message.empty() || (discard_others && discard_self) )
             throw melanobot::ConfigurationError();
 
         int timeout_seconds = settings.get("timeout",0);
@@ -141,11 +141,9 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        string::FormatterConfig fmt;
         auto from = msg.source->decode(msg.from.name);
-        auto str = melanolib::string::replace(message,message_replacements(msg),"%");
         reply_to(msg,network::OutputMessage(
-            fmt.decode(str),
+            message.replaced(message_replacements(msg)),
             action,
             reply_channel(msg),
             priority,
@@ -158,16 +156,14 @@ protected:
         return true;
     }
 
-    virtual Properties message_replacements(const network::Message& msg) const
+    virtual string::FormattedProperties message_replacements(const network::Message& msg) const
     {
-        string::FormatterConfig fmt;
-        auto from = msg.source->decode(msg.from.name);
         return {
             {"channel", melanolib::string::implode(", ",msg.channels)},
-            {"name", from.encode(fmt)},
+            {"name", msg.source->decode(msg.from.name)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id},
-            {"message", msg.source->encode_to(msg.message, fmt)}
+            {"message", msg.source->decode(msg.message)}
         };
     }
 
@@ -183,7 +179,7 @@ private:
     }
 
     network::Message::Type type;///< Type of messages to be handled
-    std::string message;        ///< Message to send
+    string::FormattedString message;        ///< Message to send
     bool        action = false; ///< Whether it should output an action
     bool        discard_self{0};///< Whether not triggered when the joining user has the same name as the source connection
     bool        discard_others{0};///< Whether not triggered when the joining user name differs from the source connection
@@ -222,19 +218,18 @@ public:
     {}
 
 protected:
-    Properties message_replacements(const network::Message& msg) const override
+    string::FormattedProperties message_replacements(const network::Message& msg) const override
     {
-        string::FormatterConfig fmt;
         return {
             {"channel", melanolib::string::implode(", ",msg.channels)},
-            {"message",msg.message},
+            {"message", msg.source->decode(msg.message)},
 
-            {"kicker", msg.source->encode_to(msg.from.name,fmt)},
+            {"kicker", msg.source->decode(msg.from.name)},
             {"kicker.host", msg.from.host},
             {"kicker.global_id", msg.from.global_id},
             {"kicker.local_id", msg.from.local_id},
 
-            {"kicked", msg.source->encode_to(msg.victim.name,fmt)},
+            {"kicked", msg.source->decode(msg.victim.name)},
             {"kicked.host", msg.victim.host},
             {"kicked.global_id", msg.victim.global_id},
             {"kicked.local_id", msg.victim.local_id}
@@ -244,7 +239,7 @@ protected:
 
 /**
  * \brief Prints a message when a user changes name
- * \note %name expands to the old name, %message to the new one
+ * \note $name expands to the old name, $message to the new one
  */
 class RenameMessage: public EventMessageBase
 {

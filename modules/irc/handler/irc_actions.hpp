@@ -33,9 +33,9 @@ class IrcKickRejoin: public melanobot::Handler
 {
 public:
     IrcKickRejoin(const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message", "");
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -47,18 +47,20 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.destination->command({"JOIN",msg.channels,priority});
+        msg.destination->command({"JOIN", msg.channels, priority});
         if ( !message.empty() )
-            reply_to(msg, melanolib::string::replace(message,{
+        {
+            reply_to(msg, message.replaced( string::FormattedProperties{
                 {"channel", msg.channels[0]},
-                {"kicker", msg.from.name},
-                {"message", msg.params.size() > 1 ? msg.params.back() : "" }
-            },"%"));
+                {"kicker",  msg.source->decode(msg.from.name)},
+                {"message", msg.source->decode(msg.message)}
+            }));
+        }
         return true;
     }
 
 private:
-    std::string message;
+    string::FormattedString message;
 };
 
 } // namespace handler

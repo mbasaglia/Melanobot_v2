@@ -36,8 +36,9 @@ public:
     {
         synopsis += "who time message...";
         help = "Sends a message at the given time";
-        reply_ok = settings.get("reply_ok", reply_ok);
-        reply_no = settings.get("reply_no", reply_no);
+        reply_ok = read_string(settings, "reply_ok", "Got it!");
+        reply_no = settings.get("reply_no", "Forget it!");
+        reply = settings.get("reply", "<$from> $to, remember $message");
         storage_id = settings.get("storage_id", storage_id);
 
         load_items();
@@ -69,15 +70,15 @@ private:
      */
     struct Item
     {
-        std::string message;    ///< Message text (already formatted as for \p reply
+        string::FormattedString message; ///< Message text (already formatted as for \p reply)
         std::string connection; ///< Name of the connection as from Melanobot
         std::string target;     ///< Message target (channel or user)
         melanolib::time::DateTime timeout; ///< Time at which the message should be delivered
     };
 
-    std::string reply_ok = "Got it!";   ///< Reply acknowledging the message will be processed
-    std::string reply_no = "Forget it!";///< Reply given when a message has been discarded
-    std::string reply = "<%from> %to, remember %message"; ///< Message formatting
+    string::FormattedString reply_ok;   ///< Reply acknowledging the message will be processed
+    string::FormattedString reply_no;   ///< Reply given when a message has been discarded
+    string::FormattedString reply;      ///< Message formatting
     std::string storage_id = "remind"; ///< ID used in storage
     std::list<Item> items; ///< List of stored messages
     std::mutex mutex; ///< Mutex guarding \p items
@@ -106,7 +107,9 @@ private:
     /**
      * \brief Returns the replacements used by \p reply
      */
-    Properties replacements(const network::Message& src, const std::string& to, const std::string& message) const;
+    string::FormattedProperties replacements(const network::Message& src,
+                                             const std::string& to,
+                                             const std::string& message) const;
 
 };
 
@@ -134,6 +137,7 @@ protected:
     bool on_handle(network::Message& msg);
 
 private:
+    /// \todo this could use something like ${time:%c %e}
     std::string reply_ok = "Got it! (%c %e)";   ///< Reply acknowledging the message will be processed
     std::string reply_no = "Forget it!";///< Reply given when a message has been discarded
 };

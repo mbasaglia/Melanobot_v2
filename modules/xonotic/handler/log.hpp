@@ -32,8 +32,10 @@ public:
     ConnectionEvents( const Settings& settings, MessageConsumer* parent )
         : Handler(settings, parent)
     {
-        connect = settings.get("connect","Server #2#%sv_host#-# connected.");
-        disconnect = settings.get("disconnect","#-b#Warning!#-# Server #1#%sv_host#-# disconnected.");
+        connect = read_string(settings, "connect",
+            "Server $(2)$sv_host$(-) connected.");
+        disconnect = read_string(settings, "disconnect",
+            "$(-b)Warning!$(-) Server $(1)$sv_host$(-) disconnected.");
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -45,17 +47,15 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        string::FormatterConfig fmt;
-        const std::string& str =
+        const auto& str =
             msg.type == network::Message::CONNECTED ? connect : disconnect;
-        reply_to(msg,fmt.decode(
-            melanolib::string::replace(str,msg.source->pretty_properties(),"%")));
+        reply_to(msg, str.replaced(msg.source->pretty_properties()));
         return true;
     }
 
 private:
-    std::string connect;
-    std::string disconnect;
+    string::FormattedString connect;
+    string::FormattedString disconnect;
 };
 
 /**
@@ -67,9 +67,11 @@ public:
     XonoticJoinPart( const Settings& settings, MessageConsumer* parent )
         : Handler(settings, parent)
     {
-        join = settings.get("join",join);
-        part = settings.get("part",part);
-        bots = settings.get("bots",bots);
+        join = read_string(settings, "join",
+            "$(2)+ join$(-): $name $(1)$map$(-) [$(1)$players$(-)/$(1)$max$(-)]");
+        part = read_string(settings, "part",
+            "$(1)- part$(-): $name $(1)$map$(-) [$(1)$players$(-)/$(1)$max$(-)]");
+        bots = settings.get("bots", bots);
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -83,19 +85,18 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         // Get all of the user properties and message properties
-        Properties props = msg.source->pretty_properties(msg.from);
+        auto props = msg.source->pretty_properties(msg.from);
 
         // Select the right message
-        const std::string& message = msg.type == network::Message::JOIN ? join : part;
-        // Format the message and send it
-        string::FormatterConfig fmt;
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        const auto& message = msg.type == network::Message::JOIN ? join : part;
+
+        reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
-    std::string join = "#2#+ join#-#: %name #1#%map#-# [#1#%players#-#/#1#%max#-#]";
-    std::string part = "#1#- part#-#: %name #1#%map#-# [#1#%players#-#/#1#%max#-#]";
+    string::FormattedString join;
+    string::FormattedString part;
     bool        bots = false;
 };
 
@@ -105,11 +106,12 @@ private:
 class XonoticMatchStart : public melanobot::Handler
 {
 public:
-    XonoticMatchStart( const Settings& settings, MessageConsumer* parent )
+    XonoticMatchStart(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
-        message = settings.get("message",message);
-        empty = settings.get("empty",empty);
+        message = settings.get("message",
+            "Playing $(dark_cyan)$gametype$(-) on $(1)$map$(-) ($free free slots); join now: $(-b)xonotic +connect $sv_server");
+        empty = settings.get("empty", empty);
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -120,16 +122,15 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        string::FormatterConfig fmt;
-        Properties props = msg.source->pretty_properties();
+        auto props = msg.source->pretty_properties();
 
         if ( empty || msg.source->count_users().users )
-            reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+            reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
-    std::string message = "Playing #dark_cyan#%gametype#-# on #1#%map#-# (%free free slots); join now: #-b#xonotic +connect %sv_server";
+    string::FormattedString message;
     bool empty = false;
 };
 
@@ -177,23 +178,23 @@ public:
     ShowVoteCall(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vcall:(\d+):(.*))",settings,parent)
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message",
+                              "$(4)*$(-) $name$(-) calls a vote for $vote");
     }
 
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
         // Uses pretty_properties with user + "vote"
-        string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = msg.source->pretty_properties(user);
-        props["vote"] = msg.source->encode_to(match[2],fmt);
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        auto props = msg.source->pretty_properties(user);
+        props["vote"] = msg.source->decode(match[2]);
+        reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
-    std::string message = "#4#*#-# %name#-# calls a vote for %vote";
+    string::FormattedString message;
 };
 
 /**
@@ -205,70 +206,75 @@ public:
     ShowVoteResult(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:v(yes|no|timeout):(\d+):(\d+):(\d+):(\d+):(-?\d+))",settings,parent)
     {
-        message = settings.get("message",message);
-        message_yes = settings.get("message_yes",message_yes);
-        message_no = settings.get("message_no",message_no);
-        message_timeout = settings.get("message_timeout",message_timeout);
-        message_abstain = settings.get("message_abstain",message_abstain);
-        message_min = settings.get("message_min",message_min);
+        message = read_string(settings, "message",
+            "$(4)*$(-) vote $message_result: $(dark_green)$yes$(-):$(1)$no$(-)$message_abstain$message_min");
+        message_yes = read_string(settings, "message_yes",
+            "$(dark_green)passed");
+        message_no = read_string(settings, "message_no",
+            "$(1)failed");
+        message_timeout = read_string(settings, "message_timeout",
+            "$(dark_yellow)timed out");
+        message_abstain = read_string(settings, "message_abstain",
+            ", $abstain_total didn't vote");
+        message_min = read_string(settings, "message_min", " ($min needed)");
     }
 
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
         // Message properties
-        string::FormatterConfig fmt;
-        Properties props = msg.source->pretty_properties();
+        auto props = msg.source->pretty_properties();
         // result: yes, no, timeout
-        props["result"] = match[1];
+        std::string result = match[1].str();
+        props["result"] = result;
         // yes: # of players who voted yes
-        props["yes"] = match[2];
+        props["yes"] = match[2].str();
         // no: # of players who voted no
-        props["no"] = match[3];
+        props["no"] = match[3].str();
         // abstain: # of players who voted abstain
-        props["abstain"] = match[4];
+        props["abstain"] = match[4].str();
         // novote: # of players who dind't vote
-        props["novote"] = match[5];
+        props["novote"] = match[5].str();
         int abstain_total = std::stoi(match[4])+std::stoi(match[5]);
         // abstain_total: # of players who voted abstain or didn't vote
         props["abstain_total"] = std::to_string(abstain_total);
         // min: minimum # of votes required to pass the vote
-        props["min"] = match[6];
+        props["min"] = match[6].str();
         int min = std::stoi(match[6]);
 
         // Sets message_result to one of message_yes, message_no or message_timeout
-        if ( props["result"] == "yes" )
-            props["message_result"] = melanolib::string::replace(message_yes,props,"%");
-        else if ( props["result"] == "no" )
-            props["message_result"] = melanolib::string::replace(message_no,props,"%");
+        if ( result == "yes" )
+            props["message_result"] = message_yes.replaced(props);
+        else if ( result == "no" )
+            props["message_result"] = message_no.replaced(props);
         else
-            props["message_result"] = melanolib::string::replace(message_timeout,props,"%");
+            props["message_result"] = message_timeout.replaced(props);
 
         // message_abstain is set only if abstain_total is > 0
-        props["message_abstain"] = abstain_total <= 0 ? "" :
-            melanolib::string::replace(message_abstain,props,"%");
+        if ( abstain_total <= 0 )
+            props["message_abstain"] = message_abstain.replaced(props);
 
         // message_abstain is set only if min is > 0
-        props["message_min"] = min <= 0 ? "" :
-            melanolib::string::replace(message_min,props,"%");
+        if ( min <= 0 )
+            props["message_min"] = message_min.replaced(props);
 
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
     /// Full message
-    std::string message         = "#4#*#-# vote %message_result: #dark_green#%yes#-#:#1#%no#-#%message_abstain%message_min";
+    string::FormattedString message;
     /// Message shown when the result is yes
-    std::string message_yes     = "#dark_green#passed";
+    string::FormattedString message_yes;
     /// Message shown when the result is no
-    std::string message_no      = "#1#failed";
+    string::FormattedString message_no;
     /// Message shown when the result is timeout
-    std::string message_timeout = "#dark_yellow#timed out";
-    /// Message shown when the %abstain_total is greater than zero
-    std::string message_abstain = ", %abstain_total didn't vote";
-    /// Message shown when %min is greater than zero
-    std::string message_min     = " (%min needed)";
+    string::FormattedString message_timeout;
+    /// Message shown when the $abstain_total is greater than zero
+    string::FormattedString message_abstain;
+    /// Message shown when $min is greater than zero
+    string::FormattedString message_min;
 };
 
 /**
@@ -280,21 +286,21 @@ public:
     ShowVoteStop(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vstop:(\d+))",settings,parent)
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message",
+            "$(4)*$(-) $name$(-) stopped the vote");
     }
 
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
-        string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = msg.source->pretty_properties(user);
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        auto props = msg.source->pretty_properties(user);
+        reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
-    std::string message = "#4#*#-# %name#-# stopped the vote";
+    string::FormattedString message;
 };
 
 /**
@@ -306,21 +312,21 @@ public:
     ShowVoteLogin(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vlogin:(\d+))",settings,parent)
     {
-        message = settings.get("message",message);
+        message = settings.get("message",
+            "$(4)*$(-) $name$(-) logged in as $(dark_yellow)master");
     }
 
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
-        string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = msg.source->pretty_properties(user);
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        auto props = msg.source->pretty_properties(user);
+        reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
-    std::string message = "#4#*#-# %name#-# logged in as #dark_yellow#master";
+    string::FormattedString message;
 };
 
 /**
@@ -332,22 +338,22 @@ public:
     ShowVoteDo(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vdo:(\d+):(.*))",settings,parent)
     {
-        message = settings.get("message",message);
+        message = settings.get("message",
+            "$(4)*$(-) $name$(-) used their master status to do $vote");
     }
 
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
-        string::FormatterConfig fmt;
         user::User user = msg.source->get_user(match[1]);
-        Properties props = msg.source->pretty_properties(user);
-        props["vote"] = msg.source->encode_to(match[2], fmt);
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        auto props = msg.source->pretty_properties(user);
+        props["vote"] = msg.source->decode(match[2]);
+        reply_to(msg, message.replaced(props));
         return true;
     }
 
 private:
-    std::string message = "#4#*#-# %name#-# used their master status to do %vote";
+    string::FormattedString message;
 };
 
 /**
@@ -380,10 +386,10 @@ private:
      */
     struct PlayerScore
     {
-        std::string name;       ///< Player name
-        int score = 0;          ///< Score
-        int id = 0;             ///< Player ID
-        PlayerScore(std::string name, int score, int id)
+        string::FormattedString name;   ///< Player name
+        int score = 0;                  ///< Score
+        int id = 0;                     ///< Player ID
+        PlayerScore(string::FormattedString name, int score, int id)
             : name(std::move(name)), score(score), id(id) {}
 
         bool operator< (const PlayerScore& o) const noexcept { return score < o.score; }
@@ -408,9 +414,10 @@ public:
             settings, parent
         )
     {
-        message = settings.get("message",message);
-        empty = settings.get("empty",empty);
-        show_spectators = settings.get("empty",show_spectators);
+        message = read_string(settings, "message",
+            "$(dark_cyan)$gametype$(-) on $(1)$map$(-) ended");
+        empty = settings.get("empty", empty);
+        show_spectators = settings.get("empty", show_spectators);
     }
 
     /**
@@ -452,11 +459,10 @@ protected:
      */
     void handle_end(const network::Message& msg, const std::smatch& match)
     {
-        string::FormatterConfig fmt;
-        Properties props = msg.source->pretty_properties();
+        auto props = msg.source->pretty_properties();
 
         // End match message
-        reply_to(msg,fmt.decode(melanolib::string::replace(message,props,"%")));
+        reply_to(msg, message.replaced(props));
 
         // Shows scores only if there are some scores to show
         if ( !player_scores.empty() || !team_scores.empty() )
@@ -512,8 +518,7 @@ protected:
                 out << color << string::FormatFlags::BOLD << it->second[i].score
                     << string::ClearFormatting() << ' ';
 
-            out << msg.source->decode(it->second[i].name)
-                << string::ClearFormatting();
+            out << it->second[i].name << string::ClearFormatting();
 
             if ( i < it->second.size() - 1 )
                 out << ", ";
@@ -581,7 +586,7 @@ protected:
             team = SPECTATORS;
 
         player_scores[team].emplace_back(
-            match[10],                     // name
+            match[10].str(),                          // name
             score,
             melanolib::string::to_int(match[9])       // id
         );
@@ -610,7 +615,7 @@ protected:
 private:
     bool empty = false;         ///< Whether to show the scores on an empty/bot-only match
     bool show_spectators = true; ///< Whether to show spectators on the score list
-    std::string message = "#dark_cyan#%gametype#-# on #1#%map#-# ended"; ///< Message starting the score list
+    string::FormattedString message; ///< Message starting the score list
 
     std::map<int,std::vector<PlayerScore>>player_scores;  ///< Player Scores (team number => scores)
     std::map<int,int>                     team_scores;    ///< Team Scores (number => score)
@@ -640,7 +645,8 @@ public:
     XonoticHostError( const Settings& settings, MessageConsumer* parent )
         : ParseEventlog( "Host_Error: (.*)", settings, parent )
     {
-        message = settings.get("message",message);
+        message = read_string(settings, "message",
+            "$(1)$(-b)SERVER ERROR$(-) $connection ($(-b)$sv_server$(-)) on $(1)$map$(-): $message");
         notify = settings.get("notify",notify);
         if ( notify.empty() )
             throw melanobot::ConfigurationError();
@@ -650,21 +656,21 @@ public:
 protected:
     bool on_handle(network::Message& msg, const std::smatch& match) override
     {
-        string::FormatterConfig fmt;
         auto props = msg.source->pretty_properties();
         props["connection"] = msg.source->config_name();
-        props["message"] = msg.source->encode_to(match[1], fmt);
+        props["message"] = msg.source->decode(match[1]);
+        auto reply = message.replaced(props);
         for ( const auto& admin : msg.destination->real_users_in_group(notify) )
         {
-            network::OutputMessage out(fmt.decode(melanolib::string::replace(message,props,"%")));
+            network::OutputMessage out(reply.copy());
             out.target = admin.local_id;
-            deliver(msg.destination,out);
+            deliver(msg.destination, out);
         }
         return true;
     }
 
 private:
-    std::string message = "#1##-b#SERVER ERROR#-# %connection (#-b#%sv_server#-#) on #1#%map#-#: %message";
+    string::FormattedString message;
     std::string notify; ///< Group to be notified
 };
 

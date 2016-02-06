@@ -90,7 +90,7 @@ protected:
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
         /// \todo convert html entities
-        reply_to(msg,parsed.get("value.joke",""));
+        reply_to(msg, parsed.get("value.joke",""));
     }
 
 private:
@@ -131,8 +131,8 @@ public:
         : SimpleJson("nextpony",settings,parent)
     {
         api_url = settings.get("url",api_url);
-        reply = settings.get("found",reply);
-        not_found = settings.get("not_found",not_found);
+        reply = read_string(settings, "found", "$time_delta until $(-b)$title$(-) (S${season}E${episode})");
+        not_found = read_string(settings, "not_found", "Next episode: not soon enough D:");
         help = "Pony countdown ("+api_url+")";
     }
 
@@ -158,19 +158,18 @@ protected:
         auto delta = time > now ? time - now : now - time;
         map["time_delta"] = melanolib::time::duration_string(delta);
 
-        string::FormatterConfig fmt;
-        reply_to(msg,fmt.decode(melanolib::string::replace(reply,map,"%")));
+        reply_to(msg, reply.replaced(map));
     }
 
     void json_failure(const network::Message& msg) override
     {
-        reply_to(msg,not_found);
+        reply_to(msg, not_found.copy());
     }
 
 private:
     std::string api_url = "http://api.ponycountdown.com/next";
-    std::string reply = "%time_delta until #-b#%title#-# (S%seasonE%episode)";
-    std::string not_found = "Next episode: not soon enough D:";
+    string::FormattedString reply;
+    string::FormattedString not_found;
 };
 
 /**
@@ -183,7 +182,7 @@ public:
         : SimpleJson("ponyface",settings,parent)
     {
         api_url = settings.get("url",api_url);
-        not_found = settings.get("not_found",not_found);
+        not_found = read_string(settings, "not_found", "Pony not found http://ponyfac.es/138/full");
         help = "Pony face ("+api_url+")";
     }
 
@@ -201,20 +200,24 @@ protected:
         if ( parsed.empty() )
             return json_failure(msg);
         auto faces = parsed.get_child("faces",{});
-        if ( faces.empty() )
-            return json_failure(msg);
-
-        reply_to(msg,faces.get(std::to_string(melanolib::math::random(faces.size()-1))+".image",not_found));
+        if ( !faces.empty() )
+        {
+            auto face = faces.get_optional<std::string>(
+                std::to_string(melanolib::math::random(faces.size()-1))+".image");
+            if ( face )
+                reply_to(msg, *face);
+        }
+        return json_failure(msg);
     }
 
     void json_failure(const network::Message& msg) override
     {
-        reply_to(msg,not_found);
+        reply_to(msg, not_found);
     }
 
 private:
     std::string api_url = "http://ponyfac.es/api.json/";
-    std::string not_found = "Pony not found http://ponyfac.es/138/full";
+    string::FormattedString not_found;
 };
 
 /**
@@ -306,7 +309,8 @@ public:
     {
         synopsis += " [time]";
         help = "Show the Discordian date";
-        format = settings.get("format",format);
+        format = read_string(settings, "format",
+            "$day_name, the $season_day day of $season in the YOLD $yold");
     }
 
 protected:
@@ -324,19 +328,18 @@ protected:
             day--;
 
         Properties discord {
-            {"day_name", day_names[day%day_names.size()]},
-            {"season_day", std::to_string(day%73+1)+melanolib::string::english.ordinal_suffix(day%73+1)},
-            {"season", season_names[(day/73)%season_names.size()]},
+            {"day_name", day_names[day % day_names.size()]},
+            {"season_day", std::to_string(day % 73 + 1)+melanolib::string::english.ordinal_suffix(day % 73 + 1)},
+            {"season", season_names[(day/73) % season_names.size()]},
             {"yold", std::to_string(year)}
         };
 
-        reply_to(msg,string::FormatterConfig().decode(
-            melanolib::string::replace(format,discord,"%") ));
+        reply_to(msg, format.replaced(discord));
         return true;
     }
 
 private:
-    std::string format = "%day_name, the %season_day day of %season in the YOLD %yold";
+    string::FormattedString format;
 };
 
 /**

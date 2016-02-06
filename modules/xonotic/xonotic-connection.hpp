@@ -77,12 +77,12 @@ public:
     /**
      * \thread any \lock none
      */
-    void command ( network::Command cmd ) override;
+    void command(network::Command cmd) override;
 
     /**
      * \thread external \lock none
      */
-    void say ( const network::OutputMessage& message ) override;
+    void say(const network::OutputMessage& message) override;
 
     /**
      * \thread external \lock none
@@ -108,12 +108,12 @@ public:
     /**
      * \thread external \lock none(todo: data)
      */
-    void disconnect(const std::string& message = {}) override;
+    void disconnect(const string::FormattedString& message = {}) override;
 
     /**
      * \thread external \lock none(todo: data)
      */
-    void reconnect(const std::string& quit_message = {}) override
+    void reconnect(const string::FormattedString& quit_message = {}) override
     {
         disconnect(quit_message);
         connect();
@@ -145,7 +145,7 @@ public:
     /**
      * \thread external \lock data
      */
-    Properties pretty_properties() const override;
+    string::FormattedProperties pretty_properties() const override;
 
     /**
      * \brief Adds a command that needs to be sent regularly to the server

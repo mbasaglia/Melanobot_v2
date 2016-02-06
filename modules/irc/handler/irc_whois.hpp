@@ -44,7 +44,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.source->update_user(msg.params[1],{{"global_id",msg.params[2]}});
+        msg.source->update_user(msg.params[1],{{"global_id", msg.params[2]}});
         return true;
     }
 

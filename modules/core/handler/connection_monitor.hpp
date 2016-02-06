@@ -56,24 +56,25 @@ public:
     MonitorServerStatus(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("status", settings, parent)
     {
-        connected = settings.get("connected", connected);
-        disconnected = settings.get("disconnected", disconnected);
+        connected = read_string(settings, "connected",
+                                "$(dark_green)Server is connected");
+        disconnected = read_string(settings, "disconnected",
+                                   "$(red)Server is not connected");
         help = "Shows whether the server is connected";
     }
 
 protected:
     bool on_handle(network::Message& msg)
     {
-        string::FormatterConfig fmt;
         if ( monitored->status() >= network::Connection::CHECKING )
-            reply_to(msg,fmt.decode(connected));
+            reply_to(msg, connected);
         else
-            reply_to(msg,fmt.decode(disconnected));
+            reply_to(msg, disconnected);
         return true;
     }
 
-    std::string connected = "#dark_green#Server is connected";
-    std::string disconnected = "#red#Server is not connected";
+    string::FormattedString connected;
+    string::FormattedString disconnected;
 };
 
 /**
@@ -85,7 +86,7 @@ public:
     MonitorReply(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("",settings,parent)
     {
-        reply = settings.get("reply", reply);
+        reply = read_string(settings, "reply", "");
         if ( reply.empty() )
             throw melanobot::ConfigurationError();
         help = settings.get("help", help);
@@ -94,15 +95,11 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        string::FormatterConfig fmt;
-        reply_to(msg, fmt.decode(melanolib::string::replace(
-            reply,
-            monitored->pretty_properties(),
-            "%")));
+        reply_to(msg, reply.replaced(monitored->pretty_properties()));
         return true;
     }
 
-    std::string reply;
+    string::FormattedString reply;
 };
 
 } // namespace core

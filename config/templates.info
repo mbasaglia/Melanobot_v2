@@ -71,7 +71,7 @@ Xonotic
             MonitorReply                ; "server ip" shows the IP address and port
             {
                 trigger "ip"
-                reply   "%sv_server"
+                reply   "$sv_server"
                 help    "Shows IP address and port"
             }
             Reply                       ; "server stats" shows the stats URL
@@ -83,12 +83,12 @@ Xonotic
             MonitorReply                ; "server game" shows gametype and map
             {
                 trigger "game"
-                reply   "Playing #dark_cyan#%gametype#-# on #1#%map"
+                reply   "Playing $(dark_cyan)$gametype$(-) on $(1)$map"
                 help    "Shows the current gametype and map"
             }
             MonitorReply                ; "server" (no parameter) shows the host name
             {
-                reply       "%sv_host"
+                reply       "$sv_host"
             }
         }
         XonoticMaps                     ; "maps" shpws a list of maps
@@ -112,8 +112,8 @@ Xonotic
 
                 JoinMessage { message "has joined" }
                 PartMessage { message "has left" }
-                KickMessage { message "has kicked %kicked!" }
-                RenameMessage { message "changed name to #7#%message" }
+                KickMessage { message "has kicked $kicked!" }
+                RenameMessage { message "changed name to $(7)$message" }
             }
         }
 
@@ -133,7 +133,7 @@ Xonotic
                 RconCommand restart     ; "restart" restarts the match
                 Group
                 {
-                    nick "[IRC] %name"
+                    nick "[IRC] $name"
                     XonoticVCall        ; "vcall" calls a vote
                     XonoticVStop        ; "vstop" stops the vote
                 }
@@ -161,7 +161,7 @@ Xonotic
         MonitorReply                    ; !irc shows the IRC channel
         {
             trigger "irc"
-            reply   "%network (%default_server) #@channel" ; Note: the # is to escape the format ##
+            reply   "$network ($default_server) #@channel" ; Note: the # is to escape the format ##
             help    "Shows the IRC channel"
         }
         Help                            ; !help shows help
@@ -189,7 +189,7 @@ Xonotic
         XonoticMatchStart               ; Shows a message on match start
         RenameMessage                   ; Shows player name changes
         {
-            message "#4#*#-# %name#-# changed name to %message"
+            message "$(4)*$(-) $name$(-) changed name to $message"
             timeout 10
         }
         XonoticMatchScore               ; Shows the score at match end
@@ -378,7 +378,7 @@ MelanobotSh
     type                IfSet
     key                 settings.melanobot_sh
     value               1
-    log_true            "#magenta#Actions for melanobot.sh activated"
+    log_true            "$(magenta)Actions for melanobot.sh activated"
 
     MelanobotShAction           ; "loop" enables auto-restart
     {
@@ -403,7 +403,7 @@ Pipe
     type                IfSet
     key                 settings.melanobot_sh
     value               1
-    log_true            "#magenta#Pipe listener activated"
+    log_true            "$(magenta)Pipe listener activated"
 
     Connection
     {

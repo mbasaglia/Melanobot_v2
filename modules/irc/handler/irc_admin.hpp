@@ -75,7 +75,7 @@ protected:
             channels = msg.channels;
         else
             return false;
-        msg.destination->command({"JOIN",channels});
+        msg.destination->command({"JOIN", channels});
         return true;
     }
 };
@@ -130,7 +130,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.destination->command({"JOIN",{msg.params[1]}});
+        msg.destination->command({"JOIN", {msg.params[1]}});
         return true;
     }
 };
@@ -194,7 +194,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.destination->command({"CLEARBUFFER",{},priority});
+        msg.destination->command({"CLEARBUFFER", {}, priority});
         return true;
     }
 };

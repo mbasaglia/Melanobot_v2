@@ -157,7 +157,7 @@ void module_melanobot_network(boost::python::scope& module_top)
             auto props = conn->pretty_properties();
             auto it = props.find(name);
             if ( it != props.end() )
-                return it->second;
+                return it->second.encode(*conn->formatter());
             return conn->properties().get(name);
         })
         .def("__setattr__",[](network::Connection* conn,

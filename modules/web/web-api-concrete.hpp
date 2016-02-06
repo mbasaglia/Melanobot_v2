@@ -41,8 +41,10 @@ public:
         yt_api_key = settings.get("yt_api_key", "");
         order = settings.get("order", order);
         api_url = settings.get("url", api_url);
-        reply = settings.get("reply", reply);
-        not_found_reply = settings.get("not_found", not_found_reply );
+        reply = read_string(settings, "reply",
+            "https://www.youtube.com/watch?v=$videoId");
+        not_found_reply = read_string(settings, "not_found",
+            "http://www.youtube.com/watch?v=oHg5SJYRHA0");
         if ( yt_api_key.empty() || api_url.empty() || reply.empty() )
             throw melanobot::ConfigurationError();
     }
@@ -66,18 +68,17 @@ protected:
         int found = parsed.get("pageInfo.totalResults",0);
         if ( !found )
         {
-            reply_to(msg,not_found_reply);
+            reply_to(msg, not_found_reply);
             return;
         }
-        string::FormatterConfig fmt;
         string::FormatterUtf8   f8;
-        Properties prop {
+        string::FormattedProperties prop {
             {"videoId",parsed.get("items.0.id.videoId","")},
-            {"title",f8.decode(parsed.get("items.0.snippet.title","")).encode(fmt)},
-            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
-            {"description",f8.decode(parsed.get("items.0.snippet.description","")).encode(fmt)},
+            {"title",f8.decode(parsed.get("items.0.snippet.title",""))},
+            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle",""))},
+            {"description",f8.decode(parsed.get("items.0.snippet.description",""))},
         };
-        reply_to(msg,fmt.decode(melanolib::string::replace(reply,prop,"%")));
+        reply_to(msg, reply.replaced(prop));
     }
 
 private:
@@ -103,11 +104,11 @@ private:
     /**
      * \brief Reply to give on found
      */
-    std::string reply = "https://www.youtube.com/watch?v=%videoId";
+    string::FormattedString reply;
     /**
      * \brief Fixed reply to give on not found
      */
-    std::string not_found_reply = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
+    string::FormattedString not_found_reply;
 };
 
 /**
@@ -120,7 +121,8 @@ public:
         : Handler(settings,parent)
     {
         yt_api_key = settings.get("yt_api_key", "");
-        reply = settings.get("reply", reply);
+        reply = read_string(settings, "reply",
+            "Ha Ha! Nice vid $name! $title ($(-b)$duration$(-))");
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -142,13 +144,12 @@ protected:
         if ( !parsed.get("pageInfo.totalResults",0) )
             return;
 
-        string::FormatterConfig fmt;
-        string::FormatterUtf8   f8;
+        string::FormatterUtf8 f8;
         send_message(msg,{
             {"videoId",parsed.get("items.0.id","")},
-            {"title",f8.decode(parsed.get("items.0.snippet.title","")).encode(fmt)},
-            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle","")).encode(fmt)},
-            {"description",f8.decode(parsed.get("items.0.snippet.description","")).encode(fmt)},
+            {"title",f8.decode(parsed.get("items.0.snippet.title",""))},
+            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle",""))},
+            {"description",f8.decode(parsed.get("items.0.snippet.description",""))},
             {"duration",
                 melanolib::time::duration_string_short(
                     melanolib::time::parse_duration(
@@ -162,13 +163,12 @@ protected:
      */
     void vimeo_found(const network::Message& msg, const Settings& parsed)
     {
-        string::FormatterConfig fmt;
-        string::FormatterUtf8   f8;
+        string::FormatterUtf8 f8;
         send_message(msg,{
             {"videoId",parsed.get("0.id","")},
-            {"title",f8.decode(parsed.get("0.title","")).encode(fmt)},
-            {"channelTitle",f8.decode(parsed.get("0.user_name","")).encode(fmt)},
-            {"description",f8.decode(parsed.get("0.description","")).encode(fmt)},
+            {"title",f8.decode(parsed.get("0.title",""))},
+            {"channelTitle",f8.decode(parsed.get("0.user_name",""))},
+            {"description",f8.decode(parsed.get("0.description",""))},
             {"duration",
                 melanolib::time::duration_string_short(
                     melanolib::time::seconds(
@@ -184,13 +184,12 @@ protected:
     {
         if ( parsed.get_child_optional("error") )
             return;
-        string::FormatterConfig fmt;
         string::FormatterUtf8   f8;
         send_message(msg,{
             {"videoId",parsed.get("id","")},
-            {"title",f8.decode(parsed.get("title","")).encode(fmt)},
-            {"channelTitle",f8.decode(parsed.get("cannel","")).encode(fmt)},
-            {"description",f8.decode(parsed.get("description","")).encode(fmt)},
+            {"title",f8.decode(parsed.get("title",""))},
+            {"channelTitle",f8.decode(parsed.get("cannel",""))},
+            {"description",f8.decode(parsed.get("description",""))},
             {"duration",
                 melanolib::time::duration_string_short(
                     melanolib::time::seconds(
@@ -206,13 +205,12 @@ protected:
     {
         if ( parsed.get_child_optional("error") )
             return;
-        string::FormatterConfig fmt;
         string::FormatterUtf8   f8;
         send_message(msg,{
             {"videoId",parsed.get("video.video_id","")},
-            {"title",f8.decode(parsed.get("video.title","")).encode(fmt)},
-            {"channelTitle",f8.decode(parsed.get("user.username","")).encode(fmt)},
-            {"description",f8.decode(parsed.get("video.description","")).encode(fmt)},
+            {"title",f8.decode(parsed.get("video.title",""))},
+            {"channelTitle",f8.decode(parsed.get("user.username",""))},
+            {"description",f8.decode(parsed.get("video.description",""))},
             {"duration",melanolib::time::duration_string_short(
                 melanolib::time::seconds(int(parsed.get("video.duration",0.0)))
             )}
@@ -222,16 +220,16 @@ protected:
     /**
      * \brief Send message with the video info
      */
-    void send_message(const network::Message& msg, Properties properties)
+    void send_message(const network::Message& msg, const string::FormattedProperties& properties)
     {
-        string::FormatterConfig fmt;
-        properties.insert({
+        auto response = reply.replaced(properties);
+        response.replace(string::FormattedProperties{
             {"channel", melanolib::string::implode(", ",msg.channels)},
-            {"name", msg.source->encode_to(msg.from.name,fmt)},
+            {"name", msg.source->decode(msg.from.name)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id},
         });
-        reply_to(msg,fmt.decode(melanolib::string::replace(reply,properties,"%")));
+        reply_to(msg, std::move(response));
     }
 
 private:
@@ -248,7 +246,7 @@ private:
     /**
      * \brief Reply to give on found
      */
-    std::string reply = "Ha Ha! Nice vid %name! %title (#-b#%duration#-#)";
+    string::FormattedString reply;
     /**
      * \brief YouTube API URL
      */
@@ -282,7 +280,7 @@ public:
     {
         synopsis += " Term...";
         help = "Search a definition on Urban Dictionary";
-        not_found_reply = settings.get("not_found", not_found_reply );
+        not_found_reply = read_string(settings, "not_found", "I don't know what $search means");
     }
 
 protected:
@@ -298,20 +296,18 @@ protected:
         std::string result = parsed.get("list.0.definition","");
 
         if ( result.empty() )
-            result = melanolib::string::replace(not_found_reply,{
+            reply_to(msg, not_found_reply.replaced( Properties{
                 {"search", msg.message},
                 {"user", msg.from.name}
-            }, "%");
+            }));
         else
-            result = melanolib::string::elide(
+            reply_to(msg, melanolib::string::elide(
                 melanolib::string::collapse_spaces(result),
                 400
-            );
-
-        reply_to(msg,result);
+            ));
     }
 private:
-    std::string not_found_reply = "I don't know what %search means";
+    string::FormattedString not_found_reply;
 };
 
 /**
@@ -342,7 +338,7 @@ private:
      * \brief Reply to give on a successful call.
      * Expands: title, url, image, longitude, latitude
      */
-    std::string found_reply = "#-b#%title#-#: %url";
+    string::FormattedString found_reply;
     /**
      * \brief Length of the content description
      *
@@ -354,7 +350,7 @@ private:
      *
      * Expands: search, user
      */
-    std::string not_found_reply = "Didn't find anything about %search";
+    string::FormattedString not_found_reply;
     /**
      * \brief Search categry
      */
@@ -372,20 +368,21 @@ public:
     {
         synopsis += " Term...";
         help = "Search a page on a wiki";
-        api_url = settings.get("url",api_url);
-        reply = settings.get("reply",reply);
-        not_found_reply = settings.get("not_found_reply",not_found_reply);
+        api_url = settings.get("url", api_url);
+        reply = read_string(settings, "reply", "$snippet");
+        not_found_reply = read_string(settings, "not_found_reply",
+                                      "I don't know anything about $search");
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
         request_json(msg, web::Request("GET", api_url,{
-            {"format",  "json"},
-            {"action",  "query"},
-            {"list",    "search"},
-            {"srsearch",msg.message},
-            {"srlimit", "1"},
+            {"format",   "json"},
+            {"action",   "query"},
+            {"list",     "search"},
+            {"srsearch", msg.message},
+            {"srlimit",  "1"},
         }));
         return true;
     }
@@ -393,22 +390,22 @@ protected:
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
         auto result = parsed.get_child_optional("query.search.0");
-        string::FormatterConfig fmt;
-        Properties prop {
-            {"search", msg.source->encode_to(msg.message,fmt)},
-            {"user", msg.source->encode_to(msg.from.name,fmt)},
+
+        string::FormattedProperties prop {
+            {"search", msg.source->decode(msg.message)},
+            {"user", msg.source->decode(msg.from.name)},
         };
 
         if ( !result )
         {
-            reply_to(msg,fmt.decode(melanolib::string::replace(not_found_reply,prop,"%")));
+            reply_to(msg, not_found_reply.replaced(prop));
             return;
         }
         prop["title"] = result->get("title","");
         /// \todo Transform snippet to plaintext
         prop["snippet"] = result->get("snippet","");
 
-        reply_to(msg,fmt.decode(melanolib::string::replace(reply,prop,"%")));
+        reply_to(msg, reply.replaced(prop));
     }
 
 protected:
@@ -419,11 +416,11 @@ protected:
     /**
      * \brief Reply to give on found
      */
-    std::string reply = "%snippet";
+    string::FormattedString reply;
     /**
      * \brief Reply to give on not found
      */
-    std::string not_found_reply = "I don't know anything about %search";
+    string::FormattedString not_found_reply;
 };
 
 /**
@@ -454,10 +451,10 @@ protected:
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
         auto result = parsed.get_child_optional("query.pages");
-        string::FormatterConfig fmt;
-        Properties prop {
-            {"search", msg.source->encode_to(msg.message,fmt)},
-            {"user", msg.source->encode_to(msg.from.name,fmt)},
+
+        string::FormattedProperties prop {
+            {"search", msg.source->decode(msg.message)},
+            {"user", msg.source->decode(msg.from.name)},
         };
 
         if ( result && !result->empty() )
@@ -465,7 +462,7 @@ protected:
 
         if ( !result || !settings::has_child(*result,"revisions.0.*") )
         {
-            reply_to(msg,fmt.decode(melanolib::string::replace(not_found_reply,prop,"%")));
+            reply_to(msg, not_found_reply.replaced(prop));
             return;
         }
 
@@ -473,7 +470,7 @@ protected:
         /// \todo Transform snippet to plaintext
         prop["snippet"] = result->get("revisions.0.*","");
 
-        reply_to(msg,fmt.decode(melanolib::string::replace(reply,prop,"%")));
+        reply_to(msg, reply.replaced(prop));
     }
 };
 

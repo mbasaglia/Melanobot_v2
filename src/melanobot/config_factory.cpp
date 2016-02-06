@@ -61,7 +61,7 @@ bool ConfigFactory::build_template(
         {
             arguments[ch.first] = settings.get(ch.first.substr(1),ch.second.data());
         }
-    ::settings::recurse(template_source, [arguments](Settings& node){
+    ::settings::recurse(template_source, [&arguments](Settings& node){
         node.data() = melanolib::string::replace(node.data(), arguments);
     });
     /// \todo recursion check

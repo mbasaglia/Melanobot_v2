@@ -304,43 +304,43 @@ std::string FormatterAnsiBlack::name() const
 std::string FormatterConfig::color(const color::Color12& color) const
 {
     if ( !color.is_valid() )
-        return "#";
+        return "$(nocolor)";
 
     switch ( color.to_bit_mask() )
     {
-        case 0x000: return "#0#";
-        case 0xf00: return "#1#";
-        case 0x0f0: return "#2#";
-        case 0xff0: return "#3#";
-        case 0x00f: return "#4#";
-        case 0xf0f: return "#5#";
-        case 0x0ff: return "#6#";
-        case 0xfff: return "#7#";
+        case 0x000: return "$(0)";
+        case 0xf00: return "$(1)";
+        case 0x0f0: return "$(2)";
+        case 0xff0: return "$(3)";
+        case 0x00f: return "$(4)";
+        case 0xf0f: return "$(5)";
+        case 0x0ff: return "$(6)";
+        case 0xfff: return "$(7)";
     }
-    return std::string("#x")+color.hex_red()+color.hex_green()+color.hex_blue()+'#';
+    return std::string("$(x")+color.hex_red()+color.hex_green()+color.hex_blue()+')';
 }
 std::string FormatterConfig::format_flags(FormatFlags flags) const
 {
-    std::string r = "#-";
+    std::string r = "$(-";
     if ( flags & FormatFlags::BOLD )
         r += "b";
     if ( flags & FormatFlags::UNDERLINE )
         r += "u";
     if ( flags & FormatFlags::ITALIC )
         r += "i";
-    return r+'#';
+    return r+')';
 }
 std::string FormatterConfig::clear() const
 {
-    return "#-#";
+    return "$(-)";
 }
 std::string FormatterConfig::ascii(char input) const
 {
-    return input == '#' ? "##" : std::string(1,input);
+    return input == '$' ? "$$" : std::string(1,input);
 }
 std::string FormatterConfig::ascii(const std::string& input) const
 {
-    return melanolib::string::replace(input,"#","##");
+    return melanolib::string::replace(input,"$","$$");
 }
 FormattedString FormatterConfig::decode(const std::string& source) const
 {
@@ -361,46 +361,74 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 
     parser.callback_ascii = [&parser,&str,&ascii,push_ascii](uint8_t byte)
     {
-        if ( byte == '#' )
+        if ( byte == '$' )
         {
-            std::string format = parser.input.get_line('#');
-
-            if ( format.empty() )
+            char next = parser.input.next();
+            if ( next == '(' )
             {
-                ascii += '#';
+                std::string format = parser.input.get_line(')');
+
+                if ( !format.empty() )
+                {
+                    push_ascii();
+                    if ( format[0] == '-' )
+                    {
+                        FormatFlags flag;
+                        for ( std::string::size_type i = 1; i < format.size(); i++ )
+                        {
+                            if ( format[i] == 'b' )
+                                flag |= FormatFlags::BOLD;
+                            else if ( format[i] == 'u' )
+                                flag |= FormatFlags::UNDERLINE;
+                            else if ( format[i] == 'i' )
+                                flag |= FormatFlags::ITALIC;
+                        }
+                        if ( !flag )
+                            str << ClearFormatting();
+                        else
+                            str << flag;
+                    }
+                    else if ( format[0] == 'x' )
+                    {
+                        str << color::Color12(format.substr(1));
+                    }
+                    else if ( std::isdigit(format[0]) )
+                    {
+                        str << color::Color12::from_4bit(0b1000|(format[0]-'0'));
+                    }
+                    else
+                    {
+                        str << color::Color12::from_name(format);
+                    }
+                }
+            }
+            else if ( next == '{' )
+            {
+                std::string id = parser.input.get_line('}');
+                if ( !id.empty() )
+                {
+                    push_ascii();
+                    str.append<Placeholder>(id);
+                }
+
+            }
+            else if ( next == '$' )
+            {
+                ascii += '$';
+            }
+            else if ( std::isalpha(next) )
+            {
+                static std::regex identifier("[a-zA-Z0-9._]+",
+                    std::regex::optimize|std::regex::ECMAScript);
+
+                std::string id = next+parser.input.get_regex(identifier);
+                push_ascii();
+                str.append<Placeholder>(id);
             }
             else
             {
-                push_ascii();
-                if ( format[0] == '-' )
-                {
-                    FormatFlags flag;
-                    for ( std::string::size_type i = 1; i < format.size(); i++ )
-                    {
-                        if ( format[i] == 'b' )
-                            flag |= FormatFlags::BOLD;
-                        else if ( format[i] == 'u' )
-                            flag |= FormatFlags::UNDERLINE;
-                        else if ( format[i] == 'i' )
-                            flag |= FormatFlags::ITALIC;
-                    }
-                    if ( !flag )
-                        str << ClearFormatting();
-                    else
-                        str << flag;
-                }
-                else if ( format[0] == 'x' )
-                {
-                    str << color::Color12(format.substr(1));
-                }
-                else if ( std::isdigit(format[0]) )
-                {
-                    str << color::Color12::from_4bit(0b1000|(format[0]-'0'));
-                }
-                else
-                {
-                    str << color::Color12::from_name(format);
-                }
+                ascii += byte;
+                parser.input.unget();
             }
         }
         else

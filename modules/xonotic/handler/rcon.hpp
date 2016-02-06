@@ -55,7 +55,7 @@ public:
             synopsis += " argument...";
         /// \todo would be cool to gather help from the server
         ///       or at least from settings
-        help = "Performs the Rcon command \"#dark_cyan#"+command+"#dark_blue#\"";
+        help = "Performs the Rcon command \"$(dark_cyan)"+command+"$(dark_blue)\"";
     }
 
 protected:
@@ -73,72 +73,61 @@ private:
     bool        arguments{true};///< Whether to allow command arguments
 };
 
-/**
- * \brief Calls a vote on the server, changing the admin name
- *        to that of the user calling the vote
- */
-class XonoticVCall : public melanobot::SimpleAction
+
+class XonoticVCallStopBase : public melanobot::SimpleAction
 {
 public:
-    XonoticVCall(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("vcall",settings,parent)
+    XonoticVCallStopBase(const char* vote, const Settings& settings, MessageConsumer* parent)
+        : SimpleAction(vote, settings, parent), vote(vote)
     {
         synopsis += " vote";
-        help = "Call a vote on the Xonotic server";
-        nick = settings.get("nick",nick);
+        nick = read_string(settings, "nick", "$name");
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        string::FormatterConfig fmt;
-        Properties props {
-            {"name",msg.source->encode_to(msg.from.name,fmt)},
+        string::FormattedProperties props {
+            {"name",msg.source->decode(msg.from.name)},
             {"local_id",msg.from.local_id},
             {"channel", melanolib::string::implode(", ",msg.channels)}
         };
-        std::string call_nick = melanolib::string::replace(nick, props, "%");
-        call_nick = fmt.decode(call_nick).encode(*msg.destination->formatter());
-        rcon_adminnick(msg.destination,{"vcall",msg.message},call_nick);
+        rcon_adminnick(msg.destination, {vote, msg.message},
+            nick.replaced(props).encode(*msg.destination->formatter()));
         return true;
     }
 
 private:
-    std::string nick = "%name"; // Nick to use
+    string::FormattedString nick; ///< Nick to use
+    const char* vote;
+};
+
+/**
+ * \brief Calls a vote on the server, changing the admin name
+ *        to that of the user calling the vote
+ */
+class XonoticVCall : public XonoticVCallStopBase
+{
+public:
+    XonoticVCall(const Settings& settings, MessageConsumer* parent)
+        : XonoticVCallStopBase("vcall", settings, parent)
+    {
+        help = "Call a vote on the Xonotic server";
+    }
 };
 
 /**
  * \brief Stop a vote on the server, changing the admin name
  *        to that of the user calling the vote
  */
-class XonoticVStop : public melanobot::SimpleAction
+class XonoticVStop : public XonoticVCallStopBase
 {
 public:
     XonoticVStop(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("vstop",settings,parent)
+        : XonoticVCallStopBase("vstop", settings, parent)
     {
-        synopsis += " vote";
         help = "Stop a vote on the Xonotic server";
-        nick = settings.get("nick",nick);
     }
-
-protected:
-    bool on_handle(network::Message& msg) override
-    {
-        string::FormatterConfig fmt;
-        Properties props {
-            {"name",msg.source->encode_to(msg.from.name,fmt)},
-            {"local_id",msg.from.local_id},
-            {"channel", melanolib::string::implode(", ", msg.channels)}
-        };
-        std::string call_nick = melanolib::string::replace(nick, props, "%");
-        call_nick = fmt.decode(call_nick).encode(*msg.destination->formatter());
-        rcon_adminnick(msg.destination,{"vstop",msg.message},call_nick);
-        return true;
-    }
-
-private:
-    std::string nick = "%name"; // Nick to use
 };
 
 } // namespace xonotic

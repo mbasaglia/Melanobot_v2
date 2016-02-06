@@ -83,32 +83,32 @@ XonoticConnection::XonoticConnection ( const ConnectionDetails& server,
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));
 
-    cmd_say = settings.get("say","say %prefix%message");
-    cmd_say_as = settings.get("say_as", "say \"%prefix%from^7: %message\"");
-    cmd_say_action = settings.get("say_action", "say \"^4* ^3%prefix%from^3 %message\"");
+    cmd_say = settings.get("say", "say $prefix$message");
+    cmd_say_as = settings.get("say_as", "say \"$prefix$from^7: $message\"");
+    cmd_say_action = settings.get("say_action", "say \"^4* ^3$prefix$from^3 $message\"");
 
     // Preset templates
     if ( cmd_say_as == "modpack" )
     {
-        cmd_say = "sv_cmd ircmsg %prefix%message";
-        cmd_say_as = "sv_cmd ircmsg %prefix%from: %message";
-        cmd_say_action = "sv_cmd ircmsg ^4* ^3%prefix%from^3 %message";
+        cmd_say = "sv_cmd ircmsg $prefix$message";
+        cmd_say_as = "sv_cmd ircmsg $prefix$from: $message";
+        cmd_say_action = "sv_cmd ircmsg ^4* ^3$prefix$from^3 $message";
     }
     else if ( cmd_say_as == "sv_adminnick" )
     {
         cmd_say =   "Melanobot_nick_push;"
-                    "set sv_adminnick \"^3%prefix^3\";"
-                    "say ^7%prefix%message;"
+                    "set sv_adminnick \"^3$prefix^3\";"
+                    "say ^7$prefix$message;"
                     "Melanobot_nick_pop";
 
         cmd_say_as ="Melanobot_nick_push;"
-                    "set sv_adminnick \"^3%prefix^3\";"
-                    "say ^7%from: %message;"
+                    "set sv_adminnick \"^3$prefix^3\";"
+                    "say ^7$from: $message;"
                     "Melanobot_nick_pop";
 
         cmd_say_action ="Melanobot_nick_push;"
-                    "set sv_adminnick \"^3%prefix^3\";"
-                    "say ^4* ^3%from^3 %message;"
+                    "set sv_adminnick \"^3$prefix^3\";"
+                    "say ^4* ^3$from^3 $message;"
                     "Melanobot_nick_pop";
     }
 
@@ -141,7 +141,7 @@ void XonoticConnection::on_connect()
     update_connection();
 }
 
-void XonoticConnection::disconnect(const std::string& message)
+void XonoticConnection::disconnect(const string::FormattedString& message)
 {
     // status: * -> DISCONNECTED
     status_polling.stop();
@@ -248,10 +248,8 @@ LockedProperties XonoticConnection::properties()
     return LockedProperties(&mutex,&properties_);
 }
 
-Properties XonoticConnection::pretty_properties() const
+string::FormattedProperties XonoticConnection::pretty_properties() const
 {
-    string::FormatterConfig fmt;
-
     user::UserCounter count = count_users();
 
     Lock lock(mutex);
@@ -260,24 +258,24 @@ Properties XonoticConnection::pretty_properties() const
     if ( count.max == 2 )
         gt = "duel";
 
-    std::string host;
+    string::FormattedString host;
     if ( auto opt = properties_.get_optional<std::string>("host") )
-        host = formatter_->decode(*opt).encode(fmt);
+        host = formatter_->decode(*opt);
     else
         host = "(unconnected) " + server().name();
 
-    return Properties {
-        {"players", std::to_string(count.users)},
-        {"bots",    std::to_string(count.bots)},
-        {"total",   std::to_string(count.users+count.bots)},
-        {"max",     std::to_string(count.max)},
-        {"free",    std::to_string(count.max-count.users)},
-        {"map",     properties_.get("match.map","?")},
-        {"gt",      gt},
-        {"gametype",xonotic::gametype_name(gt)},
-        {"mutators",properties_.get("match.mutators","")},
-        {"sv_host", host},
-        {"sv_server",server().name()}
+    return string::FormattedProperties {
+        {"players",     std::to_string(count.users)},
+        {"bots",        std::to_string(count.bots)},
+        {"total",       std::to_string(count.users+count.bots)},
+        {"max",         std::to_string(count.max)},
+        {"free",        std::to_string(count.max-count.users)},
+        {"map",         properties_.get("match.map","?")},
+        {"gt",          gt},
+        {"gametype",    xonotic::gametype_name(gt)},
+        {"mutators",    properties_.get("match.mutators","")},
+        {"sv_host",     host},
+        {"sv_server",   server().name()}
     };
 }
 
@@ -304,7 +302,7 @@ void XonoticConnection::say ( const network::OutputMessage& message )
             ( message.from.empty() ? cmd_say : cmd_say_as ),
         ";\\s*");
     for ( const auto & cmd : expl )
-        command({"rcon", { melanolib::string::replace(cmd,message_properties,"%")},
+        command({"rcon", { melanolib::string::replace(cmd,message_properties,"$")},
                 message.priority, message.timeout});
 }
 
@@ -546,7 +544,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::regex::ECMAScript|std::regex::optimize
             );
             static std::regex regex_status1_player(
-                //rowcol  IP      %pl    ping    time    frags   entity     name
+                //rowcol  IP      $pl    ping    time    frags   entity     name
                 R"(\^[37](\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+#([0-9]+)\s+\^7(.*))",
                 std::regex::ECMAScript|std::regex::optimize
             );
@@ -684,7 +682,7 @@ void XonoticConnection::check_user_start()
 /**
  * \pre \c match a successful result of \c regex_status1_player:
  *      * \b 1 IP|botclient
- *      * \b 2 %pl
+ *      * \b 2 $pl
  *      * \b 3 ping
  *      * \b 4 time
  *      * \b 5 frags

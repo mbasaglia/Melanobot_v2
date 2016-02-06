@@ -37,8 +37,8 @@ public:
         : ConnectionMonitor("who", settings, parent)
     {
         bots = settings.get("bots", bots);
-        reply = settings.get("reply", reply);
-        reply_empty = settings.get("reply_empty", reply_empty);
+        reply = read_string(settings, "reply", "$(1)$players$(-)/$(1)$max$(-): ");
+        reply_empty = read_string(settings, "reply_empty", "Server is empty");
         help = "Shows the players on the server";
     }
 
@@ -46,9 +46,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         auto users = monitored->get_users();
-        Properties props = monitored->pretty_properties();
-
-        string::FormatterConfig fmt;
+        auto props = monitored->pretty_properties();
 
         std::vector<string::FormattedString> list;
         for ( const user::User& user: users )
@@ -56,18 +54,18 @@ protected:
                 list.push_back(monitored->decode(user.name));
 
         if ( list.empty() )
-            reply_to(msg,fmt.decode(melanolib::string::replace(reply_empty, props, "%")));
+            reply_to(msg,reply_empty.replaced(props));
         else
-            reply_to(msg,fmt.decode(melanolib::string::replace(reply, props, "%"))
+            reply_to(msg, reply.replaced(props)
                 << string::implode(string::FormattedString(", "), list));
 
         return true;
     }
 
 
-    bool        bots{false};                            ///< Show bots
-    std::string reply{"#1#%players#-#/#1#%max#-#: "};   ///< Reply when there are players (followed by the list)
-    std::string reply_empty{"Server is empty"};         ///< Reply when there are no players
+    bool                    bots{false};    ///< Show bots
+    string::FormattedString reply;          ///< Reply when there are players (followed by the list)
+    string::FormattedString reply_empty;    ///< Reply when there are no players
 };
 
 /**
@@ -106,11 +104,10 @@ protected:
 
         if ( !users.empty() )
             print_users(msg,users);
-        string::FormatterConfig fmt;
 
-        static std::vector<std::string> server_info {
-            "Players: #1#%active#-# active, #1#%spectators#-# spectators, #1#%bots#-# bots, #1#%players#-#/#1#%max#-# total",
-            "Map: #1#%map#-#, Game: #1#%gametype#-#, Mutators: %mutators",
+        static std::vector<string::FormattedString> server_info {
+            "Players: $(1)$active$(-) active, $(1)$spectators$(-) spectators, $(1)$bots$(-) bots, $(1)$players$(-)/$(1)$max$(-) total",
+            "Map: $(1)$map$(-), Game: $(1)$gametype$(-), Mutators: $mutators",
         };
         auto props = monitored->pretty_properties();
         int active = 0;
@@ -129,7 +126,7 @@ protected:
         props["spectators"] = std::to_string(spectators);
 
         for ( const auto& info : server_info )
-            reply_to(msg, fmt.decode(melanolib::string::replace(info,props,"%")));
+            reply_to(msg, info.replaced(props));
 
         return true;
     }
@@ -229,8 +226,8 @@ public:
     XonoticBan(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("ban", settings, parent)
     {
-        synopsis += "#-# refresh | list | rm #-i#banid#-#... | "
-            "(ip #-i#address#-# | player (###-i#entity#-#|name)) [#-i#duration#-# [:#-i#reason#-#]]";
+        synopsis += "$(-) refresh | list | rm $(-i)banid$(-)... | "
+            "(ip $(-i)address$(-) | player (##$(-i)entity$(-)|name)) [$(-i)duration$(-) [:$(-i)reason$(-)]]";
         help = "Manage xonotic bans";
     }
 
@@ -433,7 +430,7 @@ public:
     XonoticKick(const Settings& settings, MessageConsumer* parent)
         : ConnectionMonitor("kick", settings, parent)
     {
-        synopsis += "#-####-i#entity#-#|name";
+        synopsis += "$(-)##$(-i)entity$(-)|name";
         help = "Kicks a player";
     }
 

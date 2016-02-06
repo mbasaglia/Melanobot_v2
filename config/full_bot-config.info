@@ -163,7 +163,7 @@ bot
                 id geoip
                 settings {
                     database "/path/to/GeoLite2-City.mmdb"
-                    format   "Address: %resolved, Country: %country.name (%country.iso_code), City: %city.name"
+                    format   "Address: $resolved, Country: $country.name ($country.iso_code), City: $city.name"
                 }
             }
 
@@ -196,7 +196,7 @@ bot
                 ;{
                 ;    url         http://api.ponycountdown.com/last
                 ;    not_found   "Don't know O_o"
-                ;    found       "%time_delta since #-b#%title#-# (S%seasonE%episode)"
+                ;    found       "$time_delta since $(-b)$title$(-) (S${season}E%episode)"
                 ;    trigger     lastpony
                 ;}
                 Echo { trigger say }
@@ -218,13 +218,13 @@ bot
         {
             enabled             0            ; Remove or set to 1 to enable
             discard_self 1
-            message     "Good job %kicker, we won't miss %kicked!"
+            message     "Good job $kicker, we won't miss $kicked!"
         }
         ; Joins automatically once kicked
         IrcKickRejoin
         {
             priority 512
-            ;message "HAHAHA! You can't get rid of me so easily %kicker!" ; Sassy response
+            ;message "HAHAHA! You can't get rid of me so easily $kicker!" ; Sassy response
         }
 
         ; Various search services
@@ -240,8 +240,8 @@ bot
             SearchWebSearx      ; "image" Searches for an image using Searx
             {
                 trigger     image
-                reply       "%image"
-                not_found   "Didn't find any image of %search"
+                reply       "$image"
+                not_found   "Didn't find any image of $search"
                 category    images
                 description 0
             }

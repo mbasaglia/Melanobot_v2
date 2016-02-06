@@ -114,10 +114,10 @@ void IrcConnection::connect()
     }
 }
 
-void IrcConnection::disconnect(const std::string& message)
+void IrcConnection::disconnect(const string::FormattedString& message)
 {
     if ( connection_status > CONNECTING )
-        buffer.write({"QUIT",{message},1024});
+        buffer.write({"QUIT", {message.encode(*formatter_)}, 1024});
     if ( connection_status != DISCONNECTED )
         buffer.disconnect();
     Lock lock(mutex);
@@ -130,7 +130,7 @@ void IrcConnection::disconnect(const std::string& message)
     buffer.stop();
 }
 
-void IrcConnection::reconnect(const std::string& quit_message)
+void IrcConnection::reconnect(const string::FormattedString& quit_message)
 {
     Lock lock(mutex);
         user::User* user = user_manager.user(current_nick);
@@ -1161,10 +1161,10 @@ LockedProperties IrcConnection::properties()
     return LockedProperties(&mutex,&properties_);
 }
 
-Properties IrcConnection::pretty_properties() const
+string::FormattedProperties IrcConnection::pretty_properties() const
 {
     Lock lock(mutex);
-    return Properties{
+    return string::FormattedProperties{
         {"network",             properties_.get("005.NETWORK","")},
         {"default_server",      main_server.name()},
         {"server",              current_server.name()},

@@ -96,7 +96,7 @@ public:
     /**
      * \thread external \lock buffer(indirect)
      */
-    void disconnect(const std::string& message = {}) override;
+    void disconnect(const string::FormattedString& message = {}) override;
 
     /**
      * \thread external \lock none
@@ -116,7 +116,7 @@ public:
      * \brief disconnect and connect
      * \thread external \lock buffer(indirect) data(indirect)
      */
-    void reconnect(const std::string& quit_message = {}) override;
+    void reconnect(const string::FormattedString& quit_message = {}) override;
 
     /**
      * \return The bot's current nick
@@ -193,7 +193,7 @@ public:
     /*
      * \thead external \lock data
      */
-    Properties pretty_properties() const override;
+    string::FormattedProperties pretty_properties() const override;
 
     /**
      * \thead external \lock data

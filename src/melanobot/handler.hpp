@@ -155,9 +155,22 @@ protected:
         output.priority = priority;
         deliver(input.destination,output);
     }
+
     void reply_to(const network::Message& msg, string::FormattedString&& text) const
     {
         reply_to(msg, {std::move(text), false});
+    }
+
+    /**
+     * \brief Reads a formatted string from settings
+     */
+    string::FormattedString read_string(
+        const Settings& settings,
+        const std::string& key,
+        const std::string& default_format
+    )
+    {
+        return string::FormatterConfig().decode(settings.get(key, default_format));
     }
 
     /**
@@ -301,7 +314,7 @@ protected:
     void load_settings(const Settings& settings)
     {
         trigger      = settings.get("trigger",trigger);
-        synopsis     = "#gray##-b#"+trigger+"#-##gray#";
+        synopsis     = "$(gray)$(-b)"+trigger+"$(-)$(gray)";
         direct       = settings.get("direct",direct);
         public_reply = settings.get("public",public_reply);
     }

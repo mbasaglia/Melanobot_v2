@@ -106,12 +106,12 @@ public:
     // dummy overrides:
     Status status() const override { return CONNECTED; }
     void connect() override {}
-    void disconnect(const std::string&) override {}
-    void reconnect(const std::string&) override {}
+    void disconnect(const string::FormattedString&) override {}
+    void reconnect(const string::FormattedString&) override {}
 
     void command (network::Command) override {}
     // maybe could be given some actual functionality:
-    Properties pretty_properties() const override { return Properties{}; }
+    string::FormattedProperties pretty_properties() const override { return string::FormattedProperties{}; }
 
 private:
     string::Formatter*                    formatter_;

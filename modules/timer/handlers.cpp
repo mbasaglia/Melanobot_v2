@@ -44,10 +44,9 @@ bool Remind::schedule_reply(const network::Message& src)
     std::string message = parser.get_remainder();
     if ( message.empty() )
         return false;
-    message = melanolib::string::replace(reply, replacements(src, to, message), "%");
 
     schedule_item({
-        message,
+        reply.replaced(replacements(src, to, message)),
         src.destination->config_name(),
         reply_channel(src),
         date_time
@@ -57,22 +56,21 @@ bool Remind::schedule_reply(const network::Message& src)
 }
 
 
-Properties Remind::replacements(const network::Message& src,
+string::FormattedProperties Remind::replacements(const network::Message& src,
                                 const std::string& to,
                                 const std::string& message) const
 {
-    string::FormatterConfig fmt;
-    Properties props = src.destination->pretty_properties();
+    string::FormattedProperties props = src.destination->pretty_properties();
     props.insert({
         {"channel", melanolib::string::implode(", ", src.channels)},
-        {"message", message},
+        {"message", src.source->decode(message)},
 
-        {"from", src.source->encode_to(src.from.name, fmt)},
+        {"from", src.source->decode(src.from.name)},
         {"from.host", src.from.host},
         {"from.global_id", src.from.global_id},
         {"from.local_id", src.from.local_id},
 
-        {"to", src.source->encode_to(to, fmt)},
+        {"to", src.source->decode(to)},
     });
     return props;
 }
@@ -95,11 +93,12 @@ void Remind::load_items()
 
     if ( count > 0 )
     {
+        string::FormatterConfig fmt;
         for ( unsigned i = 0; i < count; i++ )
         {
             auto map = melanobot::storage().get_map(path+"."+melanolib::string::to_string(i));
             schedule_item({
-                map["message"],
+                fmt.decode(map["message"]),
                 map["connection"],
                 map["target"],
                 melanolib::time::parse_time(map["timeout"])
@@ -117,11 +116,13 @@ void Remind::store_items()
 
     melanobot::storage().put(path, "count", melanolib::string::to_string(items.size()));
 
+    string::FormatterConfig fmt;
+
     unsigned i = 0;
     for ( const auto& item : items )
     {
         melanobot::StorageBase::table map{
-            {"message", item.message},
+            {"message", item.message.encode(fmt)},
             {"connection", item.connection},
             {"target", item.target},
             {"timeout", melanolib::time::format_char(item.timeout, 'c')}
@@ -149,9 +150,8 @@ void Remind::schedule_item(const Item& item)
             network::Connection* destination = melanobot::Melanobot::instance().connection(item.connection);
             if ( !destination )
                 return;
-            string::FormatterConfig fmt;
             network::OutputMessage out {
-                fmt.decode(item.message),
+                item.message,
                 false,
                 item.target,
                 priority

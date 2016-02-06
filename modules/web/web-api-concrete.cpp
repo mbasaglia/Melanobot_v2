@@ -102,8 +102,9 @@ SearchWebSearx::SearchWebSearx(const Settings& settings, MessageConsumer* parent
 {
     synopsis += " Term...";
     api_url = settings.get("url",api_url);
-    not_found_reply = settings.get("not_found", not_found_reply );
-    found_reply = settings.get("reply", found_reply );
+    not_found_reply = read_string(settings, "not_found",
+                                  "Didn't find anything about $search");
+    found_reply = read_string(settings, "reply", "$(-b)$title$(-): $url" );
     category = settings.get("category", category );
     description_maxlen = settings.get("description", description_maxlen );
 
@@ -117,8 +118,6 @@ SearchWebSearx::SearchWebSearx(const Settings& settings, MessageConsumer* parent
 void SearchWebSearx::json_success(const network::Message& msg, const Settings& parsed)
 {
     using namespace melanolib::string;
-    string::FormatterConfig fmt;
-
     if ( settings::has_child(parsed,"results.0.title") )
     {
         Properties props = {
@@ -129,14 +128,14 @@ void SearchWebSearx::json_success(const network::Message& msg, const Settings& p
             {"latitude", parsed.get("results.0.latitude","")},
         };
 
-        reply_to(msg, fmt.decode(replace(found_reply, props, "%")));
+        reply_to(msg, found_reply.replaced(props));
 
         if ( description_maxlen )
         {
             std::string result = parsed.get("results.0.content","");
             if ( description_maxlen > 0 )
                 result = elide( collapse_spaces(result), description_maxlen );
-            reply_to(msg,result);
+            reply_to(msg, result);
         }
     }
     else
@@ -146,7 +145,7 @@ void SearchWebSearx::json_success(const network::Message& msg, const Settings& p
             {"user", msg.from.name}
         };
 
-        reply_to(msg, fmt.decode(replace(not_found_reply, props, "%")));
+        reply_to(msg, not_found_reply.replaced(props));
     }
 
 }
