@@ -491,7 +491,7 @@ protected:
             auto reply = replace(reply_template().copy(), push.second);
             reply.replace("commit_pluralized", melanolib::string::english.pluralize(commits.size(), "commit"));
             reply.replace("branch", ref_to_branch(push.second.get("payload.ref", "")));
-            reply.replace("short_before", short_sha(push.second.get("payload.head", "")));
+            reply.replace("short_before", short_sha(push.second.get("payload.before", "")));
             reply.replace("short_head", short_sha(push.second.get("payload.head", "")));
 
             send_message(std::move(reply));
@@ -514,7 +514,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $commit_pluralized on $(magenta)$branch$(-): https://github.com/$repo.name/compare/$short_before...$short_head";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $commit_pluralized on $(magenta)$branch$(-): https://github.com/$repo.name/compare/${short_before}...${short_head}";
     }
 
     string::FormattedString commit_reply_template;
