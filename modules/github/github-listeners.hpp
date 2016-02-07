@@ -330,7 +330,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#)$payload.issue.number$(-) $(-i)$payload.issue.title$(-): $payload.comment.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#$payload.issue.number$(-) $(-i)$payload.issue.title$(-): $payload.comment.html_url";
     }
 };
 
@@ -346,13 +346,13 @@ public:
         detailed = settings.get("detailed", detailed);
     }
 
-    void handle_event(const PropertyTree& event)
+    void handle_event(const PropertyTree& event) override
     {
         int n_events = 0;
         for ( const auto& issue : event )
         {
             color::Color12 color;
-            auto action = event.get("payload.action", "");
+            auto action = issue.second.get("payload.action", "");
 
             if ( action == "closed" )
                 color = color::red;
@@ -376,7 +376,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) issue $(-b)#)$payload.issue.number$(-): $(-i)$payload.issue.title$(-) $payload.issue.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) issue $(-b)#$payload.issue.number$(-): $(-i)$payload.issue.title$(-) $payload.issue.html_url";
     }
 
     bool detailed = false;
@@ -391,10 +391,24 @@ public:
     {
     }
 
+protected:
+    string::FormattedString&& replacements(string::FormattedString && string, const PropertyTree& json) override
+    {
+        replace(std::move(string), json);
+
+        if ( json.get("payload.action", "") == "added" )
+            string.replace("color", string::FormattedString() << color::dark_green);
+        else
+            string.replace("color", string::FormattedString() << color::red);
+
+        return std::move(string);
+
+    }
+
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $payload.action member $(-b)$payload.member.id$(-)";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) member $(-b)$payload.member.login$(-)";
     }
 };
 
@@ -407,10 +421,26 @@ public:
     {
     }
 
+protected:
+    string::FormattedString&& replacements(string::FormattedString&& string, const PropertyTree& json) override
+    {
+        replace(std::move(string), json);
+
+        auto action = json.get("payload.action", "");
+        color::Color12 color =
+            action == "closed" ?
+                color::red :
+                color::dark_green;
+
+        string.replace("color", string::FormattedString() << color);
+        return std::move(string);
+    }
+
+
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $payload.action pull request $(-b)#)$payload.pull_request.number$(-): ($(-b)$(dark_yellow)$payload.pull_request.head.ref$(-) -> $(-b)$payload.pull_request.base.ref$(-)) $(-i)$payload.pull_request.title$(-) $payload.pull_request.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) pull request $(-b)#$payload.pull_request.number$(-) ($(-b)$(dark_yellow)$payload.pull_request.head.ref$(-) -> $(-b)$payload.pull_request.base.ref$(-)) $(-i)$payload.pull_request.title$(-): $payload.pull_request.html_url";
     }
 };
 
@@ -425,7 +455,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#)$payload.pull_request.number$(-) ($(-i)$payload.pull_request.title$(-)): $payload.comment.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#$payload.pull_request.number$(-) ($(-i)$payload.pull_request.title$(-)): $payload.comment.html_url";
     }
 };
 
@@ -441,7 +471,7 @@ public:
     {
         commit_reply_template = string::FormatterConfig().decode(
             settings.get("commit_reply",
-                " * [$(dark_magenta)$short_sha$(-)] $(blue)$author.name$(-) $message")
+                " * [$(dark_magenta)$short_sha$(-)] $(blue)$author.name$(-) $summary")
         );
         commit_limit = settings.get("commit_limit", commit_limit);
     }
@@ -473,6 +503,9 @@ protected:
                     break;
                 auto commit_reply = replace(commit_reply_template.copy(), commit.second);
                 commit_reply.replace("short_sha", short_sha(commit.second.get("sha", "")));
+                auto lines = melanolib::string::char_split(commit.second.get("message", ""), '\n');
+                if ( !lines.empty() )
+                    commit_reply.replace("summary", lines[0]);
                 send_message(std::move(commit_reply));
             }
         }

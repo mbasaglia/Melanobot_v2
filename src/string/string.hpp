@@ -807,14 +807,14 @@ public:
  * \brief Custom string formatting (Utf-8)
  *
  * Style formatting:
- *      * ##            #
- *      * $(-)           clear all formatting
- *      * $(-b)          bold
- *      * $(-u)          underline
- *      * $(1)           red
- *      * $(xf00)        red
- *      * $(red)         red
- *      * $(nocolor)     no color
+ *      * $$            $
+ *      * $(-)          clear all formatting
+ *      * $(-b)         bold
+ *      * $(-u)         underline
+ *      * $(1)          red
+ *      * $(xf00)       red
+ *      * $(red)        red
+ *      * $(nocolor)    no color
  */
 class FormatterConfig : public FormatterUtf8
 {
