@@ -23,15 +23,15 @@ namespace github {
 
 void GitHubEventSource::initialize(const Settings& settings)
 {
-    api_url = settings.get("api_url", api_url);
-    if ( api_url.empty() )
+    api_url_ = settings.get("api_url", api_url_);
+    if ( api_url_.empty() )
         throw melanobot::ConfigurationError("Missing GitHub API URL");
 
-    if ( api_url.back() == '/' )
-        api_url.pop_back();
+    if ( api_url_.back() == '/' )
+        api_url_.pop_back();
 
-    username = settings.get("username", "");
-    password = settings.get("password", "");
+    auth_.username = settings.get("username", "");
+    auth_.password = settings.get("password", "");
 
     for ( const auto& repo : settings )
     {
@@ -98,6 +98,7 @@ void GitHubEventSource::poll()
 
 void GitHubEventSource::stop()
 {
+    SourceRegistry::instance().unregister_source(this);
     timer.stop();
 }
 
@@ -105,14 +106,15 @@ void GitHubEventSource::start()
 {
     poll();
     timer.start();
+    SourceRegistry::instance().register_source(this);
 }
 
 
 web::Request GitHubEventSource::request(const std::string& url) const
 {
-    auto request = web::Request("GET", api_url+url);
-    if ( !username.empty() && !password.empty() )
-        request.set_auth(username, password);
+    auto request = web::Request("GET", api_url_+url);
+    if ( !auth_.username.empty() && !auth_.password.empty() )
+        request.set_auth(auth_.username, auth_.password);
     return request;
 }
 

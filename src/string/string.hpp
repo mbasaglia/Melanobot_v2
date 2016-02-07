@@ -574,6 +574,13 @@ public:
         return str;
     }
 
+    FormattedString replaced(const std::string& placeholder, const FormattedString& string)
+    {
+        FormattedString str = copy();
+        str.replace(placeholder, string);
+        return str;
+    }
+
 // Element overrides
 
     /**

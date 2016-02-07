@@ -16,31 +16,15 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
-#define MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
+#ifndef MELANOBOT_MODULE_GITHUB_LISTENERS_HPP
+#define MELANOBOT_MODULE_GITHUB_LISTENERS_HPP
 
 #include <map>
 #include "melanobot/melanobot.hpp"
 #include "melanolib/string/language.hpp"
+#include "replace-ptree.hpp"
 
 namespace github {
-
-inline string::FormattedString&& replace(
-    string::FormattedString&& str,
-    const PropertyTree& tree)
-{
-    str.replace(
-        [&tree](const std::string& id)
-            -> melanolib::Optional<string::FormattedString>
-        {
-            auto get = tree.get_optional<std::string>(id);
-            if ( get )
-                return string::FormattedString(*get);
-            return {};
-        }
-    );
-    return std::move(str);
-}
 
 /**
  * \brief Makes gir refs identifiers more human-readable
@@ -560,4 +544,4 @@ WatchEvent
 
 
 } // namespace github
-#endif // MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
+#endif // MELANOBOT_MODULE_GITHUB_LISTENERS_HPP

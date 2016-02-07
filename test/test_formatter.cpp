@@ -542,4 +542,5 @@ BOOST_AUTO_TEST_CASE( test_Replacements )
 
     BOOST_CHECK( string.replaced(replacements2).encode(ascii) == "world!!,world!!oo" );
 
+    BOOST_CHECK( string.replaced("hellooo", "hi").encode(ascii) == "hiworld,worldoo" );
 }
