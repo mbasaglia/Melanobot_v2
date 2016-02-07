@@ -50,4 +50,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_github_initialize(const Settings&)
 
     module::register_handler<github::GitHubIssue>("GitHubIssue");
     module::register_handler<github::GitHubRelease>("GitHubRelease");
+    module::register_handler<github::GitHubSearch>("GitHubSearch");
 }

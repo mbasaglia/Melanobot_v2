@@ -263,11 +263,91 @@ private:
             github_failure(msg, {});
     }
 
-private:
     string::FormattedString reply;
     string::FormattedString reply_asset;
     string::FormattedString reply_failure;
 };
+
+
+/**
+ * \brief Searches code in github
+ */
+class GitHubSearch : public GitHubBase
+{
+public:
+    GitHubSearch(const Settings& settings, MessageConsumer* parent)
+        : GitHubBase("code search", settings, parent)
+    {
+        reply = read_string(settings, "reply", " * [$(dark_magenta)$repository.full_name$(-)] $(dark_red)$path$(-) @ $(-b)$short_sha$(-): $html_url");
+        reply_invalid = read_string(settings, "reply", "$(dark_blue)std$(green)::$(blue)cout$(-) << $(dark_red)\"Search for what?\"$(-);");
+        reply_failure = read_string(settings, "reply_failure", "I didn't find anything about $query");
+        force = settings.get("force", force);
+        max_results = settings.get("max_results", max_results);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string what = melanolib::string::trimmed(msg.message);
+        if ( what.empty() )
+        {
+            reply_to(msg, reply_invalid.replaced(msg.source->pretty_properties(msg.from)));
+        }
+        else
+        {
+            std::string what_full = what;
+            if ( !force.empty() )
+                what_full += ' ' + force;
+
+            query("/search/code?q="+web::urlencode(what_full),
+                [msg, this, what](const web::Response& resp)
+                {
+                    JsonParser parser;
+                    parser.throws(false);
+                    auto json = parser.parse_string(resp.contents);
+
+                    if ( resp.success() && json.get("total_count", 0) > 0 )
+                    {
+                        std::size_t i = 0;
+                        for ( auto& match : json.get_child("items") )
+                        {
+                            if ( i++ >= max_results )
+                                break;
+                            match.second.put("query", what);
+                            match.second.put("short_sha", short_sha(match.second.get("sha", "")));
+                            github_success(msg, match.second);
+                        }
+                    }
+                    else
+                    {
+                        json.put("query", what);
+                        github_failure(msg, json);
+                    }
+                });
+        }
+
+        return true;
+    }
+
+    void github_success(const network::Message& msg, const PropertyTree& response) override
+    {
+        reply_to(msg, replace(reply.copy(), response));
+    }
+
+    void github_failure(const network::Message& msg, const PropertyTree& response) override
+    {
+        reply_to(msg, replace(reply_failure.copy(), response));
+    }
+
+private:
+    string::FormattedString reply;          ///< Reply to give when we have a result
+    string::FormattedString reply_invalid;  ///< Reply to give on an invalid search item
+    string::FormattedString reply_failure;  ///< Reply to give on a search with no results / API failure
+    std::string             force;          ///< Search query to append to every request
+    std::size_t             max_results = 3;///< Maximum number of returned results
+};
+
+
 
 } // namespace github
 #endif // MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
