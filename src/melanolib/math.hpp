@@ -20,6 +20,7 @@
 #define MELANOLIB_MATH_HPP
 
 #include <algorithm>
+#include <type_traits>
 
 namespace melanolib {
 
@@ -81,16 +82,98 @@ template<class Argument>
     }
 
 /**
+ * \brief Maximum between two values
+ */
+template<class T>
+    inline constexpr T max(T&& a, T&& b)
+    {
+        return a < b ? b : a;
+    }
+
+/**
+ * \brief Maximum among several values
+ */
+template<class T, class...Ts>
+    inline constexpr T max(T&& a,  Ts&&... b)
+    {
+        return max(std::forward<T>(a), max(std::forward<Ts>(b)...));
+    }
+
+/**
+ * \brief Minimum between two values
+ */
+template<class T>
+    inline constexpr T min(T&& a, T&& b)
+    {
+        return !(b < a) ? a : b;
+    }
+
+/**
+ * \brief Minimum among several values
+ */
+template<class T, class...Ts>
+    inline constexpr T min(T&& a,  Ts&&... b)
+    {
+        return min(std::forward<T>(a), min(std::forward<Ts>(b)...));
+    }
+
+/**
+ * \brief Absolute value
+ */
+template<class T>
+    inline constexpr T abs(T&& x)
+    {
+        return x < 0 ? -x : x;
+    }
+
+/**
+ * \brief Normalize a value
+ * \pre  value in [min, max] && min < max
+ * \post value in [0, 1]
+ */
+template<class Real>
+    inline constexpr Real normalize(Real value, Real min, Real max)
+{
+    return (value - min) / (max - min);
+}
+
+/**
+ * \brief Denormalize a value
+ * \pre  value in [0, 1] && min < max
+ * \post value in [min, max]
+ */
+template<class Real>
+    inline constexpr Real denormalize(Real value, Real min, Real max)
+{
+    return value * (max - min) + min;
+}
+
+/**
  * \brief Clamp a value inside a range
  * \tparam Argument Argument type (Must be a floating point type)
- * \param min Minimum allowed value
- * \param x   Variable to be bounded
- * \param max Maximum allowed value
+ * \param min_value Minimum allowed value
+ * \param value     Variable to be bounded
+ * \param max_value Maximum allowed value
+ * \pre min_value < max_value
+ * \post value in [min_value, max_value]
  */
-template<class Argument, class Arg2=Argument>
-    constexpr auto bound(Arg2 min, Argument x, Arg2 max)
+template<class Argument>
+    constexpr auto bound(Argument&& min_value, Argument&& value, Argument&& max_value)
     {
-        return x < max ?  std::max<Argument>(x,min) : max;
+        return max(std::forward<Argument>(min_value),
+            min(std::forward<Argument>(value), std::forward<Argument>(max_value))
+        );
+    }
+
+template<class Argument, class Arg2, class = std::enable_if_t<!std::is_same<Argument, Arg2>::value>>
+    constexpr auto bound(Arg2&& min_value, Argument&& value, Arg2&& max_value)
+    {
+        using Common = std::common_type_t<Arg2, Argument>;
+        return bound<Common>(
+            Common(std::forward<Arg2>(min_value)),
+            Common(std::forward<Argument>(value)),
+            Common(std::forward<Arg2>(max_value))
+        );
     }
 
 } // namespace math
