@@ -37,8 +37,8 @@ public:
         synopsis += "who time message...";
         help = "Sends a message at the given time";
         reply_ok = read_string(settings, "reply_ok", "Got it!");
-        reply_no = settings.get("reply_no", "Forget it!");
-        reply = settings.get("reply", "<$from> $to, remember $message");
+        reply_no = read_string(settings, "reply_no", "Forget it!");
+        reply = read_string(settings, "reply", "<$from> $to, remember $message");
         storage_id = settings.get("storage_id", storage_id);
 
         load_items();
