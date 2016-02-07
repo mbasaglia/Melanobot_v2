@@ -35,6 +35,8 @@ Repository::Repository(std::string name)
         auto last_poll = melanobot::storage().maybe_get_value("github."+name_+".last_poll", "");
         if ( !last_poll.empty() )
             last_poll_ = melanolib::time::parse_time(last_poll).time_point();
+        else
+            last_poll_ = melanolib::time::DateTime().time_point();
     }
 }
 
