@@ -51,23 +51,7 @@ void GitHubEventSource::initialize(const Settings& settings)
 
         for ( const auto& listener : repo.second )
         {
-            try
-            {
-                auto listen = ListenerFactory::instance().build(listener.first, listener.second);
-                auto listener_ptr = listen.get();
-                listeners.emplace_back(std::move(listen));
-                for ( const auto& event_type : listener_ptr->event_types() )
-                    repo_iter->add_listener(
-                        event_type,
-                        [listener_ptr](const PropertyTree& json){
-                            listener_ptr->handle_event(json);
-                        }
-                    );
-            }
-            catch ( const melanobot::MelanobotError& err )
-            {
-                ErrorLog("git") << err.what();
-            }
+            create_listener(*repo_iter, listener);
         }
     }
 
@@ -79,6 +63,43 @@ void GitHubEventSource::initialize(const Settings& settings)
         std::chrono::minutes(settings.get("poll_interval", 10)),
         true
     );
+}
+
+void GitHubEventSource::create_listener(Repository& repo, const Settings::value_type& listener, const Settings& extra)
+{
+    Settings settings = listener.second;
+    ::settings::merge(settings, extra, false);
+
+    if ( listener.first == "Group" )
+    {
+        for ( const auto& child : listener.second )
+        {
+            if ( child.second.empty() && !child.second.data().empty() )
+                settings.put(child.first, child.second.data());
+            else
+                create_listener(repo, child, settings);
+        }
+        return;
+    }
+
+    try
+    {
+        auto listen = ListenerFactory::instance().build(listener.first, settings);
+        auto listener_ptr = listen.get();
+        listeners.emplace_back(std::move(listen));
+        for ( const auto& event_type : listener_ptr->event_types() )
+            repo.add_listener(
+                event_type,
+                [listener_ptr](const PropertyTree& json){
+                    listener_ptr->handle_event(json);
+                }
+            );
+    }
+    catch ( const melanobot::MelanobotError& err )
+    {
+        ErrorLog("git") << err.what();
+    }
+
 }
 
 GitHubEventSource::~GitHubEventSource()

@@ -78,6 +78,8 @@ public:
 private:
     void poll();
 
+    void create_listener(Repository& repo, const Settings::value_type& listener, const Settings& extra = {});
+
     std::vector<Repository> repositories;
     std::string api_url_;
     melanolib::time::Timer timer; ///< Polling timer
