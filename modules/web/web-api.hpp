@@ -36,22 +36,21 @@ public:
 protected:
     /**
      * \brief Sends an asynchronous http request
-     * \note Not yet asynchronous
      */
     void request_http(const network::Message& msg, const web::Request& request)
     {
         web::HttpService::instance().async_query(request,
             [this,msg](const web::Response& resp)
             {
-                if ( resp.error_message.empty() )
-                    http_success(msg,resp);
+                if ( resp.success() )
+                    http_success(msg, resp);
                 else
-                    http_failure(msg,resp);
+                    http_failure(msg, resp);
             });
     }
 
     /**
-     * \brief Called when request_http() gets a successfult response
+     * \brief Called when request_http() gets a successful response
      */
     virtual void http_success(const network::Message& msg, const web::Response& response) = 0;
 

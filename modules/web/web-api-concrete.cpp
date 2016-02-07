@@ -75,7 +75,7 @@ bool VideoInfo::on_handle(network::Message& msg)
         web::HttpService::instance().async_query(request,
             [this, msg, found_func](const web::Response& response)
             {
-                if ( response.error_message.empty() )
+                if ( response.success() )
                 {
                     Settings ptree;
                     JsonParser parser;
