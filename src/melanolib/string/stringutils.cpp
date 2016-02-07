@@ -243,5 +243,29 @@ std::string replace(const std::string& subject, const StringTrie& trie)
 
 }
 
+std::string pretty_bytes(uint64_t bytes)
+{
+    static const char* units[] = { "B", "KB", "MB", "GB", "TB", "EB", "PB" };
+    static const std::size_t n_units = std::extent<decltype(units)>::value;
+    static const std::size_t unit = 1024;
+
+    if ( bytes < unit )
+        return std::to_string(bytes) + ' ' + units[0];
+
+    uint64_t remainder = 0;
+    std::size_t i = 0;
+    for ( ; i < n_units-1; i++ )
+    {
+        if ( bytes < unit )
+            break;
+        remainder = bytes % unit;
+        bytes /= unit;
+    }
+
+    remainder = std::round(remainder / double(unit) * 10) / 10;
+
+    return std::to_string(bytes) + '.' + std::to_string(remainder) + ' ' + units[i];
+}
+
 } // namespace string
 } // namespace melanolib

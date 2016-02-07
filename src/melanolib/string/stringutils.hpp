@@ -276,6 +276,37 @@ template<class T>
         return s;
     }
 
+/**
+ * \brief Trim string based on a predicate
+ */
+template<class Predicate>
+    std::string trimmed(std::string subject, const Predicate& predicate)
+    {
+        subject.erase(
+            subject.begin(),
+            std::find_if_not(subject.begin(), subject.end(), predicate)
+        );
+        subject.erase(
+            std::find_if_not(subject.rbegin(), subject.rend(), predicate).base(),
+            subject.end()
+        );
+        return subject;
+    }
+
+/**
+ * \brief Trims spaces
+ */
+inline std::string trimmed(const std::string& subject)
+{
+    return trimmed(subject, (int (*)(int))std::isspace);
+}
+
+/**
+ * \brief Converts a number of bytes into a human-readable format
+ */
+std::string pretty_bytes(uint64_t bytes);
+
+
 } // namespace string
 } // namespace melanolib
 #endif // MELANOLIB_STRING_UTILS_HPP

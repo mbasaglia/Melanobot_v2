@@ -253,6 +253,7 @@ BOOST_AUTO_TEST_CASE( test_misc )
     BOOST_CHECK(string::add_slashes("Hello world!","wo!") == R"(Hell\o \w\orld\!)");
     BOOST_CHECK(string::add_slashes("Hello world!","") == "Hello world!");
     BOOST_CHECK(string::regex_escape("^([a-z]+)[0-9]?$") == R"(\^\(\[a-z\]\+\)\[0-9\]\?\$)");
+    BOOST_CHECK(string::trimmed("  fo  o.\n") == "fo  o.");
 }
 
 BOOST_AUTO_TEST_CASE( test_replace )
@@ -549,3 +550,10 @@ BOOST_AUTO_TEST_CASE( test_QuickStream )
     BOOST_CHECK( qs.eof() );
 }
 
+BOOST_AUTO_TEST_CASE( test_pretty_bytes )
+{
+    BOOST_CHECK(string::pretty_bytes(1023) == "1023 B");
+    BOOST_CHECK(string::pretty_bytes(1024) == "1.0 KB");
+    BOOST_CHECK(string::pretty_bytes(1025) == "1.0 KB");
+    BOOST_CHECK(string::pretty_bytes(1048576) == "1.0 MB");
+}
