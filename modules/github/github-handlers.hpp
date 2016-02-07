@@ -26,6 +26,9 @@
 
 namespace github {
 
+/**
+ * \brief Base class for handlers that send requests to the GitHub API
+ */
 class GitHubBase : public melanobot::SimpleAction
 {
 public:
@@ -45,8 +48,7 @@ protected:
      */
     void request_github(const network::Message& msg, const std::string& url)
     {
-        auto ptr = SourceRegistry::instance().get_source(auth, api_url);
-        web::HttpService::instance().async_query(ptr->request(url),
+        query(url,
             [this, msg](const web::Response& resp)
             {
                 JsonParser parser;
@@ -57,6 +59,12 @@ protected:
                 else
                     github_failure(msg, tree);
             });
+    }
+
+    void query(const std::string& url, const web::AsyncCallback& callback)
+    {
+        auto ptr = SourceRegistry::instance().get_source(auth, api_url);
+        web::HttpService::instance().async_query(ptr->request(url), callback);
     }
 
     /**
@@ -75,6 +83,9 @@ private:
     std::string api_url = "https://api.github.com";
 };
 
+/**
+ * \brief Base class for handlers that ooperate on github repos
+ */
 class GitHubRepoBase : public GitHubBase
 {
 public:
@@ -91,13 +102,21 @@ public:
 protected:
     void request_github_repo(const network::Message& msg, const std::string& url)
     {
-        request_github(msg, "/repos/"+repo+url);
+        request_github(msg, relative_url(url));
+    }
+
+    std::string relative_url(const std::string& url)
+    {
+        return "/repos/"+repo+url;
     }
 
 private:
     std::string repo;
 };
 
+/**
+ * \brief Gets the details of a single issue
+ */
 class GitHubIssue : public GitHubRepoBase
 {
 public:
@@ -143,6 +162,111 @@ private:
     string::FormattedString reply;
     string::FormattedString reply_failure;
     string::FormattedString reply_invalid;
+};
+
+/**
+ * \brief Gets the details of a single release
+ */
+class GitHubRelease : public GitHubRepoBase
+{
+public:
+    GitHubRelease(const Settings& settings, MessageConsumer* parent)
+        : GitHubRepoBase("release", settings, parent)
+    {
+        reply = read_string(settings, "reply", "$release_type $(-b)$name$(-): $html_url");
+        reply_failure = read_string(settings, "reply_failure", "I didn't find any such release");
+        reply_asset = read_string(settings, "reply_asset", "$browser_download_url $(-b)$human_size$(-), $download_count downloads");
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string which = melanolib::string::trimmed(msg.message);
+        if ( which.empty() || which == "latest" )
+        {
+            request_github_repo(msg, "/releases/latest");
+        }
+        else
+        {
+            query(relative_url("/releases"),
+                [msg, this, which](const web::Response& resp)
+                {
+                    if ( resp.success() )
+                    {
+                        JsonParser parser;
+                        parser.throws(false);
+                        find_release(msg, which, parser.parse_string(resp.contents));
+                    }
+                    else
+                    {
+                        github_failure(msg, {});
+                    }
+                });
+        }
+
+        return true;
+    }
+
+    void github_success(const network::Message& msg, const PropertyTree& response) override
+    {
+        auto reply = replace(this->reply.copy(), response);
+
+        std::string release_type = response.get("payload.prerelease", false) ? "pre-release" : "release";
+        if ( response.get("payload.draft", false) )
+            release_type = "draft "+release_type;
+
+        reply.replace("release_type", release_type);
+
+        reply_to(msg, std::move(reply));
+
+        for ( const auto& dload : response.get_child("assets", {}) )
+        {
+            auto dload_reply = replace(reply_asset.copy(), dload.second);
+            dload_reply.replace("human_size", melanolib::string::pretty_bytes(
+                dload.second.get<uint64_t>("size", 0)));
+            reply_to(msg, std::move(dload_reply));
+        }
+    }
+
+    void github_failure(const network::Message& msg, const PropertyTree& response) override
+    {
+        auto r = reply_failure.replaced(msg.source->pretty_properties(msg.from));
+        r.replace("message", msg.message);
+        reply_to(msg, std::move(r));
+    }
+
+private:
+    void find_release(const network::Message& msg, const std::string& which, const PropertyTree& releases)
+    {
+        const PropertyTree* best_release = nullptr;
+        int max_score = 0;
+
+
+        for ( const auto& release : releases )
+        {
+            int score = melanolib::math::max(
+                melanolib::string::similarity(which, release.second.get("tag", "")),
+                melanolib::string::similarity(which, release.second.get("name", "")),
+                melanolib::string::similarity(which, release.second.get("body", ""))
+            );
+
+            if ( score > max_score )
+            {
+                max_score = score;
+                best_release = &release.second;
+            }
+        }
+
+        if ( best_release )
+            github_success(msg, *best_release);
+        else
+            github_failure(msg, {});
+    }
+
+private:
+    string::FormattedString reply;
+    string::FormattedString reply_asset;
+    string::FormattedString reply_failure;
 };
 
 } // namespace github

@@ -49,4 +49,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_github_initialize(const Settings&)
     github::ListenerFactory::instance().register_listener<github::ReleaseEvent>("ReleaseEvent");
 
     module::register_handler<github::GitHubIssue>("GitHubIssue");
+    module::register_handler<github::GitHubRelease>("GitHubRelease");
 }
