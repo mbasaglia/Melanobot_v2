@@ -227,6 +227,24 @@ bot
             ;message "HAHAHA! You can't get rid of me so easily $kicker!" ; Sassy response
         }
 
+        Remind
+
+        ; GitHub integration
+        Group
+        {
+            enabled 0
+            ; You can have username and password here, see GiHub below
+            repo     mbasaglia/Melanobot_v2
+
+            GitHubIssue   ; Searches for issues in the given repo
+            GitHubRelease ; Searches for releases in the given repo
+            GitHubSearch  ; Code search
+            {
+                ; This (optional) string is appended to the queries to limit which results are being returned
+                force "repo:mbasaglia/Melanobot_v2"
+            }
+        }
+
         ; Various search services
         Group
         {
@@ -252,6 +270,39 @@ bot
         VideoInfo           ; This shows info (Like title and similar) on video links
         {                   ; Supports Dailymotion, Vimeo and YouTube
             ; yt_api_key "Your YouTube Data API Key" ; YouTube needs an API Key
+        }
+    }
+
+    ; GitHub event manager, listens to the GitHub API for repository events
+    GitHub
+    {
+        enabled 0
+        ; poll_interval 10 ; By default it polls every 10 minutes, you can lower this value to 1 but you must provide a valid username/password pair to increase the API rate limits
+        username your_github_user ; Github username (optional)
+        password xxxxxxx          ; Your Github password in clear text or a personal access token (see https://github.com/settings/tokens)
+
+        ; Repositories must be in the form owner/repo_name
+        mbasaglia/Melanobot_v2
+        {
+            ; Groups can be used to contain listeners which share some settings
+            Group
+            {
+                destination irc_quakenet    ; Name of the connection these listeners should send messages to
+                target      #mychannel      ; Name of the channel in said connection
+
+                RefEvents ; This responds to CreateEvent and DeleteEvent from the API
+                ; All of the following listeners match the corresponing event types from the GitHub API
+                CommitCommentEvent
+                ForkEvent
+                GollumEvent
+                IssueCommentEvent
+                IssuesEvent
+                MemberEvent
+                PullRequestEvent
+                PullRequestReviewCommentEvent
+                PushEvent
+                ReleaseEvent
+            }
         }
     }
 }
