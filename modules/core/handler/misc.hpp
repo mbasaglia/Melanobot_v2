@@ -345,7 +345,7 @@ public:
         : Handler(settings,parent)
     {
         trigger         = settings.get("trigger","");
-        reply           = read_string(settings, "reply","");
+        reply           = read_string(settings, "reply", "");
         regex           = settings.get("regex",0);
         case_sensitive  = settings.get("case_sensitive",1);
         direct          = settings.get("direct",1);

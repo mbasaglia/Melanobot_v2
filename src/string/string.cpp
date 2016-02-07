@@ -416,7 +416,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
             {
                 ascii += '$';
             }
-            else if ( std::isalpha(next) )
+            else if ( std::isalnum(next) || next == '_' )
             {
                 static std::regex identifier("[a-zA-Z0-9._]+",
                     std::regex::optimize|std::regex::ECMAScript);
