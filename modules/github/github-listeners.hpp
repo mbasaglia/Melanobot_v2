@@ -33,7 +33,7 @@ inline std::string ref_to_branch(const std::string& ref)
 {
     static melanolib::string::StringTrie unref{
         "refs/",
-        "refs/head/",
+        "refs/heads/",
         "refs/remotes/",
     };
 
