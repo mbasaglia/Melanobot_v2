@@ -219,7 +219,7 @@ protected:
     string::FormattedString&& replacements(string::FormattedString&& string, const PropertyTree& json) override
     {
         replace(std::move(string), json);
-        string.replace("$short_sha", short_sha(json.get("payload.comment.commit_id", "")));
+        string.replace("short_sha", short_sha(json.get("payload.comment.commit_id", "")));
         return std::move(string);
     }
 
@@ -244,13 +244,13 @@ protected:
         replace(std::move(string), json);
         if ( json.get("type", "") == "DeleteEvent" )
         {
-            string.replace("$action", "deleted" );
-            string.replace("$color", "$(red)" );
+            string.replace("action", "deleted" );
+            string.replace("color", string::FormattedString() << color::red );
         }
         else
         {
-            string.replace("$action", "created" );
-            string.replace("$color", "$(dark_green)" );
+            string.replace("action", "created" );
+            string.replace("color", string::FormattedString() << color::dark_green );
         }
         return std::move(string);
     }
