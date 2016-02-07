@@ -394,7 +394,7 @@ void IrcConnection::handle_message(network::Message msg)
             Lock lock(mutex);
                 /// \todo Case-Insensitive?
                 /// \todo Update only on nick changes
-                std::regex regex_direct(melanolib::string::regex_escape(current_nick)+"[:,]?\\s+(.+)");
+                std::regex regex_direct(melanolib::string::regex_escape(current_nick)+"[:,]\\s+(.+)");
             lock.unlock();
             std::smatch match;
             if ( std::regex_match(msg.message, match, regex_direct) )
