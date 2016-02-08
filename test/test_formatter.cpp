@@ -581,4 +581,8 @@ BOOST_AUTO_TEST_CASE( test_Filters )
     string = cfg.decode("$(colorize red \"hello $world\")");
     string.replace("world", "pony");
     BOOST_CHECK( string.encode(FormatterAscii()) == "hello pony" );
+
+    string = cfg.decode("$(colorize red $world) yay");
+    string.replace("world", "pony");
+    BOOST_CHECK( string.encode(FormatterAscii()) == "pony yay" );
 }

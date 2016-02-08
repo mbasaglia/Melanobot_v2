@@ -384,6 +384,39 @@ static color::Color12 cfg_format_color(const std::string& format)
     return color::Color12::from_name(format);
 }
 
+static bool cfg_next_arg(char c)
+{
+    return c == ')' || std::isspace(c);
+}
+
+static std::vector<FormattedString> cfg_args(
+    melanolib::string::QuickStream& stream,
+    const FormatterConfig& cfg
+)
+{
+    std::vector<FormattedString> args;
+    while ( true )
+    {
+        stream.get_until(
+            [](char c) { return !std::isspace(c); },
+            false
+        );
+        char next = stream.next();
+        if ( stream.eof() || next == ')' )
+            break;
+
+        std::string arg;
+        if ( next == '\'' || next == '"' )
+            arg =stream.get_line(next);
+        else
+            arg = next+stream.get_until(cfg_next_arg, false);
+
+        args.push_back(cfg.decode(arg));
+    }
+
+    return args;
+}
+
 FormattedString FormatterConfig::decode(const std::string& source) const
 {
     FormattedString str;
@@ -414,8 +447,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 
         if ( next == '(' )
         {
-            auto next_arg = [](char c) { return c == ')' || std::isspace(c); };
-            std::string format = parser.input.get_until(next_arg);
+            std::string format = parser.input.get_until(cfg_next_arg);
 
             if ( format.empty() )
                 return;
@@ -444,26 +476,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
                 return;
             }
 
-            std::vector<FormattedString> args;
-            while ( true )
-            {
-                parser.input.get_until(
-                    [](char c) { return !std::isspace(c); },
-                    false
-                );
-                next = parser.input.next();
-                if ( parser.input.eof() || next == ')' )
-                    break;
-
-                std::string arg;
-                if ( next == '\'' || next == '"' )
-                    arg = parser.input.get_line(next);
-                else
-                    arg = next+parser.input.get_until(next_arg);
-
-                args.push_back(decode(arg));
-            }
-            str.append<FilterCall>(format, std::move(args));
+            str.append<FilterCall>(format, cfg_args(parser.input, *this));
         }
         else if ( next == '{' )
         {
@@ -481,10 +494,10 @@ FormattedString FormatterConfig::decode(const std::string& source) const
         }
         else if ( std::isalnum(next) || next == '_' )
         {
-            static std::regex identifier("[a-zA-Z0-9._]+",
-                std::regex::optimize|std::regex::ECMAScript);
-
-            std::string id = next+parser.input.get_regex(identifier);
+            std::string id = next+parser.input.get_until(
+                [](char c) { return !std::isalnum(c) && c != '_' && c != '.'; },
+                false
+            );
             push_ascii();
             str.append<Placeholder>(id);
         }
