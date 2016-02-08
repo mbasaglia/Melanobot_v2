@@ -20,6 +20,8 @@
 #include "github-source.hpp"
 #include "github-listeners.hpp"
 #include "github-handlers.hpp"
+#include "gitio.hpp"
+#include "string/replacements.hpp"
 
 /**
  * \brief Registers the fun handlers
@@ -51,4 +53,16 @@ MELANOMODULE_ENTRY_POINT void melanomodule_github_initialize(const Settings&)
     module::register_handler<github::GitHubIssue>("GitHubIssue");
     module::register_handler<github::GitHubRelease>("GitHubRelease");
     module::register_handler<github::GitHubSearch>("GitHubSearch");
+
+    module::register_handler<github::GitIo>("GitIo");
+    string::FilterRegistry::instance().register_filter("git_io",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            if ( args.empty() )
+                return {};
+            string::FormatterUtf8 utf8;
+            return utf8.decode(github::git_io_shorten(args[0].encode(utf8)));
+        }
+    );
+
 }

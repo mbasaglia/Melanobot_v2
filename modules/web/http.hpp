@@ -32,6 +32,18 @@ using Parameters = std::map<std::string,std::string>;
 using Headers = std::map<std::string,std::string>;
 
 /**
+ * \brief Encode a string to make it fit to be used in a url
+ * \todo urldecode (?)
+ * \see http://www.faqs.org/rfcs/rfc3986.html
+ */
+std::string urlencode ( const std::string& text );
+
+/**
+ * \brief Creates a query string from the given parameters
+ */
+std::string build_query ( const Parameters& params );
+
+/**
  * \brief A network request
  */
 struct Request
@@ -53,6 +65,14 @@ struct Request
     Request& get(std::string url)
     {
         return method_get().set_url(std::move(url));
+    }
+
+    Request& post(std::string url, const Parameters& body = {})
+    {
+        method_post().set_url(std::move(url));
+        if ( !body.empty() )
+            set_body(build_query(body));
+        return *this;
     }
 
     Request& method_get()
@@ -159,18 +179,6 @@ struct Response
  * \brief Callback used by asyncronous calls
  */
 using AsyncCallback = std::function<void(const Response&)>;
-
-/**
- * \brief Encode a string to make it fit to be used in a url
- * \todo urldecode (?)
- * \see http://www.faqs.org/rfcs/rfc3986.html
- */
-std::string urlencode ( const std::string& text );
-
-/**
- * \brief Creates a query string from the given parameters
- */
-std::string build_query ( const Parameters& params );
 
 /**
  * \brief HTTP Service

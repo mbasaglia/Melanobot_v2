@@ -18,11 +18,13 @@
  */
 #include "formatter.hpp"
 #include "logger.hpp"
+#include "string/replacements.hpp"
 
 namespace string {
 
 Formatter::Registry::Registry()
 {
+    FilterRegistry::instance();
     add_formatter(default_formatter = new FormatterUtf8);
     add_formatter(new FormatterAscii);
     add_formatter(new FormatterAnsi(true));

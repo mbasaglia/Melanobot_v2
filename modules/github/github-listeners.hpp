@@ -210,7 +210,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on commit $(-b)$short_sha(-): $payload.comment.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on commit $(-b)$short_sha(-): $(git_io $payload.comment.html_url)";
     }
 };
 
@@ -257,7 +257,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) created fork $(-b)$payload.forkee.full_name$(-): $payload.forkee.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) created fork $(-b)$payload.forkee.full_name$(-): $(git_io $payload.forkee.html_url)";
     }
 };
 
@@ -299,7 +299,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $page.action $(-b)$page.title$(-): https://github.com/$page.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $page.action $(-b)$page.title$(-): $(git_io https://github.com/$page.html_url)";
     }
 };
 
@@ -314,7 +314,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#$payload.issue.number$(-) $(-i)$payload.issue.title$(-): $payload.comment.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#$payload.issue.number$(-) $(-i)$payload.issue.title$(-): $(git_io $payload.comment.html_url)";
     }
 };
 
@@ -360,7 +360,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) issue $(-b)#$payload.issue.number$(-): $(-i)$payload.issue.title$(-) $payload.issue.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) issue $(-b)#$payload.issue.number$(-): $(-i)$payload.issue.title$(-) $(git_io $payload.issue.html_url)";
     }
 
     bool detailed = false;
@@ -424,7 +424,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) pull request $(-b)#$payload.pull_request.number$(-) ($(-b)$(dark_yellow)$payload.pull_request.head.ref$(-) -> $(-b)$payload.pull_request.base.ref$(-)) $(-i)$payload.pull_request.title$(-): $payload.pull_request.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $color$payload.action$(-) pull request $(-b)#$payload.pull_request.number$(-) ($(-b)$(dark_yellow)$payload.pull_request.head.ref$(-) -> $(-b)$payload.pull_request.base.ref$(-)) $(-i)$payload.pull_request.title$(-): $(git_io $payload.pull_request.html_url)";
     }
 };
 
@@ -439,7 +439,7 @@ public:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#$payload.pull_request.number$(-) ($(-i)$payload.pull_request.title$(-)): $payload.comment.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on issue $(-b)#$payload.pull_request.number$(-) ($(-i)$payload.pull_request.title$(-)): $(git_io $payload.comment.html_url)";
     }
 };
 
@@ -498,7 +498,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $commit_pluralized on $(magenta)$branch$(-): https://github.com/$repo.name/compare/${short_before}...${short_head}";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $commit_pluralized on $(magenta)$branch$(-): $(git_io 'https://github.com/$repo.name/compare/${short_before}...${short_head}')";
     }
 
     string::FormattedString commit_reply_template;
@@ -530,7 +530,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $payload.action $release_type $(-b)$payload.release.name$(-): $payload.release.html_url";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) $payload.action $release_type $(-b)$payload.release.name$(-): $(git_io $payload.release.html_url)";
     }
 };
 
