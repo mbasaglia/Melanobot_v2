@@ -31,6 +31,8 @@
 #include "logger.hpp"
 #include "melanolib/string/stringutils.hpp"
 #include "encoding.hpp"
+#include "replacements.hpp"
+#include "melanolib/utils.hpp"
 
 namespace string {
 
@@ -319,6 +321,7 @@ std::string FormatterConfig::color(const color::Color12& color) const
     }
     return std::string("$(x")+color.hex_red()+color.hex_green()+color.hex_blue()+')';
 }
+
 std::string FormatterConfig::format_flags(FormatFlags flags) const
 {
     std::string r = "$(-";
@@ -330,18 +333,57 @@ std::string FormatterConfig::format_flags(FormatFlags flags) const
         r += "i";
     return r+')';
 }
+
 std::string FormatterConfig::clear() const
 {
     return "$(-)";
 }
+
 std::string FormatterConfig::ascii(char input) const
 {
     return input == '$' ? "$$" : std::string(1,input);
 }
+
 std::string FormatterConfig::ascii(const std::string& input) const
 {
     return melanolib::string::replace(input,"$","$$");
 }
+
+/**
+ * \pre format[0] == '-'
+ */
+static FormatFlags cfg_format_flags(const std::string& format)
+{
+    FormatFlags flag;
+    for ( std::string::size_type i = 1; i < format.size(); i++ )
+    {
+        if ( format[i] == 'b' )
+            flag |= FormatFlags::BOLD;
+        else if ( format[i] == 'u' )
+            flag |= FormatFlags::UNDERLINE;
+        else if ( format[i] == 'i' )
+            flag |= FormatFlags::ITALIC;
+    }
+
+    return flag;
+}
+
+static color::Color12 cfg_format_color(const std::string& format)
+{
+    if ( format.size() == 4 && format[0] == 'x' &&
+        std::all_of(format.begin()+1, format.end(),
+            melanolib::FunctionPointer<int(int)>(std::isxdigit))
+       )
+    {
+        return color::Color12(format.substr(1));
+    }
+
+    if ( format.size() == 1 && std::isdigit(format[0]) )
+        return color::Color12::from_4bit(0b1000|(format[0]-'0'));
+
+    return color::Color12::from_name(format);
+}
+
 FormattedString FormatterConfig::decode(const std::string& source) const
 {
     FormattedString str;
@@ -359,81 +401,97 @@ FormattedString FormatterConfig::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&parser,&str,&ascii,push_ascii](uint8_t byte)
+    parser.callback_ascii =
+        [&parser, &str, &ascii, push_ascii, this](uint8_t byte)
     {
-        if ( byte == '$' )
+        if ( byte != '$' )
         {
-            char next = parser.input.next();
-            if ( next == '(' )
-            {
-                std::string format = parser.input.get_line(')');
+            ascii += byte;
+            return;
+        }
 
-                if ( !format.empty() )
-                {
-                    push_ascii();
-                    if ( format[0] == '-' )
-                    {
-                        FormatFlags flag;
-                        for ( std::string::size_type i = 1; i < format.size(); i++ )
-                        {
-                            if ( format[i] == 'b' )
-                                flag |= FormatFlags::BOLD;
-                            else if ( format[i] == 'u' )
-                                flag |= FormatFlags::UNDERLINE;
-                            else if ( format[i] == 'i' )
-                                flag |= FormatFlags::ITALIC;
-                        }
-                        if ( !flag )
-                            str << ClearFormatting();
-                        else
-                            str << flag;
-                    }
-                    else if ( format[0] == 'x' )
-                    {
-                        str << color::Color12(format.substr(1));
-                    }
-                    else if ( std::isdigit(format[0]) )
-                    {
-                        str << color::Color12::from_4bit(0b1000|(format[0]-'0'));
-                    }
-                    else
-                    {
-                        str << color::Color12::from_name(format);
-                    }
-                }
-            }
-            else if ( next == '{' )
-            {
-                std::string id = parser.input.get_line('}');
-                if ( !id.empty() )
-                {
-                    push_ascii();
-                    str.append<Placeholder>(id);
-                }
+        char next = parser.input.next();
 
-            }
-            else if ( next == '$' )
-            {
-                ascii += '$';
-            }
-            else if ( std::isalnum(next) || next == '_' )
-            {
-                static std::regex identifier("[a-zA-Z0-9._]+",
-                    std::regex::optimize|std::regex::ECMAScript);
+        if ( next == '(' )
+        {
+            auto next_arg = [](char c) { return c == ')' || std::isspace(c); };
+            std::string format = parser.input.get_until(next_arg);
 
-                std::string id = next+parser.input.get_regex(identifier);
+            if ( format.empty() )
+                return;
+
+            push_ascii();
+            if ( format[0] == '-' )
+            {
+                if ( auto flag = cfg_format_flags(format) )
+                    str << flag;
+                else
+                    str << ClearFormatting();
+
+                return;
+            }
+
+            if ( format == "nocolor" )
+            {
+                str << color::Color12();
+                return;
+            }
+
+            auto color = cfg_format_color(format);
+            if ( color.is_valid() )
+            {
+                str << color;
+                return;
+            }
+
+            std::vector<FormattedString> args;
+            while ( true )
+            {
+                parser.input.get_until(
+                    [](char c) { return !std::isspace(c); },
+                    false
+                );
+                next = parser.input.next();
+                if ( parser.input.eof() || next == ')' )
+                    break;
+
+                std::string arg;
+                if ( next == '\'' || next == '"' )
+                    arg = parser.input.get_line(next);
+                else
+                    arg = next+parser.input.get_until(next_arg);
+
+                args.push_back(decode(arg));
+            }
+            str.append<FilterCall>(format, std::move(args));
+        }
+        else if ( next == '{' )
+        {
+            std::string id = parser.input.get_line('}');
+            if ( !id.empty() )
+            {
                 push_ascii();
                 str.append<Placeholder>(id);
             }
-            else
-            {
-                ascii += byte;
-                parser.input.unget();
-            }
+
+        }
+        else if ( next == '$' )
+        {
+            ascii += '$';
+        }
+        else if ( std::isalnum(next) || next == '_' )
+        {
+            static std::regex identifier("[a-zA-Z0-9._]+",
+                std::regex::optimize|std::regex::ECMAScript);
+
+            std::string id = next+parser.input.get_regex(identifier);
+            push_ascii();
+            str.append<Placeholder>(id);
         }
         else
         {
             ascii += byte;
+            parser.input.unget();
         }
     };
 

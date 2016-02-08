@@ -28,6 +28,7 @@
 #include "irc/irc_formatter.hpp"
 #include "fun/rainbow.hpp"
 #include "string/encoding.hpp"
+#include "string/replacements.hpp"
 
 using namespace string;
 
@@ -545,4 +546,39 @@ BOOST_AUTO_TEST_CASE( test_Replacements )
     BOOST_CHECK( string.replaced("hellooo", "hi").encode(ascii) == "hiworld,worldoo" );
 
     BOOST_CHECK( cfg.decode("I'm $1").replaced("1", "the best").encode(ascii) == "I'm the best" );
+}
+
+
+BOOST_AUTO_TEST_CASE( test_Filters )
+{
+    FormatterConfig cfg;
+    FilterRegistry::instance().register_filter("colorize",
+        [](const std::vector<FormattedString>& args) -> FormattedString
+        {
+            if ( args.empty() )
+                return {};
+
+            if ( args.size() < 2 )
+                return args[0];
+
+            return FormattedString()
+                << color::Color12::from_name(args[0].encode(FormatterAscii()))
+                << args[1]
+                << color::Color12();
+        }
+    );
+
+    FormattedString string = cfg.decode("$(colorize red hello)");
+    BOOST_CHECK( cast<FilterCall>(string[0]) );
+
+    auto filtered = cast<FilterCall>(string[0])->filtered();
+    BOOST_CHECK( filtered.size() == 3 );
+    BOOST_CHECK( cast<Color>(filtered[0]) );
+    BOOST_CHECK( cast<Color>(filtered[0])->color() == color::red );
+    BOOST_CHECK( cast<Color>(filtered[2]) );
+    BOOST_CHECK( !cast<Color>(filtered[2])->color().is_valid() );
+
+    string = cfg.decode("$(colorize red \"hello $world\")");
+    string.replace("world", "pony");
+    BOOST_CHECK( string.encode(FormatterAscii()) == "hello pony" );
 }

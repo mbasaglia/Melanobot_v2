@@ -171,11 +171,23 @@ public:
      */
     string_type get_line(char_type delim = '\n')
     {
+        return get_until([delim](char_type c){ return c == delim; }, true);
+    }
+
+    /**
+     * \brief Get a string, untile \p predicate is true (or eof)
+     * \tparam Predicate    A predicate taking chars
+     * \param predicate     Termination condition
+     * \param skip_match    If \c true, it will skip the first character for which \p predicate is \c true
+     */
+    template<class Predicate>
+        string_type get_until(const Predicate& predicate, bool skip_match = true)
+    {
         auto begin = pos;
-        while ( !eof() && source[pos] != delim )
+        while ( !eof() && !predicate(source[pos]) )
             pos++;
         auto end = pos-begin;
-        if ( !eof() )
+        if ( !eof() && skip_match )
             pos++;
         return source.substr(begin,end);
     }

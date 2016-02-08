@@ -684,44 +684,6 @@ private:
 };
 
 /**
- * \brief Element that is used for replacements
- */
-class Placeholder : public Element
-{
-public:
-    Placeholder(std::string identifier, FormattedString replacement = {})
-        : identifier(std::move(identifier)),
-          replacement(std::move(replacement))
-    {}
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return replacement.encode(formatter);
-    }
-
-    int char_count() const override
-    {
-        return replacement.char_count();
-    }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<Placeholder>(identifier, replacement.copy());
-    }
-
-    void replace(const ReplacementFunctor& func) override
-    {
-        auto rep = func(identifier);
-        if ( rep )
-            replacement = std::move(*rep);
-    }
-
-private:
-    std::string identifier;
-    FormattedString replacement;
-};
-
-/**
  * \brief Merge several formatted strings
  */
 template<class Container, class =
