@@ -550,6 +550,7 @@ BOOST_AUTO_TEST_CASE( test_Replacements )
 BOOST_AUTO_TEST_CASE( test_Filters )
 {
     FormatterConfig cfg;
+    FormatterAscii ascii;
     FilterRegistry::instance().register_filter("colorize",
         [](const std::vector<FormattedString>& args) -> FormattedString
         {
@@ -578,9 +579,19 @@ BOOST_AUTO_TEST_CASE( test_Filters )
 
     string = cfg.decode("$(colorize red \"hello $world\")");
     string.replace("world", "pony");
-    BOOST_CHECK( string.encode(FormatterAscii()) == "hello pony" );
+    BOOST_CHECK( string.encode(ascii) == "hello pony" );
 
     string = cfg.decode("$(colorize red $world) yay");
     string.replace("world", "pony");
-    BOOST_CHECK( string.encode(FormatterAscii()) == "pony yay" );
+    BOOST_CHECK( string.encode(ascii) == "pony yay" );
+
+    // built-ins
+
+    BOOST_CHECK( cfg.decode("$(plural 1 pony)").encode(ascii) == "pony" );
+    BOOST_CHECK( cfg.decode("$(plural 6 pony)").encode(ascii) == "ponies" );
+    BOOST_CHECK( cfg.decode("$(plural $count pony)").replaced("count", "6").encode(ascii) == "ponies" );
+
+    BOOST_CHECK( cfg.decode("$(ucfirst 'pony princess')").encode(ascii) == "Pony princess" );
+
 }
+

@@ -19,12 +19,37 @@
 #include "formatter.hpp"
 #include "logger.hpp"
 #include "string/replacements.hpp"
+#include "melanolib/string/language.hpp"
+#include "melanolib/string/stringutils.hpp"
 
 namespace string {
 
 Formatter::Registry::Registry()
 {
-    FilterRegistry::instance();
+    FilterRegistry::instance().register_filter("plural",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            if ( args.size() != 2 )
+                return {};
+            string::FormatterAscii ascii;
+            int number = melanolib::string::to_int(args[0].encode(ascii));
+            std::string word = args[1].encode(ascii);
+            return melanolib::string::english.pluralize(number, word);
+        }
+    );
+    FilterRegistry::instance().register_filter("ucfirst",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            if ( args.size() != 1 )
+                return {};
+            string::FormatterAscii ascii;
+            std::string word = args[0].encode(ascii);
+            if ( !word.empty() )
+                word[0] = std::toupper(word[0]);
+            return word;
+        }
+    );
+
     add_formatter(default_formatter = new FormatterUtf8);
     add_formatter(new FormatterAscii);
     add_formatter(new FormatterAnsi(true));
