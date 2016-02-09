@@ -18,6 +18,8 @@
  */
 #include "fun-handlers.hpp"
 #include "module/melanomodule.hpp"
+#include "string/replacements.hpp"
+#include "rainbow.hpp"
 
 /**
  * \brief Registers the fun handlers
@@ -41,4 +43,15 @@ MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
     module::register_handler<fun::RenderPony>("RenderPony");
     module::register_handler<fun::PonyCountDown>("PonyCountDown");
     module::register_handler<fun::PonyFace>("PonyFace");
+
+    string::FilterRegistry::instance().register_filter("rainbow",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            fun::FormatterRainbow rainbow;
+            std::string str;
+            for ( const auto& arg : args )
+                str += arg.encode(rainbow);
+            return rainbow.decode(str);
+        }
+    );
 }
