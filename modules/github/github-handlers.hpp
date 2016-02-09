@@ -174,7 +174,7 @@ public:
     GitHubRelease(const Settings& settings, MessageConsumer* parent)
         : GitHubRepoBase("release", settings, parent)
     {
-        reply = read_string(settings, "reply", "$release_type $(-b)$name$(-): $(git_io $html_url)");
+        reply = read_string(settings, "reply", "$(ucfirst $release_type) $(-b)$name$(-): $(git_io $html_url)");
         reply_failure = read_string(settings, "reply_failure", "I didn't find any such release");
         reply_asset = read_string(settings, "reply_asset", " * $name $(git_io $browser_download_url) $(-b)$human_size$(-), $download_count downloads");
     }
@@ -279,7 +279,7 @@ public:
     GitHubSearch(const Settings& settings, MessageConsumer* parent)
         : GitHubBase("code search", settings, parent)
     {
-        reply = read_string(settings, "reply", " * [$(dark_magenta)$repository.full_name$(-)] $(dark_red)$path$(-) @ $(-b)$short_sha$(-): $(git_io $html_url)");
+        reply = read_string(settings, "reply", " * [$(dark_magenta)$repository.full_name$(-)] $(dark_red)$path$(-) @ $(-b)$(short_sha $sha)$(-): $(git_io $html_url)");
         reply_invalid = read_string(settings, "reply", "$(dark_blue)std$(green)::$(blue)cout$(-) << $(dark_red)\"Search for what?\"$(-);");
         reply_failure = read_string(settings, "reply_failure", "I didn't find anything about $query");
         force = settings.get("force", force);
@@ -315,7 +315,6 @@ protected:
                             if ( i++ >= max_results )
                                 break;
                             match.second.put("query", what);
-                            match.second.put("short_sha", short_sha(match.second.get("sha", "")));
                             github_success(msg, match.second);
                         }
                     }

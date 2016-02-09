@@ -64,5 +64,13 @@ MELANOMODULE_ENTRY_POINT void melanomodule_github_initialize(const Settings&)
             return utf8.decode(github::git_io_shorten(args[0].encode(utf8)));
         }
     );
+    string::FilterRegistry::instance().register_filter("short_sha",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            if ( args.empty() )
+                return {};
+            return args[0].encode(string::FormatterAscii()).substr(0, 7);
+        }
+    );
 
 }

@@ -41,14 +41,6 @@ inline std::string ref_to_branch(const std::string& ref)
 }
 
 /**
- * \brief Shortens a commit hash
- */
-inline std::string short_sha(const std::string& sha)
-{
-    return sha.substr(0, 7);
-}
-
-/**
  * \todo Provide mappings between actor.name and connection users
  * \todo Allow some kind of grouping to avoid repetition
  *       of \p destination, \p target and friends
@@ -199,18 +191,10 @@ public:
     {
     }
 
-protected:
-    string::FormattedString&& replacements(string::FormattedString&& string, const PropertyTree& json) override
-    {
-        replace(std::move(string), json);
-        string.replace("short_sha", short_sha(json.get("payload.comment.commit_id", "")));
-        return std::move(string);
-    }
-
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on commit $(-b)$short_sha$(-): $(git_io $payload.comment.html_url)";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on commit $(-b)$(short_sha $payload.comment.commit_id)$(-): $(git_io $payload.comment.html_url)";
     }
 };
 
@@ -455,7 +439,7 @@ public:
     {
         commit_reply_template = string::FormatterConfig().decode(
             settings.get("commit_reply",
-                " * [$(dark_magenta)$short_sha$(-)] $(blue)$author.name$(-) $summary")
+                " * [$(dark_magenta)$(short_sha $sha)$(-)] $(blue)$author.name$(-) $summary")
         );
         commit_limit = settings.get("commit_limit", commit_limit);
     }
@@ -475,8 +459,6 @@ protected:
             auto reply = replace(reply_template().copy(), push.second);
             reply.replace("commit_pluralized", melanolib::string::english.pluralize(commits.size(), "commit"));
             reply.replace("branch", ref_to_branch(push.second.get("payload.ref", "")));
-            reply.replace("short_before", short_sha(push.second.get("payload.before", "")));
-            reply.replace("short_head", short_sha(push.second.get("payload.head", "")));
 
             send_message(std::move(reply));
 
@@ -486,7 +468,6 @@ protected:
                 if ( n_commits++ >= commit_limit )
                     break;
                 auto commit_reply = replace(commit_reply_template.copy(), commit.second);
-                commit_reply.replace("short_sha", short_sha(commit.second.get("sha", "")));
                 auto lines = melanolib::string::char_split(commit.second.get("message", ""), '\n');
                 if ( !lines.empty() )
                     commit_reply.replace("summary", lines[0]);
@@ -498,7 +479,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $commit_pluralized on $(magenta)$branch$(-): $(git_io 'https://github.com/$repo.name/compare/${short_before}...${short_head}')";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $(plural $payload.size commit) on $(magenta)$branch$(-): $(git_io 'https://github.com/$repo.name/compare/$before...$head')";
     }
 
     string::FormattedString commit_reply_template;
