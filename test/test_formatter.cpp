@@ -367,8 +367,6 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
 {
     // Ctors
     BOOST_CHECK( FormattedString().empty() );
-    BOOST_CHECK( (FormattedString(string::Formatter::formatter("utf8"))
-        << "hellò world").size() == 3 );
     BOOST_CHECK( FormattedString("foobar").size() == 1 );
     {
         FormattedString foo("foo");

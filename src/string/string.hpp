@@ -367,15 +367,16 @@ public:
     template<class Iterator>
         FormattedString( const Iterator& i, const Iterator& j )
             : elements(i,j) {}
-    explicit FormattedString(Formatter* formatter) /// \todo remove
-        : input_formatter(formatter) {}
+
     FormattedString(std::string ascii_string)
     {
         if ( !ascii_string.empty() )
             append<AsciiSubstring>(std::move(ascii_string));
     }
+
     FormattedString(const char* ascii_string)
         : FormattedString(std::string(ascii_string)) {}
+
     FormattedString() = default;
     FormattedString(const FormattedString&) = default;
     FormattedString(FormattedString&&) noexcept = default;
@@ -616,10 +617,7 @@ public:
     {
         if ( !text.empty() )
         {
-            if ( input_formatter )
-                append(input_formatter->decode(text));
-            else
-                elements.emplace_back(Tag<AsciiSubstring>(), text);
+            elements.emplace_back(Tag<AsciiSubstring>(), text);
         }
         return *this;
     }
@@ -675,12 +673,6 @@ public:
 
 private:
     container elements;
-    /**
-     * \brief Formatter used to decode std::string input using stream oprations
-     *
-     * If it's \b nullptr, it will be interpreted as an ASCII string
-     */
-    Formatter *input_formatter{nullptr};
 };
 
 /**
