@@ -176,7 +176,7 @@ public:
     {
         reply = read_string(settings, "reply", "$release_type $(-b)$name$(-): $(git_io $html_url)");
         reply_failure = read_string(settings, "reply_failure", "I didn't find any such release");
-        reply_asset = read_string(settings, "reply_asset", "$(git_io $browser_download_url) $(-b)$human_size$(-), $download_count downloads");
+        reply_asset = read_string(settings, "reply_asset", " * $name $(git_io $browser_download_url) $(-b)$human_size$(-), $download_count downloads");
     }
 
 protected:

@@ -210,7 +210,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on commit $(-b)$short_sha(-): $(git_io $payload.comment.html_url)";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) commented on commit $(-b)$short_sha$(-): $(git_io $payload.comment.html_url)";
     }
 };
 
