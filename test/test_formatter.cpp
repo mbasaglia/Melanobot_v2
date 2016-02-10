@@ -546,7 +546,6 @@ BOOST_AUTO_TEST_CASE( test_Replacements )
     BOOST_CHECK( cfg.decode("I'm $1").replaced("1", "the best").encode(ascii) == "I'm the best" );
 }
 
-
 BOOST_AUTO_TEST_CASE( test_Filters )
 {
     FormatterConfig cfg;
@@ -592,6 +591,15 @@ BOOST_AUTO_TEST_CASE( test_Filters )
     BOOST_CHECK( cfg.decode("$(plural $count pony)").replaced("count", "6").encode(ascii) == "ponies" );
 
     BOOST_CHECK( cfg.decode("$(ucfirst 'pony princess')").encode(ascii) == "Pony princess" );
+}
 
+BOOST_AUTO_TEST_CASE( test_Padding )
+{
+    FormatterAscii ascii;
+    BOOST_CHECK( Padding("hello", 7).to_string(ascii) == "  hello" );
+    BOOST_CHECK( Padding("hello", 7, 0).to_string(ascii) == "hello  " );
+    BOOST_CHECK( Padding("hello", 7, 0.5).to_string(ascii) == " hello " );
+    BOOST_CHECK( Padding("hello", 7, 1, '.').to_string(ascii) == "..hello" );
+    BOOST_CHECK( (FormattedString() << Padding("hello", 7, 0) << Padding("world", 7, 1)).encode(ascii)  == "hello    world" );
 }
 

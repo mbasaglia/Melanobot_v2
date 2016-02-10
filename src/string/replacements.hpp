@@ -38,11 +38,6 @@ public:
         return replacement.encode(formatter);
     }
 
-    int char_count() const override
-    {
-        return replacement.char_count();
-    }
-
     std::unique_ptr<Element> clone() const override
     {
         return melanolib::New<Placeholder>(identifier, replacement.copy());
@@ -111,11 +106,6 @@ public:
         return filtered().encode(formatter);
     }
 
-    int char_count() const override
-    {
-        return filtered().char_count();
-    }
-
     std::unique_ptr<Element> clone() const override
     {
         return melanolib::New<FilterCall>(filter, arguments);
@@ -135,6 +125,53 @@ public:
 private:
     std::string filter;
     std::vector<FormattedString> arguments;
+};
+
+class Padding : public Element
+{
+public:
+    Padding(FormattedString string, int target_size, double align = 1, char fill=' ')
+        : string(std::move(string)),
+          target_size(target_size),
+          align(align),
+          fill(fill)
+    {}
+
+    std::string to_string(const Formatter& formatter) const override
+    {
+        auto str = string.encode(formatter);
+
+        int count = target_size - str.size();
+        if ( count > 0 )
+        {
+            int before = count * align;
+
+            if ( before )
+                str = std::string(before, fill) + str;
+
+            if ( count-before )
+                str += std::string(count-before, fill);
+        }
+
+        return str;
+
+    }
+
+    std::unique_ptr<Element> clone() const override
+    {
+        return melanolib::New<Padding>(*this);
+    }
+
+    void replace(const ReplacementFunctor& func) override
+    {
+        string.replace(func);
+    }
+
+private:
+    FormattedString string;
+    int target_size;
+    double align;
+    char fill;
 };
 
 } // namespace string

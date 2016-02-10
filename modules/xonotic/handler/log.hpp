@@ -20,6 +20,7 @@
 #define XONOTIC_HANDLER_LOG_HPP
 
 #include "core/handler/group.hpp"
+#include "string/replacements.hpp"
 
 namespace xonotic {
 
@@ -502,8 +503,7 @@ protected:
         if ( itt != team_scores.end() )
         {
             color = team_colors[team];
-            out << color << itt->second;
-            out.pad(indent);
+            out <<  string::Padding(string::FormattedString() << color << itt->second, indent);
             out << color::nocolor << ") ";
         }
         else

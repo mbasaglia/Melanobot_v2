@@ -24,6 +24,7 @@
 #include "xonotic/xonotic.hpp"
 #include "core/handler/connection_monitor.hpp"
 #include "xonotic/xonotic-connection.hpp"
+#include "string/replacements.hpp"
 
 namespace xonotic {
 
@@ -135,15 +136,15 @@ protected:
                      const std::vector<user::User>& users) const
     {
         reply_to(msg, string::FormattedString() << string::FormatFlags::BOLD
-            << string::FormattedString("ip address").pad(21,0) << " "
+            << string::Padding("ip address", 21, 0) << " "
             << "pl ping frags slot name");
         for ( const auto& user : users )
             reply_to(msg, string::FormattedString()
-                << string::FormattedString(user.host).pad(21,0) << " "
-                << string::FormattedString(user.property("pl")).pad(2) << " "
-                << string::FormattedString(user.property("ping")).pad(4) << " "
-                << string::FormattedString(user.property("frags")).pad(5) << " "
-                << " #" << string::FormattedString(user.property("entity")).pad(2,0) << " "
+                << string::Padding(user.host, 21, 0) << " "
+                << string::Padding(user.property("pl"), 2) << " "
+                << string::Padding(user.property("ping"), 4) << " "
+                << string::Padding(user.property("frags"), 5) << " "
+                << " #" << string::Padding(user.property("entity"), 2,0) << " "
                 << monitored->decode(user.name)
             );
     }
@@ -401,12 +402,14 @@ private:
             reply_to(msg, "No active bans");
             return;
         }
-        using s = string::FormattedString;
+
+        using namespace string;
+        
         for ( const auto& ban : banlist )
-            reply_to(msg,s()
-                << color::red << s("#"+ban.first).pad(4) << " "
-                << color::dark_cyan << s(ban.second.get("ip","")).pad(16,0) << " "
-                << color::nocolor << s(ban.second.get("time","?")).pad(6)
+            reply_to(msg, FormattedString()
+                << color::red << Padding("#"+ban.first, 4) << " "
+                << color::dark_cyan << Padding(ban.second.get("ip",""), 16,0) << " "
+                << color::nocolor << Padding(ban.second.get("time","?"), 6)
                 << " seconds"
             );
     }

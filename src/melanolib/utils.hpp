@@ -20,6 +20,11 @@
  */
 #ifndef MELANOLIB_UTILS_HPP
 #define MELANOLIB_UTILS_HPP
+
+#include <iosfwd>
+#include <tuple>
+#include <type_traits>
+
 namespace melanolib {
 
 /**
@@ -49,6 +54,24 @@ template<class Ret, class...Args>
  */
 template<class T>
     using FunctionPointer = typename FunctionSignature<T>::pointer_type;
+
+namespace detail {
+    class WrongOverload{};
+    struct Gobble{ template<class T> Gobble(T&&); };
+    WrongOverload operator<< (std::ostream&, Gobble);
+
+    template<class T>
+    class StreamInsertable : public
+        std::integral_constant<bool,
+            !std::is_same<
+                decltype(std::declval<std::ostream&>() << std::declval<T>()),
+                WrongOverload
+            >::value
+        >
+    {};
+}
+
+using detail::StreamInsertable;
 
 } // namespace melanolib
 #endif // MELANOLIB_UTILS_HPP
