@@ -23,16 +23,53 @@
 
 namespace xonotic {
 
+/**
+ * \brief Maps weird characters to ASCII strings
+ */
+static std::vector<std::string> qfont_table = {
+    "",   " ",  "-",  " ",  "_",  "#",  "+",  ".",  "F",  "T",  " ",  "#",  ".",  "<",  "#",  "#", // 0
+    "[",  "]",  ":)", ":)", ":(", ":P", ":/", ":D", "<",  ">",  ".",  "-",  "#",  "-",  "-",  "-", // 1
+    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 2
+    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 3
+    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 4
+    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 5
+    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 6
+    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 7
+    "=",  "=",  "=",  "#",  "!",  "[o]","[u]","[i]","[c]","[c]","[r]","#",  "?",  ">",  "#",  "#", // 8
+    "[",  "]",  ":)", ":)", ":(", ":P", ":/", ":D", "<",  ">",  "#",  "X",  "#",  "-",  "-",  "-", // 9
+    " ",  "!",  "\"", "#",  "$",  "%",  "&",  "\"", "(",  ")",  "*",  "+",  ",",  "-",  ".",  "/", // 10
+    "0",  "1",  "2",  "3",  "4",  "5",  "6",  "7", "8",  "9",  ":",  ";",  "<",  "=",  ">",  "?",  // 11
+    "@",  "A",  "B",  "C",  "D",  "E",  "F",  "G", "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  // 12
+    "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "[",  "\\", "]",  "^",  "_",  // 13
+    ".",  "A",  "B",  "C",  "D",  "E",  "F",  "G", "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  // 14
+    "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "{",  "|",  "}",  "~",  "<"   // 15
+};
 
-std::string Formatter::ascii(char c) const
+std::string QFont::alternative() const
 {
-    return c == '^' ? "^^" : std::string(1,c);
+    if ( index_ < qfont_table.size() )
+        return qfont_table[index_];
+    return "";
 }
-std::string Formatter::ascii(const std::string& input) const
+
+std::string QFont::to_string(const string::Formatter& fmt) const
+{
+    if ( dynamic_cast<const xonotic::Formatter*>(&fmt) )
+        return string::Utf8Parser::encode(0xE000|index_);
+    return alternative();
+}
+
+std::string Formatter::to_string(char c) const
+{
+    return c == '^' ? "^^" : std::string(1, c);
+}
+
+std::string Formatter::to_string(const string::AsciiString& input) const
 {
     return melanolib::string::replace(input,"^","^^");
 }
-std::string Formatter::color(const color::Color12& color) const
+
+std::string Formatter::to_string(const color::Color12& color) const
 {
     if ( !color.is_valid() )
         return "^7";
@@ -52,33 +89,28 @@ std::string Formatter::color(const color::Color12& color) const
     }
     return std::string("^x")+color.hex_red()+color.hex_green()+color.hex_blue();
 }
-std::string Formatter::format_flags(string::FormatFlags) const
+
+std::string Formatter::to_string(string::FormatFlags flags) const
 {
     return "";
 }
-std::string Formatter::clear() const
+
+std::string Formatter::to_string(string::ClearFormatting) const
 {
     return "^7";
 }
-std::string Formatter::unicode(const string::Unicode& c) const
-{
-    return c.utf8();
-}
-std::string Formatter::qfont(const string::QFont& c) const
-{
-    return string::Utf8Parser::encode(0xE000|c.index());
-}
+
 string::FormattedString Formatter::decode(const std::string& source) const
 {
     string::FormattedString str;
     string::Utf8Parser parser;
-    std::string ascii;
+    string::AsciiString ascii;
 
     auto push_ascii = [&ascii,&str]()
     {
         if ( !ascii.empty() )
         {
-            str.append<string::AsciiSubstring>(ascii);
+            str.append(ascii);
             ascii.clear();
         }
     };
@@ -103,7 +135,7 @@ string::FormattedString Formatter::decode(const std::string& source) const
         if ( parser.input.get_regex(regex_xoncolor,match) )
         {
             push_ascii();
-            str.append<string::Color>(color_from_match(match));
+            str.append(color_from_match(match));
         }
         else
         {
@@ -114,9 +146,9 @@ string::FormattedString Formatter::decode(const std::string& source) const
     {
         push_ascii();
         if ( (unicode & 0xff00) == 0xe000 )
-            str.append<string::QFont>(unicode&0xff);
+            str.append(QFont(unicode&0xff));
         else
-            str.append<string::Unicode>(utf8,unicode);
+            str.append(string::Unicode(utf8, unicode));
     };
     parser.callback_end = push_ascii;
 

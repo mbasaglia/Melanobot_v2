@@ -25,7 +25,7 @@ namespace string {
 /**
  * \brief Element that is used for replacements
  */
-class Placeholder : public Element
+class Placeholder
 {
 public:
     Placeholder(std::string identifier, FormattedString replacement = {})
@@ -33,17 +33,12 @@ public:
           replacement(std::move(replacement))
     {}
 
-    std::string to_string(const Formatter& formatter) const override
+    std::string to_string(const Formatter& formatter) const
     {
         return replacement.encode(formatter);
     }
 
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<Placeholder>(identifier, replacement.copy());
-    }
-
-    void replace(const ReplacementFunctor& func) override
+    void replace(const ReplacementFunctor& func)
     {
         auto rep = func(identifier);
         if ( rep )
@@ -54,7 +49,6 @@ private:
     std::string identifier;
     FormattedString replacement;
 };
-
 
 class FilterRegistry : public melanolib::Singleton<FilterRegistry>
 {
@@ -93,7 +87,7 @@ private:
     std::unordered_map<std::string, Filter> filters;
 };
 
-class FilterCall : public Element
+class FilterCall
 {
 public:
     FilterCall(std::string filter, std::vector<FormattedString> arguments)
@@ -101,17 +95,7 @@ public:
           arguments(std::move(arguments))
     {}
 
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return filtered().encode(formatter);
-    }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<FilterCall>(filter, arguments);
-    }
-
-    void replace(const ReplacementFunctor& func) override
+    void replace(const ReplacementFunctor& func)
     {
         for ( auto& arg : arguments )
             arg.replace(func);
@@ -122,12 +106,18 @@ public:
         return FilterRegistry::instance().apply_filter(filter, arguments);
     }
 
+    std::string to_string(const Formatter& formatter, const FilterCall& fc) const
+    {
+        return fc.filtered().encode(formatter);
+    }
+
 private:
     std::string filter;
     std::vector<FormattedString> arguments;
 };
 
-class Padding : public Element
+
+class Padding
 {
 public:
     Padding(FormattedString string, int target_size, double align = 1, char fill=' ')
@@ -137,7 +127,7 @@ public:
           fill(fill)
     {}
 
-    std::string to_string(const Formatter& formatter) const override
+    std::string to_string(const Formatter& formatter) const
     {
         auto str = string.encode(formatter);
 
@@ -157,12 +147,7 @@ public:
 
     }
 
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<Padding>(*this);
-    }
-
-    void replace(const ReplacementFunctor& func) override
+    void replace(const ReplacementFunctor& func)
     {
         string.replace(func);
     }

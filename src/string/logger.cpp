@@ -34,18 +34,21 @@ void Logger::log (const std::string& type, char direction,
 
     if ( !timestamp.empty() )
     {
-        log_destination <<  formatter->color(color::yellow) <<
-            melanolib::time::format(timestamp) << formatter->clear();
+        log_destination << formatter->to_string(color::yellow)
+                        << melanolib::time::format(timestamp)
+                        << formatter->to_string(string::ClearFormatting());
     }
 
     if ( type_it != log_types.end() )
-        log_destination <<  formatter->color(type_it->second.color);
+        log_destination <<  formatter->to_string(type_it->second.color);
     log_destination << std::setw(log_type_length) << std::left << type;
 
-    log_destination << formatter->color(log_directions[direction]) << direction;
+    log_destination << formatter->to_string(log_directions[direction]) << direction;
 
-    log_destination << formatter->clear() << message.encode(*formatter)
-        << formatter->clear() << std::endl;
+    log_destination << formatter->to_string(string::ClearFormatting())
+                    << message.encode(*formatter)
+                    << formatter->to_string(string::ClearFormatting())
+                    << std::endl;
 }
 
 

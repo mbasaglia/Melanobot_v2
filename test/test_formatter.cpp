@@ -47,7 +47,9 @@ BOOST_AUTO_TEST_CASE( test_registry )
 template<class T>
     const T* cast(FormattedString::const_reference item)
 {
-    return dynamic_cast<const T*>(item.operator->());
+    if ( item.has_type<T>() )
+        return &item.reference<T>();
+    return nullptr;
 }
 
 BOOST_AUTO_TEST_CASE( test_utf8 )
@@ -56,9 +58,9 @@ BOOST_AUTO_TEST_CASE( test_utf8 )
     std::string utf8 = u8"Foo bar è$ç";
     auto decoded = fmt.decode(utf8);
     BOOST_CHECK( decoded.size() == 4 );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]));
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]));
     BOOST_CHECK( cast<Unicode>(decoded[1]));
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]));
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]));
     BOOST_CHECK( cast<Unicode>(decoded[3]));
     BOOST_CHECK( decoded.encode(fmt) == utf8 );
     auto invalid_utf8 = utf8;
@@ -87,9 +89,9 @@ BOOST_AUTO_TEST_CASE( test_config )
     std::string utf8 = u8"Foo bar è#ç";
     auto decoded = fmt.decode(utf8);
     BOOST_CHECK( decoded.size() == 4 );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]));
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]));
     BOOST_CHECK( cast<Unicode>(decoded[1]));
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]));
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]));
     BOOST_CHECK( cast<Unicode>(decoded[3]));
     BOOST_CHECK( decoded.encode(fmt) == utf8 );
 
@@ -97,44 +99,44 @@ BOOST_AUTO_TEST_CASE( test_config )
     decoded = fmt.decode(formatted);
     BOOST_CHECK( decoded.size() == 13 );
     // "Hello "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == "Hello " );
     // red
-    BOOST_CHECK( cast<Color>(decoded[1]) );
-    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::red );
+    BOOST_CHECK( cast<color::Color12>(decoded[1]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[1]) == color::red );
     // "World "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[2]) == "World " );
     // bold+underline
-    BOOST_CHECK( cast<Format>(decoded[3]) );
-    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    BOOST_CHECK( cast<FormatFlags>(decoded[3]) );
+    BOOST_CHECK( *cast<FormatFlags>(decoded[3]) == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
     // "test"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[4]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[4]) == "test" );
     // clear
     BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
     // "#1"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[6]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[6]) == "#1" );
     // green
-    BOOST_CHECK( cast<Color>(decoded[7]) );
-    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    BOOST_CHECK( cast<color::Color12>(decoded[7]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[7]) == color::green );
     // "green"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[8]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[8]) == "green" );
     // blue
-    BOOST_CHECK( cast<Color>(decoded[9]) );
-    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    BOOST_CHECK( cast<color::Color12>(decoded[9]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[9]) == color::blue );
     // "blue"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[10]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[10]) == "blue" );
     // Unicode §
     BOOST_CHECK( cast<Unicode>(decoded[11]) );
     BOOST_CHECK( cast<Unicode>(decoded[11])->utf8() == u8"§" );
     BOOST_CHECK( cast<Unicode>(decoded[11])->point() == 0x00A7 );
     // "$(1)"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[12]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[12])->string() == "$(1)" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[12]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[12]) == "$(1)" );
 
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello $(1)World $(-bu)test$(-)#1$(2)green$(4)blue§$$(1)" );
@@ -154,43 +156,43 @@ BOOST_AUTO_TEST_CASE( test_ansi_ascii )
     auto decoded = fmt.decode(formatted);
     BOOST_CHECK( decoded.size() == 13 );
     // "Hello "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == "Hello " );
     // red
-    BOOST_CHECK( cast<Color>(decoded[1]) );
-    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::dark_red );
+    BOOST_CHECK( cast<color::Color12>(decoded[1]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[1]) == color::dark_red );
     // "World "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[2]) == "World " );
     // bold+underline
-    BOOST_CHECK( cast<Format>(decoded[3]) );
-    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    BOOST_CHECK( cast<FormatFlags>(decoded[3]) );
+    BOOST_CHECK( *cast<FormatFlags>(decoded[3]) == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
     // "test"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[4]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[4]) == "test" );
     // clear
     BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
     // "#1"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[6]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[6]) == "#1" );
     // green
-    BOOST_CHECK( cast<Color>(decoded[7]) );
-    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    BOOST_CHECK( cast<color::Color12>(decoded[7]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[7]) == color::green );
     // "green"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[8]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[8]) == "green" );
     // blue
-    BOOST_CHECK( cast<Color>(decoded[9]) );
-    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    BOOST_CHECK( cast<color::Color12>(decoded[9]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[9]) == color::blue );
     // "blue"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[10]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[10]) == "blue" );
     // nocolor
-    BOOST_CHECK( cast<Color>(decoded[11]) );
-    BOOST_CHECK( cast<Color>(decoded[11])->color() == color::nocolor );
+    BOOST_CHECK( cast<color::Color12>(decoded[11]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[11]) == color::nocolor );
     // "$"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[12]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[12])->string() == "$" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[12]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[12]) == "$" );
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m$" );
 }
@@ -203,40 +205,40 @@ BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
     auto decoded = fmt.decode(formatted);
     BOOST_CHECK( decoded.size() == 13 );
     // "Hello "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == "Hello " );
     // red
-    BOOST_CHECK( cast<Color>(decoded[1]) );
-    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::dark_red );
+    BOOST_CHECK( cast<color::Color12>(decoded[1]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[1]) == color::dark_red );
     // "World "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[2]) == "World " );
     // bold+underline
-    BOOST_CHECK( cast<Format>(decoded[3]) );
-    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    BOOST_CHECK( cast<FormatFlags>(decoded[3]) );
+    BOOST_CHECK( *cast<FormatFlags>(decoded[3]) == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
     // "test"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[4]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[4]) == "test" );
     // clear
     BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
     // "#1"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[6]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[6]) == "#1" );
     // green
-    BOOST_CHECK( cast<Color>(decoded[7]) );
-    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    BOOST_CHECK( cast<color::Color12>(decoded[7]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[7]) == color::green );
     // "green"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[8]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[8]) == "green" );
     // blue
-    BOOST_CHECK( cast<Color>(decoded[9]) );
-    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    BOOST_CHECK( cast<color::Color12>(decoded[9]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[9]) == color::blue );
     // "blue"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[10]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[10]) == "blue" );
     // nocolor
-    BOOST_CHECK( cast<Color>(decoded[11]) );
-    BOOST_CHECK( cast<Color>(decoded[11])->color() == color::nocolor );
+    BOOST_CHECK( cast<color::Color12>(decoded[11]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[11]) == color::nocolor );
     // Unicode §
     BOOST_CHECK( cast<Unicode>(decoded[12]) );
     BOOST_CHECK( cast<Unicode>(decoded[12])->utf8() == u8"§" );
@@ -252,44 +254,44 @@ BOOST_AUTO_TEST_CASE( test_irc )
     auto decoded = fmt.decode(formatted);
     BOOST_CHECK( decoded.size() == 13 );
     // "Hello "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == "Hello " );
     // red
-    BOOST_CHECK( cast<Color>(decoded[1]) );
-    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::red );
+    BOOST_CHECK( cast<color::Color12>(decoded[1]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[1]) == color::red );
     // "World "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[2]) == "World " );
     // bold+underline
-    BOOST_CHECK( cast<Format>(decoded[3]) );
-    BOOST_CHECK( cast<Format>(decoded[3])->flags() == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
+    BOOST_CHECK( cast<FormatFlags>(decoded[3]) );
+    BOOST_CHECK( *cast<FormatFlags>(decoded[3]) == (FormatFlags::BOLD|FormatFlags::UNDERLINE) );
     // "test"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "test" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[4]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[4]) == "test" );
     // clear
     BOOST_CHECK( cast<ClearFormatting>(decoded[5]) );
     // "#1"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "#1" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[6]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[6]) == "#1" );
     // green
-    BOOST_CHECK( cast<Color>(decoded[7]) );
-    BOOST_CHECK( cast<Color>(decoded[7])->color() == color::green );
+    BOOST_CHECK( cast<color::Color12>(decoded[7]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[7]) == color::green );
     // "green"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[8])->string() == "green" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[8]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[8]) == "green" );
     // blue
-    BOOST_CHECK( cast<Color>(decoded[9]) );
-    BOOST_CHECK( cast<Color>(decoded[9])->color() == color::blue );
+    BOOST_CHECK( cast<color::Color12>(decoded[9]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[9]) == color::blue );
     // "blue"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[10])->string() == "blue" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[10]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[10]) == "blue" );
     // Unicode §
     BOOST_CHECK( cast<Unicode>(decoded[11]) );
     BOOST_CHECK( cast<Unicode>(decoded[11])->utf8() == u8"§" );
     BOOST_CHECK( cast<Unicode>(decoded[11])->point() == 0x00A7 );
     // invalid color
-    BOOST_CHECK( cast<Color>(decoded[12]) );
-    BOOST_CHECK( cast<Color>(decoded[12])->color() == color::nocolor );
+    BOOST_CHECK( cast<color::Color12>(decoded[12]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[12]) == color::nocolor );
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§\xf" );
 }
@@ -302,38 +304,42 @@ BOOST_AUTO_TEST_CASE( test_xonotic )
     auto decoded = fmt.decode(formatted);
     BOOST_CHECK( decoded.size() == 9 );
     // "Hello "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[0])->string() == "Hello " );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == "Hello " );
     // red
-    BOOST_CHECK( cast<Color>(decoded[1]) );
-    BOOST_CHECK( cast<Color>(decoded[1])->color() == color::red );
+    BOOST_CHECK( cast<color::Color12>(decoded[1]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[1]) == color::red );
     // "World "
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[2])->string() == "World ^" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[2]) == "World ^" );
     // green
-    BOOST_CHECK( cast<Color>(decoded[3]) );
-    BOOST_CHECK( cast<Color>(decoded[3])->color() == color::green );
+    BOOST_CHECK( cast<color::Color12>(decoded[3]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[3]) == color::green );
     // "green"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[4])->string() == "green" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[4]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[4]) == "green" );
     // blue
-    BOOST_CHECK( cast<Color>(decoded[5]) );
-    BOOST_CHECK( cast<Color>(decoded[5])->color() == color::blue );
+    BOOST_CHECK( cast<color::Color12>(decoded[5]) );
+    BOOST_CHECK( *cast<color::Color12>(decoded[5]) == color::blue );
     // "blue"
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6]) );
-    BOOST_CHECK( cast<AsciiSubstring>(decoded[6])->string() == "blue^x00" );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[6]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[6]) == "blue^x00" );
     // Unicode §
     BOOST_CHECK( cast<Unicode>(decoded[7]) );
     BOOST_CHECK( cast<Unicode>(decoded[7])->utf8() == u8"§" );
-    // QFont smile
-    BOOST_CHECK( cast<QFont>(decoded[8]) );
-    BOOST_CHECK( cast<QFont>(decoded[8])->index() == 0x12 );
-    BOOST_CHECK( cast<QFont>(decoded[8])->alternative() == ":)" );
-    BOOST_CHECK( cast<QFont>(decoded[8])->unicode_point() == 0xe012 );
+    //  smile
+    BOOST_CHECK( cast<xonotic::QFont>(decoded[8]) );
+    BOOST_CHECK( cast<xonotic::QFont>(decoded[8])->index() == 0x12 );
+    BOOST_CHECK( cast<xonotic::QFont>(decoded[8])->alternative() == ":)" );
+    BOOST_CHECK( cast<xonotic::QFont>(decoded[8])->unicode_point() == 0xe012 );
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello ^1World ^^^2green^4blue^^x00§\ue012" );
 
     BOOST_CHECK( decoded.encode(FormatterAscii()) == "Hello World ^greenblue^x00?:)" );
+
+    // QFont
+    xonotic::QFont qf(1000);
+    BOOST_CHECK( qf.alternative() == "" );
 }
 
 BOOST_AUTO_TEST_CASE( test_rainbow  )
@@ -344,12 +350,12 @@ BOOST_AUTO_TEST_CASE( test_rainbow  )
     BOOST_CHECK( decoded.size() == 28 );
     for ( int i = 0; i < 11; i++ )
     {
-        BOOST_CHECK( cast<Color>(decoded[i*2]) );
-        BOOST_CHECK( cast<Character>(decoded[i*2+1]) );
-        BOOST_CHECK( cast<Character>(decoded[i*2+1])->character() == utf8[i] );
+        BOOST_CHECK( cast<color::Color12>(decoded[i*2]) );
+        BOOST_CHECK( cast<char>(decoded[i*2+1]) );
+        BOOST_CHECK( *cast<char>(decoded[i*2+1]) == utf8[i] );
     }
     BOOST_CHECK( cast<Unicode>(decoded[23]) );
-    BOOST_CHECK( cast<Color>(decoded[0])->color() == color::red );
+    BOOST_CHECK( *cast<color::Color12>(decoded[0]) == color::red );
     BOOST_CHECK( decoded.encode(fmt) == utf8 );
 
     fun::FormatterRainbow fmt2(0.5,0.5,0.5);
@@ -357,8 +363,8 @@ BOOST_AUTO_TEST_CASE( test_rainbow  )
     decoded = fmt2.decode(str);
     for ( unsigned i = 0; i < str.size(); i++ )
     {
-        BOOST_CHECK( cast<Color>(decoded[i*2]) );
-        BOOST_CHECK( cast<Color>(decoded[i*2])->color() == color::Color12::hsv(0.5+i*0.25,0.5,0.5) );
+        BOOST_CHECK( cast<color::Color12>(decoded[i*2]) );
+        BOOST_CHECK( *cast<color::Color12>(decoded[i*2]) == color::Color12::hsv(0.5+i*0.25,0.5,0.5) );
     }
 
 }
@@ -386,48 +392,48 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     BOOST_CHECK( s.begin() == s.end() );
     s << "Foo" << color::black;
     BOOST_CHECK( s.end() - s.begin() == 2 );
-    BOOST_CHECK( cast<AsciiSubstring>(*s.begin()) );
-    BOOST_CHECK( cast<Color>(*(s.end()-1)) );
-    BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
-    BOOST_CHECK( cast<Color>(s[1]) );
+    BOOST_CHECK( cast<string::AsciiString>(*s.begin()) );
+    BOOST_CHECK( cast<color::Color12>(*(s.end()-1)) );
+    BOOST_CHECK( cast<string::AsciiString>(s[0]) );
+    BOOST_CHECK( cast<color::Color12>(s[1]) );
     {
         const FormattedString& s2 = s;
         BOOST_CHECK( s2.begin() == s2.cbegin() );
         BOOST_CHECK( s2.end() == s2.cend() );
-        BOOST_CHECK( cast<AsciiSubstring>(s2[0]) );
-        BOOST_CHECK( cast<Color>(s2[1]) );
+        BOOST_CHECK( cast<string::AsciiString>(s2[0]) );
+        BOOST_CHECK( cast<color::Color12>(s2[1]) );
     }
 
     // Insert
-    s.push_back(melanolib::New<AsciiSubstring>("bar"));
-    BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
-    s.insert(s.begin()+2,melanolib::New<Color>(color::blue));
-    BOOST_CHECK( cast<Color>(s[2]) );
-    s.insert(s.begin()+2,3,melanolib::New<Format>(FormatFlags()));
+    s.push_back(Element("bar"));
+    BOOST_CHECK( cast<string::AsciiString>(s[2]) );
+    s.insert(s.begin()+2,Element(color::blue));
+    BOOST_CHECK( cast<color::Color12>(s[2]) );
+    s.insert(s.begin()+2,3,Element(FormatFlags()));
     for ( int i = 2; i < 5; i++ )
-        BOOST_CHECK( cast<Format>(s[i]) );
+        BOOST_CHECK( cast<FormatFlags>(s[i]) );
     {
         FormattedString s2;
         s2 << "Hello" << "World";
-        s.insert(s.begin()+3,s2.begin(),s2.end());
-        BOOST_CHECK( cast<AsciiSubstring>(s[3]) );
-        BOOST_CHECK( cast<AsciiSubstring>(s[4]) );
+        s.insert(s.begin()+3, s2.begin(), s2.end());
+        BOOST_CHECK( cast<string::AsciiString>(s[3]) );
+        BOOST_CHECK( cast<string::AsciiString>(s[4]) );
     }
     s.insert(s.begin(),{
-        melanolib::New<AsciiSubstring>("bar"),
-        melanolib::New<Color>(color::red)
+        Element(string::AsciiString("bar")),
+        Element(color::red)
     });
-    BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
-    BOOST_CHECK( cast<Color>(s[1]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[0]) );
+    BOOST_CHECK( cast<color::Color12>(s[1]) );
 
     // Erase
     s.erase(s.begin()+1);
-    BOOST_CHECK( cast<AsciiSubstring>(s[1]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[1]) );
     s.erase(s.begin()+1,s.end()-1);
     BOOST_CHECK( s.size() == 2 );
 
     // Assign
-    s.assign(5,melanolib::New<Color>(color::green));
+    s.assign(5, Element(color::Color12(color::green)));
     BOOST_CHECK( s.size() == 5 );
     {
         FormattedString s2;
@@ -436,18 +442,18 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         BOOST_CHECK( s.size() == 3 );
     }
     s.assign({
-        melanolib::New<AsciiSubstring>("bar"),
-        melanolib::New<Color>(color::red)
+        Element(string::AsciiString("bar")),
+        Element(color::Color12(color::red))
     });
     BOOST_CHECK( s.size() == 2 );
 
     // Append
-    s.append<AsciiSubstring>("hello");
-    BOOST_CHECK( cast<AsciiSubstring>(s[2]) );
-    s.append<AsciiSubstring>(std::string("hello"));
+    s.append("hello");
+    BOOST_CHECK( cast<string::AsciiString>(s[2]) );
+    s.append(std::string("hello"));
     s.pop_back();
-    s.append(melanolib::New<Color>(color::white));
-    BOOST_CHECK( cast<Color>(s[3]) );
+    s.append(color::Color12(color::white));
+    BOOST_CHECK( cast<color::Color12>(s[3]) );
     {
         FormattedString s2;
         s2 << "Hello" << "World";
@@ -458,19 +464,19 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     // operator<<
     s.clear();
     s << "hello";
-    BOOST_CHECK( cast<AsciiSubstring>(s[0]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[0]) );
     s << std::string("hello");
-    BOOST_CHECK( cast<AsciiSubstring>(s[1]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[1]) );
     s << color::dark_magenta;
-    BOOST_CHECK( cast<Color>(s[2]) );
+    BOOST_CHECK( cast<color::Color12>(s[2]) );
     s << FormatFlags();
-    BOOST_CHECK( cast<Format>(s[3]) );
+    BOOST_CHECK( cast<FormatFlags>(s[3]) );
     s << FormatFlags::BOLD;
-    BOOST_CHECK( cast<Format>(s[4]) );
+    BOOST_CHECK( cast<FormatFlags>(s[4]) );
     s << ClearFormatting();
     BOOST_CHECK( cast<ClearFormatting>(s[5]) );
     s << 'c';
-    BOOST_CHECK( cast<Character>(s[6]) );
+    BOOST_CHECK( cast<char>(s[6]) );
     {
         FormattedString s2;
         s2 << "Hello" << "World";
@@ -478,7 +484,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         BOOST_CHECK( s.size() == 9 );
     }
     s << 12.3;
-    BOOST_CHECK( cast<AsciiSubstring>(s[9]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[9]) );
 }
 
 BOOST_AUTO_TEST_CASE( test_Misc )
@@ -492,10 +498,6 @@ BOOST_AUTO_TEST_CASE( test_Misc )
     BOOST_CHECK( fmt );
     BOOST_CHECK( fmt & FormatFlags::UNDERLINE );
     BOOST_CHECK( ~fmt & FormatFlags::BOLD );
-
-    // QFont
-    QFont qf(1000);
-    BOOST_CHECK( qf.alternative() == "" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Utf8Parser )
@@ -571,10 +573,10 @@ BOOST_AUTO_TEST_CASE( test_Filters )
 
     auto filtered = cast<FilterCall>(string[0])->filtered();
     BOOST_CHECK( filtered.size() == 3 );
-    BOOST_CHECK( cast<Color>(filtered[0]) );
-    BOOST_CHECK( cast<Color>(filtered[0])->color() == color::red );
-    BOOST_CHECK( cast<Color>(filtered[2]) );
-    BOOST_CHECK( !cast<Color>(filtered[2])->color().is_valid() );
+    BOOST_CHECK( cast<color::Color12>(filtered[0]) );
+    BOOST_CHECK( *cast<color::Color12>(filtered[0]) == color::red );
+    BOOST_CHECK( cast<color::Color12>(filtered[2]) );
+    BOOST_CHECK( !cast<color::Color12>(filtered[2])->is_valid() );
 
     string = cfg.decode("$(colorize red \"hello $world\")");
     string.replace("world", "pony");

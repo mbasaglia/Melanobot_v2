@@ -56,10 +56,26 @@ template<class T>
     using FunctionPointer = typename FunctionSignature<T>::pointer_type;
 
 namespace detail {
+    /**
+     * \brief Type used to detect the operators defined in this namespace
+     */
     class WrongOverload{};
+
+    /**
+     * \brief Type to which anything can be conveted
+     */
     struct Gobble{ template<class T> Gobble(T&&); };
+
+    /**
+     * \brief Adds overload that if matched, means there is no better alternative
+     */
     WrongOverload operator<< (std::ostream&, Gobble);
 
+    /**
+     * \brief Type that inherits from \c std::true_type or \c std::false_type
+     *        based on whether \p T has a proper stream operator<<.
+     * \note Defined in this namespace to have visibility to the \c Gobble overload.
+     */
     template<class T>
     class StreamInsertable : public
         std::integral_constant<bool,

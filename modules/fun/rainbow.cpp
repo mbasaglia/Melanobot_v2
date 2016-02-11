@@ -27,21 +27,20 @@ string::FormattedString FormatterRainbow::decode(const std::string& source) cons
     string::FormattedString str;
 
     string::Utf8Parser parser;
-    std::vector<string::Color*> colors;
+    std::vector<color::Color12*> colors;
 
     parser.callback_ascii = [&str,&colors](uint8_t byte)
     {
-        auto ptr = melanolib::New<string::Color>(color::nocolor);
-        colors.push_back(ptr.get());
-        str.append(std::move(ptr));
-        str.append<string::Character>(byte);
+        string::Element color(color::nocolor);
+        colors.push_back(&color.reference<color::Color12>());
+        str.append(std::move(color));
+        str.append(char(byte));
     };
     parser.callback_utf8 = [&str,&colors](uint32_t unicode,const std::string& utf8)
     {
-        auto ptr = melanolib::New<string::Color>(color::nocolor);
-        colors.push_back(ptr.get());
-        str.append(std::move(ptr));
-        str.append<string::Unicode>(utf8,unicode);
+        string::Element color(color::nocolor);
+        colors.push_back(&color.reference<color::Color12>());
+        str.append(string::Unicode(utf8,unicode));
     };
 
     parser.parse(source);

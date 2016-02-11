@@ -36,66 +36,24 @@
 
 namespace string {
 
-std::vector<std::string> QFont::qfont_table = {
-    "",   " ",  "-",  " ",  "_",  "#",  "+",  ".",  "F",  "T",  " ",  "#",  ".",  "<",  "#",  "#", // 0
-    "[",  "]",  ":)", ":)", ":(", ":P", ":/", ":D", "<",  ">",  ".",  "-",  "#",  "-",  "-",  "-", // 1
-    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 2
-    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 3
-    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 4
-    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 5
-    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 6
-    "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 7
-    "=",  "=",  "=",  "#",  "!",  "[o]","[u]","[i]","[c]","[c]","[r]","#",  "?",  ">",  "#",  "#", // 8
-    "[",  "]",  ":)", ":)", ":(", ":P", ":/", ":D", "<",  ">",  "#",  "X",  "#",  "-",  "-",  "-", // 9
-    " ",  "!",  "\"", "#",  "$",  "%",  "&",  "\"", "(",  ")",  "*",  "+",  ",",  "-",  ".",  "/", // 10
-    "0",  "1",  "2",  "3",  "4",  "5",  "6",  "7", "8",  "9",  ":",  ";",  "<",  "=",  ">",  "?",  // 11
-    "@",  "A",  "B",  "C",  "D",  "E",  "F",  "G", "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  // 12
-    "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "[",  "\\", "]",  "^",  "_",  // 13
-    ".",  "A",  "B",  "C",  "D",  "E",  "F",  "G", "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  // 14
-    "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "{",  "|",  "}",  "~",  "<"   // 15
-};
-
-std::string FormatterUtf8::ascii(char c) const
-{
-    return std::string(1,c);
-}
-std::string FormatterUtf8::ascii(const std::string& s) const
-{
-    return s;
-}
-std::string FormatterUtf8::color(const color::Color12& color) const
-{
-    return "";
-}
-std::string FormatterUtf8::format_flags(FormatFlags flags) const
-{
-    return "";
-}
-std::string FormatterUtf8::clear() const
-{
-    return "";
-}
-std::string FormatterUtf8::unicode(const Unicode& c) const
+std::string FormatterUtf8::to_string(const Unicode& c) const
 {
     return c.utf8();
 }
-std::string FormatterUtf8::qfont(const QFont& c) const
-{
-    return c.alternative();
-}
+
 FormattedString FormatterUtf8::decode(const std::string& source) const
 {
     FormattedString str;
 
     Utf8Parser parser;
 
-    std::string ascii;
+    string::AsciiString ascii;
 
     auto push_ascii = [&ascii,&str]()
     {
         if ( !ascii.empty() )
         {
-            str.append<AsciiSubstring>(ascii);
+            str.append(ascii);
             ascii.clear();
         }
     };
@@ -107,7 +65,7 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
     parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
     {
         push_ascii();
-        str.append<Unicode>(utf8,unicode);
+        str.append(Unicode(utf8,unicode));
     };
     parser.callback_end = push_ascii;
 
@@ -115,20 +73,22 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
 
     return str;
 }
+
 std::string FormatterUtf8::name() const
 {
     return "utf8";
 }
 
 
-std::string FormatterAscii::unicode(const Unicode& c) const
+std::string FormatterAscii::to_string(const Unicode& c) const
 {
     return std::string(1,Utf8Parser::to_ascii(c.utf8()));
 }
+
 FormattedString FormatterAscii::decode(const std::string& source) const
 {
     FormattedString str;
-    str.append<AsciiSubstring>(source);
+    str.append(source);
     return str;
 }
 
@@ -137,7 +97,7 @@ std::string FormatterAscii::name() const
     return "ascii";
 }
 
-std::string FormatterAnsi::color(const color::Color12& color) const
+std::string FormatterAnsi::to_string(const color::Color12& color) const
 {
     if ( !color.is_valid() )
         return "\x1b[39m";
@@ -150,7 +110,8 @@ std::string FormatterAnsi::color(const color::Color12& color) const
     return std::string("\x1b[")+(bright ? "9" : "3")+std::to_string(number)+"m";
     //return "\x1b[3"+std::to_string(number)+";"+(bright ? "1" : "22")+"m";
 }
-std::string FormatterAnsi::format_flags(FormatFlags flags) const
+
+std::string FormatterAnsi::to_string(FormatFlags flags) const
 {
     std::vector<int> codes;
     codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
@@ -158,29 +119,32 @@ std::string FormatterAnsi::format_flags(FormatFlags flags) const
     codes.push_back( flags & FormatFlags::ITALIC ? 3 : 23 );
     return  "\x1b["+melanolib::string::implode(";",codes)+"m";
 }
-std::string FormatterAnsi::clear() const
+
+std::string FormatterAnsi::to_string(ClearFormatting clear) const
 {
     return "\x1b[0m";
 }
-std::string FormatterAnsi::unicode(const Unicode& c) const
+
+std::string FormatterAnsi::to_string(const Unicode& c) const
 {
     if ( utf8 )
         return c.utf8();
     return std::string(1,Utf8Parser::to_ascii(c.utf8()));
 }
+
 FormattedString FormatterAnsi::decode(const std::string& source) const
 {
     FormattedString str;
 
     Utf8Parser parser;
 
-    std::string ascii;
+    AsciiString ascii;
 
     auto push_ascii = [&ascii,&str]()
     {
         if ( !ascii.empty() )
         {
-            str.append<AsciiSubstring>(ascii);
+            str.append(ascii);
             ascii.clear();
         }
     };
@@ -211,9 +175,9 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
             bool use_flags = false;
             for ( int i : codes )
             {
-                if ( i == 0)
+                if ( i == 0 )
                 {
-                    str.append<ClearFormatting>();
+                    str.append(ClearFormatting());
                 }
                 else if ( i == 1 )
                 {
@@ -247,7 +211,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                 }
                 else if ( i == 39 )
                 {
-                    str.append<Color>(color::nocolor);
+                    str.append(color::nocolor);
                 }
                 else if ( i >= 30 && i <= 37 )
                 {
@@ -258,17 +222,17 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
                         flags = FormatFlags::NO_FORMAT;
                         use_flags = false;
                     }
-                    str.append<Color>(color::Color12::from_4bit(i));
+                    str.append(color::Color12::from_4bit(i));
                 }
                 else if ( i >= 90 && i <= 97 )
                 {
                     i -= 90;
                     i |= 0b1000;
-                    str.append<Color>(color::Color12::from_4bit(i));
+                    str.append(color::Color12::from_4bit(i));
                 }
             }
             if ( use_flags )
-                str.append<Format>(flags);
+                str.append(flags);
         }
         else
         {
@@ -279,7 +243,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
     {
         push_ascii();
         if ( this->utf8 )
-            str.append<Unicode>(utf8,unicode);
+            str.append(Unicode(utf8, unicode));
     };
     parser.callback_end = push_ascii;
 
@@ -292,18 +256,19 @@ std::string FormatterAnsi::name() const
     return utf8 ? "ansi-utf8" : "ansi-ascii";
 }
 
-std::string FormatterAnsiBlack::color(const color::Color12& color) const
+std::string FormatterAnsiBlack::to_string(const color::Color12& color) const
 {
     if ( color.is_valid() && color.to_4bit() == 0 )
-        return FormatterAnsi::color(color::silver);
-    return FormatterAnsi::color(color);
+        return FormatterAnsi::to_string(color::silver);
+    return FormatterAnsi::to_string(color);
 }
 std::string FormatterAnsiBlack::name() const
 {
     return FormatterAnsi::name()+"_black";
 }
 
-std::string FormatterConfig::color(const color::Color12& color) const
+
+std::string FormatterConfig::to_string(const color::Color12& color) const
 {
     if ( !color.is_valid() )
         return "$(nocolor)";
@@ -322,7 +287,7 @@ std::string FormatterConfig::color(const color::Color12& color) const
     return std::string("$(x")+color.hex_red()+color.hex_green()+color.hex_blue()+')';
 }
 
-std::string FormatterConfig::format_flags(FormatFlags flags) const
+std::string FormatterConfig::to_string(FormatFlags flags) const
 {
     std::string r = "$(-";
     if ( flags & FormatFlags::BOLD )
@@ -334,17 +299,17 @@ std::string FormatterConfig::format_flags(FormatFlags flags) const
     return r+')';
 }
 
-std::string FormatterConfig::clear() const
+std::string FormatterConfig::to_string(ClearFormatting clear) const
 {
     return "$(-)";
 }
 
-std::string FormatterConfig::ascii(char input) const
+std::string FormatterConfig::to_string(char input) const
 {
-    return input == '$' ? "$$" : std::string(1,input);
+    return input == '$' ? "$$" : std::string(1, input);
 }
 
-std::string FormatterConfig::ascii(const std::string& input) const
+std::string FormatterConfig::to_string(const AsciiString& input) const
 {
     return melanolib::string::replace(input,"$","$$");
 }
@@ -423,13 +388,13 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 
     Utf8Parser parser;
 
-    std::string ascii;
+    AsciiString ascii;
 
     auto push_ascii = [&ascii,&str]()
     {
         if ( !ascii.empty() )
         {
-            str.append<AsciiSubstring>(ascii);
+            str.append(ascii);
             ascii.clear();
         }
     };
@@ -476,7 +441,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
                 return;
             }
 
-            str.append<FilterCall>(format, cfg_args(parser.input, *this));
+            str.append(FilterCall(format, cfg_args(parser.input, *this)));
         }
         else if ( next == '{' )
         {
@@ -484,7 +449,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
             if ( !id.empty() )
             {
                 push_ascii();
-                str.append<Placeholder>(id);
+                str.append(Placeholder(id));
             }
 
         }
@@ -499,7 +464,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
                 false
             );
             push_ascii();
-            str.append<Placeholder>(id);
+            str.append(Placeholder(id));
         }
         else
         {
@@ -511,7 +476,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
     parser.callback_utf8 = [this,&str,push_ascii](uint32_t unicode,const std::string& utf8)
     {
         push_ascii();
-        str.append<Unicode>(utf8,unicode);
+        str.append(Unicode(utf8, unicode));
     };
     parser.callback_end = push_ascii;
 

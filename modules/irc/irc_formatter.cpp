@@ -26,7 +26,7 @@
 
 namespace irc {
 
-std::string FormatterIrc::color(const color::Color12& color) const
+std::string FormatterIrc::to_string(const color::Color12& color) const
 {
     int ircn = 1;
 
@@ -54,7 +54,7 @@ std::string FormatterIrc::color(const color::Color12& color) const
     }
     return '\3'+melanolib::string::to_string(ircn,2);
 }
-std::string FormatterIrc::format_flags(string::FormatFlags flags) const
+std::string FormatterIrc::to_string(string::FormatFlags flags) const
 {
     if ( flags == string::FormatFlags::NO_FORMAT )
         return "\xf"; /// \note clears color as well
@@ -67,7 +67,7 @@ std::string FormatterIrc::format_flags(string::FormatFlags flags) const
         format += "\x1d";
     return format;
 }
-std::string FormatterIrc::clear() const
+std::string FormatterIrc::to_string(string::ClearFormatting) const
 {
     return "\xf";
 }
@@ -79,18 +79,18 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
 
     string::FormatFlags flags;
 
-    std::string ascii;
+    string::AsciiString ascii;
 
     auto push_flags = [&flags,&str,&ascii](bool force_ascii)
     {
         if ( ( force_ascii || flags )  && !ascii.empty() )
         {
-            str.append<string::AsciiSubstring>(ascii);
+            str.append(ascii);
             ascii.clear();
         }
         if ( flags )
         {
-            str.append<string::Format>(flags);
+            str.append(flags);
             flags = string::FormatFlags::NO_FORMAT;
         }
     };
@@ -112,7 +112,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
             case '\xf':
                 flags = string::FormatFlags::NO_FORMAT;
                 push_flags(true);
-                str.append<string::ClearFormatting>();
+                str.append(string::ClearFormatting());
                 break;
             case '\3':
             {
@@ -125,7 +125,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                 color::Color12 color;
                 if ( match.ready() )
                     color = FormatterIrc::color_from_string(match[1]);
-                str.append<string::Color>(color);
+                str.append(color);
                 break;
             }
             case '\x16':
@@ -140,7 +140,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
     parser.callback_utf8 = [&str,&push_flags](uint32_t unicode,const std::string& utf8)
     {
         push_flags(true);
-        str.append<string::Unicode>(utf8,unicode);
+        str.append(string::Unicode(utf8, unicode));
     };
 
     parser.parse(source);
@@ -188,19 +188,19 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
     }
 }
 
-std::string FormatterIrcWhite::color(const color::Color12& color) const
+std::string FormatterIrcWhite::to_string(const color::Color12& color) const
 {
     if ( color.is_valid() )
     {
         switch ( color.to_4bit() )
         {
             case 0b1011: // yellow -> dark yellow
-                return FormatterIrc::color(color::dark_yellow);
+                return FormatterIrc::to_string(color::dark_yellow);
             case 0b1111: // white -> nocolor
-                return FormatterIrc::color(color::nocolor);
+                return FormatterIrc::to_string(color::nocolor);
         }
     }
-    return FormatterIrc::color(color);
+    return FormatterIrc::to_string(color);
 }
 
 std::string FormatterIrcWhite::name() const

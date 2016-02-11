@@ -31,16 +31,15 @@ namespace xonotic {
 /**
  * \brief Darkplaces UTF-8
  */
-class Formatter : public string::Formatter
+class Formatter : public string::FormatterUtf8
 {
 public:
-    std::string ascii(char c) const override;
-    std::string ascii(const std::string& s) const override;
-    std::string color(const color::Color12& color) const override;
-    std::string format_flags(string::FormatFlags flags) const override;
-    std::string clear() const override;
-    std::string unicode(const string::Unicode& c) const override;
-    std::string qfont(const string::QFont& c) const override;
+    std::string to_string(char input) const override;
+    std::string to_string(const string::AsciiString& s) const override;
+    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(string::FormatFlags flags) const override;
+    std::string to_string(string::ClearFormatting clear) const override;
+
     string::FormattedString decode(const std::string& source) const override;
     std::string name() const override;
     /**
@@ -59,6 +58,38 @@ private:
     static color::Color12 color_from_match(const std::smatch& match);
 };
 
+/**
+ * \brief qfont character
+ */
+class QFont
+{
+public:
+    explicit QFont(unsigned index) : index_(index) {}
+
+    /**
+     * \brief Returns the qfont index
+     */
+    unsigned index() const { return index_; }
+
+    /**
+     * \brief Gets an alternative representation of the character
+     * \return An ASCII string aproximating the qfont character
+     */
+    std::string alternative() const;
+
+    /**
+     * \brief The qfont character as a custom unicode character
+     */
+    uint32_t unicode_point() const
+    {
+        return 0xE000 | index_;
+    }
+
+    std::string to_string(const string::Formatter& fmt) const;
+
+private:
+    unsigned index_; ///< Index in the qfont_table
+};
 
 } // namespace xonotic
 #endif // XONOTIC_FORMATTER_HPP

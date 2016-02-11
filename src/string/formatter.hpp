@@ -20,16 +20,28 @@
 #define STRING_FORMATTER_HPP
 
 #include <unordered_map>
+#include <sstream>
 
 #include "format_flags.hpp"
 #include "color.hpp"
 #include "melanolib/singleton.hpp"
+#include "melanolib/utils.hpp"
 
 namespace string {
 
 class Unicode;
-class QFont;
 class FormattedString;
+
+
+/**
+ * \brief Dummy class that represents a complete reset of all flags and colors
+ */
+class ClearFormatting{};
+
+/**
+ * \brief Simple ASCII string
+ */
+using AsciiString = std::string;
 
 /**
  * \brief Abstract formatting visitor (and factory)
@@ -38,6 +50,7 @@ class FormattedString;
 class Formatter
 {
 public:
+
     /**
      * \brief Internal factory
      *
@@ -82,36 +95,55 @@ public:
     Formatter& operator=(Formatter&&) = delete;
 
     virtual ~Formatter() {}
-    /**
-     * \brief Encode a single ASCII character
-     */
-    virtual std::string ascii(char c) const = 0;
+
     /**
      * \brief Encode a simple ASCII string
      */
-    virtual std::string ascii(const std::string& s) const = 0;
+    virtual std::string to_string(const AsciiString& s) const
+    {
+        return s;
+    }
+
+    /**
+     * \brief Encode a single ASCII character
+     */
+    virtual std::string to_string(char c) const
+    {
+        return to_string(std::string(1, c));
+    }
+
+    /**
+     * \brief Encode a unicode (non-ASCII) character
+     */
+    virtual std::string to_string(const Unicode& c) const
+    {
+        return {};
+    }
+
     /**
      * \brief Encode a color code
      * \todo Background colors?
      */
-    virtual std::string color(const color::Color12& color) const = 0;
+    virtual std::string to_string(const color::Color12& color) const
+    {
+        return {};
+    }
+
     /**
      * \brief Encode format flags
      */
-    virtual std::string format_flags(FormatFlags flags) const = 0;
-    /**
-     * \brief Encode a unicode (non-ASCII) character
-     */
-    virtual std::string unicode(const Unicode& c) const = 0;
-    /**
-     * \brief Encode a Darkpaces weird character
-     */
-    virtual std::string qfont(const QFont& c) const = 0;
+    virtual std::string to_string(FormatFlags flags) const
+    {
+        return {};
+    }
 
     /**
      * \brief Clear all formatting
      */
-    virtual std::string clear() const = 0;
+    virtual std::string to_string(ClearFormatting) const
+    {
+        return {};
+    }
 
     /**
      * \brief Decode a string

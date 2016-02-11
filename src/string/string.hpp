@@ -28,8 +28,7 @@
 #include <vector>
 
 #include "formatter.hpp"
-#include "color.hpp"
-#include "melanolib/utils.hpp"
+#include "melanobot/error.hpp"
 
 /**
  * \brief Namespace for string formatting
@@ -41,163 +40,246 @@ using ReplacementFunctor = std::function<
     melanolib::Optional<class FormattedString> (const std::string&)
     >;
 
+
+namespace element {
+
+template<class T>
+    void replace(T& subject, const ReplacementFunctor& repl)
+    {
+    }
+
+
+    /**
+     * \brief Conversion template for values that can be converted to a string
+     *        using streams.
+     */
+    template<class T>
+        std::enable_if_t<melanolib::StreamInsertable<T>::value, std::string>
+        to_string(const Formatter& formatter, const T& t)
+    {
+        std::ostringstream ss;
+        ss << t;
+        return formatter.to_string(ss.str());
+    }
+
+    /**
+     * \brief Conversion template for values that need explicit conversions
+     */
+    template<class T>
+        std::enable_if_t<!melanolib::StreamInsertable<T>::value, std::string>
+        to_string(const Formatter& formatter, const T& t)
+    {
+        return "";
+    }
+
+} // namespace element
+
+namespace detail {
+
+    class OveloadTag{};
+
+    /**
+     * \brief Calls replace() on types that implement that function
+     */
+    template<class T>
+        auto replace_dispatch(T& subject, const ReplacementFunctor& repl, OveloadTag) -> decltype(subject.replace(repl))
+        {
+            return subject.replace(repl);
+        }
+
+    /**
+     * \brief Fallback
+     */
+    template<class T>
+    void replace_dispatch(T& subject, const ReplacementFunctor& repl, ...)
+    {
+        element::replace(subject, repl);
+    }
+
+
+
+    /**
+     * \brief Calls the right virtual function
+     */
+    template<class T>
+        auto to_string_dispatch(const Formatter& formatter, T&& t, OveloadTag) -> decltype(formatter.to_string(std::forward<T>(t)))
+    {
+        return formatter.to_string(std::forward<T>(t));
+    }
+
+    /**
+     * \brief Calls a member to_string
+     */
+    template<class T>
+        auto to_string_dispatch(const Formatter& formatter, T&& t, OveloadTag) -> decltype(t.to_string(formatter))
+    {
+        return t.to_string(formatter);
+    }
+
+    /**
+     * Fallback
+     */
+    template<class T>
+        std::string to_string_dispatch(const Formatter& formatter, T&& t, ...)
+        {
+            return element::to_string(formatter, t);
+        }
+
+} // namespace detail
+
 /**
- * \brief Generic element of a string
+ * \brief Type-erased element of a string
  */
 class Element
 {
-public:
-    virtual ~Element() {}
-
-    /**
-     * \brief Visitor format to string
-     */
-    virtual std::string to_string(const Formatter& formatter) const = 0;
-    std::string to_string(Formatter* formatter) const { return to_string(*formatter); }
-
-    virtual std::unique_ptr<Element> clone() const = 0;
-
-    virtual void replace(const ReplacementFunctor& func) {}
-
-};
-
-/**
- * \brief Simple class representing some code which will clear colors and formats
- */
-class ClearFormatting : public Element
-{
-public:
-    std::string to_string(const Formatter& formatter) const override
+private:
+    struct HolderBase
     {
-        return formatter.clear();
+        virtual ~HolderBase() {}
+        virtual std::string to_string(const Formatter&) const = 0;
+        virtual std::unique_ptr<HolderBase> clone() const = 0;
+        virtual const std::type_info& type() const noexcept = 0;
+        virtual void replace(const ReplacementFunctor& repl) = 0;
+    };
+
+    template<class T>
+        struct Holder : HolderBase
+        {
+            Holder(T object) : object(std::move(object)) {}
+
+            std::string to_string(const Formatter& visitor) const override
+            {
+                return detail::to_string_dispatch(visitor, object);
+            }
+
+            void replace(const ReplacementFunctor& repl) override
+            {
+                detail::replace_dispatch(object, repl, true);
+            }
+
+            std::unique_ptr<HolderBase> clone() const override
+            {
+                return std::make_unique<Holder<T>>(object);
+            }
+
+            const std::type_info& type() const noexcept override
+            {
+                return typeid(T);
+            }
+
+            T object;
+        };
+
+
+    template<class T>
+        struct HolderTraits
+        {
+            using HeldType = std::conditional_t<
+                std::is_convertible<T, std::string>::value,
+                std::string,
+                std::remove_cv_t<std::decay_t<T>>
+            >;
+        };
+
+    template<class T>
+        using HolderType = Holder<typename HolderTraits<T>::HeldType>;
+
+public:
+    template<class T>
+        using HeldType = typename HolderTraits<T>::HeldType;
+
+    template<class T>
+    explicit Element(T&& object)
+        : holder( std::make_unique<HolderType<T>>(std::forward<T>(object)) )
+        {}
+
+    Element(Element&&) noexcept = default;
+    Element& operator= (Element&&) noexcept = default;
+
+
+    Element(Element& oth) : holder(oth.holder->clone()) {}
+    Element(const Element& oth) : holder(oth.holder->clone()) {}
+
+    Element& operator=(const Element& oth) noexcept
+    {
+        holder = oth.holder->clone();
+        return *this;
     }
 
-    std::unique_ptr<Element> clone() const override
+    std::string to_string(const Formatter& formatter) const
     {
-        return melanolib::New<ClearFormatting>();
-    }
-};
-
-/**
- * \brief Simple ASCII character
- */
-class Character : public Element
-{
-public:
-    Character(char c) : c(c) {}
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return formatter.ascii(c);
+        return holder->to_string(formatter);
     }
 
-    /**
-     * \brief Returns the character
-     */
-    char character() const noexcept { return c; }
-
-    std::unique_ptr<Element> clone() const override
+    void replace(const ReplacementFunctor& repl)
     {
-        return melanolib::New<Character>(c);
+        holder->replace(repl);
+    }
+
+    Element clone() const
+    {
+        return Element(holder->clone());
+    }
+
+    template<class T>
+        HeldType<T> value() const
+    {
+        if ( has_type<T>() )
+            return static_cast<const HolderType<T>*>(holder.get())->object;
+        throw melanobot::MelanobotError("Bad element cast");
+    }
+
+    template<class T>
+        HeldType<T>& reference()
+    {
+        if ( has_type<T>() )
+            return static_cast<HolderType<T>*>(holder.get())->object;
+        throw melanobot::MelanobotError("Bad element cast");
+    }
+
+    template<class T>
+        const HeldType<T>& reference() const
+    {
+        if ( has_type<T>() )
+            return static_cast<const HolderType<T>*>(holder.get())->object;
+        throw melanobot::MelanobotError("Bad element cast");
+    }
+
+    template<class T>
+        bool has_type() const noexcept
+    {
+        if ( !holder )
+            throw melanobot::MelanobotError("Bad element!");
+
+        return holder->type() == typeid(HeldType<T>);
     }
 
 private:
-    char c;
+    explicit Element(std::unique_ptr<HolderBase>&& holder)
+        : holder(std::move(holder))
+        {}
+/*
+    template<class T>
+        Element(const std::unique_ptr<T>&) = delete;*/
+
+    std::unique_ptr<HolderBase> holder;
 };
 
-/**
- * \brief Simple ASCII string
- */
-class AsciiSubstring : public Element
-{
-public:
-    AsciiSubstring(std::string s) : s(std::move(s)) {}
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return formatter.ascii(s);
-    }
-
-    /**
-     * \brief Returns the string
-     */
-    const std::string& string() const noexcept { return s; }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<AsciiSubstring>(s);
-    }
-
-private:
-    std::string s;
-};
-
-/**
- * \brief Color code
- */
-class Color : public Element
-{
-public:
-    Color(color::Color12 color) : color_(std::move(color)) {}
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return formatter.color(color_);
-    }
-
-    /**
-     * \brief Returns the color
-     */
-    color::Color12 color() const noexcept { return color_; }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<Color>(color_);
-    }
-
-private:
-    color::Color12 color_;
-};
-
-/**
- * \brief Formatting flag
- */
-class Format : public Element
-{
-public:
-    Format(FormatFlags  flags) : flags_(std::move(flags)) {}
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return formatter.format_flags(flags_);
-    }
-    /**
-     * \brief Returns the format flags
-     */
-    FormatFlags flags() const noexcept { return flags_; }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<Format>(flags_);
-    }
-
-private:
-    FormatFlags flags_;
-};
+    template<class T>
+        struct Element::Holder<std::unique_ptr<T>>{};
+    template<>
+        struct Element::Holder<Element>{};
+    template<class T>
+        struct Element::Holder<Element::Holder<T>>{};
 
 /**
  * \brief Unicode point
  */
-class Unicode : public Element
+class Unicode
 {
 public:
     Unicode(std::string utf8, uint32_t point)
         : utf8_(std::move(utf8)), point_(point) {}
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return formatter.unicode(*this);
-    }
 
     /**
      * \brief Returns the UTF-8 representation
@@ -208,10 +290,6 @@ public:
      */
     uint32_t point() const { return point_; }
 
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<Unicode>(*this);
-    }
 
 private:
     std::string utf8_;
@@ -219,132 +297,13 @@ private:
 };
 
 /**
- * \brief qfont character
- */
-class QFont : public Element
-{
-public:
-    explicit QFont(unsigned index) : index_(index) {}
-
-    /**
-     * \brief Returns the qfont index
-     */
-    unsigned index() const { return index_; }
-
-    std::string to_string(const Formatter& formatter) const override
-    {
-        return formatter.qfont(*this);
-    }
-
-    /**
-     * \brief Gets an alternative representation of the character
-     * \return An ASCII string aproximating the qfont character
-     */
-    std::string alternative() const
-    {
-        if ( index_ < qfont_table.size() )
-            return qfont_table[index_];
-        return "";
-    }
-
-    /**
-     * \brief The qfont character as a custom unicode character
-     */
-    uint32_t unicode_point() const
-    {
-        return 0xE000 | index_;
-    }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<QFont>(index_);
-    }
-
-private:
-    /**
-     * \brief Maps weird characters to ASCII strings
-     */
-    static std::vector<std::string> qfont_table;
-    unsigned index_; ///< Index in the qfont_table
-};
-
-/**
  * \brief A formatted string
  */
-class FormattedString : public Element
+class FormattedString
 {
-private:
-    template<class T> class Tag {};
-
 public:
 
-    /**
-     * \brief Object that contains a dynamic instance of \c Element
-     *
-     * Copying this object performs a deep copy of the contained value
-     */
-    class value_type
-    {
-    public:
-
-        value_type(std::unique_ptr<Element> ptr) noexcept
-            : ptr(std::move(ptr))
-        {}
-
-        template<class Y>
-            value_type(std::unique_ptr<Y> ptr) noexcept
-            : ptr(std::move(ptr))
-        {}
-
-        template<class E, class... Args>
-            value_type(Tag<E>, Args&&... args)
-            : ptr(melanolib::New<E>(std::forward<Args>(args)...))
-        {}
-
-        value_type(const value_type& oth)
-        {
-            ptr = oth->clone();
-        }
-
-        value_type(value_type&&) noexcept = default;
-
-        value_type& operator=(const value_type& oth)
-        {
-            ptr = oth->clone();
-            return *this;
-        }
-
-        value_type& operator=(value_type&&) noexcept = default;
-
-        value_type clone() const
-        {
-            return ptr->clone();
-        }
-
-        const Element* operator->() const
-        {
-            return ptr.get();
-        }
-
-        const Element& operator*() const
-        {
-            return *ptr;
-        }
-
-        Element* operator->()
-        {
-            return ptr.get();
-        }
-
-        Element& operator*()
-        {
-            return *ptr;
-        }
-
-    private:
-        std::unique_ptr<Element> ptr;
-    };
-
+    using value_type        = Element;
     using container         = std::vector<value_type>;
     using reference         = container::reference;
     using const_reference   = container::const_reference;
@@ -357,10 +316,10 @@ public:
         FormattedString( const Iterator& i, const Iterator& j )
             : elements(i,j) {}
 
-    FormattedString(std::string ascii_string)
+    FormattedString(AsciiString ascii_string)
     {
         if ( !ascii_string.empty() )
-            append<AsciiSubstring>(std::move(ascii_string));
+            append(std::move(ascii_string));
     }
 
     FormattedString(const char* ascii_string)
@@ -445,10 +404,14 @@ public:
     /**
      * \brief Append an element
      */
-    template<class ElementType, class... Args>
-        void append(Args&&... args)
+    template<class T>
+        std::enable_if_t<
+            !std::is_same<Element::HeldType<T>, FormattedString>::value &&
+            !std::is_same<Element::HeldType<T>, Element>::value
+        >
+        append(T&& element)
         {
-            elements.emplace_back(Tag<ElementType>(), std::forward<Args>(args)...);
+            elements.emplace_back(std::forward<T>(element));
         }
 
     void append(value_type element)
@@ -461,7 +424,7 @@ public:
     {
         elements.reserve(size() + string.size());
         for ( const auto& element : string )
-            elements.emplace_back(element/*.clone()*/);
+            elements.emplace_back(element.clone());
     }
 
     /**
@@ -471,7 +434,7 @@ public:
     {
         std::string s;
         for ( const auto& e : elements )
-            s += e->to_string(formatter);
+            s += e.to_string(formatter);
         return s;
     }
 
@@ -483,8 +446,17 @@ public:
         FormattedString c;
         c.elements.reserve(elements.size());
         for ( const auto& element : *this )
-            c.elements.emplace_back(element/*.clone()*/);
+            c.elements.emplace_back(element.clone());
         return c;
+    }
+
+    /**
+     * \brief Replace placeholders based on a functor
+     */
+    void replace(const ReplacementFunctor& func)
+    {
+        for ( auto& element : elements )
+            element.replace(func);
     }
 
     /**
@@ -543,91 +515,18 @@ public:
         return str;
     }
 
-// Element overrides
-
-    std::string to_string(const Formatter& formatter) const final
-    {
-        return encode(formatter);
-    }
-
-    std::unique_ptr<Element> clone() const override
-    {
-        return melanolib::New<FormattedString>(copy());
-    }
-
-    void replace(const ReplacementFunctor& func) override
-    {
-        for ( auto& element : elements )
-            element->replace(func);
-    }
-
 // Stream-like operations
-
-    FormattedString& operator<<(const std::string& text) &
-    {
-        if ( !text.empty() )
-        {
-            elements.emplace_back(Tag<AsciiSubstring>(), text);
-        }
-        return *this;
-    }
-    FormattedString& operator<<(const char* text) &
-    {
-        return *this << std::string(text);
-    }
-    FormattedString& operator<<(const color::Color12& color) &
-    {
-        elements.emplace_back(Tag<Color>(), color);
-        return *this;
-    }
-    FormattedString& operator<<(const FormatFlags& format_flags) &
-    {
-        elements.emplace_back(Tag<Format>(), format_flags);
-        return *this;
-    }
-    FormattedString& operator<<(FormatFlags::FormatFlagsEnum format_flags) &
-    {
-        elements.emplace_back(Tag<Format>(), format_flags);
-        return *this;
-    }
-    FormattedString& operator<<(ClearFormatting) &
-    {
-        elements.emplace_back(Tag<ClearFormatting>());
-        return *this;
-    }
-    FormattedString& operator<<(char c) &
-    {
-        elements.emplace_back(Tag<Character>(), c);
-        return *this;
-    }
-    FormattedString& operator<<(const FormattedString& string) &
-    {
-        if ( !string.empty() )
-            append(string);
-        return *this;
-    }
     template <class T>
-        std::enable_if_t<melanolib::StreamInsertable<T>::value,
-        FormattedString&>
-        operator<<( const T& obj) &
+        FormattedString& operator<<(T&& obj) &
         {
-            std::ostringstream ss;
-            ss << obj;
-            return *this << ss.str();
-        }
-    template <class T>
-        std::enable_if_t<std::is_base_of<Element, T>::value,
-        FormattedString&>
-        operator<<(T&& obj) &
-        {
-            elements.emplace_back(Tag<T>(), std::forward<T>(obj));
+            append(std::forward<T>(obj));
             return *this;
         }
 
     template <class T>
         FormattedString&& operator<<(T&& obj) &&
         {
-            static_cast<FormattedString&>(*this) << std::forward<T>(obj);
+            append(std::forward<T>(obj));
             return std::move(*this);
         }
 
@@ -671,13 +570,7 @@ FormattedString implode (const FormattedString& separator, const Container& elem
 class FormatterUtf8 : public Formatter
 {
 public:
-    std::string ascii(char c) const override;
-    std::string ascii(const std::string& s) const override;
-    std::string color(const color::Color12& color) const override;
-    std::string format_flags(FormatFlags flags) const override;
-    std::string clear() const override;
-    std::string unicode(const Unicode& c) const override;
-    std::string qfont(const QFont& c) const override;
+    std::string to_string(const Unicode& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 };
@@ -685,10 +578,10 @@ public:
 /**
  * \brief Plain ASCII
  */
-class FormatterAscii : public FormatterUtf8
+class FormatterAscii : public Formatter
 {
 public:
-    std::string unicode(const Unicode& c) const override;
+    std::string to_string(const Unicode& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 };
@@ -696,15 +589,16 @@ public:
 /**
  * \brief ANSI-formatted UTF-8 or ASCII
  */
-class FormatterAnsi : public FormatterUtf8
+class FormatterAnsi : public Formatter
 {
 public:
     explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
 
-    std::string color(const color::Color12& color) const override;
-    std::string format_flags(FormatFlags flags) const override;
-    std::string clear() const override;
-    std::string unicode(const Unicode& c) const override;
+    std::string to_string(const Unicode& c) const override;
+    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(FormatFlags flags) const override;
+    std::string to_string(ClearFormatting clear) const override;
+
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 
@@ -720,7 +614,7 @@ class FormatterAnsiBlack : public FormatterAnsi
 {
 public:
     using FormatterAnsi::FormatterAnsi;
-    std::string color(const color::Color12& color) const override;
+    std::string to_string(const color::Color12& color) const override;
     std::string name() const override;
 };
 
@@ -742,11 +636,12 @@ class FormatterConfig : public FormatterUtf8
 public:
     explicit FormatterConfig() {}
 
-    std::string ascii(char c) const override;
-    std::string ascii(const std::string& s) const override;
-    std::string color(const color::Color12& color) const override;
-    std::string format_flags(FormatFlags flags) const override;
-    std::string clear() const override;
+    std::string to_string(char input) const override;
+    std::string to_string(const AsciiString& s) const override;
+    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(FormatFlags flags) const override;
+    std::string to_string(ClearFormatting clear) const override;
+
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 
