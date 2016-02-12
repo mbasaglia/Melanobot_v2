@@ -205,8 +205,8 @@ protected:
             << color::red << total << color::nocolor << " maps match";
         reply_to(msg, std::move(str));
 
-        auto r = string::Color(color::red).to_string(*msg.destination->formatter());
-        auto nc = string::Color(color::nocolor).to_string(*msg.destination->formatter());
+        auto r = msg.destination->formatter()->to_string(color::red);
+        auto nc = msg.destination->formatter()->to_string(color::nocolor);
         if ( max_print >= 0 && int(maps.size()) <= max_print && !maps.empty())
             reply_to(msg, r + melanolib::string::implode(nc + ", " + r, maps));
 

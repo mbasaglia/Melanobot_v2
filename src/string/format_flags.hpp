@@ -27,13 +27,19 @@ namespace string {
 class FormatFlags
 {
 public:
-    enum FormatFlagsEnum {
+    enum class FormatFlagsEnum {
         NO_FORMAT = 0,
         BOLD      = 1,
         UNDERLINE = 2,
         ITALIC    = 4,
     };
-    constexpr FormatFlags(FormatFlagsEnum flags) noexcept : flags(flags) {}
+
+    static constexpr auto NO_FORMAT = FormatFlagsEnum::NO_FORMAT;
+    static constexpr auto BOLD      = FormatFlagsEnum::BOLD;
+    static constexpr auto UNDERLINE = FormatFlagsEnum::UNDERLINE;
+    static constexpr auto ITALIC    = FormatFlagsEnum::ITALIC;
+
+    constexpr FormatFlags(FormatFlagsEnum flags) noexcept : flags(int(flags)) {}
 
     constexpr FormatFlags() noexcept = default;
 
@@ -103,6 +109,11 @@ private:
 
     int flags = 0;
 };
+
+inline FormatFlags operator~ (FormatFlags::FormatFlagsEnum e)
+{
+    return ~FormatFlags(e);
+}
 
 } // namespace string
 #endif // FORMAT_FLAGS_HPP

@@ -490,4 +490,9 @@ std::string FormatterConfig::name() const
     return "config";
 }
 
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::NO_FORMAT;
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::BOLD;
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::UNDERLINE;
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::ITALIC;
+
 } // namespace string

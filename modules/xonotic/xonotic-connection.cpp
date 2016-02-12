@@ -285,7 +285,7 @@ void XonoticConnection::say ( const network::OutputMessage& message )
     if ( !message.prefix.empty() )
         prefix_stream << message.prefix << ' ' << color::nocolor;
 
-    auto nocolor = string::Color(color::nocolor).to_string(*formatter_);
+    auto nocolor = formatter_->to_string(color::nocolor);
     std::string prefix   = prefix_stream.encode(*formatter_);
     std::string from     = message.from.encode(*formatter_)+nocolor;
     std::string contents = message.message.encode(*formatter_)+nocolor;

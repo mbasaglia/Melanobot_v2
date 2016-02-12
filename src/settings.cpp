@@ -80,8 +80,8 @@ Settings settings::initialize ( int argc, char** argv )
 
     // Load command line options
     string::FormatterAnsi fmt(true);
-    auto bold = fmt.format_flags(string::FormatFlags::BOLD);
-    auto clear = fmt.clear();
+    auto bold = fmt.to_string(string::FormatFlags::BOLD);
+    auto clear = fmt.to_string(string::ClearFormatting());
     namespace po = boost::program_options;
     po::options_description described_options(bold+"Options"+clear);
     described_options.add_options()
