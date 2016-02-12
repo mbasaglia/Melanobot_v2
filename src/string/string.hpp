@@ -248,9 +248,6 @@ public:
     template<class T>
         bool has_type() const noexcept
     {
-        if ( !holder )
-            throw melanobot::MelanobotError("Bad element!");
-
         return holder->type() == typeid(HeldType<T>);
     }
 
