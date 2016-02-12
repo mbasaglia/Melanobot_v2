@@ -149,12 +149,12 @@ private:
 
             std::string to_string(const Formatter& visitor) const override
             {
-                return detail::to_string_dispatch(visitor, object);
+                return detail::to_string_dispatch(visitor, object, detail::OveloadTag{});
             }
 
             void replace(const ReplacementFunctor& repl) override
             {
-                detail::replace_dispatch(object, repl, true);
+                detail::replace_dispatch(object, repl, detail::OveloadTag{});
             }
 
             std::unique_ptr<HolderBase> clone() const override
@@ -171,15 +171,8 @@ private:
         };
 
 
-    template<class T>
-        struct HolderTraits
-        {
-            using HeldType = std::conditional_t<
-                std::is_convertible<T, std::string>::value,
-                std::string,
-                std::remove_cv_t<std::decay_t<T>>
-            >;
-        };
+    template<class T, class SFINAE = void>
+        struct HolderTraits;
 
     template<class T>
         using HolderType = Holder<typename HolderTraits<T>::HeldType>;
@@ -262,12 +255,23 @@ private:
     std::unique_ptr<HolderBase> holder;
 };
 
-    template<class T>
-        struct Element::Holder<std::unique_ptr<T>>{};
-    template<>
-        struct Element::Holder<Element>{};
-    template<class T>
-        struct Element::Holder<Element::Holder<T>>{};
+template<class T>
+    struct Element::HolderTraits<T, std::enable_if_t<!std::is_convertible<T, std::string>::value>>
+    {
+        using HeldType = std::remove_cv_t<std::decay_t<T>>;
+    };
+
+template<>
+    struct Element::HolderTraits<FormatFlags::FormatFlagsEnum>
+    {
+        using HeldType = FormatFlags;
+    };
+
+template<class T>
+    struct Element::HolderTraits<T, std::enable_if_t<std::is_convertible<T, std::string>::value>>
+    {
+        using HeldType = AsciiString;
+    };
 
 /**
  * \brief Unicode point

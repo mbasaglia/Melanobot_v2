@@ -40,6 +40,7 @@ string::FormattedString FormatterRainbow::decode(const std::string& source) cons
     {
         string::Element color(color::nocolor);
         colors.push_back(&color.reference<color::Color12>());
+        str.append(std::move(color));
         str.append(string::Unicode(utf8,unicode));
     };
 

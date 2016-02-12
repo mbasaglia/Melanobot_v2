@@ -484,7 +484,7 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
         BOOST_CHECK( s.size() == 9 );
     }
     s << 12.3;
-    BOOST_CHECK( cast<string::AsciiString>(s[9]) );
+    BOOST_CHECK( cast<double>(s[9]) );
 }
 
 BOOST_AUTO_TEST_CASE( test_Misc )

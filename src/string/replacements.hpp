@@ -106,9 +106,9 @@ public:
         return FilterRegistry::instance().apply_filter(filter, arguments);
     }
 
-    std::string to_string(const Formatter& formatter, const FilterCall& fc) const
+    std::string to_string(const Formatter& formatter) const
     {
-        return fc.filtered().encode(formatter);
+        return filtered().encode(formatter);
     }
 
 private:
