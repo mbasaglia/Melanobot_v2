@@ -605,3 +605,15 @@ BOOST_AUTO_TEST_CASE( test_Padding )
     BOOST_CHECK( (FormattedString() << Padding("hello", 7, 0) << Padding("world", 7, 1)).encode(ascii)  == "hello    world" );
 }
 
+BOOST_AUTO_TEST_CASE( test_Element )
+{
+    BOOST_CHECK( Element("foo").has_type<std::string>() );
+    BOOST_CHECK( Element((int) 1).has_type<int>() );
+    BOOST_CHECK( Element((const int) 1).has_type<int>() );
+    Element e("foo");
+    BOOST_CHECK( Element(e).has_type<std::string>() );
+    BOOST_CHECK( Element(std::move(e)).has_type<std::string>() );
+    BOOST_CHECK( Element(std::string("foo")).has_type<std::string>() );
+    BOOST_CHECK( Element(FormatFlags(FormatFlags::BOLD)).has_type<FormatFlags>() );
+    BOOST_CHECK( Element(FormatFlags::BOLD).has_type<FormatFlags>() );
+}
