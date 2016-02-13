@@ -248,29 +248,49 @@ private:
     explicit Element(std::unique_ptr<HolderBase>&& holder)
         : holder(std::move(holder))
         {}
-/*
-    template<class T>
-        Element(const std::unique_ptr<T>&) = delete;*/
 
     std::unique_ptr<HolderBase> holder;
 };
 
+/**
+ * \brief Base case, a holder contains \p T
+ */
 template<class T>
-    struct Element::HolderTraits<T, std::enable_if_t<!std::is_convertible<T, std::string>::value>>
+    struct Element::HolderTraits<T,
+        std::enable_if_t<!melanolib::CanDecay<T>::value &&
+                         !melanolib::StringConvertible<T>::value>
+    >
     {
-        using HeldType = std::remove_cv_t<std::decay_t<T>>;
+        using HeldType = T;
     };
 
+/**
+ * \brief cv-qualified, reference or array fall back to decayed type
+ */
+template<class T>
+    struct Element::HolderTraits<T,
+        std::enable_if_t<melanolib::CanDecay<T>::value &&
+                         !melanolib::StringConvertible<T>::value>
+    >
+        : HolderTraits<std::remove_cv_t<std::decay_t<T>>>
+    {};
+
+/**
+ * \brief \c FormatFlags::FormatFlagsEnum uses \c FormatFlags
+ */
 template<>
     struct Element::HolderTraits<FormatFlags::FormatFlagsEnum>
     {
         using HeldType = FormatFlags;
     };
 
+/**
+ * \brief Anything that can be implicitly converted to \c std::string, does so
+ */
 template<class T>
-    struct Element::HolderTraits<T, std::enable_if_t<std::is_convertible<T, std::string>::value>>
+    struct Element::HolderTraits<T, std::enable_if_t<melanolib::StringConvertible<T>::value>>
     {
-        using HeldType = AsciiString;
+        using HeldType = std::string;
     };
 
 /**

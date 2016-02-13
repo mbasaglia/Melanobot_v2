@@ -89,5 +89,25 @@ namespace detail {
 
 using detail::StreamInsertable;
 
+/**
+ * \brief Type that inherits from \c std::true_type or \c std::false_type
+ *        based on whether std::decay_t<T> would do something
+ */
+template<class T>
+    struct CanDecay : std::integral_constant<bool,
+            std::is_reference<T>::value ||
+            std::is_const<T>::value     ||
+            std::is_volatile<T>::value  ||
+            std::is_array<T>::value     >
+    {};
+
+/**
+ * \brief Type that inherits from \c std::true_type or \c std::false_type
+ *        based on whether \p T can be converted to \c std::string.
+ */
+template<class T>
+    struct StringConvertible : std::is_convertible<T, std::string>
+    {};
+
 } // namespace melanolib
 #endif // MELANOLIB_UTILS_HPP
