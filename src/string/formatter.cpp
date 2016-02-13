@@ -28,6 +28,9 @@ namespace string {
 
 Formatter::Registry::Registry()
 {
+    // plural:
+    //  number  anything convertible to ascii and then to int
+    //  word    convertible to ascii, should be a single word
     FilterRegistry::instance().register_filter("plural",
         [](const std::vector<string::FormattedString>& args) -> string::FormattedString
         {
@@ -39,6 +42,9 @@ Formatter::Registry::Registry()
             return melanolib::string::english.pluralize(number, word);
         }
     );
+
+    // ucfirst:
+    //  word    anything convertible to ascii
     FilterRegistry::instance().register_filter("ucfirst",
         [](const std::vector<string::FormattedString>& args) -> string::FormattedString
         {
@@ -49,6 +55,27 @@ Formatter::Registry::Registry()
             if ( !word.empty() )
                 word[0] = std::toupper(word[0]);
             return word;
+        }
+    );
+
+    // if:
+    //  lhs     anything convertible to ascii
+    //  rhs     anything convertible to ascii
+    //  if-true string used if lhs == rhs
+    //  [else]  string used if lhs != rhs
+    FilterRegistry::instance().register_filter("if",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            if ( args.size() < 3 )
+                return {};
+            string::FormatterAscii ascii;
+            std::string lhs = args[0].encode(ascii);
+            std::string rhs = args[1].encode(ascii);
+            if ( lhs == rhs )
+                return args[2];
+            else if ( args.size() > 3 )
+                return args[3];
+            return {};
         }
     );
 

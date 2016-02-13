@@ -690,6 +690,19 @@ BOOST_AUTO_TEST_CASE( test_Filters )
 
     BOOST_CHECK( cfg.decode("$(ucfirst 'pony princess')").encode(ascii) == "Pony princess" );
     BOOST_CHECK( cfg.decode("$(ucfirst)").encode(ascii) == "" );
+
+    auto conditional = cfg.decode("$(if $test cmp 'hello $world' 'nope')");
+    conditional.replace("test", "cmp");
+    conditional.replace("world", "pony");
+    BOOST_CHECK( conditional.encode(ascii) == "hello pony" );
+    conditional.replace("test", "fail");
+    BOOST_CHECK( conditional.encode(ascii) == "nope" );
+
+    conditional = cfg.decode("$(if $test cmp 'hello')");
+    conditional.replace("test", "cmp");
+    BOOST_CHECK( conditional.encode(ascii) == "hello" );
+    conditional.replace("test", "fail");
+    BOOST_CHECK( conditional.encode(ascii) == "" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Padding )
