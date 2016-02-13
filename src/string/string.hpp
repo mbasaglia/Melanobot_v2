@@ -40,13 +40,17 @@ using ReplacementFunctor = std::function<
     melanolib::Optional<class FormattedString> (const std::string&)
     >;
 
-
+/**
+ * \brief Namespace with templated functions for Element objects
+ *
+ * They can be specialized to add more types
+ */
 namespace element {
 
-template<class T>
-    void replace(T& subject, const ReplacementFunctor& repl)
-    {
-    }
+    template<class T>
+        void replace(T& subject, const ReplacementFunctor& repl)
+        {
+        }
 
 
     /**
@@ -74,6 +78,9 @@ template<class T>
 
 } // namespace element
 
+/**
+ * \brief Private namespace with overloads that send the right types to the right functions
+ */
 namespace detail {
 
     class OveloadTag{};
@@ -159,7 +166,7 @@ private:
 
             std::unique_ptr<HolderBase> clone() const override
             {
-                return std::make_unique<Holder<T>>(object);
+                return melanolib::New<Holder<T>>(object);
             }
 
             const std::type_info& type() const noexcept override
@@ -183,7 +190,7 @@ public:
 
     template<class T>
     explicit Element(T&& object)
-        : holder( std::make_unique<HolderType<T>>(std::forward<T>(object)) )
+        : holder( melanolib::New<HolderType<T>>(std::forward<T>(object)) )
         {}
 
     Element(Element&&) noexcept = default;
@@ -292,31 +299,6 @@ template<class T>
     {
         using HeldType = std::string;
     };
-
-/**
- * \brief Unicode point
- */
-class Unicode
-{
-public:
-    Unicode(std::string utf8, uint32_t point)
-        : utf8_(std::move(utf8)), point_(point) {}
-
-    /**
-     * \brief Returns the UTF-8 representation
-     */
-    const std::string& utf8() const { return utf8_; }
-    /**
-     * \brief Returns the Unicode code point
-     */
-    uint32_t point() const { return point_; }
-
-
-private:
-    std::string utf8_;
-    uint32_t    point_;
-};
-
 /**
  * \brief A formatted string
  */
@@ -585,93 +567,6 @@ FormattedString implode (const FormattedString& separator, const Container& elem
     return ret;
 }
 
-/**
- * \brief Plain UTF-8
- */
-class FormatterUtf8 : public Formatter
-{
-public:
-    using Formatter::to_string;
-    std::string to_string(const Unicode& c) const override;
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-};
-
-/**
- * \brief Plain ASCII
- */
-class FormatterAscii : public Formatter
-{
-public:
-    using Formatter::to_string;
-    std::string to_string(const Unicode& c) const override;
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-};
-
-/**
- * \brief ANSI-formatted UTF-8 or ASCII
- */
-class FormatterAnsi : public Formatter
-{
-public:
-    explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
-
-    using Formatter::to_string;
-    std::string to_string(const Unicode& c) const override;
-    std::string to_string(const color::Color12& color) const override;
-    std::string to_string(FormatFlags flags) const override;
-    std::string to_string(ClearFormatting clear) const override;
-
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-
-private:
-    bool utf8;
-};
-
-/**
- * \brief IRC formatter optimized for black backgrounds
- * \todo Might be better to have a generic color filter option in the formatter
- */
-class FormatterAnsiBlack : public FormatterAnsi
-{
-public:
-    using FormatterAnsi::FormatterAnsi;
-    using FormatterAnsi::to_string;
-    std::string to_string(const color::Color12& color) const override;
-    std::string name() const override;
-};
-
-/**
- * \brief Custom string formatting (Utf-8)
- *
- * Style formatting:
- *      * $$            $
- *      * $(-)          clear all formatting
- *      * $(-b)         bold
- *      * $(-u)         underline
- *      * $(1)          red
- *      * $(xf00)       red
- *      * $(red)        red
- *      * $(nocolor)    no color
- */
-class FormatterConfig : public FormatterUtf8
-{
-public:
-    explicit FormatterConfig() {}
-
-    using FormatterUtf8::to_string;
-    std::string to_string(char input) const override;
-    std::string to_string(const AsciiString& s) const override;
-    std::string to_string(const color::Color12& color) const override;
-    std::string to_string(FormatFlags flags) const override;
-    std::string to_string(ClearFormatting clear) const override;
-
-    FormattedString decode(const std::string& source) const override;
-    std::string name() const override;
-
-};
 
 using FormattedProperties = std::unordered_map<std::string, FormattedString>;
 

@@ -80,5 +80,33 @@ private:
 };
 
 
+/**
+ * \brief Unicode point
+ */
+class Unicode
+{
+public:
+    Unicode(std::string utf8, uint32_t point)
+        : utf8_(std::move(utf8)), point_(point) {}
+
+    explicit Unicode(uint32_t point)
+        : utf8_(Utf8Parser::encode(point)), point_(point) {}
+
+    /**
+     * \brief Returns the UTF-8 representation
+     */
+    const std::string& utf8() const { return utf8_; }
+    /**
+     * \brief Returns the Unicode code point
+     */
+    uint32_t point() const { return point_; }
+
+
+private:
+    std::string utf8_;
+    uint32_t    point_;
+};
+
+
 } // namespace string
 #endif // STRING_ENCODING_HPP

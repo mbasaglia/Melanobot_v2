@@ -169,5 +169,93 @@ public:
     static Registry& registry() { return Registry::instance(); }
 };
 
+/**
+ * \brief Plain UTF-8
+ */
+class FormatterUtf8 : public Formatter
+{
+public:
+    using Formatter::to_string;
+    std::string to_string(const Unicode& c) const override;
+    FormattedString decode(const std::string& source) const override;
+    std::string name() const override;
+};
+
+/**
+ * \brief Plain ASCII
+ */
+class FormatterAscii : public Formatter
+{
+public:
+    using Formatter::to_string;
+    std::string to_string(const Unicode& c) const override;
+    FormattedString decode(const std::string& source) const override;
+    std::string name() const override;
+};
+
+/**
+ * \brief ANSI-formatted UTF-8 or ASCII
+ */
+class FormatterAnsi : public Formatter
+{
+public:
+    explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
+
+    using Formatter::to_string;
+    std::string to_string(const Unicode& c) const override;
+    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(FormatFlags flags) const override;
+    std::string to_string(ClearFormatting clear) const override;
+
+    FormattedString decode(const std::string& source) const override;
+    std::string name() const override;
+
+private:
+    bool utf8;
+};
+
+/**
+ * \brief IRC formatter optimized for black backgrounds
+ * \todo Might be better to have a generic color filter option in the formatter
+ */
+class FormatterAnsiBlack : public FormatterAnsi
+{
+public:
+    using FormatterAnsi::FormatterAnsi;
+    using FormatterAnsi::to_string;
+    std::string to_string(const color::Color12& color) const override;
+    std::string name() const override;
+};
+
+/**
+ * \brief Custom string formatting (Utf-8)
+ *
+ * Style formatting:
+ *      * $$            $
+ *      * $(-)          clear all formatting
+ *      * $(-b)         bold
+ *      * $(-u)         underline
+ *      * $(1)          red
+ *      * $(xf00)       red
+ *      * $(red)        red
+ *      * $(nocolor)    no color
+ */
+class FormatterConfig : public FormatterUtf8
+{
+public:
+    explicit FormatterConfig() {}
+
+    using FormatterUtf8::to_string;
+    std::string to_string(char input) const override;
+    std::string to_string(const AsciiString& s) const override;
+    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(FormatFlags flags) const override;
+    std::string to_string(ClearFormatting clear) const override;
+
+    FormattedString decode(const std::string& source) const override;
+    std::string name() const override;
+
+};
+
 } // namespace string
 #endif // STRING_FORMATTER_HPP

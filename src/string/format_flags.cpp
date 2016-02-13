@@ -17,9 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "string.hpp"
+#include "format_flags.hpp"
 
 
 namespace string {
+
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::NO_FORMAT;
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::BOLD;
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::UNDERLINE;
+constexpr FormatFlags::FormatFlagsEnum FormatFlags::ITALIC;
 
 } // namespace string

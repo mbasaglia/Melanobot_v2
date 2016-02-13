@@ -35,6 +35,7 @@ string/encoding.cpp
 string/formatter.cpp
 string/logger.cpp
 string/string.cpp
+string/format_flags.cpp
 user/user.cpp
 user/user_group.cpp
 user/user_manager.cpp
