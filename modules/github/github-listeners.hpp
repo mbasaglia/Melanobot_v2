@@ -479,7 +479,7 @@ protected:
 private:
     static const char* default_message()
     {
-        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $(plural $payload.size commit) on $(magenta)$branch$(-): $(git_io 'https://github.com/$repo.name/compare/$before...$head')";
+        return "[$(dark_magenta)$repo.name$(-)] $(blue)$actor.login$(-) pushed $(-b)$payload.size$(-) $(plural $payload.size commit) on $(magenta)$branch$(-): $(git_io 'https://github.com/$repo.name/compare/$payload.before...$payload.head')";
     }
 
     string::FormattedString commit_reply_template;
