@@ -591,6 +591,7 @@ FormattedString implode (const FormattedString& separator, const Container& elem
 class FormatterUtf8 : public Formatter
 {
 public:
+    using Formatter::to_string;
     std::string to_string(const Unicode& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
@@ -602,6 +603,7 @@ public:
 class FormatterAscii : public Formatter
 {
 public:
+    using Formatter::to_string;
     std::string to_string(const Unicode& c) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
@@ -615,6 +617,7 @@ class FormatterAnsi : public Formatter
 public:
     explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
 
+    using Formatter::to_string;
     std::string to_string(const Unicode& c) const override;
     std::string to_string(const color::Color12& color) const override;
     std::string to_string(FormatFlags flags) const override;
@@ -635,6 +638,7 @@ class FormatterAnsiBlack : public FormatterAnsi
 {
 public:
     using FormatterAnsi::FormatterAnsi;
+    using FormatterAnsi::to_string;
     std::string to_string(const color::Color12& color) const override;
     std::string name() const override;
 };
@@ -657,6 +661,7 @@ class FormatterConfig : public FormatterUtf8
 public:
     explicit FormatterConfig() {}
 
+    using FormatterUtf8::to_string;
     std::string to_string(char input) const override;
     std::string to_string(const AsciiString& s) const override;
     std::string to_string(const color::Color12& color) const override;

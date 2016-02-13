@@ -34,6 +34,7 @@ namespace xonotic {
 class Formatter : public string::FormatterUtf8
 {
 public:
+    using FormatterUtf8::to_string;
     std::string to_string(char input) const override;
     std::string to_string(const string::AsciiString& s) const override;
     std::string to_string(const color::Color12& color) const override;

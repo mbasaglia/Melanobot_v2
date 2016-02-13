@@ -68,6 +68,13 @@ BOOST_AUTO_TEST_CASE( test_utf8 )
     BOOST_CHECK( fmt.decode(invalid_utf8).encode(fmt) == utf8 );
 
     BOOST_CHECK( decoded.encode(*Formatter::formatter(fmt.name())) == utf8 );
+
+    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red).empty() );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD).empty() );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()).empty() );
 }
 
 BOOST_AUTO_TEST_CASE( test_ascii )
@@ -81,6 +88,17 @@ BOOST_AUTO_TEST_CASE( test_ascii )
 #endif
 
     BOOST_CHECK( fmt.decode("foobarè").size() == 1 );
+
+    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+#ifdef HAS_ICONV
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "c" );
+#else
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)).empty() );
+#endif
+    BOOST_CHECK( fmt.to_string(color::red).empty() );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD).empty() );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()).empty() );
 }
 
 BOOST_AUTO_TEST_CASE( test_config )
@@ -140,6 +158,15 @@ BOOST_AUTO_TEST_CASE( test_config )
 
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello $(1)World $(-bu)test$(-)#1$(2)green$(4)blue§$$(1)" );
+
+    BOOST_CHECK( fmt.to_string("hello world$") == "hello world$$" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+    BOOST_CHECK( fmt.to_string('$') == "$$" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red) == "$(1)" );
+    BOOST_CHECK( fmt.to_string(color::nocolor) == "$(nocolor)" );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD) == "$(-b)" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "$(-)" );
 }
 
 BOOST_AUTO_TEST_CASE( test_ansi_ascii )
@@ -195,6 +222,19 @@ BOOST_AUTO_TEST_CASE( test_ansi_ascii )
     BOOST_CHECK( *cast<string::AsciiString>(decoded[12]) == "$" );
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m$" );
+
+    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+#ifdef HAS_ICONV
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "c" );
+#else
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)).empty() );
+#endif
+    BOOST_CHECK( fmt.to_string(color::dark_red) == "\x1b[31m" );
+    BOOST_CHECK( fmt.to_string(color::nocolor) == "\x1b[39m" );
+    auto bold = fmt.to_string(FormatFlags::BOLD);
+    BOOST_CHECK( std::regex_match(bold, std::regex(R"(\x1b\[.*(\b1;.*m$)|(\b1m$))")) );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "\x1b[0m" );
 }
 
 BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
@@ -244,6 +284,15 @@ BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
     BOOST_CHECK( cast<Unicode>(decoded[12])->utf8() == u8"§" );
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m§" );
+
+    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::dark_red) == "\x1b[31m" );
+    BOOST_CHECK( fmt.to_string(color::nocolor) == "\x1b[39m" );
+    auto bold = fmt.to_string(FormatFlags::BOLD);
+    BOOST_CHECK( std::regex_match(bold, std::regex(R"(\x1b\[.*(\b1;.*m$)|(\b1m$))")) );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "\x1b[0m" );
 }
 
 BOOST_AUTO_TEST_CASE( test_irc )
@@ -294,6 +343,14 @@ BOOST_AUTO_TEST_CASE( test_irc )
     BOOST_CHECK( *cast<color::Color12>(decoded[12]) == color::nocolor );
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§\xf" );
+
+    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red) == "\x03""04" );
+    BOOST_CHECK( fmt.to_string(color::nocolor) == "\xf" );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD) == "\x02" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "\xf" );
 }
 
 BOOST_AUTO_TEST_CASE( test_xonotic )
@@ -336,6 +393,15 @@ BOOST_AUTO_TEST_CASE( test_xonotic )
     BOOST_CHECK( decoded.encode(fmt) == "Hello ^1World ^^^2green^4blue^^x00§\ue012" );
 
     BOOST_CHECK( decoded.encode(FormatterAscii()) == "Hello World ^greenblue^x00?:)" );
+
+    BOOST_CHECK( fmt.to_string("hello world^") == "hello world^^" );
+    BOOST_CHECK( fmt.to_string('x') == "x" );
+    BOOST_CHECK( fmt.to_string('^') == "^^" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red) == "^1" );
+    BOOST_CHECK( fmt.to_string(color::nocolor) == "^7" );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD) == "" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "^7" );
 
     // QFont
     xonotic::QFont qf(1000);
@@ -485,6 +551,32 @@ BOOST_AUTO_TEST_CASE( test_FormattedString )
     }
     s << 12.3;
     BOOST_CHECK( cast<double>(s[9]) );
+
+    // implode
+    std::vector<FormattedString> v;
+    v.push_back(FormattedString() << "hello" << color::red << "world");
+    v.push_back(FormattedString() << 123);
+    v.push_back(FormattedString() << FormatFlags::BOLD << "foo");
+    FormattedString separator;
+    separator << ClearFormatting() << ", ";
+
+    s = implode(separator, v);
+    BOOST_CHECK( s.size() == 10 );
+
+    BOOST_CHECK( cast<string::AsciiString>(s[0]) );
+    BOOST_CHECK( cast<color::Color12>(s[1]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[2]) );
+
+    BOOST_CHECK( cast<ClearFormatting>(s[3]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[4]) );
+
+    BOOST_CHECK( cast<int>(s[5]) );
+
+    BOOST_CHECK( cast<ClearFormatting>(s[6]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[7]) );
+
+    BOOST_CHECK( cast<FormatFlags>(s[8]) );
+    BOOST_CHECK( cast<string::AsciiString>(s[9]) );
 }
 
 BOOST_AUTO_TEST_CASE( test_Misc )
@@ -512,6 +604,7 @@ BOOST_AUTO_TEST_CASE( test_Utf8Parser )
     BOOST_CHECK( Utf8Parser::to_ascii("è") == 'e' );
     BOOST_CHECK( Utf8Parser::to_ascii("à") == 'a' );
     BOOST_CHECK( Utf8Parser::to_ascii("ç") == 'c' );
+    BOOST_CHECK( Utf8Parser::to_ascii(0x00E7) == 'c' );
 #endif
 
     BOOST_CHECK( Utf8Parser::encode(0x00A7) == u8"§" );
@@ -586,13 +679,17 @@ BOOST_AUTO_TEST_CASE( test_Filters )
     string.replace("world", "pony");
     BOOST_CHECK( string.encode(ascii) == "pony yay" );
 
+    BOOST_CHECK( cfg.decode("$(fake pony)").encode(ascii) == "pony" );
+
     // built-ins
 
     BOOST_CHECK( cfg.decode("$(plural 1 pony)").encode(ascii) == "pony" );
     BOOST_CHECK( cfg.decode("$(plural 6 pony)").encode(ascii) == "ponies" );
     BOOST_CHECK( cfg.decode("$(plural $count pony)").replaced("count", "6").encode(ascii) == "ponies" );
+    BOOST_CHECK( cfg.decode("$(plural pony)").encode(ascii) == "" );
 
     BOOST_CHECK( cfg.decode("$(ucfirst 'pony princess')").encode(ascii) == "Pony princess" );
+    BOOST_CHECK( cfg.decode("$(ucfirst)").encode(ascii) == "" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Padding )
@@ -616,4 +713,8 @@ BOOST_AUTO_TEST_CASE( test_Element )
     BOOST_CHECK( Element(std::string("foo")).has_type<std::string>() );
     BOOST_CHECK( Element(FormatFlags(FormatFlags::BOLD)).has_type<FormatFlags>() );
     BOOST_CHECK( Element(FormatFlags::BOLD).has_type<FormatFlags>() );
+
+    BOOST_CHECK_THROW(Element(1).reference<double>(), melanobot::MelanobotError);
+    e = Element(1);
+    BOOST_CHECK_THROW(e.reference<double>(), melanobot::MelanobotError);
 }
