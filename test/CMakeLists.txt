@@ -62,7 +62,7 @@ melanotest(test_time)
 add_executable(test_formatter EXCLUDE_FROM_ALL test_formatter.cpp
     ${CMAKE_SOURCE_DIR}/src/string/string.cpp
     ${CMAKE_SOURCE_DIR}/src/string/format_flags.cpp
-    ${CMAKE_SOURCE_DIR}/modules/xonotic/formatter.cpp
+    ${CMAKE_SOURCE_DIR}/modules/xonotic/xonotic-formatter.cpp
     ${CMAKE_SOURCE_DIR}/modules/irc/irc_formatter.cpp
     ${CMAKE_SOURCE_DIR}/modules/fun/rainbow.cpp
     ${CMAKE_SOURCE_DIR}/src/string/color.cpp

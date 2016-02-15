@@ -45,9 +45,11 @@ public:
     /**
      * \thread main \lock none
      */
-    XonoticConnection ( const ConnectionDetails&  server,
-                        const Settings&           settings = {},
-                        const std::string&        name = {} );
+    XonoticConnection ( const network::Server&  server,
+                        const std::string&      password,
+                        Darkplaces::Secure      secure = Darkplaces::Secure::NO,
+                        const Settings&         settings = {},
+                        const std::string&      name = {} );
 
     /**
      * \thread main \lock none
@@ -63,7 +65,7 @@ public:
      */
     network::Server server() const override
     {
-        return details().server;
+        return Darkplaces::server();
     }
 
     /**
@@ -71,7 +73,7 @@ public:
      */
     std::string description() const override
     {
-        return details().server.name();
+        return Darkplaces::server().name();
     }
 
     /**

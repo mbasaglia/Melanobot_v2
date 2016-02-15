@@ -41,199 +41,34 @@ static std::string hmac_md4(const std::string& input, const std::string& key)
 
 namespace xonotic {
 
-Darkplaces::Darkplaces(ConnectionDetails connection_details)
-    : connection_details(std::move(connection_details))
+Darkplaces::Darkplaces(network::Server server,
+        std::string rcon_password, Secure rcon_secure)
+    : Engine(std::move(server), std::move(rcon_password), 1400),
+      rcon_secure_(rcon_secure)
 {
-    io.max_datagram_size(1400);
-    io.on_error = [this](const std::string& msg)
-    {
-        on_network_error(msg);
-    };
-    io.on_async_receive = [this](const std::string& datagram)
-    {
-        read(datagram);
-    };
-    io.on_failure = [this]()
-    {
-        disconnect();
-    };
 }
 
-Darkplaces::~Darkplaces()
+std::pair<melanolib::cstring_view, melanolib::cstring_view>
+    Darkplaces::split_command(melanolib::cstring_view message) const
 {
-    if ( connected() )
-    {
-        disconnect();
-    }
-    else
-    {
-        // In case the connection failed
-        if ( thread_input.joinable() )
-            thread_input.join();
-    }
+    if ( message[0] == 'n' )
+        return {
+            {message.begin(), message.begin()+1},
+            {message.begin()+1, message.end()}
+        };
+    return Engine::split_command(message);
 }
 
-void Darkplaces::disconnect()
+melanolib::cstring_view Darkplaces::filter_challenge(melanolib::cstring_view message) const
 {
-    if ( io.connected() )
-        on_disconnecting();
-    io.disconnect();
-    if ( thread_input.joinable() &&
-            thread_input.get_id() != std::this_thread::get_id() )
-        thread_input.join();
-    clear();
-    on_disconnect();
+    return {message.begin(), melanolib::math::min(message.begin()+11, message.end())};
 }
 
-bool Darkplaces::connect()
+void Darkplaces::challenged_command(const std::string& challenge, const std::string& command)
 {
-    if ( !io.connected() )
-    {
-        if ( io.connect(connection_details.server) )
-        {
-            if ( thread_input.get_id() == std::this_thread::get_id() )
-                return false;
-
-            if ( thread_input.joinable() )
-                thread_input.join();
-
-            thread_input = std::move(std::thread([this]{
-                clear();
-                io.run_input();
-            }));
-
-            on_connect();
-        }
-    }
-
-    return io.connected();
-}
-
-bool Darkplaces::reconnect()
-{
-    disconnect();
-    return connect();
-}
-
-void Darkplaces::clear()
-{
-    Lock lock(mutex);
-    rcon2_buffer.clear();
-}
-
-bool Darkplaces::connected() const
-{
-    return io.connected();
-}
-
-
-void Darkplaces::sync_read()
-{
-    read(io.read());
-}
-
-void Darkplaces::read(const std::string& datagram)
-{
-    if ( datagram.size() < 5 || datagram.substr(0,4) != "\xff\xff\xff\xff" )
-    {
-        on_network_error("Invalid datagram: "+datagram);
-        return;
-    }
-
-    on_network_input(datagram);
-
-    // non-log/rcon output
-    if ( datagram[4] != 'n' )
-    {
-        auto space = std::find(datagram.begin(), datagram.end(), ' ');
-        std::string command(datagram.begin()+4, space);
-        std::string message;
-        if ( space != datagram.end() )
-            message = std::string(space+1, datagram.end());
-
-        if ( command == "challenge" )
-            handle_challenge(message.substr(0,11));
-
-        on_receive(command, message);
-        return;
-    }
-
-    Lock lock(mutex);
-    std::istringstream socket_stream(line_buffer+datagram.substr(5));
-    line_buffer.clear();
-    lock.unlock();
-
-    on_log_begin();
-
-    // convert the datagram into lines
-    std::string line;
-    while (socket_stream)
-    {
-        std::getline(socket_stream,line);
-        if (socket_stream.eof())
-        {
-            if (!line.empty())
-            {
-                lock.lock();
-                line_buffer = line;
-                lock.unlock();
-            }
-            break;
-        }
-        on_receive_log(line);
-    }
-
-    on_log_end();
-}
-
-void Darkplaces::handle_challenge(const std::string& challenge)
-{
-    Lock lock(mutex);
-    if ( rcon2_buffer.empty() || challenge.empty() ||
-        connection_details.rcon_secure != xonotic::ConnectionDetails::CHALLENGE)
-        return;
-
-    auto rcon_command = rcon2_buffer.front();
-    if ( !rcon_command.challenged ||
-        rcon_command.timeout < network::Clock::now() )
-    {
-        rcon2_buffer.front().challenged = false;
-        lock.unlock();
-        request_challenge();
-        return;
-    }
-
-    rcon2_buffer.pop_front();
-    bool request_new_challenge = !rcon2_buffer.empty();
-    lock.unlock();
-
-    std::string challenge_command = challenge+' '+rcon_command.command;
-    std::string key = hmac_md4(challenge_command, connection_details.rcon_password);
+    std::string challenge_command = challenge+' '+command;
+    std::string key = hmac_md4(challenge_command, password());
     write("srcon HMAC-MD4 CHALLENGE "+key+' '+challenge_command);
-
-    if ( request_new_challenge )
-        request_challenge();
-
-}
-
-void Darkplaces::request_challenge()
-{
-    Lock lock(mutex);
-    if ( !rcon2_buffer.empty() && !rcon2_buffer.front().challenged )
-    {
-        rcon2_buffer.front().challenged = true;
-        /// \todo timeout from settings
-        rcon2_buffer.front().timeout = network::Clock::now() + std::chrono::seconds(5);
-        write("getchallenge");
-    }
-}
-
-void Darkplaces::set_details(const ConnectionDetails& details)
-{
-    bool should_reconnect = details.server != connection_details.server;
-    connection_details = details;
-    if ( should_reconnect )
-        reconnect();
 }
 
 void Darkplaces::rcon_command(std::string command)
@@ -242,34 +77,26 @@ void Darkplaces::rcon_command(std::string command)
         [](char c){return c == '\n' || c == '\0' || c == '\xff';}),
         command.end());
 
-    if ( connection_details.rcon_secure == xonotic::ConnectionDetails::NO )
+    if ( rcon_secure_ == Secure::NO )
     {
-        write("rcon "+connection_details.rcon_password+' '+command);
+        write("rcon "+password()+' '+command);
     }
-    else if ( connection_details.rcon_secure == xonotic::ConnectionDetails::TIME )
+    else if ( rcon_secure_ == Secure::TIME )
     {
         auto message = std::to_string(std::time(nullptr))+".000000 "+command;
-        write("srcon HMAC-MD4 TIME "+
-            hmac_md4(message, connection_details.rcon_password)
+        write("srcon HMAC-MD4 TIME "+ hmac_md4(message, password())
             +' '+message);
     }
-    else if ( connection_details.rcon_secure == xonotic::ConnectionDetails::CHALLENGE )
+    else if ( rcon_secure_ == Secure::CHALLENGE )
     {
-        Lock lock(mutex);
-        rcon2_buffer.push_back(command);
-        lock.unlock();
-        request_challenge();
+        schedule_challenged_command(command);
     }
 }
 
-void Darkplaces::write(std::string line)
-{
-    io.write(header+line);
-}
 
-network::Server Darkplaces::local_endpoint() const
+bool Darkplaces::is_log(melanolib::cstring_view command) const
 {
-    return io.local_endpoint();
+    return command[0] == 'n';
 }
 
 } // namespace xonotic

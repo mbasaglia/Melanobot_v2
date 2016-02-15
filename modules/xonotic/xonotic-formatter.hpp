@@ -31,7 +31,7 @@ namespace xonotic {
 /**
  * \brief Darkplaces UTF-8
  */
-class Formatter : public string::FormatterUtf8
+class XonoticFormatter : public string::FormatterUtf8
 {
 public:
     using FormatterUtf8::to_string;

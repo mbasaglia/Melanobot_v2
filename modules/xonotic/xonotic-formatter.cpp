@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "formatter.hpp"
+#include "xonotic-formatter.hpp"
 
 #include "melanolib/string/stringutils.hpp"
 #include "string/encoding.hpp"
@@ -54,22 +54,22 @@ std::string QFont::alternative() const
 
 std::string QFont::to_string(const string::Formatter& fmt) const
 {
-    if ( dynamic_cast<const xonotic::Formatter*>(&fmt) )
+    if ( dynamic_cast<const xonotic::XonoticFormatter*>(&fmt) )
         return string::Utf8Parser::encode(0xE000|index_);
     return alternative();
 }
 
-std::string Formatter::to_string(char c) const
+std::string XonoticFormatter::to_string(char c) const
 {
     return c == '^' ? "^^" : std::string(1, c);
 }
 
-std::string Formatter::to_string(const string::AsciiString& input) const
+std::string XonoticFormatter::to_string(const string::AsciiString& input) const
 {
     return melanolib::string::replace(input,"^","^^");
 }
 
-std::string Formatter::to_string(const color::Color12& color) const
+std::string XonoticFormatter::to_string(const color::Color12& color) const
 {
     if ( !color.is_valid() )
         return "^7";
@@ -90,17 +90,17 @@ std::string Formatter::to_string(const color::Color12& color) const
     return std::string("^x")+color.hex_red()+color.hex_green()+color.hex_blue();
 }
 
-std::string Formatter::to_string(string::FormatFlags flags) const
+std::string XonoticFormatter::to_string(string::FormatFlags flags) const
 {
     return "";
 }
 
-std::string Formatter::to_string(string::ClearFormatting) const
+std::string XonoticFormatter::to_string(string::ClearFormatting) const
 {
     return "^7";
 }
 
-string::FormattedString Formatter::decode(const std::string& source) const
+string::FormattedString XonoticFormatter::decode(const std::string& source) const
 {
     string::FormattedString str;
     string::Utf8Parser parser;
@@ -157,12 +157,12 @@ string::FormattedString Formatter::decode(const std::string& source) const
     return str;
 
 }
-std::string Formatter::name() const
+std::string XonoticFormatter::name() const
 {
     return "xonotic";
 }
 
-color::Color12 Formatter::color_from_string(std::string color)
+color::Color12 XonoticFormatter::color_from_string(std::string color)
 {
     if ( color.empty() )
         return {};
@@ -178,11 +178,11 @@ color::Color12 Formatter::color_from_string(std::string color)
     return color_from_match(match);
 }
 
-std::regex Formatter::regex_xoncolor( "([[:digit:]]|x([[:xdigit:]]{3}))",
+std::regex XonoticFormatter::regex_xoncolor( "([[:digit:]]|x([[:xdigit:]]{3}))",
     std::regex_constants::optimize |
     std::regex_constants::extended
 );
-color::Color12 Formatter::color_from_match(const std::smatch& match)
+color::Color12 XonoticFormatter::color_from_match(const std::smatch& match)
 {
     using namespace color;
 

@@ -355,7 +355,7 @@ BOOST_AUTO_TEST_CASE( test_irc )
 
 BOOST_AUTO_TEST_CASE( test_xonotic )
 {
-    xonotic::Formatter fmt;
+    xonotic::XonoticFormatter fmt;
 
     std::string formatted = "Hello ^1World ^^^2green^x00fblue^x00§\ue012";
     auto decoded = fmt.decode(formatted);

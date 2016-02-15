@@ -66,19 +66,21 @@ std::unique_ptr<XonoticConnection> XonoticConnection::create(
         throw melanobot::ConfigurationError("Xonotic connection with no server");
     }
 
-    ConnectionDetails details(server,
-        settings.get("rcon_password",""),
-        ConnectionDetails::Secure(settings.get("rcon_secure",0))
-    );
-
-    return melanolib::New<XonoticConnection>(details, settings, name);
+    auto password = settings.get("rcon_password", "");
+    auto secure= Darkplaces::Secure(settings.get("rcon_secure",0));
+    return melanolib::New<XonoticConnection>(server, password, secure, settings, name);
 }
 
-XonoticConnection::XonoticConnection ( const ConnectionDetails& server,
-                                       const Settings&          settings,
-                                       const std::string&       name
-                                     )
-    : Connection(name), Darkplaces(server), status_(DISCONNECTED)
+XonoticConnection::XonoticConnection (
+    const network::Server&  server,
+    const std::string&      password,
+    Darkplaces::Secure      secure,
+    const Settings&         settings,
+    const std::string&      name
+)
+    : Connection(name),
+      Darkplaces(server, password, secure),
+      status_(DISCONNECTED)
 {
     formatter_ = string::Formatter::formatter(
         settings.get("string_format",std::string("xonotic")));
@@ -203,7 +205,7 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
         user.origin = const_cast<XonoticConnection*>(this);
         user.local_id = "0";
         user.properties["entity"] = "0";
-        user.host = details().server.name();
+        user.host = server().name();
         user.name = properties_.get("cvar.sv_adminnick","");
         if ( user.name.empty() )
             user.name = "(Server Admin)";
@@ -618,7 +620,7 @@ void XonoticConnection::cleanup_connection()
     command({"rcon",{"set", "log_dest_udp", ""},1024});
 
     // try to actually clear log_dest_udp when challenges are required
-    if ( details().rcon_secure >= ConnectionDetails::CHALLENGE )
+    if ( rcon_secure() >= Darkplaces::Secure::CHALLENGE )
         sync_read();
 
     Lock lock(mutex);

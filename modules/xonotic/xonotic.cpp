@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "formatter.hpp"
+#include "xonotic-formatter.hpp"
 #include "module/melanomodule.hpp"
 #include "xonotic-connection.hpp"
 #include "handler/rcon.hpp"
@@ -34,7 +34,7 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_xonotic_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_xonotic_initialize(const Settings&)
 {
-    module::register_formatter<xonotic::Formatter>();
+    module::register_formatter<xonotic::XonoticFormatter>();
     module::register_log_type("xon",color::dark_cyan);
     module::register_connection<xonotic::XonoticConnection>("xonotic");
 
