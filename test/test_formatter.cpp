@@ -24,7 +24,7 @@
 
 #include "string/string.hpp"
 #include "string/logger.hpp"
-#include "xonotic/formatter.hpp"
+#include "xonotic/xonotic-formatter.hpp"
 #include "irc/irc_formatter.hpp"
 #include "fun/rainbow.hpp"
 #include "string/encoding.hpp"
