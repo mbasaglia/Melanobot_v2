@@ -17,6 +17,7 @@ melanomodule(xonotic "Xonotic integration" ON)
 set(SOURCES
 xonotic.cpp
 darkplaces.cpp
+daemon.cpp
 engine.cpp
 xonotic-formatter.cpp
 xonotic-connection.cpp

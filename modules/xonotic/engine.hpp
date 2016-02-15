@@ -25,6 +25,7 @@
 #include "network/time.hpp"
 #include "concurrency/concurrency.hpp"
 #include "melanolib/string/string_view.hpp"
+#include "settings.hpp"
 
 namespace xonotic {
 
@@ -109,6 +110,11 @@ protected:
     virtual std::pair<melanolib::cstring_view, melanolib::cstring_view>
         split_command(melanolib::cstring_view message) const;
 
+    /**
+     * \brief Parses an info string into a map
+     */
+    Properties parse_info_string(const std::string& string);
+
 private:
 
     /**
@@ -176,7 +182,7 @@ private:
     /**
      * \brief Whether the given out of band resonse header is a challenge response
      */
-    virtual bool is_challenge(melanolib::cstring_view command) const;
+    virtual bool is_challenge_response(melanolib::cstring_view command) const;
 
     /**
      * \brief The command to send in order to obtain a challenge
@@ -236,7 +242,7 @@ private:
     network::UdpIo              io;
     std::thread                 thread_input;
     std::list<ChallengedCommand>challenged_buffer;              ///< Buffer for messages to be challenged
-    std::chrono::seconds        rcon_challenge_timeout; /// TODO: getter/setter
+    std::chrono::seconds        rcon_challenge_timeout;
 };
 
 } // namespace xonotic

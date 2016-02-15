@@ -176,7 +176,7 @@ std::pair<melanolib::cstring_view, melanolib::cstring_view>
     };
 }
 
-bool Engine::is_challenge(melanolib::cstring_view command) const
+bool Engine::is_challenge_response(melanolib::cstring_view command) const
 {
     return command == "challenge";
 }
@@ -207,7 +207,7 @@ void Engine::read(const std::string& datagram)
     if ( !is_log(command) )
     {
 
-        if ( is_challenge(command) )
+        if ( is_challenge_response(command) )
             handle_challenge(filter_challenge(message).str());
         else
             on_receive(command.str(), message.str());
@@ -290,6 +290,31 @@ void Engine::schedule_challenged_command(const std::string& command)
 void Engine::write(std::string line)
 {
     io.write(header+line);
+}
+
+Properties Engine::parse_info_string(const std::string& string)
+{
+    static const char INFO_SEPARATOR = '\\';
+    Properties map;
+
+    if ( string.empty() )
+    {
+        return map;
+    }
+
+    melanolib::string::QuickStream input(string);
+    while ( !input.eof() )
+    {
+        input.ignore(1, INFO_SEPARATOR);
+        std::string key = input.get_line(INFO_SEPARATOR);
+        std::string value = input.get_line(INFO_SEPARATOR);
+        if ( !key.empty() )
+        {
+            map[key] = value;
+        }
+    }
+
+    return map;
 }
 
 } // namespace xonotic

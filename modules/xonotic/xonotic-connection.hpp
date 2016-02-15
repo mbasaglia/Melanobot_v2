@@ -19,8 +19,6 @@
 #ifndef XONOTIC_CONNECTION_HPP
 #define XONOTIC_CONNECTION_HPP
 
-#include <thread>
-
 #include "network/connection.hpp"
 #include "concurrency/container.hpp"
 #include "user/user_manager.hpp"
