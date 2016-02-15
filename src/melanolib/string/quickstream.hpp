@@ -137,6 +137,15 @@ public:
     }
 
     /**
+     * \brief Returns the previous character
+     * \return A valid character or Traits::eof()
+     */
+    int_type peek_back() const noexcept
+    {
+        return pos > 0 && pos <= source.size() ? source[pos-1] : Traits::eof();
+    }
+
+    /**
      * \brief Extracts the next character
      */
     void ignore() noexcept
