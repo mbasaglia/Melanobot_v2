@@ -110,7 +110,7 @@ public:
     XonoticMatchStart(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
-        message = settings.get("message",
+        message = read_string(settings, "message",
             "Playing $(dark_cyan)$gametype$(-) on $(1)$map$(-) ($free free slots); join now: $(-b)xonotic +connect $sv_server");
         empty = settings.get("empty", empty);
     }
@@ -586,7 +586,7 @@ protected:
             team = SPECTATORS;
 
         player_scores[team].emplace_back(
-            match[10].str(),                          // name
+            conn->decode(match[10].str()),            // name
             score,
             melanolib::string::to_int(match[9])       // id
         );
