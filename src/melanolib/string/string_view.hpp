@@ -21,6 +21,7 @@
 
 #include <iterator>
 #include <type_traits>
+#include "melanolib/c++-compat.hpp"
 
 namespace melanolib {
 
@@ -56,7 +57,7 @@ public:
 
     template<std::size_t size>
         constexpr basic_string_view(value_type (&array)[size]) noexcept
-        :  basic_string_view(array, size)
+        :  basic_string_view(array, size > 0 && array[size-1] == '\0' ? size-1 : size)
     {}
 
     template<class Iterator, class =
@@ -152,6 +153,20 @@ public:
     constexpr bool operator!= (const basic_string_view& rhs) const noexcept
     {
         return !(*this == rhs);
+    }
+
+    SUPER_CONSTEXPR bool strequal(const basic_string_view& rhs) const noexcept
+    {
+        if ( size() != rhs.size() )
+            return false;
+
+        for( size_type i = 0; i < size(); i++ )
+        {
+            if ( begin_[i] != rhs[i] )
+                return false;
+        }
+
+        return true;
     }
 
     string_type str() const
