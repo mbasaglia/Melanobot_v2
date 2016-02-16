@@ -45,7 +45,6 @@ public:
      */
     bool connected() const;
 
-
     /**
      * \brief Returns connection details
      */

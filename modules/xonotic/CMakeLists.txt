@@ -21,6 +21,7 @@ daemon.cpp
 engine.cpp
 xonotic-formatter.cpp
 xonotic-connection.cpp
+unvanquished-connection.cpp
 )
 
 if(${MODULE_ENABLED})

@@ -88,7 +88,7 @@ Xonotic
             }
             MonitorReply                ; "server" (no parameter) shows the host name
             {
-                reply       "$sv_host"
+                reply       "$hostname"
             }
         }
         XonoticMaps                     ; "maps" shpws a list of maps
@@ -417,5 +417,149 @@ Pipe
         source          @name
         Quit
         MelanobotShRestart
+    }
+}
+
+
+; Unvanquished integration
+Unvanquished
+{
+    ; Parameter declarations
+    @name                               ; Unvanquished connection name
+    @server     localhost               ; Unvanquished server
+    @rcon_password
+
+    @irc        irc_quakenet            ; IRC connection (defaults to irc_quakenet)
+    @channel                            ; IRC channel name
+    @prefix                             ; Prefix shown on IRC
+    @admin      admin                   ; User group required to trigger admin functionality
+    @show_irc_events    1               ; Show to Unvanquished players IRC join/parts and similar
+    @show_connection_events 1           ; Shows when the server connected or disconnected
+
+    type        Group
+
+    ; Sets up an Unvanquished connection
+    Connection
+    {
+        protocol        unvanquished
+        name            @name
+        server          @server
+        rcon_password   @rcon_password
+    }
+
+    ; IRC showing information on the Unvanquished server
+    Group {
+        source          @irc
+        channels        @channel
+        monitored       @name
+        trigger         @prefix
+        prefix          @prefix
+        help            "Integration with the Unvanquished server @server"
+        help_group      @irc
+        direct          1
+
+        ListPlayers                     ; "who" shows the connected players
+
+        Group
+        {
+            auth        @admin
+            priority    100
+            UnvanquishedStatus { public 0 }  ; "status" shows info on players and the server
+        }
+
+        Group                           ; "server" shows server information
+        {
+            trigger "server"
+            help "Shows server information"
+            MonitorServerStatus         ; "server status" shows whether the server is connected
+            MonitorReply                ; "server ip" shows the IP address and port
+            {
+                trigger "ip"
+                reply   "$server"
+                help    "Shows IP address and port"
+            }
+            MonitorReply                ; "server game" shows gametype and map
+            {
+                trigger "game"
+                reply   "Playing $(1)$map"
+                help    "Shows the current map"
+            }
+            MonitorReply                ; "server" (no parameter) shows the host name
+            {
+                reply       "$hostname"
+            }
+        }
+    }
+
+    ; IRC to Unvanquished
+    Bridge
+    {
+        source          @irc
+        channels        @channel
+        destination     @name
+        prefix          [IRC]
+        priority        0
+
+        IfSet                           ; Shows join/parts and similar
+        {
+            value               @show_irc_events
+            Group {
+                action          1
+                discard_self    1
+
+                JoinMessage { message "has joined" }
+                PartMessage { message "has left" }
+                KickMessage { message "has kicked $kicked!" }
+                RenameMessage { message "changed name to $(7)$message" }
+            }
+        }
+
+        Group {
+            trigger         @prefix
+            help            "Integration with the Unvanquished server @server"
+            help_group      @irc
+
+            Group
+            {
+                direct      1
+                auth        @admin
+
+                RconCommand endmatch    ; "endmatch" ends the current match
+                RconCommand map         ; "map (map)" changes the map after showing the scoreboard
+                RconCommand restart     ; "restart" restarts the match
+                Connect                 ; "connect" activates the attached connection
+                Disconnect              ; "disconnect" deactivates the attached connection
+                Reconnect               ; "reconnect" reconnects the attached connection
+            }
+            Group {                     ; If you want some users to have their chat shown in rainbows
+                auth rainbow
+                RainbowBridgeChat
+            }
+            BridgeChat                  ; Sends chat
+        }
+    }
+
+    ; Unvanquished to IRC
+    Bridge
+    {
+        source          @name
+        destination     @irc
+        dst_channel     @channel
+        prefix          @prefix
+        priority        0
+
+        IfSet                           ; Shows when the server connected or disconnected
+        {
+            value       @show_connection_events
+            ConnectionEvents
+        }
+        JoinMessage
+        {
+            message "$(2)+ join$(-): $name $(1)$map$(-) [$(1)$players$(-)/$(1)$max$(-)]"
+        }
+        PartMessage
+        {
+            message "$(1)- part$(-): $name $(1)$map$(-) [$(1)$players$(-)/$(1)$max$(-)]"
+        }
     }
 }

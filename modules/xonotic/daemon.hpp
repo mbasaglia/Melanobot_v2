@@ -43,12 +43,6 @@ public:
 protected:
     void rcon_command(std::string command) override;
 
-private:
-    bool is_log(melanolib::cstring_view command) const override;
-
-    void challenged_command(const std::string& challenge, const std::string& command) override;
-
-    bool is_challenge_response(melanolib::cstring_view command) const override;
 
     /**
      * \brief Requests a rconinfo
@@ -59,6 +53,13 @@ private:
      * \brief Manages rconInfoResponse
      */
     void on_receive(const std::string& cmd, const std::string& msg) override;
+
+private:
+    bool is_log(melanolib::cstring_view command) const override;
+
+    void challenged_command(const std::string& challenge, const std::string& command) override;
+
+    bool is_challenge_response(melanolib::cstring_view command) const override;
 
     std::string challenge_request() const override;
 

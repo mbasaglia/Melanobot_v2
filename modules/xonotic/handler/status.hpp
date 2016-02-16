@@ -106,7 +106,7 @@ protected:
         if ( !users.empty() )
             print_users(msg,users);
 
-        static std::vector<string::FormattedString> server_info {
+        static std::vector<std::string> server_info {
             "Players: $(1)$active$(-) active, $(1)$spectators$(-) spectators, $(1)$bots$(-) bots, $(1)$players$(-)/$(1)$max$(-) total",
             "Map: $(1)$map$(-), Game: $(1)$gametype$(-), Mutators: $mutators",
         };
@@ -126,8 +126,9 @@ protected:
         props["active"] = std::to_string(active);
         props["spectators"] = std::to_string(spectators);
 
+        string::FormatterConfig cfg;
         for ( const auto& info : server_info )
-            reply_to(msg, info.replaced(props));
+            reply_to(msg, cfg.decode(info).replaced(props));
 
         return true;
     }

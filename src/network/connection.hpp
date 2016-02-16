@@ -249,10 +249,11 @@ public:
     {
         string::FormattedProperties props = pretty_properties();
         props.insert({
-            {"name",    decode(user.name)},
-            {"ip",      user.host},
-            {"local_id",user.local_id},
+            {"name",     decode(user.name)},
+            {"ip",       user.host},
+            {"local_id", user.local_id},
             {"global_id",user.global_id},
+            {"host",     user.host},
         });
         props.insert(user.properties.begin(), user.properties.end());
         return props;

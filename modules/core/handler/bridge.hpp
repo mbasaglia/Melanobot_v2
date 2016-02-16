@@ -158,13 +158,12 @@ protected:
 
     virtual string::FormattedProperties message_replacements(const network::Message& msg) const
     {
-        return {
+        auto props = msg.source->pretty_properties(msg.from);
+        props.insert({
             {"channel", melanolib::string::implode(", ",msg.channels)},
-            {"name", msg.source->decode(msg.from.name)},
-            {"host", msg.from.host},
-            {"global_id", msg.from.global_id},
             {"message", msg.source->decode(msg.message)}
-        };
+        });
+        return props;
     }
 
 private:
@@ -220,7 +219,8 @@ public:
 protected:
     string::FormattedProperties message_replacements(const network::Message& msg) const override
     {
-        return {
+        auto props = msg.source->pretty_properties(msg.from);
+        props.insert({
             {"channel", melanolib::string::implode(", ",msg.channels)},
             {"message", msg.source->decode(msg.message)},
 
@@ -233,7 +233,8 @@ protected:
             {"kicked.host", msg.victim.host},
             {"kicked.global_id", msg.victim.global_id},
             {"kicked.local_id", msg.victim.local_id}
-        };
+        });
+        return props;
     }
 };
 

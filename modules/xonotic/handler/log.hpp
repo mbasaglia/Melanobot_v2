@@ -34,9 +34,9 @@ public:
         : Handler(settings, parent)
     {
         connect = read_string(settings, "connect",
-            "Server $(2)$sv_host$(-) connected.");
+            "Server $(2)$hostname$(-) connected.");
         disconnect = read_string(settings, "disconnect",
-            "$(-b)Warning!$(-) Server $(1)$sv_host$(-) disconnected.");
+            "$(-b)Warning!$(-) Server $(1)$hostname$(-) disconnected.");
     }
 
     bool can_handle(const network::Message& msg) const override

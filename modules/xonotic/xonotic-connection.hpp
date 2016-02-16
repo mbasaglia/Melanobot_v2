@@ -32,7 +32,6 @@ namespace xonotic {
  */
 class XonoticConnection : public network::Connection, protected Darkplaces
 {
-
 public:
     /**
      * \brief Create from settings

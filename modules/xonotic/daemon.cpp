@@ -18,6 +18,7 @@
  */
 
 #include "daemon.hpp"
+#include "string/logger.hpp"
 
 namespace unvanquished {
 
@@ -35,10 +36,12 @@ void Daemon::rcon_command(std::string command)
 
     if ( rcon_secure_ == Secure::Unencrypted )
     {
+        Log("unv", '<', 4) << command;
         write("rcon "+password()+' '+command);
     }
     else if ( rcon_secure_ == Secure::EncryptedPlain )
     {
+        Log("unv", '<', 4) << command;
         /// \todo AES encryption
     }
     else if ( rcon_secure_ == Secure::EncryptedChallenge )
@@ -49,17 +52,18 @@ void Daemon::rcon_command(std::string command)
 
 bool Daemon::is_log(melanolib::cstring_view command) const
 {
-    return command == "print";
+    return command.strequal("print");
 }
 
 void Daemon::challenged_command(const std::string& challenge, const std::string& command)
 {
+    Log("unv", '<', 4) << command;
     /// \todo AES encryption
 }
 
 bool Daemon::is_challenge_response(melanolib::cstring_view command) const
 {
-    return command == "challengeResponseNew";
+    return command.strequal("challengeResponseNew");
 }
 
 std::string Daemon::challenge_request() const

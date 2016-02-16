@@ -28,25 +28,6 @@
 
 namespace xonotic {
 
-
-std::string hmac_md4(const std::string& input, const std::string& key)
-{
-    HMAC_CTX ctx;
-    HMAC_CTX_init(&ctx);
-
-    HMAC_Init_ex(&ctx, key.data(), key.size(), EVP_md4(), nullptr);
-
-    HMAC_Update(&ctx, reinterpret_cast<const unsigned char*>(input.data()), input.size());
-
-    unsigned char out[16];
-    unsigned int out_size = 0;
-    HMAC_Final(&ctx, out, &out_size);
-
-    HMAC_CTX_cleanup(&ctx);
-
-    return std::string(out,out+out_size);
-}
-
 std::unique_ptr<XonoticConnection> XonoticConnection::create(
     const Settings& settings, const std::string& name)
 {
@@ -187,7 +168,7 @@ void XonoticConnection::update_user(const std::string& local_id,
         *user = updated;
 
         if ( !updated.global_id.empty() )
-            Log("irc",'!',3) << "User " << color::dark_cyan << user->local_id
+            Log("xon",'!',3) << "User " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << updated.global_id;
     }
 }
@@ -276,27 +257,21 @@ string::FormattedProperties XonoticConnection::pretty_properties() const
         {"gt",          gt},
         {"gametype",    xonotic::gametype_name(gt)},
         {"mutators",    properties_.get("match.mutators","")},
-        {"sv_host",     host},
+        {"hostname",    host},
         {"sv_server",   server().name()}
     };
 }
 
-void XonoticConnection::say ( const network::OutputMessage& message )
+void XonoticConnection::say(const network::OutputMessage& message)
 {
     string::FormattedString prefix_stream;
     if ( !message.prefix.empty() )
         prefix_stream << message.prefix << ' ' << color::nocolor;
 
-    auto nocolor = formatter_->to_string(color::nocolor);
-    std::string prefix   = prefix_stream.encode(*formatter_);
-    std::string from     = message.from.encode(*formatter_)+nocolor;
-    std::string contents = message.message.encode(*formatter_)+nocolor;
     Properties message_properties = {
-        {"prefix",              prefix},
-        {"from",                from},
-        {"message",             contents},
-        //{"from_quoted",         quote_string(from)},
-        //{"message_quoted",      quote_string(contents)},
+        {"prefix",  prefix_stream.encode(*formatter_)},
+        {"from",    (message.from.copy() << color::nocolor).encode(*formatter_)},
+        {"message", (message.message.copy() << color::nocolor).encode(*formatter_)},
     };
 
     auto expl = melanolib::string::regex_split(
@@ -304,7 +279,7 @@ void XonoticConnection::say ( const network::OutputMessage& message )
             ( message.from.empty() ? cmd_say : cmd_say_as ),
         ";\\s*");
     for ( const auto & cmd : expl )
-        command({"rcon", { melanolib::string::replace(cmd,message_properties,"$")},
+        command({"rcon", { melanolib::string::replace(cmd, message_properties,"$")},
                 message.priority, message.timeout});
 }
 
