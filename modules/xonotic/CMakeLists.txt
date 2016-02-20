@@ -19,6 +19,7 @@ xonotic.cpp
 darkplaces.cpp
 daemon.cpp
 engine.cpp
+encryption.cpp
 xonotic-formatter.cpp
 xonotic-connection.cpp
 unvanquished-connection.cpp

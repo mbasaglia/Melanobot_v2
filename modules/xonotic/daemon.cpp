@@ -19,6 +19,7 @@
 
 #include "daemon.hpp"
 #include "string/logger.hpp"
+#include <openssl/aes.h>
 
 namespace unvanquished {
 

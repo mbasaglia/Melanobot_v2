@@ -91,6 +91,5 @@ protected:
     }
 };
 
-
 } // namespace unvanquished
 #endif // MELANOBOT_MODULES_XONOTIC_HANDLERS_UNVANQUISHED_HPP

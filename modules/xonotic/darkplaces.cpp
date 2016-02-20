@@ -17,27 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "darkplaces.hpp"
-
-#include <openssl/hmac.h>
-
-
-static std::string hmac_md4(const std::string& input, const std::string& key)
-{
-    HMAC_CTX ctx;
-    HMAC_CTX_init(&ctx);
-
-    HMAC_Init_ex(&ctx, key.data(), key.size(), EVP_md4(), nullptr);
-
-    HMAC_Update(&ctx, reinterpret_cast<const unsigned char*>(input.data()), input.size());
-
-    unsigned char out[16];
-    unsigned int out_size = 0;
-    HMAC_Final(&ctx, out, &out_size);
-
-    HMAC_CTX_cleanup(&ctx);
-
-    return std::string(out,out+out_size);
-}
+#include "encryption.hpp"
 
 namespace xonotic {
 
@@ -67,7 +47,7 @@ melanolib::cstring_view Darkplaces::filter_challenge(melanolib::cstring_view mes
 void Darkplaces::challenged_command(const std::string& challenge, const std::string& command)
 {
     std::string challenge_command = challenge+' '+command;
-    std::string key = hmac_md4(challenge_command, password());
+    std::string key = crypto::hmac_md4(challenge_command, password());
     write("srcon HMAC-MD4 CHALLENGE "+key+' '+challenge_command);
 }
 
@@ -84,7 +64,7 @@ void Darkplaces::rcon_command(std::string command)
     else if ( rcon_secure_ == Secure::TIME )
     {
         auto message = std::to_string(std::time(nullptr))+".000000 "+command;
-        write("srcon HMAC-MD4 TIME "+ hmac_md4(message, password())
+        write("srcon HMAC-MD4 TIME "+ crypto::hmac_md4(message, password())
             +' '+message);
     }
     else if ( rcon_secure_ == Secure::CHALLENGE )
