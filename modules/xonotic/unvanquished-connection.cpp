@@ -87,7 +87,7 @@ void UnvanquishedConnection::connect()
         status_ = WAITING;
 
         // Just connected, clear all
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         user_manager.clear();
         lock.unlock();
 
@@ -119,7 +119,7 @@ void UnvanquishedConnection::disconnect(const string::FormattedString& message)
     }
     close_connection();
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user_manager.clear();
 }
 
@@ -137,7 +137,7 @@ void UnvanquishedConnection::close_connection()
 void UnvanquishedConnection::update_user(const std::string& local_id,
                                          const Properties& properties)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
     {
@@ -153,7 +153,7 @@ void UnvanquishedConnection::update_user(const std::string& local_id,
 void UnvanquishedConnection::update_user(const std::string& local_id,
                                          const user::User& updated)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
     {
@@ -170,7 +170,7 @@ user::User UnvanquishedConnection::get_user(const std::string& local_id) const
     if ( local_id.empty() )
         return {};
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     if ( local_id == "-1" )
     {
@@ -192,7 +192,7 @@ user::User UnvanquishedConnection::get_user(const std::string& local_id) const
 
 std::vector<user::User> UnvanquishedConnection::get_users( const std::string& channel_mask ) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     auto list = user_manager.users();
     return {list.begin(), list.end()};
 }
@@ -200,13 +200,13 @@ std::vector<user::User> UnvanquishedConnection::get_users( const std::string& ch
 
 std::string UnvanquishedConnection::name() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return properties_.get("cvar.sv_hostname", "");
 }
 
 user::UserCounter UnvanquishedConnection::count_users(const std::string& channel) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::UserCounter c;
     for ( const auto& user : user_manager )
         (user.host.empty() ? c.bots : c.users)++;
@@ -223,7 +223,7 @@ string::FormattedProperties UnvanquishedConnection::pretty_properties() const
 {
     user::UserCounter count = count_users();
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     string::FormattedString host;
     if ( auto opt = properties_.get_optional<std::string>("cvar.sv_hostname") )
@@ -285,7 +285,7 @@ void UnvanquishedConnection::command ( network::Command cmd )
             }
             if ( cmd.parameters[0] == "set" )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 properties_.put("cvar."+cmd.parameters[1], cmd.parameters[2]);
             }
             cmd.parameters[2] = xonotic::quote_string(cmd.parameters[2]);
@@ -368,7 +368,7 @@ void UnvanquishedConnection::on_receive_log(const std::string& line)
         {
             std::string cvar_name = match[1];
             std::string cvar_value = match[2];
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             properties_.put("cvar."+cvar_name, cvar_value);
             lock.unlock();
         }
@@ -409,7 +409,7 @@ void UnvanquishedConnection::on_receive_log(const std::string& line)
             std::string status_value = match[2];
             if ( status_name == "hostname" )
                 status_name = "cvar.sv_hostname";
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             properties_.put(status_name, status_value);
         }
         else if ( std::regex_match(msg.raw, match, regex_status1_player) )
@@ -425,7 +425,7 @@ void UnvanquishedConnection::on_receive_log(const std::string& line)
 void UnvanquishedConnection::check_user_start()
 {
     // Marks all users as unchecked
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     for ( user::User& user : user_manager )
         user.checked = false;
 
@@ -434,7 +434,7 @@ void UnvanquishedConnection::check_user_start()
 
 void UnvanquishedConnection::check_user(const std::smatch& match)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     Properties props = {
         {"local_id", match[1]},
@@ -471,7 +471,7 @@ void UnvanquishedConnection::check_user_end()
 
     // Removes all unchecked users
     /// \todo Send part command
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     auto it = user_manager.users_reference().begin();
     while ( it != user_manager.users_reference().end() )
     {
@@ -514,7 +514,7 @@ void UnvanquishedConnection::request_status()
 
 void UnvanquishedConnection::add_polling_command(const network::Command& command)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     for ( const auto& cmd : polling_status )
         if ( cmd.command == command.command && cmd.parameters == command.parameters )

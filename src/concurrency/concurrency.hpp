@@ -24,7 +24,11 @@
 #include <thread>
 #include <mutex>
 
-using Lock = std::unique_lock<std::mutex>;
+template<class Mutex, class Lock = std::unique_lock<Mutex>>
+    Lock make_lock(Mutex& mutex)
+    {
+        return Lock(mutex);
+    }
 
 
 #endif // CONCURRENCY_HPP

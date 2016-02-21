@@ -26,7 +26,7 @@ namespace timer {
 struct TimerQueue::EditLock
 {
     TimerQueue* subject;
-    Lock lock;
+    std::unique_lock<std::mutex> lock;
 
     explicit EditLock(TimerQueue* subject)
         : subject(subject)
@@ -35,7 +35,7 @@ struct TimerQueue::EditLock
         {
             subject->timer_action = TimerAction::Noop;
             subject->condition.notify_one();
-            lock = Lock(subject->events_mutex);
+            lock = std::unique_lock<std::mutex>(subject->events_mutex);
         }
     }
 
@@ -93,7 +93,7 @@ void TimerQueue::run()
     std::mutex condition_mutex;
     while ( true )
     {
-        Lock lock(events_mutex);
+        auto lock = make_lock(events_mutex);
 
         if ( !items.empty() )
         {
@@ -121,7 +121,7 @@ void TimerQueue::run()
     }
 }
 
-bool TimerQueue::tick(Lock& lock)
+bool TimerQueue::tick(std::unique_lock<std::mutex>& lock)
 {
     if ( items.empty() )
         return false;

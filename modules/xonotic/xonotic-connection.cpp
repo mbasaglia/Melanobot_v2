@@ -109,7 +109,7 @@ void XonoticConnection::connect()
         status_ = WAITING;
 
         // Just connected, clear all
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
             properties_.erase("cvar");// cvars might have changed
             clear_match();
             user_manager.clear();
@@ -135,7 +135,7 @@ void XonoticConnection::disconnect(const string::FormattedString& message)
         cleanup_connection();
     }
     close_connection();
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     clear_match();
     user_manager.clear();
     lock.unlock();
@@ -144,7 +144,7 @@ void XonoticConnection::disconnect(const string::FormattedString& message)
 void XonoticConnection::update_user(const std::string& local_id,
                                     const Properties& properties)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
     {
@@ -161,7 +161,7 @@ void XonoticConnection::update_user(const std::string& local_id,
 void XonoticConnection::update_user(const std::string& local_id,
                                    const user::User& updated)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
     {
@@ -178,7 +178,7 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
     if ( local_id.empty() )
         return {};
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     if ( local_id == "0" || local_id == "#0" )
     {
@@ -205,20 +205,20 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
 
 std::vector<user::User> XonoticConnection::get_users( const std::string& channel_mask ) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     auto list = user_manager.users();
     return {list.begin(), list.end()};
 }
 
 std::string XonoticConnection::name() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return properties_.get("cvar.sv_adminnick","");
 }
 
 user::UserCounter XonoticConnection::count_users(const std::string& channel) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::UserCounter c;
     for ( const auto& user : user_manager )
         (user.host.empty() ? c.bots : c.users)++;
@@ -235,7 +235,7 @@ string::FormattedProperties XonoticConnection::pretty_properties() const
 {
     user::UserCounter count = count_users();
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     std::string gt = properties_.get("match.gametype","?");
     if ( count.max == 2 )
@@ -303,7 +303,7 @@ void XonoticConnection::command ( network::Command cmd )
             }
             if ( cmd.parameters[0] == "set" )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 properties_.put("cvar."+cmd.parameters[1],cmd.parameters[2]);
             }
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
@@ -396,7 +396,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             {
                 std::string cvar_name = match[1];
                 std::string cvar_value = match[2];
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 properties_.put("cvar."+cvar_name,cvar_value);
                 lock.unlock();
 
@@ -460,7 +460,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 if ( match[3] != "bot" )
                     user.host = match[3];
                 user.name = match[4];
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 user_manager.add_user(user);
                 lock.unlock();
                 msg.from = user;
@@ -469,7 +469,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             }
             else if ( std::regex_match(msg.raw,match,regex_part) )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 if ( user::User *found = user_manager.user(match[1]) )
                 {
                     Log("xon",'!',3) << "Removed user " << decode(found->name);
@@ -480,7 +480,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             }
             else if ( std::regex_match(msg.raw,match,regex_gamestart) )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 clear_match();
                 //check_user_start();
                 msg.command = "gamestart";
@@ -492,7 +492,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             }
             else if ( std::regex_match(msg.raw,match,regex_name) )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 if ( user::User *found = user_manager.user(match[1]) )
                 {
                     msg.from = *found;
@@ -505,7 +505,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             }
             else if ( std::regex_match(msg.raw,match,regex_mutators) )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 properties_.put("match.mutators", melanolib::string::replace(match[1],":",", "));
             }
         }
@@ -534,7 +534,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             {
                 std::string status_name = match[1];
                 std::string status_value = match[2];
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 if ( status_name == "map" )
                     status_name = "match.map";
                 properties_.put(status_name, status_value);
@@ -598,7 +598,7 @@ void XonoticConnection::cleanup_connection()
     if ( rcon_secure() >= Darkplaces::Secure::CHALLENGE )
         sync_read();
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     properties_.erase("cvar");
     clear_match();
 }
@@ -651,7 +651,7 @@ void XonoticConnection::clear_match()
 void XonoticConnection::check_user_start()
 {
     // Marks all users as unchecked
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     for ( user::User& user : user_manager )
         user.checked = false;
 }
@@ -668,7 +668,7 @@ void XonoticConnection::check_user_start()
  */
 void XonoticConnection::check_user(const std::smatch& match)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user_by_property("entity",match[6]);
     Properties props = {
         {"host",   match[1] == "botclient" ? std::string(): match[1]},
@@ -698,7 +698,7 @@ void XonoticConnection::check_user_end()
 {
     // Removes all unchecked users
     /// \todo Send part command
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user_manager.users_reference().remove_if(
         [](const user::User& user) { return !user.checked; } );
 }

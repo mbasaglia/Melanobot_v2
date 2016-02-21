@@ -121,7 +121,7 @@ public:
     template<class Predicate>
     void remove_if(const Predicate& pred)
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
 
         Container swapped;
         std::swap(swapped,container);

@@ -105,10 +105,10 @@ private:
 
     /**
      * \brief Tries to execute the top item
-     * \param lock Lock for events_mutex, will be released if an action is executed
+     * \param lock std::unique_lock<std::mutex> for events_mutex, will be released if an action is executed
      * \return \b true if the top item has been executed
      */
-    bool tick(Lock& lock);
+    bool tick(std::unique_lock<std::mutex>& lock);
 
     std::vector<TimerItem> items;       ///< Items (heap)
     std::condition_variable condition;  ///< Activated on timeout of the next items or when the item heap changes

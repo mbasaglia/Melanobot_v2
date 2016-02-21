@@ -105,7 +105,7 @@ void IrcConnection::connect()
         connection_status = WAITING;
         if ( !buffer.connect(main_server) )
             return;
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         current_server = main_server;
         lock.unlock();
         connection_status = CONNECTING;
@@ -120,7 +120,7 @@ void IrcConnection::disconnect(const string::FormattedString& message)
         buffer.write({"QUIT", {message.encode(*formatter_)}, 1024});
     if ( connection_status != DISCONNECTED )
         buffer.disconnect();
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     connection_status = DISCONNECTED;
     network::Message().disconnected().send(this);
     current_nick = "";
@@ -132,7 +132,7 @@ void IrcConnection::disconnect(const string::FormattedString& message)
 
 void IrcConnection::reconnect(const string::FormattedString& quit_message)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
         user::User* user = user_manager.user(current_nick);
         if ( user )
         {
@@ -154,13 +154,13 @@ void IrcConnection::error_stop()
 
 network::Server IrcConnection::server() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return current_server;
 }
 
 std::string IrcConnection::description() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     std::string irc_network = properties_.get("005.NETWORK","");
     if ( !irc_network.empty() )
         irc_network = '('+irc_network+") ";
@@ -173,7 +173,7 @@ void IrcConnection::remove_from_channel(const std::string& user_id,
     if ( channels.empty() )
         return;
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     if ( strtolower(user_id) == current_nick_lowecase )
     {
         // Can it ever receive more than one channel?
@@ -230,7 +230,7 @@ void IrcConnection::handle_message(network::Message msg)
 
     if ( !std::isdigit(msg.command[0]) )
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         from_user = user_manager.user(msg.from.local_id);
         if ( from_user )
         {
@@ -244,7 +244,7 @@ void IrcConnection::handle_message(network::Message msg)
         // RPL_WELCOME: prefix 001 target :message
         if ( msg.params.size() < 1 ) return;
 
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
             current_nick = msg.params[0];
             current_server.host = msg.from.name;
             current_nick_lowecase = strtolower(current_nick);
@@ -257,7 +257,7 @@ void IrcConnection::handle_message(network::Message msg)
     {
         // these could be executed on 001, but this gives time to
         // messages triggered on CONNECTED to take over if needed
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
             std::list<network::Command> missed_commands;
             scheduled_commands.swap(missed_commands);
         lock.unlock();
@@ -292,7 +292,7 @@ void IrcConnection::handle_message(network::Message msg)
         std::vector<std::string> users = melanolib::string::regex_split(msg.params[3],"\\s+");
 
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             for ( auto& user : users )
             {
                 if ( user[0] == '@' || user[0] == '+' )
@@ -320,7 +320,7 @@ void IrcConnection::handle_message(network::Message msg)
         // ERR_NICKNAMEINUSE
         if ( msg.params.size() < 2 ) return;
 
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         if ( strtolower(attempted_nick) == strtolower(msg.params[1]) )
         {
             Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
@@ -348,7 +348,7 @@ void IrcConnection::handle_message(network::Message msg)
             return; // Odd PRIVMSG format
 
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             if ( strtolower(msg.from.name) == current_nick_lowecase )
                 return; // received our own message for some reason, disregard
 
@@ -391,7 +391,7 @@ void IrcConnection::handle_message(network::Message msg)
         }
         else
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
                 /// \todo Case-Insensitive?
                 /// \todo Update only on nick changes
                 std::regex regex_direct(melanolib::string::regex_escape(current_nick)+"[:,]\\s+(.+)");
@@ -420,7 +420,7 @@ void IrcConnection::handle_message(network::Message msg)
             return;
         msg.channels = msg.params;
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             if ( !from_user )
             {
                 msg.from.channels = msg.channels;
@@ -456,7 +456,7 @@ void IrcConnection::handle_message(network::Message msg)
     }
     else if ( msg.command == "QUIT" )
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         if ( strtolower(msg.from.name) == current_nick_lowecase )
         {
             user_manager.clear();
@@ -481,7 +481,7 @@ void IrcConnection::handle_message(network::Message msg)
     {
         if ( msg.params.size() == 1 )
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             if ( from_user )
             {
                 msg.channels = from_user->channels;
@@ -702,7 +702,7 @@ void IrcConnection::command(network::Command cmd)
         }
         std::string to = strtolower(cmd.parameters[0]);
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             if ( to == current_nick_lowecase )
             {
                 ErrorLog("irc") << "Cannot send " << cmd.command << " to self";
@@ -755,7 +755,7 @@ void IrcConnection::command(network::Command cmd)
         cmd.parameters[0] = new_nick;
 
         {
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             if ( new_nick == current_nick )
                 return;
             if ( attempted_nick.empty() )
@@ -773,7 +773,7 @@ void IrcConnection::command(network::Command cmd)
     }
     else if ( cmd.command == "MODE" )
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         if ( cmd.parameters.size() == 1 )
         {
             cmd.parameters.resize(2);
@@ -803,7 +803,7 @@ void IrcConnection::command(network::Command cmd)
             return;
         }
 
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
             std::vector<std::string> channels;
 
             user::User* self_user = user_manager.user(current_nick);
@@ -840,7 +840,7 @@ void IrcConnection::command(network::Command cmd)
             return;
         }
 
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         user::User* self_user = user_manager.user(current_nick);
         if ( self_user )
         {
@@ -1004,7 +1004,7 @@ bool IrcConnection::user_auth(const std::string& local_id,
     if ( auth_group.empty() )
         return true;
     
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     const user::User* user = user_manager.user(local_id);
     if ( user )
         return auth_system.in_group(*user,auth_group);
@@ -1015,7 +1015,7 @@ bool IrcConnection::user_auth(const std::string& local_id,
 void IrcConnection::update_user(const std::string& local_id,
                                 const Properties& properties)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
     {
@@ -1031,7 +1031,7 @@ void IrcConnection::update_user(const std::string& local_id,
 void IrcConnection::update_user(const std::string& local_id,
                                 const user::User& updated)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     user::User* user = user_manager.user(local_id);
     if ( user )
     {
@@ -1045,13 +1045,13 @@ void IrcConnection::update_user(const std::string& local_id,
 
 std::string IrcConnection::name() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return current_nick;
 }
 
 user::User IrcConnection::get_user(const std::string& local_id) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     const user::User* user = user_manager.user(local_id);
     if ( user )
         return *user;
@@ -1060,7 +1060,7 @@ user::User IrcConnection::get_user(const std::string& local_id) const
 
 std::vector<user::User> IrcConnection::get_users(const std::string& channel) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     std::list<user::User> list;
     if ( channel.empty() )
@@ -1102,7 +1102,7 @@ bool IrcConnection::add_to_group( const std::string& username, const std::string
 
     if ( !groups.empty() )
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         groups.erase(std::remove_if(groups.begin(),groups.end(),
                         [this,user](const std::string& str)
                         { return auth_system.in_group(user,str); }),
@@ -1126,7 +1126,7 @@ bool IrcConnection::remove_from_group(const std::string& username, const std::st
 
     user::User user = build_user(username);
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     if ( auth_system.in_group(user,group,false) )
     {
         auth_system.remove_user(user,group);
@@ -1138,12 +1138,12 @@ bool IrcConnection::remove_from_group(const std::string& username, const std::st
 
 std::vector<user::User> IrcConnection::users_in_group(const std::string& group) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return auth_system.users_with_auth(group);
 }
 std::vector<user::User> IrcConnection::real_users_in_group(const std::string& group) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     auto user_group = auth_system.group(group);
     if ( !user_group )
@@ -1163,7 +1163,7 @@ LockedProperties IrcConnection::properties()
 
 string::FormattedProperties IrcConnection::pretty_properties() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return string::FormattedProperties{
         {"network",             properties_.get("005.NETWORK","")},
         {"default_server",      main_server.name()},
@@ -1175,7 +1175,7 @@ string::FormattedProperties IrcConnection::pretty_properties() const
 
 user::UserCounter IrcConnection::count_users(const std::string& channel) const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
 
     // network
     if ( channel.empty() )

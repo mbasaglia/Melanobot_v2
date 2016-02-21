@@ -57,7 +57,7 @@ void Repository::poll_events(const GitHubEventSource& source)
 {
     auto request = source.request("/repos/" + name_ +"/events" );
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         if ( !etag_.empty() )
             request.set_header("If-None-Match", etag_);
         current_poll_ = PollTime::clock::now();
@@ -70,7 +70,7 @@ void Repository::poll_events(const GitHubEventSource& source)
             auto it = response.headers.find("ETag");
             if ( it != response.headers.end() )
             {
-                Lock lock(mutex);
+                auto lock = make_lock(mutex);
                 etag_ = it->second;
                 if ( melanobot::has_storage() )
                     melanobot::storage().put("github."+name_+".etag", etag_);
@@ -93,7 +93,7 @@ void Repository::dispatch_events(const web::Response& response)
 
     melanolib::time::DateTime::Time poll_time;
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         poll_time = last_poll_;
         last_poll_ = current_poll_;
         if ( melanobot::has_storage() )

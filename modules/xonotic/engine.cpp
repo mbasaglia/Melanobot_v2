@@ -62,7 +62,7 @@ Engine::~Engine()
 
 void Engine::set_server(const network::Server& server)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     if ( server != rcon_server )
     {
         rcon_server = server;
@@ -72,32 +72,32 @@ void Engine::set_server(const network::Server& server)
 
 network::Server Engine::server() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return rcon_server;
 }
 
 std::chrono::seconds Engine::challenge_timeout() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return rcon_challenge_timeout;
 }
 
 void Engine::set_challenge_timeout(std::chrono::seconds seconds)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     rcon_challenge_timeout = seconds;
     /// \todo could clear up the existing command queue
 }
 
 std::string Engine::password() const
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     return rcon_password;
 }
 
 void Engine::set_password(const std::string& password)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     rcon_password = password;
 }
 
@@ -145,7 +145,7 @@ bool Engine::reconnect()
 
 void Engine::clear()
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     challenged_buffer.clear();
 }
 
@@ -214,7 +214,7 @@ void Engine::read(const std::string& datagram)
         return;
     }
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     melanolib::string::QuickStream socket_stream(line_buffer + message.str());
     line_buffer.clear();
     lock.unlock();
@@ -240,7 +240,7 @@ void Engine::read(const std::string& datagram)
 
 void Engine::handle_challenge(const std::string& challenge)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     if ( challenged_buffer.empty() || challenge.empty() )
         return;
 
@@ -266,7 +266,7 @@ void Engine::handle_challenge(const std::string& challenge)
 
 void Engine::request_challenge()
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     if ( !challenged_buffer.empty() && !challenged_buffer.front().challenged )
     {
         challenged_buffer.front().challenge(rcon_challenge_timeout);
@@ -281,7 +281,7 @@ std::string Engine::challenge_request() const
 
 void Engine::schedule_challenged_command(const std::string& command)
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     challenged_buffer.push_back(command);
     lock.unlock();
     request_challenge();

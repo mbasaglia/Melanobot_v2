@@ -78,7 +78,7 @@ string::FormattedProperties Remind::replacements(const network::Message& src,
 void Remind::load_items()
 {
     {
-        Lock lock(mutex);
+        auto lock = make_lock(mutex);
         items.clear();
     }
     
@@ -111,7 +111,7 @@ void Remind::load_items()
 
 void Remind::store_items()
 {
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     std::string path = "remind."+storage_id;
 
     melanobot::storage().put(path, "count", melanolib::string::to_string(items.size()));
@@ -138,7 +138,7 @@ void Remind::schedule_item(const Item& item)
         item.timeout.time_point()
     );
 
-    Lock lock(mutex);
+    auto lock = make_lock(mutex);
     items.push_back(item);
     auto iterator = items.end();
     --iterator;
@@ -157,7 +157,7 @@ void Remind::schedule_item(const Item& item)
                 priority
             };
             deliver(destination, out);
-            Lock lock(mutex);
+            auto lock = make_lock(mutex);
             items.erase(iterator);
         },
         this
