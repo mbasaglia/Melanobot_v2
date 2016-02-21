@@ -23,7 +23,7 @@
 #include "locking_reference.hpp"
 #include <mutex>
 
-class LockedProperties : public LockingReferenceBase<std::mutex,PropertyTree>
+class LockedProperties : public LockingReferenceBase<PropertyTree>
 {
 public:
     typedef PropertyTree::path_type path_type;

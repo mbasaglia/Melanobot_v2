@@ -63,7 +63,7 @@ protected:
         return true;
     }
 
-
+private:
     bool                    bots{false};    ///< Show bots
     string::FormattedString reply;          ///< Reply when there are players (followed by the list)
     string::FormattedString reply_empty;    ///< Reply when there are no players
@@ -169,13 +169,19 @@ public:
     void initialize() override
     {
         if ( auto xon = dynamic_cast<xonotic::XonoticConnection*>(monitored) )
-            xon->add_polling_command({"rcon",{"g_maplist"}});
+            xon->add_polling_command({"rcon", {"g_maplist"}});
     }
 
 protected:
+    virtual std::vector<std::string>  get_maps() const
+    {
+        return melanolib::string::regex_split(
+            monitored->properties().get("cvar.g_maplist"), "\\s+");
+    }
+
     bool on_handle(network::Message& msg)
     {
-        auto maps = melanolib::string::regex_split(monitored->properties().get("cvar.g_maplist"),"\\s+");
+        auto maps = get_maps();
         int total = maps.size();
         if ( !msg.message.empty() )
         {
@@ -214,6 +220,7 @@ protected:
         return true;
     }
 
+private:
     bool regex = false;
     int max_print = 6;
 };

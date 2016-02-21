@@ -465,6 +465,11 @@ Unvanquished
             auth        @admin
             priority    100
             UnvanquishedStatus { public 0 }  ; "status" shows info on players and the server
+            UnvanquishedMaps                 ; "maps" shpws a list of maps (regex for admins)
+            {
+                regex           1
+                max_print       10
+            }
         }
 
         Group                           ; "server" shows server information
@@ -475,19 +480,20 @@ Unvanquished
             MonitorReply                ; "server ip" shows the IP address and port
             {
                 trigger "ip"
-                reply   "$server"
+                reply   "unv://$server"
                 help    "Shows IP address and port"
             }
             MonitorReply                ; "server game" shows gametype and map
             {
                 trigger "game"
-                reply   "Playing $(1)$map"
+                reply   "Playing on $(1)$map"
                 help    "Shows the current map"
             }
             MonitorReply                ; "server" (no parameter) shows the host name
             {
                 reply       "$hostname"
             }
+            UnvanquishedMaps            ; "maps" shpws a list of maps
         }
     }
 

@@ -67,8 +67,9 @@ MELANOMODULE_ENTRY_POINT void melanomodule_xonotic_initialize(const Settings&)
 
 
     module::register_connection<unvanquished::UnvanquishedConnection>("unvanquished");
-    module::register_handler<unvanquished::UnvanquishedStatus>("UnvanquishedStatus");
     module::register_log_type("unv",color::dark_cyan);
+    module::register_handler<unvanquished::UnvanquishedStatus>("UnvanquishedStatus");
+    module::register_handler<unvanquished::UnvanquishedMaps>("UnvanquishedMaps");
 }
 
 namespace xonotic {

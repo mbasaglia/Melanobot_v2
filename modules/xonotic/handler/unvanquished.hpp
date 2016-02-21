@@ -20,6 +20,8 @@
 #define MELANOBOT_MODULES_XONOTIC_HANDLERS_UNVANQUISHED_HPP
 
 #include "core/handler/connection_monitor.hpp"
+#include "xonotic/unvanquished-connection.hpp"
+#include "status.hpp"
 
 namespace unvanquished {
 
@@ -88,6 +90,32 @@ protected:
                 << string::Padding(user.local_id, 3, 0) << " "
                 << monitored->decode(user.name)
             );
+    }
+};
+
+/**
+ * \brief Lists unvanquished maps matching a query
+ */
+class UnvanquishedMaps : public xonotic::XonoticMaps
+{
+public:
+    UnvanquishedMaps(const Settings& settings, MessageConsumer* parent)
+        : XonoticMaps(settings, parent)
+    {
+    }
+
+    void initialize() override
+    {
+        if ( auto unv = dynamic_cast<unvanquished::UnvanquishedConnection*>(monitored) )
+            unv->add_startup_command({"rcon", {"listmaps"}});
+    }
+
+protected:
+    std::vector<std::string> get_maps() const override
+    {
+        if ( auto unv = dynamic_cast<unvanquished::UnvanquishedConnection*>(monitored) )
+            return unv->maps();
+        return {};
     }
 };
 

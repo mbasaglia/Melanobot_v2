@@ -105,6 +105,12 @@ public:
      */
     void add_polling_command(const network::Command& command);
 
+    /**
+     * \brief Adds a command that needs to be sent once fully connected
+     * \param command    Command to be sent
+     */
+    void add_startup_command(const network::Command& command);
+
     user::UserCounter count_users(const std::string& channel = {}) const override;
 
     // Dummy methods:
@@ -132,6 +138,8 @@ public:
     {
         return {};
     }
+
+    std::vector<std::string> maps() const;
 
 private:
     void on_connect() override;
@@ -170,16 +178,19 @@ private:
      */
     void request_status();
 
-    string::Formatter*  formatter_ = nullptr;       ///< String formatter
-    PropertyTree        properties_;                ///< Misc properties (eg: map, gametype)
-    AtomicStatus        status_;                    ///< Connection status
-    user::UserManager   user_manager;               ///< Keeps track of players
-    mutable std::mutex  mutex;                      ///< Guard data races
-    string::FormattedString cmd_say;
-    string::FormattedString cmd_say_as;
-    string::FormattedString cmd_say_action;
-    network::Timer      status_polling;             ///< Timer used to gether the connection status
+    string::Formatter*            formatter_ = nullptr; ///< String formatter
+    PropertyTree                  properties_;      ///< Misc properties (eg: map, gametype)
+    AtomicStatus                  status_;          ///< Connection status
+    user::UserManager             user_manager;     ///< Keeps track of players
+    mutable std::recursive_mutex  mutex;            ///< Guard data races
+    string::FormattedString       cmd_say;
+    string::FormattedString       cmd_say_as;
+    string::FormattedString       cmd_say_action;
+    network::Timer                status_polling;   ///< Timer used to gether the connection status
     std::vector<network::Command> polling_status;   ///< Commands to send on status_polling
+    std::vector<network::Command> startup_commands; ///< Commands to run once fully connected
+    std::vector<std::string>      maps_;
+    std::size_t                   map_checking;
 };
 
 } // namespace unvanquished

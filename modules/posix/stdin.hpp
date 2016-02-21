@@ -100,7 +100,7 @@ public:
     LockedProperties properties() override
     {
         static PropertyTree props;
-        return {nullptr, &props};
+        return {{}, &props};
     }
 
     // dummy overrides:

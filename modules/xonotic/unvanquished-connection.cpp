@@ -321,6 +321,13 @@ void UnvanquishedConnection::on_receive(const std::string& command,
 
     if ( command == "rconInfoResponse" )
     {
+        auto lock = make_lock(mutex);
+        for ( const auto& cmd : startup_commands )
+        {
+            this->command(cmd);
+        }
+        lock.unlock();
+
         request_status();
         status_polling.start();
         network::Message().connected().send(this);
@@ -417,6 +424,27 @@ void UnvanquishedConnection::on_receive_log(const std::string& line)
             check_user(match);
         }
     }
+    else
+    {
+        static std::regex regex_map_header(
+            R"(Listing (\d+) maps:)",
+            std::regex::ECMAScript|std::regex::optimize
+        );
+
+        std::smatch match;
+
+        auto lock = make_lock(mutex);
+        if ( map_checking )
+        {
+            maps_.push_back(line);
+            map_checking--;
+        }
+        else if ( std::regex_match(msg.raw, match, regex_map_header) )
+        {
+            map_checking = melanolib::string::to_uint(match[1]);
+            maps_.clear();
+        }
+    }
 
 
     forward_message(msg);
@@ -502,6 +530,7 @@ void UnvanquishedConnection::request_status()
     {
         status_ = CHECKING;
 
+        auto lock = make_lock(mutex);
         for ( const auto& cmd : polling_status )
             command(cmd);
     }
@@ -521,5 +550,23 @@ void UnvanquishedConnection::add_polling_command(const network::Command& command
             return;
     polling_status.push_back(command);
 }
+
+void UnvanquishedConnection::add_startup_command(const network::Command& command)
+{
+    auto lock = make_lock(mutex);
+    startup_commands.push_back(command);
+    if ( status_ == CONNECTED || status_ == CHECKING )
+    {
+        this->command(command);
+    }
+}
+
+std::vector<std::string> UnvanquishedConnection::maps() const
+{
+    /// \todo could send a sync call to get the maps when maps_ is empty
+    auto lock = make_lock(mutex);
+    return maps_;
+}
+
 
 } // namespace unvanquished

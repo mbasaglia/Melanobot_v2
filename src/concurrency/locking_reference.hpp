@@ -20,23 +20,24 @@
 #define LOCKING_REFERENCE_HPP
 
 #include "pointer_lock.hpp"
+#include "concurrency.hpp"
 
 /**
  * \brief Base class for classes that provide a locking interface to another class
  */
-template <class Lockable, class Referenced>
+template <class Referenced>
 class LockingReferenceBase
 {
 public:
-    LockingReferenceBase(Lockable* lock_target, Referenced* referenced)
-        : lock_target(lock_target), referenced(referenced)
+    LockingReferenceBase(ErasedMutex lock_target, Referenced* referenced)
+        : lock_target(std::move(lock_target)), referenced(referenced)
         {}
 
 protected:
-    auto lock() { return PointerLock<Lockable>(lock_target); }
+    auto lock() { return make_lock(lock_target); }
 
-    Lockable*  lock_target = nullptr;
-    Referenced*referenced  = nullptr;
+    ErasedMutex lock_target;
+    Referenced* referenced = nullptr;
 };
 
 #endif // LOCKING_REFERENCE_HPP

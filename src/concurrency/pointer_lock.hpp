@@ -20,51 +20,88 @@
 #define POINTER_LOCK_HPP
 
 #include <algorithm>
+#include "melanolib/c++-compat.hpp"
 
 /**
- * \brief Move-only locking RAII class
- *        which does nothing if initialized with a null pointer
+ * \brief Type-erased mutex reference holder
  */
-template <class Lockable>
-class PointerLock
+class ErasedMutex
 {
-public:
-    PointerLock(Lockable* target)
-        : target(target)
+private:
+    class HolderBase
     {
-        lock();
-    }
-    PointerLock(const PointerLock&) = delete;
-    PointerLock& operator=(const PointerLock&) = delete;
-    PointerLock(PointerLock&& o)
-        : target(o.target)
-    {
-        o.target = nullptr;
-    }
-    PointerLock& operator=(PointerLock&& o)
-    {
-        std::swap(o.target,target);
-    }
+    public:
+        virtual ~HolderBase(){}
+        virtual void lock() = 0;
+        virtual void unlock() = 0;
+        virtual bool try_lock() = 0;
+    };
 
-    ~PointerLock()
-    {
-        unlock();
-    }
+    template<class Lockable>
+        class Holder : public HolderBase
+        {
+        public:
+            Holder(Lockable& lockable)
+                : lockable(lockable)
+            {}
+
+            void lock() override
+            {
+                lockable.lock();
+            }
+
+            void unlock() override
+            {
+                lockable.unlock();
+            }
+
+            bool try_lock() override
+            {
+                return lockable.try_lock();
+            }
+
+        private:
+            Lockable& lockable;
+        };
+
+public:
+    template<class Lockable>
+        ErasedMutex(Lockable& lockable)
+            : holder(melanolib::New<Holder<Lockable>>(lockable))
+        {}
+
+    template<class Lockable>
+        ErasedMutex(Lockable* lockable)
+            : ErasedMutex(*lockable)
+        {}
+
+    ErasedMutex(std::nullptr_t)
+    {}
+
+    ErasedMutex()
+    {}
 
     void lock()
     {
-        if ( target )
-            target->lock();
+        if ( holder )
+            holder->lock();
     }
 
     void unlock()
     {
-        if ( target )
-            target->unlock();
+        if ( holder )
+            holder->unlock();
+    }
+
+    bool try_lock()
+    {
+        if ( holder )
+            return holder->try_lock();
+        return false;
     }
 
 private:
-    Lockable* target;
+    std::unique_ptr<HolderBase> holder;
 };
 
 #endif // POINTER_LOCK_HPP
