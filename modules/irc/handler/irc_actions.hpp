@@ -47,7 +47,11 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.destination->command({"JOIN", msg.channels, priority});
+        msg.destination->command({
+            "JOIN",
+            {melanolib::string::implode(",", msg.channels)},
+            priority
+        });
         if ( !message.empty() )
         {
             reply_to(msg, message.replaced( string::FormattedProperties{

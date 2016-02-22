@@ -791,43 +791,46 @@ void IrcConnection::command(network::Command cmd)
     }
     else if ( cmd.command == "JOIN" )
     {
-        /**
-         * \note incoming JOIN is treated differently from how the
-         * IRC specification says: each parameter is handled like
-         * a separate channel
-         */
-
-        if ( cmd.parameters.size() < 1 )
+        if ( cmd.parameters.size() < 1 || cmd.parameters.size() > 2 )
         {
             ErrorLog("irc") << "Ill-formed JOIN";
             return;
         }
 
+        /**
+         * \todo Could keep track of channel keys, so subsequent join requests
+         * only need the channel name
+         */
+
+        std::vector<std::string> channels = melanolib::string::comma_split(cmd.parameters[0]);
         auto lock = make_lock(mutex);
-            std::vector<std::string> channels;
 
             user::User* self_user = user_manager.user(current_nick);
             if ( self_user )
             {
+                /// \todo Keep keys aligned to channels
                 std::sort(self_user->channels.begin(), self_user->channels.end());
-                std::sort(cmd.parameters.begin(), cmd.parameters.end());
-                std::transform(cmd.parameters.begin(), cmd.parameters.end(),
-                            cmd.parameters.begin(), strtolower);
+                std::sort(channels.begin(), channels.end());
+                std::transform(channels.begin(), channels.end(),
+                               channels.begin(), strtolower);
 
-                std::set_difference(self_user->channels.begin(), self_user->channels.end(),
-                                    cmd.parameters.begin(), cmd.parameters.end(),
-                                    std::inserter(channels, channels.begin()));
-            }
-            else
-            {
-                channels = cmd.parameters;
+                std::vector<std::string> temp_channels;
+                temp_channels.reserve(channels.size());
+                std::set_difference(
+                    channels.begin(), channels.end(),
+                    self_user->channels.begin(), self_user->channels.end(),
+                    std::back_inserter(temp_channels));
+                std::swap(channels, temp_channels);
             }
         lock.unlock();
 
         if ( channels.empty() )
             return;
 
-        cmd.parameters = { melanolib::string::implode(",",cmd.parameters) };
+        // Remove keys if empty
+        if ( cmd.parameters.size() == 2 && cmd.parameters.back().empty() )
+            cmd.parameters.pop_back();
+
         /// \todo keep track of too many channels,
         /// check that channel names are ok
         /// http://tools.ietf.org/html/rfc2812#section-3.2.1

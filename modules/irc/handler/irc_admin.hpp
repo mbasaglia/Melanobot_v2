@@ -68,14 +68,27 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        std::vector<std::string> channels;
+        std::string channels;
+        std::string keys;
         if ( !msg.message.empty() )
-            channels = melanolib::string::comma_split(msg.message);
+        {
+            auto chankeys = melanolib::string::regex_split(msg.message, "\\s+");
+            if ( !chankeys.empty() )
+            {
+                channels = chankeys[0];
+                if ( chankeys.size() > 1 )
+                    keys = chankeys[1];
+            }
+        }
         else if ( !msg.channels.empty() )
-            channels = msg.channels;
-        else
-            return false;
-        msg.destination->command({"JOIN", channels});
+        {
+            channels = melanolib::string::implode(",", msg.channels);
+        }
+
+        if ( !channels.empty() )
+        {
+            msg.destination->command({"JOIN", {channels, keys}});
+        }
         return true;
     }
 };
