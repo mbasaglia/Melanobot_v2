@@ -145,11 +145,13 @@ void IrcConnection::reconnect(const string::FormattedString& quit_message)
     connect();
 }
 
-void IrcConnection::error_stop()
+void IrcConnection::error_stop(const std::string& message)
 {
     disconnect();
-    settings::global_settings.put("exit_code",1);
-    melanobot::Melanobot::instance().stop(); /// \todo is this the right thing to do? -- maybe have a handler that does this
+    network::Message msg;
+    msg.type = network::Message::ERROR;
+    msg.message = message;
+    msg.send(this);
 }
 
 network::Server IrcConnection::server() const
@@ -412,7 +414,7 @@ void IrcConnection::handle_message(network::Message msg)
         else
             errl << msg.params[0];
         msg.type = network::Message::ERROR;
-        error_stop();
+        disconnect();
     }
     else if ( msg.command == "JOIN" )
     {

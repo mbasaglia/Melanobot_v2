@@ -66,6 +66,8 @@ MELANOMODULE_ENTRY_POINT void melanomodule_core_initialize(const Settings&)
     module::register_handler<core::Command>("Command");
     module::register_handler<core::Time>("Time");
 
+    module::register_handler<core::ErrorAbort>("ErrorAbort");
+
     module::register_handler<core::Group>("Group");
     module::register_handler<core::Multi>("Multi");
     module::register_handler<core::IfSet>("IfSet");

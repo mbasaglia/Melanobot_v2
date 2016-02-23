@@ -98,6 +98,16 @@ bot
         irc             irc_quakenet
     }
 
+    ; Add extra functionality to IRC
+    Group
+    {
+        source          irc_quakenet
+
+        ErrorAbort ; This instructs the bot to abort after encountering
+                   ; a networking error on IRC, it's advisable to remove this
+                   ; if the bot is connected to multiple IRC networks.
+    }
+
 ;     ; Q AUTH information
 ;     IrcQuakeNet
 ;     {

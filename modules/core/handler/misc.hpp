@@ -538,6 +538,30 @@ private:
     std::string format = "%r (UTC)"; ///< Output time format
 };
 
-} // namespace core
+/**
+ * \brief Aborts the bot after a connection error
+ */
+class ErrorAbort : public melanobot::Handler
+{
+public:
+    ErrorAbort(const Settings& settings, MessageConsumer* parent)
+        : Handler(settings, parent)
+        {}
 
+public:
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.type == network::Message::ERROR;
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        settings::global_settings.put("exit_code",1);
+        melanobot::Melanobot::instance().stop();
+        return true;
+    }
+};
+
+} // namespace core
 #endif // HANDLER_MISC

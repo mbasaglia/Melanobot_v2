@@ -229,7 +229,7 @@ private:
     /**
      * \brief Stop caused by an error
      */
-    void error_stop();
+    void error_stop(const std::string& message);
 
     /**
      * \brief Removes a user from a channel and

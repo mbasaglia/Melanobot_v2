@@ -271,6 +271,10 @@ bot
         {                   ; Supports Dailymotion, Vimeo and YouTube
             ; yt_api_key "Your YouTube Data API Key" ; YouTube needs an API Key
         }
+
+        ErrorAbort ; This instructs the bot to abort after encountering
+                   ; a networking error on IRC, it's advisable to remove this
+                   ; if the bot is connected to multiple IRC networks.
     }
 
     ; GitHub event manager, listens to the GitHub API for repository events

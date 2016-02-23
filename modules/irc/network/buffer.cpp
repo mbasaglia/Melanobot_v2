@@ -56,7 +56,7 @@ void Buffer::run_input()
     if ( err )
     {
         ErrorLog("irc","Network Error") << err.message();
-        irc.error_stop();
+        irc.error_stop(err.message());
     }
 }
 
@@ -162,7 +162,7 @@ bool Buffer::connect(const network::Server& server)
         flood_timer = network::Clock::now();
     } catch ( const boost::system::system_error& err ) {
         ErrorLog("irc","Network Error") << err.what();
-        irc.error_stop();
+        irc.error_stop(err.what());
         return false;
     }
     return true;
