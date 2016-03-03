@@ -112,6 +112,8 @@ public:
         return to_string(std::string(1, c));
     }
 
+    std::string to_string(int c) const = delete;
+
     /**
      * \brief Encode a unicode (non-ASCII) character
      */

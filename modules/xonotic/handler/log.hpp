@@ -558,11 +558,11 @@ protected:
         // Print scores
         auto it = player_scores.begin();
         for ( ++it; it != player_scores.end(); ++it )
-            print_scores(msg,it->first);
+            print_scores(msg, it->first);
 
         // Print spectators
         if ( show_spectators )
-            print_scores(msg,SPECTATORS);
+            print_scores(msg, SPECTATORS);
     }
 
     /**

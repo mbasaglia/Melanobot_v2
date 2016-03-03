@@ -590,6 +590,11 @@ BOOST_AUTO_TEST_CASE( test_Misc )
     BOOST_CHECK( fmt );
     BOOST_CHECK( fmt & FormatFlags::UNDERLINE );
     BOOST_CHECK( ~fmt & FormatFlags::BOLD );
+
+    // String conversions
+    FormattedString s;
+    s << 5;
+    BOOST_CHECK( s.encode(FormatterAscii()) == "5" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Utf8Parser )
