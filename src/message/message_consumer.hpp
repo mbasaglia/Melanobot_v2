@@ -38,6 +38,7 @@ public:
 
     /**
      * \brief Populates \c output from properties of its children
+	 * \todo The output should contain FormattedStrings instead of plain strings
      */
     virtual void populate_properties(const std::vector<std::string>& properties, PropertyTree& output) const = 0;
 
