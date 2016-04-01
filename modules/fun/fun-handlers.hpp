@@ -360,6 +360,64 @@ private:
     int max_adjectives = 3;
 };
 
+/**
+ * \brief Handler translating between morse and latin
+ */
+class Stardate : public melanobot::SimpleAction
+{
+public:
+    using unix_t = int64_t;
+    using stardate_t = long double;
+
+    Stardate(const Settings& settings, MessageConsumer* parent)
+        : SimpleAction("stardate", settings, parent)
+    {
+        synopsis += " [time|stardate]";
+        help = "Converts between stardates and Gregorian dates";
+    }
+
+    static constexpr unix_t stardate_to_unix(stardate_t stardate)
+    {
+        return (stardate - unix_epoch_stardate) * seconds_per_stardate;
+    }
+
+    static constexpr stardate_t unix_to_stardate(unix_t unix)
+    {
+        return unix / seconds_per_stardate + unix_epoch_stardate;
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        static std::regex stardate(R"(^\s*(\d+\.\d+)\s*$)",
+            std::regex::ECMAScript|std::regex::optimize
+        );
+        using namespace melanolib::time;
+
+
+        std::smatch match;
+        if ( std::regex_match(msg.message, match, stardate) )
+        {
+            auto date =
+                DateTime(1970,Month::JANUARY,days(1),hours(0),minutes(0)) +
+                seconds(stardate_to_unix(std::stold(match[1])))
+            ;
+            reply_to(msg, format_char(date, 'r'));
+        }
+        else
+        {
+            auto stardate = unix_to_stardate(parse_time(msg.message).unix());
+            reply_to(msg, std::to_string(stardate));
+        }
+
+        return true;
+    }
+
+    static constexpr stardate_t seconds_per_stardate = 31536;
+    static constexpr stardate_t unix_epoch_stardate = -353260.7;
+};
+
+
 
 } // namespace fun
 #endif // FUN_HANDLERS_HPP
