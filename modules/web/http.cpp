@@ -94,12 +94,12 @@ Response HttpService::query (const Request& request)
 
     if ( max_redirs )
     {
-        session.SetMaxRedirects(max_redirs);
+        session.SetMaxRedirects(cpr::MaxRedirects(max_redirs));
         session.SetRedirect(true);
     }
     else
     {
-        session.SetMaxRedirects(0);
+        session.SetMaxRedirects(cpr::MaxRedirects(0));
         session.SetRedirect(false);
     }
     /// TODO SetTimeout
