@@ -203,6 +203,7 @@ bot
                 Action { auth admin }
                 Cointoss
                 Discord
+                Stardate
                 Insult
                 InventoryManager
                 Remind              ; "remind" Schedules a message
