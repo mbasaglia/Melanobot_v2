@@ -19,7 +19,7 @@
 
 #include "engine.hpp"
 #include "melanolib/string/quickstream.hpp"
-#include "melanolib/utils.hpp"
+#include "melanolib/utils/type_utils.hpp"
 
 namespace xonotic {
 

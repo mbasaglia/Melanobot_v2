@@ -20,7 +20,7 @@
 #define POINTER_LOCK_HPP
 
 #include <algorithm>
-#include "melanolib/c++-compat.hpp"
+#include "melanolib/utils/c++-compat.hpp"
 
 /**
  * \brief Type-erased mutex reference holder

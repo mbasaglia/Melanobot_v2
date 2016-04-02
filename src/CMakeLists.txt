@@ -19,12 +19,6 @@ melanobot/config_factory.cpp
 melanobot/handler.cpp
 melanobot/melanobot.cpp
 melanobot/storage.cpp
-melanolib/library.cpp
-melanolib/math.cpp
-melanolib/string/language.cpp
-melanolib/string/stringutils.cpp
-melanolib/time/time.cpp
-melanolib/time/time_string.cpp
 message/input_message.cpp
 module/load_module.cpp
 network/connection.cpp
@@ -56,4 +50,4 @@ if(Iconv_FOUND)
     add_definitions(-DHAS_ICONV)
 endif()
 
-target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_DL_LIBS})
+target_link_libraries(${EXECUTABLE_NAME} melano)

@@ -1,0 +1,3 @@
+[submodule "lib/Melanolib"]
+	path = lib/Melanolib
+	url = https://github.com/mbasaglia/Melanolib.git

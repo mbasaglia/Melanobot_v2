@@ -25,7 +25,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "melanolib/c++-compat.hpp"
+#include "melanolib/utils/c++-compat.hpp"
 #include "string/string.hpp"
 #include "melanobot/error.hpp"
 

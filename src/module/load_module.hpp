@@ -32,7 +32,7 @@ template<class... InitArgs>
     std::vector<module::Melanomodule>
         initialize_modules(const std::vector<std::string>& paths, InitArgs&&... init_args)
 {
-    using namespace melanolib::library;
+    using namespace melanolib::dynlib;
     std::vector<module::Melanomodule> modules = find_modules(paths);
 
     if ( modules.empty() )

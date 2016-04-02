@@ -18,7 +18,7 @@
  */
 
 #include "encoding.hpp"
-#include "melanolib/functional.hpp"
+#include "melanolib/utils/functional.hpp"
 
 #ifdef HAS_ICONV
 #       include <iconv.h>

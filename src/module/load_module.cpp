@@ -26,7 +26,7 @@
 #include <boost/range/istream_range.hpp>
 #include <regex>
 
-using namespace melanolib::library;
+using namespace melanolib::dynlib;
 
 namespace module {
 

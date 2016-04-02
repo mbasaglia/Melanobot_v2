@@ -24,8 +24,8 @@
 
 #include "format_flags.hpp"
 #include "color.hpp"
-#include "melanolib/singleton.hpp"
-#include "melanolib/utils.hpp"
+#include "melanolib/utils/singleton.hpp"
+#include "melanolib/utils/type_utils.hpp"
 
 namespace string {
 

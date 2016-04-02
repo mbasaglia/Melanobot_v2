@@ -21,7 +21,7 @@
 
 #include <boost/asio.hpp>
 
-#include "melanolib/functional.hpp"
+#include "melanolib/utils/functional.hpp"
 #include "server.hpp"
 
 namespace network {

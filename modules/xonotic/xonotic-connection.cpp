@@ -24,7 +24,7 @@
 
 #include <openssl/hmac.h>
 
-#include "melanolib/math.hpp"
+#include "melanolib/math/math.hpp"
 
 namespace xonotic {
 

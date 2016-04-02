@@ -26,7 +26,7 @@
 
 #include "core/handler/bridge.hpp"
 #include "web/web-api.hpp"
-#include "melanolib/math.hpp"
+#include "melanolib/math/random.hpp"
 #include "melanolib/time/time_string.hpp"
 
 namespace fun {

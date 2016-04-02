@@ -22,8 +22,8 @@
 #include <cstdint>
 #include <string>
 
-#include "melanolib/math.hpp"
-#include "melanolib/c++-compat.hpp"
+#include "melanolib/math/math.hpp"
+#include "melanolib/utils/c++-compat.hpp"
 
 /**
  * \brief Namespace for color operations

@@ -22,7 +22,7 @@
 #define HANDLER_MISC
 
 #include "melanobot/handler.hpp"
-#include "melanolib/math.hpp"
+#include "melanolib/math/random.hpp"
 #include "melanolib/string/language.hpp"
 #include "melanolib/time/time_string.hpp"
 #include "melanobot/melanobot.hpp"

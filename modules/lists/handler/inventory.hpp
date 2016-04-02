@@ -22,7 +22,7 @@
 #include "core/handler/group.hpp"
 #include "melanobot/storage.hpp"
 #include "melanolib/string/language.hpp"
-#include "melanolib/math.hpp"
+#include "melanolib/math/random.hpp"
 
 namespace lists {
 

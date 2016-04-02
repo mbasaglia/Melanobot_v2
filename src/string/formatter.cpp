@@ -22,7 +22,7 @@
 #include "string/replacements.hpp"
 #include "melanolib/string/language.hpp"
 #include "melanolib/string/stringutils.hpp"
-#include "melanolib/utils.hpp"
+#include "melanolib/utils/type_utils.hpp"
 
 namespace string {
 

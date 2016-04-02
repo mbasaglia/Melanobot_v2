@@ -24,8 +24,8 @@
 #include "string/logger.hpp"
 #include "network/connection.hpp"
 #include "network/async_service.hpp"
-#include "melanolib/library.hpp"
-#include "melanolib/c++-compat.hpp"
+#include "melanolib/dynlib/library.hpp"
+#include "melanolib/utils/c++-compat.hpp"
 #include "melanobot/storage.hpp"
 #include "melanobot/config_factory.hpp"
 #include "melanobot/melanobot.hpp"
@@ -138,7 +138,7 @@ struct Melanomodule
     std::vector<Dependency> dependencies;
 
     /// \todo Make this an implementation detail if possible
-    melanolib::Optional<melanolib::library::Library> library; ///< Set at runtime
+    melanolib::Optional<melanolib::dynlib::Library> library; ///< Set at runtime
 };
 
 /**

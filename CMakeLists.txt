@@ -95,6 +95,12 @@ macro(melanomodule name description default)
     endif()
 endmacro()
 
+# Libraries
+
+include_directories(${CMAKE_SOURCE_DIR}/lib/Melanolib/include)
+add_definitions(-DMELANOLIB_BOOST_OPTIONAL -DMELANOLIB_BOOST_ANY)
+add_subdirectory(lib/Melanolib/src EXCLUDE_FROM_ALL)
+
 add_subdirectory(modules lib)
 
 get_property(MELANOMODULES GLOBAL PROPERTY MELANOMODULES)
@@ -108,6 +114,8 @@ endif()
 add_subdirectory(src bin)
 
 # Tests 
+include(testing.cmake)
+add_subdirectory(lib/Melanolib/test EXCLUDE_FROM_ALL)
 add_subdirectory(test)
 
 # Doxygen target
