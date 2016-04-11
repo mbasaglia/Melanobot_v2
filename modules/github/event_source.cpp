@@ -17,22 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "repository.hpp"
+#include "event_source.hpp"
 #include "melanolib/time/time_string.hpp"
 #include "melanobot/storage.hpp"
 #include "string/json.hpp"
-#include "github-source.hpp"
+#include "github-controller.hpp"
 
 namespace github {
 
 
-Repository::Repository(std::string name)
+EventSource::EventSource(std::string name)
     : name_(std::move(name))
 {
     if ( melanobot::has_storage() )
     {
-        etag_ = melanobot::storage().maybe_get_value("github."+name_+".etag", "");
-        auto last_poll = melanobot::storage().maybe_get_value("github."+name_+".last_poll", "");
+        etag_ = melanobot::storage().maybe_get_value(storage_path("etag"), "");
+        auto last_poll = melanobot::storage().maybe_get_value(storage_path("last_poll"), "");
         if ( !last_poll.empty() )
             last_poll_ = melanolib::time::parse_time(last_poll).time_point();
         else
@@ -40,12 +40,18 @@ Repository::Repository(std::string name)
     }
 }
 
-const std::string& Repository::name() const
+const std::string& EventSource::name() const
 {
     return name_;
 }
 
-void Repository::add_listener(const std::string& event_type, const ListenerFunctor& listener)
+
+std::string EventSource::storage_path(const std::string& suffix) const
+{
+    return "github." + name_ + "." + suffix;
+}
+
+void EventSource::add_listener(const std::string& event_type, const ListenerFunctor& listener)
 {
     if ( event_type.empty() )
         return;
@@ -53,9 +59,15 @@ void Repository::add_listener(const std::string& event_type, const ListenerFunct
     listeners_.push_back({event_type, listener});
 }
 
-void Repository::poll_events(const GitHubEventSource& source)
+
+std::string EventSource::api_path() const
 {
-    auto request = source.request("/repos/" + name_ +"/events" );
+    return "/" + name_ + "/events";
+}
+
+void EventSource::poll_events(const GitHubController& source)
+{
+    auto request = source.request(api_path());
     {
         auto lock = make_lock(mutex);
         if ( !etag_.empty() )
@@ -73,14 +85,14 @@ void Repository::poll_events(const GitHubEventSource& source)
                 auto lock = make_lock(mutex);
                 etag_ = it->second;
                 if ( melanobot::has_storage() )
-                    melanobot::storage().put("github."+name_+".etag", etag_);
+                    melanobot::storage().put(storage_path("etag"), etag_);
             }
             dispatch_events(response);
         }
     );
 }
 
-void Repository::dispatch_events(const web::Response& response)
+void EventSource::dispatch_events(const web::Response& response)
 {
     if ( !response.success() )
         return;
@@ -98,7 +110,7 @@ void Repository::dispatch_events(const web::Response& response)
         last_poll_ = current_poll_;
         if ( melanobot::has_storage() )
             melanobot::storage().put(
-                "github."+name_+".last_poll",
+                storage_path("last_poll"),
                 melanolib::time::format_char(last_poll_, 'c')
             );
     }

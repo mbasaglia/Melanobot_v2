@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_MODULE_GITHUB_REPOSITORY_HPP
-#define MELANOBOT_MODULE_GITHUB_REPOSITORY_HPP
+#ifndef MELANOBOT_MODULE_GITHUB_EVENT_SOURCE_HPP
+#define MELANOBOT_MODULE_GITHUB_EVENT_SOURCE_HPP
 
 
 #include "web/http.hpp"
@@ -25,7 +25,7 @@
 
 namespace github {
 
-class Repository
+class EventSource
 {
 public:
 
@@ -33,26 +33,26 @@ public:
     using PollTime = melanolib::time::DateTime::Time;
 
 private:
-    struct RepoListener
+    struct SourceListener
     {
         std::string event_type;
         ListenerFunctor callback;
     };
 
 public:
-    Repository(std::string name);
+    EventSource(std::string name);
 
-    Repository(Repository&& repo)
-        : name_(std::move(repo.name_)),
-          etag_(std::move(repo.etag_)),
-          listeners_(std::move(repo.listeners_))
+    EventSource(EventSource&& src)
+        : name_(std::move(src.name_)),
+          etag_(std::move(src.etag_)),
+          listeners_(std::move(src.listeners_))
     {}
 
-    Repository& operator=(Repository&& repo)
+    EventSource& operator=(EventSource&& src)
     {
-        name_ = std::move(repo.name_);
-        etag_ = std::move(repo.etag_);
-        listeners_ = std::move(repo.listeners_);
+        name_ = std::move(src.name_);
+        etag_ = std::move(src.etag_);
+        listeners_ = std::move(src.listeners_);
         return *this;
     }
 
@@ -61,14 +61,21 @@ public:
 
     void add_listener(const std::string& event_type, const ListenerFunctor& listener);
 
-    void poll_events(const class GitHubEventSource& source);
+    void poll_events(const class GitHubController& source);
+
+    /**
+     * \brief Path component of a full API event url
+     */
+    std::string api_path() const;
 
 private:
     void dispatch_events(const web::Response& response);
 
+    std::string storage_path(const std::string& suffix) const;
+
     std::string name_;
     std::string etag_;
-    std::vector<RepoListener> listeners_;
+    std::vector<SourceListener> listeners_;
     PollTime last_poll_;
     PollTime current_poll_;
     std::mutex mutex;
@@ -76,4 +83,4 @@ private:
 
 
 } // namespace github
-#endif // MELANOBOT_MODULE_GITHUB_REPOSITORY_HPP
+#endif // MELANOBOT_MODULE_GITHUB_EVENT_SOURCE_HPP

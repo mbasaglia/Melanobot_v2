@@ -16,12 +16,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef MELANOBOT_MODULE_GITHUB_CONNECTION_HPP
-#define MELANOBOT_MODULE_GITHUB_CONNECTION_HPP
+#ifndef MELANOBOT_MODULE_GITHUB_CONTROLLER_HPP
+#define MELANOBOT_MODULE_GITHUB_CONTROLLER_HPP
 
 #include "network/async_service.hpp"
 #include "github-listeners.hpp"
-#include "repository.hpp"
+#include "event_source.hpp"
 
 
 namespace github {
@@ -45,16 +45,16 @@ struct Auth
 /**
  * \brief Single instance of a github connection
  */
-class GitHubEventSource : public AsyncService
+class GitHubController : public AsyncService
 {
 public:
-    explicit GitHubEventSource(Auth auth = {}, std::string api_url = "https://api.github.com")
+    explicit GitHubController(Auth auth = {}, std::string api_url = "https://api.github.com")
         : api_url_(std::move(api_url)), auth_(std::move(auth))
     {}
 
     void initialize(const Settings& settings) override;
 
-    ~GitHubEventSource();
+    ~GitHubController();
 
     void stop() override;
 
@@ -78,9 +78,9 @@ public:
 private:
     void poll();
 
-    void create_listener(Repository& repo, const Settings::value_type& listener, const Settings& extra = {});
+    void create_listener(EventSource& src, const Settings::value_type& listener, const Settings& extra = {});
 
-    std::vector<Repository> repositories;
+    std::vector<EventSource> sources;
     std::string api_url_;
     melanolib::time::Timer timer; ///< Polling timer
     std::vector<std::unique_ptr<GitHubEventListener>> listeners;
@@ -90,10 +90,10 @@ private:
 /**
  * \brief Class that keeps track of \c GitHubEventSource objects
  */
-class SourceRegistry : public melanolib::Singleton<SourceRegistry>
+class ControllerRegistry : public melanolib::Singleton<ControllerRegistry>
 {
 public:
-    MaybePtr<const GitHubEventSource> get_source(const Auth& auth, const std::string& api_url) const
+    MaybePtr<const GitHubController> get_source(const Auth& auth, const std::string& api_url) const
     {
         for ( auto src : sources )
         {
@@ -102,17 +102,17 @@ public:
                 return {src, false};
         }
 
-        return MaybePtr<const GitHubEventSource>::make(auth);
+        return MaybePtr<const GitHubController>::make(auth);
     }
 
-    void register_source(const GitHubEventSource* source)
+    void register_source(const GitHubController* source)
     {
         auto it = std::find(sources.begin(), sources.end(), source);
         if ( it == sources.end() )
             sources.push_back(source);
     }
 
-    void unregister_source(const GitHubEventSource* source)
+    void unregister_source(const GitHubController* source)
     {
         auto it = std::find(sources.begin(), sources.end(), source);
         if ( it != sources.end() )
@@ -124,12 +124,12 @@ public:
     }
 
 private:
-    SourceRegistry(){}
+    ControllerRegistry(){}
     friend ParentSingleton;
 
-    std::vector<const GitHubEventSource*> sources;
+    std::vector<const GitHubController*> sources;
 
 };
 
 } // namespace github
-#endif // MELANOBOT_MODULE_GITHUB_CONNECTION_HPP
+#endif // MELANOBOT_MODULE_GITHUB_CONTROLLER_HPP

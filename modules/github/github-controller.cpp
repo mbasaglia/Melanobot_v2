@@ -17,11 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "github-source.hpp"
+#include "github-controller.hpp"
 
 namespace github {
 
-void GitHubEventSource::initialize(const Settings& settings)
+void GitHubController::initialize(const Settings& settings)
 {
     api_url_ = settings.get("api_url", api_url_);
     if ( api_url_.empty() )
@@ -33,30 +33,27 @@ void GitHubEventSource::initialize(const Settings& settings)
     auth_.username = settings.get("username", "");
     auth_.password = settings.get("password", "");
 
-    for ( const auto& repo : settings )
+    for ( const auto& source : settings )
     {
-        if ( repo.first.find('/') == std::string::npos )
-            continue;
-
-        auto repo_iter = std::find_if(repositories.begin(), repositories.end(),
-            [name=repo.first](const Repository& repo){
-                return repo.name() == name;
+        auto src_iter = std::find_if(sources.begin(), sources.end(),
+            [&source](const EventSource& other){
+                return source.first == other.name();
             });
 
-        if ( repo_iter == repositories.end() )
+        if ( src_iter == sources.end() )
         {
-            repositories.emplace_back(repo.first);
-            repo_iter = repositories.end() - 1;
+            sources.emplace_back(source.first);
+            src_iter = sources.end() - 1;
         }
 
-        for ( const auto& listener : repo.second )
+        for ( const auto& listener : source.second )
         {
-            create_listener(*repo_iter, listener);
+            create_listener(*src_iter, listener);
         }
     }
 
-    if ( repositories.empty() )
-        throw melanobot::ConfigurationError("No repositories for github connection");
+    if ( sources.empty() )
+        throw melanobot::ConfigurationError("No sources for github connection");
 
     timer = melanolib::time::Timer(
         [this]{poll();},
@@ -65,7 +62,7 @@ void GitHubEventSource::initialize(const Settings& settings)
     );
 }
 
-void GitHubEventSource::create_listener(Repository& repo, const Settings::value_type& listener, const Settings& extra)
+void GitHubController::create_listener(EventSource& src, const Settings::value_type& listener, const Settings& extra)
 {
     Settings settings = listener.second;
     ::settings::merge(settings, extra, false);
@@ -77,7 +74,7 @@ void GitHubEventSource::create_listener(Repository& repo, const Settings::value_
             if ( child.second.empty() && !child.second.data().empty() )
                 settings.put(child.first, child.second.data());
             else
-                create_listener(repo, child, settings);
+                create_listener(src, child, settings);
         }
         return;
     }
@@ -88,7 +85,7 @@ void GitHubEventSource::create_listener(Repository& repo, const Settings::value_
         auto listener_ptr = listen.get();
         listeners.emplace_back(std::move(listen));
         for ( const auto& event_type : listener_ptr->event_types() )
-            repo.add_listener(
+            src.add_listener(
                 event_type,
                 [listener_ptr](const PropertyTree& json){
                     listener_ptr->handle_event(json);
@@ -102,36 +99,36 @@ void GitHubEventSource::create_listener(Repository& repo, const Settings::value_
 
 }
 
-GitHubEventSource::~GitHubEventSource()
+GitHubController::~GitHubController()
 {
     stop();
 }
 
 
-void GitHubEventSource::poll()
+void GitHubController::poll()
 {
-    for ( auto& repo : repositories )
+    for ( auto& src : sources )
     {
-        repo.poll_events(*this);
+        src.poll_events(*this);
     }
 }
 
 
-void GitHubEventSource::stop()
+void GitHubController::stop()
 {
-    SourceRegistry::instance().unregister_source(this);
+    ControllerRegistry::instance().unregister_source(this);
     timer.stop();
 }
 
-void GitHubEventSource::start()
+void GitHubController::start()
 {
     poll();
     timer.start();
-    SourceRegistry::instance().register_source(this);
+    ControllerRegistry::instance().register_source(this);
 }
 
 
-web::Request GitHubEventSource::request(const std::string& url) const
+web::Request GitHubController::request(const std::string& url) const
 {
     auto request = web::Request("GET", api_url_+url);
     if ( !auth_.username.empty() && !auth_.password.empty() )

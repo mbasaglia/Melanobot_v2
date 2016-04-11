@@ -19,7 +19,7 @@
 #ifndef MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
 #define MELANOBOT_MODULE_GITHUB_HANDLERS_HPP
 
-#include "github-source.hpp"
+#include "github-controller.hpp"
 #include "melanobot/handler.hpp"
 #include "string/json.hpp"
 #include "replace-ptree.hpp"
@@ -64,7 +64,7 @@ protected:
 
     void query(const std::string& url, const web::AsyncCallback& callback)
     {
-        auto ptr = SourceRegistry::instance().get_source(auth, api_url);
+        auto ptr = ControllerRegistry::instance().get_source(auth, api_url);
         web::HttpService::instance().async_query(ptr->request(url), callback);
     }
 
@@ -85,44 +85,44 @@ private:
 };
 
 /**
- * \brief Base class for handlers that ooperate on github repos
+ * \brief Base class for handlers that ooperate on github sources
  */
-class GitHubRepoBase : public GitHubBase
+class GitHubSourceBase : public GitHubBase
 {
 public:
-    GitHubRepoBase(const std::string& default_trigger,
+    GitHubSourceBase(const std::string& default_trigger,
                const Settings&    settings,
                MessageConsumer*   parent)
         : GitHubBase(default_trigger, settings, parent)
     {
-        repo = settings.get("repo", "");
-        if ( repo.empty() )
-            throw melanobot::ConfigurationError("Missing repository");
+        git_source = settings.get("git_source", "");
+        if ( git_source.empty() )
+            throw melanobot::ConfigurationError("Missing github source");
     }
 
 protected:
-    void request_github_repo(const network::Message& msg, const std::string& url)
+    void request_github_source(const network::Message& msg, const std::string& url)
     {
         request_github(msg, relative_url(url));
     }
 
     std::string relative_url(const std::string& url)
     {
-        return "/repos/"+repo+url;
+        return "/" + git_source + url;
     }
 
 private:
-    std::string repo;
+    std::string git_source;
 };
 
 /**
  * \brief Gets the details of a single issue
  */
-class GitHubIssue : public GitHubRepoBase
+class GitHubIssue : public GitHubSourceBase
 {
 public:
     GitHubIssue(const Settings& settings, MessageConsumer* parent)
-        : GitHubRepoBase("issue", settings, parent)
+        : GitHubSourceBase("issue", settings, parent)
     {
         reply = read_string(settings, "reply", "$(-b)#$number$(-) - $(-i)$title$(-) ($color$state$(-)): $(git_io $html_url)");
         reply_failure = read_string(settings, "reply_failure", "I didn't find issue $(-b)$message$(b)");
@@ -137,7 +137,7 @@ protected:
         std::smatch match;
         if ( std::regex_match(msg.message, match, strip_request) )
         {
-            request_github_repo(msg, "/issues/"+match[1].str());
+            request_github_source(msg, "/issues/"+match[1].str());
         }
         else
         {
@@ -168,11 +168,11 @@ private:
 /**
  * \brief Gets the details of a single release
  */
-class GitHubRelease : public GitHubRepoBase
+class GitHubRelease : public GitHubSourceBase
 {
 public:
     GitHubRelease(const Settings& settings, MessageConsumer* parent)
-        : GitHubRepoBase("release", settings, parent)
+        : GitHubSourceBase("release", settings, parent)
     {
         reply = read_string(settings, "reply", "$(ucfirst $release_type) $(-b)$name$(-): $(git_io $html_url)");
         reply_failure = read_string(settings, "reply_failure", "I didn't find any such release");
@@ -185,7 +185,7 @@ protected:
         std::string which = melanolib::string::trimmed(msg.message);
         if ( which.empty() || which == "latest" )
         {
-            request_github_repo(msg, "/releases/latest");
+            request_github_source(msg, "/releases/latest");
         }
         else
         {

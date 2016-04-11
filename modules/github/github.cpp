@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "module/melanomodule.hpp"
-#include "github-source.hpp"
+#include "github-controller.hpp"
 #include "github-listeners.hpp"
 #include "github-handlers.hpp"
 #include "gitio.hpp"
@@ -34,8 +34,8 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_github_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_github_initialize(const Settings&)
 {
-    github::SourceRegistry::instance();
-    module::register_instantiable_service<github::GitHubEventSource>("GitHub");
+    github::ControllerRegistry::instance();
+    module::register_instantiable_service<github::GitHubController>("GitHub");
 
     github::ListenerFactory::instance().register_listener<github::GitHubEventListener>("Event");
     github::ListenerFactory::instance().register_listener<github::CommitCommentEvent>("CommitCommentEvent");

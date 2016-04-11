@@ -16,12 +16,12 @@ melanomodule(github "GitHub integration" ON)
 
 set(SOURCES
 github.cpp
-github-source.cpp
-repository.cpp
+github-controller.cpp
+event_source.cpp
 )
 
 if(${MODULE_ENABLED})
     add_library(${MODULE_NAME} MODULE ${SOURCES})
-    target_link_libraries(${MODULE_NAME} melanomodule_web)
+    target_link_libraries(${MODULE_NAME} melanomodule_web melano)
 endif()
 
