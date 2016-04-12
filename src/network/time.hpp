@@ -19,7 +19,8 @@
 #ifndef NETWORK_TIME_HPP
 #define NETWORK_TIME_HPP
 
-#include "melanolib/time/time.hpp"
+#include "melanolib/time/timer.hpp"
+#include "melanolib/time/date_time.hpp"
 
 namespace network {
 

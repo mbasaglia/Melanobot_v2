@@ -43,7 +43,7 @@ function(melanotest test_name)
     add_executable(${test_name} EXCLUDE_FROM_ALL ${test_name}.cpp ${ARGN})
     target_link_libraries(${test_name} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
     add_test (NAME ${test_name} COMMAND ${test_name})
-    add_dependencies(test_all ${test_name})
+    add_dependencies(tests_compile ${test_name})
 endfunction(melanotest)
 
 
