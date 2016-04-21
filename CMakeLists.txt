@@ -99,6 +99,7 @@ endmacro()
 
 include_directories(${CMAKE_SOURCE_DIR}/lib/Melanolib/include)
 add_definitions(-DMELANOLIB_BOOST_OPTIONAL -DMELANOLIB_BOOST_ANY)
+set(BUILD_SHARED_MELANO_LIBS ON)
 add_subdirectory(lib/Melanolib/src EXCLUDE_FROM_ALL)
 
 add_subdirectory(modules lib)
