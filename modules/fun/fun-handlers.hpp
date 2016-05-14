@@ -206,6 +206,7 @@ protected:
                 std::to_string(melanolib::math::random(faces.size()-1))+".image");
             if ( face )
                 reply_to(msg, *face);
+            return;
         }
         return json_failure(msg);
     }
