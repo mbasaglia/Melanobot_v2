@@ -35,6 +35,9 @@ void GitHubController::initialize(const Settings& settings)
 
     for ( const auto& source : settings )
     {
+        if ( source.second.empty() || !source.second.data().empty() )
+            continue;
+
         auto src_iter = std::find_if(sources.begin(), sources.end(),
             [&source](const EventSource& other){
                 return source.first == other.name();
