@@ -207,6 +207,7 @@ bot
                 Insult
                 InventoryManager
                 Remind              ; "remind" Schedules a message
+                WhereIsGoogle
                 AnswerQuestions
             }
         }

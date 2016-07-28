@@ -355,7 +355,7 @@ bool RenderPony::on_handle(network::Message& msg)
 bool AnswerQuestions::on_handle(network::Message& msg)
 {
     static std::regex regex_question(
-        "^(?:(where(?: (?:is|are))?|(?:when(?: (?:will|did))?)|(?:who(?:se|m)?)|what|how)\\b)?\\s*(.*)\\?",
+        "^(?:((?:when(?: (?:will|did))?)|(?:who(?:se|m)?)|what|how)\\b)?\\s*(.*)\\?",
         std::regex::ECMAScript|std::regex::optimize|std::regex::icase
     );
     std::smatch match;
@@ -372,28 +372,6 @@ bool AnswerQuestions::on_handle(network::Message& msg)
         else if ( melanolib::string::ends_with(question,"will") )
             answers.push_back(&category_when_will);
     }
-    /// \todo move where to some other handler (in the web module)
-    else if ( melanolib::string::starts_with(question,"where") )
-    {
-        static std::string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
-        auto response =  web::HttpService::instance().query(
-            web::Request("GET", url, {{"address",match[2]}})
-        );
-
-        JsonParser parser;
-        parser.throws(false);
-        Settings ptree = parser.parse_string(response.contents,response.resource);
-
-        std::string address = ptree.get("results.0.formatted_address","I don't know");
-        web::Parameters params {{"q",match[2]}};
-        auto location = ptree.get_child_optional("results.0.geometry.location");
-        if ( location )
-            params["ll"] = location->get("lat","")+","+location->get("lng","");
-
-        reply_to(msg, address+": https://maps.google.com/?"+web::build_query(params));
-
-        return true;
-    }
     else if ( melanolib::string::starts_with(question,"who") && !msg.channels.empty() && msg.source )
     {
         auto users = msg.source->get_users(msg.channels[0]);
@@ -408,7 +386,7 @@ bool AnswerQuestions::on_handle(network::Message& msg)
             answers.push_back(&category_dunno);
         }
     }
-    else if ( question == "what" || question == "how" || question == "why" )
+    else if ( question == "what" || question == "how" || question == "why" || question == "where" )
     {
         answers.push_back(&category_dunno);
     }

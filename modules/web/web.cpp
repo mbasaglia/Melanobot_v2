@@ -39,4 +39,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
     module::register_handler<web::VideoInfo>("VideoInfo");
     module::register_handler<web::MediaWiki>("MediaWiki");
     module::register_handler<web::MediaWikiTitles>("MediaWikiTitles");
+    module::register_handler<web::WhereIsGoogle>("WhereIsGoogle");
 }

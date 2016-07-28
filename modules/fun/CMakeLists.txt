@@ -24,5 +24,6 @@ if(${MODULE_ENABLED})
     add_library(${MODULE_NAME} MODULE ${SOURCES})
     target_link_libraries(${MODULE_NAME} melanomodule_core)
     target_link_libraries(${MODULE_NAME} melanomodule_web)
+    target_link_libraries(${MODULE_NAME} melano_random)
 endif()
 

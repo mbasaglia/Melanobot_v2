@@ -21,6 +21,7 @@
 #ifndef WEB_API_CONCRETE
 #define WEB_API_CONCRETE
 
+#include <regex>
 #include "web-api.hpp"
 #include "melanolib/time/time_string.hpp"
 #include "melanolib/utils/type_utils.hpp"
@@ -471,6 +472,49 @@ protected:
         prop["snippet"] = result->get("revisions.0.*","");
 
         reply_to(msg, reply.replaced(prop));
+    }
+};
+
+
+class WhereIsGoogle : public SimpleJson
+{
+public:
+    WhereIsGoogle(const Settings& settings, MessageConsumer* parent)
+        : SimpleJson("where", settings, parent)
+    {
+        synopsis += " Term...";
+        help = "Search a plage on Google maps";
+    }
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        static std::string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
+        auto subject = get_subject(msg);
+        request_json(msg, web::Request("GET", url, {{"address", subject}}));
+        // map types: satellite terrain hybrid roadmap
+        reply_to(msg, "http://maps.google.com/maps/api/staticmap?size=400x400&maptype=hybrid&sensor=false&format=png&markers=" + urlencode(subject));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        std::string address = parsed.get("results.0.formatted_address","I don't know");
+        auto subject = get_subject(msg);
+        std::string url = "https://maps.google.com/?" + web::build_query({{"q", subject}, {"hnear", subject}});
+        reply_to(msg, address + ": " + url);
+    }
+
+private:
+    std::string get_subject(const network::Message& msg)
+    {
+        static std::regex regex_question(
+            R"(^\s*(?:is|are)?\s*([^?]+)(?:\?.*)?)",
+            std::regex::ECMAScript|std::regex::optimize|std::regex::icase
+        );
+        std::smatch match;
+        if ( std::regex_match(msg.message, match, regex_question) )
+            return match[1];
+        return msg.from.name;
     }
 };
 
