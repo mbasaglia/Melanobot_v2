@@ -498,9 +498,15 @@ protected:
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        std::string address = parsed.get("results.0.formatted_address","I don't know");
+        std::string address = parsed.get("results.0.formatted_address", "");
         auto subject = get_subject(msg);
-        std::string url = "https://maps.google.com/?" + web::build_query({{"q", subject}, {"hnear", subject}});
+        std::string near = address;
+        if ( address.empty() )
+        {
+            address = "I don't know";
+            near = subject;
+        }
+        std::string url = "https://maps.google.com/?" + web::build_query({{"q", subject}, {"hnear", near}});
         reply_to(msg, address + ": " + url);
     }
 
