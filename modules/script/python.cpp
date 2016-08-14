@@ -23,14 +23,17 @@
 
 namespace python {
 
-ScriptOutput PythonEngine::exec(const std::string& python_code, const Converter& vars)
+ScriptOutput PythonEngine::exec(
+    const std::string& python_code,
+    const Converter& vars,
+    ScriptOutput::CaptureFlags flags)
 {
     if ( !initialize() )
         return ScriptOutput{};
 
     ScriptOutput output;
     try {
-        ScriptEnvironment env(output);
+        ScriptEnvironment env(output, flags);
         try {
             vars.convert(env.main_namespace());
             boost::python::exec(py_str(python_code), env.main_namespace());
@@ -54,14 +57,17 @@ ScriptOutput PythonEngine::exec(const std::string& python_code, const Converter&
     return output;
 }
 
-ScriptOutput PythonEngine::exec_file(const std::string& file, const Converter& vars)
+ScriptOutput PythonEngine::exec_file(
+    const std::string& file,
+    const Converter& vars,
+    ScriptOutput::CaptureFlags flags)
 {
     if ( !initialize() )
         return ScriptOutput{};
 
     ScriptOutput output;
     try {
-        ScriptEnvironment env(output);
+        ScriptEnvironment env(output, flags);
         try {
             vars.convert(env.main_namespace());
             boost::python::exec_file(py_str(file), env.main_namespace());

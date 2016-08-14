@@ -33,8 +33,20 @@ namespace python {
  */
 struct ScriptOutput
 {
+    enum CaptureFlag
+    {
+        Nothing         = 0x00,
+        CaptureStdout   = 0x01,
+        LogStdout       = 0x02,
+        CaptureStderr   = 0x10,
+        LogStderr       = 0x20,
+        Default         = CaptureStdout|LogStderr,
+    };
+    using CaptureFlags = std::underlying_type_t<CaptureFlag>;
+
     std::vector<std::string>    output;    ///< Lines written to stdout
     bool                        success{0};///< Whether the script has run successfully
+
 };
 
 /**
@@ -48,14 +60,20 @@ public:
      * \param python_code Python sources to execute
      * \param dict        Properties to be added to the main dict
      */
-    ScriptOutput exec(const std::string& python_code, const Converter& vars = {});
+    ScriptOutput exec(
+        const std::string& python_code,
+        const Converter& vars = {},
+        ScriptOutput::CaptureFlags flags = ScriptOutput::Default);
 
     /**
      * \brief Executes some python code from a file
      * \param file File containing python sources
      * \param dict Properties to be added to the main dict
      */
-    ScriptOutput exec_file(const std::string& file, const Converter& vars = {});
+    ScriptOutput exec_file(
+        const std::string& file,
+        const Converter& vars = {},
+        ScriptOutput::CaptureFlags flags = ScriptOutput::Default);
 
 private:
     PythonEngine() {}
