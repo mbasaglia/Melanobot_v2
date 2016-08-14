@@ -27,7 +27,7 @@ namespace python {
 /**
  * \brief Runs a python script
  */
-class SimpleScript : public melanobot::SimpleAction
+class ScriptRunner : public melanobot::SimpleAction
 {
 protected:
     /**
@@ -36,12 +36,12 @@ protected:
      */
     struct Variables : public MessageVariables
     {
-        Variables(SimpleScript* obj, network::Message& msg)
+        Variables(ScriptRunner* obj, network::Message& msg)
             : MessageVariables(msg), obj(obj) {}
 
         void convert(boost::python::object& target_namespace) const override;
 
-        SimpleScript* obj;
+        ScriptRunner* obj;
     };
 
     /**
@@ -54,20 +54,9 @@ protected:
     };
 
 public:
-    SimpleScript(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction(settings.get("trigger",settings.get("script","")),settings,parent)
+    ScriptRunner(const std::string& trigger, const Settings& settings, MessageConsumer* parent)
+        : SimpleAction(trigger, settings, parent)
     {
-        std::string script_rel = settings.get("script","");
-        if ( script_rel.empty() )
-            throw melanobot::ConfigurationError("Missing script file");
-
-        /// \todo check for absolute path
-        script = settings::data_file("scripts/"+script_rel);
-        if ( script.empty() )
-            throw melanobot::ConfigurationError("Script file not found: "+script_rel);
-
-        synopsis += settings.get("synopsis","");
-        help = settings.get("help", "Runs "+script_rel);
         on_error = onerror_from_string(settings.get("error", onerror_to_string(on_error)));
 
         auto formatter_name = settings.get_optional<std::string>("formatter");
@@ -76,24 +65,27 @@ public:
     }
 
 protected:
+
     bool on_handle(network::Message& msg) override
     {
         /// \todo Timeout
         auto env = environment(msg);
-        auto output = python::PythonEngine::instance().exec_file(script,*env);
+        auto output = run_script(msg, *env);
         if ( output.success || on_error == OnError::IGNORE )
             for ( const auto& line : output.output )
-                reply_to(msg,format(line));
+                reply_to(msg, format(line));
 
         return output.success || on_error != OnError::DISCARD_INPUT;
     }
+
+    virtual ScriptOutput run_script(const network::Message& msg, const MessageVariables& env) = 0;
 
     /**
      * \brief Build the environment on which the script is run
      */
     virtual std::unique_ptr<MessageVariables> environment(network::Message& msg)
     {
-        return std::make_unique<Variables>(this,msg);
+        return std::make_unique<Variables>(this, msg);
     }
 
     /**
@@ -103,10 +95,10 @@ protected:
     {
         switch(err)
         {
-            case OnError::DISCARD_INPUT: return "discard_input";
-            case OnError::DISCARD_OUTPUT:return "discard_output";
-            case OnError::IGNORE:        return "ignore";
-            default:                     return "";
+            case OnError::DISCARD_INPUT:  return "discard_input";
+            case OnError::DISCARD_OUTPUT: return "discard_output";
+            case OnError::IGNORE:         return "ignore";
+            default:                      return "";
         }
     }
 
@@ -124,7 +116,6 @@ protected:
         return OnError::DISCARD_OUTPUT;
     }
 
-private:
     string::FormattedString format(const std::string& line)
     {
         if ( formatter )
@@ -132,9 +123,44 @@ private:
         return string::FormattedString(line);
     }
 
-    std::string script;                         ///< Script file path
     OnError on_error = OnError::DISCARD_OUTPUT; ///< Script error policy
     string::Formatter* formatter{nullptr};      ///< Formatter used to parse the output
+};
+
+
+/**
+ * \brief Runs a python script
+ */
+class SimpleScript : public ScriptRunner
+{
+public:
+    SimpleScript(const Settings& settings, MessageConsumer* parent)
+        : ScriptRunner(settings.get("trigger", settings.get("script","")), settings, parent)
+    {
+        std::string script_rel = settings.get("script","");
+        if ( script_rel.empty() )
+            throw melanobot::ConfigurationError("Missing script file");
+
+        /// \todo check for absolute path
+        script = settings::data_file("scripts/"+script_rel);
+        if ( script.empty() )
+            throw melanobot::ConfigurationError("Script file not found: "+script_rel);
+
+        synopsis += settings.get("synopsis","");
+        help = settings.get("help", "Runs "+script_rel);
+    }
+
+protected:
+    ScriptOutput run_script(
+        const network::Message& msg,
+        const MessageVariables& env
+    ) override
+    {
+        return python::PythonEngine::instance().exec_file(script, env);
+    }
+
+private:
+    std::string script;                         ///< Script file path
 };
 
 /**
@@ -201,6 +227,33 @@ private:
     }
 
     Settings settings; ///< Script settings, read from the script description and the bot configuration
+};
+
+/**
+ * \brief Runs arbitrary python code from IRC input
+ * \warning It litterally executes arbitrary code, only grant access to trusted users
+ */
+class PythonAction : public ScriptRunner
+{
+public:
+    PythonAction(const Settings& settings, MessageConsumer* parent)
+        : ScriptRunner("python", settings, parent)
+    {
+        synopsis += settings.get("synopsis", "code");
+        help = settings.get("help", "Interprets the input as python code");
+        if ( !settings.count("error") )
+            on_error = ScriptRunner::OnError::IGNORE;
+    }
+protected:
+    ScriptOutput run_script(
+        const network::Message& msg,
+        const MessageVariables& env
+    ) override
+    {
+        Log("py", '<') << msg.message;
+        auto flags = ScriptOutput::CaptureStdout|ScriptOutput::CaptureStderr;
+        return python::PythonEngine::instance().exec(msg.message, env, flags);
+    }
 };
 
 } // namespace python

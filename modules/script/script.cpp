@@ -35,4 +35,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_script_initialize(const Settings&)
 
     module::register_handler<python::SimpleScript>("SimpleScript");
     module::register_handler<python::StructuredScript>("StructuredScript");
+    module::register_handler<python::PythonAction>("Python");
 }
