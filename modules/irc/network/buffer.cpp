@@ -158,6 +158,7 @@ bool Buffer::connect(const network::Server& server)
         buffer.start();
         boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
         boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+        socket = boost::asio::ip::tcp::socket(io_service);
         boost::asio::connect(socket, endpoint_iterator);
         flood_timer = network::Clock::now();
     } catch ( const boost::system::system_error& err ) {

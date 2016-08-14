@@ -79,6 +79,7 @@ public:
             boost::asio::ip::udp::resolver::query query(
                 server.host, std::to_string(server.port));
             boost::asio::ip::udp::endpoint endpoint = *resolver.resolve(query);
+            socket = boost::asio::ip::udp::socket(io_service);
             socket.connect(endpoint);
             if ( io_service.stopped() )
                 io_service.reset();
