@@ -118,7 +118,8 @@ public:
             .def("flush", &OutputCapture::flush)
         ;
         object main_module = import("__main__");
-        main_namespace_ = main_module.attr("__dict__");
+        main_namespace_ = boost::python::dict();
+        main_namespace_["__builtins__"] = main_module.attr("__dict__")["__builtins__"];
         object sys_module = import("sys");
         sys_module.attr("stdout") = ptr(&stdout);
         sys_module.attr("stderr") = ptr(&stderr);
