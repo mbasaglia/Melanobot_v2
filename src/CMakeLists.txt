@@ -45,9 +45,11 @@ find_package (Boost COMPONENTS system thread filesystem program_options REQUIRED
 target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
 include_directories (${Boost_INCLUDE_DIRS})
 
-find_package(Iconv)
+find_package(Iconv QUIET)
 if(Iconv_FOUND)
     add_definitions(-DHAS_ICONV)
+    target_link_libraries(${EXECUTABLE_NAME} ${Iconv_LIBRARY})
+include_directories (${Iconv_INCLUDE_DIR})
 endif()
 
 target_link_libraries(${EXECUTABLE_NAME} melano)

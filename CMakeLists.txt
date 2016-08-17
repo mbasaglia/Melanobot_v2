@@ -25,7 +25,8 @@ set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://wiki.evil-ant-colony.org/doku.php?id=melanobot:melanobot")
 
 # CMake modules
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(misc)
 
 # Flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Werror")
@@ -33,23 +34,7 @@ include_directories("${CMAKE_SOURCE_DIR}/src")
 
 # Check C++14
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(${CMAKE_VERSION} LESS 3.2)
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
-        include(CheckCXXCompilerFlag)
-        check_cxx_compiler_flag(--std=c++${CMAKE_CXX_STANDARD} STD_CXX)
-        if(STD_CXX)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++${CMAKE_CXX_STANDARD}")
-        else()
-            message(SEND_ERROR "Requires C++${CMAKE_CXX_STANDARD} or better")
-        endif()
-    else()
-        message(WARNING "Unrecognized compiler: ${CMAKE_CXX_COMPILER_ID}, make sure it supports C++${CMAKE_CXX_STANDARD}")
-    endif()
-endif()
+use_cxx_standard(14)
 
 # Enable Debug by default, can be changed with -D CMAKE_BUILD_TYPE=Release
 if(CMAKE_BUILD_TYPE STREQUAL "")
@@ -115,42 +100,19 @@ endif()
 add_subdirectory(src bin)
 
 # Tests 
-include(testing.cmake)
+include(testing)
 add_subdirectory(lib/Melanolib/test EXCLUDE_FROM_ALL)
 add_subdirectory(test)
 
 # Doxygen target
-find_package(Doxygen)
+# Find all sources for documentation and stuff
+set(ALL_SOURCE_DIRECTORIES src modules doc)
+
+find_sources(ALL_SOURCES *.cpp *.hpp)
+set(DOXYGEN_FOUND ON)
+find_package(Doxygen QUIET)
 if(DOXYGEN_FOUND)
-
-    if ( ${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
-        set(DOXYGEN_OUTPUT "\"${CMAKE_BINARY_DIR}/doc-out\"")
-    else()
-        set(DOXYGEN_OUTPUT "\"${CMAKE_BINARY_DIR}/doc\"")
-    endif()
-
-    set(DOXYGEN_INPUT "\"${CONFIG_HEADER}\" \"${MELANOMODULE_HEADER}\"")
-
-    file(GLOB_RECURSE DOXYGEN_INPUT_FILES "doc/*.dox" "src/*.cpp" "src/*.hpp" "modules/*.cpp" "modules/*.hpp" )
-    foreach(source ${DOXYGEN_INPUT_FILES})
-        set(DOXYGEN_INPUT "${DOXYGEN_INPUT} \"${source}\"")
-    endforeach()
-
-    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
-    add_custom_target(doc
-        ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-        DEPENDS ${PROJECT_BINARY_DIR}/Doxyfile ${DOXYGEN_INPUT_FILES}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        COMMENT "Generating Doxygen Documentation" VERBATIM
-    )
-    add_custom_target(doc-view
-        xdg-open ${DOXYGEN_OUTPUT}/html/index.html
-        COMMENT "Showing Doxygen documentation"
-    )
-    add_custom_target(doc-commit
-        COMMAND "${CMAKE_SOURCE_DIR}/commit-doc.sh" "${DOXYGEN_OUTPUT}/html"
-        COMMENT "Committing Doxygen documentation"
-    )
+    create_doxygen_target(doc)
 endif(DOXYGEN_FOUND)
 
 # CPack
