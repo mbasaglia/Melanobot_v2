@@ -25,6 +25,7 @@
 #include "web-api.hpp"
 #include "melanolib/time/time_string.hpp"
 #include "melanolib/utils/type_utils.hpp"
+#include "melanolib/math/random.hpp"
 
 namespace web {
 
@@ -473,6 +474,190 @@ protected:
 
         reply_to(msg, reply.replaced(prop));
     }
+};
+
+/**
+ * \brief Returns a random page title from a category
+ */
+class MediaWikiCategoryTitle : public melanobot::SimpleAction
+{
+private:
+    template<class Callback>
+    struct MultiCallback
+    {
+        MultiCallback(Callback on_loaded)
+            : on_loaded(std::move(on_loaded))
+        {}
+
+        ~MultiCallback()
+        {
+            auto lock = make_lock(mutex);
+            on_loaded(items);
+        }
+
+        void append(const std::vector<std::string>& chunk)
+        {
+            auto lock = make_lock(mutex);
+           items.insert(items.end(), chunk.begin(), chunk.end());
+        }
+
+        std::mutex mutex;
+        std::vector<std::string> items;
+        Callback on_loaded;
+    };
+
+    template<class Callback>
+        using MutiCallbackWrapper = std::shared_ptr<MultiCallback<Callback>>;
+
+public:
+    MediaWikiCategoryTitle(const Settings& settings, MessageConsumer* parent)
+        : melanobot::SimpleAction("random_title", settings, parent)
+    {
+
+        std::string item_name = settings.get("item_name", "item");
+
+        synopsis += " Term...";
+        help = "Name a a random " + item_name;
+
+        api_url = settings.get("url", api_url);
+        reply = read_string(settings, "reply", "$item");
+        not_found_reply = read_string(settings, "not_found_reply",
+                                      "I didn't find any " + item_name);
+
+        default_categories = comma_split(settings.get("default", ""));
+
+        title_pattern = std::regex(
+            settings.get("pattern", "[^:/]+"),
+            std::regex::optimize
+        );
+
+        if ( !default_categories.empty() && settings.get("preload", false) )
+            load_categories(default_categories, melanolib::Noop{});
+    }
+
+protected:
+    std::vector<std::string> comma_split(const std::string& words)
+    {
+        static std::regex regex_comma ( "(,\\s*)",
+            std::regex_constants::optimize |
+            std::regex_constants::ECMAScript );
+        return melanolib::string::regex_split(words, regex_comma);
+    }
+
+    bool on_handle(network::Message& msg) override
+    {
+        load_categories(
+            msg.message.empty() ? default_categories : comma_split(msg.message),
+            [this, msg](const std::vector<std::string>& pages)
+            {
+                if ( pages.empty() )
+                    reply_to(msg, not_found_reply);
+                else
+                    reply_to(msg, pages[melanolib::math::random(pages.size()-1)]);
+            }
+        );
+        return true;
+    }
+
+    template<class Callback>
+        void load_categories(const std::vector<std::string>& categories, const Callback& on_loaded)
+    {
+        auto multi_callback = std::make_shared<MultiCallback<Callback>>(on_loaded);
+        for ( const auto& category : categories )
+            load_category(category, multi_callback);
+    }
+
+private:
+    template<class Callback>
+        void load_category(const std::string& category,
+                           const MutiCallbackWrapper<Callback>& callback)
+    {
+        auto lock = make_lock(mutex);
+        auto it = titles.find(category);
+        if ( it != titles.end() )
+        {
+            callback->append(it->second);
+            return;
+        }
+        titles.insert(it, {category, {}});
+        lock.unlock();
+
+        request(category, "", callback);
+    }
+
+    template<class Callback>
+    void request(const std::string& category,
+                 const std::string& cmcontinue,
+                 const MutiCallbackWrapper<Callback>& callback)
+    {
+        auto category_id = "Category:" + melanolib::string::slug(category);
+        web::HttpService::instance().async_query(
+            web::Request("GET", api_url, {
+                {"format",      "json"},
+                {"action",      "query"},
+                {"list",        "categorymembers"},
+                {"cmlimit",     "300"},
+                {"cmtitle",     category_id},
+                {"cmcontinue",  cmcontinue},
+            }),
+            [this, callback, category, cmcontinue](const web::Response& resp)
+            {
+                if ( resp.success() )
+                {
+                    Settings ptree;
+                    JsonParser parser;
+                    try {
+                        ptree = parser.parse_string(resp.contents, resp.resource);
+                    } catch ( const JsonError& err ) {
+                        ErrorLog errlog("web","JSON Error");
+                        if ( settings::global_settings.get("debug",0) )
+                            errlog << err.file << ':' << err.line << ": ";
+                        errlog << err.what();
+                        return;
+                    }
+
+                    auto next = ptree.get("query-continue.categorymembers.cmcontinue", "");
+                    if ( !next.empty() )
+                        request(category, cmcontinue, callback);
+
+                    auto lock = make_lock(mutex);
+                    auto& list = titles[category];
+                    for ( const auto& page : ptree.get_child("query.categorymembers", {}) )
+                    {
+                        std::string title = page.second.get("title", "");
+                        if ( std::regex_match(title, title_pattern) )
+                            list.push_back(title);
+                    }
+                    auto list_copy = list;
+                    lock.unlock();
+
+                    if ( next.empty() )
+                        callback->append(std::move(list_copy));
+                }
+            });
+    }
+
+    std::vector<std::string> default_categories;
+    std::regex title_pattern;
+    std::string item_name = "item";
+
+    std::map<std::string, std::vector<std::string>> titles;
+    std::mutex mutex;
+
+    /**
+     * \brief API endpoint URL
+     */
+    std::string api_url = "http://en.wikipedia.org/w/api.php";
+
+    /**
+     * \brief Reply to give on found
+     */
+    string::FormattedString reply;
+
+    /**
+     * \brief Reply to give on not found
+     */
+    string::FormattedString not_found_reply;
 };
 
 
