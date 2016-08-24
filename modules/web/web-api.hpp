@@ -37,28 +37,38 @@ protected:
     /**
      * \brief Sends an asynchronous http request
      */
-    void request_http(const network::Message& msg, const web::Request& request)
+    void request_http(const network::Message& msg, web::Request&& request)
     {
-        web::HttpService::instance().async_query(request,
-            [this,msg](const web::Response& resp)
+        web::HttpClient::instance().async_query(
+            std::move(request),
+            [this, msg](web::Request& request, web::Response& response)
             {
-                if ( resp.success() )
-                    http_success(msg, resp);
+                if ( response.status.is_error() )
+                    http_failure(msg, request, response);
                 else
-                    http_failure(msg, resp);
-            });
+                    http_success(msg, request, response);
+            }),
+            [this, msg](web::Request& request, const OperationStatus& status)
+            {
+                network_failure(msg, request, status);
+            }
+        ;
     }
 
     /**
      * \brief Called when request_http() gets a successful response
      */
-    virtual void http_success(const network::Message& msg, const web::Response& response) = 0;
-
+    virtual void http_success(const network::Message& msg, web::Request& request, web::Response& response) = 0;
 
     /**
-     * \brief Called when request_http() fails
+     * \brief Called when request_http() gets an error response
      */
-    virtual void http_failure(const network::Message&, const web::Response&) {}
+    virtual void http_failure(const network::Message&, web::Request&, web::Response&) {}
+
+    /**
+     * \brief Called when request_http() encounters an error before it can receive a response
+     */
+    virtual void network_failure(const network::Message&, web::Request&, const OperationStatus&) {}
 
 };
 
@@ -74,17 +84,17 @@ protected:
     /**
      * \brief Sends an asynchronous http request
      */
-    void request_json(const network::Message& msg, const web::Request& request)
+    void request_json(const network::Message& msg, web::Request&& request)
     {
-        request_http(msg, request);
+        request_http(msg, std::move(request));
     }
 
-    void http_success(const network::Message& msg, const web::Response& response) override
+    void http_success(const network::Message& msg, web::Request& request, web::Response& response) override
     {
         Settings ptree;
         JsonParser parser;
         try {
-            ptree = parser.parse_string(response.contents,response.resource);
+            ptree = parser.parse(response.body, request.uri.full());
             json_success(msg,ptree);
         } catch ( const JsonError& err ) {
             ErrorLog errlog("web","JSON Error");
@@ -95,7 +105,12 @@ protected:
         }
     }
 
-    void http_failure(const network::Message& msg, const web::Response&) override
+    void http_failure(const network::Message& msg, web::Request&, web::Response&) override
+    {
+        json_failure(msg);
+    }
+
+    void network_failure(const network::Message& msg, web::Request&, const OperationStatus&) override
     {
         json_failure(msg);
     }

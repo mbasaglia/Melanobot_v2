@@ -38,7 +38,7 @@ public:
                MessageConsumer*   parent)
         : SimpleAction(default_trigger, settings, parent)
     {
-        auth.username = settings.get("username", "");
+        auth.user = settings.get("username", "");
         auth.password = settings.get("password", "");
         api_url = settings.get("api_url", api_url);
     }
@@ -50,22 +50,23 @@ protected:
     void request_github(const network::Message& msg, const std::string& url)
     {
         query(url,
-            [this, msg](const web::Response& resp)
+            [this, msg](web::Request& request, web::Response& response)
             {
                 JsonParser parser;
                 parser.throws(false);
-                PropertyTree tree = parser.parse_string(resp.contents);
-                if ( resp.success() )
-                    github_success(msg, tree);
-                else
+                PropertyTree tree = parser.parse(response.body, request.uri.full());
+                if ( response.status.is_error() )
                     github_failure(msg, tree);
+                else
+                    github_success(msg, tree);
             });
     }
 
-    void query(const std::string& url, const web::AsyncCallback& callback)
+    template<class Callback>
+    void query(const std::string& url, const Callback& callback)
     {
         auto ptr = ControllerRegistry::instance().get_source(auth, api_url);
-        web::HttpService::instance().async_query(ptr->request(url), callback);
+        web::HttpClient::instance().async_query(ptr->request(url), callback);
     }
 
     /**
@@ -80,7 +81,7 @@ protected:
     virtual void github_failure(const network::Message&, const PropertyTree&) {}
 
 private:
-    Auth auth;
+    httpony::Auth auth;
     std::string api_url = "https://api.github.com";
 };
 
@@ -190,17 +191,17 @@ protected:
         else
         {
             query(relative_url("/releases"),
-                [msg, this, which](const web::Response& resp)
+                [msg, this, which](web::Request& request, web::Response& response)
                 {
-                    if ( resp.success() )
+                    if ( response.status.is_error() )
                     {
-                        JsonParser parser;
-                        parser.throws(false);
-                        find_release(msg, which, parser.parse_string(resp.contents));
+                        github_failure(msg, {});
                     }
                     else
                     {
-                        github_failure(msg, {});
+                        JsonParser parser;
+                        parser.throws(false);
+                        find_release(msg, which, parser.parse(response.body, request.uri.full()));
                     }
                 });
         }
@@ -301,13 +302,13 @@ protected:
                 what_full += ' ' + force;
 
             query("/search/code?q="+web::urlencode(what_full),
-                [msg, this, what](const web::Response& resp)
+                [msg, this, what](web::Request& request, web::Response& response)
                 {
                     JsonParser parser;
                     parser.throws(false);
-                    auto json = parser.parse_string(resp.contents);
+                    auto json = parser.parse(response.body, request.uri.full());
 
-                    if ( resp.success() && json.get("total_count", 0) > 0 )
+                    if ( !response.status.is_error() && json.get("total_count", 0) > 0 )
                     {
                         std::size_t i = 0;
                         for ( auto& match : json.get_child("items") )

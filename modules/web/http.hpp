@@ -20,228 +20,60 @@
 #define HTTP_HPP
 
 #include <map>
+#include "httpony/ssl/ssl.hpp"
 #include "network/async_service.hpp"
 
 namespace web {
 
-/**
- * \brief Request parameters
- */
-using Parameters = std::map<std::string,std::string>;
-
-using Headers = std::map<std::string,std::string>;
-
-/**
- * \brief Encode a string to make it fit to be used in a url
- * \todo urldecode (?)
- * \see http://www.faqs.org/rfcs/rfc3986.html
- */
-std::string urlencode ( const std::string& text );
-
-/**
- * \brief Creates a query string from the given parameters
- */
-std::string build_query ( const Parameters& params );
-
-/**
- * \brief A network request
- */
-struct Request
-{
-    Request() = default;
-    Request(std::string method,
-            std::string resource,
-            Parameters  parameters = {},
-            std::string body = {},
-            Headers     headers = {}
-           )
-        : method(std::move(method)),
-          resource(std::move(resource)),
-          parameters(std::move(parameters)),
-          body(std::move(body)),
-          headers(std::move(headers))
-    {}
-
-    Request& get(std::string url)
-    {
-        return method_get().set_url(std::move(url));
-    }
-
-    Request& post(std::string url, const Parameters& body = {})
-    {
-        method_post().set_url(std::move(url));
-        if ( !body.empty() )
-            set_body(build_query(body));
-        return *this;
-    }
-
-    Request& method_get()
-    {
-        method = "GET";
-        return *this;
-    }
-
-    Request& method_post()
-    {
-        method = "POST";
-        return *this;
-    }
-
-    Request& set_param(const std::string& name, const std::string& value)
-    {
-        parameters[name] = value;
-        return *this;
-    }
-
-    Request& set_params(Parameters params)
-    {
-        std::swap(parameters, params);
-        return *this;
-    }
-
-    Request& set_header(const std::string& name, const std::string& value)
-    {
-        headers[name] = value;
-        return *this;
-    }
-
-    Request& set_headers(Headers new_headers)
-    {
-        std::swap(headers, new_headers);
-        return *this;
-    }
-
-    Request& set_body(std::string contents)
-    {
-        std::swap(body, contents);
-        return *this;
-    }
-
-    Request& set_url(std::string url)
-    {
-        std::swap(resource, url);
-        return *this;
-    }
-
-    Request& set_auth(const std::string& username, const std::string& password)
-    {
-        auth = {username, password};
-        return *this;
-    }
-
-    /**
-     * \brief Resource + query
-     */
-    std::string full_url() const;
-
-private:
-    std::string method;    ///< Protocol-specific command
-    std::string resource;   ///< Name/identifier for the requested resource
-    Parameters  parameters; ///< GET query parameters
-    std::string body;       ///< POST/PUT body
-    Headers     headers;    ///< Headers
-    melanolib::Optional<std::pair<std::string, std::string>> auth; ///< Optional username/password pair
-
-    friend class HttpService;
-};
-
-/**
- * \brief Result of a request
- */
-struct Response
-{
-    Response(
-        std::string contents,
-        std::string resource,
-        int status_code = 200,
-        std::string error_message = {},
-        Headers     headers = {}
-    ) : contents(std::move(contents)),
-        resource(std::move(resource)),
-        status_code(status_code),
-        error_message(std::move(error_message)),
-        headers(std::move(headers))
-    {}
-
-    bool success() const
-    {
-        return status_code < 400;
-    }
-
-    std::string contents;       ///< Response contents
-    std::string resource;       ///< Name/identifier for the requested resource
-    int         status_code = 200;
-    std::string error_message;  ///< Message in the case of error, if empty not an error
-    Headers     headers;        ///< Headers
-};
-
-/**
- * \brief Callback used by asyncronous calls
- */
-using AsyncCallback = std::function<void(const Response&)>;
+using httpony::DataMap;
+using httpony::OperationStatus;
+using httpony::Request;
+using httpony::Response;
+using httpony::Uri;
+using httpony::build_query_string;
+using httpony::urlencode;
 
 /**
  * \brief HTTP Service
  */
-class HttpService : public AsyncService, public melanolib::Singleton<HttpService>
+class HttpClient : public AsyncService,
+                   public httpony::BasicAsyncClient<httpony::ssl::SslClient>,
+                   public melanolib::Singleton<HttpClient>
 {
+    using ParentClient = httpony::BasicAsyncClient<httpony::ssl::SslClient>;
 public:
-    Response query (const Request& request);
     void initialize(const Settings& settings) override;
 
+    template<class OnResponse, class OnError = melanolib::Noop>
+        void async_query(Request&& request,
+                         const OnResponse& on_response,
+                         const OnError& on_error = {})
+    {
+        ParentClient::async_query(std::move(request), on_response, melanolib::Noop{}, on_error);
+    }
 
     void start() override
     {
-        requests.start();
-        if ( !thread.joinable() )
-            thread = std::move(std::thread([this]{run();}));
+        ParentClient::start();
     }
 
     void stop() override
     {
-        requests.stop();
-        if ( thread.joinable() )
-            thread.join();
+        ParentClient::stop();
     }
 
-    void async_query (const Request& request, const AsyncCallback& callback)
-    {
-        requests.push({request, callback});
-    }
+protected:
+    void on_error(Request& request, const OperationStatus& status) override;
+    void on_response(Request& request, Response& response) override;
+    void process_request(Request& request) override;
 
 private:
-    HttpService(){}
-    ~HttpService()
+    HttpClient()
     {
-        stop();
+        set_max_redirects(3);
+        set_timeout(melanolib::time::seconds(10));
     }
     friend ParentSingleton;
-
-    std::string user_agent;
-    int         max_redirs = 3;
-    /**
-     * \brief Internal request record
-     */
-    struct Item
-    {
-        Request       request;
-        AsyncCallback callback;
-    };
-
-    ConcurrentQueue<Item> requests;
-    std::thread thread;
-
-    void run()
-    {
-        while ( requests.active() )
-        {
-            Item item;
-            requests.pop(item);
-            if ( !requests.active() )
-                break;
-            item.callback(query(item.request));
-        }
-    }
 };
 
 } // namespace web

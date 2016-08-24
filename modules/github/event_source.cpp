@@ -71,13 +71,13 @@ void EventSource::poll_events(const GitHubController& source)
     {
         auto lock = make_lock(mutex);
         if ( !etag_.empty() )
-            request.set_header("If-None-Match", etag_);
+            request.headers["If-None-Match"] = etag_;
         current_poll_ = PollTime::clock::now();
     }
 
-    web::HttpService::instance().async_query(
-        request,
-        [this](const web::Response& response) {
+    web::HttpClient::instance().async_query(
+        std::move(request),
+        [this](web::Request& request, web::Response& response) {
             /// \todo Handle X-Poll-Interval (and rate limit stuff)
             auto it = response.headers.find("ETag");
             if ( it != response.headers.end() )
@@ -87,19 +87,19 @@ void EventSource::poll_events(const GitHubController& source)
                 if ( melanobot::has_storage() )
                     melanobot::storage().put(storage_path("etag"), etag_);
             }
-            dispatch_events(response);
+            dispatch_events(response, request.uri.full());
         }
     );
 }
 
-void EventSource::dispatch_events(const web::Response& response)
+void EventSource::dispatch_events(web::Response& response, const std::string& uri)
 {
-    if ( !response.success() )
+    if ( response.status.is_error() )
         return;
 
     JsonParser parser;
     parser.throws(false);
-    auto json = parser.parse_string(response.contents, response.resource);
+    auto json = parser.parse(response.body, uri);
     if ( parser.error() )
         return;
 

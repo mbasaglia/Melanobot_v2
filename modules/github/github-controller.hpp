@@ -26,29 +26,13 @@
 
 namespace github {
 
-struct Auth
-{
-    std::string username; ///< Username for basic auth
-    std::string password; ///< Password / OAuth personal access token
-
-    bool empty() const
-    {
-        return username.empty() || password.empty();
-    }
-
-    bool operator==(const Auth& oth) const
-    {
-        return username == oth.username && password == oth.password;
-    }
-};
-
 /**
  * \brief Single instance of a github connection
  */
 class GitHubController : public AsyncService
 {
 public:
-    explicit GitHubController(Auth auth = {}, std::string api_url = "https://api.github.com")
+    explicit GitHubController(httpony::Auth auth = {}, std::string api_url = "https://api.github.com")
         : api_url_(std::move(api_url)), auth_(std::move(auth))
     {}
 
@@ -65,7 +49,7 @@ public:
      */
     web::Request request(const std::string& url) const;
 
-    const Auth& auth() const
+    const httpony::Auth& auth() const
     {
         return auth_;
     }
@@ -84,7 +68,7 @@ private:
     std::string api_url_;
     melanolib::time::Timer timer; ///< Polling timer
     std::vector<std::unique_ptr<GitHubEventListener>> listeners;
-    Auth auth_;
+    httpony::Auth auth_;
 };
 
 /**
@@ -93,12 +77,12 @@ private:
 class ControllerRegistry : public melanolib::Singleton<ControllerRegistry>
 {
 public:
-    MaybePtr<const GitHubController> get_source(const Auth& auth, const std::string& api_url) const
+    MaybePtr<const GitHubController> get_source(const httpony::Auth& auth, const std::string& api_url) const
     {
         for ( auto src : sources )
         {
-            if ( ( auth.empty() || src->auth() == auth ) &&
-                    src->api_url() == api_url )
+            bool equal = src->auth().user == auth.user && src->auth().password == auth.password;
+            if ( src->api_url() == api_url && (auth.empty() || equal) )
                 return {src, false};
         }
 

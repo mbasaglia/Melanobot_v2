@@ -54,14 +54,14 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg, web::Request("GET", api_url,{
+        request_json(msg, web::Request("GET", Uri(api_url, {
             {"part", "snippet"},
             {"type", "video" },
             {"maxResults","1"},
             {"order",order},
             {"key",yt_api_key},
             {"q",msg.message},
-        }));
+        })));
         return true;
     }
 
@@ -289,7 +289,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::string url = "http://api.urbandictionary.com/v0/define";
-        request_json(msg, web::Request("GET", url, {{"term",msg.message}}));
+        request_json(msg, web::Request("GET", {url, {{"term",msg.message}}}));
         return true;
     }
 
@@ -323,11 +323,11 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg, web::Request("GET", api_url,{
+        request_json(msg, web::Request("GET", {api_url, {
             {"format", "json"},
             {"q", msg.message},
             {"categories", category}
-        }));
+        }}));
         return true;
     }
 
@@ -379,13 +379,13 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg, web::Request("GET", api_url,{
+        request_json(msg, web::Request("GET", {api_url, {
             {"format",   "json"},
             {"action",   "query"},
             {"list",     "search"},
             {"srsearch", msg.message},
             {"srlimit",  "1"},
-        }));
+        }}));
         return true;
     }
 
@@ -438,7 +438,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg, web::Request("GET", api_url,{
+        request_json(msg, web::Request("GET", {api_url, {
             {"format",  "json"},
             {"action",  "query"},
             {"prop",    "revisions"},
@@ -446,7 +446,7 @@ protected:
             {"rvprop",  "content"},
             {"rvsection","0"},
             {"redirects",""},
-        }));
+        }}));
         return true;
     }
 
@@ -591,23 +591,23 @@ private:
                  const MutiCallbackWrapper<Callback>& callback)
     {
         auto category_id = "Category:" + melanolib::string::slug(category);
-        web::HttpService::instance().async_query(
-            web::Request("GET", api_url, {
+        web::HttpClient::instance().async_query(
+            web::Request("GET", web::Uri(api_url, {
                 {"format",      "json"},
                 {"action",      "query"},
                 {"list",        "categorymembers"},
                 {"cmlimit",     "300"},
                 {"cmtitle",     category_id},
                 {"cmcontinue",  cmcontinue},
-            }),
-            [this, callback, category, cmcontinue](const web::Response& resp)
+            })),
+            [this, callback, category, cmcontinue](Request& req, web::Response& resp)
             {
-                if ( resp.success() )
+                if ( !resp.status.is_error() )
                 {
                     Settings ptree;
                     JsonParser parser;
                     try {
-                        ptree = parser.parse_string(resp.contents, resp.resource);
+                        ptree = parser.parse(resp.body, req.uri.full());
                     } catch ( const JsonError& err ) {
                         ErrorLog errlog("web","JSON Error");
                         if ( settings::global_settings.get("debug",0) )
@@ -675,7 +675,7 @@ protected:
     {
         static std::string url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false";
         auto subject = get_subject(msg);
-        request_json(msg, web::Request("GET", url, {{"address", subject}}));
+        request_json(msg, web::Request("GET", {url, {{"address", subject}}}));
         // map types: satellite terrain hybrid roadmap
         reply_to(msg, "http://maps.google.com/maps/api/staticmap?size=400x400&maptype=hybrid&sensor=false&format=png&markers=" + urlencode(subject));
         return true;
@@ -691,7 +691,7 @@ protected:
             address = "I don't know";
             near = subject;
         }
-        std::string url = "https://maps.google.com/?" + web::build_query({{"q", subject}, {"hnear", near}});
+        std::string url = "https://maps.google.com/?" + build_query_string({{"q", subject}, {"hnear", near}});
         reply_to(msg, address + ": " + url);
     }
 
