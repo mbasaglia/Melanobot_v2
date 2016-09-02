@@ -90,6 +90,8 @@ add_subdirectory(lib/Melanolib/src EXCLUDE_FROM_ALL)
 
 
 include_directories(${CMAKE_SOURCE_DIR}/lib/HttPony/include)
+set(BUILD_SHARED_MELANO_LIBS ON)
+set(HTTPONY_SHARED ON)
 add_subdirectory(lib/HttPony EXCLUDE_FROM_ALL)
 
 add_subdirectory(modules lib)

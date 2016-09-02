@@ -94,7 +94,7 @@ protected:
         Settings ptree;
         JsonParser parser;
         try {
-            ptree = parser.parse(response.body, request.uri.full());
+            ptree = parser.parse_string(response.body.read_all(), request.uri.full());
             json_success(msg,ptree);
         } catch ( const JsonError& err ) {
             ErrorLog errlog("web","JSON Error");

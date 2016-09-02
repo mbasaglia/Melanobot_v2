@@ -289,7 +289,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::string url = "http://api.urbandictionary.com/v0/define";
-        request_json(msg, web::Request("GET", {url, {{"term",msg.message}}}));
+        request_json(msg, web::Request("GET", {url, {{"term", msg.message}}}));
         return true;
     }
 
