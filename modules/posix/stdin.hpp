@@ -156,6 +156,7 @@ private:
 
         msg.chat(msg.raw);
         msg.from = name();
+        msg.direct = true;
 
         msg.send(this);
 
