@@ -333,6 +333,8 @@ protected:
 
     void json_success(const network::Message& msg, const Settings& parsed) override;
 
+    void json_failure(const network::Message& msg) override;
+
 private:
     /// Base url for the searx installation
     std::string api_url = "https://searx.me/";

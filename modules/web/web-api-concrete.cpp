@@ -142,14 +142,19 @@ void SearchWebSearx::json_success(const network::Message& msg, const Settings& p
     }
     else
     {
-        Properties props = {
-            {"search", msg.message},
-            {"user", msg.from.name}
-        };
-
-        reply_to(msg, not_found_reply.replaced(props));
+        json_failure(msg);
     }
 
+}
+
+void SearchWebSearx::json_failure(const network::Message& msg)
+{
+    Properties props = {
+        {"search", msg.message},
+        {"user", msg.from.name}
+    };
+
+    reply_to(msg, not_found_reply.replaced(props));
 }
 
 } // namespace web
