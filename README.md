@@ -33,6 +33,9 @@ Up to date sources are available at https://github.com/mbasaglia/Melanobot_v2
 Installing
 ==========
 
+The git repository makes use of submodules so ensure they are up to date
+before compiling.
+
 Dependencies
 ------------
 
@@ -44,9 +47,7 @@ Dependencies
     * program_options
     * property_tree
     * python (MODULE_SCRIPT)
-* [cURL](http://curl.haxx.se/libcurl/) (MODULE_WEB)
-* [git](http://git-scm.com/) (MODULE_WEB, used to download external dependencies)
-* [OpenSSL](http://openssl.org/) (MODULE_XONOTIC)
+* [OpenSSL](http://openssl.org/) (MODULE_XONOTIC, MODULE_WEB)
 * [CPython API](https://www.python.org/) (MODULE_SCRIPT)
 
 Building
@@ -66,7 +67,7 @@ The bot by default tries to load a file called config.info.
 This file is searched in: the run directory,
 the executable directory, ~/.config/melanobot, or ~/.melanobot.
 
-See configuration examples in ./examples
+See configuration examples in ./config
 
 Installation
 ------------

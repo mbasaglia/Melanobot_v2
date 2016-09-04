@@ -31,7 +31,7 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_web_metadata()
 MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
 {
     module::register_log_type("web", color::dark_blue);
-    module::register_service<web::HttpService>("http");
+    module::register_service<web::HttpClient>("http");
 
     module::register_handler<web::SearchVideoYoutube>("SearchVideoYoutube");
     module::register_handler<web::UrbanDictionary>("UrbanDictionary");

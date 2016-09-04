@@ -267,7 +267,7 @@ bool ChuckNorris::on_handle(network::Message& msg)
             std::regex_constants::optimize |
             std::regex_constants::ECMAScript);
 
-    web::Parameters params;
+    web::DataMap params;
     std::smatch match;
 
     if ( std::regex_match(msg.message, match, regex_name) && match.length() > 0 )
@@ -276,7 +276,7 @@ bool ChuckNorris::on_handle(network::Message& msg)
         params["lastName"]  = match[2];
     }
 
-    request_json(msg, web::Request("GET", api_url, params));
+    request_json(msg, web::Request("GET", web::Uri(api_url, params)));
     return true;
 }
 

@@ -4,3 +4,6 @@
 [submodule "cmake"]
 	path = cmake
 	url = https://github.com/mbasaglia/CMake-Lib.git
+[submodule "lib/HttPony"]
+	path = lib/HttPony
+	url = https://github.com/mbasaglia/HttPony.git

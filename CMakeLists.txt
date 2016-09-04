@@ -16,6 +16,7 @@
 # CMake stuff
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0012 NEW)
+cmake_policy(SET CMP0002 OLD)
 
 # Metadata
 project(MelanoBot CXX)
@@ -25,7 +26,7 @@ set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://wiki.evil-ant-colony.org/doku.php?id=melanobot:melanobot")
 
 # CMake modules
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(misc)
 
 # Flags
@@ -86,6 +87,12 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/Melanolib/include)
 add_definitions(-DMELANOLIB_BOOST_OPTIONAL -DMELANOLIB_BOOST_ANY)
 set(BUILD_SHARED_MELANO_LIBS ON)
 add_subdirectory(lib/Melanolib/src EXCLUDE_FROM_ALL)
+
+
+include_directories(${CMAKE_SOURCE_DIR}/lib/HttPony/include)
+set(BUILD_SHARED_MELANO_LIBS ON)
+set(HTTPONY_SHARED ON)
+add_subdirectory(lib/HttPony EXCLUDE_FROM_ALL)
 
 add_subdirectory(modules lib)
 

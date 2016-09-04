@@ -69,7 +69,7 @@ public:
     std::string api_path() const;
 
 private:
-    void dispatch_events(const web::Response& response);
+    void dispatch_events(web::Response& response, const std::string& uri);
 
     std::string storage_path(const std::string& suffix) const;
 

@@ -22,125 +22,48 @@
 #include <iomanip>
 #include <sstream>
 
-#include <cpr/cpr.h>
-#include <cpr/util.h>
-
 #include "string/logger.hpp"
 #include "config.hpp"
 
 
 namespace web {
 
-std::string Request::full_url() const
+void HttpClient::initialize(const Settings& settings)
 {
-    if ( !parameters.empty() )
-    {
-        std::string url = resource;
-        if ( url.find('?') == std::string::npos )
-            url += '?';
-        else
-            url += '&';
-        url += build_query(parameters);
-        return url;
-    }
-    return resource;
-}
-
-std::string urlencode(const std::string& text)
-{
-    return cpr::util::urlEncode(text);
-}
-
-static cpr::Parameters cpr_parameters(const Parameters& params)
-{
-    cpr::Parameters parameters;
-    for ( const auto & param : params )
-    {
-        parameters.AddParameter({param.first, param.second});
-    }
-    return parameters;
-}
-
-std::string build_query(const Parameters& params)
-{
-    return cpr_parameters(params).content;
-}
-
-void HttpService::initialize(const Settings& settings)
-{
+    std::string user_agent = settings.get("user_agent", "" );
     if ( user_agent.empty() )
-        user_agent = PROJECT_NAME "/" PROJECT_VERSION " (" PROJECT_WEBSITE ") "
-                     "cpr";
-    user_agent = settings.get("user_agent", user_agent );
-    max_redirs = settings.get("redirects", max_redirs);
+    {
+        httpony::UserAgent default_user_agent(
+            PROJECT_NAME "/" PROJECT_VERSION " (" PROJECT_WEBSITE ") "
+        );
+        set_user_agent( default_user_agent + httpony::UserAgent::default_user_agent());
+    }
+    set_max_redirects(settings.get("redirects", max_redirects()));
+
+    int timeout_seconds = timeout() ? timeout()->count() : 0;
+    timeout_seconds = settings.get("timeout", timeout_seconds);
+    if ( timeout_seconds <= 0 )
+        clear_timeout();
+    else
+        set_timeout(melanolib::time::seconds(timeout_seconds));
 }
 
-Response HttpService::query (const Request& request)
+void HttpClient::on_error(Request& request, const OperationStatus& status)
 {
-    std::string url = request.full_url();
+    ErrorLog("web") << "Error processing " << request.uri.full() << ": " << status;
+}
 
-    cpr::Session session;
-    cpr::Response response;
+void HttpClient::on_response(Request& request, Response& response)
+{
+    Log("web", '>') << response.status.code << ' ' << request.uri.full();
+}
 
-
-    session.SetUrl(cpr::Url(url));
-
-    if ( request.auth )
-        session.SetAuth({request.auth->first, request.auth->second});
-
-    auto headers = request.headers;
-    headers["User-Agent"] = user_agent;
-    session.SetHeader(cpr::Header(headers.begin(), headers.end()));
-
-    if ( max_redirs )
-    {
-        session.SetMaxRedirects(cpr::MaxRedirects(max_redirs));
-        session.SetRedirect(true);
-    }
-    else
-    {
-        session.SetMaxRedirects(cpr::MaxRedirects(0));
-        session.SetRedirect(false);
-    }
-    /// TODO SetTimeout
-
-    if ( request.method == "GET" )
-    {
-        response = session.Get();
-    }
-    else if ( request.method == "POST" )
-    {
-        cpr::Payload payload{};
-        payload.content = request.body;
-        session.SetPayload(payload);
-        response = session.Post();
-    }
-    else if ( request.method == "PUT" )
-    {
-        cpr::Payload payload{};
-        payload.content = request.body;
-        session.SetPayload(payload);
-        response = session.Put();
-    }
-    else if ( request.method == "HEAD" )
-    {
-        response = session.Head();
-    }
-
-    Log("web",'<') << request.method << ' ' << request.resource;
-
-    if ( response.error )
-    {
-        ErrorLog("web") << "Error processing " << request.resource;
-    }
-
-    return Response(
-        response.text,
-        response.url,
-        response.status_code,
-        response.error.message,
-        Headers(response.header.begin(), response.header.end())
-    );
+void HttpClient::process_request(Request& request)
+{
+    /// \todo Implement Transfer-encoding and switch to 1.1
+//     request.protocol = httpony::Protocol::http_1_0;
+    ParentClient::process_request(request);
+    Log("web",'<') << request.method << ' ' << request.uri.full();
 }
 
 } // namespace web

@@ -26,13 +26,13 @@ std::pair<VideoInfo::FoundFunction, web::Request>
     {
         return {
             &VideoInfo::yt_found,
-            web::Request("GET", yt_api_url,
+            web::Request("GET", {yt_api_url,
             {
                 {"part", "snippet,contentDetails"},
                 {"maxResults", "1"},
                 {"key", yt_api_key},
                 {"id", match[1]},
-            })
+            }})
         };
     }
     else if ( match[2].matched )
@@ -60,7 +60,7 @@ std::pair<VideoInfo::FoundFunction, web::Request>
         };
     }
 
-    return {nullptr, {}};
+    return {nullptr, web::Request()};
 }
 
 bool VideoInfo::on_handle(network::Message& msg)
@@ -72,15 +72,16 @@ bool VideoInfo::on_handle(network::Message& msg)
         FoundFunction found_func;
         std::tie(found_func, request) = request_from_match(match);
 
-        web::HttpService::instance().async_query(request,
-            [this, msg, found_func](const web::Response& response)
+        web::HttpClient::instance().async_query(
+            std::move(request),
+            [this, msg, found_func](Request& request, Response& response)
             {
-                if ( response.success() )
+                if ( !response.status.is_error() )
                 {
                     Settings ptree;
                     JsonParser parser;
                     try {
-                        ptree = parser.parse_string(response.contents,response.resource);
+                        ptree = parser.parse(response.body, request.uri.full());
                         (this->*found_func)(msg,ptree);
                     } catch ( const JsonError& err ) {
                         ErrorLog errlog("web","JSON Error");
@@ -89,7 +90,8 @@ bool VideoInfo::on_handle(network::Message& msg)
                         errlog << err.what();
                     }
                 }
-            });
+            }
+        );
 
         return true;
     }
@@ -140,14 +142,19 @@ void SearchWebSearx::json_success(const network::Message& msg, const Settings& p
     }
     else
     {
-        Properties props = {
-            {"search", msg.message},
-            {"user", msg.from.name}
-        };
-
-        reply_to(msg, not_found_reply.replaced(props));
+        json_failure(msg);
     }
 
+}
+
+void SearchWebSearx::json_failure(const network::Message& msg)
+{
+    Properties props = {
+        {"search", msg.message},
+        {"user", msg.from.name}
+    };
+
+    reply_to(msg, not_found_reply.replaced(props));
 }
 
 } // namespace web

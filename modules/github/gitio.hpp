@@ -28,10 +28,12 @@ namespace github {
  */
 inline std::string git_io_shorten(const std::string& url)
 {
-    auto response = web::HttpService::instance().query(
-        web::Request().post("https://git.io", {{"url", url}})
+    web::Response response;
+    web::HttpClient::instance().query(
+        web::Request("POST", web::Uri("https://git.io", {{"url", url}})),
+        response
     );
-    if ( response.status_code == 201 )
+    if ( response.status.code == 201 )
         return response.headers["Location"];
     return url;
 }

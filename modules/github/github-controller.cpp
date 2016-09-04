@@ -30,7 +30,7 @@ void GitHubController::initialize(const Settings& settings)
     if ( api_url_.back() == '/' )
         api_url_.pop_back();
 
-    auth_.username = settings.get("username", "");
+    auth_.user = settings.get("username", "");
     auth_.password = settings.get("password", "");
 
     for ( const auto& source : settings )
@@ -134,8 +134,8 @@ void GitHubController::start()
 web::Request GitHubController::request(const std::string& url) const
 {
     auto request = web::Request("GET", api_url_+url);
-    if ( !auth_.username.empty() && !auth_.password.empty() )
-        request.set_auth(auth_.username, auth_.password);
+    if ( !auth_.user.empty() && !auth_.password.empty() )
+        request.auth = auth_;
     return request;
 }
 
