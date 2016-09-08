@@ -22,6 +22,6 @@ event_source.cpp
 
 if(${MODULE_ENABLED})
     add_library(${MODULE_NAME} MODULE ${SOURCES})
-    target_link_libraries(${MODULE_NAME} melanomodule_web melano)
+    target_link_libraries(${MODULE_NAME} melanomodule_web melano_stringutils melano_time)
 endif()
 

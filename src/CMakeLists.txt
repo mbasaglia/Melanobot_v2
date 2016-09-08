@@ -52,4 +52,4 @@ if(Iconv_FOUND)
 include_directories (${Iconv_INCLUDE_DIR})
 endif()
 
-target_link_libraries(${EXECUTABLE_NAME} melano)
+target_link_libraries(${EXECUTABLE_NAME} melano_stringutils melano_time melano_dynlib)
