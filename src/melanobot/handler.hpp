@@ -238,7 +238,7 @@ public:
                  MessageConsumer*   parent)
         : Handler(settings,parent),
           trigger(default_trigger),
-          pattern(pattern,std::regex::ECMAScript|std::regex::optimize)
+          pattern(pattern, std::regex::ECMAScript|std::regex::optimize)
     {
         load_settings(settings);
     }

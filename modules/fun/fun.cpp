@@ -40,6 +40,8 @@ MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
     module::register_handler<fun::Discord>("Discord");
     module::register_handler<fun::Stardate>("Stardate");
     module::register_handler<fun::Insult>("Insult");
+    module::register_handler<fun::MarkovGenerator>("MarkovGenerator");
+    module::register_handler<fun::MarkovListener>("MarkovListener");
 
     module::register_handler<fun::RenderPony>("RenderPony");
     module::register_handler<fun::PonyCountDown>("PonyCountDown");

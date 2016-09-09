@@ -28,6 +28,7 @@
 #include "web/web-api.hpp"
 #include "melanolib/math/random.hpp"
 #include "melanolib/time/time_string.hpp"
+#include "melanolib/string/text_generator.hpp"
 
 namespace fun {
 
@@ -418,6 +419,80 @@ protected:
     static constexpr stardate_t unix_epoch_stardate = -353260.7;
 };
 
+class MarkovListener : public melanobot::Handler
+{
+public:
+    MarkovListener(const Settings& settings, MessageConsumer* parent)
+        : Handler(settings, parent)
+    {
+        direct = settings.get("direct", direct);
+        markov_key = settings.get("markov_key", markov_key);
+        generator = &markov_generator(markov_key);
+        generator->set_max_age(melanolib::time::days(
+            settings.get("max_age", generator->max_age().count())
+        ));
+        generator->set_max_size(settings.get("max_size", generator->max_size()));
+    }
+
+    static melanolib::string::TextGenerator& markov_generator(const std::string& key)
+    {
+        static std::map<std::string, melanolib::string::TextGenerator> generators;
+        return generators[key];
+    }
+
+protected:
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.type == network::Message::CHAT && (msg.direct || !direct);
+    }
+
+    bool on_handle(network::Message& msg) override
+    {
+        generator->add_text(melanolib::string::trimmed(
+            msg.source->encode_to(msg.message, string::FormatterUtf8())
+        ));
+        return true;
+    }
+
+private:
+    bool direct = false; ///< Whether the message needs to be direct
+    std::string markov_key;
+    melanolib::string::TextGenerator* generator = nullptr;
+};
+
+class MarkovGenerator : public melanobot::SimpleAction
+{
+public:
+    MarkovGenerator(const Settings& settings, MessageConsumer* parent)
+        : SimpleAction("chat", "chat( about)?", settings, parent)
+    {
+        synopsis += " [about subject...]";
+        help = "Generates a random chat message";
+        std::string markov_key = settings.get("markov_key", "");
+        generator = &MarkovListener::markov_generator(markov_key);
+        min_words = settings.get("min_words", min_words);
+        max_words = settings.get("max_words", max_words);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string subject = melanolib::string::trimmed(
+            msg.source->encode_to(msg.message, string::FormatterUtf8())
+        );
+        if ( subject.empty() )
+            subject = generator->generate_string(min_words, max_words);
+        else
+            subject = generator->generate_string(subject, min_words, max_words);
+        reply_to(msg, subject);
+        return true;
+    }
+
+private:
+    melanolib::string::TextGenerator* generator = nullptr;
+    std::size_t min_words = 5;
+    std::size_t max_words = 100;
+};
 
 
 } // namespace fun
