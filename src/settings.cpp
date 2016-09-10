@@ -323,10 +323,10 @@ std::string settings::data_file(const std::string& rel_path, FileCheck check)
 
     if ( check == FileCheck::CREATE )
     {
-        create_directory(paths.best_match);
-        std::string file = absolute(paths.best_match+"/"+rel_path).string();
-        std::ofstream{file};
-        return file;
+        path file = absolute(paths.best_match + "/" + rel_path);
+        create_directory(file.parent_path());
+        std::ofstream{file.string()};
+        return file.string();
     }
 
     return {};
