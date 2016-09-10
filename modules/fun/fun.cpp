@@ -20,6 +20,7 @@
 #include "module/melanomodule.hpp"
 #include "string/replacements.hpp"
 #include "rainbow.hpp"
+#include "markov.hpp"
 
 /**
  * \brief Registers the fun handlers
@@ -40,12 +41,14 @@ MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
     module::register_handler<fun::Discord>("Discord");
     module::register_handler<fun::Stardate>("Stardate");
     module::register_handler<fun::Insult>("Insult");
-    module::register_handler<fun::MarkovGenerator>("MarkovGenerator");
-    module::register_handler<fun::MarkovListener>("MarkovListener");
 
     module::register_handler<fun::RenderPony>("RenderPony");
     module::register_handler<fun::PonyCountDown>("PonyCountDown");
     module::register_handler<fun::PonyFace>("PonyFace");
+
+    module::register_handler<fun::MarkovTextGenerator>("MarkovTextGenerator");
+    module::register_handler<fun::MarkovListener>("MarkovListener");
+    module::register_handler<fun::MarkovSave>("MarkovSave");
 
     string::FilterRegistry::instance().register_filter("rainbow",
         [](const std::vector<string::FormattedString>& args) -> string::FormattedString
