@@ -57,15 +57,18 @@ bool ConfigFactory::build_template(
 {
     Properties arguments;
     for ( const auto& ch : template_source )
-        if ( melanolib::string::starts_with(ch.first,"@") )
+        if ( melanolib::string::starts_with(ch.first, "@") )
         {
-            arguments[ch.first] = settings.get(ch.first.substr(1),ch.second.data());
+            arguments[ch.first] = settings.get(ch.first.substr(1), ch.second.data());
         }
     ::settings::recurse(template_source, [&arguments](Settings& node){
         node.data() = melanolib::string::replace(node.data(), arguments);
     });
+
+    ::settings::merge(template_source, settings, true);
+
     /// \todo recursion check
-    return build(handler_name, template_source, parent);
+    return build(handler_name, "Group", template_source, parent);
 }
 
 bool ConfigFactory::build(
@@ -73,9 +76,18 @@ bool ConfigFactory::build(
     const Settings&     settings,
     MessageConsumer*    parent) const
 {
-    std::string type = settings.get("type",handler_name);
+    return build(handler_name, handler_name, settings, parent);
+}
 
-    if ( !settings.get("enabled",true) )
+bool ConfigFactory::build(
+    const std::string&  handler_name,
+    const std::string&  default_type,
+    const Settings&     settings,
+    MessageConsumer*    parent) const
+{
+    std::string type = settings.get("type", default_type);
+
+    if ( !settings.get("enabled", true) )
     {
         Log("sys",'!') << "Skipping disabled handler " << color::red << handler_name;
         return false;
@@ -89,7 +101,7 @@ bool ConfigFactory::build(
             return pit->second(handler_name, settings, parent);
         }
 
-        ErrorLog("sys") << "Unknown handler type: " << handler_name;
+        ErrorLog("sys") << "Unknown handler type: " << type << " for " << handler_name;
 
     }
     catch ( const ConfigurationError& error )

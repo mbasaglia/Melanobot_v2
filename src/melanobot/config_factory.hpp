@@ -65,6 +65,20 @@ public:
     void register_item(const std::string& name, const CreateFunction& func);
 
 private:
+    /**
+     * \brief Builds a single item from its name and settings
+     * \param name          Name of the object as from the property tree
+     * \param default_type  Default handler type
+     * \param settings      Settings for this item
+     * \param parent        Parent (for hanlers)
+     * \returns \b true on success
+     */
+    bool build(
+        const std::string& name,
+        const std::string& default_type,
+        const Settings& settings,
+        MessageConsumer* parent
+    ) const;
 
     ConfigFactory();
     friend ParentSingleton;
