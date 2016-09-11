@@ -113,7 +113,7 @@ protected:
     void add_children(Settings child_settings,
                       const Settings& default_settings={})
     {
-        group.add_children(child_settings,default_settings);
+        group.add_children(child_settings, default_settings);
     }
 
     const std::vector<std::unique_ptr<Handler>>& children() const

@@ -33,7 +33,7 @@ void AbstractGroup::add_children(Settings child_settings,
         // start with an uppercase name
         if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
-            settings::merge(p.second,default_settings,false);
+            settings::merge(p.second, default_settings, false);
             melanobot::ConfigFactory::instance().build(
                 p.first,
                 p.second,
@@ -65,14 +65,14 @@ Group::Group(const Settings& settings, MessageConsumer* parent)
     : AbstractActionGroup("",settings,parent)
 {
     // Gather settings
-    auth = settings.get("auth",auth);
-    channels = settings.get("channels","");
-    name = settings.get("name","");
-    help_group = settings.get("help_group",help_group);
-    pass_through = settings.get("pass_through",pass_through);
-    prefix = settings.get("prefix",prefix);
+    auth = settings.get("auth", auth);
+    channels = settings.get("channels", "");
+    name = settings.get("name", "");
+    help_group = settings.get("help_group", help_group);
+    pass_through = settings.get("pass_through", pass_through);
+    prefix = settings.get("prefix", prefix);
 
-    std::string source_name = settings.get("source","");
+    std::string source_name = settings.get("source", "");
     if ( !source_name.empty() )
     {
         source = melanobot::Melanobot::instance().connection(source_name);
@@ -90,13 +90,13 @@ Group::Group(const Settings& settings, MessageConsumer* parent)
     for ( const auto& p : settings )
         if ( !p.second.data().empty() &&
                 !melanolib::string::is_one_of(p.first,
-                    {"trigger","auth","name","type","prefix"}) )
+                    {"trigger", "auth", "name", "type", "prefix", "source", "channels"}) )
         {
-            default_settings.put(p.first,p.second.data());
+            default_settings.put(p.first, p.second.data());
         }
 
     // Initialize children
-    add_children(settings,default_settings);
+    add_children(settings, default_settings);
 }
 
 std::string Group::get_property ( const std::string& name ) const
