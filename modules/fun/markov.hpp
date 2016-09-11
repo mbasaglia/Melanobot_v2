@@ -208,7 +208,7 @@ public:
         std::string markov_key = settings.get("markov_key", "");
         generator = &MarkovGeneratorWrapper::get_generator(markov_key).generator;
         reply = read_string(settings, "reply",
-            "I know $(-b)$word_count$(-) and a total of $(-b)$transitions$(-) transitions. "
+            "I know $(-b)$word_count$(-) words and a total of $(-b)$transitions$(-) transitions. "
             "The most common word I know is \"$(-i)$most_common$(-)\".");
     }
 
