@@ -90,7 +90,7 @@ private:
      */
     bool build_template(
         const std::string&  handler_name,
-        const Settings&     settings,
+        Settings            settings,
         MessageConsumer*    parent,
         Settings            template_source) const;
 

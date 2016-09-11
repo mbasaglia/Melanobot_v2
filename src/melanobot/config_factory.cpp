@@ -51,7 +51,7 @@ ConfigFactory::ConfigFactory()
 
 bool ConfigFactory::build_template(
     const std::string&  handler_name,
-    const Settings&     settings,
+    Settings     settings,
     MessageConsumer*    parent,
     Settings            template_source) const
 {
@@ -59,7 +59,9 @@ bool ConfigFactory::build_template(
     for ( const auto& ch : template_source )
         if ( melanolib::string::starts_with(ch.first, "@") )
         {
-            arguments[ch.first] = settings.get(ch.first.substr(1), ch.second.data());
+            std::string key = ch.first.substr(1);
+            arguments[ch.first] = settings.get(key, ch.second.data());
+            settings.erase(key);
         }
     ::settings::recurse(template_source, [&arguments](Settings& node){
         node.data() = melanolib::string::replace(node.data(), arguments);
