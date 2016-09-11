@@ -42,7 +42,6 @@ Xonotic
         channels        @channel
         monitored       @name
         trigger         @prefix
-        prefix          @prefix
         help            "Integration with the xonotic server @server"
         help_group      @irc
         direct          1
