@@ -49,6 +49,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
     module::register_handler<fun::MarkovTextGenerator>("MarkovTextGenerator");
     module::register_handler<fun::MarkovListener>("MarkovListener");
     module::register_handler<fun::MarkovSave>("MarkovSave");
+    module::register_handler<fun::MarkovStatus>("MarkovStatus");
 
     string::FilterRegistry::instance().register_filter("rainbow",
         [](const std::vector<string::FormattedString>& args) -> string::FormattedString

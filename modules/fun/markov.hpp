@@ -198,5 +198,39 @@ private:
 
 };
 
+class MarkovStatus : public melanobot::SimpleAction
+{
+public:
+    MarkovStatus(const Settings& settings, MessageConsumer* parent)
+        : SimpleAction("markov status", settings, parent)
+    {
+        help = "Shows info on the text generator";
+        std::string markov_key = settings.get("markov_key", "");
+        generator = &MarkovGeneratorWrapper::get_generator(markov_key).generator;
+        reply = read_string(settings, "reply",
+            "I know $(-b)$word_count$(-) and a total of $(-b)$transitions$(-) transitions. "
+            "The most common word I know is \"$(-i)$most_common$(-)\".");
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        auto stats = generator->stats();
+
+        string::FormattedProperties props {
+            {"most_common", stats.most_common},
+            {"transitions", std::to_string(stats.transitions)},
+            {"word_count", std::to_string(stats.word_count)},
+        };
+
+        reply_to(msg, reply.replaced(props));
+        return true;
+    }
+
+private:
+    melanolib::string::TextGenerator *generator;
+    string::FormattedString reply;
+};
+
 } // namespace fun
 #endif // MELANOBOT_FUN_MARKOV_HPP
