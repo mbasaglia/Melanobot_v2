@@ -569,3 +569,26 @@ Unvanquished
         }
     }
 }
+
+; Adds text generation
+; NOTE:
+;   * Should be added near the end of the handler list, as it would gobble up
+;     all unhandled messages
+;   * It's best to add the "cannels" filter when used
+;   * You can set markov_key to group different text generators
+Markov
+{
+;     type Group
+
+    MarkovTextGenerator
+
+    Group
+    {
+        auth owner
+        direct 1
+
+        MarkovSave
+    }
+
+    MarkovListener
+}
