@@ -63,7 +63,7 @@ public:
      * \throws JsonError On bad syntax
      * \returns The property tree populated from the stream
      */
-    const Settings& parse(std::istream& stream, const std::string& stream_name="")
+    const boost::property_tree::ptree& parse(std::istream& stream, const std::string& stream_name="")
     {
         this->stream.rdbuf(stream.rdbuf());
         this->stream_name = stream_name;
@@ -77,12 +77,12 @@ public:
      * \throws JsonError On bad syntax
      * \returns The property tree populated from the stream
      */
-    const Settings& parse_file(const std::string& file_name )
+    const boost::property_tree::ptree& parse_file(const std::string& file_name )
     {
         std::filebuf buf;
         line = 1;
         stream_name = file_name;
-        if ( !buf.open(file_name,std::ios::in) )
+        if ( !buf.open(file_name, std::ios::in) )
             error("Cannot open file");
         this->stream.rdbuf(&buf);
         parse_json_root();
@@ -94,7 +94,7 @@ public:
      * \throws JsonError On bad syntax
      * \returns The property tree populated from the stream
      */
-    const Settings& parse_string(const std::string& json, const std::string& stream_name="" )
+    const boost::property_tree::ptree& parse_string(const std::string& json, const std::string& stream_name="" )
     {
         std::istringstream ss(json);
         return parse(ss,stream_name);
@@ -103,7 +103,7 @@ public:
     /**
      * \brief This can be used to get partial trees on errors
      */
-    const Settings& tree() const
+    const boost::property_tree::ptree& tree() const
     {
         return ptree;
     }
@@ -567,7 +567,7 @@ private:
     std::istream stream{nullptr};///< Input stream
     std::string stream_name;    ///< Name of the file
     int line = 0;               ///< Line number
-    Settings ptree;             ///< Output tree
+    boost::property_tree::ptree ptree; ///< Output tree
     std::stack<Context> context;///< Context stack
     bool nothrow = false;       ///< If true, don't throw
     bool error_flag = false;    ///< If true, there has been an error
