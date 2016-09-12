@@ -27,6 +27,7 @@
 
 #include "melanolib/string/stringutils.hpp"
 #include "string/json.hpp"
+#include "string/logger.hpp"
 
 namespace storage {
 namespace file {

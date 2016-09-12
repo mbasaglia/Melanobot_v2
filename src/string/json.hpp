@@ -27,9 +27,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "string/logger.hpp"
 #include "melanolib/string/stringutils.hpp"
-#include "string.hpp"
 #include "melanolib/string/encoding.hpp"
 
 
