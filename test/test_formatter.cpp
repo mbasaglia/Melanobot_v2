@@ -597,27 +597,6 @@ BOOST_AUTO_TEST_CASE( test_Misc )
     BOOST_CHECK( s.encode(FormatterAscii()) == "5" );
 }
 
-BOOST_AUTO_TEST_CASE( test_Utf8Parser )
-{
-    for ( unsigned char c = 0; c < 128; c++ ) // C++ XD
-    {
-        BOOST_CHECK( Utf8Parser::to_ascii(c) == c );
-        BOOST_CHECK( Utf8Parser::encode(c) == std::string(1,c) );
-    }
-
-#ifdef HAS_ICONV
-    BOOST_CHECK( Utf8Parser::to_ascii("è") == 'e' );
-    BOOST_CHECK( Utf8Parser::to_ascii("à") == 'a' );
-    BOOST_CHECK( Utf8Parser::to_ascii("ç") == 'c' );
-    BOOST_CHECK( Utf8Parser::to_ascii(0x00E7) == 'c' );
-#endif
-
-    BOOST_CHECK( Utf8Parser::encode(0x00A7) == u8"§" );
-    BOOST_CHECK( Utf8Parser::encode(0x110E) == u8"ᄎ" );
-    BOOST_CHECK( Utf8Parser::encode(0x26060) == u8"𦁠" );
-
-}
-
 BOOST_AUTO_TEST_CASE( test_Replacements )
 {
     FormatterConfig cfg;

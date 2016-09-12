@@ -18,8 +18,8 @@
  */
 #include "formatter.hpp"
 #include "logger.hpp"
-#include "encoding.hpp"
 #include "string/replacements.hpp"
+#include "melanolib/string/encoding.hpp"
 #include "melanolib/string/language.hpp"
 #include "melanolib/string/stringutils.hpp"
 #include "melanolib/utils/type_utils.hpp"
@@ -118,7 +118,7 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
 {
     FormattedString str;
 
-    Utf8Parser parser;
+    melanolib::string::Utf8Parser parser;
 
     string::AsciiString ascii;
 
@@ -155,7 +155,7 @@ std::string FormatterUtf8::name() const
 
 std::string FormatterAscii::to_string(const Unicode& c) const
 {
-    return std::string(1,Utf8Parser::to_ascii(c.utf8()));
+    return std::string(1,melanolib::string::Utf8Parser::to_ascii(c.utf8()));
 }
 
 FormattedString FormatterAscii::decode(const std::string& source) const
@@ -202,14 +202,14 @@ std::string FormatterAnsi::to_string(const Unicode& c) const
 {
     if ( utf8 )
         return c.utf8();
-    return std::string(1,Utf8Parser::to_ascii(c.utf8()));
+    return std::string(1,melanolib::string::Utf8Parser::to_ascii(c.utf8()));
 }
 
 FormattedString FormatterAnsi::decode(const std::string& source) const
 {
     FormattedString str;
 
-    Utf8Parser parser;
+    melanolib::string::Utf8Parser parser;
 
     AsciiString ascii;
 
@@ -459,7 +459,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 {
     FormattedString str;
 
-    Utf8Parser parser;
+    melanolib::string::Utf8Parser parser;
 
     AsciiString ascii;
 

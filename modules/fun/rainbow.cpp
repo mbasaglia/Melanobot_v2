@@ -18,7 +18,6 @@
  */
 
 #include "rainbow.hpp"
-#include "string/encoding.hpp"
 
 namespace fun {
 
@@ -26,7 +25,7 @@ string::FormattedString FormatterRainbow::decode(const std::string& source) cons
 {
     string::FormattedString str;
 
-    string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser;
     std::vector<color::Color12*> colors;
 
     parser.callback_ascii = [&str,&colors](uint8_t byte)

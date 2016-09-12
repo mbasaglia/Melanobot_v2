@@ -55,7 +55,6 @@ if (BUILD_TESTING)
         ${CMAKE_SOURCE_DIR}/modules/fun/rainbow.cpp
         ${CMAKE_SOURCE_DIR}/src/string/color.cpp
         ${CMAKE_SOURCE_DIR}/src/string/logger.cpp
-        ${CMAKE_SOURCE_DIR}/src/string/encoding.cpp
         ${CMAKE_SOURCE_DIR}/src/string/formatter.cpp
     )
     target_link_libraries(test_formatter melano_time melano_stringutils)
@@ -68,9 +67,7 @@ if (BUILD_TESTING)
         include_directories (${Iconv_INCLUDE_DIR})
     endif()
 
-    melanotest(test_json
-        ${CMAKE_SOURCE_DIR}/src/string/encoding.cpp
-    )
+    melanotest(test_json)
     target_link_libraries(test_json melano_stringutils)
 
 endif()

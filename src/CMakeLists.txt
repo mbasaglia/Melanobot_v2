@@ -25,7 +25,6 @@ network/connection.cpp
 network/async_service.cpp
 settings.cpp
 string/color.cpp
-string/encoding.cpp
 string/formatter.cpp
 string/logger.cpp
 string/string.cpp

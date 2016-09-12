@@ -22,7 +22,6 @@
 #include <regex>
 
 #include "melanolib/string/stringutils.hpp"
-#include "string/encoding.hpp"
 
 namespace irc {
 
@@ -75,7 +74,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
 {
     string::FormattedString str;
 
-    string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser;
 
     string::FormatFlags flags;
 

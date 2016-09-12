@@ -19,7 +19,6 @@
 #include "xonotic-formatter.hpp"
 
 #include "melanolib/string/stringutils.hpp"
-#include "string/encoding.hpp"
 
 namespace xonotic {
 
@@ -55,7 +54,7 @@ std::string QFont::alternative() const
 std::string QFont::to_string(const string::Formatter& fmt) const
 {
     if ( dynamic_cast<const xonotic::XonoticFormatter*>(&fmt) )
-        return string::Utf8Parser::encode(0xE000|index_);
+        return melanolib::string::Utf8Parser::encode(0xE000|index_);
     return alternative();
 }
 
@@ -103,7 +102,7 @@ std::string XonoticFormatter::to_string(string::ClearFormatting) const
 string::FormattedString XonoticFormatter::decode(const std::string& source) const
 {
     string::FormattedString str;
-    string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser;
     string::AsciiString ascii;
 
     auto push_ascii = [&ascii,&str]()

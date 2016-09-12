@@ -26,10 +26,11 @@
 #include "color.hpp"
 #include "melanolib/utils/singleton.hpp"
 #include "melanolib/utils/type_utils.hpp"
+#include "melanolib/string/encoding.hpp"
 
 namespace string {
 
-class Unicode;
+using Unicode = melanolib::string::Unicode;
 class FormattedString;
 
 
