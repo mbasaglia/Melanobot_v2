@@ -31,10 +31,7 @@ inline std::string git_io_shorten(const std::string& url)
     web::Response response;
     web::Request request("POST", web::Uri("https://git.io"));
     request.post["url"] = url;
-    httpony::ssl::SslClient client;
-//     client.set_verify_mode(true);
-    client.set_timeout(*web::HttpClient::instance().timeout());
-    client.query(std::move(request), response);
+    web::HttpClient::instance().query(std::move(request), response);
     if ( response.status.code == 201 )
         return response.headers["Location"];
     return url;
