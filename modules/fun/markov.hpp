@@ -43,10 +43,18 @@ struct MarkovGeneratorWrapper
     void save(const std::string& suffix = "",
               StorageFormat format = StorageFormat::TextPlain) const
     {
-        std::ofstream file(
-            settings::data_file(file_name() + suffix, settings::FileCheck::CREATE)
-        );
-        generator.store(file, format);
+        if ( read_only && suffix.empty() )
+            return;
+
+        std::string file_path = settings::data_file(file_name() + suffix, settings::FileCheck::CREATE);
+        Log("sys", '!', 4) << "Storing Markov data to " << file_path;
+
+        try {
+            std::ofstream stream(file_path);
+            generator.store(stream, format);
+        } catch(const std::runtime_error& ) {
+            ErrorLog("sys") << "Couldn't store Markov data to " << file_path;
+        }
     }
 
     void load(const std::string& suffix = "",
@@ -55,8 +63,13 @@ struct MarkovGeneratorWrapper
         std::string file_path = settings::data_file(file_name(), settings::FileCheck::EXISTING);
         if ( !file_path.empty() )
         {
+            Log("sys", '!', 4) << "Loading Markov data from " << file_path;
             std::ifstream file(file_path);
-            generator.load(file);
+            try {
+                generator.load(file);
+            } catch(const std::runtime_error& ) {
+                ErrorLog("sys") << "Couldn't load Markov data from " << file_path;
+            }
         }
     }
 
@@ -68,6 +81,18 @@ struct MarkovGeneratorWrapper
     void set_key(const std::string& key)
     {
         markov_key = key.empty() ? "markov" : key;
+    }
+
+    void read_settings(const Settings& settings)
+    {
+        std::size_t max_size = settings.get("max_size", generator.max_size());
+        if ( max_size == 0 )
+            max_size = std::numeric_limits<std::size_t>::max();
+        generator.set_max_size(max_size);
+        generator.set_max_age(melanolib::time::days(
+            settings.get("max_age", generator.max_age().count())
+        ));
+        read_only = settings.get("read_only", read_only);
     }
 
     static MarkovGeneratorWrapper& get_generator(const std::string& key)
@@ -83,8 +108,17 @@ struct MarkovGeneratorWrapper
         return gen;
     }
 
+    static MarkovGeneratorWrapper& get_generator(const Settings& settings)
+    {
+        std::string markov_key = settings.get("markov_key", "");
+        auto& gen = get_generator(markov_key);
+        gen.read_settings(settings);
+        return gen;
+    }
+
     std::string markov_key;
     melanolib::string::TextGenerator generator;
+    bool read_only = false;
 };
 
 class MarkovListener : public melanobot::Handler
@@ -94,12 +128,7 @@ public:
         : Handler(settings, parent)
     {
         direct = settings.get("direct", direct);
-        markov_key = settings.get("markov_key", markov_key);
-        generator = &MarkovGeneratorWrapper::get_generator(markov_key).generator;
-        generator->set_max_age(melanolib::time::days(
-            settings.get("max_age", generator->max_age().count())
-        ));
-        generator->set_max_size(settings.get("max_size", generator->max_size()));
+        generator = &MarkovGeneratorWrapper::get_generator(settings).generator;
     }
 
     static melanolib::string::TextGenerator& markov_generator(const std::string& key)
@@ -124,7 +153,6 @@ protected:
 
 private:
     bool direct = false; ///< Whether the message needs to be direct
-    std::string markov_key;
     melanolib::string::TextGenerator* generator = nullptr;
 };
 
@@ -132,12 +160,16 @@ class MarkovTextGenerator : public melanobot::SimpleAction
 {
 public:
     MarkovTextGenerator(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("chat", "chat( about)?", settings, parent)
+        : SimpleAction("chat", settings, parent)
     {
         synopsis += " [about subject...]";
         help = "Generates a random chat message";
+        pattern = std::regex(
+            melanolib::string::regex_escape(trigger) + "( about\\s+)?",
+            std::regex::ECMAScript|std::regex::optimize
+        );
         std::string markov_key = settings.get("markov_key", "");
-        generator = &MarkovGeneratorWrapper::get_generator(markov_key).generator;
+        generator = &MarkovGeneratorWrapper::get_generator(settings).generator;
         min_words = settings.get("min_words", min_words);
         enough_words = settings.get("enough_words", enough_words);
         max_words = settings.get("max_words", max_words);
