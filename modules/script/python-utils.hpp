@@ -52,7 +52,7 @@ public:
             line += msg.substr(0, newline);
             flush();
 
-            msg.erase(0,newline+1);
+            msg.erase(0, newline+1);
             newline = msg.find('\n');
         }
 
@@ -100,13 +100,13 @@ public:
         output_(output),
         stdout{[this, flags](const std::string& line){
             if ( flags & ScriptOutput::LogStdout )
-                Log("py",'>',3) << line;
+                Log("py", '>', 3) << line;
             if ( flags & ScriptOutput::CaptureStdout )
                 output_.output.push_back(line);
         }},
         stderr{[this, flags](const std::string& line){
             if ( flags & ScriptOutput::LogStderr )
-                Log("py",'>',3) << line;
+                Log("py", '>', 3) << line;
             if ( flags & ScriptOutput::CaptureStderr )
                 output_.output.push_back(line);
         }}

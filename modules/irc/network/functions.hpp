@@ -42,7 +42,7 @@ inline bool is_nickchar(char c)
  */
 inline std::string strtolower ( std::string string )
 {
-    std::transform(string.begin(),string.end(),string.begin(),[](char c)->char {
+    std::transform(string.begin(), string.end(), string.begin(), [](char c)->char {
         switch (c) {
             case '[': return '{';
             case ']': return '}';
@@ -59,7 +59,7 @@ inline std::string strtolower ( std::string string )
  */
 inline std::string strtoupper ( std::string string )
 {
-    std::transform(string.begin(),string.end(),string.begin(),[](char c)->char {
+    std::transform(string.begin(), string.end(), string.begin(), [](char c)->char {
         switch (c) {
             case '{': return '[';
             case '}': return ']';

@@ -45,7 +45,7 @@ struct Server
         : port(0)
     {
         auto p = server.find(':');
-        host = server.substr(0,p);
+        host = server.substr(0, p);
         if ( p != std::string::npos && p < server.size()-1 && std::isdigit(server[p+1]) )
             port = melanolib::string::to_uint(server.substr(p+1));
     }

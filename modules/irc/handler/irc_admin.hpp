@@ -34,7 +34,7 @@ class AdminNick: public melanobot::SimpleAction
 {
 public:
     AdminNick(const Settings& settings, ::MessageConsumer* parent)
-        : SimpleAction("nick",settings,parent)
+        : SimpleAction("nick", settings, parent)
     {
         synopsis += " nickname";
         help = "Changes the bot nickname";
@@ -45,7 +45,7 @@ protected:
     {
         if ( !msg.message.empty() )
         {
-            msg.destination->command({"NICK",{msg.message}});
+            msg.destination->command({"NICK", {msg.message}});
             return true;
         }
         return false;
@@ -59,7 +59,7 @@ class AdminJoin: public melanobot::SimpleAction
 {
 public:
     AdminJoin(const Settings& settings, ::MessageConsumer* parent)
-        : SimpleAction("join",settings,parent)
+        : SimpleAction("join", settings, parent)
     {
         synopsis += " channel...";
         help = "Makes the bot join one or more channels";
@@ -82,7 +82,7 @@ protected:
         }
         else if ( !msg.channels.empty() )
         {
-            channels = melanolib::string::implode(",", msg.channels);
+            channels = melanolib::string::implode(", ", msg.channels);
         }
 
         if ( !channels.empty() )
@@ -100,7 +100,7 @@ class AdminPart: public melanobot::SimpleAction
 {
 public:
     AdminPart(const Settings& settings, ::MessageConsumer* parent)
-        : SimpleAction("part",settings,parent)
+        : SimpleAction("part", settings, parent)
     {
         synopsis += " [channel]";
         help = "Makes the bot part a channel";
@@ -113,10 +113,10 @@ protected:
             std::regex::ECMAScript | std::regex::optimize );
         std::smatch match;
 
-        if ( std::regex_match(msg.message,match,regex_part) )
-            msg.destination->command({"PART",{match[1], match[2]}});
+        if ( std::regex_match(msg.message, match, regex_part) )
+            msg.destination->command({"PART", {match[1], match[2]}});
         else if ( msg.channels.size() == 1 )
-            msg.destination->command({"PART",{msg.channels[0]}});
+            msg.destination->command({"PART", {msg.channels[0]}});
         else
             return false;
         return true;
@@ -132,7 +132,7 @@ class AcceptInvite: public melanobot::Handler
 {
 public:
     AcceptInvite(const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {}
 
     bool can_handle(const network::Message& msg) const override
@@ -155,7 +155,7 @@ class AdminRaw: public melanobot::SimpleAction
 {
 public:
     AdminRaw(const Settings& settings, ::MessageConsumer* parent)
-        : SimpleAction("raw",settings,parent)
+        : SimpleAction("raw", settings, parent)
     {
         synopsis += " command";
         help = "Sends raw IRC commands";
@@ -199,7 +199,7 @@ class ClearBuffer: public melanobot::SimpleAction
 {
 public:
     ClearBuffer(const Settings& settings, ::MessageConsumer* parent)
-        : SimpleAction("stop",settings,parent)
+        : SimpleAction("stop", settings, parent)
     {
         help = "Clears the IRC buffer";
     }

@@ -42,7 +42,7 @@ ScriptOutput PythonEngine::exec(
             ErrorLog("py") << "Exception from python script";
 
             if (PyErr_ExceptionMatches(PyExc_SystemExit))
-                Log("py",'!',3) << "Called sys.exit";
+                Log("py", '!', 3) << "Called sys.exit";
             else
                 PyErr_Print();
             // PyErr_Print will use the stderr as defined in ScriptEnvironment
@@ -76,7 +76,7 @@ ScriptOutput PythonEngine::exec_file(
             ErrorLog("py") << "Exception from python script";
 
             if (PyErr_ExceptionMatches(PyExc_SystemExit))
-                Log("py",'!',3) << "Called sys.exit";
+                Log("py", '!', 3) << "Called sys.exit";
             else
                 PyErr_Print();
             // PyErr_Print will use the stderr as defined in ScriptEnvironment

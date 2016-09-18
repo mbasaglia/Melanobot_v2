@@ -37,7 +37,7 @@ public:
     template <class... Args>
     static MaybePtr make(Args&&...args)
     {
-        return MaybePtr(new T(std::forward<Args>(args)...),true);
+        return MaybePtr(new T(std::forward<Args>(args)...), true);
     }
 
     MaybePtr(pointer p = nullptr, bool owns = false) noexcept
@@ -98,8 +98,8 @@ public:
      */
     void swap(MaybePtr& oth) noexcept
     {
-        std::swap(data,oth.data);
-        std::swap(ownership,oth.ownership);
+        std::swap(data, oth.data);
+        std::swap(ownership, oth.ownership);
     }
 
     /**

@@ -30,9 +30,9 @@ bool Morse::on_handle(network::Message& msg)
             std::regex_constants::ECMAScript);
 
     std::string result;
-    if ( std::regex_match(msg.message,regex_morse) )
+    if ( std::regex_match(msg.message, regex_morse) )
     {
-        auto morse_array = melanolib::string::regex_split(msg.message," ",false);
+        auto morse_array = melanolib::string::regex_split(msg.message, " ", false);
         for ( const auto& mc : morse_array )
         {
             if ( mc.empty() )
@@ -65,12 +65,12 @@ bool Morse::on_handle(network::Message& msg)
     }
 
     if ( !result.empty() )
-        reply_to(msg,result);
+        reply_to(msg, result);
 
     return true;
 }
 
-std::unordered_map<char,std::string> Morse::morse {
+std::unordered_map<char, std::string> Morse::morse {
     { 'a', ".-" },
     { 'b', "-..." },
     { 'c', "-.-." },
@@ -144,7 +144,7 @@ std::unordered_map<char,std::string> Morse::morse {
 
 bool ReverseText::on_handle(network::Message& msg)
 {
-    std::string ascii = msg.source->encode_to(msg.message,string::FormatterAscii());
+    std::string ascii = msg.source->encode_to(msg.message, string::FormatterAscii());
     if ( ascii.empty() )
         return true;
 
@@ -158,12 +158,12 @@ bool ReverseText::on_handle(network::Message& msg)
             result = c + result;
     }
 
-    reply_to(msg,result);
+    reply_to(msg, result);
 
     return true;
 }
 
-std::unordered_map<char,std::string> ReverseText::reverse_ascii {
+std::unordered_map<char, std::string> ReverseText::reverse_ascii {
     { ' ', " " },
     { '!', "¡" },
     { '"', "„" },
@@ -182,7 +182,7 @@ std::unordered_map<char,std::string> ReverseText::reverse_ascii {
     { '/', "\\" },
     { '0', "0" },
     { '1', "⇂" }, // Ɩ
-    { '2', "ح" },//ᄅ
+    { '2', "ح" }, //ᄅ
     { '3', "Ꜫ" },
     { '4', "ᔭ" },
     { '5', "2" }, // meh
@@ -212,7 +212,7 @@ std::unordered_map<char,std::string> ReverseText::reverse_ascii {
     { 'M', "ꟽ" },
     { 'N', "N" },
     { 'O', "O" },
-    { 'P', "d" },// meh
+    { 'P', "d" }, // meh
     { 'Q', "Ò" },
     { 'R', "ᴚ" },
     { 'S', "S" },
@@ -337,9 +337,9 @@ bool RenderPony::on_handle(network::Message& msg)
                 std::string line;
                 while(true)
                 {
-                    std::getline(file,line);
+                    std::getline(file, line);
                     if ( !file ) break;
-                    reply_to(msg,line);
+                    reply_to(msg, line);
                 }
                 // done, return
                 return true;
@@ -348,7 +348,7 @@ bool RenderPony::on_handle(network::Message& msg)
     }
 
     // didn't find any suitable file
-    reply_to(msg,"Didn't find anypony D:");
+    reply_to(msg, "Didn't find anypony D:");
     return true;
 }
 
@@ -360,25 +360,25 @@ bool AnswerQuestions::on_handle(network::Message& msg)
     );
     std::smatch match;
 
-    std::regex_match(msg.message,match,regex_question);
+    std::regex_match(msg.message, match, regex_question);
     std::string question = melanolib::string::strtolower(match[1]);
         std::vector<std::vector<std::string>*> answers;
 
-    if ( melanolib::string::starts_with(question,"when") )
+    if ( melanolib::string::starts_with(question, "when") )
     {
         answers.push_back(&category_when);
-        if ( melanolib::string::ends_with(question,"did") )
+        if ( melanolib::string::ends_with(question, "did") )
             answers.push_back(&category_when_did);
-        else if ( melanolib::string::ends_with(question,"will") )
+        else if ( melanolib::string::ends_with(question, "will") )
             answers.push_back(&category_when_will);
     }
-    else if ( melanolib::string::starts_with(question,"who") && !msg.channels.empty() && msg.source )
+    else if ( melanolib::string::starts_with(question, "who") && !msg.channels.empty() && msg.source )
     {
         auto users = msg.source->get_users(msg.channels[0]);
         if ( !users.empty() )
         {
             const auto& name = users[melanolib::math::random(users.size()-1)].name;
-            reply_to(msg,name == msg.source->name() ? "Not me!" : name);
+            reply_to(msg, name == msg.source->name() ? "Not me!" : name);
             return true;
         }
         else
@@ -396,7 +396,7 @@ bool AnswerQuestions::on_handle(network::Message& msg)
         answers.push_back(&category_dunno);
     }
 
-    random_answer(msg,answers);
+    random_answer(msg, answers);
 
     return true;
 }
@@ -418,7 +418,7 @@ void AnswerQuestions::random_answer(network::Message& msg,
         }
         else
         {
-            reply_to(msg,(*cat)[n]);
+            reply_to(msg, (*cat)[n]);
             break;
         }
     }
@@ -475,15 +475,15 @@ std::vector<std::string> AnswerQuestions::category_when_will {
 
 bool RainbowBridgeChat::on_handle(network::Message& msg)
 {
-    FormatterRainbow formatter(melanolib::math::random_real(),0.6,1);
+    FormatterRainbow formatter(melanolib::math::random_real(), 0.6, 1);
 
     auto from = formatter.decode(
-        msg.source->encode_to(msg.from.name,formatter));
+        msg.source->encode_to(msg.from.name, formatter));
 
     auto message = formatter.decode(
-        msg.source->encode_to(msg.message,formatter));
+        msg.source->encode_to(msg.message, formatter));
 
-    reply_to(msg,network::OutputMessage(
+    reply_to(msg, network::OutputMessage(
         std::move(message),
         msg.type == network::Message::ACTION,
         {},
@@ -697,7 +697,7 @@ std::string Insult::random_adjectives() const
 }
 
 Insult::Insult(const Settings& settings, MessageConsumer* parent)
-    : SimpleAction("insult",settings,parent)
+    : SimpleAction("insult", settings, parent)
 {
     synopsis += " [something]";
     help = "Gives a true statement about the subject";

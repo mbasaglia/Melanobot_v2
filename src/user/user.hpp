@@ -171,7 +171,7 @@ private:
     /**
      * \brief Attributes that can be accessed as properties
      */
-    static std::unordered_map<std::string,std::string User::*> string_attributes;
+    static std::unordered_map<std::string, std::string User::*> string_attributes;
 };
 
 } // namespace user

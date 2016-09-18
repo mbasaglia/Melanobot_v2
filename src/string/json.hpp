@@ -97,7 +97,7 @@ public:
     const boost::property_tree::ptree& parse_string(const std::string& json, const std::string& stream_name="" )
     {
         std::istringstream ss(json);
-        return parse(ss,stream_name);
+        return parse(ss, stream_name);
     }
 
     /**
@@ -138,7 +138,7 @@ private:
      */
     void error /*[[noreturn]]*/ (const std::string& message)
     {
-        throw JsonError(stream_name,line,message);
+        throw JsonError(stream_name, line, message);
     }
 
     /**
@@ -189,7 +189,7 @@ private:
             error("Expected object");
 
         if ( !context.empty() )
-            ptree.put_child(context_pos(),{});
+            ptree.put_child(context_pos(), {});
 
         parse_json_properties();
     }
@@ -246,7 +246,7 @@ private:
             error("Expected array");
 
         if ( !context.empty() )
-            ptree.put_child(context_pos(),{});
+            ptree.put_child(context_pos(), {});
 
         context_push_array();
         parse_json_array_elements();
@@ -353,13 +353,13 @@ private:
                     if ( c == 'u' )
                     {
                         char hex[] = "0000";
-                        stream.read(hex,4);
+                        stream.read(hex, 4);
                         for ( int i = 0; i < 4; i++ )
                         {
                             if ( !std::isxdigit(hex[i]) )
                                 hex[i] = '0';
                         }
-                        r += melanolib::string::Utf8Parser::encode(melanolib::string::to_uint(hex,16));
+                        r += melanolib::string::Utf8Parser::encode(melanolib::string::to_uint(hex, 16));
 
                         continue;
                     }
@@ -502,7 +502,7 @@ private:
     template<class T>
         void put(const T& val)
     {
-        ptree.put(context_pos(),val);
+        ptree.put(context_pos(), val);
     }
 
     /**

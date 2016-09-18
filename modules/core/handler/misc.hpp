@@ -37,16 +37,16 @@ class License : public melanobot::SimpleAction
 {
 public:
     License(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("license",settings,parent)
+        : SimpleAction("license", settings, parent)
     {
-        sources_url = settings.get("url",settings::global_settings.get("website",""));
+        sources_url = settings.get("url", settings::global_settings.get("website", ""));
         help = "Shows licensing information";
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,"AGPLv3+ (http://www.gnu.org/licenses/agpl-3.0.html), Sources: "+sources_url);
+        reply_to(msg, "AGPLv3+ (http://www.gnu.org/licenses/agpl-3.0.html), Sources: "+sources_url);
         return true;
     }
 
@@ -62,12 +62,12 @@ class Help : public melanobot::SimpleAction
 {
 public:
     Help(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("help",settings,parent)
+        : SimpleAction("help", settings, parent)
     {
         help = "Shows available commands";
         synopsis += " [command|group]";
-        help_group = settings.get("help_group",help_group);
-        show_inline = settings.get("inline",show_inline);
+        help_group = settings.get("help_group", help_group);
+        show_inline = settings.get("inline", show_inline);
     }
 
 protected:
@@ -77,19 +77,19 @@ protected:
         PropertyTree props;
         // AKA get the toplevel parent
         get_parent<melanobot::Melanobot>()->populate_properties(
-            {"name","help","auth","synopsis","help_group","channels"},
+            {"name", "help", "auth", "synopsis", "help_group", "channels"},
             props);
         
         if ( cleanup(msg, props) )
         {
             PropertyTree result;
-            restructure(props,&result);
+            restructure(props, &result);
 
-            auto queried = find(result,msg.message);
+            auto queried = find(result, msg.message);
             if ( queried )
             {
                 string::FormattedString synopsis;
-                std::string name = queried->get("name","");
+                std::string name = queried->get("name", "");
 
                 if ( !name.empty() )
                     synopsis << color::red << name << color::nocolor;
@@ -98,7 +98,7 @@ protected:
                 gather(*queried, names);
                 if ( !names.empty() )
                 {
-                    std::sort(names.begin(),names.end());
+                    std::sort(names.begin(), names.end());
                     for ( auto& name : names )
                         if ( name.find(' ') != std::string::npos )
                             name = '"' + name + '"';
@@ -108,7 +108,7 @@ protected:
                     synopsis << melanolib::string::implode(" ", names);
                 }
 
-                std::string synopsis_string = queried->get("synopsis","");
+                std::string synopsis_string = queried->get("synopsis", "");
                 if ( !synopsis_string.empty() )
                 {
                     if ( !synopsis.empty() )
@@ -116,7 +116,7 @@ protected:
                     synopsis << string::FormatterConfig().decode(synopsis_string);
                 }
 
-                std::string help_raw = queried->get("help","");
+                std::string help_raw = queried->get("help", "");
                 string::FormattedString help;
                 if ( !help_raw.empty() )
                     help << color::dark_blue << string::FormatterConfig().decode(help_raw);
@@ -134,13 +134,13 @@ protected:
             }
             else
             {
-                reply_to(msg,string::FormattedString() << "Not found: " <<
+                reply_to(msg, string::FormattedString() << "Not found: " <<
                     string::FormatFlags::BOLD << msg.message);
             }
         }
         else
         {
-            reply_to(msg,string::FormattedString() << "No help items found");
+            reply_to(msg, string::FormattedString() << "No help items found");
         }
 
         return true;
@@ -156,17 +156,17 @@ private:
      */
     bool cleanup(network::Message& msg, PropertyTree& properties ) const
     {
-        if ( !msg.source->user_auth(msg.from.local_id,properties.get("auth","")) )
+        if ( !msg.source->user_auth(msg.from.local_id, properties.get("auth", "")) )
             return false;
-        if ( properties.get("help_group",help_group) != help_group )
+        if ( properties.get("help_group", help_group) != help_group )
             return false;
         auto channels = properties.get_optional<std::string>("channels");
-        if ( channels && !msg.source->channel_mask(msg.channels,*channels) )
+        if ( channels && !msg.source->channel_mask(msg.channels, *channels) )
             return false;
 
         for ( auto it = properties.begin(); it != properties.end(); )
         {
-            if ( !cleanup(msg,it->second) )
+            if ( !cleanup(msg, it->second) )
                 it = properties.erase(it);
             else
                     ++it;
@@ -191,19 +191,19 @@ private:
         {
             if ( !p.second.empty() )
             {
-                auto child = restructure(p.second,parent);
+                auto child = restructure(p.second, parent);
                 if ( child )
                 {
                     auto merge = parent->get_child_optional(p.first);
                     if ( merge )
-                        settings::merge(*merge,*child,true);
+                        settings::merge(*merge, *child, true);
                     else
-                        parent->put_child(p.first,*child);
+                        parent->put_child(p.first, *child);
                 }
             }
             else if ( ret && !p.second.data().empty() )
             {
-                ret->put(p.first,p.second.data());
+                ret->put(p.first, p.second.data());
             }
         }
 
@@ -237,7 +237,7 @@ private:
 
         for ( const auto& p : tree )
         {
-            auto ptr = find(p.second,name);
+            auto ptr = find(p.second, name);
             if ( ptr && !ptr->empty() )
                 return ptr;
         }
@@ -253,7 +253,7 @@ class Echo : public melanobot::SimpleAction
 {
 public:
     Echo(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("echo",settings,parent)
+        : SimpleAction("echo", settings, parent)
     {
         help = "Repeats \"Text...\"";
         synopsis += " Text...";
@@ -274,7 +274,7 @@ class ServerHost : public melanobot::SimpleAction
 {
 public:
     ServerHost(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("server",settings,parent)
+        : SimpleAction("server", settings, parent)
     {}
 
 protected:
@@ -292,11 +292,11 @@ class Cointoss : public melanobot::SimpleAction
 {
 public:
     Cointoss(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("cointoss",settings,parent)
+        : SimpleAction("cointoss", settings, parent)
     {
         auto items = settings.get_optional<std::string>("items");
         if ( items )
-            default_items = melanolib::string::regex_split(*items,",\\s*");
+            default_items = melanolib::string::regex_split(*items, ",\\s*");
         customizable = settings.get("customizable", customizable);
 
         help = "Get a random element out of ";
@@ -325,7 +325,7 @@ protected:
             item_vector = default_items;
 
         if ( !item_vector.empty() )
-            reply_to(msg,item_vector[melanolib::math::random(item_vector.size()-1)]);
+            reply_to(msg, item_vector[melanolib::math::random(item_vector.size()-1)]);
 
         return true;
     }
@@ -342,13 +342,13 @@ class Reply : public melanobot::Handler
 {
 public:
     Reply(const Settings& settings, MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
-        trigger         = settings.get("trigger","");
+        trigger         = settings.get("trigger", "");
         reply           = read_string(settings, "reply", "");
-        regex           = settings.get("regex",0);
-        case_sensitive  = settings.get("case_sensitive",1);
-        direct          = settings.get("direct",1);
+        regex           = settings.get("regex", 0);
+        case_sensitive  = settings.get("case_sensitive", 1);
+        direct          = settings.get("direct", 1);
         help            = settings.get("help", help);
 
         if ( trigger.empty() || reply.empty() )
@@ -359,7 +359,7 @@ public:
             auto flags = std::regex::ECMAScript|std::regex::optimize;
             if ( !case_sensitive )
                 flags |= std::regex::icase;
-            trigger_regex = std::regex(trigger,flags);
+            trigger_regex = std::regex(trigger, flags);
         }
     }
 
@@ -393,11 +393,11 @@ protected:
         if ( regex )
         {
             std::smatch match;
-            if ( std::regex_match(msg.message,match,trigger_regex) )
+            if ( std::regex_match(msg.message, match, trigger_regex) )
             {
                 string::FormattedProperties map = {
                     {"sender", msg.source->decode(msg.from.name)},
-                    {"channel", melanolib::string::implode(",", msg.channels)},
+                    {"channel", melanolib::string::implode(", ", msg.channels)},
                 };
                 for ( unsigned i = 0; i < match.size(); i++ )
                     map[std::to_string(i)] = match[i].str();
@@ -458,13 +458,13 @@ class Action : public melanobot::SimpleAction
 {
 public:
     Action(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("please",settings,parent)
+        : SimpleAction("please", settings, parent)
     {
         help = "Make the bot perform a chat action (Roleplay)";
         synopsis += " Action...";
         unauthorized = read_string(settings, "unauthorized", "Won't do!");
         empty = read_string(settings, "empty", "Please what?");
-        auth = settings.get("auth",auth);
+        auth = settings.get("auth", auth);
     }
 
     std::string get_property(const std::string& name) const override
@@ -478,7 +478,7 @@ protected:
 
     bool on_handle(network::Message& msg) override
     {
-        if ( !auth.empty() && !msg.source->user_auth(msg.from.local_id,auth) )
+        if ( !auth.empty() && !msg.source->user_auth(msg.from.local_id, auth) )
         {
             reply_to(msg, unauthorized);
             return true;
@@ -494,9 +494,9 @@ protected:
         std::smatch match;
         if ( std::regex_match(msg.message, match, regex_imperative) )
         {
-            reply_to(msg,network::OutputMessage(
+            reply_to(msg, network::OutputMessage(
                 english.imperate(match[1])+" "+
-                english.pronoun_to3rd(match[2],msg.from.name,msg.source->name()),
+                english.pronoun_to3rd(match[2], msg.from.name, msg.source->name()),
                 true
             ));
         }
@@ -520,9 +520,9 @@ class Time : public melanobot::SimpleAction
 {
 public:
     Time(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("time",settings,parent)
+        : SimpleAction("time", settings, parent)
     {
-        format = settings.get("format",format);
+        format = settings.get("format", format);
         synopsis += " [time]";
         help = "Shows the time";
     }
@@ -530,7 +530,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,melanolib::time::strftime(melanolib::time::parse_time(msg.message), format));
+        reply_to(msg, melanolib::time::strftime(melanolib::time::parse_time(msg.message), format));
         return true;
     }
 
@@ -557,7 +557,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        settings::global_settings.put("exit_code",1);
+        settings::global_settings.put("exit_code", 1);
         melanobot::Melanobot::instance().stop();
         return true;
     }

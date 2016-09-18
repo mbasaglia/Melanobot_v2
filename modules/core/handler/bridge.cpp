@@ -23,10 +23,10 @@
 namespace core {
 
 Bridge::Bridge(const Settings& settings, MessageConsumer* parent)
-    : Group(settings,parent)
+    : Group(settings, parent)
 {
 
-    std::string destination_name = settings.get("destination","");
+    std::string destination_name = settings.get("destination", "");
     if ( !destination_name.empty() )
         destination = melanobot::Melanobot::instance().connection(destination_name);
     dst_channel = settings.get_optional<std::string>("dst_channel");
@@ -44,34 +44,34 @@ void Bridge::attach(network::Connection* connection)
 {
     destination = connection;
     if ( connection )
-        Log("sys",'!',3) << "Bridge attached to "
+        Log("sys", '!', 3) << "Bridge attached to "
             << color::green << connection->description()
             << color::nocolor << " using protocol "
             << color::white << connection->protocol();
     else
-        Log("sys",'!',3) << "Bridge detached";
+        Log("sys", '!', 3) << "Bridge detached";
 }
 
 void Bridge::attach_channel(melanolib::Optional<std::string> channel)
 {
     dst_channel = channel;
     if ( channel )
-        Log("sys",'!',3) << "Bridge attached to channel "
+        Log("sys", '!', 3) << "Bridge attached to channel "
             << color::dark_green << *channel;
     else
-        Log("sys",'!',3) << "Bridge detached from channel";
+        Log("sys", '!', 3) << "Bridge detached from channel";
 
 }
 
 BridgeChat::BridgeChat(const Settings& settings, MessageConsumer* parent)
-    : Handler(settings,parent)
+    : Handler(settings, parent)
 {
-    int timeout_seconds = settings.get("timeout",0);
+    int timeout_seconds = settings.get("timeout", 0);
     if ( timeout_seconds > 0 )
         timeout = std::chrono::duration_cast<network::Duration>(
             std::chrono::seconds(timeout_seconds) );
 
-    ignore_self = settings.get("ignore_self",ignore_self);
+    ignore_self = settings.get("ignore_self", ignore_self);
 
     from = settings.get_optional<std::string>("from");
 }
@@ -99,10 +99,10 @@ bool BridgeChat::on_handle(network::Message& msg)
 }
 
 BridgeAttach::BridgeAttach(const Settings& settings, MessageConsumer* parent)
-    : SimpleAction("attach",settings,parent)
+    : SimpleAction("attach", settings, parent)
 {
-    protocol = settings.get("protocol",protocol); /// \todo unused?
-    detach = settings.get("detach",detach);
+    protocol = settings.get("protocol", protocol); /// \todo unused?
+    detach = settings.get("detach", detach);
 }
 
 void BridgeAttach::initialize()
@@ -124,7 +124,7 @@ bool BridgeAttach::on_handle(network::Message& msg)
 
 BridgeAttachChannel::BridgeAttachChannel(const Settings& settings,
                                          MessageConsumer* parent)
-    : SimpleAction("channel",settings,parent)
+    : SimpleAction("channel", settings, parent)
 {}
 
 void BridgeAttachChannel::initialize()

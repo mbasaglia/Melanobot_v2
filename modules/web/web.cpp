@@ -25,7 +25,7 @@
  */
 MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_web_metadata()
 {
-    return {"web","Web services"};
+    return {"web", "Web services"};
 }
 
 MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)

@@ -157,9 +157,9 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::smatch match;
-        if ( std::regex_match(msg.raw,match,regex) )
+        if ( std::regex_match(msg.raw, match, regex) )
         {
-            return on_handle(msg,match);
+            return on_handle(msg, match);
         }
         return false;
     }
@@ -177,7 +177,7 @@ class ShowVoteCall : public ParseEventlog
 {
 public:
     ShowVoteCall(const Settings& settings, MessageConsumer* parent)
-    : ParseEventlog(R"(^:vote:vcall:(\d+):(.*))",settings,parent)
+    : ParseEventlog(R"(^:vote:vcall:(\d+):(.*))", settings, parent)
     {
         message = read_string(settings, "message",
                               "$(4)*$(-) $name$(-) calls a vote for $vote");
@@ -205,7 +205,7 @@ class ShowVoteResult : public ParseEventlog
 {
 public:
     ShowVoteResult(const Settings& settings, MessageConsumer* parent)
-    : ParseEventlog(R"(^:vote:v(yes|no|timeout):(\d+):(\d+):(\d+):(\d+):(-?\d+))",settings,parent)
+    : ParseEventlog(R"(^:vote:v(yes|no|timeout):(\d+):(\d+):(\d+):(\d+):(-?\d+))", settings, parent)
     {
         message = read_string(settings, "message",
             "$(4)*$(-) vote $message_result: $(dark_green)$yes$(-):$(1)$no$(-)$message_abstain$message_min");
@@ -285,7 +285,7 @@ class ShowVoteStop : public ParseEventlog
 {
 public:
     ShowVoteStop(const Settings& settings, MessageConsumer* parent)
-    : ParseEventlog(R"(^:vote:vstop:(\d+))",settings,parent)
+    : ParseEventlog(R"(^:vote:vstop:(\d+))", settings, parent)
     {
         message = read_string(settings, "message",
             "$(4)*$(-) $name$(-) stopped the vote");
@@ -311,7 +311,7 @@ class ShowVoteLogin : public ParseEventlog
 {
 public:
     ShowVoteLogin(const Settings& settings, MessageConsumer* parent)
-    : ParseEventlog(R"(^:vote:vlogin:(\d+))",settings,parent)
+    : ParseEventlog(R"(^:vote:vlogin:(\d+))", settings, parent)
     {
         message = settings.get("message",
             "$(4)*$(-) $name$(-) logged in as $(dark_yellow)master");
@@ -337,7 +337,7 @@ class ShowVoteDo : public ParseEventlog
 {
 public:
     ShowVoteDo(const Settings& settings, MessageConsumer* parent)
-    : ParseEventlog(R"(^:vote:vdo:(\d+):(.*))",settings,parent)
+    : ParseEventlog(R"(^:vote:vdo:(\d+):(.*))", settings, parent)
     {
         message = settings.get("message",
             "$(4)*$(-) $name$(-) used their master status to do $vote");
@@ -371,7 +371,7 @@ public:
             "ShowVoteStop",
             "ShowVoteLogin",
             "ShowVoteDo"
-        },settings,parent)
+        }, settings, parent)
     {}
 };
 
@@ -442,13 +442,13 @@ protected:
          *      * :end
          */
         if ( match[1].matched )
-            handle_end(msg,match);
+            handle_end(msg, match);
         else if ( match[2].matched )
             handle_team(match);
         else if ( match[5].matched )
-            handle_player(msg.source,match);
+            handle_player(msg.source, match);
         else if ( match[11].matched )
-            handle_scores(msg.source,match);
+            handle_scores(msg.source, match);
         else if ( match[14].matched )
             handle_labels(match);
 
@@ -489,9 +489,9 @@ protected:
         if ( team != SPECTATORS )
         {
             if ( sort_reverse )
-                std::stable_sort(it->second.begin(),it->second.end());
+                std::stable_sort(it->second.begin(), it->second.end());
             else
-                std::stable_sort(it->second.rbegin(),it->second.rend());
+                std::stable_sort(it->second.rbegin(), it->second.rend());
         }
 
         string::FormattedString out;
@@ -508,7 +508,7 @@ protected:
         }
         else
         {
-            out << std::string(indent,' ');
+            out << std::string(indent, ' ');
         }
 
         // Print each player and their score
@@ -549,7 +549,7 @@ protected:
                 }
                 else
                 {
-                    no_team.insert(no_team.end(),it->second.begin(),it->second.end());
+                    no_team.insert(no_team.end(), it->second.begin(), it->second.end());
                     it = player_scores.erase(it);
                 }
             }
@@ -579,7 +579,7 @@ protected:
     void handle_player(network::Connection* conn, const std::smatch& match)
     {
         // Team number (-1 = no team, -2 = spectator)
-        int team = melanolib::string::to_int(match[8],10,SPECTATORS);
+        int team = melanolib::string::to_int(match[8], 10, SPECTATORS);
         int score = melanolib::string::to_int(match[6]);
 
         if ( team == NO_TEAM && score == 0 && conn->properties().get("gametype") == "lms" )
@@ -597,8 +597,8 @@ protected:
      */
     void handle_scores(network::Connection* conn, const std::smatch& match)
     {
-        conn->properties().put<std::string>("gametype",match[12]);
-        conn->properties().put<std::string>("map",match[13]);
+        conn->properties().put<std::string>("gametype", match[12]);
+        conn->properties().put<std::string>("map", match[13]);
         player_scores = { {SPECTATORS, {}} };
         team_scores.clear();
         sort_reverse = false;
@@ -617,8 +617,8 @@ private:
     bool show_spectators = true; ///< Whether to show spectators on the score list
     string::FormattedString message; ///< Message starting the score list
 
-    std::map<int,std::vector<PlayerScore>>player_scores;  ///< Player Scores (team number => scores)
-    std::map<int,int>                     team_scores;    ///< Team Scores (number => score)
+    std::map<int, std::vector<PlayerScore>>player_scores;  ///< Player Scores (team number => scores)
+    std::map<int, int>                     team_scores;    ///< Team Scores (number => score)
     bool                                  sort_reverse{0};///< Whether a low score is better
 
     /// Map team numbers to their color
@@ -647,7 +647,7 @@ public:
     {
         message = read_string(settings, "message",
             "$(1)$(-b)SERVER ERROR$(-) $connection ($(-b)$sv_server$(-)) on $(1)$map$(-): $message");
-        notify = settings.get("notify",notify);
+        notify = settings.get("notify", notify);
         if ( notify.empty() )
             throw melanobot::ConfigurationError();
     }
@@ -699,8 +699,8 @@ protected:
         else if ( match[2].matched )
         {
             std::string ban_id = "banlist."+std::string(match[3]);
-            msg.source->properties().put<std::string>(ban_id+".ip",match[4]);
-            msg.source->properties().put<std::string>(ban_id+".time",match[5]);
+            msg.source->properties().put<std::string>(ban_id+".ip", match[4]);
+            msg.source->properties().put<std::string>(ban_id+".time", match[5]);
         }
         return true;
     }

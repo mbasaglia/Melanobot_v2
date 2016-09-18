@@ -29,11 +29,11 @@
  */
 void initialize_static()
 {
-    Logger::instance().register_direction('<',color::dark_green);
-    Logger::instance().register_direction('>',color::dark_yellow);
-    Logger::instance().register_direction('!',color::dark_blue);
+    Logger::instance().register_direction('<', color::dark_green);
+    Logger::instance().register_direction('>', color::dark_yellow);
+    Logger::instance().register_direction('!', color::dark_blue);
 
-    Logger::instance().register_log_type("sys",color::dark_red);
+    Logger::instance().register_log_type("sys", color::dark_red);
 
     string::Formatter::registry(); // ensures the default formatters get loaded
 }
@@ -51,10 +51,10 @@ Settings initialize_global(int argc, char **argv)
     if ( settings.empty() )
         throw melanobot::ConfigurationError("Missing configuration");
 
-    Log("sys",'!',0) << "Executing from " << settings::global_settings.get("config","");
+    Log("sys", '!', 0) << "Executing from " << settings::global_settings.get("config", "");
 
     // Log configuration
-    Logger::instance().load_settings(settings.get_child("log",{}));
+    Logger::instance().load_settings(settings.get_child("log", {}));
 
     // Load modules
     auto lib_path = settings::global_settings.get("path.library", "");
@@ -66,7 +66,7 @@ Settings initialize_global(int argc, char **argv)
 
     // Initialize storage
     melanobot::StorageFactory::instance().initilize_global_storage(
-        settings.get_child("storage",{})
+        settings.get_child("storage", {})
     );
 
     return settings;
@@ -76,8 +76,8 @@ void run_bot(const Settings& settings)
 try
 {
     auto& factory = melanobot::ConfigFactory::instance();
-    factory.load_templates(settings.get_child("templates",{}));
-    factory.build(settings.get_child("bot",{}), &melanobot::Melanobot::instance());
+    factory.load_templates(settings.get_child("templates", {}));
+    factory.build(settings.get_child("bot", {}), &melanobot::Melanobot::instance());
 
     melanobot::Melanobot::instance().start();
     melanobot::Melanobot::instance().run();
@@ -87,14 +87,14 @@ try
 catch ( const melanobot::MelanobotError& exc )
 {
     /// \todo policy on how to handle exceptions (quit/restart)
-    ErrorLog ("sys","Unhandled Error") << exc.what();
+    ErrorLog ("sys", "Unhandled Error") << exc.what();
     settings::global_settings.get("exit_code", 1);
 }
 
 void run_services(const Settings& settings)
 try
 {
-    ServiceRegistry::instance().initialize(settings.get_child("services",{}));
+    ServiceRegistry::instance().initialize(settings.get_child("services", {}));
     ServiceRegistry::instance().start();
 
     run_bot(settings);
@@ -103,7 +103,7 @@ try
 }
 catch ( const melanobot::MelanobotError& exc )
 {
-    ErrorLog ("sys","Service Initialization Error") << exc.what();
+    ErrorLog ("sys", "Service Initialization Error") << exc.what();
     settings::global_settings.get("exit_code", 1);
 }
 
@@ -116,17 +116,17 @@ int main(int argc, char **argv)
 
         // Finalize for a clean exit
         int exit_code = settings::global_settings.get("exit_code", 0);
-        Log("sys",'!',4) << "Exiting with status " << exit_code;
+        Log("sys", '!', 4) << "Exiting with status " << exit_code;
         return exit_code;
     }
     catch ( const std::exception& exc )
     {
-        ErrorLog ("sys","Critical Error") << exc.what();
+        ErrorLog ("sys", "Critical Error") << exc.what();
         return 1;
     }
     catch ( ... )
     {
-        ErrorLog ("sys","Unexpected Error");
+        ErrorLog ("sys", "Unexpected Error");
         return 1;
     }
 }

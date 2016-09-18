@@ -55,7 +55,7 @@ protected:
                 list.push_back(monitored->decode(user.name));
 
         if ( list.empty() )
-            reply_to(msg,reply_empty.replaced(props));
+            reply_to(msg, reply_empty.replaced(props));
         else
             reply_to(msg, reply.replaced(props)
                 << string::implode(string::FormattedString(", "), list));
@@ -90,21 +90,21 @@ protected:
         if ( !msg.message.empty() )
         {
             string::FormatterAscii ascii;
-            users.erase(std::remove_if(users.begin(),users.end(),
-                [&ascii,&msg](const user::User& user) {
-                    return msg.source->encode_to(user.name,ascii)
+            users.erase(std::remove_if(users.begin(), users.end(),
+                [&ascii, &msg](const user::User& user) {
+                    return msg.source->encode_to(user.name, ascii)
                         .find(msg.message) == std::string::npos;
-            }),users.end());
+            }), users.end());
 
             if ( users.empty() )
-                reply_to(msg,"(No users match the query)");
+                reply_to(msg, "(No users match the query)");
             else
-                print_users(msg,users);
+                print_users(msg, users);
             return true;
         }
 
         if ( !users.empty() )
-            print_users(msg,users);
+            print_users(msg, users);
 
         static std::vector<std::string> server_info {
             "Players: $(1)$active$(-) active, $(1)$spectators$(-) spectators, $(1)$bots$(-) bots, $(1)$players$(-)/$(1)$max$(-) total",
@@ -145,7 +145,7 @@ protected:
                 << string::Padding(user.property("pl"), 2) << " "
                 << string::Padding(user.property("ping"), 4) << " "
                 << string::Padding(user.property("frags"), 5) << " "
-                << " #" << string::Padding(user.property("entity"), 2,0) << " "
+                << " #" << string::Padding(user.property("entity"), 2, 0) << " "
                 << monitored->decode(user.name)
             );
     }
@@ -189,10 +189,10 @@ protected:
             {
                 try {
                     std::regex pattern(msg.message);
-                    maps.erase(std::remove_if(maps.begin(),maps.end(),
+                    maps.erase(std::remove_if(maps.begin(), maps.end(),
                         [&pattern](const std::string& map){
-                            return !std::regex_search(map,pattern);
-                    }),maps.end());
+                            return !std::regex_search(map, pattern);
+                    }), maps.end());
                 } catch (const std::regex_error& err) {
                     ErrorLog("sys", "RegEx Error") << err.what();
                     maps.clear();
@@ -200,10 +200,10 @@ protected:
             }
             else
             {
-                maps.erase(std::remove_if(maps.begin(),maps.end(),
+                maps.erase(std::remove_if(maps.begin(), maps.end(),
                     [&msg](const std::string& map) {
                         return map.find(msg.message) == std::string::npos;
-                }),maps.end());
+                }), maps.end());
             }
         }
 
@@ -243,7 +243,7 @@ public:
     void initialize() override
     {
         if ( auto xon = dynamic_cast<xonotic::XonoticConnection*>(monitored) )
-            xon->add_polling_command({"rcon",{"banlist"}});
+            xon->add_polling_command({"rcon", {"banlist"}});
     }
 
 protected:
@@ -260,7 +260,7 @@ protected:
             show_bans(msg);
             return true;
         }
-        else if ( melanolib::string::starts_with(msg.message,"rm ") )
+        else if ( melanolib::string::starts_with(msg.message, "rm ") )
         {
             unban(msg);
             return true;
@@ -277,12 +277,12 @@ protected:
             std::regex::ECMAScript|std::regex::optimize);
 
         std::smatch match;
-        if ( std::regex_match(msg.message,match,regex_ban) )
+        if ( std::regex_match(msg.message, match, regex_ban) )
         {
             if ( match[1].matched || match[2].matched )
-                kickban(msg,match);
+                kickban(msg, match);
             else
-                ban(msg,match);
+                ban(msg, match);
             return true;
         }
 
@@ -303,7 +303,7 @@ private:
         // find user with given entity number
         if ( match[1].matched )
         {
-            kicked = std::find_if(users.begin(),users.end(),
+            kicked = std::find_if(users.begin(), users.end(),
                 [&match](const user::User& user) {
                     return user.property("entity") == match[1];
                 });
@@ -312,9 +312,9 @@ private:
         else
         {
             string::FormatterAscii ascii;
-            kicked = std::find_if(users.begin(),users.end(),
-                [&match,&ascii,monitored](const user::User& user) {
-                    return monitored->encode_to(user.name,ascii)
+            kicked = std::find_if(users.begin(), users.end(),
+                [&match, &ascii, monitored](const user::User& user) {
+                    return monitored->encode_to(user.name, ascii)
                         .find(match[2]) == std::string::npos;
                 });
         }
@@ -328,7 +328,7 @@ private:
      */
     void kickban(const network::Message& msg, const std::smatch& match)
     {
-        if ( auto kicked = find_user(monitored,match) )
+        if ( auto kicked = find_user(monitored, match) )
         {
             std::vector<std::string> params = {"kickban",
                 "#"+kicked->property("entity") };
@@ -393,7 +393,7 @@ private:
                 ss.unget();
             if ( !(ss >> id) )
                 break;
-            monitored->command({"rcon", {"unban","#"+id}, priority});
+            monitored->command({"rcon", {"unban", "#"+id}, priority});
         }
         reply_to(msg, "Removing given bans");
         refresh();
@@ -416,8 +416,8 @@ private:
         for ( const auto& ban : banlist )
             reply_to(msg, FormattedString()
                 << color::red << Padding("#"+ban.first, 4) << " "
-                << color::dark_cyan << Padding(ban.second.get("ip",""), 16,0) << " "
-                << color::nocolor << Padding(ban.second.get("time","?"), 6)
+                << color::dark_cyan << Padding(ban.second.get("ip", ""), 16, 0) << " "
+                << color::nocolor << Padding(ban.second.get("time", "?"), 6)
                 << " seconds"
             );
     }
@@ -428,7 +428,7 @@ private:
     void refresh()
     {
         // defer 1 because apparently the server doesn't update bans right away
-        monitored->command({"rcon",{"defer","1","banlist"},priority});
+        monitored->command({"rcon", {"defer", "1", "banlist"}, priority});
     }
 };
 
@@ -458,8 +458,8 @@ protected:
             std::regex::ECMAScript|std::regex::optimize);
 
         std::smatch match;
-        if ( std::regex_match(msg.message,match,regex_kick) )
-            kick(msg,match);
+        if ( std::regex_match(msg.message, match, regex_kick) )
+            kick(msg, match);
         else
             reply_to(msg, "Invalid call, see help for usage"); // AKA RTFM
 
@@ -473,7 +473,7 @@ private:
      */
     void kick(const network::Message& msg, const std::smatch& match)
     {
-        if ( auto kicked = XonoticBan::find_user(monitored,match) )
+        if ( auto kicked = XonoticBan::find_user(monitored, match) )
         {
             std::vector<std::string> params = {"kick",
                 "# "+kicked->property("entity") };

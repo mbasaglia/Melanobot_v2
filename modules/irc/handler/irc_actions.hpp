@@ -49,7 +49,7 @@ protected:
     {
         msg.destination->command({
             "JOIN",
-            {melanolib::string::implode(",", msg.channels)},
+            {melanolib::string::implode(", ", msg.channels)},
             priority
         });
         if ( !message.empty() )

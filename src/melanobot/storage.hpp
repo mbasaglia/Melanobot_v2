@@ -46,7 +46,7 @@ public:
     using value_type    = std::string; ///< Type used to represent values
     using sequence      = std::vector<value_type>; ///< Sequence of value
     /// Associative container for key/value
-    using table         = std::unordered_map<key_type,value_type>;
+    using table         = std::unordered_map<key_type, value_type>;
 
     virtual ~StorageBase() {}
 

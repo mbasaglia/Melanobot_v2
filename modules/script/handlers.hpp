@@ -135,9 +135,9 @@ class SimpleScript : public ScriptRunner
 {
 public:
     SimpleScript(const Settings& settings, MessageConsumer* parent)
-        : ScriptRunner(settings.get("trigger", settings.get("script","")), settings, parent)
+        : ScriptRunner(settings.get("trigger", settings.get("script", "")), settings, parent)
     {
-        std::string script_rel = settings.get("script","");
+        std::string script_rel = settings.get("script", "");
         if ( script_rel.empty() )
             throw melanobot::ConfigurationError("Missing script file");
 
@@ -146,7 +146,7 @@ public:
         if ( script.empty() )
             throw melanobot::ConfigurationError("Script file not found: "+script_rel);
 
-        synopsis += settings.get("synopsis","");
+        synopsis += settings.get("synopsis", "");
         help = settings.get("help", "Runs "+script_rel);
     }
 
@@ -176,20 +176,20 @@ private:
     struct Variables : public SimpleScript::Variables
     {
         Variables(StructuredScript* obj, network::Message& msg)
-            : SimpleScript::Variables(obj,msg) {}
+            : SimpleScript::Variables(obj, msg) {}
 
         void convert(boost::python::object& target_namespace) const override;
     };
 
 public:
     StructuredScript(const Settings& in_settings, MessageConsumer* parent)
-        : StructuredScript(load_settings(in_settings),parent,true)
+        : StructuredScript(load_settings(in_settings), parent, true)
     {}
 
 protected:
     std::unique_ptr<MessageVariables> environment(network::Message& msg) override
     {
-        return std::make_unique<Variables>(this,msg);
+        return std::make_unique<Variables>(this, msg);
     }
 
 private:
@@ -197,9 +197,9 @@ private:
      * \brief Called by the public constructor to ensure settings are read only once
      */
     StructuredScript(const Settings& read_settings, MessageConsumer* parent, bool)
-        : SimpleScript(read_settings,parent)
+        : SimpleScript(read_settings, parent)
     {
-        settings = read_settings.get_child("settings",{});
+        settings = read_settings.get_child("settings", {});
     }
 
     /**
@@ -210,7 +210,7 @@ private:
      */
     static Settings load_settings(const Settings& input)
     {
-        std::string relfile = input.get("id","");
+        std::string relfile = input.get("id", "");
         if ( relfile.empty() )
             throw melanobot::ConfigurationError("Missing id file");
 

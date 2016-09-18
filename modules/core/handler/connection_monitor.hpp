@@ -34,9 +34,9 @@ public:
     ConnectionMonitor(const std::string& default_trigger,
                       const Settings& settings,
                       MessageConsumer* parent)
-        : SimpleAction(default_trigger,settings,parent)
+        : SimpleAction(default_trigger, settings, parent)
     {
-        std::string monitored_name = settings.get("monitored","");
+        std::string monitored_name = settings.get("monitored", "");
         if ( !monitored_name.empty() )
             monitored = melanobot::Melanobot::instance().connection(monitored_name);
         if ( !monitored )
@@ -84,7 +84,7 @@ class MonitorReply : public ConnectionMonitor
 {
 public:
     MonitorReply(const Settings& settings, MessageConsumer* parent)
-        : ConnectionMonitor("",settings,parent)
+        : ConnectionMonitor("", settings, parent)
     {
         reply = read_string(settings, "reply", "");
         if ( reply.empty() )

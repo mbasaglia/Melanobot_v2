@@ -48,20 +48,20 @@ protected:
         {
             string::FormatterAscii ascii;
             users.erase(std::remove_if(users.begin(), users.end(),
-                [&ascii,&msg](const user::User& user) {
-                    return msg.source->encode_to(user.name,ascii)
+                [&ascii, &msg](const user::User& user) {
+                    return msg.source->encode_to(user.name, ascii)
                         .find(msg.message) == std::string::npos;
-            }),users.end());
+            }), users.end());
 
             if ( users.empty() )
-                reply_to(msg,"(No users match the query)");
+                reply_to(msg, "(No users match the query)");
             else
-                print_users(msg,users);
+                print_users(msg, users);
             return true;
         }
 
         if ( !users.empty() )
-            print_users(msg,users);
+            print_users(msg, users);
 
         static std::vector<std::string> server_info {
             "Players: $(1)$players$(-) active, $(1)$bots$(-) bots, $(1)$players$(-)/$(1)$max$(-) total",

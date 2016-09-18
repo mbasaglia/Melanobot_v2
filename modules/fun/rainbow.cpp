@@ -28,25 +28,25 @@ string::FormattedString FormatterRainbow::decode(const std::string& source) cons
     melanolib::string::Utf8Parser parser;
     std::vector<color::Color12*> colors;
 
-    parser.callback_ascii = [&str,&colors](uint8_t byte)
+    parser.callback_ascii = [&str, &colors](uint8_t byte)
     {
         string::Element color(color::nocolor);
         colors.push_back(&color.reference<color::Color12>());
         str.append(std::move(color));
         str.append(char(byte));
     };
-    parser.callback_utf8 = [&str,&colors](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [&str, &colors](uint32_t unicode, const std::string& utf8)
     {
         string::Element color(color::nocolor);
         colors.push_back(&color.reference<color::Color12>());
         str.append(std::move(color));
-        str.append(string::Unicode(utf8,unicode));
+        str.append(string::Unicode(utf8, unicode));
     };
 
     parser.parse(source);
 
     for ( unsigned i = 0; i < colors.size(); i++ )
-        *colors[i] = color::Color12::hsv(hue+double(i)/colors.size(),saturation,value);
+        *colors[i] = color::Color12::hsv(hue+double(i)/colors.size(), saturation, value);
 
     return str;
 }

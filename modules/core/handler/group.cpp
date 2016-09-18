@@ -50,19 +50,19 @@ void AbstractGroup::populate_properties(const std::vector<std::string>& properti
     for ( unsigned i = 0; i < children.size(); i++ )
     {
         PropertyTree child;
-        children[i]->populate_properties(properties,child);
+        children[i]->populate_properties(properties, child);
         if ( !child.empty() || !child.data().empty() )
         {
             std::string name = children[i]->get_property("name");
             if ( name.empty() )
                 name = std::to_string(i);
-            output.put_child(name,child);
+            output.put_child(name, child);
         }
     }
 }
 
 Group::Group(const Settings& settings, MessageConsumer* parent)
-    : AbstractActionGroup("",settings,parent)
+    : AbstractActionGroup("", settings, parent)
 {
     // Gather settings
     auth = settings.get("auth", auth);
@@ -80,7 +80,7 @@ Group::Group(const Settings& settings, MessageConsumer* parent)
             throw melanobot::ConfigurationError();
     }
     synopsis = "";
-    help = settings.get("help","");
+    help = settings.get("help", "");
     // Force a name for groups with explicit help
     if ( !help.empty() && name.empty() )
         name = trigger;
@@ -135,7 +135,7 @@ class ListInsert : public melanobot::SimpleAction
 public:
     ListInsert(const Settings& settings,
                AbstractList* parent)
-    : SimpleAction("+|add","(?:\\+|add)\\s+",settings,parent),
+    : SimpleAction("+|add", "(?:\\+|add)\\s+", settings, parent),
         parent(parent)
     {
         if ( !parent )
@@ -154,18 +154,18 @@ protected:
             ( parent->add(s) ? ok : ko ).push_back(s);
 
         if ( !ok.empty() )
-            reply_to(msg,string::FormattedString() <<
+            reply_to(msg, string::FormattedString() <<
                 "Added to "+parent->get_property("list_name")
-                +": " << color::green << melanolib::string::implode(" ",ok));
+                +": " << color::green << melanolib::string::implode(" ", ok));
         else if ( ko.empty() )
-            reply_to(msg,"No items were added to "
+            reply_to(msg, "No items were added to "
                 +parent->get_property("list_name"));
 
         if ( !ko.empty() )
-            reply_to(msg,string::FormattedString() <<
+            reply_to(msg, string::FormattedString() <<
                 string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
                 " added to "+parent->get_property("list_name")
-                    +": " << color::dark_yellow << melanolib::string::implode(" ",ko));
+                    +": " << color::dark_yellow << melanolib::string::implode(" ", ko));
 
         return true;
     }
@@ -181,7 +181,7 @@ class ListRemove : public melanobot::SimpleAction
 public:
     ListRemove(const Settings& settings,
                AbstractList* parent)
-    : SimpleAction("-|rm","(?:-|rm)\\s+",settings,parent),
+    : SimpleAction("-|rm", "(?:-|rm)\\s+", settings, parent),
         parent(parent)
     {
         if ( !parent )
@@ -200,18 +200,18 @@ protected:
             ( parent->remove(s) ? ok : ko ).push_back(s);
 
         if ( !ok.empty() )
-            reply_to(msg,string::FormattedString() <<
+            reply_to(msg, string::FormattedString() <<
                 "Removed from "+parent->get_property("list_name")
-                +": " << color::red << melanolib::string::implode(" ",ok));
+                +": " << color::red << melanolib::string::implode(" ", ok));
         else if ( ko.empty() )
-            reply_to(msg,"No items were removed from "
+            reply_to(msg, "No items were removed from "
                 +parent->get_property("list_name"));
 
         if ( !ko.empty() )
-            reply_to(msg,string::FormattedString() <<
+            reply_to(msg, string::FormattedString() <<
                 string::FormatFlags::BOLD << "Not" << string::FormatFlags::NO_FORMAT <<
                 " removed from "+parent->get_property("list_name")
-                    +": " << color::dark_yellow << melanolib::string::implode(" ",ko));
+                    +": " << color::dark_yellow << melanolib::string::implode(" ", ko));
 
         return true;
     }
@@ -227,7 +227,7 @@ class ListClear : public melanobot::SimpleAction
 {
 public:
     ListClear(const Settings& settings, AbstractList* parent)
-    : SimpleAction("clear",settings,parent),
+    : SimpleAction("clear", settings, parent),
         parent(parent)
     {
         if ( !parent )
@@ -239,9 +239,9 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         if ( parent->clear() )
-            reply_to(msg,parent->get_property("list_name")+" has been cleared");
+            reply_to(msg, parent->get_property("list_name")+" has been cleared");
         else
-            reply_to(msg,parent->get_property("list_name")+" could not be cleared");
+            reply_to(msg, parent->get_property("list_name")+" could not be cleared");
 
         return true;
     }
@@ -256,7 +256,7 @@ class ListShow : public melanobot::SimpleAction
 {
 public:
     ListShow(const Settings& settings, AbstractList* parent)
-    : SimpleAction("list","(?:list\\b)?\\s*",settings,parent),
+    : SimpleAction("list", "(?:list\\b)?\\s*", settings, parent),
         parent(parent)
     {
         if ( !parent )
@@ -272,7 +272,7 @@ protected:
             reply_to(msg, parent->get_property("list_name")+" is empty");
         else
             reply_to(msg, parent->get_property("list_name")+": "+
-                            melanolib::string::implode(" ",elem));
+                            melanolib::string::implode(" ", elem));
 
         return true;
     }
@@ -283,10 +283,10 @@ private:
 
 AbstractList::AbstractList(const std::string& default_trigger, bool clear,
                            const Settings& settings, MessageConsumer* parent)
-    : AbstractActionGroup(default_trigger,settings, parent)
+    : AbstractActionGroup(default_trigger, settings, parent)
 {
 
-    edit = settings.get("edit","");
+    edit = settings.get("edit", "");
 
     Settings child_settings;
     for ( const auto& p : settings )
@@ -294,17 +294,17 @@ AbstractList::AbstractList(const std::string& default_trigger, bool clear,
         if ( !p.second.data().empty() )
         {
             if ( p.first != "trigger" &&  p.first != "name" )
-                child_settings.put(p.first,p.second.data());
+                child_settings.put(p.first, p.second.data());
         }
     }
 
-    add_handler(melanolib::New<ListInsert>(child_settings,this));
-    add_handler(melanolib::New<ListRemove>(child_settings,this));
+    add_handler(melanolib::New<ListInsert>(child_settings, this));
+    add_handler(melanolib::New<ListRemove>(child_settings, this));
 
     if ( clear )
-        add_handler(melanolib::New<ListClear>(child_settings,this));
+        add_handler(melanolib::New<ListClear>(child_settings, this));
 
-    add_handler(melanolib::New<ListShow>(child_settings,this));
+    add_handler(melanolib::New<ListShow>(child_settings, this));
 }
 
 bool AbstractList::on_handle(network::Message& msg)
@@ -315,33 +315,33 @@ bool AbstractList::on_handle(network::Message& msg)
 }
 
 Multi::Multi(const Settings& settings, MessageConsumer* parent)
-    : AbstractActionGroup("",settings,parent)
+    : AbstractActionGroup("", settings, parent)
 {
     synopsis = "";
-    help = settings.get("help","");
+    help = settings.get("help", "");
 
     // Copy relevant defaults to show the children
     Settings default_settings;
     for ( const auto& p : settings )
         if ( !p.second.data().empty() &&
-            !melanolib::string::is_one_of(p.first,{"trigger","type"}) )
+            !melanolib::string::is_one_of(p.first, {"trigger", "type"}) )
         {
-            default_settings.put(p.first,p.second.data());
+            default_settings.put(p.first, p.second.data());
         }
 
     // Initialize children
-    add_children(settings,default_settings);
+    add_children(settings, default_settings);
 
 
     PropertyTree props;
-    populate_properties({"trigger"},props);
+    populate_properties({"trigger"}, props);
 
     prefixes.resize(children().size());
     auto it = props.begin();
     for ( unsigned i = 0; i < children().size() && it != props.end(); ++it, ++i )
     {
         settings::breakable_recurse(it->second,
-        [this,i](const PropertyTree& node){
+        [this, i](const PropertyTree& node){
             if ( auto opt = node.get_optional<std::string>("trigger") )
             {
                 std::string debug = *opt;
@@ -385,9 +385,9 @@ bool Multi::on_handle ( network::Message& msg )
 }
 
 IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
-        : AbstractGroup(settings,parent)
+        : AbstractGroup(settings, parent)
 {
-    std::string key = settings.get("key","");
+    std::string key = settings.get("key", "");
 
     bool active = false;
     melanolib::Optional<std::string> message;
@@ -404,7 +404,7 @@ IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
             active = true;
     }
     else
-        active = settings.get("value",false);
+        active = settings.get("value", false);
 
     if ( active )
     {
@@ -416,7 +416,7 @@ IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
         message = settings.get_optional<std::string>("log_false");
     }
     if ( message )
-        Log("sys",'!') << string::FormatterConfig().decode(*message);
+        Log("sys", '!') << string::FormatterConfig().decode(*message);
 }
 
 } // namespace core

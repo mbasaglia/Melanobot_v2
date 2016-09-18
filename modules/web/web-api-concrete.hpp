@@ -36,7 +36,7 @@ class SearchVideoYoutube : public SimpleJson
 {
 public:
     SearchVideoYoutube(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("video",settings,parent)
+        : SimpleJson("video", settings, parent)
     {
         synopsis += " Term...";
         help = "Search a video on YouTube";
@@ -57,17 +57,17 @@ protected:
         request_json(msg, web::Request("GET", Uri(api_url, {
             {"part", "snippet"},
             {"type", "video" },
-            {"maxResults","1"},
-            {"order",order},
-            {"key",yt_api_key},
-            {"q",msg.message},
+            {"maxResults", "1"},
+            {"order", order},
+            {"key", yt_api_key},
+            {"q", msg.message},
         })));
         return true;
     }
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        int found = parsed.get("pageInfo.totalResults",0);
+        int found = parsed.get("pageInfo.totalResults", 0);
         if ( !found )
         {
             reply_to(msg, not_found_reply);
@@ -75,10 +75,10 @@ protected:
         }
         string::FormatterUtf8   f8;
         string::FormattedProperties prop {
-            {"videoId",parsed.get("items.0.id.videoId","")},
-            {"title",f8.decode(parsed.get("items.0.snippet.title",""))},
-            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle",""))},
-            {"description",f8.decode(parsed.get("items.0.snippet.description",""))},
+            {"videoId", parsed.get("items.0.id.videoId", "")},
+            {"title", f8.decode(parsed.get("items.0.snippet.title", ""))},
+            {"channelTitle", f8.decode(parsed.get("items.0.snippet.channelTitle", ""))},
+            {"description", f8.decode(parsed.get("items.0.snippet.description", ""))},
         };
         reply_to(msg, reply.replaced(prop));
     }
@@ -120,7 +120,7 @@ class VideoInfo : public melanobot::Handler
 {
 public:
     VideoInfo(const Settings& settings, MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
         yt_api_key = settings.get("yt_api_key", "");
         reply = read_string(settings, "reply",
@@ -135,7 +135,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override;
 
-    using FoundFunction = void (VideoInfo::*)(const network::Message&,const Settings&);
+    using FoundFunction = void (VideoInfo::*)(const network::Message&, const Settings&);
     std::pair<FoundFunction, web::Request> request_from_match(const std::smatch& match) const;
 
     /**
@@ -143,19 +143,19 @@ protected:
      */
     void yt_found(const network::Message& msg, const Settings& parsed)
     {
-        if ( !parsed.get("pageInfo.totalResults",0) )
+        if ( !parsed.get("pageInfo.totalResults", 0) )
             return;
 
         string::FormatterUtf8 f8;
-        send_message(msg,{
-            {"videoId",parsed.get("items.0.id","")},
-            {"title",f8.decode(parsed.get("items.0.snippet.title",""))},
-            {"channelTitle",f8.decode(parsed.get("items.0.snippet.channelTitle",""))},
-            {"description",f8.decode(parsed.get("items.0.snippet.description",""))},
+        send_message(msg, {
+            {"videoId", parsed.get("items.0.id", "")},
+            {"title", f8.decode(parsed.get("items.0.snippet.title", ""))},
+            {"channelTitle", f8.decode(parsed.get("items.0.snippet.channelTitle", ""))},
+            {"description", f8.decode(parsed.get("items.0.snippet.description", ""))},
             {"duration",
                 melanolib::time::duration_string_short(
                     melanolib::time::parse_duration(
-                        parsed.get("items.0.contentDetails.duration","")
+                        parsed.get("items.0.contentDetails.duration", "")
                 ))}
         });
     }
@@ -166,15 +166,15 @@ protected:
     void vimeo_found(const network::Message& msg, const Settings& parsed)
     {
         string::FormatterUtf8 f8;
-        send_message(msg,{
-            {"videoId",parsed.get("0.id","")},
-            {"title",f8.decode(parsed.get("0.title",""))},
-            {"channelTitle",f8.decode(parsed.get("0.user_name",""))},
-            {"description",f8.decode(parsed.get("0.description",""))},
+        send_message(msg, {
+            {"videoId", parsed.get("0.id", "")},
+            {"title", f8.decode(parsed.get("0.title", ""))},
+            {"channelTitle", f8.decode(parsed.get("0.user_name", ""))},
+            {"description", f8.decode(parsed.get("0.description", ""))},
             {"duration",
                 melanolib::time::duration_string_short(
                     melanolib::time::seconds(
-                        parsed.get("0.duration",0)
+                        parsed.get("0.duration", 0)
                 ))}
         });
     }
@@ -187,15 +187,15 @@ protected:
         if ( parsed.get_child_optional("error") )
             return;
         string::FormatterUtf8   f8;
-        send_message(msg,{
-            {"videoId",parsed.get("id","")},
-            {"title",f8.decode(parsed.get("title",""))},
-            {"channelTitle",f8.decode(parsed.get("cannel",""))},
-            {"description",f8.decode(parsed.get("description",""))},
+        send_message(msg, {
+            {"videoId", parsed.get("id", "")},
+            {"title", f8.decode(parsed.get("title", ""))},
+            {"channelTitle", f8.decode(parsed.get("cannel", ""))},
+            {"description", f8.decode(parsed.get("description", ""))},
             {"duration",
                 melanolib::time::duration_string_short(
                     melanolib::time::seconds(
-                        parsed.get("duration",0)
+                        parsed.get("duration", 0)
                 ))}
         });
     }
@@ -208,13 +208,13 @@ protected:
         if ( parsed.get_child_optional("error") )
             return;
         string::FormatterUtf8   f8;
-        send_message(msg,{
-            {"videoId",parsed.get("video.video_id","")},
-            {"title",f8.decode(parsed.get("video.title",""))},
-            {"channelTitle",f8.decode(parsed.get("user.username",""))},
-            {"description",f8.decode(parsed.get("video.description",""))},
-            {"duration",melanolib::time::duration_string_short(
-                melanolib::time::seconds(int(parsed.get("video.duration",0.0)))
+        send_message(msg, {
+            {"videoId", parsed.get("video.video_id", "")},
+            {"title", f8.decode(parsed.get("video.title", ""))},
+            {"channelTitle", f8.decode(parsed.get("user.username", ""))},
+            {"description", f8.decode(parsed.get("video.description", ""))},
+            {"duration", melanolib::time::duration_string_short(
+                melanolib::time::seconds(int(parsed.get("video.duration", 0.0)))
             )}
         });
     }
@@ -226,7 +226,7 @@ protected:
     {
         auto response = reply.replaced(properties);
         response.replace(string::FormattedProperties{
-            {"channel", melanolib::string::implode(", ",msg.channels)},
+            {"channel", melanolib::string::implode(", ", msg.channels)},
             {"name", msg.source->decode(msg.from.name)},
             {"host", msg.from.host},
             {"global_id", msg.from.global_id},
@@ -278,7 +278,7 @@ class UrbanDictionary : public SimpleJson
 {
 public:
     UrbanDictionary(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("define",settings,parent)
+        : SimpleJson("define", settings, parent)
     {
         synopsis += " Term...";
         help = "Search a definition on Urban Dictionary";
@@ -295,7 +295,7 @@ protected:
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        std::string result = parsed.get("list.0.definition","");
+        std::string result = parsed.get("list.0.definition", "");
 
         if ( result.empty() )
             reply_to(msg, not_found_reply.replaced( Properties{
@@ -368,7 +368,7 @@ class MediaWiki : public SimpleJson
 {
 public:
     MediaWiki(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("wiki",settings,parent)
+        : SimpleJson("wiki", settings, parent)
     {
         synopsis += " Term...";
         help = "Search a page on a wiki";
@@ -405,9 +405,9 @@ protected:
             reply_to(msg, not_found_reply.replaced(prop));
             return;
         }
-        prop["title"] = result->get("title","");
+        prop["title"] = result->get("title", "");
         /// \todo Transform snippet to plaintext
-        prop["snippet"] = result->get("snippet","");
+        prop["snippet"] = result->get("snippet", "");
 
         reply_to(msg, reply.replaced(prop));
     }
@@ -434,7 +434,7 @@ class MediaWikiTitles : public MediaWiki
 {
 public:
     MediaWikiTitles(const Settings& settings, MessageConsumer* parent)
-        : MediaWiki(settings,parent)
+        : MediaWiki(settings, parent)
     {}
 
 protected:
@@ -446,8 +446,8 @@ protected:
             {"prop",    "revisions"},
             {"titles",  msg.message},
             {"rvprop",  "content"},
-            {"rvsection","0"},
-            {"redirects",""},
+            {"rvsection", "0"},
+            {"redirects", ""},
         }}));
         return true;
     }
@@ -464,15 +464,15 @@ protected:
         if ( result && !result->empty() )
             result = result->front().second;
 
-        if ( !result || !settings::has_child(*result,"revisions.0.*") )
+        if ( !result || !settings::has_child(*result, "revisions.0.*") )
         {
             reply_to(msg, not_found_reply.replaced(prop));
             return;
         }
 
-        prop["title"] = result->get("title","");
+        prop["title"] = result->get("title", "");
         /// \todo Transform snippet to plaintext
-        prop["snippet"] = result->get("revisions.0.*","");
+        prop["snippet"] = result->get("revisions.0.*", "");
 
         reply_to(msg, reply.replaced(prop));
     }
@@ -611,8 +611,8 @@ private:
                     try {
                         ptree = parser.parse(resp.body, req.uri.full());
                     } catch ( const JsonError& err ) {
-                        ErrorLog errlog("web","JSON Error");
-                        if ( settings::global_settings.get("debug",0) )
+                        ErrorLog errlog("web", "JSON Error");
+                        if ( settings::global_settings.get("debug", 0) )
                             errlog << err.file << ':' << err.line << ": ";
                         errlog << err.what();
                         return;

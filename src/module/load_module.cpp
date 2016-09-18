@@ -50,7 +50,7 @@ void gather_metadata(const std::string& search_path,
         std::string basename = entry.path().filename().string();
         if ( std::regex_match(basename, match, regex) )
         {
-            Log("sys",'!',4) << "\tLoading library " << entry.path().string();
+            Log("sys", '!', 4) << "\tLoading library " << entry.path().string();
             try
             {
                 Library lib(entry.path().native(),
@@ -59,12 +59,12 @@ void gather_metadata(const std::string& search_path,
                     match[1].str()+"_metadata");
                 module.library = lib;
                 modules.push_back(module);
-                Log("sys",'!',3) << "\tFound module "
+                Log("sys", '!', 3) << "\tFound module "
                                 << module.name << ' ' << module.version;
             }
             catch ( const LibraryError& error )
             {
-                ErrorLog errlog("sys","Module Error");
+                ErrorLog errlog("sys", "Module Error");
                 if ( settings::global_settings.get("debug", 0) )
                     errlog << error.library_file << ": ";
                 errlog  << error.what();
@@ -97,7 +97,7 @@ void filter_dependencies(std::vector<module::Melanomodule>& modules)
 
         if ( modules.size() == size )
         {
-            Log log("sys",'!');
+            Log log("sys", '!');
             log << "The following modules have unsatisfied dependencies:";
             for ( const auto& mod : modules )
             {
@@ -119,7 +119,7 @@ void filter_deprecation(std::vector<module::Melanomodule>& modules)
 
     if ( it != modules.end() )
     {
-        Log log("sys",'!');
+        Log log("sys", '!');
         log << "The following modules are deprecated:";
         for( auto i = it; i != modules.end(); ++i )
         {
@@ -134,7 +134,7 @@ std::vector<module::Melanomodule> find_modules(const std::vector<std::string>& p
     if ( paths.empty() )
         return {};
 
-    Log("sys",'!',3) << "Searching for modules";
+    Log("sys", '!', 3) << "Searching for modules";
     std::vector<module::Melanomodule> modules;
     for ( const auto& path : paths )
         gather_metadata(path, modules);

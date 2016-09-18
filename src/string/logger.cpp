@@ -76,10 +76,10 @@ void Logger::load_settings(const Settings& settings)
 {
     std::lock_guard<std::mutex> lock(mutex);
 
-    std::string format = settings.get("string_format","ansi-utf8");
+    std::string format = settings.get("string_format", "ansi-utf8");
     formatter = string::Formatter::formatter(format);
-    timestamp = settings.get("timestamp",timestamp);
-    for ( const auto&p  : settings.get_child("verbosity",{}) )
+    timestamp = settings.get("timestamp", timestamp);
+    for ( const auto&p  : settings.get_child("verbosity", {}) )
     {
         auto type_it = log_types.find(p.first);
         if ( type_it != log_types.end() )
@@ -91,11 +91,11 @@ void Logger::load_settings(const Settings& settings)
             if ( log_type_length < p.first.size() )
                 log_type_length = p.first.size();
             log_types.insert({p.first,
-                LogType(color::nocolor,p.second.get_value(2))});
+                LogType(color::nocolor, p.second.get_value(2))});
         }
     }
     /// \todo maybe should use different a formatter (ie: plain utf8) for log files
-    std::string output = settings.get("logfile","");
+    std::string output = settings.get("logfile", "");
     if ( !output.empty() )
     {
         if ( !log_buffer.push_file(output) )

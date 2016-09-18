@@ -34,24 +34,24 @@ std::unique_ptr<Connection> ConnectionFactory::create(
 {
     try
     {
-        std::string protocol = settings.get("protocol",std::string());
+        std::string protocol = settings.get("protocol", std::string());
         auto it = factory.find(protocol);
         if ( it != factory.end() )
         {
-            if ( !settings.get("enabled",true) )
+            if ( !settings.get("enabled", true) )
             {
-                Log("sys",'!') << "Skipping disabled connection " << color::red << name;
+                Log("sys", '!') << "Skipping disabled connection " << color::red << name;
                 return nullptr;
             }
 
-            Log("sys",'!') << "Creating connection " << color::dark_green << name;
+            Log("sys", '!') << "Creating connection " << color::dark_green << name;
             return it->second(settings, name);
         }
-        ErrorLog ("sys","Connection Error") << ": Unknown connection protocol "+protocol;
+        ErrorLog ("sys", "Connection Error") << ": Unknown connection protocol "+protocol;
     }
     catch ( const melanobot::MelanobotError& exc )
     {
-        ErrorLog ("sys","Connection Error") << exc.what();
+        ErrorLog ("sys", "Connection Error") << exc.what();
     }
 
     return nullptr;

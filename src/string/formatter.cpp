@@ -122,7 +122,7 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
 
     string::AsciiString ascii;
 
-    auto push_ascii = [&ascii,&str]()
+    auto push_ascii = [&ascii, &str]()
     {
         if ( !ascii.empty() )
         {
@@ -131,14 +131,14 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&str,&ascii](uint8_t byte)
+    parser.callback_ascii = [&str, &ascii](uint8_t byte)
     {
         ascii += byte;
     };
-    parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [&str, push_ascii](uint32_t unicode, const std::string& utf8)
     {
         push_ascii();
-        str.append(Unicode(utf8,unicode));
+        str.append(Unicode(utf8, unicode));
     };
     parser.callback_end = push_ascii;
 
@@ -155,7 +155,7 @@ std::string FormatterUtf8::name() const
 
 std::string FormatterAscii::to_string(const Unicode& c) const
 {
-    return std::string(1,melanolib::string::Utf8Parser::to_ascii(c.utf8()));
+    return std::string(1, melanolib::string::Utf8Parser::to_ascii(c.utf8()));
 }
 
 FormattedString FormatterAscii::decode(const std::string& source) const
@@ -190,7 +190,7 @@ std::string FormatterAnsi::to_string(FormatFlags flags) const
     codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
     codes.push_back( flags & FormatFlags::UNDERLINE ? 4 : 24 );
     codes.push_back( flags & FormatFlags::ITALIC ? 3 : 23 );
-    return  "\x1b["+melanolib::string::implode(";",codes)+"m";
+    return  "\x1b["+melanolib::string::implode(";", codes)+"m";
 }
 
 std::string FormatterAnsi::to_string(ClearFormatting clear) const
@@ -202,7 +202,7 @@ std::string FormatterAnsi::to_string(const Unicode& c) const
 {
     if ( utf8 )
         return c.utf8();
-    return std::string(1,melanolib::string::Utf8Parser::to_ascii(c.utf8()));
+    return std::string(1, melanolib::string::Utf8Parser::to_ascii(c.utf8()));
 }
 
 FormattedString FormatterAnsi::decode(const std::string& source) const
@@ -213,7 +213,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
 
     AsciiString ascii;
 
-    auto push_ascii = [&ascii,&str]()
+    auto push_ascii = [&ascii, &str]()
     {
         if ( !ascii.empty() )
         {
@@ -222,7 +222,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&parser,&str,&ascii,push_ascii](uint8_t byte)
+    parser.callback_ascii = [&parser, &str, &ascii, push_ascii](uint8_t byte)
     {
         if ( byte == '\x1b' && parser.input.peek() == '[' )
         {
@@ -312,7 +312,7 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
             ascii += byte;
         }
     };
-    parser.callback_utf8 = [this,&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [this, &str, push_ascii](uint32_t unicode, const std::string& utf8)
     {
         push_ascii();
         if ( this->utf8 )
@@ -384,7 +384,7 @@ std::string FormatterConfig::to_string(char input) const
 
 std::string FormatterConfig::to_string(const AsciiString& input) const
 {
-    return melanolib::string::replace(input,"$","$$");
+    return melanolib::string::replace(input, "$", "$$");
 }
 
 /**
@@ -463,7 +463,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 
     AsciiString ascii;
 
-    auto push_ascii = [&ascii,&str]()
+    auto push_ascii = [&ascii, &str]()
     {
         if ( !ascii.empty() )
         {
@@ -546,7 +546,7 @@ FormattedString FormatterConfig::decode(const std::string& source) const
         }
     };
 
-    parser.callback_utf8 = [this,&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [this, &str, push_ascii](uint32_t unicode, const std::string& utf8)
     {
         push_ascii();
         str.append(Unicode(utf8, unicode));

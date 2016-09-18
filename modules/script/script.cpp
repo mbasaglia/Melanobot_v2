@@ -31,7 +31,7 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_script_metadata()
 
 MELANOMODULE_ENTRY_POINT void melanomodule_script_initialize(const Settings&)
 {
-    module::register_log_type("py",color::dark_yellow);
+    module::register_log_type("py", color::dark_yellow);
 
     module::register_handler<python::SimpleScript>("SimpleScript");
     module::register_handler<python::StructuredScript>("StructuredScript");

@@ -25,7 +25,7 @@
  */
 MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_posix_metadata()
 {
-    return {"posix","POSIX extensions"};
+    return {"posix", "POSIX extensions"};
 }
 
 MELANOMODULE_ENTRY_POINT void melanomodule_posix_initialize(const Settings&)
@@ -34,5 +34,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_posix_initialize(const Settings&)
     module::register_handler<posix::MelanobotShAction>("MelanobotShAction");
     module::register_handler<posix::MelanobotShRestart>("MelanobotShRestart");
     module::register_handler<posix::MelanobotShQuit>("MelanobotShQuit");
-    module::register_log_type("std",color::white);
+    module::register_log_type("std", color::white);
 }

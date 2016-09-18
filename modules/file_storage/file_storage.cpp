@@ -65,7 +65,7 @@ PropertyTree Storage::node_from_map(const table& value)
 Storage::Storage(const Settings& settings)
     : cache_policy{melanobot::CachePolicy::Read::ONCE, melanobot::CachePolicy::Write::DYNAMIC}
 {
-    std::string formatstring = melanolib::string::strtolower(settings.get("format","info"));
+    std::string formatstring = melanolib::string::strtolower(settings.get("format", "info"));
     if ( formatstring == "xml" )
         format = settings::FileFormat::XML;
     else if ( formatstring == "json" )
@@ -108,7 +108,7 @@ void Storage::load()
     cache_policy.mark_clean();
     if ( std::ifstream file{filename} )
     {
-        Log("sys",'!',4) << "Loading settings from " << filename;
+        Log("sys", '!', 4) << "Loading settings from " << filename;
         if ( format ==  settings::FileFormat::INFO )
             boost::property_tree::read_info(file, data);
         else if ( format == settings::FileFormat::XML )
@@ -129,7 +129,7 @@ void Storage::save()
     if ( std::ofstream file{filename} )
     {
         cache_policy.mark_clean();
-        Log("sys",'!',4) << "Writing settings to " << filename;
+        Log("sys", '!', 4) << "Writing settings to " << filename;
 
         if ( format == settings::FileFormat::INFO )
             boost::property_tree::write_info(file, data);
@@ -212,7 +212,7 @@ void Storage::put(const key_type& path, const key_type& key, const value_type& v
     auto pt = data.get_child_optional(path);
     if ( !pt )
         pt = data.put_child(path, {});
-    pt->push_back({key,PropertyTree(value)});
+    pt->push_back({key, PropertyTree(value)});
     cache_policy.mark_dirty();
     maybe_save();
 }
@@ -248,7 +248,7 @@ void Storage::append(const key_type& path, const value_type& element)
     if ( auto child = data.get_child_optional(path) )
         child->put(std::to_string(child->size()), element);
     else
-        data.put(path+".0",element);
+        data.put(path+".0", element);
 }
 
 int Storage::erase(const key_type& path)

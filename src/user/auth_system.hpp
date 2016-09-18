@@ -42,7 +42,7 @@ public:
     {
         int ret = 0;
         for ( const auto& g : groups )
-            if ( add_user(user,g) )
+            if ( add_user(user, g) )
                 ret++;
         return ret;
     }
@@ -122,7 +122,7 @@ public:
     }
 
 private:
-    std::unordered_map<std::string,UserGroup> user_groups;
+    std::unordered_map<std::string, UserGroup> user_groups;
 };
 
 

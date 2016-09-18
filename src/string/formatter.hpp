@@ -85,7 +85,7 @@ public:
         Registry();
         friend ParentSingleton;
 
-        std::unordered_map<std::string,Formatter*> formatters;
+        std::unordered_map<std::string, Formatter*> formatters;
         Formatter* default_formatter = nullptr;
     };
 

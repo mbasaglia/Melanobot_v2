@@ -49,14 +49,14 @@ public:
     }
 
     StdinConnection(const Settings& settings, const std::string& name)
-        : SingleUnitConnection(name),input{io_service}
+        : SingleUnitConnection(name), input{io_service}
     {
-        std::string filename = settings.get("file","");
+        std::string filename = settings.get("file", "");
         int file = open_file(filename);
         if ( file < 0 )
             throw melanobot::ConfigurationError("Cannot open "+filename);
-        input = boost::asio::posix::stream_descriptor(io_service,file);
-        formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("utf8")));
+        input = boost::asio::posix::stream_descriptor(io_service, file);
+        formatter_ = string::Formatter::formatter(settings.get("string_format", std::string("utf8")));
     }
 
     ~StdinConnection()
@@ -89,12 +89,12 @@ public:
 
 
     std::string protocol() const override { return "stdin"; }
-    network::Server server() const override { return {"stdin",0}; }
+    network::Server server() const override { return {"stdin", 0}; }
     std::string description() const override { return  "stdin"; }
 
     void say ( const network::OutputMessage& msg ) override
     {
-        Log("std",'>',1) << msg.message;
+        Log("std", '>', 1) << msg.message;
     }
 
     LockedProperties properties() override
@@ -127,7 +127,7 @@ private:
         io_service.run(err);
         if ( err )
         {
-            ErrorLog("std","Network Error") << err.message();
+            ErrorLog("std", "Network Error") << err.message();
             melanobot::Melanobot::instance().stop(); /// \todo move this in error handler
         }
     }
@@ -144,14 +144,14 @@ private:
         if (error)
         {
             if ( error != boost::asio::error::eof )
-                ErrorLog("std","Network Error") << error.message();
+                ErrorLog("std", "Network Error") << error.message();
             return;
         }
 
         std::istream buffer_stream(&buffer_read);
         network::Message msg;
-        std::getline(buffer_stream,msg.raw);
-        Log("std",'<',1) << formatter_->decode(msg.raw);
+        std::getline(buffer_stream, msg.raw);
+        Log("std", '<', 1) << formatter_->decode(msg.raw);
         std::istringstream socket_stream(msg.raw);
 
         msg.chat(msg.raw);

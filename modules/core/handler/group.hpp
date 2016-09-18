@@ -84,8 +84,8 @@ public:
     AbstractActionGroup(const std::string& default_trigger,
                         const Settings& settings,
                         MessageConsumer* parent)
-    : SimpleAction(default_trigger,settings,parent),
-      group({},this) {}
+    : SimpleAction(default_trigger, settings, parent),
+      group({}, this) {}
 
     void initialize() override
     {
@@ -100,8 +100,8 @@ public:
     void populate_properties(const std::vector<std::string>& properties,
                              PropertyTree& output) const override
     {
-        group.populate_properties(properties,output);
-        SimpleAction::populate_properties(properties,output);
+        group.populate_properties(properties, output);
+        SimpleAction::populate_properties(properties, output);
     }
 
 protected:
@@ -147,7 +147,7 @@ public:
      */
     bool authorized(const network::Message& msg) const
     {
-        return auth.empty() || msg.source->user_auth(msg.from.local_id,auth);
+        return auth.empty() || msg.source->user_auth(msg.from.local_id, auth);
     }
 
 protected:
@@ -230,7 +230,7 @@ class PresetGroup : public AbstractGroup
 public:
     PresetGroup( const std::initializer_list<std::string>& preset,
                  const Settings& settings, MessageConsumer* parent)
-        : AbstractGroup(settings,parent)
+        : AbstractGroup(settings, parent)
     {
         add_children(settings::merge_copy(settings,
             settings::from_initializer(preset), false));

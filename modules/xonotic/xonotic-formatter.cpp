@@ -34,9 +34,9 @@ static std::vector<std::string> qfont_table = {
     "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 5
     "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 6
     "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?",  "?", // 7
-    "=",  "=",  "=",  "#",  "!",  "[o]","[u]","[i]","[c]","[c]","[r]","#",  "?",  ">",  "#",  "#", // 8
+    "=",  "=",  "=",  "#",  "!",  "[o]", "[u]", "[i]", "[c]", "[c]", "[r]", "#",  "?",  ">",  "#",  "#", // 8
     "[",  "]",  ":)", ":)", ":(", ":P", ":/", ":D", "<",  ">",  "#",  "X",  "#",  "-",  "-",  "-", // 9
-    " ",  "!",  "\"", "#",  "$",  "%",  "&",  "\"", "(",  ")",  "*",  "+",  ",",  "-",  ".",  "/", // 10
+    " ",  "!",  "\"", "#",  "$",  "%",  "&",  "\"", "(",  ")",  "*",  "+",  ", ",  "-",  ".",  "/", // 10
     "0",  "1",  "2",  "3",  "4",  "5",  "6",  "7", "8",  "9",  ":",  ";",  "<",  "=",  ">",  "?",  // 11
     "@",  "A",  "B",  "C",  "D",  "E",  "F",  "G", "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  // 12
     "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W", "X",  "Y",  "Z",  "[",  "\\", "]",  "^",  "_",  // 13
@@ -65,7 +65,7 @@ std::string XonoticFormatter::to_string(char c) const
 
 std::string XonoticFormatter::to_string(const string::AsciiString& input) const
 {
-    return melanolib::string::replace(input,"^","^^");
+    return melanolib::string::replace(input, "^", "^^");
 }
 
 std::string XonoticFormatter::to_string(const color::Color12& color) const
@@ -105,7 +105,7 @@ string::FormattedString XonoticFormatter::decode(const std::string& source) cons
     melanolib::string::Utf8Parser parser;
     string::AsciiString ascii;
 
-    auto push_ascii = [&ascii,&str]()
+    auto push_ascii = [&ascii, &str]()
     {
         if ( !ascii.empty() )
         {
@@ -114,7 +114,7 @@ string::FormattedString XonoticFormatter::decode(const std::string& source) cons
         }
     };
 
-    parser.callback_ascii = [&str,&parser,&ascii,push_ascii](uint8_t byte)
+    parser.callback_ascii = [&str, &parser, &ascii, push_ascii](uint8_t byte)
     {
         if ( byte != '^' )
         {
@@ -131,7 +131,7 @@ string::FormattedString XonoticFormatter::decode(const std::string& source) cons
 
         std::smatch match;
 
-        if ( parser.input.get_regex(regex_xoncolor,match) )
+        if ( parser.input.get_regex(regex_xoncolor, match) )
         {
             push_ascii();
             str.append(color_from_match(match));
@@ -141,7 +141,7 @@ string::FormattedString XonoticFormatter::decode(const std::string& source) cons
             ascii += '^';
         }
     };
-    parser.callback_utf8 = [&str,push_ascii](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [&str, push_ascii](uint32_t unicode, const std::string& utf8)
     {
         push_ascii();
         if ( (unicode & 0xff00) == 0xe000 )
@@ -171,7 +171,7 @@ color::Color12 XonoticFormatter::color_from_string(std::string color)
 
     std::smatch match;
 
-    if ( !std::regex_match(color,match,regex_xoncolor) )
+    if ( !std::regex_match(color, match, regex_xoncolor) )
         return {};
 
     return color_from_match(match);

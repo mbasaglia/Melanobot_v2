@@ -317,7 +317,7 @@ public:
 
     template<class Iterator>
         FormattedString( const Iterator& i, const Iterator& j )
-            : elements(i,j) {}
+            : elements(i, j) {}
 
     FormattedString(AsciiString ascii_string)
     {

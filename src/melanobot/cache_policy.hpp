@@ -119,8 +119,8 @@ public:
      */
     void load_settings(const Settings& settings)
     {
-        read_ = to_read_policy(settings.get("read",to_string(read_)));
-        write_ = to_write_policy(settings.get("write",to_string(write_)));
+        read_ = to_read_policy(settings.get("read", to_string(read_)));
+        write_ = to_write_policy(settings.get("write", to_string(write_)));
     }
 
     /**

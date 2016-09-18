@@ -148,7 +148,7 @@ struct Melanomodule
 template<class ConnectionT>
     void register_connection(const std::string& name)
 {
-    static_assert(std::is_base_of<network::Connection,ConnectionT>::value,
+    static_assert(std::is_base_of<network::Connection, ConnectionT>::value,
                 "Expected network::Connection class");
     network::ConnectionFactory::instance()
         .register_connection(name, &ConnectionT::create);
@@ -161,7 +161,7 @@ template<class ConnectionT>
  */
 inline void register_log_type(const std::string& name, color::Color12 color)
 {
-    Logger::instance().register_log_type(name,color);
+    Logger::instance().register_log_type(name, color);
 }
 
 /**
@@ -172,7 +172,7 @@ inline void register_log_type(const std::string& name, color::Color12 color)
 template <class FormatterT, class... Args>
     void register_formatter(Args&&... args)
 {
-    static_assert(std::is_base_of<string::Formatter,FormatterT>::value,
+    static_assert(std::is_base_of<string::Formatter, FormatterT>::value,
                     "Expected string::Formatter type");
     string::Formatter::registry()
         .add_formatter(new FormatterT(std::forward<Args>(args)...));
@@ -187,10 +187,10 @@ template <class FormatterT, class... Args>
 template<class ServiceT>
     void register_service(const std::string& name)
 {
-    static_assert(std::is_base_of<AsyncService,ServiceT>::value,
+    static_assert(std::is_base_of<AsyncService, ServiceT>::value,
                     "Expected AsyncService type");
     ServiceRegistry::instance()
-        .register_service(name,&ServiceT::instance());
+        .register_service(name, &ServiceT::instance());
 }
 
 /**

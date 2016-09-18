@@ -88,9 +88,9 @@ public:
     DynamicReplyManager(const Settings& settings, MessageConsumer* parent)
         : SimpleAction("reply", settings, parent)
     {
-        list_id = "lists."+settings.get("list","dynamic_reply");
+        list_id = "lists."+settings.get("list", "dynamic_reply");
 
-        std::string separator = settings.get("separator","->");
+        std::string separator = settings.get("separator", "->");
         regex_reply = std::regex("(.+)\\s+"+melanolib::string::regex_escape(separator)+"(\\s+(.+))?",
                                  std::regex::ECMAScript|std::regex::optimize);
 
@@ -115,7 +115,7 @@ protected:
                 reply_to(msg, "Removed the given reply");
             }
             melanobot::storage().put(list_id+".last_updated",
-                                   melanolib::time::format_char(melanolib::time::DateTime(),'c'));
+                                   melanolib::time::format_char(melanolib::time::DateTime(), 'c'));
         }
         else
         {
@@ -139,7 +139,7 @@ public:
     DynamicReply(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
-        list_id = "lists."+settings.get("list","dynamic_reply");
+        list_id = "lists."+settings.get("list", "dynamic_reply");
         load_replies();
     }
 
@@ -180,7 +180,7 @@ private:
     }
 
     std::string list_id;        ///< List name in the storage system
-    std::unordered_map<std::string,std::string> replies; ///< Trigger/reply map
+    std::unordered_map<std::string, std::string> replies; ///< Trigger/reply map
     std::string last_updated;   ///< Timestamp for load_replies
 
 };

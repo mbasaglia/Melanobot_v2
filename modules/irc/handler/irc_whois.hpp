@@ -33,7 +33,7 @@ class Whois330 : public melanobot::Handler
 {
 public:
     Whois330(const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent) {}
+        : Handler(settings, parent) {}
 
     bool can_handle(const network::Message& msg) const override
     {
@@ -44,7 +44,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.source->update_user(msg.params[1],{{"global_id", msg.params[2]}});
+        msg.source->update_user(msg.params[1], {{"global_id", msg.params[2]}});
         return true;
     }
 
@@ -59,9 +59,9 @@ class QSendWhois : public melanobot::Handler
 {
 public:
     QSendWhois(const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
-        q_bot = settings.get("q_to",q_bot);
+        q_bot = settings.get("q_to", q_bot);
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -75,12 +75,12 @@ protected:
     {
         if ( msg.source->name() == msg.from.name )
         {
-            msg.destination->command({"PRIVMSG",{q_bot,"users "+msg.channels[0]},priority});
+            msg.destination->command({"PRIVMSG", {q_bot, "users "+msg.channels[0]}, priority});
         }
         else
         {
             if ( msg.from.global_id.empty() )
-                msg.destination->command({"PRIVMSG",{q_bot,"whois "+msg.from.name},priority});
+                msg.destination->command({"PRIVMSG", {q_bot, "whois "+msg.from.name}, priority});
         }
 
         return false; // reacts to the message but allows to do futher processing
@@ -97,9 +97,9 @@ class QGetWhois : public melanobot::Handler
 {
 public:
     QGetWhois(const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
-        q_bot = settings.get("q_from",q_bot);
+        q_bot = settings.get("q_from", q_bot);
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -128,13 +128,13 @@ protected:
             std::regex_constants::ECMAScript );
 
         std::smatch match;
-        if ( std::regex_match(msg.params[1],match,regex_qwhois) || (
-            expects_users && std::regex_match(msg.params[1],match,regex_users) ))
+        if ( std::regex_match(msg.params[1], match, regex_qwhois) || (
+            expects_users && std::regex_match(msg.params[1], match, regex_users) ))
         {
-            msg.source->update_user(match[1],{{"global_id",match[2]}});
+            msg.source->update_user(match[1], {{"global_id", match[2]}});
             return true;
         }
-        else if ( std::regex_match(msg.params[1],regex_startusers) )
+        else if ( std::regex_match(msg.params[1], regex_startusers) )
         {
             expects_users = true;
             return true;
@@ -160,7 +160,7 @@ class QWhois : public core::PresetGroup
 {
 public:
     QWhois(const Settings& settings, ::MessageConsumer* parent)
-        : PresetGroup({"QSendWhois","QGetWhois"},settings,parent) {}
+        : PresetGroup({"QSendWhois", "QGetWhois"}, settings, parent) {}
 };
 
 /**
@@ -170,7 +170,7 @@ class WhoisCheckMe : public melanobot::SimpleAction
 {
 public:
     WhoisCheckMe(const Settings& settings, ::MessageConsumer* parent)
-        : SimpleAction("checkme",settings,parent)
+        : SimpleAction("checkme", settings, parent)
     {}
 
     bool can_handle(const network::Message& msg) const override
@@ -182,7 +182,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        msg.destination->command({"WHOIS",{msg.from.name},priority});
+        msg.destination->command({"WHOIS", {msg.from.name}, priority});
         return true;
     }
 
@@ -197,15 +197,15 @@ class IrcIdentify : public melanobot::Handler
 {
 public:
     IrcIdentify(const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
         if ( !settings.get_optional<int>("priority") )
             priority = 2048; // higher than 1024 used by IrcConnection
-        nick        = settings.get("nick",nick);
-        password    = settings.get("password",password);
-        service     = settings.get("service",service);
-        command     = settings.get("command",command);
-        modes       = settings.get("modes",modes);
+        nick        = settings.get("nick", nick);
+        password    = settings.get("password", password);
+        service     = settings.get("service", service);
+        command     = settings.get("command", command);
+        modes       = settings.get("modes", modes);
         if ( password.empty() || service.empty() || command.empty() )
             throw melanobot::ConfigurationError();
     }
@@ -219,9 +219,9 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::string auth_nick = nick.empty() ? msg.source->properties().get("config.nick") : nick;
-        msg.destination->command({"PRIVMSG",{service,command+' '+auth_nick+' '+password},priority});
+        msg.destination->command({"PRIVMSG", {service, command+' '+auth_nick+' '+password}, priority});
         if ( !modes.empty() )
-            msg.destination->command({"MODE",{msg.source->name(), modes},priority});
+            msg.destination->command({"MODE", {msg.source->name(), modes}, priority});
         return true;
     }
 

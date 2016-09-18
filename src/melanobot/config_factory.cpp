@@ -91,7 +91,7 @@ bool ConfigFactory::build(
 
     if ( !settings.get("enabled", true) )
     {
-        Log("sys",'!') << "Skipping disabled handler " << color::red << handler_name;
+        Log("sys", '!') << "Skipping disabled handler " << color::red << handler_name;
         return false;
     }
 

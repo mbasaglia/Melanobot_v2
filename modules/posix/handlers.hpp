@@ -34,7 +34,7 @@ public:
     MelanobotShBase(const std::string& default_trigger,
                       const Settings& settings,
                       MessageConsumer* parent)
-        : SimpleAction(default_trigger,settings,parent)
+        : SimpleAction(default_trigger, settings, parent)
     {
         if ( !settings::global_settings.get_child_optional("settings.tmp_dir") )
             throw melanobot::ConfigurationError();
@@ -65,7 +65,7 @@ protected:
      */
     static std::string tmp_file(const std::string& file)
     {
-        return settings::global_settings.get("settings.tmp_dir",".")+"/"+file;
+        return settings::global_settings.get("settings.tmp_dir", ".")+"/"+file;
     }
 
 };
@@ -77,9 +77,9 @@ class MelanobotShAction : public MelanobotShBase
 {
 public:
     MelanobotShAction(const Settings& settings, MessageConsumer* parent)
-        : MelanobotShBase(settings.get("action",""),settings,parent)
+        : MelanobotShBase(settings.get("action", ""), settings, parent)
     {
-        action = settings.get("action",action);
+        action = settings.get("action", action);
         if ( action.empty() )
             throw melanobot::ConfigurationError();
         help = "Changes the quit action to "+action;
@@ -104,7 +104,7 @@ class MelanobotShRestart : public MelanobotShBase
 {
 public:
     MelanobotShRestart(const Settings& settings, MessageConsumer* parent)
-        : MelanobotShBase("restart",settings,parent)
+        : MelanobotShBase("restart", settings, parent)
     {
         help = "Restarts the bot";
     }
@@ -127,7 +127,7 @@ class MelanobotShQuit : public MelanobotShBase
 {
 public:
     MelanobotShQuit(const Settings& settings, MessageConsumer* parent)
-        : MelanobotShBase("quit",settings,parent)
+        : MelanobotShBase("quit", settings, parent)
     {
         help = "Quits the bot";
     }

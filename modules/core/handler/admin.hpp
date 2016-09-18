@@ -34,7 +34,7 @@ class AdminQuit: public melanobot::SimpleAction
 {
 public:
     AdminQuit(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("quit",settings,parent)
+        : SimpleAction("quit", settings, parent)
     {
         message = read_string(settings, "message", "Bye!");
         synopsis += " [message]";
@@ -66,18 +66,18 @@ class AdminGroup: public AbstractList
 {
 public:
     AdminGroup(const Settings& settings, MessageConsumer* parent)
-        : AbstractList(settings.get("group",""),true,settings,parent)
+        : AbstractList(settings.get("group", ""), true, settings, parent)
     {
-        std::string conn_name = settings.get("connection",settings.get("source",""));
+        std::string conn_name = settings.get("connection", settings.get("source", ""));
         connection = melanobot::Melanobot::instance().connection(conn_name);
-        group = settings.get("group","");
+        group = settings.get("group", "");
         if ( !connection || group.empty() )
             throw melanobot::ConfigurationError();
 
-        description = settings.get("description","the "+group+" group");
-        ignore = settings.get("ignore","");
+        description = settings.get("description", "the "+group+" group");
+        ignore = settings.get("ignore", "");
 
-        storage = settings.get("storage",storage);
+        storage = settings.get("storage", storage);
         storage_name = "groups."+connection->config_name()+"."+group;
     }
 
@@ -86,12 +86,12 @@ public:
         if ( storage && melanobot::has_storage() )
         {
             auto config_users = elements();
-            auto storage_users = melanobot::storage().maybe_put(storage_name,config_users);
+            auto storage_users = melanobot::storage().maybe_put(storage_name, config_users);
 
             // Add elements from the storage
             for ( const auto& user : storage_users )
                 if ( !ignored(user) )
-                    connection->add_to_group(user,group);
+                    connection->add_to_group(user, group);
 
             // Sort the two sequences to make them into sets
             std::sort(config_users.begin(), config_users.end());
@@ -110,13 +110,13 @@ public:
             // Remove elements which are in the config but not in the storage
             for ( const auto& user : remove )
                 if ( !ignored(user) )
-                    connection->remove_from_group(user,group);
+                    connection->remove_from_group(user, group);
         }
     }
 
     bool add(const std::string& element) override
     {
-        if ( !ignored(element) && connection->add_to_group(element,group) )
+        if ( !ignored(element) && connection->add_to_group(element, group) )
         {
             save_in_storage();
             return true;
@@ -126,7 +126,7 @@ public:
 
     bool remove(const std::string& element) override
     {
-        if ( !ignored(element) && connection->remove_from_group(element,group) )
+        if ( !ignored(element) && connection->remove_from_group(element, group) )
         {
             save_in_storage();
             return true;
@@ -142,7 +142,7 @@ public:
         {
             auto string = user_string(user);
             if ( string && !ignored(*string) &&
-                    connection->remove_from_group(*string,group) )
+                    connection->remove_from_group(*string, group) )
                 removed++;
         }
         save_in_storage();
@@ -176,7 +176,7 @@ private:
     void save_in_storage()
     {
         if ( storage && melanobot::has_storage() )
-            melanobot::storage().put(storage_name,elements());
+            melanobot::storage().put(storage_name, elements());
     }
 
     /**
@@ -221,16 +221,16 @@ class FilterGroup: public melanobot::Handler
 {
 public:
     FilterGroup(const Settings& settings, MessageConsumer* parent)
-        : Handler(settings,parent)
+        : Handler(settings, parent)
     {
-        ignore = settings.get("ignore",ignore);
+        ignore = settings.get("ignore", ignore);
         if ( ignore.empty() )
             throw melanobot::ConfigurationError();
     }
 
     bool can_handle(const network::Message& msg) const override
     {
-        return msg.source->user_auth(msg.from.local_id,ignore);
+        return msg.source->user_auth(msg.from.local_id, ignore);
     }
 
 private:
@@ -249,7 +249,7 @@ class AdminReconnect: public melanobot::SimpleAction
 {
 public:
     AdminReconnect(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("reconnect",settings,parent)
+        : SimpleAction("reconnect", settings, parent)
     {
         message = read_string(settings, "message", "Reconnecting...");
         synopsis += " [message]";
@@ -280,7 +280,7 @@ class AdminConnect: public melanobot::SimpleAction
 {
 public:
     AdminConnect(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("connect",settings,parent)
+        : SimpleAction("connect", settings, parent)
     {
         help = "Connects bot";
     }
@@ -300,7 +300,7 @@ class AdminDisconnect: public melanobot::SimpleAction
 {
 public:
     AdminDisconnect(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("disconnect",settings,parent)
+        : SimpleAction("disconnect", settings, parent)
     {
         message = read_string(settings, "message", "Disconnecting...");
         synopsis += " [message]";
@@ -331,8 +331,8 @@ class Chanhax: public melanobot::Handler
 {
 public:
     Chanhax(const Settings& settings, MessageConsumer* parent)
-        : Handler(settings,parent),
-        trigger(settings.get("trigger","chanhax")),
+        : Handler(settings, parent),
+        trigger(settings.get("trigger", "chanhax")),
         regex_chanhax (
             "(.+)\\s+"+melanolib::string::regex_escape(trigger)+"\\s+(\\S+)",
             std::regex::ECMAScript|std::regex::optimize
@@ -361,7 +361,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         std::smatch match;
-        if ( std::regex_match(msg.message,match,regex_chanhax) )
+        if ( std::regex_match(msg.message, match, regex_chanhax) )
         {
             msg.message = match[1];
             msg.channels = {match[2]};

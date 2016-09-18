@@ -46,7 +46,7 @@ public:
      */
     void push_buffer(std::streambuf* buffer, bool take_ownership = false)
     {
-        buffers.emplace_back(buffer,take_ownership);
+        buffers.emplace_back(buffer, take_ownership);
     }
 
     /**

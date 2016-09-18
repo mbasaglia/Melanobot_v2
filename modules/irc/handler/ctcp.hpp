@@ -42,7 +42,7 @@ class CtcpBase : public melanobot::Handler
 public:
 
     CtcpBase(const std::string& ctcp, const Settings& settings, ::MessageConsumer* parent)
-        : Handler(settings,parent), ctcp(irc::strtoupper(ctcp))
+        : Handler(settings, parent), ctcp(irc::strtoupper(ctcp))
     {
         if ( ctcp.empty() )
             throw melanobot::ConfigurationError();
@@ -76,7 +76,7 @@ protected:
         string::FormattedString s;
         s << '\1' << ctcp << ' ' << output.message << '\1';
         msg.destination->command({"NOTICE",
-            {msg.from.name,s.encode(*msg.destination->formatter())}, priority});
+            {msg.from.name, s.encode(*msg.destination->formatter())}, priority});
     }
     using Handler::reply_to;
 
@@ -97,7 +97,7 @@ public:
     CtcpVersion ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("VERSION", settings, parent)
     {
-        version = settings.get("version","");
+        version = settings.get("version", "");
         clientinfo = ": Shows the bot's version";
 
         if ( version.empty() )
@@ -109,7 +109,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,version);
+        reply_to(msg, version);
         return true;
     }
 
@@ -129,14 +129,14 @@ public:
     CtcpSource ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("SOURCE", settings, parent)
     {
-        sources_url = settings.get("url",settings::global_settings.get("website",""));
+        sources_url = settings.get("url", settings::global_settings.get("website", ""));
         clientinfo = ": Shows the bot's source URL";
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,sources_url);
+        reply_to(msg, sources_url);
         return true;
     }
 
@@ -153,16 +153,16 @@ class CtcpUserInfo: public CtcpBase
 
 public:
     CtcpUserInfo ( const Settings& settings, ::MessageConsumer* parent )
-        : CtcpBase(settings.get("ctcp","USERINFO"), settings, parent)
+        : CtcpBase(settings.get("ctcp", "USERINFO"), settings, parent)
     {
-        reply = settings.get("reply","");
-        clientinfo = settings.get("clientinfo","");
+        reply = settings.get("reply", "");
+        clientinfo = settings.get("clientinfo", "");
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,reply);
+        reply_to(msg, reply);
         return true;
     }
 
@@ -188,7 +188,7 @@ protected:
     {
         /// \note should return a timestamp in the same format as the one
         /// provided by \c msg, but that's kinda hard to detect...
-        reply_to(msg,msg.params.size() < 2 ? "" : msg.params[1]);
+        reply_to(msg, msg.params.size() < 2 ? "" : msg.params[1]);
         return true;
     }
 };
@@ -203,14 +203,14 @@ public:
     CtcpTime ( const Settings& settings, ::MessageConsumer* parent )
         : CtcpBase("TIME", settings, parent)
     {
-        format = settings.get("format","r");
+        format = settings.get("format", "r");
         clientinfo = ": Shows local time";
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,melanolib::time::format(format));
+        reply_to(msg, melanolib::time::format(format));
         return true;
     }
 
@@ -230,14 +230,14 @@ public:
         : CtcpBase("CLIENTINFO", settings, parent)
     {
         clientinfo = "[command] : Shows help on CTCP commands";
-        help_group = settings.get("help_group",help_group);
+        help_group = settings.get("help_group", help_group);
     }
 
 protected:
     bool on_handle(network::Message& msg) override
     {
         PropertyTree props;
-        get_parent<melanobot::Melanobot>()->populate_properties({"ctcp","clientinfo","help_group"},props);
+        get_parent<melanobot::Melanobot>()->populate_properties({"ctcp", "clientinfo", "help_group"}, props);
 
         Properties clientinfo;
         gather(props, clientinfo);
@@ -248,7 +248,7 @@ protected:
             auto it = clientinfo.find(irc::strtoupper(query));
             if ( it != clientinfo.end() )
             {
-                reply_to(msg,it->first+" "+it->second);
+                reply_to(msg, it->first+" "+it->second);
             }
             else
             {
@@ -256,7 +256,7 @@ protected:
                 ctcp.reserve(clientinfo.size());
                 for ( const auto& p : clientinfo )
                     ctcp.push_back(p.first);
-                std::sort(ctcp.begin(),ctcp.end());
+                std::sort(ctcp.begin(), ctcp.end());
 
                 reply_to(msg, melanolib::string::implode(" ", ctcp));
             }
@@ -273,13 +273,13 @@ private:
      */
     void gather(const PropertyTree& properties, Properties& out) const
     {
-        if ( properties.get("help_group",help_group) != help_group )
+        if ( properties.get("help_group", help_group) != help_group )
             return;
         for ( const auto& p : properties )
         {
-            auto name = p.second.get("ctcp","");
+            auto name = p.second.get("ctcp", "");
             if ( !name.empty() )
-                out[name] = p.second.get("clientinfo","");
+                out[name] = p.second.get("clientinfo", "");
             gather(p.second, out);
         }
     }
@@ -298,7 +298,7 @@ public:
             "CtcpPing",
             "CtcpTime",
             "CtcpClientInfo",
-        },settings,parent) {}
+        }, settings, parent) {}
 };
 
 

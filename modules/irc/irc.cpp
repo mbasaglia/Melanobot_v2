@@ -29,13 +29,13 @@
  */
 MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_irc_metadata()
 {
-    return {"irc","IRC integration"};
+    return {"irc", "IRC integration"};
 }
 
 MELANOMODULE_ENTRY_POINT void melanomodule_irc_initialize(const Settings&)
 {
     module::register_connection<irc::IrcConnection>("irc");
-    module::register_log_type("irc",color::dark_magenta);
+    module::register_log_type("irc", color::dark_magenta);
     module::register_formatter<irc::FormatterIrc>();
     module::register_formatter<irc::FormatterIrcWhite>();
 

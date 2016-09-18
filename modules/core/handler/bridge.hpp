@@ -112,7 +112,7 @@ public:
     EventMessageBase(network::Message::Type type,
                      const Settings& settings,
                      ::MessageConsumer* parent)
-        : Handler(settings,parent), type(type)
+        : Handler(settings, parent), type(type)
     {
         message = read_string(settings, "message", "");
         action  = settings.get("action", action);
@@ -121,7 +121,7 @@ public:
         if ( message.empty() || (discard_others && discard_self) )
             throw melanobot::ConfigurationError();
 
-        int timeout_seconds = settings.get("timeout",0);
+        int timeout_seconds = settings.get("timeout", 0);
         if ( timeout_seconds > 0 )
             timeout = std::chrono::duration_cast<network::Duration>(
                 std::chrono::seconds(timeout_seconds) );
@@ -142,7 +142,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         auto from = msg.source->decode(msg.from.name);
-        reply_to(msg,network::OutputMessage(
+        reply_to(msg, network::OutputMessage(
             message.replaced(message_replacements(msg)),
             action,
             reply_channel(msg),
@@ -160,7 +160,7 @@ protected:
     {
         auto props = msg.source->pretty_properties(msg.from);
         props.insert({
-            {"channel", melanolib::string::implode(", ",msg.channels)},
+            {"channel", melanolib::string::implode(", ", msg.channels)},
             {"message", msg.source->decode(msg.message)}
         });
         return props;
@@ -192,7 +192,7 @@ class JoinMessage: public EventMessageBase
 {
 public:
     JoinMessage(const Settings& settings, ::MessageConsumer* parent)
-        : EventMessageBase(network::Message::JOIN,settings,parent)
+        : EventMessageBase(network::Message::JOIN, settings, parent)
     {}
 };
 
@@ -203,7 +203,7 @@ class PartMessage: public EventMessageBase
 {
 public:
     PartMessage(const Settings& settings, ::MessageConsumer* parent)
-        : EventMessageBase(network::Message::PART,settings,parent)
+        : EventMessageBase(network::Message::PART, settings, parent)
     {}
 };
 /**
@@ -213,7 +213,7 @@ class KickMessage: public EventMessageBase
 {
 public:
     KickMessage(const Settings& settings, ::MessageConsumer* parent)
-        : EventMessageBase(network::Message::KICK,settings,parent)
+        : EventMessageBase(network::Message::KICK, settings, parent)
     {}
 
 protected:
@@ -221,7 +221,7 @@ protected:
     {
         auto props = msg.source->pretty_properties(msg.from);
         props.insert({
-            {"channel", melanolib::string::implode(", ",msg.channels)},
+            {"channel", melanolib::string::implode(", ", msg.channels)},
             {"message", msg.source->decode(msg.message)},
 
             {"kicker", msg.source->decode(msg.from.name)},
@@ -246,7 +246,7 @@ class RenameMessage: public EventMessageBase
 {
 public:
     RenameMessage(const Settings& settings, ::MessageConsumer* parent)
-        : EventMessageBase(network::Message::RENAME,settings,parent)
+        : EventMessageBase(network::Message::RENAME, settings, parent)
     {}
 };
 

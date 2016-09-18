@@ -30,11 +30,11 @@
 #include "string/json.hpp"
 #include "config.hpp"
 
-static std::unordered_map<std::string,settings::FileFormat> format_extension = {
-    {".json",settings::FileFormat::JSON},
-    {".info",settings::FileFormat::INFO},
-    {".xml",settings::FileFormat::XML},
-    {".ini",settings::FileFormat::INI},
+static std::unordered_map<std::string, settings::FileFormat> format_extension = {
+    {".json", settings::FileFormat::JSON},
+    {".info", settings::FileFormat::INFO},
+    {".xml", settings::FileFormat::XML},
+    {".ini", settings::FileFormat::INI},
 };
 
 Settings settings::global_settings;
@@ -42,10 +42,10 @@ Settings settings::global_settings;
 Settings settings::initialize ( int argc, char** argv )
 {
     // Global settings
-    global_settings.put("website",PROJECT_WEBSITE);
+    global_settings.put("website", PROJECT_WEBSITE);
 
     // By default exit code is 0 (success)
-    global_settings.put("exit_code",0);
+    global_settings.put("exit_code", 0);
 
     // Find system paths
     boost::system::error_code err;
@@ -74,9 +74,9 @@ Settings settings::initialize ( int argc, char** argv )
 
     // Home
     path = std::getenv("HOME");
-    std::string home_dir = boost::filesystem::canonical(path,err).string();
+    std::string home_dir = boost::filesystem::canonical(path, err).string();
     if ( !err )
-        global_settings.put("path.home",home_dir);
+        global_settings.put("path.home", home_dir);
 
     // Load command line options
     string::FormatterAnsi fmt(true);
@@ -105,7 +105,7 @@ Settings settings::initialize ( int argc, char** argv )
         std::cout << bold << "Version" << clear << ":\n";
         std::cout << "  " PROJECT_NAME " " PROJECT_DEV_VERSION << "\n";
         std::cout << bold << "Usage" << clear << ":\n";
-        std::cout << "  " << global_settings.get("executable","") << " [option ...]\n";
+        std::cout << "  " << global_settings.get("executable", "") << " [option ...]\n";
         std::cout << described_options;
         std::cout << bold << "System" << clear << ":\n";
         std::cout << "  " SYSTEM_NAME " " SYSTEM_VERSION " " SYSTEM_PROCESSOR " " SYSTEM_COMPILER "\n";
@@ -120,7 +120,7 @@ Settings settings::initialize ( int argc, char** argv )
     if ( vm.count("log.debug") )
     {
         debug = vm["log.debug"].as<int>();
-        global_settings.put("debug",debug);
+        global_settings.put("debug", debug);
     }
 
     // Get the right config file
@@ -131,11 +131,11 @@ Settings settings::initialize ( int argc, char** argv )
     else
         settings_file = find_config();
 
-    global_settings.put("config",settings_file);
+    global_settings.put("config", settings_file);
 
     if ( settings_file.empty() )
     {
-        global_settings.put("exit_code",1);
+        global_settings.put("exit_code", 1);
         ErrorLog("sys") << "Cannot start without a config file";
         return {};
     }
@@ -148,15 +148,15 @@ Settings settings::initialize ( int argc, char** argv )
     {
         if ( opt.unregistered && !opt.value.empty() )
         {
-            if ( melanolib::string::starts_with(opt.string_key,"settings.") )
-                global_settings.put(opt.string_key,opt.value.front());
+            if ( melanolib::string::starts_with(opt.string_key, "settings.") )
+                global_settings.put(opt.string_key, opt.value.front());
             else
-                settings.put(opt.string_key,opt.value.front());
+                settings.put(opt.string_key, opt.value.front());
         }
     }
 
     debug = settings.get("log.debug", debug);
-    global_settings.put("debug",debug);
+    global_settings.put("debug", debug);
 
     return settings;
 }
@@ -173,7 +173,7 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
     }
 
     boost::system::error_code err;
-    auto status = boost::filesystem::status(file_name,err);
+    auto status = boost::filesystem::status(file_name, err);
     if ( status.type() != boost::filesystem::regular_file || err )
     {
         ErrorLog("sys") << "Cannot load config file: " << file_name;
@@ -184,10 +184,10 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
     switch ( format )
     {
         case FileFormat::INFO:
-            boost::property_tree::info_parser::read_info(file_name,ptree);
+            boost::property_tree::info_parser::read_info(file_name, ptree);
             break;
         case FileFormat::INI:
-            boost::property_tree::ini_parser::read_ini(file_name,ptree);
+            boost::property_tree::ini_parser::read_ini(file_name, ptree);
             break;
         case FileFormat::JSON:
         {
@@ -196,7 +196,7 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
             break;
         }
         case FileFormat::XML:
-            boost::property_tree::xml_parser::read_xml(file_name,ptree);
+            boost::property_tree::xml_parser::read_xml(file_name, ptree);
             break;
         case FileFormat::AUTO:
             ErrorLog("sys") << "Cannot detect file format for " << file_name;
@@ -208,7 +208,7 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
 static std::string find_config ( const std::string& dir, settings::FileFormat format)
 {
     boost::system::error_code err;
-    auto status = boost::filesystem::status(dir,err);
+    auto status = boost::filesystem::status(dir, err);
     if ( status.type() != boost::filesystem::directory_file || err )
         return {};
 
@@ -221,7 +221,7 @@ static std::string find_config ( const std::string& dir, settings::FileFormat fo
             if ( boost::filesystem::exists(fp) )
             {
                 boost::system::error_code err;
-                fp = boost::filesystem::canonical(fp,err).string();
+                fp = boost::filesystem::canonical(fp, err).string();
                 if ( !err )
                     return fp.string();
             }
@@ -234,13 +234,13 @@ std::string settings::find_config(FileFormat format)
 {
     std::vector<std::string> paths;
     paths.push_back(".");
-    std::string home_dir = global_settings.get("path.home","");
+    std::string home_dir = global_settings.get("path.home", "");
     if ( !home_dir.empty() )
     {
         paths.push_back(home_dir + "/.config/" + PROJECT_SHORTNAME);
         paths.push_back(home_dir + ("/." PROJECT_SHORTNAME));
     }
-    std::string exe_dir = global_settings.get("path.executable","");
+    std::string exe_dir = global_settings.get("path.executable", "");
     if ( !exe_dir.empty() )
         paths.push_back(exe_dir);
 
@@ -263,8 +263,8 @@ static std::ostream& recursive_print(std::ostream& stream,
 {
     for ( const auto& p : tree )
     {
-        stream << std::string(depth*2,' ') << p.first << ": " << p.second.data() << '\n';
-        recursive_print(stream,p.second,depth+1);
+        stream << std::string(depth*2, ' ') << p.first << ": " << p.second.data() << '\n';
+        recursive_print(stream, p.second, depth+1);
     }
     return stream;
 }
@@ -272,7 +272,7 @@ static std::ostream& recursive_print(std::ostream& stream,
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings )
 {
-    return recursive_print(stream,settings);
+    return recursive_print(stream, settings);
 }
 
 /**
@@ -285,7 +285,7 @@ struct DataPathInfo
         // Search current directory
         paths.push_back(".");
 
-        std::string home_dir = settings::global_settings.get("path.home","");
+        std::string home_dir = settings::global_settings.get("path.home", "");
         if ( !home_dir.empty() )
         {
             // Search ~/.config/melanobot
@@ -296,7 +296,7 @@ struct DataPathInfo
         }
 
         // Search installation directory PREFIX/share/melanobot
-        std::string exe_dir = settings::global_settings.get("path.executable","");
+        std::string exe_dir = settings::global_settings.get("path.executable", "");
         if ( !exe_dir.empty() )
             paths.push_back(exe_dir+"/../share/"+PROJECT_SHORTNAME);
     }
@@ -336,7 +336,7 @@ PropertyTree properties_to_tree(const Properties& properties)
 {
     PropertyTree ptree;
     for ( const auto& prop : properties )
-        ptree.put(prop.first,prop.second);
+        ptree.put(prop.first, prop.second);
     return ptree;
 }
 
@@ -349,7 +349,7 @@ void settings::merge ( Settings& target, const Settings& source, bool overwrite 
     {
         auto child = target.get_child_optional(prop.first);
         if ( !child )
-            target.put_child(prop.first,prop.second);
+            target.put_child(prop.first, prop.second);
         else
             merge(*child, prop.second, overwrite);
     }

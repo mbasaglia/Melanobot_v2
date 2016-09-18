@@ -32,13 +32,13 @@
  */
 MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_xonotic_metadata()
 {
-    return {"xonotic","Xonotic integration"};
+    return {"xonotic", "Xonotic integration"};
 }
 
 MELANOMODULE_ENTRY_POINT void melanomodule_xonotic_initialize(const Settings&)
 {
     module::register_formatter<xonotic::XonoticFormatter>();
-    module::register_log_type("xon",color::dark_cyan);
+    module::register_log_type("xon", color::dark_cyan);
     module::register_connection<xonotic::XonoticConnection>("xonotic");
 
     module::register_handler<xonotic::RconCommand>("RconCommand");
@@ -67,7 +67,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_xonotic_initialize(const Settings&)
 
 
     module::register_connection<unvanquished::UnvanquishedConnection>("unvanquished");
-    module::register_log_type("unv",color::dark_cyan);
+    module::register_log_type("unv", color::dark_cyan);
     module::register_handler<unvanquished::UnvanquishedStatus>("UnvanquishedStatus");
     module::register_handler<unvanquished::UnvanquishedMaps>("UnvanquishedMaps");
 }

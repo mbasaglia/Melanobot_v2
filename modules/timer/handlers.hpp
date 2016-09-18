@@ -32,7 +32,7 @@ class Remind : public melanobot::SimpleAction
 {
 public:
     Remind(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("remind",settings,parent)
+        : SimpleAction("remind", settings, parent)
     {
         synopsis += "who time message...";
         help = "Sends a message at the given time";

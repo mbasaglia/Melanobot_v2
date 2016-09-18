@@ -39,7 +39,7 @@ template<class... InitArgs>
         return {};
 
     std::vector<module::Melanomodule> loaded_modules;
-    Log("sys",'!') << "Loading modules";
+    Log("sys", '!') << "Loading modules";
     for ( const auto& mod : modules )
     {
         try
@@ -50,12 +50,12 @@ template<class... InitArgs>
                 std::forward<InitArgs>(init_args)...
             );
             loaded_modules.push_back(mod);
-            Log("sys",'!') << "\tLoaded module "
+            Log("sys", '!') << "\tLoaded module "
                             << mod.name << ' ' << mod.version;
         }
         catch ( const LibraryError& error )
         {
-            ErrorLog errlog("sys","Module Error");
+            ErrorLog errlog("sys", "Module Error");
             if ( settings::global_settings.get("debug", 0) )
                 errlog << error.library_file << ": ";
             errlog  << error.what();

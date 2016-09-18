@@ -85,7 +85,7 @@ public:
                 io_service.reset();
             return true;
         } catch ( const boost::system::system_error& err ) {
-            melanolib::callback(on_error,err.what());
+            melanolib::callback(on_error, err.what());
             melanolib::callback(on_failure);
             return false;
         }
@@ -101,7 +101,7 @@ public:
             boost::system::error_code ec;
             socket.close(ec);
             if ( ec )
-                melanolib::callback(on_error,ec.message());
+                melanolib::callback(on_error, ec.message());
             io_service.stop();
         }
     }
@@ -127,7 +127,7 @@ public:
             socket.send(boost::asio::buffer(datagram));
             return true;
         } catch ( const boost::system::system_error& err ) {
-            melanolib::callback(on_error,err.what());
+            melanolib::callback(on_error, err.what());
             return false;
         }
     }
@@ -146,7 +146,7 @@ public:
             datagram.resize(len);
             return datagram;
         } catch ( const boost::system::system_error& err ) {
-            melanolib::callback(on_error,err.what());
+            melanolib::callback(on_error, err.what());
             return {};
         }
     }
@@ -161,7 +161,7 @@ public:
         io_service.run(err);
         if ( err )
         {
-            melanolib::callback(on_error,err.message());
+            melanolib::callback(on_error, err.message());
             melanolib::callback(on_failure);
         }
     }
@@ -204,7 +204,7 @@ private:
         socket.async_receive(
             boost::asio::mutable_buffers_1(&receive_buffer[0], max_bytes),
                 [this](const boost::system::error_code& error, std::size_t nbytes)
-                { return on_receive(error,nbytes); });
+                { return on_receive(error, nbytes); });
     }
 
     /**
@@ -214,10 +214,10 @@ private:
     {
         if (error)
         {
-            melanolib::callback(on_error,error.message());
+            melanolib::callback(on_error, error.message());
             return;
         }
-        melanolib::callback(on_async_receive,receive_buffer.substr(0,nbytes));
+        melanolib::callback(on_async_receive, receive_buffer.substr(0, nbytes));
         schedule_read();
     }
 

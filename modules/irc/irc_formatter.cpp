@@ -51,7 +51,7 @@ std::string FormatterIrc::to_string(const color::Color12& color) const
         case 0b1110: ircn = 11; break; // cyan
         case 0b1111: ircn =  0; break; // white
     }
-    return '\3'+melanolib::string::to_string(ircn,2);
+    return '\3'+melanolib::string::to_string(ircn, 2);
 }
 std::string FormatterIrc::to_string(string::FormatFlags flags) const
 {
@@ -80,7 +80,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
 
     string::AsciiString ascii;
 
-    auto push_flags = [&flags,&str,&ascii](bool force_ascii)
+    auto push_flags = [&flags, &str, &ascii](bool force_ascii)
     {
         if ( ( force_ascii || flags )  && !ascii.empty() )
         {
@@ -94,7 +94,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&str,&flags,&parser,&ascii,&push_flags](uint8_t byte)
+    parser.callback_ascii = [&str, &flags, &parser, &ascii, &push_flags](uint8_t byte)
     {
         // see https://github.com/myano/jenni/wiki/IRC-String-Formatting
         switch ( byte )
@@ -136,7 +136,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
                 break;
         }
     };
-    parser.callback_utf8 = [&str,&push_flags](uint32_t unicode,const std::string& utf8)
+    parser.callback_utf8 = [&str, &push_flags](uint32_t unicode, const std::string& utf8)
     {
         push_flags(true);
         str.append(string::Unicode(utf8, unicode));
@@ -162,7 +162,7 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
     );
 
     std::smatch match;
-    if ( !std::regex_match(color,match,regex) )
+    if ( !std::regex_match(color, match, regex) )
         return Color12();
 
     switch ( melanolib::string::to_uint(match[1].str()) )

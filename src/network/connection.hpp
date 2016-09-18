@@ -252,7 +252,7 @@ public:
             {"name",     decode(user.name)},
             {"ip",       user.host},
             {"local_id", user.local_id},
-            {"global_id",user.global_id},
+            {"global_id", user.global_id},
             {"host",     user.host},
         });
         props.insert(user.properties.begin(), user.properties.end());
@@ -318,7 +318,7 @@ private:
     ConnectionFactory(){}
     friend ParentSingleton;
 
-    std::unordered_map<std::string,Contructor> factory;
+    std::unordered_map<std::string, Contructor> factory;
 };
 
 

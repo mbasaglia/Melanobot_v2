@@ -31,24 +31,24 @@ namespace xonotic {
 std::unique_ptr<XonoticConnection> XonoticConnection::create(
     const Settings& settings, const std::string& name)
 {
-    if ( settings.get("protocol",std::string()) != "xonotic" )
+    if ( settings.get("protocol", std::string()) != "xonotic" )
     {
         /// \todo accept similar protocols? eg: nexuiz
         throw melanobot::ConfigurationError("Wrong protocol for Xonotic connection");
     }
 
-    network::Server server ( settings.get("server",std::string()) );
+    network::Server server ( settings.get("server", std::string()) );
     if ( !server.port )
         server.port = 26000;
-    server.host = settings.get("server.host",server.host);
-    server.port = settings.get("server.port",server.port);
+    server.host = settings.get("server.host", server.host);
+    server.port = settings.get("server.port", server.port);
     if ( server.host.empty() || !server.port )
     {
         throw melanobot::ConfigurationError("Xonotic connection with no server");
     }
 
     auto password = settings.get("rcon_password", "");
-    auto secure= Darkplaces::Secure(settings.get("rcon_secure",0));
+    auto secure= Darkplaces::Secure(settings.get("rcon_secure", 0));
     return melanolib::New<XonoticConnection>(server, password, secure, settings, name);
 }
 
@@ -64,7 +64,7 @@ XonoticConnection::XonoticConnection (
       status_(DISCONNECTED)
 {
     formatter_ = string::Formatter::formatter(
-        settings.get("string_format",std::string("xonotic")));
+        settings.get("string_format", std::string("xonotic")));
 
     cmd_say = settings.get("say", "say $prefix$message");
     cmd_say_as = settings.get("say_as", "say \"$prefix$from^7: $message\"");
@@ -95,10 +95,10 @@ XonoticConnection::XonoticConnection (
                     "Melanobot_nick_pop";
     }
 
-    add_polling_command({"rcon",{"status 1"},1024},true);
-    add_polling_command({"rcon",{"log_dest_udp"},1024},true);
+    add_polling_command({"rcon", {"status 1"}, 1024}, true);
+    add_polling_command({"rcon", {"log_dest_udp"}, 1024}, true);
     status_polling = network::Timer{[this]{request_status();},
-        melanolib::time::seconds(settings.get("status_delay",60))};
+        melanolib::time::seconds(settings.get("status_delay", 60))};
 }
 
 void XonoticConnection::connect()
@@ -153,7 +153,7 @@ void XonoticConnection::update_user(const std::string& local_id,
         /// \todo this might not be needed if crypto_id isn't good enough
         auto it = properties.find("global_id");
         if ( it != properties.end() )
-            Log("xon",'!',3) << "Player " << color::dark_cyan << user->local_id
+            Log("xon", '!', 3) << "Player " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << it->second;
     }
 }
@@ -168,7 +168,7 @@ void XonoticConnection::update_user(const std::string& local_id,
         *user = updated;
 
         if ( !updated.global_id.empty() )
-            Log("xon",'!',3) << "User " << color::dark_cyan << user->local_id
+            Log("xon", '!', 3) << "User " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << updated.global_id;
     }
 }
@@ -187,14 +187,14 @@ user::User XonoticConnection::get_user(const std::string& local_id) const
         user.local_id = "0";
         user.properties["entity"] = "0";
         user.host = server().name();
-        user.name = properties_.get("cvar.sv_adminnick","");
+        user.name = properties_.get("cvar.sv_adminnick", "");
         if ( user.name.empty() )
             user.name = "(Server Admin)";
         return user;
     }
 
     const user::User* user = local_id[0] == '#' ?
-        user_manager.user_by_property("entity",local_id.substr(1))
+        user_manager.user_by_property("entity", local_id.substr(1))
         : user_manager.user(local_id);
 
     if ( user )
@@ -213,7 +213,7 @@ std::vector<user::User> XonoticConnection::get_users( const std::string& channel
 std::string XonoticConnection::name() const
 {
     auto lock = make_lock(mutex);
-    return properties_.get("cvar.sv_adminnick","");
+    return properties_.get("cvar.sv_adminnick", "");
 }
 
 user::UserCounter XonoticConnection::count_users(const std::string& channel) const
@@ -222,13 +222,13 @@ user::UserCounter XonoticConnection::count_users(const std::string& channel) con
     user::UserCounter c;
     for ( const auto& user : user_manager )
         (user.host.empty() ? c.bots : c.users)++;
-    c.max = properties_.get("cvar.g_maxplayers",0);
+    c.max = properties_.get("cvar.g_maxplayers", 0);
     return c;
 }
 
 LockedProperties XonoticConnection::properties()
 {
-    return LockedProperties(&mutex,&properties_);
+    return LockedProperties(&mutex, &properties_);
 }
 
 string::FormattedProperties XonoticConnection::pretty_properties() const
@@ -237,7 +237,7 @@ string::FormattedProperties XonoticConnection::pretty_properties() const
 
     auto lock = make_lock(mutex);
 
-    std::string gt = properties_.get("match.gametype","?");
+    std::string gt = properties_.get("match.gametype", "?");
     if ( count.max == 2 )
         gt = "duel";
 
@@ -253,10 +253,10 @@ string::FormattedProperties XonoticConnection::pretty_properties() const
         {"total",       std::to_string(count.users+count.bots)},
         {"max",         std::to_string(count.max)},
         {"free",        std::to_string(count.max-count.users)},
-        {"map",         properties_.get("match.map","?")},
+        {"map",         properties_.get("match.map", "?")},
         {"gt",          gt},
         {"gametype",    xonotic::gametype_name(gt)},
-        {"mutators",    properties_.get("match.mutators","")},
+        {"mutators",    properties_.get("match.mutators", "")},
         {"hostname",    host},
         {"sv_server",   server().name()}
     };
@@ -279,7 +279,7 @@ void XonoticConnection::say(const network::OutputMessage& message)
             ( message.from.empty() ? cmd_say : cmd_say_as ),
         ";\\s*");
     for ( const auto & cmd : expl )
-        command({"rcon", { melanolib::string::replace(cmd, message_properties,"$")},
+        command({"rcon", { melanolib::string::replace(cmd, message_properties, "$")},
                 message.priority, message.timeout});
 }
 
@@ -304,12 +304,12 @@ void XonoticConnection::command ( network::Command cmd )
             if ( cmd.parameters[0] == "set" )
             {
                 auto lock = make_lock(mutex);
-                properties_.put("cvar."+cmd.parameters[1],cmd.parameters[2]);
+                properties_.put("cvar."+cmd.parameters[1], cmd.parameters[2]);
             }
             cmd.parameters[2] = quote_string(cmd.parameters[2]);
         }
 
-        std::string command = melanolib::string::implode(" ",cmd.parameters);
+        std::string command = melanolib::string::implode(" ", cmd.parameters);
         if ( command.empty() )
         {
             ErrorLog("xon") << "Empty rcon command";
@@ -317,18 +317,18 @@ void XonoticConnection::command ( network::Command cmd )
         }
 
         rcon_command(command);
-        /// \todo Log("xon",'<',2) << decode(rcon_command); when actually being executed
+        /// \todo Log("xon", '<', 2) << decode(rcon_command); when actually being executed
     }
     else
     {
-        Log("xon",'<',1) << cmd.command;
+        Log("xon", '<', 1) << cmd.command;
         write(cmd.command);
     }
 }
 
 void XonoticConnection::on_network_error(const std::string& message)
 {
-    ErrorLog("xon","Network Error") << message;
+    ErrorLog("xon", "Network Error") << message;
     close_connection();
     return;
 }
@@ -361,7 +361,7 @@ void XonoticConnection::on_receive_log(const std::string& line)
 
 void XonoticConnection::handle_message(network::Message& msg)
 {
-    Log("xon",'>',4) << formatter_->decode(msg.raw); // 4 'cause spams
+    Log("xon", '>', 4) << formatter_->decode(msg.raw); // 4 'cause spams
     if ( msg.raw.empty() )
         return;
 
@@ -374,7 +374,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::regex::ECMAScript|std::regex::optimize
             );
             std::smatch match;
-            if ( std::regex_match(msg.raw,match,regex_chat) )
+            if ( std::regex_match(msg.raw, match, regex_chat) )
             {
                 msg.from.name = match[1];
                 msg.chat(match[2]);
@@ -397,7 +397,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 std::string cvar_name = match[1];
                 std::string cvar_value = match[2];
                 auto lock = make_lock(mutex);
-                properties_.put("cvar."+cvar_name,cvar_value);
+                properties_.put("cvar."+cvar_name, cvar_value);
                 lock.unlock();
 
                 if ( cvar_name == "log_dest_udp" )
@@ -448,7 +448,7 @@ void XonoticConnection::handle_message(network::Message& msg)
             );
 
             std::smatch match;
-            if ( std::regex_match(msg.raw,match,regex_join) )
+            if ( std::regex_match(msg.raw, match, regex_join) )
             {
                 user_manager.users_reference().remove_if(
                     [match](const user::User& u) {
@@ -465,20 +465,20 @@ void XonoticConnection::handle_message(network::Message& msg)
                 lock.unlock();
                 msg.from = user;
                 msg.type = network::Message::JOIN;
-                Log("xon",'!',3) << "Added user " << decode(user.name);
+                Log("xon", '!', 3) << "Added user " << decode(user.name);
             }
-            else if ( std::regex_match(msg.raw,match,regex_part) )
+            else if ( std::regex_match(msg.raw, match, regex_part) )
             {
                 auto lock = make_lock(mutex);
                 if ( user::User *found = user_manager.user(match[1]) )
                 {
-                    Log("xon",'!',3) << "Removed user " << decode(found->name);
+                    Log("xon", '!', 3) << "Removed user " << decode(found->name);
                     msg.from = *found;
                     user_manager.remove_user(found->local_id);
                     msg.type = network::Message::PART;
                 }
             }
-            else if ( std::regex_match(msg.raw,match,regex_gamestart) )
+            else if ( std::regex_match(msg.raw, match, regex_gamestart) )
             {
                 auto lock = make_lock(mutex);
                 clear_match();
@@ -490,7 +490,7 @@ void XonoticConnection::handle_message(network::Message& msg)
                 for ( const auto& cmd : polling_match )
                     command(cmd);
             }
-            else if ( std::regex_match(msg.raw,match,regex_name) )
+            else if ( std::regex_match(msg.raw, match, regex_name) )
             {
                 auto lock = make_lock(mutex);
                 if ( user::User *found = user_manager.user(match[1]) )
@@ -498,15 +498,15 @@ void XonoticConnection::handle_message(network::Message& msg)
                     msg.from = *found;
                     msg.message = match[2];
                     msg.type = network::Message::RENAME;
-                    Log("xon",'!',3) << "Renamed user " << decode(found->name)
+                    Log("xon", '!', 3) << "Renamed user " << decode(found->name)
                         << color::nocolor << " to " << decode(msg.message);
                     found->name = msg.message;
                 }
             }
-            else if ( std::regex_match(msg.raw,match,regex_mutators) )
+            else if ( std::regex_match(msg.raw, match, regex_mutators) )
             {
                 auto lock = make_lock(mutex);
-                properties_.put("match.mutators", melanolib::string::replace(match[1],":",", "));
+                properties_.put("match.mutators", melanolib::string::replace(match[1], ":", ", "));
             }
         }
         // status reply
@@ -555,15 +555,15 @@ void XonoticConnection::update_connection()
     {
         status_ = WAITING;
 
-        command({"rcon",{"set","log_dest_udp",local_endpoint().name()},1024});
+        command({"rcon", {"set", "log_dest_udp", local_endpoint().name()}, 1024});
 
-        command({"rcon",{"set", "sv_eventlog", "1"},1024});
+        command({"rcon", {"set", "sv_eventlog", "1"}, 1024});
 
         /// \todo maybe this should be an option
-        command({"rcon",{"set", "sv_logscores_bots", "1"},1024});
+        command({"rcon", {"set", "sv_logscores_bots", "1"}, 1024});
 
-        command({"rcon",{"alias", "Melanobot_nick_push", "set Melanobot_sv_adminnick \"$sv_adminnick\""},1024});
-        command({"rcon",{"alias", "Melanobot_nick_pop", "set sv_adminnick \"$Melanobot_sv_adminnick\"; sv_adminnick"},1024});
+        command({"rcon", {"alias", "Melanobot_nick_push", "set Melanobot_sv_adminnick \"$sv_adminnick\""}, 1024});
+        command({"rcon", {"alias", "Melanobot_nick_pop", "set sv_adminnick \"$Melanobot_sv_adminnick\"; sv_adminnick"}, 1024});
 
         // status: WAITING -> CONNECTING
         if ( status_ == WAITING )
@@ -592,7 +592,7 @@ void XonoticConnection::update_connection()
 
 void XonoticConnection::cleanup_connection()
 {
-    command({"rcon",{"set", "log_dest_udp", ""},1024});
+    command({"rcon", {"set", "log_dest_udp", ""}, 1024});
 
     // try to actually clear log_dest_udp when challenges are required
     if ( rcon_secure() >= Darkplaces::Secure::CHALLENGE )
@@ -669,7 +669,7 @@ void XonoticConnection::check_user_start()
 void XonoticConnection::check_user(const std::smatch& match)
 {
     auto lock = make_lock(mutex);
-    user::User* user = user_manager.user_by_property("entity",match[6]);
+    user::User* user = user_manager.user_by_property("entity", match[6]);
     Properties props = {
         {"host",   match[1] == "botclient" ? std::string(): match[1]},
         {"pl",     match[2]},

@@ -33,7 +33,7 @@ class InventoryList : public melanobot::SimpleAction
 {
 public:
     InventoryList(std::string list_id, const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("list","(?:list\\b)?\\s*", settings, parent),
+        : SimpleAction("list", "(?:list\\b)?\\s*", settings, parent),
           list_id(std::move(list_id))
     {
         help = "Shows the inventory";
@@ -44,9 +44,9 @@ protected:
     {
         auto elements = melanobot::storage().maybe_get_sequence(list_id);
         if ( elements.empty() )
-            reply_to(msg,network::OutputMessage("is empty",true));
+            reply_to(msg, network::OutputMessage("is empty", true));
         else
-            reply_to(msg,network::OutputMessage("has "+melanolib::string::implode(", ",elements),true));
+            reply_to(msg, network::OutputMessage("has "+melanolib::string::implode(", ", elements), true));
         return true;
     }
 
@@ -62,7 +62,7 @@ class InventoryClear : public melanobot::SimpleAction
 public:
     InventoryClear(std::string list_id, std::string auth,
                    const Settings& settings, MessageConsumer* parent)
-    : SimpleAction("clear",settings,parent),
+    : SimpleAction("clear", settings, parent),
           list_id(std::move(list_id)),
           auth(std::move(auth))
     {
@@ -81,13 +81,13 @@ protected:
         auto elements = melanobot::storage().maybe_get_sequence(list_id);
         if ( elements.empty() )
         {
-            reply_to(msg,network::OutputMessage("was already empty",true));
+            reply_to(msg, network::OutputMessage("was already empty", true));
         }
         else
         {
             elements.clear();
             melanobot::storage().put(list_id, elements);
-            reply_to(msg,network::OutputMessage("is now empty",true));
+            reply_to(msg, network::OutputMessage("is now empty", true));
         }
         return true;
     }
@@ -107,10 +107,10 @@ public:
     InventoryManager(const Settings& settings, MessageConsumer* parent)
         : AbstractActionGroup("inventory", settings, parent)
     {
-        std::string list_id = "lists."+settings.get("list",trigger);
+        std::string list_id = "lists."+settings.get("list", trigger);
         help = "Shows the inventory";
-        add_handler(melanolib::New<InventoryClear>(list_id,settings.get("clear","admin"),Settings{},this));
-        add_handler(melanolib::New<InventoryList>(list_id,Settings{},this));
+        add_handler(melanolib::New<InventoryClear>(list_id, settings.get("clear", "admin"), Settings{}, this));
+        add_handler(melanolib::New<InventoryList>(list_id, Settings{}, this));
     }
 };
 
@@ -123,9 +123,9 @@ public:
     InventoryPut(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
-        list_id = "lists."+settings.get("list",list_id);
-        action = settings.get("action",action);
-        max_items = settings.get("max_items",max_items);
+        list_id = "lists."+settings.get("list", list_id);
+        action = settings.get("action", action);
+        max_items = settings.get("max_items", max_items);
         /// \todo help and synopsis (as get_property)
     }
 
@@ -147,13 +147,13 @@ protected:
         if ( item.empty() )
             return false;
 
-        item = melanolib::string::english.pronoun_to3rd(item,msg.from.name,msg.source->name());
+        item = melanolib::string::english.pronoun_to3rd(item, msg.from.name, msg.source->name());
 
         auto inventory = melanobot::storage().maybe_get_sequence(list_id);
         // Check that item isn't already in the inventory
         if ( std::find(inventory.begin(), inventory.end(), item) != inventory.end())
         {
-            reply_to(msg,network::OutputMessage("already had "+item, true));
+            reply_to(msg, network::OutputMessage("already had "+item, true));
             return true;
         }
 
@@ -168,7 +168,7 @@ protected:
                 auto it = inventory.begin()+rand;
                 drop = *it;
                 // swap + pop to avoid moving items around for no reason
-                std::swap(*it,inventory.back());
+                std::swap(*it, inventory.back());
                 inventory.pop_back();
             }
             reply += " and drops "+melanolib::string::implode(", ", dropped);
@@ -176,7 +176,7 @@ protected:
 
         inventory.push_back(item);
         melanobot::storage().put(list_id, inventory);
-        reply_to(msg,network::OutputMessage(reply, true));
+        reply_to(msg, network::OutputMessage(reply, true));
         return true;
     }
 
@@ -196,8 +196,8 @@ public:
     InventoryTake(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
-        list_id = "lists."+settings.get("list",list_id);
-        action = settings.get("action",action);
+        list_id = "lists."+settings.get("list", list_id);
+        action = settings.get("action", action);
         /// \todo help and synopsis (as get_property)
     }
 
@@ -219,7 +219,7 @@ protected:
         if ( item.empty() )
             return false;
 
-        item = melanolib::string::english.pronoun_to3rd(item,msg.from.name,msg.source->name());
+        item = melanolib::string::english.pronoun_to3rd(item, msg.from.name, msg.source->name());
         auto inventory = melanobot::storage().maybe_get_sequence(list_id);
 
         auto iter = std::find(inventory.begin(), inventory.end(), item);
@@ -229,10 +229,10 @@ protected:
             std::swap(*iter, inventory.back());
             inventory.pop_back();
             melanobot::storage().put(list_id, inventory);
-            reply_to(msg,network::OutputMessage("gives "+msg.from.name+" "+item, true));
+            reply_to(msg, network::OutputMessage("gives "+msg.from.name+" "+item, true));
             return true;
         }
-        reply_to(msg,network::OutputMessage("doesn't have "+item, true));
+        reply_to(msg, network::OutputMessage("doesn't have "+item, true));
         return true;
     }
 

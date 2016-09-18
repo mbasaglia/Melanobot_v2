@@ -19,11 +19,11 @@
 #include "user.hpp"
 namespace user {
 
-std::unordered_map<std::string,std::string User::*> User::string_attributes = {
+std::unordered_map<std::string, std::string User::*> User::string_attributes = {
     {"name",     &User::name},
     {"host",     &User::host},
     {"local_id", &User::local_id},
-    {"global_id",&User::global_id}
+    {"global_id", &User::global_id}
 };
 
 } // namespace user

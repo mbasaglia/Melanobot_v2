@@ -53,7 +53,7 @@ void Melanobot::start()
 {
     if ( connections.empty() )
     {
-        settings::global_settings.put("exit_code",1);
+        settings::global_settings.put("exit_code", 1);
         throw melanobot::ConfigurationError("Creating a bot with no connections");
     }
 
@@ -124,7 +124,7 @@ void Melanobot::add_connection(std::string suggested_name, const Settings& setti
 {
     if ( suggested_name == "Connection" )
         suggested_name.clear();
-    suggested_name = settings.get("name",suggested_name);
+    suggested_name = settings.get("name", suggested_name);
 
     if ( suggested_name.empty() )
     {
@@ -138,11 +138,11 @@ void Melanobot::add_connection(std::string suggested_name, const Settings& setti
         return;
     }
 
-    auto conn = network::ConnectionFactory::instance().create(settings,suggested_name);
+    auto conn = network::ConnectionFactory::instance().create(settings, suggested_name);
 
     if ( conn )
     {
-        Log("sys",'!') << "Created connection " << color::green << suggested_name;
+        Log("sys", '!') << "Created connection " << color::green << suggested_name;
         connections[suggested_name] = std::move(conn);
     }
 }
@@ -157,13 +157,13 @@ void Melanobot::populate_properties(const std::vector<std::string>& properties, 
     for ( unsigned i = 0; i < handlers.size(); i++ )
     {
         PropertyTree child;
-        handlers[i]->populate_properties(properties,child);
+        handlers[i]->populate_properties(properties, child);
         if ( !child.empty() || !child.data().empty() )
         {
             std::string name = handlers[i]->get_property("name");
             if ( name.empty() )
                 name = std::to_string(i);
-            output.put_child(name,child);
+            output.put_child(name, child);
         }
     }
 }

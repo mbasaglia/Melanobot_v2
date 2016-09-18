@@ -32,10 +32,10 @@ Buffer::Buffer(IrcConnection& irc, const Settings& settings)
     : irc(irc)
 {
     flood_timer = network::Clock::now();
-    flood_timer_max = std::chrono::seconds(settings.get("timer_max",10));
-    flood_message_penalty = std::chrono::seconds(settings.get("message_penalty",2));
-    flood_bytes_penalty = settings.get("bytes_penalty",120);
-    flood_max_length = settings.get("max_length",510);
+    flood_timer_max = std::chrono::seconds(settings.get("timer_max", 10));
+    flood_message_penalty = std::chrono::seconds(settings.get("message_penalty", 2));
+    flood_bytes_penalty = settings.get("bytes_penalty", 120);
+    flood_max_length = settings.get("max_length", 510);
 }
 Buffer::~Buffer()
 {
@@ -55,7 +55,7 @@ void Buffer::run_input()
     io_service.run(err);
     if ( err )
     {
-        ErrorLog("irc","Network Error") << err.message();
+        ErrorLog("irc", "Network Error") << err.message();
         irc.error_stop(err.message());
     }
 }
@@ -100,7 +100,7 @@ void Buffer::process()
         auto max_timer = network::Clock::now() + flood_timer_max;
         if ( flood_timer+flood_message_penalty > max_timer )
         {
-            std::this_thread::sleep_for(std::max(flood_message_penalty,flood_timer-max_timer));
+            std::this_thread::sleep_for(std::max(flood_message_penalty, flood_timer-max_timer));
         }
     }
     while ( cmd.timeout < network::Clock::now() );
@@ -131,20 +131,20 @@ void Buffer::write_line ( std::string line )
     std::ostream request_stream(&buffer_write);
     if ( line.size() > flood_max_length )
     {
-        Log("irc",'!',4) << "Truncating " << irc.decode(line);
+        Log("irc", '!', 4) << "Truncating " << irc.decode(line);
         line.erase(flood_max_length-1);
     }
     request_stream << line << "\r\n";
-    Log("irc",'<',1) << irc.decode(line);
+    Log("irc", '<', 1) << irc.decode(line);
 
     boost::system::error_code error;
     boost::asio::write(socket, buffer_write, error);
     if (error && error != boost::asio::error::eof )
     {
-        ErrorLog("irc","Network Error") << error.message();
+        ErrorLog("irc", "Network Error") << error.message();
     }
 
-    flood_timer = std::max(flood_timer,network::Clock::now());
+    flood_timer = std::max(flood_timer, network::Clock::now());
     flood_timer += flood_message_penalty;
     if ( flood_bytes_penalty > 0 )
         flood_timer += std::chrono::seconds(line.size()/flood_bytes_penalty);
@@ -162,7 +162,7 @@ bool Buffer::connect(const network::Server& server)
         boost::asio::connect(socket, endpoint_iterator);
         flood_timer = network::Clock::now();
     } catch ( const boost::system::system_error& err ) {
-        ErrorLog("irc","Network Error") << err.what();
+        ErrorLog("irc", "Network Error") << err.what();
         irc.error_stop(err.what());
         return false;
     }
@@ -177,7 +177,7 @@ void Buffer::disconnect()
             socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
             socket.close();
         } catch ( const boost::system::system_error& err ) {
-            ErrorLog("irc","Network Error") << err.what();
+            ErrorLog("irc", "Network Error") << err.what();
         }
     }
 }
@@ -199,15 +199,15 @@ void Buffer::on_read_line(const boost::system::error_code &error)
     if (error)
     {
         if ( error != boost::asio::error::eof )
-             ErrorLog("irc","Network Error") << error.message();
+             ErrorLog("irc", "Network Error") << error.message();
         return;
     }
 
     std::istream buffer_stream(&buffer_read);
     std::string line;
-    std::getline(buffer_stream,line,'\r');
-    Log("irc",'>',1) << irc.decode(line);
-    buffer_stream.ignore(2,'\n');
+    std::getline(buffer_stream, line, '\r');
+    Log("irc", '>', 1) << irc.decode(line);
+    buffer_stream.ignore(2, '\n');
 
     irc.handle_message(parse_line(line));
 

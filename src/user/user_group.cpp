@@ -50,7 +50,7 @@ bool UserGroup::contains ( const User& user, bool recursive ) const
     if ( recursive )
     {
         for ( UserGroup* g : children )
-            if ( g->contains(user,true) )
+            if ( g->contains(user, true) )
                 return true;
     }
     return false;
@@ -76,7 +76,7 @@ std::vector<User> UserGroup::all_users() const
     for ( UserGroup* g : children )
     {
         std::vector<User> tmp = g->all_users();
-        ret.insert(ret.end(),tmp.begin(),tmp.end());
+        ret.insert(ret.end(), tmp.begin(), tmp.end());
     }
 
     return ret;

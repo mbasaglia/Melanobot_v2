@@ -28,16 +28,16 @@ namespace irc {
 std::unique_ptr<IrcConnection> IrcConnection::create(
     const Settings& settings, const std::string& name)
 {
-    if ( settings.get("protocol",std::string()) != "irc" )
+    if ( settings.get("protocol", std::string()) != "irc" )
     {
         throw melanobot::ConfigurationError("Wrong protocol for IRC connection");
     }
 
-    network::Server server ( settings.get("server",std::string()) );
+    network::Server server ( settings.get("server", std::string()) );
     if ( !server.port )
         server.port = 6667;
-    server.host = settings.get("server.host",server.host);
-    server.port = settings.get("server.port",server.port);
+    server.host = settings.get("server.host", server.host);
+    server.port = settings.get("server.port", server.port);
     if ( server.host.empty() || !server.port )
     {
         throw melanobot::ConfigurationError("IRC connection with no server");
@@ -52,7 +52,7 @@ IrcConnection::IrcConnection ( const network::Server&   server,
     : Connection(name),
      main_server(server),
      current_server(server),
-     buffer(*this, settings.get_child("buffer",{}))
+     buffer(*this, settings.get_child("buffer", {}))
 {
     read_settings(settings);
 }
@@ -66,25 +66,25 @@ void IrcConnection::read_settings(const Settings& settings)
 {
     /// \note doesn't read buffer settings
     /// \todo if called from somewhere that is not the constructor, lock data
-    server_password  = settings.get("server.password",std::string());
-    main_server.host = settings.get("server.host",main_server.host);
-    main_server.port = settings.get("server.port",main_server.port);
+    server_password  = settings.get("server.password", std::string());
+    main_server.host = settings.get("server.host", main_server.host);
+    main_server.port = settings.get("server.port", main_server.port);
 
-    preferred_nick   = settings.get("nick","PleaseNameMe");
-    properties_.put("config.nick",preferred_nick);
+    preferred_nick   = settings.get("nick", "PleaseNameMe");
+    properties_.put("config.nick", preferred_nick);
 
-    formatter_ = string::Formatter::formatter(settings.get("string_format",std::string("irc")));
+    formatter_ = string::Formatter::formatter(settings.get("string_format", std::string("irc")));
     connection_status = DISCONNECTED;
 
-    private_notice = settings.get("notice",private_notice);
+    private_notice = settings.get("notice", private_notice);
 
-    auto channels = melanolib::string::comma_split(settings.get("channels",""));
+    auto channels = melanolib::string::comma_split(settings.get("channels", ""));
     for ( const auto& chan : channels )
-        command({"JOIN",{chan},1024});
+        command({"JOIN", {chan}, 1024});
 
-    for ( const auto pt: settings.get_child("users",{}) )
+    for ( const auto pt: settings.get_child("users", {}) )
     {
-        add_to_group(pt.first,pt.second.data());
+        add_to_group(pt.first, pt.second.data());
     }
 
     auto groups = settings.get_child_optional("groups");
@@ -94,7 +94,7 @@ void IrcConnection::read_settings(const Settings& settings)
             auth_system.add_group(pt.first);
             auto inherits = melanolib::string::comma_split(pt.second.data());
             for ( const auto& inh : inherits )
-                auth_system.grant_access(inh,pt.first);
+                auth_system.grant_access(inh, pt.first);
         }
 }
 
@@ -137,7 +137,7 @@ void IrcConnection::reconnect(const string::FormattedString& quit_message)
         if ( user )
         {
             for (const auto& chan: user->channels)
-                scheduled_commands.push_back({"JOIN",{chan}});
+                scheduled_commands.push_back({"JOIN", {chan}});
         }
     lock.unlock();
 
@@ -163,7 +163,7 @@ network::Server IrcConnection::server() const
 std::string IrcConnection::description() const
 {
     auto lock = make_lock(mutex);
-    std::string irc_network = properties_.get("005.NETWORK","");
+    std::string irc_network = properties_.get("005.NETWORK", "");
     if ( !irc_network.empty() )
         irc_network = '('+irc_network+") ";
     return irc_network+current_server.name();
@@ -188,12 +188,12 @@ void IrcConnection::remove_from_channel(const std::string& user_id,
             user->remove_channel(channel);
             if ( user->channels.empty() )
             {
-                Log("irc",'!',2) << "Removed user " << color::dark_red << user->name;
+                Log("irc", '!', 2) << "Removed user " << color::dark_red << user->name;
                 user_manager.remove_user(user->local_id);
             }
             else
             {
-                Log("irc",'!',3) << "User " << color::dark_cyan << user->name
+                Log("irc", '!', 3) << "User " << color::dark_cyan << user->name
                     << color::dark_red << " parted " << color::nocolor
                     << channel;
             }
@@ -209,14 +209,14 @@ void IrcConnection::remove_from_channel(const std::string& user_id,
 
             if ( found->channels.empty() )
             {
-                Log("irc",'!',2) << "Removed user " << color::dark_red << found->name;
+                Log("irc", '!', 2) << "Removed user " << color::dark_red << found->name;
                 user_manager.remove_user(found->local_id);
             }
             else
             {
-                Log("irc",'!',3) << "User " << color::dark_cyan << found->name
+                Log("irc", '!', 3) << "User " << color::dark_cyan << found->name
                     << color::dark_red << " parted " << color::nocolor
-                    << melanolib::string::implode(", ",channels);
+                    << melanolib::string::implode(", ", channels);
             }
         }
     }
@@ -278,9 +278,9 @@ void IrcConnection::handle_message(network::Message msg)
         for ( std::string::size_type i = 1; i < msg.params.size()-1; i++ )
         {
             auto eq = msg.params[i].find('=');
-            std::string name = msg.params[i].substr(0,eq);
+            std::string name = msg.params[i].substr(0, eq);
             std::string value = eq == std::string::npos ? "1" : msg.params[i].substr(eq+1);
-            properties_.put("005."+name,value);
+            properties_.put("005."+name, value);
         }
     }
     else if ( msg.command == "353" )
@@ -291,7 +291,7 @@ void IrcConnection::handle_message(network::Message msg)
         std::string channel = msg.params[2];
         msg.channels = { channel };
 
-        std::vector<std::string> users = melanolib::string::regex_split(msg.params[3],"\\s+");
+        std::vector<std::string> users = melanolib::string::regex_split(msg.params[3], "\\s+");
 
         {
             auto lock = make_lock(mutex);
@@ -300,7 +300,7 @@ void IrcConnection::handle_message(network::Message msg)
                 if ( user[0] == '@' || user[0] == '+' )
                 {
                     /// \todo maybe it would be useful to store operator/voiced status
-                    user.erase(0,1);
+                    user.erase(0, 1);
                 }
                 user::User *found = user_manager.user(user);
                 if ( !found )
@@ -309,10 +309,10 @@ void IrcConnection::handle_message(network::Message msg)
                     new_user.origin = this;
                     new_user.name = new_user.local_id = user;
                     found = user_manager.add_user(new_user);
-                    Log("irc",'!',2) << "Added user " << color::dark_green << user;
+                    Log("irc", '!', 2) << "Added user " << color::dark_green << user;
                 }
                 found->add_channel(strtolower(channel));
-                Log("irc",'!',3) << "User " << color::dark_cyan << user
+                Log("irc", '!', 3) << "User " << color::dark_cyan << user
                     << color::dark_green << " joined " << color::nocolor << channel;
             }
         }
@@ -325,10 +325,10 @@ void IrcConnection::handle_message(network::Message msg)
         auto lock = make_lock(mutex);
         if ( strtolower(attempted_nick) == strtolower(msg.params[1]) )
         {
-            Log("irc",'!',4) << attempted_nick << " is taken, trying a new nick";
+            Log("irc", '!', 4) << attempted_nick << " is taken, trying a new nick";
             /// \todo check nick max length
             /// \todo system to try to get the best nick possible
-            network::Command cmd {{"NICK"},{attempted_nick+'_'},1024};
+            network::Command cmd {{"NICK"}, {attempted_nick+'_'}, 1024};
             lock.unlock();
             command(cmd);
         }
@@ -342,7 +342,7 @@ void IrcConnection::handle_message(network::Message msg)
     {
         /// \todo read PING timeout in settings
         /// \todo set timer to the latest server message and call PING when too old
-        command({"PONG",msg.params,1024,std::chrono::minutes(3)});
+        command({"PONG", msg.params, 1024, std::chrono::minutes(3)});
     }
     else if ( msg.command == "PRIVMSG" )
     {
@@ -374,7 +374,7 @@ void IrcConnection::handle_message(network::Message msg)
                 std::regex_constants::optimize |
                 std::regex_constants::ECMAScript);
             std::smatch match;
-            std::regex_match(msg.message,match,regex_ctcp);
+            std::regex_match(msg.message, match, regex_ctcp);
             msg.message.clear();
             std::string ctcp = strtoupper(match[1].str());
 
@@ -408,7 +408,7 @@ void IrcConnection::handle_message(network::Message msg)
     }
     else if ( msg.command == "ERROR" )
     {
-        ErrorLog errl("irc","Server Error:");
+        ErrorLog errl("irc", "Server Error:");
         if ( msg.params.empty() )
             errl << "Unknown error";
         else
@@ -427,7 +427,7 @@ void IrcConnection::handle_message(network::Message msg)
             {
                 msg.from.channels = msg.channels;
                 from_user = user_manager.add_user(msg.from);
-                Log("irc",'!',2) << "Added user " << color::dark_green << msg.from.name;
+                Log("irc", '!', 2) << "Added user " << color::dark_green << msg.from.name;
             }
             else
             {
@@ -441,16 +441,16 @@ void IrcConnection::handle_message(network::Message msg)
         }
         msg.type = network::Message::JOIN;
 
-        Log("irc",'!',3) << "User " << color::dark_cyan << msg.from.name
+        Log("irc", '!', 3) << "User " << color::dark_cyan << msg.from.name
             << color::dark_green << " joined " << color::nocolor
-            << melanolib::string::implode(", ",msg.channels);
+            << melanolib::string::implode(", ", msg.channels);
     }
     else if ( msg.command == "PART" )
     {
         if ( msg.params.size() >= 1 )
         {
             msg.channels = melanolib::string::comma_split(msg.params[0]);
-            remove_from_channel(msg.from.name,msg.channels);
+            remove_from_channel(msg.from.name, msg.channels);
             if ( msg.params.size() > 1 )
                 msg.message = msg.params[1];
             msg.type = network::Message::PART;
@@ -467,12 +467,12 @@ void IrcConnection::handle_message(network::Message msg)
         {
             msg.channels = from_user->channels;
             user_manager.remove_user(msg.from.local_id);
-            Log("irc",'!',2) << "Removed user " << color::dark_red << msg.from.name;
+            Log("irc", '!', 2) << "Removed user " << color::dark_red << msg.from.name;
 
             if ( strtolower(preferred_nick) == strtolower(msg.from.name) )
             {
                 lock.unlock();
-                command({"NICK",{preferred_nick}});
+                command({"NICK", {preferred_nick}});
             }
             if ( !msg.params.empty() )
                 msg.message = msg.params[0];
@@ -489,7 +489,7 @@ void IrcConnection::handle_message(network::Message msg)
                 msg.channels = from_user->channels;
                 from_user->name = from_user->local_id = msg.params[0];
 
-                Log("irc",'!',2) << "Renamed user " << color::dark_cyan << msg.from.name
+                Log("irc", '!', 2) << "Renamed user " << color::dark_cyan << msg.from.name
                     << color::nocolor << " to " << color::dark_cyan << from_user->name;
 
                 if ( strtolower(msg.from.name) == current_nick_lowecase )
@@ -512,7 +512,7 @@ void IrcConnection::handle_message(network::Message msg)
         msg.victim = get_user(msg.params[1]);
         if ( msg.params.size() > 2 )
             msg.message = msg.params.back();
-        remove_from_channel(msg.params[1],msg.channels);
+        remove_from_channel(msg.params[1], msg.channels);
         msg.type = network::Message::KICK;
     }
     // see http://tools.ietf.org/html/rfc2812#section-3 (Messages)
@@ -738,8 +738,8 @@ void IrcConnection::command(network::Command cmd)
 
         if ( cmd.parameters.size() == 1 )
         {
-            auto nick_length = properties_.get("005.NICKLEN",std::string::npos);
-            nick_length = std::min(nick_length,cmd.parameters[0].size());
+            auto nick_length = properties_.get("005.NICKLEN", std::string::npos);
+            nick_length = std::min(nick_length, cmd.parameters[0].size());
             /// \note NICK validation is very basic, the spec is more precise
             for ( unsigned i = 0; i < nick_length; i++ )
             {
@@ -953,13 +953,13 @@ bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
         if ( m == "!" )
         {
             // find channels not starting with #
-            match = std::any_of(channels.begin(),channels.end(),
+            match = std::any_of(channels.begin(), channels.end(),
                 [](const std::string& ch){ return !ch.empty() && ch[0]!='#'; });
         }
         else
         {
             for ( const auto& chan : channels )
-                if ( melanolib::string::simple_wildcard(strtolower(chan),m) )
+                if ( melanolib::string::simple_wildcard(strtolower(chan), m) )
                 {
                     match = true;
                     break;
@@ -975,9 +975,9 @@ bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
 void IrcConnection::login()
 {
     if ( !server_password.empty() )
-        command({"PASS",{server_password},1024});
-    command({"NICK",{preferred_nick},1024});
-    command({"USER",{preferred_nick, "0", preferred_nick, preferred_nick},1024});
+        command({"PASS", {server_password}, 1024});
+    command({"NICK", {preferred_nick}, 1024});
+    command({"USER", {preferred_nick, "0", preferred_nick, preferred_nick}, 1024});
 }
 
 
@@ -992,7 +992,7 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
 
     user::User user;
 
-    if ( std::regex_match(prefix,match,regex_prefix) )
+    if ( std::regex_match(prefix, match, regex_prefix) )
     {
         user.name = user.local_id = match[1].str();
         user.host = match[2].str();
@@ -1012,9 +1012,9 @@ bool IrcConnection::user_auth(const std::string& local_id,
     auto lock = make_lock(mutex);
     const user::User* user = user_manager.user(local_id);
     if ( user )
-        return auth_system.in_group(*user,auth_group);
+        return auth_system.in_group(*user, auth_group);
 
-    return auth_system.in_group(build_user(local_id),auth_group);
+    return auth_system.in_group(build_user(local_id), auth_group);
 }
 
 void IrcConnection::update_user(const std::string& local_id,
@@ -1028,7 +1028,7 @@ void IrcConnection::update_user(const std::string& local_id,
 
         auto it = properties.find("global_id");
         if ( it != properties.end() )
-            Log("irc",'!',3) << "User " << color::dark_cyan << user->local_id
+            Log("irc", '!', 3) << "User " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << it->second;
     }
 }
@@ -1041,7 +1041,7 @@ void IrcConnection::update_user(const std::string& local_id,
     if ( user )
     {
         if ( !updated.global_id.empty() && updated.global_id != user->global_id )
-            Log("irc",'!',3) << "User " << color::dark_cyan << updated.local_id
+            Log("irc", '!', 3) << "User " << color::dark_cyan << updated.local_id
                 << color::nocolor << " is authed as " << color::cyan << updated.global_id;
 
         *user = updated;
@@ -1075,7 +1075,7 @@ std::vector<user::User> IrcConnection::get_users(const std::string& channel) con
     else
         list = { *user_manager.user(strtolower(channel)) };
 
-    return std::vector<user::User>(list.begin(),list.end());
+    return std::vector<user::User>(list.begin(), list.end());
 }
 
 user::User IrcConnection::build_user(const std::string& exname) const
@@ -1108,14 +1108,14 @@ bool IrcConnection::add_to_group( const std::string& username, const std::string
     if ( !groups.empty() )
     {
         auto lock = make_lock(mutex);
-        groups.erase(std::remove_if(groups.begin(),groups.end(),
-                        [this,user](const std::string& str)
-                        { return auth_system.in_group(user,str); }),
+        groups.erase(std::remove_if(groups.begin(), groups.end(),
+                        [this, user](const std::string& str)
+                        { return auth_system.in_group(user, str); }),
                     groups.end()
         );
-        if ( !groups.empty() && auth_system.add_user(user,groups) )
+        if ( !groups.empty() && auth_system.add_user(user, groups) )
         {
-            Log("irc",'!',3) << "Registered user " << color::cyan
+            Log("irc", '!', 3) << "Registered user " << color::cyan
                 << username << color::nocolor << " in "
                 << melanolib::string::implode(", ", groups);
             return true;
@@ -1132,9 +1132,9 @@ bool IrcConnection::remove_from_group(const std::string& username, const std::st
     user::User user = build_user(username);
 
     auto lock = make_lock(mutex);
-    if ( auth_system.in_group(user,group,false) )
+    if ( auth_system.in_group(user, group, false) )
     {
-        auth_system.remove_user(user,group);
+        auth_system.remove_user(user, group);
         return true;
     }
 
@@ -1156,21 +1156,21 @@ std::vector<user::User> IrcConnection::real_users_in_group(const std::string& gr
 
     std::vector<user::User> users;
     for ( const user::User& user : user_manager )
-        if ( user_group->contains(user,true) )
+        if ( user_group->contains(user, true) )
             users.push_back(user);
     return users;
 }
 
 LockedProperties IrcConnection::properties()
 {
-    return LockedProperties(&mutex,&properties_);
+    return LockedProperties(&mutex, &properties_);
 }
 
 string::FormattedProperties IrcConnection::pretty_properties() const
 {
     auto lock = make_lock(mutex);
     return string::FormattedProperties{
-        {"network",             properties_.get("005.NETWORK","")},
+        {"network",             properties_.get("005.NETWORK", "")},
         {"default_server",      main_server.name()},
         {"server",              current_server.name()},
         {"nick",                current_nick},
@@ -1184,7 +1184,7 @@ user::UserCounter IrcConnection::count_users(const std::string& channel) const
 
     // network
     if ( channel.empty() )
-        return { std::max(0,int(user_manager.users_reference().size())-1), 1, 0 };
+        return { std::max(0, int(user_manager.users_reference().size())-1), 1, 0 };
 
     // channel
     if ( channel[0] == '#' )

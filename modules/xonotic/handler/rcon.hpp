@@ -31,10 +31,10 @@ inline void rcon_adminnick(network::Connection* destination,
                            const std::vector<std::string>& command,
                            const std::string& nick)
 {
-    destination->command({"rcon",{"Melanobot_nick_push"}});
-    destination->command({"rcon",{"set", "sv_adminnick", nick+"^3"}});
-    destination->command({"rcon",command});
-    destination->command({"rcon",{"defer 1 Melanobot_nick_pop"}});
+    destination->command({"rcon", {"Melanobot_nick_push"}});
+    destination->command({"rcon", {"set", "sv_adminnick", nick+"^3"}});
+    destination->command({"rcon", command});
+    destination->command({"rcon", {"defer 1 Melanobot_nick_pop"}});
 }
 
 /**
@@ -44,13 +44,13 @@ class RconCommand : public melanobot::SimpleAction
 {
 public:
     RconCommand(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction(settings.get("command",settings.data()),settings,parent)
+        : SimpleAction(settings.get("command", settings.data()), settings, parent)
     {
         /// \note it allows the command to be specified in the top-level data
-        command = settings.get("command",settings.data());
+        command = settings.get("command", settings.data());
         if ( command.empty() )
             throw melanobot::ConfigurationError{};
-        arguments = settings.get("arguments",arguments);
+        arguments = settings.get("arguments", arguments);
         if ( arguments )
             synopsis += " argument...";
         /// \todo would be cool to gather help from the server
@@ -64,7 +64,7 @@ protected:
         std::vector<std::string> args = { command };
         if ( arguments && !msg.message.empty() )
             args.push_back(msg.message);
-        msg.destination->command({"rcon",std::move(args),priority});
+        msg.destination->command({"rcon", std::move(args), priority});
         return true;
     }
 
@@ -88,9 +88,9 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         string::FormattedProperties props {
-            {"name",msg.source->decode(msg.from.name)},
-            {"local_id",msg.from.local_id},
-            {"channel", melanolib::string::implode(", ",msg.channels)}
+            {"name", msg.source->decode(msg.from.name)},
+            {"local_id", msg.from.local_id},
+            {"channel", melanolib::string::implode(", ", msg.channels)}
         };
         rcon_adminnick(msg.destination, {vote, msg.message},
             nick.replaced(props).encode(*msg.destination->formatter()));

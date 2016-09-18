@@ -112,7 +112,7 @@ public:
     {}
 
     Log(const std::string& type, char direction, const std::string& message, int verbosity = 2)
-        : Log(type,direction,verbosity)
+        : Log(type, direction, verbosity)
     {
         stream << message;
     }
@@ -150,7 +150,7 @@ public:
     ErrorLog(const std::string& type,
              const std::string& error = "Error",
              int verbosity = 0 )
-        : Log(type,'!',verbosity)
+        : Log(type, '!', verbosity)
     {
         stream << string::FormatFlags::BOLD << color::red << error
             << string::ClearFormatting() << ": ";

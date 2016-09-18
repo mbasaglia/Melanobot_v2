@@ -36,9 +36,9 @@ public:
     string::FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 
-    double hue;         ///< Starting hue [0,1]
-    double saturation;  ///< Saturation [0,1]
-    double value;       ///< Value [0,1]
+    double hue;         ///< Starting hue [0, 1]
+    double saturation;  ///< Saturation [0, 1]
+    double value;       ///< Value [0, 1]
 };
 
 } // namespace fun

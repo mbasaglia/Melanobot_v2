@@ -25,7 +25,7 @@
  */
 MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_file_storage_metadata()
 {
-    return {"file_storage","Plain file-based storage"};
+    return {"file_storage", "Plain file-based storage"};
 }
 
 MELANOMODULE_ENTRY_POINT void melanomodule_file_storage_initialize(const Settings& settings)

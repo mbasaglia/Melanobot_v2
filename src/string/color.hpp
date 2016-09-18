@@ -140,7 +140,7 @@ public:
     }
 
     /**
-     * \brief Get a color from HSV components in [0,1]
+     * \brief Get a color from HSV components in [0, 1]
      */
     static Color12 hsv(double h, double s, double v);
 

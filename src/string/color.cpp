@@ -66,8 +66,8 @@ Color12::Component Color12::to_4bit() const
 
     Component color = 0;
 
-    Component cmax = std::max({r,g,b});
-    Component cmin = std::min({r,g,b});
+    Component cmax = std::max({r, g, b});
+    Component cmin = std::min({r, g, b});
     Component delta = cmax-cmin;
 
     if ( delta > 0 )
@@ -172,8 +172,8 @@ Color12 Color12::hsv(double h, double s, double v)
         h = 0;
     else if ( h > 1 )
         h = melanolib::math::fractional(h);
-    s = melanolib::math::bound(0,s,1);
-    v = melanolib::math::bound(0,v,1);
+    s = melanolib::math::bound(0, s, 1);
+    v = melanolib::math::bound(0, v, 1);
 
     h *= 6;
     auto c = v*s;
@@ -192,13 +192,13 @@ Color12 Color12::hsv(double h, double s, double v)
 
     switch (h1)
     {
-        case 0: return Color12(v,k,m);
-        case 1: return Color12(n,v,m);
-        case 2: return Color12(m,v,k);
-        case 3: return Color12(m,n,v);
-        case 4: return Color12(k,m,v);
+        case 0: return Color12(v, k, m);
+        case 1: return Color12(n, v, m);
+        case 2: return Color12(m, v, k);
+        case 3: return Color12(m, n, v);
+        case 4: return Color12(k, m, v);
         case 6:
-        case 5: return Color12(v,m,n);
+        case 5: return Color12(v, m, n);
     }
     return Color12();
 }

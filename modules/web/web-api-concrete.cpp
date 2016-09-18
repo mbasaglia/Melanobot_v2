@@ -28,7 +28,7 @@ std::pair<VideoInfo::FoundFunction, web::Request>
             &VideoInfo::yt_found,
             web::Request("GET", {yt_api_url,
             {
-                {"part", "snippet,contentDetails"},
+                {"part", "snippet, contentDetails"},
                 {"maxResults", "1"},
                 {"key", yt_api_key},
                 {"id", match[1]},
@@ -48,7 +48,7 @@ std::pair<VideoInfo::FoundFunction, web::Request>
             &VideoInfo::dm_found,
             web::Request("GET", dm_api_url+std::string(match[3]),
             {
-                {"fields", "id,title,channel,duration,description"},
+                {"fields", "id, title, channel, duration, description"},
             })
         };
     }
@@ -66,7 +66,7 @@ std::pair<VideoInfo::FoundFunction, web::Request>
 bool VideoInfo::on_handle(network::Message& msg)
 {
     std::smatch match;
-    if ( std::regex_search(msg.message,match,regex) )
+    if ( std::regex_search(msg.message, match, regex) )
     {
         web::Request request;
         FoundFunction found_func;
@@ -82,10 +82,10 @@ bool VideoInfo::on_handle(network::Message& msg)
                     JsonParser parser;
                     try {
                         ptree = parser.parse(response.body, request.uri.full());
-                        (this->*found_func)(msg,ptree);
+                        (this->*found_func)(msg, ptree);
                     } catch ( const JsonError& err ) {
-                        ErrorLog errlog("web","JSON Error");
-                        if ( settings::global_settings.get("debug",0) )
+                        ErrorLog errlog("web", "JSON Error");
+                        if ( settings::global_settings.get("debug", 0) )
                             errlog << err.file << ':' << err.line << ": ";
                         errlog << err.what();
                     }
@@ -100,10 +100,10 @@ bool VideoInfo::on_handle(network::Message& msg)
 
 
 SearchWebSearx::SearchWebSearx(const Settings& settings, MessageConsumer* parent)
-    : SimpleJson("search",settings,parent)
+    : SimpleJson("search", settings, parent)
 {
     synopsis += " Term...";
-    api_url = settings.get("url",api_url);
+    api_url = settings.get("url", api_url);
     not_found_reply = read_string(settings, "not_found",
                                   "Didn't find anything about $search");
     found_reply = read_string(settings, "reply", "$(-b)$title$(-): $url" );
@@ -120,21 +120,21 @@ SearchWebSearx::SearchWebSearx(const Settings& settings, MessageConsumer* parent
 void SearchWebSearx::json_success(const network::Message& msg, const Settings& parsed)
 {
     using namespace melanolib::string;
-    if ( settings::has_child(parsed,"results.0.title") )
+    if ( settings::has_child(parsed, "results.0.title") )
     {
         Properties props = {
-            {"title",  parsed.get("results.0.title","")},
-            {"url", parsed.get("results.0.url","")},
-            {"image", parsed.get("results.0.img_src","")},
-            {"longitude", parsed.get("results.0.longitude","")},
-            {"latitude", parsed.get("results.0.latitude","")},
+            {"title",  parsed.get("results.0.title", "")},
+            {"url", parsed.get("results.0.url", "")},
+            {"image", parsed.get("results.0.img_src", "")},
+            {"longitude", parsed.get("results.0.longitude", "")},
+            {"latitude", parsed.get("results.0.latitude", "")},
         };
 
         reply_to(msg, found_reply.replaced(props));
 
         if ( description_maxlen )
         {
-            std::string result = parsed.get("results.0.content","");
+            std::string result = parsed.get("results.0.content", "");
             if ( description_maxlen > 0 )
                 result = elide( collapse_spaces(result), description_maxlen );
             reply_to(msg, result);

@@ -102,7 +102,7 @@ namespace settings
     inline Settings merge_copy(const Settings& target, const Settings& source, bool overwrite)
     {
         Settings copy = target;
-        merge(copy,source,overwrite);
+        merge(copy, source, overwrite);
         return copy;
     }
 
@@ -114,7 +114,7 @@ namespace settings
         {
             func(sett);
             for ( auto& child : sett )
-                recurse(child.second,func);
+                recurse(child.second, func);
         }
 
     /**
@@ -128,7 +128,7 @@ namespace settings
             if ( func(sett) )
                 return true;
             for ( auto& child : sett )
-                if ( breakable_recurse(child.second,func) )
+                if ( breakable_recurse(child.second, func) )
                     return true;
             return false;
         }
@@ -160,7 +160,7 @@ std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
 /**
  * \brief Key-value map used to store object properties
  */
-using Properties = std::unordered_map<std::string,std::string>;
+using Properties = std::unordered_map<std::string, std::string>;
 
 /**
  * \brief Converts flat properties to a tree

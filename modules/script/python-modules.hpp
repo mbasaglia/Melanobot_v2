@@ -120,47 +120,47 @@ void module_melanobot_network(boost::python::scope& module_top)
     scope module_scope = module_object;
 
     /// \todo readonly or readwrite?
-    class_<network::Message>("Message",no_init)
-        .def_readwrite("raw",&network::Message::raw)
-        .def_readonly("params",convert_member(&network::Message::params))
+    class_<network::Message>("Message", no_init)
+        .def_readwrite("raw", &network::Message::raw)
+        .def_readonly("params", convert_member(&network::Message::params))
 
-        .def_readwrite("message",&network::Message::message)
-        .def_readonly("channels",convert_member(&network::Message::channels))
-        .def_readwrite("direct",&network::Message::direct)
-        .add_property("user",[](const network::Message& msg){
+        .def_readwrite("message", &network::Message::message)
+        .def_readonly("channels", convert_member(&network::Message::channels))
+        .def_readwrite("direct", &network::Message::direct)
+        .add_property("user", [](const network::Message& msg){
             return make_shared_user(msg.from);
         })
-        .def_readonly("victim",[](const network::Message& msg){
+        .def_readonly("victim", [](const network::Message& msg){
             return make_shared_user(msg.victim);
         })
-        .def_readonly("source",&network::Message::source)
-        .def_readonly("destination",&network::Message::destination)
+        .def_readonly("source", &network::Message::source)
+        .def_readonly("destination", &network::Message::destination)
     ;
 
-    class_<network::Connection,network::Connection*,boost::noncopyable>("Connection",no_init)
-        .add_property("name",return_copy(&network::Connection::config_name))
-        .add_property("description",&network::Connection::description)
-        .add_property("protocol",&network::Connection::protocol)
-        .add_property("formatter",return_pointer(&network::Connection::formatter))
-        .def("user",[](network::Connection* conn, const std::string& local_id){
+    class_<network::Connection, network::Connection*, boost::noncopyable>("Connection", no_init)
+        .add_property("name", return_copy(&network::Connection::config_name))
+        .add_property("description", &network::Connection::description)
+        .add_property("protocol", &network::Connection::protocol)
+        .add_property("formatter", return_pointer(&network::Connection::formatter))
+        .def("user", [](network::Connection* conn, const std::string& local_id){
             return make_shared_user(conn->get_user(local_id));
         })
         /// \todo Expose Command
-        .def("command",[](network::Connection* conn,const std::string& command){
+        .def("command", [](network::Connection* conn, const std::string& command){
             conn->command({command});
         })
         /// \todo Expose OutputMessage and say()
-        .def("connect",&network::Connection::connect)
-        .def("disconnect",&network::Connection::disconnect)
-        .def("reconnect",&network::Connection::reconnect)
-        .def("__getattr__",[](network::Connection* conn, const std::string& name){
+        .def("connect", &network::Connection::connect)
+        .def("disconnect", &network::Connection::disconnect)
+        .def("reconnect", &network::Connection::reconnect)
+        .def("__getattr__", [](network::Connection* conn, const std::string& name){
             auto props = conn->pretty_properties();
             auto it = props.find(name);
             if ( it != props.end() )
                 return it->second.encode(*conn->formatter());
             return conn->properties().get(name);
         })
-        .def("__setattr__",[](network::Connection* conn,
+        .def("__setattr__", [](network::Connection* conn,
                               const std::string&   name,
                               const std::string&   value ){
             conn->properties().put(name, value);
@@ -168,32 +168,32 @@ void module_melanobot_network(boost::python::scope& module_top)
     ;
 
     /*class_<network::Request>("Request")
-        .def("__init__",make_constructor(
+        .def("__init__", make_constructor(
             [](const std::string& command, const std::string& resource, list parameters) {
                 std::vector<std::string> params;
-                Converter::convert(parameters,params);
+                Converter::convert(parameters, params);
                 return std::shared_ptr<network::Request>(
                     new network::Request(command, resource, params));
         }))
-        .def_readwrite("command",&network::Request::command)
-        .def_readwrite("resource",&network::Request::resource)
+        .def_readwrite("command", &network::Request::command)
+        .def_readwrite("resource", &network::Request::resource)
         .add_property("parameters",
                       convert_member(&network::Request::parameters),
                       convert_member_setter(&network::Request::parameters))
     ;
 
     class_<network::Response>("Response")
-        .def_readwrite("error_message",&network::Response::error_message)
-        .def_readwrite("contents",&network::Response::contents)
-        .def_readwrite("resource",&network::Response::resource)
+        .def_readwrite("error_message", &network::Response::error_message)
+        .def_readwrite("contents", &network::Response::contents)
+        .def_readwrite("resource", &network::Response::resource)
     ;
 
-    class_<network::AsyncService,network::AsyncService*,boost::noncopyable>("Service",no_init)
-        .def("query",[](network::AsyncService* serv, const network::Request& request)
+    class_<network::AsyncService, network::AsyncService*, boost::noncopyable>("Service", no_init)
+        .def("query", [](network::AsyncService* serv, const network::Request& request)
             { return serv->query(request); })
     ;
 
-    def("service",return_pointer(&network::require_service));*/
+    def("service", return_pointer(&network::require_service));*/
 }
 
 void module_melanobot_storage(boost::python::scope& module_top)
@@ -223,29 +223,29 @@ void module_melanobot_storage(boost::python::scope& module_top)
             PyErr_SetString(PyExc_RuntimeError, err.what());
     });
 
-    def("get_value",[](const key_type& path) {
+    def("get_value", [](const key_type& path) {
         return melanobot::storage().get_value(path);
     });
-    def("get_sequence",[](const key_type& path) {
+    def("get_sequence", [](const key_type& path) {
         list out;
         Converter::convert(melanobot::storage().get_sequence(path), out);
         return out;
     });
-    def("get_map",[](const key_type& path) {
+    def("get_map", [](const key_type& path) {
         dict out;
         Converter::convert(melanobot::storage().get_map(path), out);
         return out;
     });
 
-    def("maybe_get_value",[](const key_type& path, const value_type& def) {
+    def("maybe_get_value", [](const key_type& path, const value_type& def) {
         return melanobot::storage().maybe_get_value(path, def);
     });
-    def("maybe_get_sequence",[](const key_type& path) {
+    def("maybe_get_sequence", [](const key_type& path) {
         list out;
         Converter::convert(melanobot::storage().maybe_get_sequence(path), out);
         return out;
     });
-    def("maybe_get_map",[](const key_type& path) {
+    def("maybe_get_map", [](const key_type& path) {
         dict out;
         Converter::convert(melanobot::storage().maybe_get_map(path), out);
         return out;
@@ -319,56 +319,56 @@ BOOST_PYTHON_MODULE(melanobot)
     // def data_file(path)
     def("data_file", [](const std::string& path) { return settings::data_file(path); } );
 
-    class_<user::User, std::shared_ptr<user::User>>("User",no_init)
-        .def_readwrite("name",&user::User::name)
-        .def_readwrite("host",&user::User::host)
-        .def_readonly("local_id",&user::User::local_id)
-        .def_readwrite("global_id",&user::User::global_id)
-        .add_property("channels",convert_member(&user::User::channels))
-        .def("__getattr__",&user::User::property)
-        .def("__setattr__",[](user::User& user, const std::string& property, object val) {
+    class_<user::User, std::shared_ptr<user::User>>("User", no_init)
+        .def_readwrite("name", &user::User::name)
+        .def_readwrite("host", &user::User::host)
+        .def_readonly("local_id", &user::User::local_id)
+        .def_readwrite("global_id", &user::User::global_id)
+        .add_property("channels", convert_member(&user::User::channels))
+        .def("__getattr__", &user::User::property)
+        .def("__setattr__", [](user::User& user, const std::string& property, object val) {
             user.properties[property] = extract<std::string>(val);
         })
     ;
 
-    class_<melanobot::Melanobot, melanobot::Melanobot*, boost::noncopyable>("Melanobot",no_init)
-        .def("stop",&melanobot::Melanobot::stop)
-        .def("connection",return_pointer(&melanobot::Melanobot::connection))
+    class_<melanobot::Melanobot, melanobot::Melanobot*, boost::noncopyable>("Melanobot", no_init)
+        .def("stop", &melanobot::Melanobot::stop)
+        .def("connection", return_pointer(&melanobot::Melanobot::connection))
     ;
 
     class_<color::Color12>("Color")
         .def(init<std::string>())
         .def(init<color::Color12::BitMask>())
-        .def(init<color::Color12::Component,color::Color12::Component,color::Color12::Component>())
-        .add_property("valid",&color::Color12::is_valid)
-        .add_property("red",&color::Color12::red)
-        .add_property("green",&color::Color12::green)
-        .add_property("blue",&color::Color12::blue)
-        .def("hsv",&color::Color12::hsv).staticmethod("hsv")
-        .def("blend",&color::Color12::blend).staticmethod("blend")
-        .def("__str__",[](const color::Color12& col){
+        .def(init<color::Color12::Component, color::Color12::Component, color::Color12::Component>())
+        .add_property("valid", &color::Color12::is_valid)
+        .add_property("red", &color::Color12::red)
+        .add_property("green", &color::Color12::green)
+        .add_property("blue", &color::Color12::blue)
+        .def("hsv", &color::Color12::hsv).staticmethod("hsv")
+        .def("blend", &color::Color12::blend).staticmethod("blend")
+        .def("__str__", [](const color::Color12& col){
             object main = import("__main__");
             dict main_namespace = extract<dict>(main.attr("__dict__"));
             if ( !main_namespace.has_key("formatter") )
                 return object(str());
             return main_namespace["formatter"].attr("convert")(col);
         })
-        .def("__add__",[](const color::Color12& lhs, const str& rhs) {
+        .def("__add__", [](const color::Color12& lhs, const str& rhs) {
             return str(lhs)+rhs;
         })
     ;
 
-    class_<string::Formatter,string::Formatter*,boost::noncopyable>("Formatter",no_init)
+    class_<string::Formatter, string::Formatter*, boost::noncopyable>("Formatter", no_init)
         .def("__init__", make_constructor([](const std::string& name) {
             return string::Formatter::formatter(name);
         }))
-        .add_property("name",[](string::Formatter* fmt) {
+        .add_property("name", [](string::Formatter* fmt) {
             return fmt ? fmt->name() : "";
         })
-        .def("convert",[](string::Formatter* fmt, const color::Color12& col) {
+        .def("convert", [](string::Formatter* fmt, const color::Color12& col) {
             return fmt ? fmt->to_string(col) : "";
         })
-        .def("convert",[](string::Formatter* fmt, const std::string& str) {
+        .def("convert", [](string::Formatter* fmt, const std::string& str) {
             return str;
         })
     ;

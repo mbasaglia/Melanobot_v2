@@ -36,7 +36,7 @@ public:
     std::string get(const path_type& property)
     {
         auto l = lock();
-        return referenced->get(property,"");
+        return referenced->get(property, "");
     }
 
     /**
@@ -46,7 +46,7 @@ public:
         auto get(const path_type& property, T&& default_value)
     {
         auto l = lock();
-        return referenced->get(property,std::forward<T>(default_value));
+        return referenced->get(property, std::forward<T>(default_value));
     }
 
     /**
@@ -56,7 +56,7 @@ public:
         void put(const path_type& property, T&& value)
     {
         auto l = lock();
-        referenced->put(property,std::forward<T>(value));
+        referenced->put(property, std::forward<T>(value));
     }
 
     /**
@@ -85,7 +85,7 @@ public:
     PropertyTree get_child(const path_type& property)
     {
         auto l = lock();
-        return referenced->get_child(property,{});
+        return referenced->get_child(property, {});
     }
 };
 

@@ -55,7 +55,7 @@ UnvanquishedConnection::UnvanquishedConnection(
       status_(DISCONNECTED)
 {
     formatter_ = string::Formatter::formatter(
-        settings.get("string_format",std::string("xonotic"))); /// \todo Unv formatter
+        settings.get("string_format", std::string("xonotic"))); /// \todo Unv formatter
 
     cmd_say = string::FormatterConfig().decode(
         settings.get("say", "pr $to $prefix$message"));
@@ -145,7 +145,7 @@ void UnvanquishedConnection::update_user(const std::string& local_id,
 
         auto it = properties.find("global_id");
         if ( it != properties.end() )
-            Log("unv",'!',3) << "Player " << color::dark_cyan << user->local_id
+            Log("unv", '!', 3) << "Player " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << it->second;
     }
 }
@@ -160,7 +160,7 @@ void UnvanquishedConnection::update_user(const std::string& local_id,
         *user = updated;
 
         if ( !updated.global_id.empty() )
-            Log("unv",'!',3) << "User " << color::dark_cyan << user->local_id
+            Log("unv", '!', 3) << "User " << color::dark_cyan << user->local_id
                 << color::nocolor << " is authed as " << color::cyan << updated.global_id;
     }
 }
@@ -178,7 +178,7 @@ user::User UnvanquishedConnection::get_user(const std::string& local_id) const
         user.origin = const_cast<UnvanquishedConnection*>(this);
         user.local_id = "-1";
         user.host = server().name();
-        user.name = properties_.get("cvar.sv_hostname","");
+        user.name = properties_.get("cvar.sv_hostname", "");
         if ( user.name.empty() )
             user.name = "(Server Admin)";
         return user;
@@ -210,7 +210,7 @@ user::UserCounter UnvanquishedConnection::count_users(const std::string& channel
     user::UserCounter c;
     for ( const auto& user : user_manager )
         (user.host.empty() ? c.bots : c.users)++;
-    c.max = properties_.get("cvar.sv_maxclients",0);
+    c.max = properties_.get("cvar.sv_maxclients", 0);
     return c;
 }
 
@@ -291,7 +291,7 @@ void UnvanquishedConnection::command ( network::Command cmd )
             cmd.parameters[2] = xonotic::quote_string(cmd.parameters[2]);
         }
 
-        std::string command = melanolib::string::implode(" ",cmd.parameters);
+        std::string command = melanolib::string::implode(" ", cmd.parameters);
         if ( command.empty() )
         {
             ErrorLog("unv") << "Empty rcon command";
@@ -302,14 +302,14 @@ void UnvanquishedConnection::command ( network::Command cmd )
     }
     else
     {
-        Log("unv",'<',1) << cmd.command;
+        Log("unv", '<', 1) << cmd.command;
         write(cmd.command);
     }
 }
 
 void UnvanquishedConnection::on_network_error(const std::string& message)
 {
-    ErrorLog("unv","Network Error") << message;
+    ErrorLog("unv", "Network Error") << message;
     close_connection();
     return;
 }
@@ -343,7 +343,7 @@ void UnvanquishedConnection::on_receive(const std::string& command,
 
 void UnvanquishedConnection::forward_message(network::Message& msg)
 {
-    Log("unv",'>',4) << formatter_->decode(msg.raw); // 4 'cause spams
+    Log("unv", '>', 4) << formatter_->decode(msg.raw); // 4 'cause spams
     if ( msg.raw.empty() )
         return;
 
@@ -487,7 +487,7 @@ void UnvanquishedConnection::check_user(const std::smatch& match)
         network::Message msg;
         msg.type = network::Message::JOIN;
         msg.from = new_user;
-        Log("unv",'!',3) << "Added user " << decode(new_user.name);
+        Log("unv", '!', 3) << "Added user " << decode(new_user.name);
         msg.send(this);
     }
 }
@@ -508,7 +508,7 @@ void UnvanquishedConnection::check_user_end()
             network::Message msg;
             msg.type = network::Message::PART;
             msg.from = *it;
-            Log("unv",'!',3) << "Removed user " << decode(it->name);
+            Log("unv", '!', 3) << "Removed user " << decode(it->name);
             msg.send(this);
             it = user_manager.users_reference().erase(it);
         }

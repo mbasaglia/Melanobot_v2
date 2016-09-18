@@ -77,7 +77,7 @@ public:
     void pop(reference item)
     {
         std::unique_lock<std::mutex> lock(mutex);
-        condition.wait(lock,[this]{return !wait_condition();});
+        condition.wait(lock, [this]{return !wait_condition();});
         if ( !run )
             return;
         item = (container.*container_get)();
@@ -124,7 +124,7 @@ public:
         auto lock = make_lock(mutex);
 
         Container swapped;
-        std::swap(swapped,container);
+        std::swap(swapped, container);
 
         value_type value;
         while ( !swapped.empty() )
@@ -156,9 +156,9 @@ private:
  * \brief Makes a std::queue suitable for concurrency
  */
 template<class T, class Container = std::deque<T>>
-class ConcurrentQueue : public ConcurrentContainer<std::queue<T,Container>>
+class ConcurrentQueue : public ConcurrentContainer<std::queue<T, Container>>
 {
-    using parent_type = ConcurrentContainer<std::queue<T,Container>>;
+    using parent_type = ConcurrentContainer<std::queue<T, Container>>;
 
 public:
     using container_type = typename parent_type::container_type;
@@ -173,9 +173,9 @@ public:
 template<class T,
          class Container = std::vector<T>,
          class Compare = std::less<typename Container::value_type> >
-class ConcurrentPriorityQueue : public ConcurrentContainer<std::priority_queue<T,Container,Compare>>
+class ConcurrentPriorityQueue : public ConcurrentContainer<std::priority_queue<T, Container, Compare>>
 {
-    using parent_type = ConcurrentContainer<std::priority_queue<T,Container,Compare>>;
+    using parent_type = ConcurrentContainer<std::priority_queue<T, Container, Compare>>;
 
 public:
     using container_type = typename parent_type::container_type;

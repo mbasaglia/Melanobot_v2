@@ -66,7 +66,7 @@ protected:
     template<class ConsumerT>
         ConsumerT* get_parent() const
         {
-            static_assert(std::is_base_of<MessageConsumer,ConsumerT>::value,
+            static_assert(std::is_base_of<MessageConsumer, ConsumerT>::value,
                           "Expected MessageConsumer type");
             if ( !parent )
                 return nullptr;

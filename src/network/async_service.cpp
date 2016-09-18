@@ -94,7 +94,7 @@ AsyncService* ServiceRegistry::service(const std::string& name) const
 
 void ServiceRegistry::load_service(EntryMap::value_type& entry, const Settings& settings)
 {
-    Log("sys",'!') << "Loading service: " << entry.first;
+    Log("sys", '!') << "Loading service: " << entry.first;
     try
     {
         entry.second.service->initialize(settings);

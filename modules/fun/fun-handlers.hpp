@@ -38,7 +38,7 @@ class Morse : public melanobot::SimpleAction
 {
 public:
     Morse(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("morse",settings,parent)
+        : SimpleAction("morse", settings, parent)
     {
         synopsis += " text|morse";
         help = "Converts between ASCII and Morse code";
@@ -48,7 +48,7 @@ protected:
     bool on_handle(network::Message& msg) override;
 
 private:
-    static std::unordered_map<char,std::string> morse;
+    static std::unordered_map<char, std::string> morse;
 };
 
 /**
@@ -58,7 +58,7 @@ class ReverseText : public melanobot::SimpleAction
 {
 public:
     ReverseText(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("reverse",settings,parent)
+        : SimpleAction("reverse", settings, parent)
     {
         synopsis += " text";
         help = "Turns ASCII upside-down";
@@ -68,7 +68,7 @@ protected:
     bool on_handle(network::Message& msg) override;
 
 private:
-    static std::unordered_map<char,std::string> reverse_ascii;
+    static std::unordered_map<char, std::string> reverse_ascii;
 };
 
 /**
@@ -78,7 +78,7 @@ class ChuckNorris : public web::SimpleJson
 {
 public:
     ChuckNorris(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("norris",settings,parent)
+        : SimpleJson("norris", settings, parent)
     {
         synopsis += " [name]";
         help = "Shows a Chuck Norris joke from http://icndb.com";
@@ -90,7 +90,7 @@ protected:
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
         /// \todo convert html entities
-        reply_to(msg, parsed.get("value.joke",""));
+        reply_to(msg, parsed.get("value.joke", ""));
     }
 
 private:
@@ -107,11 +107,11 @@ class RenderPony : public melanobot::SimpleAction
 {
 public:
     RenderPony(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("render_pony",settings,parent)
+        : SimpleAction("render_pony", settings, parent)
     {
         synopsis += " pony";
         help = "Draws a pretty pony /)^3^(\\";
-        pony_path = settings.get("path",pony_path);
+        pony_path = settings.get("path", pony_path);
     }
 
 protected:
@@ -128,9 +128,9 @@ class PonyCountDown : public web::SimpleJson
 {
 public:
     PonyCountDown(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("nextpony",settings,parent)
+        : SimpleJson("nextpony", settings, parent)
     {
-        api_url = settings.get("url",api_url);
+        api_url = settings.get("url", api_url);
         reply = read_string(settings, "found", "$time_delta until $(-b)$title$(-) (S${season}E${episode})");
         not_found = read_string(settings, "not_found", "Next episode: not soon enough D:");
         help = "Pony countdown ("+api_url+")";
@@ -149,11 +149,11 @@ protected:
             return json_failure(msg);
 
         Properties map;
-        map["title"] = parsed.get("name","");
-        map["season"] = melanolib::string::to_string(parsed.get("season",0),2);
-        map["episode"] = melanolib::string::to_string(parsed.get("episode",0),2);
-        map["duration"] = parsed.get("duration","");
-        melanolib::time::DateTime time = melanolib::time::parse_time(parsed.get("time",""));
+        map["title"] = parsed.get("name", "");
+        map["season"] = melanolib::string::to_string(parsed.get("season", 0), 2);
+        map["episode"] = melanolib::string::to_string(parsed.get("episode", 0), 2);
+        map["duration"] = parsed.get("duration", "");
+        melanolib::time::DateTime time = melanolib::time::parse_time(parsed.get("time", ""));
         melanolib::time::DateTime now;
         auto delta = time > now ? time - now : now - time;
         map["time_delta"] = melanolib::time::duration_string(delta);
@@ -179,9 +179,9 @@ class PonyFace : public web::SimpleJson
 {
 public:
     PonyFace(const Settings& settings, MessageConsumer* parent)
-        : SimpleJson("ponyface",settings,parent)
+        : SimpleJson("ponyface", settings, parent)
     {
-        api_url = settings.get("url",api_url);
+        api_url = settings.get("url", api_url);
         not_found = read_string(settings, "not_found", "Pony not found http://ponyfac.es/138/full");
         help = "Pony face ("+api_url+")";
     }
@@ -199,7 +199,7 @@ protected:
     {
         if ( parsed.empty() )
             return json_failure(msg);
-        auto faces = parsed.get_child("faces",{});
+        auto faces = parsed.get_child("faces", {});
         if ( !faces.empty() )
         {
             auto face = faces.get_optional<std::string>(
@@ -230,7 +230,7 @@ public:
     AnswerQuestions(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
     {
-        direct    = settings.get("direct",direct);
+        direct    = settings.get("direct", direct);
     }
 
     bool can_handle(const network::Message& msg) const override
@@ -270,7 +270,7 @@ class Slap : public melanobot::SimpleAction
 {
 public:
     Slap(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("slap",settings,parent)
+        : SimpleAction("slap", settings, parent)
     {
         synopsis += " victim";
         help = "Slap the victim";
@@ -279,7 +279,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,network::OutputMessage(
+        reply_to(msg, network::OutputMessage(
             string::FormattedString() << "slaps " << msg.message,
             true
         ));
@@ -306,7 +306,7 @@ class Discord : public melanobot::SimpleAction
 {
 public:
     Discord(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("discord",settings,parent)
+        : SimpleAction("discord", settings, parent)
     {
         synopsis += " [time]";
         help = "Show the Discordian date";
@@ -401,7 +401,7 @@ protected:
         if ( std::regex_match(msg.message, match, stardate) )
         {
             auto date =
-                DateTime(1970,Month::JANUARY,days(1),hours(0),minutes(0)) +
+                DateTime(1970, Month::JANUARY, days(1), hours(0), minutes(0)) +
                 seconds(stardate_to_unix(std::stold(match[1])))
             ;
             reply_to(msg, format_char(date, 'r'));

@@ -52,7 +52,7 @@ public:
     Handler(const Settings& settings, MessageConsumer* parent)
         : MessageConsumer(parent)
     {
-        priority = settings.get("priority",priority);
+        priority = settings.get("priority", priority);
     }
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
@@ -116,7 +116,7 @@ public:
         {
             std::string value = get_property(p);
             if ( !value.empty() )
-                output.put(p,value);
+                output.put(p, value);
         }
     }
     
@@ -153,7 +153,7 @@ protected:
     {
         output.target = reply_channel(input);
         output.priority = priority;
-        deliver(input.destination,output);
+        deliver(input.destination, output);
     }
 
     void reply_to(const network::Message& msg, string::FormattedString&& text) const
@@ -189,9 +189,9 @@ class MyAction : public melanobot::SimpleAction
 {
 public:
     MyAction(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("default_handler",settings,parent)
+        : SimpleAction("default_handler", settings, parent)
     {
-        some_setting = settings.get("some_setting",some_setting);
+        some_setting = settings.get("some_setting", some_setting);
         synopsis += " text...";
         help = "Help message for MyAction";
     }
@@ -199,7 +199,7 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        reply_to(msg,"I got: \""+msg.message+"\" from "+msg.from.name);
+        reply_to(msg, "I got: \""+msg.message+"\" from "+msg.from.name);
         return true;
     }
 
@@ -221,7 +221,7 @@ public:
     SimpleAction(const std::string& default_trigger,
                  const Settings&    settings,
                  MessageConsumer*   parent)
-        : Handler(settings,parent),
+        : Handler(settings, parent),
           trigger(default_trigger)
     {
         load_settings(settings);
@@ -236,7 +236,7 @@ public:
                  const std::string& pattern,
                  const Settings&    settings,
                  MessageConsumer*   parent)
-        : Handler(settings,parent),
+        : Handler(settings, parent),
           trigger(default_trigger),
           pattern(pattern, std::regex::ECMAScript|std::regex::optimize)
     {
@@ -313,10 +313,10 @@ protected:
      */
     void load_settings(const Settings& settings)
     {
-        trigger      = settings.get("trigger",trigger);
+        trigger      = settings.get("trigger", trigger);
         synopsis     = "$(gray)$(-b)"+trigger+"$(-)$(gray)";
-        direct       = settings.get("direct",direct);
-        public_reply = settings.get("public",public_reply);
+        direct       = settings.get("direct", direct);
+        public_reply = settings.get("public", public_reply);
     }
 };
 
