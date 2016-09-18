@@ -118,7 +118,7 @@ struct MarkovGeneratorWrapper
 
     std::string markov_key;
     melanolib::string::TextGenerator generator;
-    bool read_only = false;
+    bool read_only = true;
 };
 
 class MarkovListener : public melanobot::Handler
@@ -128,7 +128,9 @@ public:
         : Handler(settings, parent)
     {
         direct = settings.get("direct", direct);
-        generator = &MarkovGeneratorWrapper::get_generator(settings).generator;
+        auto& wrapper = MarkovGeneratorWrapper::get_generator(settings);
+        wrapper.read_only = false;
+        generator = &wrapper.generator;
     }
 
     static melanolib::string::TextGenerator& markov_generator(const std::string& key)
@@ -204,6 +206,7 @@ public:
         help = "Saves the text generator graph";
         std::string markov_key = settings.get("markov_key", "");
         generator = &MarkovGeneratorWrapper::get_generator(markov_key);
+        generator->read_only = false;
     }
 
 protected:
@@ -262,6 +265,81 @@ protected:
 private:
     melanolib::string::TextGenerator *generator;
     string::FormattedString reply;
+};
+
+class MultiMarkovTextGenerator : public melanobot::SimpleAction
+{
+public:
+    MultiMarkovTextGenerator(const Settings& settings, MessageConsumer* parent)
+        : SimpleAction("chat like", settings, parent)
+    {
+        synopsis += " character [about subject...]";
+        help = "Generates a random chat message";
+
+        min_words = settings.get("min_words", min_words);
+        enough_words = settings.get("enough_words", enough_words);
+        max_words = settings.get("max_words", max_words);
+
+        prompt_separator = settings.get("prompt_separator", prompt_separator);
+
+        std::string markov_prefix = settings.get("markov_prefix", "");
+        auto chains = settings.get_child("Chains", {});
+        for ( const auto& chain : chains )
+        {
+            melanolib::string::TextGenerator* generator =
+                &MarkovGeneratorWrapper::get_generator(markov_prefix + chain.first).generator;
+            if ( chain.second.empty() )
+            {
+                generators[chain.first] = generator;
+            }
+            else
+            {
+                auto& output = output_prefixes[generator];
+                for ( const auto& prefix : chain.second )
+                {
+                    if ( prefix.second.data().empty() || prefix.second.data() == "output" )
+                        output.push_back(prefix.first);
+                    if ( prefix.second.data().empty() || prefix.second.data() == "input" )
+                        generators[prefix.first] = generator;
+                }
+            }
+        }
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string subject = melanolib::string::trimmed(
+            msg.source->encode_to(msg.message, string::FormatterUtf8())
+        );
+
+        auto split = subject.find(prompt_separator);
+        std::string name = subject.substr(0, split);
+
+        auto iter = generators.find(name);
+        if ( iter != generators.end() )
+        {
+            melanolib::string::TextGenerator* generator = iter->second;
+            std::string text;
+            if ( split != std::string::npos && split + prompt_separator.size() < subject.size() )
+                text = subject.substr(split + prompt_separator.size());
+            text = generator->generate_string(text, min_words, enough_words, max_words);
+            const auto& prefixes = output_prefixes[generator];
+            if ( !prefixes.empty() )
+                text = prefixes[melanolib::math::random(0, prefixes.size() - 1)] + text;
+            reply_to(msg, text);
+            return true;
+        }
+        return false;
+    }
+
+private:
+    std::size_t min_words = 5;
+    std::size_t enough_words = 10;
+    std::size_t max_words = 100;
+    std::string prompt_separator = " about ";
+    std::unordered_map<melanolib::string::TextGenerator*, std::vector<std::string>> output_prefixes;
+    std::unordered_map<std::string, melanolib::string::TextGenerator*> generators;
 };
 
 } // namespace fun
