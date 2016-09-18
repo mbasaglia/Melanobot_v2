@@ -139,6 +139,7 @@ public:
         std::string markov_key = settings.get("markov_key", "");
         generator = &MarkovGeneratorWrapper::get_generator(markov_key).generator;
         min_words = settings.get("min_words", min_words);
+        enough_words = settings.get("enough_words", enough_words);
         max_words = settings.get("max_words", max_words);
     }
 
@@ -148,10 +149,8 @@ protected:
         std::string subject = melanolib::string::trimmed(
             msg.source->encode_to(msg.message, string::FormatterUtf8())
         );
-        if ( subject.empty() )
-            subject = generator->generate_string(min_words, max_words);
-        else
-            subject = generator->generate_string(subject, min_words, max_words);
+
+        subject = generator->generate_string(subject, min_words, enough_words, max_words);
         reply_to(msg, subject);
         return true;
     }
@@ -159,6 +158,7 @@ protected:
 private:
     melanolib::string::TextGenerator* generator = nullptr;
     std::size_t min_words = 5;
+    std::size_t enough_words = 10;
     std::size_t max_words = 100;
 };
 
