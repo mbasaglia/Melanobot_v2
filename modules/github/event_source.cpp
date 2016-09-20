@@ -20,7 +20,7 @@
 #include "event_source.hpp"
 #include "melanolib/time/time_string.hpp"
 #include "melanobot/storage.hpp"
-#include "string/json.hpp"
+#include "httpony/formats/json.hpp"
 #include "github-controller.hpp"
 
 namespace github {
@@ -97,7 +97,7 @@ void EventSource::dispatch_events(web::Response& response, const std::string& ur
     if ( response.status.is_error() )
         return;
 
-    JsonParser parser;
+    httpony::json::JsonParser parser;
     parser.throws(false);
     auto json = parser.parse(response.body, uri);
     if ( parser.error() )

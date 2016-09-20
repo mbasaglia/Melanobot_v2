@@ -607,10 +607,10 @@ private:
                 if ( !resp.status.is_error() )
                 {
                     Settings ptree;
-                    JsonParser parser;
+                    httpony::json::JsonParser parser;
                     try {
                         ptree = parser.parse(resp.body, req.uri.full());
-                    } catch ( const JsonError& err ) {
+                    } catch ( const httpony::json::JsonError& err ) {
                         ErrorLog errlog("web", "JSON Error");
                         if ( settings::global_settings.get("debug", 0) )
                             errlog << err.file << ':' << err.line << ": ";

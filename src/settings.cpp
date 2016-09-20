@@ -27,7 +27,7 @@
 #include <boost/property_tree/xml_parser.hpp>
 
 #include "string/logger.hpp"
-#include "string/json.hpp"
+#include "httpony/formats/json.hpp"
 #include "config.hpp"
 
 static std::unordered_map<std::string, settings::FileFormat> format_extension = {
@@ -191,7 +191,7 @@ Settings settings::load ( const std::string& file_name, FileFormat format )
             break;
         case FileFormat::JSON:
         {
-            JsonParser parser;
+            httpony::json::JsonParser parser;
             ptree = parser.parse_file(file_name);
             break;
         }

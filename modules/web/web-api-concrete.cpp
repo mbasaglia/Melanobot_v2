@@ -79,11 +79,11 @@ bool VideoInfo::on_handle(network::Message& msg)
                 if ( !response.status.is_error() )
                 {
                     Settings ptree;
-                    JsonParser parser;
+                    httpony::json::JsonParser parser;
                     try {
                         ptree = parser.parse(response.body, request.uri.full());
                         (this->*found_func)(msg, ptree);
-                    } catch ( const JsonError& err ) {
+                    } catch ( const httpony::json::JsonError& err ) {
                         ErrorLog errlog("web", "JSON Error");
                         if ( settings::global_settings.get("debug", 0) )
                             errlog << err.file << ':' << err.line << ": ";

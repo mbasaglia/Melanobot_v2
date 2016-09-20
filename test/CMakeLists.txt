@@ -59,15 +59,4 @@ if (BUILD_TESTING)
     )
     target_link_libraries(test_formatter melano_time melano_stringutils)
 
-    # Iconv
-    find_package(Iconv QUIET)
-    if(Iconv_FOUND)
-        add_definitions(-DHAS_ICONV)
-        target_link_libraries(test_formatter ${Iconv_LIBRARY})
-        include_directories (${Iconv_INCLUDE_DIR})
-    endif()
-
-    melanotest(test_json)
-    target_link_libraries(test_json melano_stringutils)
-
 endif()

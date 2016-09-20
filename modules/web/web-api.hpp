@@ -21,7 +21,7 @@
 
 #include "melanobot/handler.hpp"
 #include "http.hpp"
-#include "string/json.hpp"
+#include "httpony/formats/json.hpp"
 
 namespace web {
 
@@ -92,11 +92,11 @@ protected:
     void http_success(const network::Message& msg, web::Request& request, web::Response& response) override
     {
         Settings ptree;
-        JsonParser parser;
+        httpony::json::JsonParser parser;
         try {
             ptree = parser.parse_string(response.body.read_all(), request.uri.full());
             json_success(msg, ptree);
-        } catch ( const JsonError& err ) {
+        } catch ( const httpony::json::JsonError& err ) {
             ErrorLog errlog("web", "JSON Error");
             if ( settings::global_settings.get("debug", 0) )
                 errlog << err.file << ':' << err.line << ": ";

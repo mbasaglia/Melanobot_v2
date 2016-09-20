@@ -26,7 +26,7 @@
 #include <boost/property_tree/info_parser.hpp>
 
 #include "melanolib/string/stringutils.hpp"
-#include "string/json.hpp"
+#include "httpony/formats/json.hpp"
 #include "string/logger.hpp"
 
 namespace storage {
@@ -114,7 +114,7 @@ void Storage::load()
         else if ( format == settings::FileFormat::XML )
             boost::property_tree::read_xml(file, data);
         else
-            data = JsonParser().parse_file(filename);
+            data = httpony::json::JsonParser().parse_file(filename);
     }
 }
 

@@ -21,7 +21,7 @@
 
 #include "github-controller.hpp"
 #include "melanobot/handler.hpp"
-#include "string/json.hpp"
+#include "httpony/formats/json.hpp"
 #include "replace-ptree.hpp"
 #include "gitio.hpp"
 
@@ -52,7 +52,7 @@ protected:
         query(url,
             [this, msg](web::Request& request, web::Response& response)
             {
-                JsonParser parser;
+                httpony::json::JsonParser parser;
                 parser.throws(false);
                 PropertyTree tree = parser.parse(response.body, request.uri.full());
                 if ( response.status.is_error() )
@@ -199,7 +199,7 @@ protected:
                     }
                     else
                     {
-                        JsonParser parser;
+                        httpony::json::JsonParser parser;
                         parser.throws(false);
                         find_release(msg, which, parser.parse(response.body, request.uri.full()));
                     }
@@ -304,7 +304,7 @@ protected:
             query("/search/code?q="+web::urlencode(what_full),
                 [msg, this, what](web::Request& request, web::Response& response)
                 {
-                    JsonParser parser;
+                    httpony::json::JsonParser parser;
                     parser.throws(false);
                     auto json = parser.parse(response.body, request.uri.full());
 
