@@ -80,6 +80,8 @@ public:
     class PathSuffix
     {
     public:
+        using value_type = httpony::Path::value_type;
+        using reference = httpony::Path::const_reference;
         using iterator = httpony::Path::const_iterator;
         using reverse_iterator = httpony::Path::const_reverse_iterator;
         using size_type = httpony::Path::size_type;
@@ -112,9 +114,14 @@ public:
             return std::equal(suffix.begin(), suffix.end(), range_begin, range_end);
         }
 
-        PathSuffix left_stripped(std::size_t count) const
+        PathSuffix left_stripped(size_type count) const
         {
             return {melanolib::math::min(range_begin + count, range_end), range_end};
+        }
+
+        reference operator[](const size_type pos) const
+        {
+            return range_begin[pos];
         }
 
         iterator begin() const { return range_begin; }
@@ -134,6 +141,17 @@ public:
     }
 
     virtual Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const = 0;
+
+protected:
+    UriPath read_uri(const Settings& settings, const std::string& default_value = "") const
+    {
+        return read_uri("uri", settings, default_value);
+    }
+
+    UriPath read_uri(const std::string& name, const Settings& settings, const std::string& default_value = "") const
+    {
+        return melanolib::string::char_split(settings.get(name, ""), '/');
+    }
 };
 
 /**

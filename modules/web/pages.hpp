@@ -39,7 +39,7 @@ public:
         if ( directory.empty() || !boost::filesystem::is_directory(directory) )
             throw melanobot::ConfigurationError("Invalid path: " + directory.string());
 
-        uri_prefix = melanolib::string::char_split(settings.get("prefix", "static"), '/');
+        uri = read_uri(settings, "static");
 
         default_mime_type = settings.get("default_mime_type", default_mime_type.string());
 
@@ -51,7 +51,7 @@ public:
 
     bool matches(const Request& request, const PathSuffix& path) const override
     {
-        return path.match_prefix(uri_prefix) && boost::filesystem::is_regular(full_path(path));
+        return path.match_prefix(uri) && boost::filesystem::is_regular(full_path(path));
     }
 
     Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
@@ -83,14 +83,14 @@ protected:
     boost::filesystem::path full_path(const PathSuffix& path) const
     {
         auto file_path = directory;
-        for ( const auto& dir : path.left_stripped(uri_prefix.size()) )
+        for ( const auto& dir : path.left_stripped(uri.size()) )
             file_path /= dir;
         return file_path;
     }
 
 private:
     boost::filesystem::path directory;
-    httpony::Path uri_prefix;
+    httpony::Path uri;
     std::unordered_map<std::string, MimeType> extension_to_mime;
     MimeType default_mime_type = "application/octet-stream";
 };
@@ -104,14 +104,14 @@ public:
     explicit RenderFile(const Settings& settings)
     {
         file_path = settings.get("path", file_path);
-        uri_filename = melanolib::string::char_split(settings.get("uri", ""), '/');
+        uri = read_uri(settings);
 
         mime_type = settings.get("mime_type", mime_type.string());
     }
 
     bool matches(const Request& request, const PathSuffix& path) const override
     {
-        return path.match_exactly(uri_filename);
+        return path.match_exactly(uri);
     }
 
     Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
@@ -132,7 +132,7 @@ public:
 
 private:
     std::string file_path;
-    httpony::Path uri_filename;
+    httpony::Path uri;
     MimeType mime_type = "application/octet-stream";
 };
 
@@ -144,24 +144,24 @@ class PageDirectory : public HttpRequestHandler, public WebPage
 public:
     explicit PageDirectory(const Settings& settings)
     {
-        prefix = melanolib::string::char_split(settings.get("prefix", ""), '/');
+        uri = read_uri(settings);
         load_pages(settings);
     }
 
     bool matches(const Request& request, const PathSuffix& path) const override
     {
-        return path.match_prefix(prefix);
+        return path.match_prefix(uri);
     }
 
     Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
     {
         return HttpRequestHandler::respond(
-            request, StatusCode::OK, path.left_stripped(prefix.size()), sv
+            request, StatusCode::OK, path.left_stripped(uri.size()), sv
         );
     }
 
 private:
-    httpony::Path prefix;
+    httpony::Path uri;
 };
 
 /**
