@@ -24,6 +24,7 @@
 #include "melanobot/handler.hpp"
 #include "melanolib/string/text_generator.hpp"
 #include "settings.hpp"
+#include "web/base_pages.hpp"
 
 namespace fun {
 
@@ -267,20 +268,17 @@ private:
     string::FormattedString reply;
 };
 
-class MultiMarkovTextGenerator : public melanobot::SimpleAction
+/**
+ * \brief Class to generate text from multiple markov chains
+ */
+class MultiMarkov
 {
 public:
-    MultiMarkovTextGenerator(const Settings& settings, MessageConsumer* parent)
-        : SimpleAction("chat like", settings, parent)
+    explicit MultiMarkov(const Settings& settings)
     {
-        synopsis += " character [about subject...]";
-        help = "Generates a random chat message";
-
         min_words = settings.get("min_words", min_words);
         enough_words = settings.get("enough_words", enough_words);
         max_words = settings.get("max_words", max_words);
-
-        prompt_separator = settings.get("prompt_separator", prompt_separator);
 
         std::string markov_prefix = settings.get("markov_prefix", "");
         auto chains = settings.get_child("Chains", {});
@@ -288,13 +286,13 @@ public:
         {
             melanolib::string::TextGenerator* generator =
                 &MarkovGeneratorWrapper::get_generator(markov_prefix + chain.first).generator;
+            auto& output = output_prefixes[generator];
             if ( chain.second.empty() )
             {
                 generators[chain.first] = generator;
             }
             else
             {
-                auto& output = output_prefixes[generator];
                 for ( const auto& prefix : chain.second )
                 {
                     if ( prefix.second.data().empty() || prefix.second.data() == "output" )
@@ -304,6 +302,64 @@ public:
                 }
             }
         }
+    }
+
+    bool contains(const std::string& generator) const
+    {
+        return generators.count(generator);
+    }
+
+    bool generate(const std::string& generator, const std::string& prompt, std::string& output) const
+    {
+        return generate(generator, prompt, min_words, enough_words, output);
+    }
+
+    bool generate(const std::string& generator, const std::string& prompt,
+                  std::size_t min_words, std::size_t enough_words,
+                  std::string& output) const
+    {
+        auto iter = generators.begin();
+
+        if ( generator.empty() )
+            std::advance(iter, melanolib::math::random(0, generators.size() - 1));
+        else
+            iter = generators.find(generator);
+
+        if ( iter != generators.end() )
+        {
+            min_words = melanolib::math::min(min_words, max_words);
+            enough_words = melanolib::math::min(enough_words, max_words);
+            melanolib::string::TextGenerator* generator = iter->second;
+            const auto& prefixes = output_prefixes.at(generator);
+            if ( !prefixes.empty() )
+                output = prefixes[melanolib::math::random(0, prefixes.size() - 1)];
+            output += generator->generate_string(prompt, min_words, enough_words, max_words);
+            return true;
+        }
+        return false;
+    }
+
+protected:
+    std::size_t min_words = 5;
+    std::size_t enough_words = 10;
+    std::size_t max_words = 100;
+    std::unordered_map<melanolib::string::TextGenerator*, std::vector<std::string>> output_prefixes;
+    std::unordered_map<std::string, melanolib::string::TextGenerator*> generators;
+};
+
+/**
+ * \brief MultiMarkov chat handler
+ */
+class MultiMarkovTextGenerator : public MultiMarkov, public melanobot::SimpleAction
+{
+public:
+    MultiMarkovTextGenerator(const Settings& settings, MessageConsumer* parent)
+        : MultiMarkov(settings), SimpleAction("chat like", settings, parent)
+    {
+        synopsis += " character [about subject...]";
+        help = "Generates a random chat message";
+
+        prompt_separator = settings.get("prompt_separator", prompt_separator);
     }
 
 protected:
@@ -316,30 +372,168 @@ protected:
         auto split = subject.find(prompt_separator);
         std::string name = subject.substr(0, split);
 
-        auto iter = generators.find(name);
-        if ( iter != generators.end() )
+        std::string prompt;
+        if ( split != std::string::npos && split + prompt_separator.size() < subject.size() )
+            prompt = subject.substr(split + prompt_separator.size());
+
+        std::string result;
+        if ( generate(name, prompt, result) )
         {
-            melanolib::string::TextGenerator* generator = iter->second;
-            std::string text;
-            if ( split != std::string::npos && split + prompt_separator.size() < subject.size() )
-                text = subject.substr(split + prompt_separator.size());
-            text = generator->generate_string(text, min_words, enough_words, max_words);
-            const auto& prefixes = output_prefixes[generator];
-            if ( !prefixes.empty() )
-                text = prefixes[melanolib::math::random(0, prefixes.size() - 1)] + text;
-            reply_to(msg, text);
+            reply_to(msg, result);
             return true;
         }
         return false;
     }
 
 private:
-    std::size_t min_words = 5;
-    std::size_t enough_words = 10;
-    std::size_t max_words = 100;
     std::string prompt_separator = " about ";
-    std::unordered_map<melanolib::string::TextGenerator*, std::vector<std::string>> output_prefixes;
-    std::unordered_map<std::string, melanolib::string::TextGenerator*> generators;
+};
+
+/**
+ * \brief MultiMarkov web page (html form)
+ */
+class MultiMarkovHtmlPage : public MultiMarkov, public web::WebPage
+{
+public:
+    explicit MultiMarkovHtmlPage(const Settings& settings)
+        : MultiMarkov(settings)
+    {
+        uri = read_uri(settings);
+        title = settings.get("title", title);
+        raw_link = settings.get("raw_link", raw_link);
+    }
+
+    bool matches(const web::Request& request, const PathSuffix& path) const override
+    {
+        return path.match_exactly(uri);
+    }
+
+    web::Response respond(web::Request& request, const PathSuffix& path, const web::HttpServer& sv) const override
+    {
+        web::Response response(request.protocol);
+
+        using namespace httpony::quick_xml::html;
+        using namespace httpony::quick_xml;
+
+        std::string selected = request.uri.query["character"];
+        Select select_pony("character");
+        select_pony.append(Option("", selected == "", false, Text{"Random"}));
+        for ( const auto& item : generators )
+            select_pony.append(Option(item.first, selected == item.first));
+
+        HtmlDocument html(title);
+
+        Element submit_p{"p", Input("submit", "submit", "Chat!")};
+
+        if ( !raw_link.empty() )
+        {
+            submit_p.append(
+                Input("raw", "submit", "Raw result",
+                    Attribute{"onclick", "this.form.action='" + raw_link + "';"})
+            );
+        }
+
+        html.body().append(
+            Element{"h1", Text{title}},
+            Element{"form",
+                Element{"p",
+                    Label("character", "Character"),
+                    std::move(select_pony),
+                },
+                Element{"p",
+                    Label("prompt", "Prompt"),
+                    Input("prompt", "text", request.uri.query["prompt"])},
+                Element{"p",
+                    Label("min-words", "Min words"),
+                    Input("min-words", "number",
+                          request.uri.query.get("min-words", "5"),
+                          Attribute{"min", "0"},
+                          Attribute{"max", std::to_string(max_words)}
+                    )},
+                Element{"p",
+                    Label("enough-words", "Enough words"),
+                    Input("enough-words", "number",
+                          request.uri.query.get("enough-words", "10"),
+                          Attribute{"min", "0"},
+                          Attribute{"max", std::to_string(max_words)}
+                    )},
+                submit_p
+            }
+        );
+
+        if ( request.uri.query.contains("submit") )
+        {
+            std::string result;
+            generate(
+                request.uri.query["character"],
+                request.uri.query["prompt"],
+                melanolib::string::to_uint(request.uri.query["min-words"]),
+                melanolib::string::to_uint(request.uri.query["enough-words"]),
+                result
+            );
+            html.body().append(
+                Element{"h2", Text{"Output"}},
+                Element{"div", Text{result}}
+            );
+        }
+
+        response.body.start_output("text/html; charset=utf-8");
+        html.print(response.body, true);
+        response.body << "\r\n";
+        return response;
+
+        return response;
+    }
+private:
+    web::UriPath uri;
+    std::string title = "Chat generator";
+    std::string raw_link;
+};
+
+/**
+ * \brief MultiMarkov web page (plain text)
+ */
+class MultiMarkovPlainPage : public MultiMarkov, public web::WebPage
+{
+public:
+    explicit MultiMarkovPlainPage(const Settings& settings)
+        : MultiMarkov(settings)
+    {
+        uri = read_uri(settings);
+    }
+
+    bool matches(const web::Request& request, const PathSuffix& path) const override
+    {
+        return path.match_prefix(uri);
+    }
+
+    web::Response respond(web::Request& request, const PathSuffix& path, const web::HttpServer& sv) const override
+    {
+
+        std::string character;
+        if ( path.size() > uri.size() )
+            character = path[uri.size()];
+        else
+            character = request.uri.query["character"];
+        std::string result;
+        auto generated_ok = generate(
+            character,
+            request.uri.query["prompt"],
+            melanolib::string::to_uint(request.uri.query["min-words"]),
+            melanolib::string::to_uint(request.uri.query["enough-words"]),
+            result
+        );
+
+        if ( !generated_ok )
+            throw web::HttpError(web::StatusCode::NotFound);
+
+        web::Response response("text/plain; charset=utf-8", {}, request.protocol);
+        response.body << result << "\r\n";
+        return response;
+    }
+
+private:
+    web::UriPath uri;
 };
 
 } // namespace fun

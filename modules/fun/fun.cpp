@@ -62,4 +62,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
             return rainbow.decode(str);
         }
     );
+
+    web::PageRegistry::instance().register_page<fun::MultiMarkovHtmlPage>("MultiMarkovHtmlPage");
+    web::PageRegistry::instance().register_page<fun::MultiMarkovPlainPage>("MultiMarkovPlainPage");
 }
