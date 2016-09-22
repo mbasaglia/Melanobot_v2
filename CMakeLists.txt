@@ -14,12 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # CMake stuff
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
 cmake_policy(SET CMP0012 NEW)
 
 # Metadata
-project(MelanoBot CXX)
-set(PROJECT_VERSION 2.0)
+project(MelanoBot LANGUAGES CXX VERSION 2.0)
 string(TOLOWER MelanoBot EXECUTABLE_NAME)
 set(MAINTAINER "Mattia Basaglia <mattia.basaglia@gmail.com>")
 set(PROJECT_WEBSITE "https://wiki.evil-ant-colony.org/doku.php?id=melanobot:melanobot")
@@ -66,6 +65,7 @@ include_directories("${CMAKE_BINARY_DIR}/src")
 
 #Melano modules
 set_property(GLOBAL PROPERTY MELANOMODULES "")
+set_property(GLOBAL PROPERTY MELANOMODULES_DISABLED "")
 option (MODULE_ALL "Enable all modules" OFF)
 macro(melanomodule name description default)
     string(TOUPPER "MODULE_${name}" OPTION_NAME)
@@ -77,6 +77,8 @@ macro(melanomodule name description default)
         message(STATUS "Enabled module ${name}: ${description}")
     else()
         set(MODULE_ENABLED OFF)
+        set_property(GLOBAL APPEND PROPERTY MELANOMODULES_DISABLED ${MODULE_NAME})
+        message(STATUS "Disabled module ${name}: ${description}")
     endif()
 endmacro()
 
@@ -100,6 +102,13 @@ if (NOT MELANOMODULES)
     message(STATUS "No modules enabled")
 else()
     message(STATUS "Loaded Modules: ${MELANOMODULES}")
+endif()
+
+get_property(MELANOMODULES_DISABLED GLOBAL PROPERTY MELANOMODULES_DISABLED)
+if (NOT MELANOMODULES_DISABLED)
+    message(STATUS "All modules enabled")
+else()
+    message(STATUS "Disabled Modules: ${MELANOMODULES_DISABLED}")
 endif()
 
 # Binary
