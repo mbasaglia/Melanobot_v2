@@ -18,6 +18,7 @@
  */
 #include "web-api-concrete.hpp"
 #include "http.hpp"
+#include "pages.hpp"
 #include "module/melanomodule.hpp"
 
 /**
@@ -31,7 +32,9 @@ MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_web_metadata()
 MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
 {
     module::register_log_type("web", color::dark_blue);
+    module::register_log_type("wsv", color::dark_blue);
     module::register_service<web::HttpClient>("http");
+    module::register_instantiable_service<web::HttpServer>("HttpServer");
 
     module::register_handler<web::SearchVideoYoutube>("SearchVideoYoutube");
     module::register_handler<web::UrbanDictionary>("UrbanDictionary");
@@ -41,4 +44,9 @@ MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
     module::register_handler<web::MediaWikiTitles>("MediaWikiTitles");
     module::register_handler<web::MediaWikiCategoryTitle>("MediaWikiCategoryTitle");
     module::register_handler<web::WhereIsGoogle>("WhereIsGoogle");
+
+    web::PageRegistry::instance().register_page<web::RenderStatic>("RenderStatic");
+    web::PageRegistry::instance().register_page<web::PageDirectory>("Directory");
+    web::PageRegistry::instance().register_page<web::RenderFile>("RenderFile");
+    web::PageRegistry::instance().register_page<web::HtmlErrorPage>("HtmlErrorPage");
 }

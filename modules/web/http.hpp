@@ -19,19 +19,11 @@
 #ifndef HTTP_HPP
 #define HTTP_HPP
 
-#include <map>
-#include "httpony/ssl/ssl.hpp"
+#include "aliases.hpp"
 #include "network/async_service.hpp"
 
 namespace web {
 
-using httpony::DataMap;
-using httpony::OperationStatus;
-using httpony::Request;
-using httpony::Response;
-using httpony::Uri;
-using httpony::build_query_string;
-using httpony::urlencode;
 
 /**
  * \brief HTTP Service
