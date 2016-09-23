@@ -77,6 +77,18 @@ public:
         Log("wsv", '!') << "Server stopped";
     }
 
+    bool running() const override
+    {
+        return Server::running();
+    }
+
+    std::string name() const override
+    {
+        std::ostringstream ss;
+        ss << "HTTP server at " << listen_address();
+        return ss.str();
+    }
+
     void respond(httpony::Request& request, const httpony::Status& status) override
     {
         auto response = HttpRequestHandler::respond(request, status,

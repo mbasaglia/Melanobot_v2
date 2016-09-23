@@ -130,6 +130,10 @@ void GitHubController::start()
     ControllerRegistry::instance().register_source(this);
 }
 
+bool GitHubController::running() const
+{
+    return timer.running();
+}
 
 web::Request GitHubController::request(const std::string& url) const
 {

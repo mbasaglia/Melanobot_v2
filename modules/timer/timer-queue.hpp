@@ -84,6 +84,10 @@ public:
      */
     void start() override;
 
+    bool running() const override;
+
+    std::string name() const override;
+
     void initialize(const Settings& settings) override {}
 
 private:

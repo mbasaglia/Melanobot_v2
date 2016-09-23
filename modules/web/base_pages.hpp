@@ -93,6 +93,16 @@ public:
             : range_begin(path.begin()), range_end(path.end())
         {}
 
+        bool match_prefix(const value_type& prefix) const
+        {
+            return prefix.empty() || (!empty() && *range_begin == prefix);
+        }
+
+        bool match_exactly(const value_type& prefix) const
+        {
+            return prefix.empty() || (size() == 1 && *range_begin == prefix);
+        }
+
         bool match_prefix(const httpony::Path& prefix) const
         {
             return prefix.empty() || (
@@ -129,6 +139,7 @@ public:
         reverse_iterator rbegin() const { return reverse_iterator(range_end); }
         reverse_iterator rend() const { return reverse_iterator(range_begin); }
         size_type size() const { return range_end - range_begin; }
+        bool empty() const { return range_end <= range_begin; }
 
     private:
         iterator range_begin;

@@ -23,6 +23,7 @@
 
 #include <boost/filesystem.hpp>
 #include "server.hpp"
+#include "melanobot/melanobot.hpp"
 
 namespace web {
 
@@ -217,6 +218,168 @@ public:
 private:
     std::string css_file;
     std::string extra_info;
+};
+
+
+
+/**
+ * \brief Web page showing an overview of the bot status
+ * \todo Require SSL client certs (as part of some other page wrapper)
+ */
+class StatusPage : public WebPage
+{
+public:
+    explicit StatusPage(const Settings& settings)
+    {
+        uri = read_uri(settings, "");
+    }
+
+    bool matches(const Request& request, const PathSuffix& path) const override
+    {
+        return path.match_prefix(uri);
+    }
+
+    Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
+    {
+        auto local_path = path.left_stripped(uri.size());
+        httpony::quick_xml::html::HtmlDocument html("Bot status");
+
+        if ( local_path.empty() )
+            home(html.body());
+        else if ( local_path.match_exactly("connection") )
+            connection_list(html.body());
+        else if ( local_path.match_exactly("service") )
+            service_list(html.body());
+        else if ( local_path.match_prefix("connection") && local_path.size() == 2 )
+            connection(local_path[1], html.body());
+        else if ( local_path.match_prefix("service") && local_path.size() == 2 )
+            service(local_path[1], html.body());
+        else
+            throw HttpError(StatusCode::NotFound);
+        Response response("text/html", StatusCode::OK, request.protocol);
+        html.print(response.body, true);
+        return response;
+    }
+
+private:
+    using BlockElement = httpony::quick_xml::BlockElement;
+
+    static melanobot::Melanobot& bot()
+    {
+        return melanobot::Melanobot::instance();
+    }
+
+    void home(BlockElement& parent) const
+    {
+        connection_list(parent);
+        service_list(parent);
+    }
+
+    void connection_list(BlockElement& parent) const
+    {
+        using namespace httpony::quick_xml;
+        using namespace httpony::quick_xml::html;
+
+        parent.append(Element{"h1", Text{"Connections"}});
+
+        List connections;
+        for ( const auto& conn : bot().connection_names() )
+            connections.add_item(Link("./connection/"+conn, conn));
+        parent.append(connections);
+    }
+
+    void service_list(BlockElement& parent) const
+    {
+        using namespace httpony::quick_xml;
+        using namespace httpony::quick_xml::html;
+
+        parent.append(Element{"h1", Text{"Services"}});
+
+        List services;
+        for ( const auto& svc : bot().service_list() )
+            services.add_item(Link("./service/" + std::to_string(uintptr_t(svc.get())), svc->name()));
+        parent.append(services);
+    }
+
+    void connection(const std::string& name, BlockElement& parent) const
+    {
+        using namespace httpony::quick_xml;
+        using namespace httpony::quick_xml::html;
+
+        network::Connection* conn = bot().connection(name);
+        if ( !conn )
+            throw HttpError(StatusCode::NotFound);
+
+        parent.append(Element{"h1", Text{name}});
+
+        Table table;
+        table.add_header_row(Text{"Property"}, Text{"Value"});
+        table.add_data_row(Text("Protocol"), Text(conn->protocol()));
+        table.add_data_row(Text("Status"), status(conn->status()));
+        table.add_data_row(Text("Name"), Text(conn->name()));
+        table.add_data_row(Text("Config Name"), Text(conn->config_name()));
+        table.add_data_row(Text("Formatter"), Text(conn->formatter()->name()));
+        table.add_data_row(Text("Server"), Text(conn->server().name()));
+
+//         for ( const auto& prop : conn->properties())
+//             table.add_data_row(Text(prop.first), Text(prop.second));
+
+        /// \todo FormatterHtml
+        string::FormatterUtf8 formatter;
+        for ( const auto& prop : conn->pretty_properties())
+            table.add_data_row(Text(prop.first), Text(prop.second.encode(formatter)));
+
+        parent.append(table);
+    }
+
+    void service(const std::string& id, BlockElement& parent) const
+    {
+        using namespace httpony::quick_xml;
+        using namespace httpony::quick_xml::html;
+
+        AsyncService* service = nullptr;
+        for ( const auto& svc : bot().service_list() )
+            if ( std::to_string(uintptr_t(svc.get())) == id )
+            {
+                service = svc.get();
+                break;
+            }
+        if ( !service )
+            throw HttpError(StatusCode::NotFound);
+
+        parent.append(Element{"h1", Text{service->name()}});
+
+        Table table;
+        table.add_header_row(Text{"Property"}, Text{"Value"});
+        table.add_data_row(Text("Status"), status(
+            service->running() ?
+                network::Connection::CONNECTED :
+                network::Connection::DISCONNECTED
+        ));
+        table.add_data_row(Text("Name"), Text(service->name()));
+
+        parent.append(table);
+    }
+
+    httpony::quick_xml::BlockElement status(network::Connection::Status status) const
+    {
+        using namespace httpony::quick_xml;
+
+        std::string status_name = "Disconnected";
+        if ( status > network::Connection::CHECKING )
+            status_name = "Connected";
+        else if ( status >= network::Connection::CONNECTING )
+            status_name = "Connecting";
+
+        return BlockElement{
+            "span",
+            Attribute("class", "status_" + status_name),
+            Text(status_name)
+        };
+    }
+
+private:
+    httpony::Path uri;
 };
 
 } // namespace web

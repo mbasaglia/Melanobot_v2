@@ -74,6 +74,8 @@ public:
      */
     network::Connection* connection(const std::string& name) const;
 
+    std::vector<std::string> connection_names() const;
+
     /**
      * \brief Adds a connection from settings
      */
@@ -84,6 +86,14 @@ public:
     void populate_properties(const std::vector<std::string>& property, PropertyTree& output) const override;
     
     void add_service(std::unique_ptr<AsyncService> service);
+
+    /**
+     * \brief Returns the list of services
+     */
+    const std::vector<std::unique_ptr<AsyncService>>& service_list() const
+    {
+        return services;
+    }
 
 private:
     explicit Melanobot();

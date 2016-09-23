@@ -44,6 +44,13 @@ public:
 
     void start() override;
 
+    bool running() const override;
+
+    std::string name() const override
+    {
+        return "GitHub at " + api_url_;
+    }
+
     /**
      * \brief Builds a request for the relative \p url
      */

@@ -54,6 +54,17 @@ public:
         ParentClient::stop();
     }
 
+    bool running() const override
+    {
+        return ParentClient::started();
+    }
+
+
+    std::string name() const override
+    {
+        return "HTTP Client";
+    }
+
 protected:
     void on_error(Request& request, const OperationStatus& status) override;
     void on_response(Request& request, Response& response) override;

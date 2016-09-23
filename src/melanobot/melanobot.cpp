@@ -120,6 +120,16 @@ network::Connection* Melanobot::connection(const std::string& name) const
     return it->second.get();
 }
 
+std::vector<std::string> Melanobot::connection_names() const
+{
+    std::vector<std::string> result;
+    result.reserve(connections.size());
+    for ( const auto& conn : connections )
+        result.push_back(conn.first);
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
 void Melanobot::add_connection(std::string suggested_name, const Settings& settings)
 {
     if ( suggested_name == "Connection" )

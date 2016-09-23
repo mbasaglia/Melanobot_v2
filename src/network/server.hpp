@@ -27,6 +27,7 @@ namespace network {
 
 /**
  * \brief Identifies a network server
+ * \todo Could be replaced by httpony::IPAddress
  */
 struct Server
 {

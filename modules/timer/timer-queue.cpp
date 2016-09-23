@@ -88,6 +88,16 @@ void TimerQueue::start()
     }
 }
 
+bool TimerQueue::running() const
+{
+    return thread.joinable() && timer_action == TimerAction::Die;
+}
+
+std::string TimerQueue::name() const
+{
+    return "TimerQueue";
+}
+
 void TimerQueue::run()
 {
     std::mutex condition_mutex;

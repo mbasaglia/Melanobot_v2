@@ -59,6 +59,16 @@ public:
      * \brief Stops the service
      */
     virtual void stop() = 0;
+
+    /**
+     * \brief Service name
+     */
+    virtual std::string name() const = 0;
+
+    /**
+     * \brief Whether the service is active and functioning properly
+     */
+    virtual bool running() const = 0;
 };
 
 /**

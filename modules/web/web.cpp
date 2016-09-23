@@ -49,4 +49,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
     web::PageRegistry::instance().register_page<web::PageDirectory>("Directory");
     web::PageRegistry::instance().register_page<web::RenderFile>("RenderFile");
     web::PageRegistry::instance().register_page<web::HtmlErrorPage>("HtmlErrorPage");
+    web::PageRegistry::instance().register_page<web::StatusPage>("StatusPage");
 }
