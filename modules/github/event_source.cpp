@@ -99,7 +99,10 @@ void EventSource::dispatch_events(web::Response& response, const std::string& ur
 
     httpony::json::JsonParser parser;
     parser.throws(false);
-    auto json = parser.parse(response.body, uri);
+
+    /// \todo Figure why without the extra reference, it fails to read all of the data
+    auto& stream = response.body;
+    auto json = parser.parse(stream, uri);
     if ( parser.error() )
         return;
 
