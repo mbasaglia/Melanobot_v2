@@ -45,7 +45,9 @@ public:
     EventSource(EventSource&& src)
         : name_(std::move(src.name_)),
           etag_(std::move(src.etag_)),
-          listeners_(std::move(src.listeners_))
+          listeners_(std::move(src.listeners_)),
+          last_poll_(std::move(src.last_poll_)),
+          current_poll_(std::move(src.current_poll_))
     {}
 
     EventSource& operator=(EventSource&& src)
@@ -53,6 +55,8 @@ public:
         name_ = std::move(src.name_);
         etag_ = std::move(src.etag_);
         listeners_ = std::move(src.listeners_);
+        last_poll_ = std::move(src.last_poll_);
+        current_poll_ = std::move(src.current_poll_);
         return *this;
     }
 
