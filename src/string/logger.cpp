@@ -20,35 +20,47 @@
 #include "melanolib/time/time_string.hpp"
 #include "concurrency/concurrency.hpp"
 
-void Logger::log (const std::string& type, char direction,
+string::FormatterAnsi Logger::default_formatter{true};
+
+void Logger::log(const std::string& type, char direction,
     const string::FormattedString& message, int verbosity)
 {
-    if ( !formatter )
-        formatter = new string::FormatterAnsi(true); // This happens when everything else has failed and will leak
 
-    std::lock_guard<std::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     auto type_it = log_types.find(type);
     if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
         return;
 
+    auto log_type_length = this->log_type_length;
+    auto type_color = type_it != log_types.end() ? type_it->second.color : color::Color12();
+    auto direction_color = log_directions[direction];
+    auto timestamp = this->timestamp;
+
+    lock.unlock();
+
+    std::string buffer;
     if ( !timestamp.empty() )
     {
-        log_destination << formatter->to_string(color::yellow)
-                        << melanolib::time::format(timestamp)
-                        << formatter->to_string(string::ClearFormatting());
+        buffer += formatter->to_string(color::yellow)
+               + melanolib::time::format(timestamp)
+               + formatter->to_string(string::ClearFormatting());
     }
 
-    if ( type_it != log_types.end() )
-        log_destination <<  formatter->to_string(type_it->second.color);
-    log_destination << std::setw(log_type_length) << std::left << type;
+    buffer += formatter->to_string(type_color)
+           + type
+           + std::string(log_type_length > type.size() ? log_type_length > type.size() : 0, ' ');
 
-    log_destination << formatter->to_string(log_directions[direction]) << direction;
+    buffer += formatter->to_string(direction_color) + direction;
 
-    log_destination << formatter->to_string(string::ClearFormatting())
-                    << message.encode(*formatter)
-                    << formatter->to_string(string::ClearFormatting())
-                    << std::endl;
+    buffer += formatter->to_string(string::ClearFormatting())
+           + message.encode(*formatter)
+           + formatter->to_string(string::ClearFormatting())
+           + '\n';
+
+    lock.lock();
+    log_destination.write(buffer.data(), buffer.size());
+    log_destination.flush();
 }
 
 
@@ -74,7 +86,7 @@ void Logger::set_log_verbosity(const std::string& name, int level)
 
 void Logger::load_settings(const Settings& settings)
 {
-    std::lock_guard<std::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     std::string format = settings.get("string_format", "ansi-utf8");
     formatter = string::Formatter::formatter(format);
@@ -94,11 +106,15 @@ void Logger::load_settings(const Settings& settings)
                 LogType(color::nocolor, p.second.get_value(2))});
         }
     }
+
     /// \todo maybe should use different a formatter (ie: plain utf8) for log files
     std::string output = settings.get("logfile", "");
     if ( !output.empty() )
     {
         if ( !log_buffer.push_file(output) )
+        {
+            lock.unlock();
             ErrorLog("sys") << "Cannot open log file: " << output;
+        }
     }
 }
