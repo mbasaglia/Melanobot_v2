@@ -60,8 +60,6 @@ void HttpClient::on_response(Request& request, Response& response)
 
 void HttpClient::process_request(Request& request)
 {
-    /// \todo Implement Transfer-encoding and switch to 1.1
-//     request.protocol = httpony::Protocol::http_1_0;
     ParentClient::process_request(request);
     Log("web", '<') << request.method << ' ' << request.uri.full();
 }
