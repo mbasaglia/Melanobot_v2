@@ -18,6 +18,7 @@ set(SOURCES
 http.cpp
 web.cpp
 web-api-concrete.cpp
+server.cpp
 )
 
 if(${MODULE_ENABLED})

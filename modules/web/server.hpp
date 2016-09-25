@@ -23,7 +23,6 @@
 
 #include "base_pages.hpp"
 #include "network/async_service.hpp"
-#include "config.hpp"
 
 namespace web {
 
@@ -37,59 +36,7 @@ class HttpServer : public AsyncService, public HttpRequestHandler,
 public:
     HttpServer() : ParentServer(1, httpony::IPAddress{}, false) {}
 
-    void initialize(const Settings& settings) override
-    {
-        httpony::IPAddress address(settings.get("address", ""));
-        if ( auto port = settings.get_optional<uint16_t>("port") )
-            address.port = *port;
-        if ( auto ip_version = settings.get_optional<int>("ip_version") )
-            address.type = *ip_version == 4 ?
-                httpony::IPAddress::Type::IPv4 :
-                httpony::IPAddress::Type::IPv6;
-        set_listen_address(address);
-
-        log_format = settings.get("log_format", log_format);
-
-        /// \todo Allow configuring headers evaluated at runtime
-        ///       (They could use the same syntax as the log format)
-        for ( const auto& header : settings.get_child("Headers", {}) )
-            headers.append(header.first, header.second.data());
-
-        std::size_t threads = settings.get("threads", pool_size());
-        if ( threads == 0 )
-            throw melanobot::ConfigurationError("You need at least 1 thread");
-        resize_pool(threads);
-
-        if ( auto ssl = settings.get_child_optional("SSL") )
-        {
-            set_ssl_enabled(true);
-            std::string cert_file = ssl->get("certificate", "");
-            std::string key_file = ssl->get("key", cert_file);
-            std::string dh_file = ssl->get("dh", "");
-
-            auto status = set_certificate(cert_file, key_file, dh_file);
-            if ( status.error() )
-                throw melanobot::ConfigurationError(status.message());
-
-            if ( ssl->get("verify_client", false) )
-            {
-                set_verify_mode(true);
-                status = load_default_authorities();
-                if ( status.error() )
-                    ErrorLog("wsv") << "Could not load default certificate autorities";
-                auto range = ssl->equal_range("authority");
-                for ( auto it = range.first; it != range.second; ++it )
-                {
-                    status = load_cert_authority(it->second.data());
-                    if ( status.error() )
-                        throw melanobot::ConfigurationError(status.message());
-                }
-                set_session_id_context(PROJECT_NAME + (" " + name()));
-            }
-        }
-
-        HttpRequestHandler::load_pages(settings.get_child("Pages", {}));
-    }
+    void initialize(const Settings& settings) override;
 
     void start() override
     {
@@ -109,31 +56,9 @@ public:
         return Server::running();
     }
 
-    std::string name() const override
-    {
-        std::ostringstream ss;
-        ss << (ssl_enabled() ? "HTTPS" : "HTTP") << " server at " << listen_address();
-        return ss.str();
-    }
+    std::string name() const override;
 
-    void respond(httpony::Request& request, const httpony::Status& status) override
-    {
-        auto response = HttpRequestHandler::respond(request, status,
-                                                    request.uri.path, *this);
-
-        for ( const auto& header : headers )
-            if ( !response.headers.contains(header.first) )
-                response.headers.append(header);
-
-        if ( response.protocol >= httpony::Protocol::http_1_1 )
-            response.headers["Connection"] = "close";
-
-        response.clean_body(request);
-
-        log_response(request, response);
-        if ( !send(request.connection, response) )
-            request.connection.close();
-    }
+    void respond(httpony::Request& request, const httpony::Status& status) override;
 
     std::string format_info(const std::string& template_string,
                             const Request& request,
