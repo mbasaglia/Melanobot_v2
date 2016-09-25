@@ -23,6 +23,7 @@
 
 #include "base_pages.hpp"
 #include "network/async_service.hpp"
+#include "config.hpp"
 
 namespace web {
 
@@ -34,7 +35,7 @@ class HttpServer : public AsyncService, public HttpRequestHandler,
 {
     using ParentServer = httpony::BasicPooledServer<httpony::ssl::SslServer>;
 public:
-    HttpServer() : ParentServer(1, httpony::IPAddress{}) {}
+    HttpServer() : ParentServer(1, httpony::IPAddress{}, false) {}
 
     void initialize(const Settings& settings) override
     {
@@ -59,7 +60,33 @@ public:
             throw melanobot::ConfigurationError("You need at least 1 thread");
         resize_pool(threads);
 
-        /// \todo Read ssl config
+        if ( auto ssl = settings.get_child_optional("SSL") )
+        {
+            set_ssl_enabled(true);
+            std::string cert_file = ssl->get("certificate", "");
+            std::string key_file = ssl->get("key", cert_file);
+            std::string dh_file = ssl->get("dh", "");
+
+            auto status = set_certificate(cert_file, key_file, dh_file);
+            if ( status.error() )
+                throw melanobot::ConfigurationError(status.message());
+
+            if ( ssl->get("verify_client", false) )
+            {
+                set_verify_mode(true);
+                status = load_default_authorities();
+                if ( status.error() )
+                    ErrorLog("wsv") << "Could not load default certificate autorities";
+                auto range = ssl->equal_range("authority");
+                for ( auto it = range.first; it != range.second; ++it )
+                {
+                    status = load_cert_authority(it->second.data());
+                    if ( status.error() )
+                        throw melanobot::ConfigurationError(status.message());
+                }
+                set_session_id_context(PROJECT_NAME + (" " + name()));
+            }
+        }
 
         HttpRequestHandler::load_pages(settings.get_child("Pages", {}));
     }
@@ -67,12 +94,12 @@ public:
     void start() override
     {
         ParentServer::start();
-        Log("wsv", '!') << "Server started on port " << listen_address().port;
+        Log("wsv", '!') << "Started " << name();
     }
 
     void stop() override
     {
-        Log("wsv", '!') << "Stopping server on port " << listen_address().port;
+        Log("wsv", '!') << "Stopping " << name();
         ParentServer::stop();
         Log("wsv", '!') << "Server stopped";
     }
@@ -85,7 +112,7 @@ public:
     std::string name() const override
     {
         std::ostringstream ss;
-        ss << "HTTP server at " << listen_address();
+        ss << (ssl_enabled() ? "HTTPS" : "HTTP") << " server at " << listen_address();
         return ss.str();
     }
 
@@ -100,7 +127,7 @@ public:
 
         if ( response.protocol >= httpony::Protocol::http_1_1 )
             response.headers["Connection"] = "close";
-        
+
         response.clean_body(request);
 
         log_response(request, response);
