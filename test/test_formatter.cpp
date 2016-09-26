@@ -28,6 +28,7 @@
 #include "irc/irc_formatter.hpp"
 #include "fun/rainbow.hpp"
 #include "string/replacements.hpp"
+#include "web/formatter_html.hpp"
 
 using namespace string;
 
@@ -711,4 +712,29 @@ BOOST_AUTO_TEST_CASE( test_Element )
     BOOST_CHECK_THROW(Element(1).reference<double>(), melanobot::MelanobotError);
     e = Element(1);
     BOOST_CHECK_THROW(e.reference<double>(), melanobot::MelanobotError);
+}
+
+BOOST_AUTO_TEST_CASE( test_html )
+{
+    web::FormatterHtml fmt;
+    std::string utf8 = u8"Foo bar è#ç";
+    auto decoded = fmt.decode(utf8);
+    BOOST_CHECK( decoded.size() == 4 );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]));
+    BOOST_CHECK( cast<Unicode>(decoded[1]));
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]));
+    BOOST_CHECK( cast<Unicode>(decoded[3]));
+    BOOST_CHECK( decoded.encode(fmt) == utf8 );
+
+    decoded.clear();
+    decoded << "\nHello " << color::red << "World "
+        << (FormatFlags::BOLD|FormatFlags::UNDERLINE) << "test" << ClearFormatting()
+        << "#1" << color::green << "green" << color::blue << "blue"
+        << Unicode("§", 0x00A7) << "<foo bar='\"'/>&";
+
+    BOOST_CHECK_EQUAL( decoded.encode(fmt),
+        "\nHello <span style='color:#f00'>World "
+        "<span style='font-weight:bold;text-decoration:underline;font-style:normal;'>test</span></span>"
+        "#1<span style='color:#0f0'>green<span style='color:#00f'>blue§"
+        "&lt;foo bar=&apos;&quot;&apos;/&gt;&amp;</span></span>" );
 }
