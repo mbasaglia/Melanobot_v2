@@ -137,7 +137,7 @@ public:
         PathSuffix strip_path_suffix(const httpony::Path& path) const
         {
             auto iter_pair = std::mismatch(path.rbegin(), path.rend(), rbegin(), rend());
-            return PathSuffix(path.begin(), iter_pair.first.base() + 1);
+            return PathSuffix(path.begin(), iter_pair.first.base());
         }
 
         httpony::Path to_path() const
@@ -179,7 +179,7 @@ protected:
 
     UriPath read_uri(const std::string& name, const Settings& settings, const std::string& default_value = "") const
     {
-        return melanolib::string::char_split(settings.get(name, ""), '/');
+        return melanolib::string::char_split(settings.get(name, default_value), '/');
     }
 };
 

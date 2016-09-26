@@ -221,8 +221,6 @@ private:
     std::string extra_info;
 };
 
-
-
 /**
  * \brief Web page showing an overview of the bot status
  * \todo Require SSL client certs (as part of some other page wrapper)
@@ -249,13 +247,14 @@ public:
         auto local_path = path.left_stripped(uri.size());
         HtmlDocument html("Bot status");
         BlockElement contents("div", Attribute("class", "contents"));
+        httpony::Path base_path = path.strip_path_suffix(request.uri.path).to_path();
 
         if ( local_path.empty() )
-            home(contents);
+            home(contents, base_path);
         else if ( local_path.match_prefix("connection") )
-            connection(local_path, contents);
+            connection(local_path, contents, base_path);
         else if ( local_path.match_prefix("service") )
-            service(local_path, contents);
+            service(local_path, contents, base_path);
         else
             throw HttpError(StatusCode::NotFound);
 
@@ -267,7 +266,6 @@ public:
         }
 
         List nav;
-        auto base_path = path.strip_path_suffix(request.uri.path).to_path();
         for ( const auto& pair : links )
         {
             if ( local_path.match_exactly(pair.second) )
@@ -296,13 +294,13 @@ private:
         return melanobot::Melanobot::instance();
     }
 
-    void home(BlockElement& parent) const
+    void home(BlockElement& parent, const httpony::Path& base_path) const
     {
-        connection_list(parent);
-        service_list(parent);
+        connection_list(parent, base_path);
+        service_list(parent, base_path);
     }
 
-    void connection_list(BlockElement& parent) const
+    void connection_list(BlockElement& parent, const httpony::Path& base_path) const
     {
         using namespace httpony::quick_xml;
         using namespace httpony::quick_xml::html;
@@ -311,11 +309,11 @@ private:
 
         List connections;
         for ( const auto& conn : bot().connection_names() )
-            connections.add_item(Link("./connection/"+conn, conn));
+            connections.add_item(Link((base_path / "connection" / conn).url_encoded(), conn));
         parent.append(connections);
     }
 
-    void service_list(BlockElement& parent) const
+    void service_list(BlockElement& parent, const httpony::Path& base_path) const
     {
         using namespace httpony::quick_xml;
         using namespace httpony::quick_xml::html;
@@ -324,14 +322,16 @@ private:
 
         List services;
         for ( const auto& svc : bot().service_list() )
-            services.add_item(Link("./service/" + std::to_string(uintptr_t(svc.get())), svc->name()));
+            services.add_item(Link(
+                (base_path/"service"/std::to_string(uintptr_t(svc.get()))).url_encoded(),
+                svc->name()));
         parent.append(services);
     }
 
-    void connection(const PathSuffix& path, BlockElement& parent) const
+    void connection(const PathSuffix& path, BlockElement& parent, const httpony::Path& base_path) const
     {
         if ( path.size() == 1 )
-            return connection_list(parent);
+            return connection_list(parent, base_path);
 
         if ( path.size() != 2 )
             throw HttpError(StatusCode::NotFound);
@@ -384,10 +384,10 @@ private:
         }
     }
 
-    void service(const PathSuffix& path, BlockElement& parent) const
+    void service(const PathSuffix& path, BlockElement& parent, const httpony::Path& base_path) const
     {
         if ( path.size() == 1 )
-            return service_list(parent);
+            return service_list(parent, base_path);
 
         if ( path.size() != 2 )
             throw HttpError(StatusCode::NotFound);
