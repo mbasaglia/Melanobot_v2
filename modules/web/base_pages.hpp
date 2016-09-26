@@ -56,6 +56,8 @@ private:
 class ErrorPage
 {
 public:
+    virtual ~ErrorPage() {}
+
     virtual bool matches(const Status& status, const Request& request) const
     {
         return status.is_error();
@@ -145,6 +147,8 @@ public:
         iterator range_begin;
         iterator range_end;
     };
+
+    virtual ~WebPage() {}
 
     virtual bool matches(const Request& request, const PathSuffix& path) const
     {
