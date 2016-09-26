@@ -57,9 +57,13 @@ void HttpServer::initialize(const Settings& settings)
         if ( status.error() )
             throw melanobot::ConfigurationError(status.message());
 
-        if ( ssl->get("verify_client", false) )
+        std::string verify = ssl->get("verify_client", "");
+        if ( !verify.empty() )
         {
-            set_verify_mode(true);
+            set_verify_mode(verify == "loose" ?
+                httpony::ssl::VerifyMode::Loose :
+                httpony::ssl::VerifyMode::Strict
+            );
             status = load_default_authorities();
             if ( status.error() )
                 ErrorLog("wsv") << "Could not load default certificate autorities";
