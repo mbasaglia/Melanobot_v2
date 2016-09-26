@@ -36,7 +36,7 @@ public:
     {
         synopsis += "who time message...";
         help = "Sends a message at the given time";
-        reply_ok = read_string(settings, "reply_ok", "Got it!");
+        reply_ok = read_string(settings, "reply_ok", "Got it! ($(date $date '%c'))");
         reply_no = read_string(settings, "reply_no", "Forget it!");
         reply = read_string(settings, "reply", "<$from> $to, remember $message");
         storage_id = settings.get("storage_id", storage_id);
@@ -51,17 +51,9 @@ public:
     }
 
 protected:
-    bool on_handle(network::Message& msg) override
-    {
-        if ( schedule_reply(msg) )
-            reply_to(msg, reply_ok);
-        else
-            reply_to(msg, reply_no);
-        return true;
-    }
+    bool on_handle(network::Message& msg) override;
 
 private:
-
     /**
      * \brief Message information
      *
@@ -99,17 +91,14 @@ private:
     void schedule_item(const Item& item);
 
     /**
-     * \brief Extracts an Item from the message and schedules it
-     * \returns \b false if the message cannot be processed
-     */
-    bool schedule_reply(const network::Message& msg);
-
-    /**
      * \brief Returns the replacements used by \p reply
      */
-    string::FormattedProperties replacements(const network::Message& src,
-                                             const std::string& to,
-                                             const std::string& message) const;
+    string::FormattedProperties replacements(
+        const network::Message& src,
+        const std::string& to,
+        const std::string& message,
+        const melanolib::time::DateTime& date_time
+    ) const;
 
 };
 

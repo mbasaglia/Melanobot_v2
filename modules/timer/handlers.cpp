@@ -24,41 +24,47 @@
 
 namespace timer {
 
-
-bool Remind::schedule_reply(const network::Message& src)
+bool Remind::on_handle(network::Message& msg)
 {
-    std::stringstream stream(src.message);
-
+    std::stringstream stream(msg.message);
     std::string to;
-    stream >> to;
 
-    if ( to.empty() || !stream )
-        return false;
+    if ( stream >> to )
+    {
+        if ( melanolib::string::icase_equal(to, "me") )
+            to = msg.from.name;
 
-    if ( melanolib::string::icase_equal(to, "me") )
-        to = src.from.name;
+        /// \todo Reject invalid time formats
+        melanolib::time::TimeParser parser(stream);
+        auto date_time = parser.parse_time_point();
 
-    melanolib::time::TimeParser parser(stream);
-    auto date_time = parser.parse_time_point();
+        std::string message = parser.get_remainder();
+        if ( !message.empty() )
+        {
+            auto reply_replacements = replacements(msg, to, message, date_time);
+            schedule_item({
+                reply.replaced(reply_replacements),
+                msg.destination->config_name(),
+                reply_channel(msg),
+                date_time
+            });
 
-    std::string message = parser.get_remainder();
-    if ( message.empty() )
-        return false;
+            reply_to(msg, reply_ok.replaced(reply_replacements));
+            return true;
+        }
+    }
 
-    schedule_item({
-        reply.replaced(replacements(src, to, message)),
-        src.destination->config_name(),
-        reply_channel(src),
-        date_time
-    });
-
+    reply_to(msg, reply_no);
     return true;
 }
 
 
-string::FormattedProperties Remind::replacements(const network::Message& src,
-                                const std::string& to,
-                                const std::string& message) const
+string::FormattedProperties Remind::replacements(
+    const network::Message& src,
+    const std::string& to,
+    const std::string& message,
+    const melanolib::time::DateTime& date_time
+) const
 {
     string::FormattedProperties props = src.destination->pretty_properties();
     props.insert({
@@ -71,6 +77,8 @@ string::FormattedProperties Remind::replacements(const network::Message& src,
         {"from.local_id", src.from.local_id},
 
         {"to", src.source->decode(to)},
+
+        {"date", melanolib::time::format_char(date_time, 'c')},
     });
     return props;
 }

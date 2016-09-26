@@ -23,6 +23,7 @@
 #include "handler/misc.hpp"
 #include "handler/group.hpp"
 #include "handler/connection_monitor.hpp"
+#include "string/replacements.hpp"
 
 /**
  * \brief Defines the core module
@@ -71,4 +72,18 @@ MELANOMODULE_ENTRY_POINT void melanomodule_core_initialize(const Settings&)
     module::register_handler<core::Group>("Group");
     module::register_handler<core::Multi>("Multi");
     module::register_handler<core::IfSet>("IfSet");
+
+    string::FilterRegistry::instance().register_filter("date",
+        [](const std::vector<string::FormattedString>& args) -> string::FormattedString
+        {
+            if ( args.empty() )
+                return {};
+            if ( args.size() == 1 )
+                return args[0];
+            string::FormatterUtf8 utf8;
+            auto time = melanolib::time::parse_time(args[0].encode(utf8));
+            std::string format = args[1].encode(utf8);
+            return utf8.decode(melanolib::time::strftime(time, format));
+        }
+    );
 }
