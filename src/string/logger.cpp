@@ -19,6 +19,7 @@
 #include "logger.hpp"
 #include "melanolib/time/time_string.hpp"
 #include "concurrency/concurrency.hpp"
+#include "string/replacements.hpp"
 
 string::FormatterAnsi Logger::default_formatter{true};
 
@@ -39,24 +40,17 @@ void Logger::log(const std::string& type, char direction,
 
     lock.unlock();
 
-    std::string buffer;
+    string::FormattedString line;
     if ( !timestamp.empty() )
     {
-        buffer += formatter->to_string(color::yellow)
-               + melanolib::time::format(timestamp)
-               + formatter->to_string(string::ClearFormatting());
+        line << color::yellow << melanolib::time::format(timestamp) << string::ClearFormatting();
     }
 
-    buffer += formatter->to_string(type_color)
-           + type
-           + std::string(log_type_length > type.size() ? log_type_length > type.size() : 0, ' ');
+    line << type_color << string::Padding(type, log_type_length, 0)
+         << direction_color << direction << string::ClearFormatting()
+         << message << string::ClearFormatting();
 
-    buffer += formatter->to_string(direction_color) + direction;
-
-    buffer += formatter->to_string(string::ClearFormatting())
-           + message.encode(*formatter)
-           + formatter->to_string(string::ClearFormatting())
-           + '\n';
+    std::string buffer = line.encode(*formatter) + '\n';
 
     lock.lock();
     log_destination.write(buffer.data(), buffer.size());

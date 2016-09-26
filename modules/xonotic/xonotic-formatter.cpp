@@ -58,17 +58,17 @@ std::string QFont::to_string(const string::Formatter& fmt) const
     return alternative();
 }
 
-std::string XonoticFormatter::to_string(char c) const
+std::string XonoticFormatter::to_string(char c, Context* context) const
 {
     return c == '^' ? "^^" : std::string(1, c);
 }
 
-std::string XonoticFormatter::to_string(const string::AsciiString& input) const
+std::string XonoticFormatter::to_string(const string::AsciiString& input, Context* context) const
 {
     return melanolib::string::replace(input, "^", "^^");
 }
 
-std::string XonoticFormatter::to_string(const color::Color12& color) const
+std::string XonoticFormatter::to_string(const color::Color12& color, Context* context) const
 {
     if ( !color.is_valid() )
         return "^7";
@@ -89,12 +89,12 @@ std::string XonoticFormatter::to_string(const color::Color12& color) const
     return std::string("^x")+color.hex_red()+color.hex_green()+color.hex_blue();
 }
 
-std::string XonoticFormatter::to_string(string::FormatFlags flags) const
+std::string XonoticFormatter::to_string(string::FormatFlags flags, Context* context) const
 {
     return "";
 }
 
-std::string XonoticFormatter::to_string(string::ClearFormatting) const
+std::string XonoticFormatter::to_string(string::ClearFormatting, Context* context) const
 {
     return "^7";
 }

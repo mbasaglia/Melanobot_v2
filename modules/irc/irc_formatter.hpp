@@ -31,9 +31,9 @@ class FormatterIrc : public string::FormatterUtf8
 public:
 
     using FormatterUtf8::to_string;
-    std::string to_string(const color::Color12& color) const override;
-    std::string to_string(string::FormatFlags flags) const override;
-    std::string to_string(string::ClearFormatting clear) const override;
+    std::string to_string(const color::Color12& color, Context* context) const override;
+    std::string to_string(string::FormatFlags flags, Context* context) const override;
+    std::string to_string(string::ClearFormatting clear, Context* context) const override;
 
     string::FormattedString decode(const std::string& source) const override;
     std::string name() const override;
@@ -49,7 +49,7 @@ public:
 class FormatterIrcWhite : public FormatterIrc
 {
 public:
-    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(const color::Color12& color, Context* context) const override;
     std::string name() const override;
 };
 

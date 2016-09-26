@@ -89,6 +89,12 @@ public:
         Formatter* default_formatter = nullptr;
     };
 
+    class Context
+    {
+    public:
+        virtual ~Context(){};
+    };
+
     Formatter() = default;
     Formatter(const Formatter&) = delete;
     Formatter(Formatter&&) = delete;
@@ -97,10 +103,31 @@ public:
 
     virtual ~Formatter() {}
 
+    virtual std::unique_ptr<Context> context() const
+    {
+        return {};
+    }
+
+    /**
+     * \brief Begin encoding a string
+     */
+    virtual std::string string_begin(Context* context) const
+    {
+        return {};
+    }
+
+    /**
+     * \brief End encoding a string
+     */
+    virtual std::string string_end(Context* context) const
+    {
+        return {};
+    }
+
     /**
      * \brief Encode a simple ASCII string
      */
-    virtual std::string to_string(const AsciiString& s) const
+    virtual std::string to_string(const AsciiString& s, Context* context) const
     {
         return s;
     }
@@ -108,17 +135,17 @@ public:
     /**
      * \brief Encode a single ASCII character
      */
-    virtual std::string to_string(char c) const
+    virtual std::string to_string(char c, Context* context) const
     {
-        return to_string(std::string(1, c));
+        return to_string(std::string(1, c), context);
     }
 
-    std::string to_string(int c) const = delete;
+    std::string to_string(int c, Context* context) const = delete;
 
     /**
      * \brief Encode a unicode (non-ASCII) character
      */
-    virtual std::string to_string(const Unicode& c) const
+    virtual std::string to_string(const Unicode& c, Context* context) const
     {
         return {};
     }
@@ -127,7 +154,7 @@ public:
      * \brief Encode a color code
      * \todo Background colors?
      */
-    virtual std::string to_string(const color::Color12& color) const
+    virtual std::string to_string(const color::Color12& color, Context* context) const
     {
         return {};
     }
@@ -135,7 +162,7 @@ public:
     /**
      * \brief Encode format flags
      */
-    virtual std::string to_string(FormatFlags flags) const
+    virtual std::string to_string(FormatFlags flags, Context* context) const
     {
         return {};
     }
@@ -143,7 +170,7 @@ public:
     /**
      * \brief Clear all formatting
      */
-    virtual std::string to_string(ClearFormatting) const
+    virtual std::string to_string(ClearFormatting, Context* context) const
     {
         return {};
     }
@@ -179,7 +206,7 @@ class FormatterUtf8 : public Formatter
 {
 public:
     using Formatter::to_string;
-    std::string to_string(const Unicode& c) const override;
+    std::string to_string(const Unicode& c, Context* context) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 };
@@ -191,7 +218,7 @@ class FormatterAscii : public Formatter
 {
 public:
     using Formatter::to_string;
-    std::string to_string(const Unicode& c) const override;
+    std::string to_string(const Unicode& c, Context* context) const override;
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
 };
@@ -205,10 +232,10 @@ public:
     explicit FormatterAnsi(bool utf8) : utf8(utf8) {}
 
     using Formatter::to_string;
-    std::string to_string(const Unicode& c) const override;
-    std::string to_string(const color::Color12& color) const override;
-    std::string to_string(FormatFlags flags) const override;
-    std::string to_string(ClearFormatting clear) const override;
+    std::string to_string(const Unicode& c, Context* context) const override;
+    std::string to_string(const color::Color12& color, Context* context) const override;
+    std::string to_string(FormatFlags flags, Context* context) const override;
+    std::string to_string(ClearFormatting clear, Context* context) const override;
 
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;
@@ -226,7 +253,7 @@ class FormatterAnsiBlack : public FormatterAnsi
 public:
     using FormatterAnsi::FormatterAnsi;
     using FormatterAnsi::to_string;
-    std::string to_string(const color::Color12& color) const override;
+    std::string to_string(const color::Color12& color, Context* context) const override;
     std::string name() const override;
 };
 
@@ -249,11 +276,11 @@ public:
     explicit FormatterConfig() {}
 
     using FormatterUtf8::to_string;
-    std::string to_string(char input) const override;
-    std::string to_string(const AsciiString& s) const override;
-    std::string to_string(const color::Color12& color) const override;
-    std::string to_string(FormatFlags flags) const override;
-    std::string to_string(ClearFormatting clear) const override;
+    std::string to_string(char input, Context* context) const override;
+    std::string to_string(const AsciiString& s, Context* context) const override;
+    std::string to_string(const color::Color12& color, Context* context) const override;
+    std::string to_string(FormatFlags flags, Context* context) const override;
+    std::string to_string(ClearFormatting clear, Context* context) const override;
 
     FormattedString decode(const std::string& source) const override;
     std::string name() const override;

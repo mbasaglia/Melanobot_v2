@@ -59,11 +59,11 @@ namespace element {
      */
     template<class T>
         std::enable_if_t<melanolib::StreamInsertable<T>::value, std::string>
-        to_string(const Formatter& formatter, const T& t)
+        to_string(const Formatter& formatter, const T& t, Formatter::Context* context)
     {
         std::ostringstream ss;
         ss << t;
-        return formatter.to_string(ss.str());
+        return formatter.to_string(ss.str(), context);
     }
 
     /**
@@ -71,7 +71,7 @@ namespace element {
      */
     template<class T>
         std::enable_if_t<!melanolib::StreamInsertable<T>::value, std::string>
-        to_string(const Formatter& formatter, const T& t)
+        to_string(const Formatter& formatter, const T& t, Formatter::Context* context)
     {
         return "";
     }
@@ -109,27 +109,43 @@ namespace detail {
      * \brief Calls the right virtual function
      */
     template<class T>
-        auto to_string_dispatch(const Formatter& formatter, T&& t, OveloadTag) -> decltype(formatter.to_string(std::forward<T>(t)))
+        auto to_string_dispatch(const Formatter& formatter, T&& t,
+                                Formatter::Context* context, OveloadTag)
+        -> decltype(formatter.to_string(std::forward<T>(t), context))
     {
-        return formatter.to_string(std::forward<T>(t));
+        return formatter.to_string(std::forward<T>(t), context);
     }
 
     /**
      * \brief Calls a member to_string
      */
     template<class T>
-        auto to_string_dispatch(const Formatter& formatter, T&& t, OveloadTag) -> decltype(t.to_string(formatter))
+        auto to_string_dispatch(const Formatter& formatter, T&& t,
+                                Formatter::Context* context, OveloadTag)
+        -> decltype(t.to_string(formatter))
     {
         return t.to_string(formatter);
+    }
+
+    /**
+     * \brief Calls a member to_string
+     */
+    template<class T>
+        auto to_string_dispatch(const Formatter& formatter, T&& t,
+                                Formatter::Context* context, OveloadTag)
+        -> decltype(t.to_string(formatter, context))
+    {
+        return t.to_string(formatter, context);
     }
 
     /**
      * Fallback
      */
     template<class T>
-        std::string to_string_dispatch(const Formatter& formatter, T&& t, ...)
+        std::string to_string_dispatch(const Formatter& formatter, T&& t,
+                                       Formatter::Context* context, ...)
         {
-            return element::to_string(formatter, t);
+            return element::to_string(formatter, t, context);
         }
 
 } // namespace detail
@@ -143,7 +159,7 @@ private:
     struct HolderBase
     {
         virtual ~HolderBase() {}
-        virtual std::string to_string(const Formatter&) const = 0;
+        virtual std::string to_string(const Formatter&, Formatter::Context*) const = 0;
         virtual std::unique_ptr<HolderBase> clone() const = 0;
         virtual const std::type_info& type() const noexcept = 0;
         virtual void replace(const ReplacementFunctor& repl) = 0;
@@ -154,9 +170,9 @@ private:
         {
             Holder(T object) : object(std::move(object)) {}
 
-            std::string to_string(const Formatter& visitor) const override
+            std::string to_string(const Formatter& visitor, Formatter::Context* context) const override
             {
-                return detail::to_string_dispatch(visitor, object, detail::OveloadTag{});
+                return detail::to_string_dispatch(visitor, object, context, detail::OveloadTag{});
             }
 
             void replace(const ReplacementFunctor& repl) override
@@ -206,9 +222,9 @@ public:
         return *this;
     }
 
-    std::string to_string(const Formatter& formatter) const
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
-        return holder->to_string(formatter);
+        return holder->to_string(formatter, context);
     }
 
     void replace(const ReplacementFunctor& repl)
@@ -435,10 +451,16 @@ public:
      */
     std::string encode(const Formatter& formatter) const
     {
-        std::string s;
+        auto context = formatter.context();
+        return encode(formatter, context.get());
+    }
+
+    std::string encode(const Formatter& formatter, Formatter::Context* context) const
+    {
+        std::string s = formatter.string_begin(context);
         for ( const auto& e : elements )
-            s += e.to_string(formatter);
-        return s;
+            s += e.to_string(formatter, context);
+        return s + formatter.string_end(context);
     }
 
     /**

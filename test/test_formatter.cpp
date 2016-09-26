@@ -27,7 +27,6 @@
 #include "xonotic/xonotic-formatter.hpp"
 #include "irc/irc_formatter.hpp"
 #include "fun/rainbow.hpp"
-#include "string/encoding.hpp"
 #include "string/replacements.hpp"
 
 using namespace string;
@@ -69,36 +68,35 @@ BOOST_AUTO_TEST_CASE( test_utf8 )
 
     BOOST_CHECK( decoded.encode(*Formatter::formatter(fmt.name())) == utf8 );
 
-    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
-    BOOST_CHECK( fmt.to_string(color::red).empty() );
-    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD).empty() );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()).empty() );
+    BOOST_CHECK( fmt.to_string("hello world", nullptr) == "hello world" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red, nullptr).empty() );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD, nullptr).empty() );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr).empty() );
 }
 
 BOOST_AUTO_TEST_CASE( test_ascii )
 {
     string::FormatterAscii fmt;
     std::string utf8 = u8"Foo bar è$ç";
-#ifdef HAS_ICONV
-    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar e$c" );
-#else
-    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
-#endif
+    if ( melanolib::string::Utf8Parser::has_iconv() )
+        BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar e$c" );
+    else
+        BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
 
     BOOST_CHECK( fmt.decode("foobarè").size() == 1 );
 
-    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-#ifdef HAS_ICONV
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "c" );
-#else
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)).empty() );
-#endif
-    BOOST_CHECK( fmt.to_string(color::red).empty() );
-    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD).empty() );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()).empty() );
+    BOOST_CHECK( fmt.to_string("hello world", nullptr) == "hello world" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    if ( melanolib::string::Utf8Parser::has_iconv() )
+        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "c" );
+    else
+        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr).empty() );
+
+    BOOST_CHECK( fmt.to_string(color::red, nullptr).empty() );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD, nullptr).empty() );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr).empty() );
 }
 
 BOOST_AUTO_TEST_CASE( test_config )
@@ -159,25 +157,24 @@ BOOST_AUTO_TEST_CASE( test_config )
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello $(1)World $(-bu)test$(-)#1$(2)green$(4)blue§$$(1)" );
 
-    BOOST_CHECK( fmt.to_string("hello world$") == "hello world$$" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-    BOOST_CHECK( fmt.to_string('$') == "$$" );
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
-    BOOST_CHECK( fmt.to_string(color::red) == "$(1)" );
-    BOOST_CHECK( fmt.to_string(color::nocolor) == "$(nocolor)" );
-    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD) == "$(-b)" );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "$(-)" );
+    BOOST_CHECK( fmt.to_string("hello world$", nullptr) == "hello world$$" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    BOOST_CHECK( fmt.to_string('$', nullptr) == "$$" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red, nullptr) == "$(1)" );
+    BOOST_CHECK( fmt.to_string(color::nocolor, nullptr) == "$(nocolor)" );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD, nullptr) == "$(-b)" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr) == "$(-)" );
 }
 
 BOOST_AUTO_TEST_CASE( test_ansi_ascii )
 {
     FormatterAnsi fmt(false);
     std::string utf8 = u8"Foo bar è$ç";
-#ifdef HAS_ICONV
-    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar e$c" );
-#else
-    BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
-#endif
+    if ( melanolib::string::Utf8Parser::has_iconv() )
+        BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar e$c" );
+    else
+        BOOST_CHECK( string::FormatterUtf8().decode(utf8).encode(fmt) == "Foo bar ?$?" );
 
     std::string formatted = "Hello \x1b[31mWorld \x1b[1;4;41mtest\x1b[0m#1\x1b[92mgreen\x1b[1;34mblue\x1b[39m$";
     auto decoded = fmt.decode(formatted);
@@ -223,18 +220,18 @@ BOOST_AUTO_TEST_CASE( test_ansi_ascii )
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m$" );
 
-    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-#ifdef HAS_ICONV
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "c" );
-#else
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)).empty() );
-#endif
-    BOOST_CHECK( fmt.to_string(color::dark_red) == "\x1b[31m" );
-    BOOST_CHECK( fmt.to_string(color::nocolor) == "\x1b[39m" );
-    auto bold = fmt.to_string(FormatFlags::BOLD);
+    BOOST_CHECK( fmt.to_string("hello world", nullptr) == "hello world" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    if ( melanolib::string::Utf8Parser::has_iconv() )
+        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "c" );
+    else
+        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr).empty() );
+
+    BOOST_CHECK( fmt.to_string(color::dark_red, nullptr) == "\x1b[31m" );
+    BOOST_CHECK( fmt.to_string(color::nocolor, nullptr) == "\x1b[39m" );
+    auto bold = fmt.to_string(FormatFlags::BOLD, nullptr);
     BOOST_CHECK( std::regex_match(bold, std::regex(R"(\x1b\[.*(\b1;.*m$)|(\b1m$))")) );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "\x1b[0m" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr) == "\x1b[0m" );
 }
 
 BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
@@ -285,14 +282,14 @@ BOOST_AUTO_TEST_CASE( test_ansi_utf8 )
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x1b[31mWorld \x1b[1;4;23mtest\x1b[0m#1\x1b[92mgreen\x1b[94mblue\x1b[39m§" );
 
-    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
-    BOOST_CHECK( fmt.to_string(color::dark_red) == "\x1b[31m" );
-    BOOST_CHECK( fmt.to_string(color::nocolor) == "\x1b[39m" );
-    auto bold = fmt.to_string(FormatFlags::BOLD);
+    BOOST_CHECK( fmt.to_string("hello world", nullptr) == "hello world" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::dark_red, nullptr) == "\x1b[31m" );
+    BOOST_CHECK( fmt.to_string(color::nocolor, nullptr) == "\x1b[39m" );
+    auto bold = fmt.to_string(FormatFlags::BOLD, nullptr);
     BOOST_CHECK( std::regex_match(bold, std::regex(R"(\x1b\[.*(\b1;.*m$)|(\b1m$))")) );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "\x1b[0m" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr) == "\x1b[0m" );
 }
 
 BOOST_AUTO_TEST_CASE( test_irc )
@@ -344,13 +341,13 @@ BOOST_AUTO_TEST_CASE( test_irc )
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello \x03""04World \x02\x1ftest\x0f#1\x03""09green\x03""12blue§\xf" );
 
-    BOOST_CHECK( fmt.to_string("hello world") == "hello world" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
-    BOOST_CHECK( fmt.to_string(color::red) == "\x03""04" );
-    BOOST_CHECK( fmt.to_string(color::nocolor) == "\xf" );
-    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD) == "\x02" );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "\xf" );
+    BOOST_CHECK( fmt.to_string("hello world", nullptr) == "hello world" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red, nullptr) == "\x03""04" );
+    BOOST_CHECK( fmt.to_string(color::nocolor, nullptr) == "\xf" );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD, nullptr) == "\x02" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr) == "\xf" );
 }
 
 BOOST_AUTO_TEST_CASE( test_xonotic )
@@ -394,14 +391,14 @@ BOOST_AUTO_TEST_CASE( test_xonotic )
 
     BOOST_CHECK( decoded.encode(FormatterAscii()) == "Hello World ^greenblue^x00?:)" );
 
-    BOOST_CHECK( fmt.to_string("hello world^") == "hello world^^" );
-    BOOST_CHECK( fmt.to_string('x') == "x" );
-    BOOST_CHECK( fmt.to_string('^') == "^^" );
-    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7)) == "ç" );
-    BOOST_CHECK( fmt.to_string(color::red) == "^1" );
-    BOOST_CHECK( fmt.to_string(color::nocolor) == "^7" );
-    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD) == "" );
-    BOOST_CHECK( fmt.to_string(ClearFormatting()) == "^7" );
+    BOOST_CHECK( fmt.to_string("hello world^", nullptr) == "hello world^^" );
+    BOOST_CHECK( fmt.to_string('x', nullptr) == "x" );
+    BOOST_CHECK( fmt.to_string('^', nullptr) == "^^" );
+    BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "ç" );
+    BOOST_CHECK( fmt.to_string(color::red, nullptr) == "^1" );
+    BOOST_CHECK( fmt.to_string(color::nocolor, nullptr) == "^7" );
+    BOOST_CHECK( fmt.to_string(FormatFlags::BOLD, nullptr) == "" );
+    BOOST_CHECK( fmt.to_string(ClearFormatting(), nullptr) == "^7" );
 
     // QFont
     xonotic::QFont qf(1000);
@@ -692,10 +689,10 @@ BOOST_AUTO_TEST_CASE( test_Filters )
 BOOST_AUTO_TEST_CASE( test_Padding )
 {
     FormatterAscii ascii;
-    BOOST_CHECK( Padding("hello", 7).to_string(ascii) == "  hello" );
-    BOOST_CHECK( Padding("hello", 7, 0).to_string(ascii) == "hello  " );
-    BOOST_CHECK( Padding("hello", 7, 0.5).to_string(ascii) == " hello " );
-    BOOST_CHECK( Padding("hello", 7, 1, '.').to_string(ascii) == "..hello" );
+    BOOST_CHECK( Padding("hello", 7).to_string(ascii, nullptr) == "  hello" );
+    BOOST_CHECK( Padding("hello", 7, 0).to_string(ascii, nullptr) == "hello  " );
+    BOOST_CHECK( Padding("hello", 7, 0.5).to_string(ascii, nullptr) == " hello " );
+    BOOST_CHECK( Padding("hello", 7, 1, '.').to_string(ascii, nullptr) == "..hello" );
     BOOST_CHECK( (FormattedString() << Padding("hello", 7, 0) << Padding("world", 7, 1)).encode(ascii)  == "hello    world" );
 }
 

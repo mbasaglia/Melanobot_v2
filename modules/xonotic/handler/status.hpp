@@ -212,11 +212,17 @@ protected:
             << color::red << total << color::nocolor << " maps match";
         reply_to(msg, std::move(str));
 
-        auto r = msg.destination->formatter()->to_string(color::red);
-        auto nc = msg.destination->formatter()->to_string(color::nocolor);
         if ( max_print >= 0 && int(maps.size()) <= max_print && !maps.empty())
-            reply_to(msg, r + melanolib::string::implode(nc + ", " + r, maps));
-
+        {
+            string::FormattedString map_csv;
+            for ( const auto& map : maps )
+            {
+                if ( !map_csv.empty() )
+                    map_csv << ",";
+                map_csv << color::red << map << color::nocolor;
+            }
+            reply_to(msg, map_csv);
+        }
         return true;
     }
 

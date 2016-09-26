@@ -109,7 +109,7 @@ void Formatter::Registry::add_formatter(Formatter* instance)
 }
 
 
-std::string FormatterUtf8::to_string(const Unicode& c) const
+std::string FormatterUtf8::to_string(const Unicode& c, Context* context) const
 {
     return c.utf8();
 }
@@ -153,7 +153,7 @@ std::string FormatterUtf8::name() const
 }
 
 
-std::string FormatterAscii::to_string(const Unicode& c) const
+std::string FormatterAscii::to_string(const Unicode& c, Context* context) const
 {
     return std::string(1, melanolib::string::Utf8Parser::to_ascii(c.utf8()));
 }
@@ -170,7 +170,7 @@ std::string FormatterAscii::name() const
     return "ascii";
 }
 
-std::string FormatterAnsi::to_string(const color::Color12& color) const
+std::string FormatterAnsi::to_string(const color::Color12& color, Context* context) const
 {
     if ( !color.is_valid() )
         return "\x1b[39m";
@@ -184,7 +184,7 @@ std::string FormatterAnsi::to_string(const color::Color12& color) const
     //return "\x1b[3"+std::to_string(number)+";"+(bright ? "1" : "22")+"m";
 }
 
-std::string FormatterAnsi::to_string(FormatFlags flags) const
+std::string FormatterAnsi::to_string(FormatFlags flags, Context* context) const
 {
     std::vector<int> codes;
     codes.push_back( flags & FormatFlags::BOLD ? 1 : 22 );
@@ -193,12 +193,12 @@ std::string FormatterAnsi::to_string(FormatFlags flags) const
     return  "\x1b["+melanolib::string::implode(";", codes)+"m";
 }
 
-std::string FormatterAnsi::to_string(ClearFormatting clear) const
+std::string FormatterAnsi::to_string(ClearFormatting clear, Context* context) const
 {
     return "\x1b[0m";
 }
 
-std::string FormatterAnsi::to_string(const Unicode& c) const
+std::string FormatterAnsi::to_string(const Unicode& c, Context* context) const
 {
     if ( utf8 )
         return c.utf8();
@@ -329,11 +329,11 @@ std::string FormatterAnsi::name() const
     return utf8 ? "ansi-utf8" : "ansi-ascii";
 }
 
-std::string FormatterAnsiBlack::to_string(const color::Color12& color) const
+std::string FormatterAnsiBlack::to_string(const color::Color12& color, Context* context) const
 {
     if ( color.is_valid() && color.to_4bit() == 0 )
-        return FormatterAnsi::to_string(color::silver);
-    return FormatterAnsi::to_string(color);
+        return FormatterAnsi::to_string(color::silver, context);
+    return FormatterAnsi::to_string(color, context);
 }
 std::string FormatterAnsiBlack::name() const
 {
@@ -341,7 +341,7 @@ std::string FormatterAnsiBlack::name() const
 }
 
 
-std::string FormatterConfig::to_string(const color::Color12& color) const
+std::string FormatterConfig::to_string(const color::Color12& color, Context* context) const
 {
     if ( !color.is_valid() )
         return "$(nocolor)";
@@ -360,7 +360,7 @@ std::string FormatterConfig::to_string(const color::Color12& color) const
     return std::string("$(x")+color.hex_red()+color.hex_green()+color.hex_blue()+')';
 }
 
-std::string FormatterConfig::to_string(FormatFlags flags) const
+std::string FormatterConfig::to_string(FormatFlags flags, Context* context) const
 {
     std::string r = "$(-";
     if ( flags & FormatFlags::BOLD )
@@ -372,17 +372,17 @@ std::string FormatterConfig::to_string(FormatFlags flags) const
     return r+')';
 }
 
-std::string FormatterConfig::to_string(ClearFormatting clear) const
+std::string FormatterConfig::to_string(ClearFormatting clear, Context* context) const
 {
     return "$(-)";
 }
 
-std::string FormatterConfig::to_string(char input) const
+std::string FormatterConfig::to_string(char input, Context* context) const
 {
     return input == '$' ? "$$" : std::string(1, input);
 }
 
-std::string FormatterConfig::to_string(const AsciiString& input) const
+std::string FormatterConfig::to_string(const AsciiString& input, Context* context) const
 {
     return melanolib::string::replace(input, "$", "$$");
 }

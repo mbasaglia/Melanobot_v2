@@ -25,7 +25,7 @@
 
 namespace irc {
 
-std::string FormatterIrc::to_string(const color::Color12& color) const
+std::string FormatterIrc::to_string(const color::Color12& color, Context* context) const
 {
     int ircn = 1;
 
@@ -53,7 +53,7 @@ std::string FormatterIrc::to_string(const color::Color12& color) const
     }
     return '\3'+melanolib::string::to_string(ircn, 2);
 }
-std::string FormatterIrc::to_string(string::FormatFlags flags) const
+std::string FormatterIrc::to_string(string::FormatFlags flags, Context* context) const
 {
     if ( flags == string::FormatFlags::NO_FORMAT )
         return "\xf"; /// \note clears color as well
@@ -66,7 +66,7 @@ std::string FormatterIrc::to_string(string::FormatFlags flags) const
         format += "\x1d";
     return format;
 }
-std::string FormatterIrc::to_string(string::ClearFormatting) const
+std::string FormatterIrc::to_string(string::ClearFormatting, Context* context) const
 {
     return "\xf";
 }
@@ -187,19 +187,19 @@ color::Color12 FormatterIrc::color_from_string(const std::string& color)
     }
 }
 
-std::string FormatterIrcWhite::to_string(const color::Color12& color) const
+std::string FormatterIrcWhite::to_string(const color::Color12& color, Context* context) const
 {
     if ( color.is_valid() )
     {
         switch ( color.to_4bit() )
         {
             case 0b1011: // yellow -> dark yellow
-                return FormatterIrc::to_string(color::dark_yellow);
+                return FormatterIrc::to_string(color::dark_yellow, context);
             case 0b1111: // white -> nocolor
-                return FormatterIrc::to_string(color::nocolor);
+                return FormatterIrc::to_string(color::nocolor, context);
         }
     }
-    return FormatterIrc::to_string(color);
+    return FormatterIrc::to_string(color, context);
 }
 
 std::string FormatterIrcWhite::name() const

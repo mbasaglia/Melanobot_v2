@@ -116,7 +116,7 @@ add_subdirectory(src bin)
 
 # Tests 
 include(testing)
-add_subdirectory(lib/Melanolib/test EXCLUDE_FROM_ALL)
+# add_subdirectory(lib/Melanolib/test EXCLUDE_FROM_ALL)
 add_subdirectory(test)
 
 # Doxygen target

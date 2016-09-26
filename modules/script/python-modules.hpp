@@ -366,7 +366,7 @@ BOOST_PYTHON_MODULE(melanobot)
             return fmt ? fmt->name() : "";
         })
         .def("convert", [](string::Formatter* fmt, const color::Color12& col) {
-            return fmt ? fmt->to_string(col) : "";
+            return fmt ? fmt->to_string(col, nullptr) : "";
         })
         .def("convert", [](string::Formatter* fmt, const std::string& str) {
             return str;

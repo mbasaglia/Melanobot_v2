@@ -33,9 +33,9 @@ public:
           replacement(std::move(replacement))
     {}
 
-    std::string to_string(const Formatter& formatter) const
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
-        return replacement.encode(formatter);
+        return replacement.encode(formatter, context);
     }
 
     void replace(const ReplacementFunctor& func)
@@ -106,9 +106,9 @@ public:
         return FilterRegistry::instance().apply_filter(filter, arguments);
     }
 
-    std::string to_string(const Formatter& formatter) const
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
-        return filtered().encode(formatter);
+        return filtered().encode(formatter, context);
     }
 
 private:
@@ -127,9 +127,9 @@ public:
           fill(fill)
     {}
 
-    std::string to_string(const Formatter& formatter) const
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
-        auto str = string.encode(formatter);
+        auto str = string.encode(formatter, context);
 
         int count = target_size - str.size();
         if ( count > 0 )
