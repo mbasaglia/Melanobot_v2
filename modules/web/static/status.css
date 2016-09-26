@@ -1,0 +1,58 @@
+td
+{
+    border: 1px solid gray;
+    padding: 0.5ex;
+}
+
+table
+{
+    border-collapse: collapse;
+}
+
+td:last-child
+{
+    font-family: monospace;
+    text-align: right;
+}
+
+.status_connected
+{
+    color: green;
+}
+
+.status_connecting
+{
+    color: orange;
+}
+
+.status_disconnected
+{
+    color: red;
+}
+
+nav ul
+{
+    background-color: navy;
+    color: yellow;
+    font-size: small;
+    list-style: none;
+    margin: 0;
+    padding: 0.25ex;
+}
+nav li
+{
+    display: inline-block;
+}
+nav a, nav a:hover, nav a:link, nav a:visited
+{
+    color: inherit;
+    text-decoration: none;
+}
+nav a:hover
+{
+    background-color: blue;
+}
+nav span
+{
+    font-weight: bold;
+}

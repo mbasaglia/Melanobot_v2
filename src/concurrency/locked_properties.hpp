@@ -87,6 +87,12 @@ public:
         auto l = lock();
         return referenced->get_child(property, {});
     }
+
+    PropertyTree copy()
+    {
+        auto l = lock();
+        return *referenced;
+    }
 };
 
 

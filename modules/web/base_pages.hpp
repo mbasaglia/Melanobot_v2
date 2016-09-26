@@ -131,6 +131,20 @@ public:
             return {melanolib::math::min(range_begin + count, range_end), range_end};
         }
 
+        /**
+         * \brief Strips the longest matching suffix from \p path
+         */
+        PathSuffix strip_path_suffix(const httpony::Path& path) const
+        {
+            auto iter_pair = std::mismatch(path.rbegin(), path.rend(), rbegin(), rend());
+            return PathSuffix(path.begin(), iter_pair.first.base() + 1);
+        }
+
+        httpony::Path to_path() const
+        {
+            return httpony::Path(range_begin, range_end);
+        }
+
         reference operator[](const size_type pos) const
         {
             return range_begin[pos];

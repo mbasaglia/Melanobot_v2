@@ -24,6 +24,7 @@
 #include <boost/filesystem.hpp>
 #include "server.hpp"
 #include "melanobot/melanobot.hpp"
+#include "formatter_html.hpp"
 
 namespace web {
 
@@ -174,7 +175,7 @@ public:
     explicit HtmlErrorPage(const Settings& settings)
     {
         css_file = settings.get("css", css_file);
-        extra_info = settings.get("css", css_file);
+        extra_info = settings.get("extra_info", extra_info);
     }
 
     Response respond(const Status& status, Request& request, const HttpServer& sv) const
@@ -232,6 +233,7 @@ public:
     explicit StatusPage(const Settings& settings)
     {
         uri = read_uri(settings, "");
+        css_file = settings.get("css", css_file);
     }
 
     bool matches(const Request& request, const PathSuffix& path) const override
@@ -241,21 +243,46 @@ public:
 
     Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
     {
+        using namespace httpony::quick_xml;
+        using namespace httpony::quick_xml::html;
+
         auto local_path = path.left_stripped(uri.size());
-        httpony::quick_xml::html::HtmlDocument html("Bot status");
+        HtmlDocument html("Bot status");
+        BlockElement contents("div", Attribute("class", "contents"));
 
         if ( local_path.empty() )
-            home(html.body());
-        else if ( local_path.match_exactly("connection") )
-            connection_list(html.body());
-        else if ( local_path.match_exactly("service") )
-            service_list(html.body());
-        else if ( local_path.match_prefix("connection") && local_path.size() == 2 )
-            connection(local_path[1], html.body());
-        else if ( local_path.match_prefix("service") && local_path.size() == 2 )
-            service(local_path[1], html.body());
+            home(contents);
+        else if ( local_path.match_prefix("connection") )
+            connection(local_path, contents);
+        else if ( local_path.match_prefix("service") )
+            service(local_path, contents);
         else
             throw HttpError(StatusCode::NotFound);
+
+        if ( !css_file.empty() )
+        {
+            html.head().append(Element("link", Attributes{
+                {"rel", "stylesheet"}, {"type", "text/css"}, {"href", css_file}
+            }));
+        }
+
+        List nav;
+        auto base_path = path.strip_path_suffix(request.uri.path).to_path();
+        for ( const auto& pair : links )
+        {
+            if ( local_path.match_exactly(pair.second) )
+                nav.add_item(Element("span", Text(pair.first)));
+            else
+                nav.add_item(Link(
+                    (base_path + pair.second).url_encoded(true),
+                    pair.first
+                ));
+        }
+        html.body().append(
+            Element("nav", nav),
+            contents
+        );
+
         Response response("text/html", StatusCode::OK, request.protocol);
         html.print(response.body, true);
         return response;
@@ -301,16 +328,22 @@ private:
         parent.append(services);
     }
 
-    void connection(const std::string& name, BlockElement& parent) const
+    void connection(const PathSuffix& path, BlockElement& parent) const
     {
+        if ( path.size() == 1 )
+            return connection_list(parent);
+
+        if ( path.size() != 2 )
+            throw HttpError(StatusCode::NotFound);
+
         using namespace httpony::quick_xml;
         using namespace httpony::quick_xml::html;
 
-        network::Connection* conn = bot().connection(name);
+        network::Connection* conn = bot().connection(path[1]);
         if ( !conn )
             throw HttpError(StatusCode::NotFound);
 
-        parent.append(Element{"h1", Text{name}});
+        parent.append(Element{"h1", Text{path[1]}});
 
         Table table;
         table.add_header_row(Text{"Property"}, Text{"Value"});
@@ -321,25 +354,50 @@ private:
         table.add_data_row(Text("Formatter"), Text(conn->formatter()->name()));
         table.add_data_row(Text("Server"), Text(conn->server().name()));
 
-//         for ( const auto& prop : conn->properties())
-//             table.add_data_row(Text(prop.first), Text(prop.second));
+        auto pretty = conn->pretty_properties();
+        if ( !pretty.empty() )
+        {
+            table.add_row(Element("th", Attribute("colspan", "2"), Text("Formatting")));
+            FormatterHtml formatter;
+            for ( const auto& prop : pretty )
+                table.add_data_row(Text(prop.first), Text(prop.second.encode(formatter)));
+        }
 
-        /// \todo FormatterHtml
-        string::FormatterUtf8 formatter;
-        for ( const auto& prop : conn->pretty_properties())
-            table.add_data_row(Text(prop.first), Text(prop.second.encode(formatter)));
+        auto internal = conn->properties().copy();
+        if ( !internal.empty() )
+        {
+            table.add_row(Element("th", Attribute("colspan", "2"), Text("Internal")));
+            flatten_tree(internal, "", table);
+        }
 
         parent.append(table);
     }
 
-    void service(const std::string& id, BlockElement& parent) const
+    void flatten_tree(const PropertyTree& tree, const std::string& prefix,
+                      httpony::quick_xml::html::Table& table) const
     {
+        using namespace httpony::quick_xml;
+        for ( const auto& prop : tree)
+        {
+            table.add_data_row(Text(prop.first), Text(prop.second.data()));
+            flatten_tree(prop.second, prefix + prop.first + '.', table);
+        }
+    }
+
+    void service(const PathSuffix& path, BlockElement& parent) const
+    {
+        if ( path.size() == 1 )
+            return service_list(parent);
+
+        if ( path.size() != 2 )
+            throw HttpError(StatusCode::NotFound);
+
         using namespace httpony::quick_xml;
         using namespace httpony::quick_xml::html;
 
         AsyncService* service = nullptr;
         for ( const auto& svc : bot().service_list() )
-            if ( std::to_string(uintptr_t(svc.get())) == id )
+            if ( std::to_string(uintptr_t(svc.get())) == path[1] )
             {
                 service = svc.get();
                 break;
@@ -373,13 +431,19 @@ private:
 
         return BlockElement{
             "span",
-            Attribute("class", "status_" + status_name),
+            Attribute("class", "status_" + melanolib::string::strtolower(status_name)),
             Text(status_name)
         };
     }
 
 private:
     httpony::Path uri;
+    std::string css_file;
+    melanolib::OrderedMultimap<std::string, httpony::Path> links = {
+        {"Status", httpony::Path("")},
+        {"Connections", httpony::Path("connection")},
+        {"Services", httpony::Path("service")}
+    };
 };
 
 } // namespace web
