@@ -148,11 +148,14 @@ public:
     {
         uri = read_uri(settings);
         load_pages(settings);
+        auto range = settings.equal_range("verified_client");
+        for ( ; range.first != range.second; ++range.first )
+            verified_clients.push_back(range.first->second.data());
     }
 
     bool matches(const Request& request, const PathSuffix& path) const override
     {
-        return path.match_prefix(uri);
+        return path.match_prefix(uri) && verified(request);
     }
 
     Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
@@ -163,7 +166,16 @@ public:
     }
 
 private:
+    bool verified(const Request& request) const
+    {
+        return verified_clients.empty() ||
+            std::find(verified_clients.begin(), verified_clients.end(),
+                httpony::ssl::SslAgent::get_cert_common_name(request.connection.socket()))
+            != verified_clients.end();
+    }
+
     httpony::Path uri;
+    std::vector<std::string> verified_clients;
 };
 
 /**
