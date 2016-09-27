@@ -34,23 +34,35 @@ static melanobot::Melanobot& bot()
     return melanobot::Melanobot::instance();
 }
 
-static void connection_list(BlockElement& parent, const httpony::Path& base_path)
-{
 
-    List connections;
-    for ( const auto& conn : bot().connection_names() )
-        connections.add_item(Link((base_path / "connection" / conn).url_encoded(), conn));
-    parent.append(connections);
+std::shared_ptr<BlockElement> page_link(
+    const Request& request,
+    const httpony::Path& path,
+    const Text& text)
+{
+    if ( WebPage::PathSuffix(request.uri.path).match_exactly(path) )
+        return std::make_shared<Element>("span", text);
+    else
+        return std::make_shared<Link>(path.url_encoded(true), text);
 }
 
-static void service_list(BlockElement& parent, const httpony::Path& base_path)
+static List connection_list(const Request& request, const httpony::Path& base_path)
+{
+    List connections;
+    for ( const auto& conn : bot().connection_names() )
+        connections.add_item(page_link(request, base_path/"connection"/conn, conn));
+    return connections;
+}
+
+static List service_list(const Request& request, const httpony::Path& base_path)
 {
     List services;
     for ( const auto& svc : bot().service_list() )
-        services.add_item(Link(
-            (base_path/"service"/std::to_string(uintptr_t(svc.get()))).url_encoded(),
+        services.add_item(page_link(
+            request,
+            base_path/"service"/std::to_string(uintptr_t(svc.get())),
             svc->name()));
-    parent.append(services);
+    return services;
 }
 
 static void flatten_tree(
@@ -114,6 +126,16 @@ public:
         const httpony::Path& link_base_path
     ) const = 0;
 
+    virtual bool has_submenu() const
+    {
+        return false;
+    }
+
+    virtual List submenu(const Request& request, const httpony::Path& link_base_path) const
+    {
+        return List();
+    }
+
 private:
     std::string _name;
     httpony::Path _path;
@@ -138,9 +160,9 @@ public:
     {
         parent.append(Element{"h1", Text{PROJECT_NAME}});
         parent.append(Element{"h2", Text{"Connections"}});
-        connection_list(parent, link_base_path);
+        parent.append(connection_list(request, link_base_path));
         parent.append(Element{"h2", Text{"Services"}});
-        service_list(parent, link_base_path);
+        parent.append(service_list(request, link_base_path));
 
     }
 };
@@ -160,7 +182,7 @@ public:
         if ( path.size() == 1 )
         {
             parent.append(Element{"h1", Text{"Connections"}});
-            connection_list(parent, link_base_path);
+            parent.append(connection_list(request, link_base_path));
             return;
         }
 
@@ -200,6 +222,16 @@ public:
 
         parent.append(table);
     }
+
+    virtual bool has_submenu() const override
+    {
+        return true;
+    }
+
+    virtual List submenu(const Request& request, const httpony::Path& link_base_path) const override
+    {
+        return connection_list(request, link_base_path);
+    }
 };
 
 class Services : public StatusPage::SubPage
@@ -217,7 +249,7 @@ public:
         if ( path.size() == 1 )
         {
             parent.append(Element{"h1", Text{"Services"}});
-            service_list(parent, link_base_path);
+            parent.append(service_list(request, link_base_path));
             return;
         }
 
@@ -247,6 +279,16 @@ public:
 
         parent.append(table);
     }
+
+    virtual bool has_submenu() const override
+    {
+        return true;
+    }
+
+    virtual List submenu(const Request& request, const httpony::Path& link_base_path) const override
+    {
+        return service_list(request, link_base_path);
+    }
 };
 
 StatusPage::StatusPage(const Settings& settings)
@@ -264,7 +306,6 @@ Response StatusPage::respond(Request& request, const PathSuffix& path, const Htt
 {
     auto local_path = path.left_stripped(uri.size());
     HtmlDocument html("Bot status");
-    BlockElement contents("div", Attribute("class", "contents"));
     httpony::Path base_path = local_path.strip_path_suffix(request.uri.path).to_path();
 
     if ( !css_file.empty() )
@@ -275,30 +316,24 @@ Response StatusPage::respond(Request& request, const PathSuffix& path, const Htt
     }
 
     List nav;
-    bool found = false;
+    SubPage* current_page = nullptr;
     for ( const auto& page : sub_pages )
     {
         if ( page->match_path(local_path) )
-        {
-            found = true;
-            page->render(request, local_path, contents, base_path);
-        }
+            current_page = page.get();
 
-        if ( local_path.match_exactly(page->path()) )
-            nav.add_item(Element("span", Text(page->name())));
-        else
-            nav.add_item(Link(
-                (base_path + page->path()).url_encoded(true),
-                page->name()
-            ));
+        nav.add_item(page_link(request, base_path + page->path(), page->name()));
     }
-    if ( !found )
+    if ( !current_page )
         throw HttpError(StatusCode::NotFound);
 
-    html.body().append(
-        Element("nav", nav),
-        contents
-    );
+    html.body().append(Element("nav", Attribute("class", "menu"), nav));
+    if ( current_page->has_submenu() )
+        html.body().append(Element("nav", Attribute("class", "submenu"),
+            current_page->submenu(request, base_path)));
+    BlockElement contents("div", Attribute("class", "contents"));
+    current_page->render(request, local_path, contents, base_path);
+    html.body().append(contents);
 
     Response response("text/html", StatusCode::OK, request.protocol);
     html.print(response.body, true);
