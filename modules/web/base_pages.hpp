@@ -95,16 +95,6 @@ public:
             : range_begin(path.begin()), range_end(path.end())
         {}
 
-        bool match_prefix(const value_type& prefix) const
-        {
-            return prefix.empty() || (!empty() && *range_begin == prefix);
-        }
-
-        bool match_exactly(const value_type& prefix) const
-        {
-            return prefix.empty() || (size() == 1 && *range_begin == prefix);
-        }
-
         bool match_prefix(const httpony::Path& prefix) const
         {
             return prefix.empty() || (

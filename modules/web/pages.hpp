@@ -25,6 +25,7 @@
 #include "server.hpp"
 #include "melanobot/melanobot.hpp"
 #include "formatter_html.hpp"
+#include "config.hpp"
 
 namespace web {
 
@@ -244,6 +245,9 @@ public:
     {
         uri = read_uri(settings, "");
         css_file = settings.get("css", css_file);
+        sub_pages.push_back(melanolib::New<Home>());
+        sub_pages.push_back(melanolib::New<Connections>());
+        sub_pages.push_back(melanolib::New<Services>());
     }
 
     bool matches(const Request& request, const PathSuffix& path) const override
@@ -261,15 +265,6 @@ public:
         BlockElement contents("div", Attribute("class", "contents"));
         httpony::Path base_path = path.strip_path_suffix(request.uri.path).to_path();
 
-        if ( local_path.empty() )
-            home(contents, base_path);
-        else if ( local_path.match_prefix("connection") )
-            connection(local_path, contents, base_path);
-        else if ( local_path.match_prefix("service") )
-            service(local_path, contents, base_path);
-        else
-            throw HttpError(StatusCode::NotFound);
-
         if ( !css_file.empty() )
         {
             html.head().append(Element("link", Attributes{
@@ -278,16 +273,26 @@ public:
         }
 
         List nav;
-        for ( const auto& pair : links )
+        bool found = false;
+        for ( const auto& page : sub_pages )
         {
-            if ( local_path.match_exactly(pair.second) )
-                nav.add_item(Element("span", Text(pair.first)));
+            if ( page->match_path(local_path)  )
+            {
+                found = true;
+                page->render(request, local_path, contents, base_path);
+            }
+
+            if ( local_path.match_exactly(page->path()) )
+                nav.add_item(Element("span", Text(page->name())));
             else
                 nav.add_item(Link(
-                    (base_path + pair.second).url_encoded(true),
-                    pair.first
+                    (base_path + page->path()).url_encoded(true),
+                    page->name()
                 ));
         }
+        if ( !found )
+            throw HttpError(StatusCode::NotFound);
+
         html.body().append(
             Element("nav", nav),
             contents
@@ -300,24 +305,188 @@ public:
 
 private:
     using BlockElement = httpony::quick_xml::BlockElement;
+    class SubPage
+    {
+    public:
+        SubPage(std::string name, httpony::Path path)
+            : _name(std::move(name)), _path(std::move(path))
+        {}
+
+        virtual ~SubPage(){}
+
+        virtual bool match_path(const PathSuffix& path) const
+        {
+            return path.match_prefix(_path);
+        }
+
+        const std::string& name() const
+        {
+            return _name;
+        }
+
+        const httpony::Path& path() const
+        {
+            return _path;
+        }
+
+        virtual void render(
+            Request& request,
+            const PathSuffix& path,
+            BlockElement& parent,
+            const httpony::Path& link_base_path
+        ) const = 0;
+
+    private:
+        std::string _name;
+        httpony::Path _path;
+    };
+
+    class Home : public SubPage
+    {
+    public:
+        Home() : SubPage("Home", "") {}
+
+        bool match_path(const PathSuffix& path) const
+        {
+            return path.empty();
+        }
+
+        void render(
+            Request& request,
+            const PathSuffix& path,
+            BlockElement& parent,
+            const httpony::Path& link_base_path
+        ) const override
+        {
+            using namespace httpony::quick_xml;
+            parent.append(Element{"h1", Text{PROJECT_NAME}});
+            parent.append(Element{"h2", Text{"Connections"}});
+            connection_list(parent, link_base_path);
+            parent.append(Element{"h2", Text{"Services"}});
+            service_list(parent, link_base_path);
+
+        }
+    };
+
+    class Connections : public SubPage
+    {
+    public:
+        Connections() : SubPage("Connections", "connection") {}
+
+        void render(
+            Request& request,
+            const PathSuffix& path,
+            BlockElement& parent,
+            const httpony::Path& link_base_path
+        ) const override
+        {
+            using namespace httpony::quick_xml;
+            using namespace httpony::quick_xml::html;
+
+            if ( path.size() == 1 )
+            {
+                parent.append(Element{"h1", Text{"Connections"}});
+                connection_list(parent, link_base_path);
+                return;
+            }
+
+            if ( path.size() != 2 )
+                throw HttpError(StatusCode::NotFound);
+
+            network::Connection* conn = bot().connection(path[1]);
+            if ( !conn )
+                throw HttpError(StatusCode::NotFound);
+
+            parent.append(Element{"h1", Text{path[1]}});
+
+            Table table;
+            table.add_header_row(Text{"Property"}, Text{"Value"});
+            table.add_data_row(Text("Protocol"), Text(conn->protocol()));
+            table.add_data_row(Text("Status"), status(conn->status()));
+            table.add_data_row(Text("Name"), Text(conn->name()));
+            table.add_data_row(Text("Config Name"), Text(conn->config_name()));
+            table.add_data_row(Text("Formatter"), Text(conn->formatter()->name()));
+            table.add_data_row(Text("Server"), Text(conn->server().name()));
+
+            auto pretty = conn->pretty_properties();
+            if ( !pretty.empty() )
+            {
+                table.add_row(Element("th", Attribute("colspan", "2"), Text("Formatting")));
+                FormatterHtml formatter;
+                for ( const auto& prop : pretty )
+                    table.add_data_row(Text(prop.first), Text(prop.second.encode(formatter)));
+            }
+
+            auto internal = conn->properties().copy();
+            if ( !internal.empty() )
+            {
+                table.add_row(Element("th", Attribute("colspan", "2"), Text("Internal")));
+                flatten_tree(internal, "", table);
+            }
+
+            parent.append(table);
+        }
+    };
+
+    class Services : public SubPage
+    {
+    public:
+        Services() : SubPage("Services", "service") {}
+
+        void render(
+            Request& request,
+            const PathSuffix& path,
+            BlockElement& parent,
+            const httpony::Path& link_base_path
+        ) const override
+        {
+            using namespace httpony::quick_xml;
+            using namespace httpony::quick_xml::html;
+
+            if ( path.size() == 1 )
+            {
+                parent.append(Element{"h1", Text{"Services"}});
+                service_list(parent, link_base_path);
+                return;
+            }
+
+            if ( path.size() != 2 )
+                throw HttpError(StatusCode::NotFound);
+
+            AsyncService* service = nullptr;
+            for ( const auto& svc : bot().service_list() )
+                if ( std::to_string(uintptr_t(svc.get())) == path[1] )
+                {
+                    service = svc.get();
+                    break;
+                }
+            if ( !service )
+                throw HttpError(StatusCode::NotFound);
+
+            parent.append(Element{"h1", Text{service->name()}});
+
+            Table table;
+            table.add_header_row(Text{"Property"}, Text{"Value"});
+            table.add_data_row(Text("Status"), status(
+                service->running() ?
+                    network::Connection::CONNECTED :
+                    network::Connection::DISCONNECTED
+            ));
+            table.add_data_row(Text("Name"), Text(service->name()));
+
+            parent.append(table);
+        }
+    };
 
     static melanobot::Melanobot& bot()
     {
         return melanobot::Melanobot::instance();
     }
 
-    void home(BlockElement& parent, const httpony::Path& base_path) const
-    {
-        connection_list(parent, base_path);
-        service_list(parent, base_path);
-    }
-
-    void connection_list(BlockElement& parent, const httpony::Path& base_path) const
+    static void connection_list(BlockElement& parent, const httpony::Path& base_path)
     {
         using namespace httpony::quick_xml;
         using namespace httpony::quick_xml::html;
-
-        parent.append(Element{"h1", Text{"Connections"}});
 
         List connections;
         for ( const auto& conn : bot().connection_names() )
@@ -325,12 +494,10 @@ private:
         parent.append(connections);
     }
 
-    void service_list(BlockElement& parent, const httpony::Path& base_path) const
+    static void service_list(BlockElement& parent, const httpony::Path& base_path)
     {
         using namespace httpony::quick_xml;
         using namespace httpony::quick_xml::html;
-
-        parent.append(Element{"h1", Text{"Services"}});
 
         List services;
         for ( const auto& svc : bot().service_list() )
@@ -340,53 +507,10 @@ private:
         parent.append(services);
     }
 
-    void connection(const PathSuffix& path, BlockElement& parent, const httpony::Path& base_path) const
-    {
-        if ( path.size() == 1 )
-            return connection_list(parent, base_path);
-
-        if ( path.size() != 2 )
-            throw HttpError(StatusCode::NotFound);
-
-        using namespace httpony::quick_xml;
-        using namespace httpony::quick_xml::html;
-
-        network::Connection* conn = bot().connection(path[1]);
-        if ( !conn )
-            throw HttpError(StatusCode::NotFound);
-
-        parent.append(Element{"h1", Text{path[1]}});
-
-        Table table;
-        table.add_header_row(Text{"Property"}, Text{"Value"});
-        table.add_data_row(Text("Protocol"), Text(conn->protocol()));
-        table.add_data_row(Text("Status"), status(conn->status()));
-        table.add_data_row(Text("Name"), Text(conn->name()));
-        table.add_data_row(Text("Config Name"), Text(conn->config_name()));
-        table.add_data_row(Text("Formatter"), Text(conn->formatter()->name()));
-        table.add_data_row(Text("Server"), Text(conn->server().name()));
-
-        auto pretty = conn->pretty_properties();
-        if ( !pretty.empty() )
-        {
-            table.add_row(Element("th", Attribute("colspan", "2"), Text("Formatting")));
-            FormatterHtml formatter;
-            for ( const auto& prop : pretty )
-                table.add_data_row(Text(prop.first), Text(prop.second.encode(formatter)));
-        }
-
-        auto internal = conn->properties().copy();
-        if ( !internal.empty() )
-        {
-            table.add_row(Element("th", Attribute("colspan", "2"), Text("Internal")));
-            flatten_tree(internal, "", table);
-        }
-
-        parent.append(table);
-    }
-
-    void flatten_tree(const PropertyTree& tree, const std::string& prefix,
-                      httpony::quick_xml::html::Table& table) const
+    static void flatten_tree(
+        const PropertyTree& tree,
+        const std::string& prefix,
+        httpony::quick_xml::html::Table& table)
     {
         using namespace httpony::quick_xml;
         for ( const auto& prop : tree)
@@ -396,42 +520,7 @@ private:
         }
     }
 
-    void service(const PathSuffix& path, BlockElement& parent, const httpony::Path& base_path) const
-    {
-        if ( path.size() == 1 )
-            return service_list(parent, base_path);
-
-        if ( path.size() != 2 )
-            throw HttpError(StatusCode::NotFound);
-
-        using namespace httpony::quick_xml;
-        using namespace httpony::quick_xml::html;
-
-        AsyncService* service = nullptr;
-        for ( const auto& svc : bot().service_list() )
-            if ( std::to_string(uintptr_t(svc.get())) == path[1] )
-            {
-                service = svc.get();
-                break;
-            }
-        if ( !service )
-            throw HttpError(StatusCode::NotFound);
-
-        parent.append(Element{"h1", Text{service->name()}});
-
-        Table table;
-        table.add_header_row(Text{"Property"}, Text{"Value"});
-        table.add_data_row(Text("Status"), status(
-            service->running() ?
-                network::Connection::CONNECTED :
-                network::Connection::DISCONNECTED
-        ));
-        table.add_data_row(Text("Name"), Text(service->name()));
-
-        parent.append(table);
-    }
-
-    httpony::quick_xml::BlockElement status(network::Connection::Status status) const
+    static httpony::quick_xml::BlockElement status(network::Connection::Status status)
     {
         using namespace httpony::quick_xml;
 
@@ -451,11 +540,7 @@ private:
 private:
     httpony::Path uri;
     std::string css_file;
-    melanolib::OrderedMultimap<std::string, httpony::Path> links = {
-        {"Status", httpony::Path("")},
-        {"Connections", httpony::Path("connection")},
-        {"Services", httpony::Path("service")}
-    };
+    std::vector<std::unique_ptr<SubPage>> sub_pages;
 };
 
 } // namespace web
