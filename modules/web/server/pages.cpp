@@ -40,16 +40,72 @@ std::shared_ptr<BlockElement> page_link(
     const Text& text)
 {
     if ( UriPathSlice(request.uri.path).match_exactly(path) )
-        return std::make_shared<Element>("span", text);
+        return std::make_shared<Element>("span", text, Attribute("class", "current_page"));
     else
         return std::make_shared<Link>(path.url_encoded(true), text);
 }
+
+class ServiceStatus
+{
+public:
+    ServiceStatus(network::Connection::Status status)
+    {
+        if ( status > network::Connection::CHECKING )
+        {
+            status_name = "Connected";
+            short_name = "OK";
+        }
+        else if ( status >= network::Connection::CONNECTING )
+        {
+            status_name = "Connecting";
+            short_name = "...";
+        }
+        else
+        {
+            status_name = "Disconnected";
+            short_name = "(!)";
+        }
+    }
+
+    ServiceStatus(bool status)
+        : ServiceStatus(status ? network::Connection::CONNECTED : network::Connection::DISCONNECTED)
+        {}
+
+    const std::string& name() const
+    {
+        return status_name;
+    }
+
+    Attribute css_class() const
+    {
+        return Attribute("class", "status_" + melanolib::string::strtolower(status_name));
+    }
+
+    httpony::quick_xml::BlockElement element(const std::string& tag = "span") const
+    {
+        return BlockElement{tag, css_class(), Text(status_name)};
+    }
+
+    httpony::quick_xml::BlockElement short_element(const std::string& tag = "span") const
+    {
+        return BlockElement{tag, css_class(), Text(short_name)};
+    }
+
+
+private:
+    std::string status_name;
+    std::string short_name;
+};
 
 static List connection_list(const Request& request, const UriPath& base_path)
 {
     List connections;
     for ( const auto& conn : bot().connection_names() )
-        connections.add_item(page_link(request, base_path/"connection"/conn, conn));
+    {
+        auto link = page_link(request, base_path/"connection"/conn, conn);
+        link->append(ServiceStatus(bot().connection(conn)->status()).short_element());
+        connections.add_item(link);
+    }
     return connections;
 }
 
@@ -57,10 +113,15 @@ static List service_list(const Request& request, const UriPath& base_path)
 {
     List services;
     for ( const auto& svc : bot().service_list() )
-        services.add_item(page_link(
+    {
+        auto link = page_link(
             request,
             base_path/"service"/std::to_string(uintptr_t(svc.get())),
-            svc->name()));
+            svc->name()
+        );
+        link->append(ServiceStatus(svc->running()).short_element());
+        services.add_item(link);
+    }
     return services;
 }
 
@@ -74,21 +135,6 @@ static void flatten_tree(
         table.add_data_row(Text(prop.first), Text(prop.second.data()));
         flatten_tree(prop.second, prefix + prop.first + '.', table);
     }
-}
-
-static httpony::quick_xml::BlockElement status(network::Connection::Status status)
-{
-    std::string status_name = "Disconnected";
-    if ( status > network::Connection::CHECKING )
-        status_name = "Connected";
-    else if ( status >= network::Connection::CONNECTING )
-        status_name = "Connecting";
-
-    return BlockElement{
-        "span",
-        Attribute("class", "status_" + melanolib::string::strtolower(status_name)),
-        Text(status_name)
-    };
 }
 
 class StatusPage::SubPage
@@ -158,6 +204,15 @@ public:
     ) const override
     {
         parent.append(Element{"h1", Text{PROJECT_NAME}});
+        parent.append(Element{"h2", Text{"Build"}});
+        Table table;
+        table.add_header_row(Text{"Property"}, Text{"Value"});
+        table.add_data_row(Text{"Name"}, Text{PROJECT_NAME});
+        table.add_data_row(Text{"Version"}, Text{PROJECT_DEV_VERSION});
+        table.add_data_row(Text{"OS"}, Text{SYSTEM_NAME " " SYSTEM_VERSION});
+        table.add_data_row(Text{"Processor"}, Text{SYSTEM_PROCESSOR});
+        table.add_data_row(Text{"Compiler"}, Text{SYSTEM_COMPILER});
+        parent.append(table);
         parent.append(Element{"h2", Text{"Connections"}});
         parent.append(connection_list(request, link_base_path));
         parent.append(Element{"h2", Text{"Services"}});
@@ -178,26 +233,26 @@ public:
         const UriPath& link_base_path
     ) const override
     {
-        if ( path.size() == 1 )
+        if ( path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Connections"}});
             parent.append(connection_list(request, link_base_path));
             return;
         }
 
-        if ( path.size() != 2 )
+        if ( path.size() != 1 )
             throw HttpError(StatusCode::NotFound);
 
-        network::Connection* conn = bot().connection(path[1]);
+        network::Connection* conn = bot().connection(path[0]);
         if ( !conn )
             throw HttpError(StatusCode::NotFound);
 
-        parent.append(Element{"h1", Text{path[1]}});
+        parent.append(Element{"h1", Text{path[0]}});
 
         Table table;
         table.add_header_row(Text{"Property"}, Text{"Value"});
         table.add_data_row(Text("Protocol"), Text(conn->protocol()));
-        table.add_data_row(Text("Status"), status(conn->status()));
+        table.add_data_row(Text("Status"), ServiceStatus(conn->status()).element());
         table.add_data_row(Text("Name"), Text(conn->name()));
         table.add_data_row(Text("Config Name"), Text(conn->config_name()));
         table.add_data_row(Text("Formatter"), Text(conn->formatter()->name()));
@@ -245,19 +300,19 @@ public:
         const UriPath& link_base_path
     ) const override
     {
-        if ( path.size() == 1 )
+        if ( path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Services"}});
             parent.append(service_list(request, link_base_path));
             return;
         }
 
-        if ( path.size() != 2 )
+        if ( path.size() != 1 )
             throw HttpError(StatusCode::NotFound);
 
         AsyncService* service = nullptr;
         for ( const auto& svc : bot().service_list() )
-            if ( std::to_string(uintptr_t(svc.get())) == path[1] )
+            if ( std::to_string(uintptr_t(svc.get())) == path[0] )
             {
                 service = svc.get();
                 break;
@@ -269,11 +324,7 @@ public:
 
         Table table;
         table.add_header_row(Text{"Property"}, Text{"Value"});
-        table.add_data_row(Text("Status"), status(
-            service->running() ?
-                network::Connection::CONNECTED :
-                network::Connection::DISCONNECTED
-        ));
+        table.add_data_row(Text("Status"), ServiceStatus(service->running()).element());
         table.add_data_row(Text("Name"), Text(service->name()));
 
         parent.append(table);
@@ -290,11 +341,36 @@ public:
     }
 };
 
+class GlobalSettings : public StatusPage::SubPage
+{
+public:
+    GlobalSettings() : SubPage("Global Settings", "settings") {}
+
+    void render(
+        Request& request,
+        const PathSuffix& path,
+        BlockElement& parent,
+        const UriPath& link_base_path
+    ) const override
+    {
+        if ( !path.empty() )
+            throw HttpError(StatusCode::NotFound);
+
+        parent.append(Element{"h1", Text{"Global Settings"}});
+
+        Table table;
+        table.add_header_row(Text{"Property"}, Text{"Value"});
+        flatten_tree(settings::global_settings, "", table);
+        parent.append(table);
+    }
+};
+
 StatusPage::StatusPage(const Settings& settings)
 {
     uri = read_uri(settings, "");
     css_file = settings.get("css", css_file);
     sub_pages.push_back(melanolib::New<Home>());
+    sub_pages.push_back(melanolib::New<GlobalSettings>());
     sub_pages.push_back(melanolib::New<Connections>());
     sub_pages.push_back(melanolib::New<Services>());
 }
@@ -314,24 +390,38 @@ Response StatusPage::respond(Request& request, const UriPathSlice& path, const H
         }));
     }
 
-    List nav;
+    List menu;
+    menu.append(Attribute("class", "menu"));
     SubPage* current_page = nullptr;
     for ( const auto& page : sub_pages )
     {
         if ( page->match_path(local_path) )
             current_page = page.get();
 
-        nav.add_item(page_link(request, base_path + page->path(), page->name()));
+        menu.add_item(page_link(request, base_path + page->path(), page->name()));
     }
     if ( !current_page )
         throw HttpError(StatusCode::NotFound);
 
-    html.body().append(Element("nav", Attribute("class", "menu"), nav));
+    Element nav("nav");
+    nav.append(menu);
+
     if ( current_page->has_submenu() )
-        html.body().append(Element("nav", Attribute("class", "submenu"),
-            current_page->submenu(request, base_path)));
+    {
+        List submenu = current_page->submenu(request, base_path);
+        submenu.append(Attribute("class", "submenu"));
+        nav.append(submenu);
+    }
+
+    html.body().append(nav);
+
     BlockElement contents("div", Attribute("class", "contents"));
-    current_page->render(request, local_path, contents, base_path);
+    current_page->render(
+        request,
+        local_path.left_stripped(current_page->path().size()),
+        contents,
+        base_path
+    );
     html.body().append(contents);
 
     Response response("text/html", StatusCode::OK, request.protocol);

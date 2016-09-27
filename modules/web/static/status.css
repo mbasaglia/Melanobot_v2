@@ -1,3 +1,13 @@
+a
+{
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
 td
 {
     border: 1px solid gray;
@@ -12,7 +22,6 @@ table
 td:last-child
 {
     font-family: monospace;
-    text-align: right;
 }
 
 .status_connected
@@ -30,18 +39,48 @@ td:last-child
     color: red;
 }
 
-nav ul
+nav
 {
-    background-color: navy;
     color: yellow;
     font-size: small;
+}
+
+.menu
+{
+    background-color: #666;
+}
+
+.submenu
+{
+    background-color: #333;
+}
+
+nav ul:first-child
+{
+    border-top-left-radius: 1ex;
+    border-top-right-radius: 1ex;
+}
+
+nav ul:last-child
+{
+    border-bottom-left-radius: 1ex;
+    border-bottom-right-radius: 1ex;
+}
+
+nav ul
+{
     list-style: none;
     margin: 0;
-    padding: 0.25ex;
+    padding: 0 2ex;
+    display: flex;
 }
 nav li
 {
-    display: inline-block;
+    display: inline-flex;
+}
+nav li > a, nav li > span
+{
+    padding: 1ex;
 }
 nav a, nav a:hover, nav a:link, nav a:visited
 {
@@ -50,9 +89,10 @@ nav a, nav a:hover, nav a:link, nav a:visited
 }
 nav a:hover
 {
-    background-color: blue;
+    background-color: #aaa;
 }
-nav span
+nav span.current_page
 {
     font-weight: bold;
+    background-color: #888;
 }
