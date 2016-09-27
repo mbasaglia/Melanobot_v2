@@ -20,7 +20,7 @@
 #define HANDLER_WEB_API_HPP
 
 #include "melanobot/handler.hpp"
-#include "http.hpp"
+#include "../client/http.hpp"
 #include "httpony/formats/json.hpp"
 
 namespace web {

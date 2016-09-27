@@ -20,7 +20,7 @@
 #define MELANOBOT_MODULE_GITHUB_EVENT_SOURCE_HPP
 
 
-#include "web/http.hpp"
+#include "web/client/http.hpp"
 #include "melanolib/time/date_time.hpp"
 
 namespace github {

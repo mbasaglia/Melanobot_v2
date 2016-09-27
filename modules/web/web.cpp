@@ -16,9 +16,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "web-api-concrete.hpp"
-#include "http.hpp"
-#include "pages.hpp"
+#include "handler/web-api-concrete.hpp"
+#include "client/http.hpp"
+#include "server/pages.hpp"
 #include "module/melanomodule.hpp"
 
 /**

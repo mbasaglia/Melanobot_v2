@@ -19,7 +19,7 @@
 #ifndef MELANOBOT_MODULE_GITHUB_GITIO_HPP
 #define MELANOBOT_MODULE_GITHUB_GITIO_HPP
 
-#include "web/http.hpp"
+#include "web/client/http.hpp"
 
 namespace github {
 

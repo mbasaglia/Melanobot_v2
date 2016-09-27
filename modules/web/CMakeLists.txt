@@ -15,10 +15,10 @@
 melanomodule(web "Web stuff (HTTP and friends)" ON)
 
 set(SOURCES
-http.cpp
+client/http.cpp
 web.cpp
-web-api-concrete.cpp
-server.cpp
+handler/web-api-concrete.cpp
+server/server.cpp
 )
 
 if(${MODULE_ENABLED})

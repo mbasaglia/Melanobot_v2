@@ -24,7 +24,7 @@
 #include "melanobot/handler.hpp"
 #include "melanolib/string/text_generator.hpp"
 #include "settings.hpp"
-#include "web/base_pages.hpp"
+#include "web/server/base_pages.hpp"
 
 namespace fun {
 

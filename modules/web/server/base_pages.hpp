@@ -21,7 +21,7 @@
 #ifndef MELANOBOT_MODULE_WEB_BASE_PAGES_HPP
 #define MELANOBOT_MODULE_WEB_BASE_PAGES_HPP
 
-#include "aliases.hpp"
+#include "../aliases.hpp"
 #include "settings.hpp"
 #include "string/logger.hpp"
 

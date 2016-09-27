@@ -25,7 +25,7 @@
 #include <boost/filesystem.hpp>
 
 #include "core/handler/bridge.hpp"
-#include "web/web-api.hpp"
+#include "web/handler/web-api.hpp"
 #include "melanolib/math/random.hpp"
 #include "melanolib/time/time_string.hpp"
 
