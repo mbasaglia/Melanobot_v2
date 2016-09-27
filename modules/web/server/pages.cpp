@@ -34,19 +34,18 @@ static melanobot::Melanobot& bot()
     return melanobot::Melanobot::instance();
 }
 
-
 std::shared_ptr<BlockElement> page_link(
     const Request& request,
-    const httpony::Path& path,
+    const UriPath& path,
     const Text& text)
 {
-    if ( WebPage::PathSuffix(request.uri.path).match_exactly(path) )
+    if ( UriPathSlice(request.uri.path).match_exactly(path) )
         return std::make_shared<Element>("span", text);
     else
         return std::make_shared<Link>(path.url_encoded(true), text);
 }
 
-static List connection_list(const Request& request, const httpony::Path& base_path)
+static List connection_list(const Request& request, const UriPath& base_path)
 {
     List connections;
     for ( const auto& conn : bot().connection_names() )
@@ -54,7 +53,7 @@ static List connection_list(const Request& request, const httpony::Path& base_pa
     return connections;
 }
 
-static List service_list(const Request& request, const httpony::Path& base_path)
+static List service_list(const Request& request, const UriPath& base_path)
 {
     List services;
     for ( const auto& svc : bot().service_list() )
@@ -96,9 +95,9 @@ class StatusPage::SubPage
 {
 public:
     using BlockElement = httpony::quick_xml::BlockElement;
-    using PathSuffix = WebPage::PathSuffix;
+    using PathSuffix = UriPathSlice;
 
-    SubPage(std::string name, httpony::Path path)
+    SubPage(std::string name, UriPath path)
         : _name(std::move(name)), _path(std::move(path))
     {}
 
@@ -114,7 +113,7 @@ public:
         return _name;
     }
 
-    const httpony::Path& path() const
+    const UriPath& path() const
     {
         return _path;
     }
@@ -123,7 +122,7 @@ public:
         Request& request,
         const PathSuffix& path,
         BlockElement& parent,
-        const httpony::Path& link_base_path
+        const UriPath& link_base_path
     ) const = 0;
 
     virtual bool has_submenu() const
@@ -131,14 +130,14 @@ public:
         return false;
     }
 
-    virtual List submenu(const Request& request, const httpony::Path& link_base_path) const
+    virtual List submenu(const Request& request, const UriPath& link_base_path) const
     {
         return List();
     }
 
 private:
     std::string _name;
-    httpony::Path _path;
+    UriPath _path;
 };
 
 class Home : public StatusPage::SubPage
@@ -155,7 +154,7 @@ public:
         Request& request,
         const PathSuffix& path,
         BlockElement& parent,
-        const httpony::Path& link_base_path
+        const UriPath& link_base_path
     ) const override
     {
         parent.append(Element{"h1", Text{PROJECT_NAME}});
@@ -176,7 +175,7 @@ public:
         Request& request,
         const PathSuffix& path,
         BlockElement& parent,
-        const httpony::Path& link_base_path
+        const UriPath& link_base_path
     ) const override
     {
         if ( path.size() == 1 )
@@ -228,7 +227,7 @@ public:
         return true;
     }
 
-    virtual List submenu(const Request& request, const httpony::Path& link_base_path) const override
+    virtual List submenu(const Request& request, const UriPath& link_base_path) const override
     {
         return connection_list(request, link_base_path);
     }
@@ -243,7 +242,7 @@ public:
         Request& request,
         const PathSuffix& path,
         BlockElement& parent,
-        const httpony::Path& link_base_path
+        const UriPath& link_base_path
     ) const override
     {
         if ( path.size() == 1 )
@@ -285,7 +284,7 @@ public:
         return true;
     }
 
-    virtual List submenu(const Request& request, const httpony::Path& link_base_path) const override
+    virtual List submenu(const Request& request, const UriPath& link_base_path) const override
     {
         return service_list(request, link_base_path);
     }
@@ -302,11 +301,11 @@ StatusPage::StatusPage(const Settings& settings)
 
 StatusPage::~StatusPage() = default;
 
-Response StatusPage::respond(Request& request, const PathSuffix& path, const HttpServer& sv) const
+Response StatusPage::respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const
 {
     auto local_path = path.left_stripped(uri.size());
     HtmlDocument html("Bot status");
-    httpony::Path base_path = local_path.strip_path_suffix(request.uri.path).to_path();
+    UriPath base_path = local_path.strip_path_suffix(request.uri.path).to_path();
 
     if ( !css_file.empty() )
     {

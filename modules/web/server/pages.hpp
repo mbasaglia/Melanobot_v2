@@ -49,12 +49,12 @@ public:
         /// \todo blacklist patterns
     }
 
-    bool matches(const Request& request, const PathSuffix& path) const override
+    bool matches(const Request& request, const UriPathSlice& path) const override
     {
         return path.match_prefix(uri) && boost::filesystem::is_regular(full_path(path));
     }
 
-    Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
+    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override
     {
         auto file_path = full_path(path);
         std::ifstream input(file_path.string());
@@ -80,7 +80,7 @@ protected:
         return default_mime_type;
     }
 
-    boost::filesystem::path full_path(const PathSuffix& path) const
+    boost::filesystem::path full_path(const UriPathSlice& path) const
     {
         auto file_path = directory;
         for ( const auto& dir : path.left_stripped(uri.size()) )
@@ -90,7 +90,7 @@ protected:
 
 private:
     boost::filesystem::path directory;
-    httpony::Path uri;
+    UriPath uri;
     std::unordered_map<std::string, MimeType> extension_to_mime;
     MimeType default_mime_type = "application/octet-stream";
 };
@@ -109,12 +109,12 @@ public:
         mime_type = settings.get("mime_type", mime_type.string());
     }
 
-    bool matches(const Request& request, const PathSuffix& path) const override
+    bool matches(const Request& request, const UriPathSlice& path) const override
     {
         return path.match_exactly(uri);
     }
 
-    Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
+    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override
     {
         std::ifstream input(file_path);
         if ( !input.is_open() )
@@ -132,7 +132,7 @@ public:
 
 private:
     std::string file_path;
-    httpony::Path uri;
+    UriPath uri;
     MimeType mime_type = "application/octet-stream";
 };
 
@@ -151,12 +151,12 @@ public:
             verified_clients.push_back(range.first->second.data());
     }
 
-    bool matches(const Request& request, const PathSuffix& path) const override
+    bool matches(const Request& request, const UriPathSlice& path) const override
     {
         return path.match_prefix(uri) && verified(request);
     }
 
-    Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override
+    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override
     {
         return HttpRequestHandler::respond(
             request, StatusCode::OK, path.left_stripped(uri.size()), sv
@@ -172,7 +172,7 @@ private:
             != verified_clients.end();
     }
 
-    httpony::Path uri;
+    UriPath uri;
     std::vector<std::string> verified_clients;
 };
 
@@ -242,15 +242,15 @@ public:
     explicit StatusPage(const Settings& settings);
     ~StatusPage();
 
-    bool matches(const Request& request, const PathSuffix& path) const override
+    bool matches(const Request& request, const UriPathSlice& path) const override
     {
         return path.match_prefix(uri);
     }
 
-    Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const override;
+    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override;
 
 private:
-    httpony::Path uri;
+    UriPath uri;
     std::string css_file;
     std::vector<std::unique_ptr<SubPage>> sub_pages;
 };

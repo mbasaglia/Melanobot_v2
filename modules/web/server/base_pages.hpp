@@ -79,87 +79,14 @@ public:
 class WebPage
 {
 public:
-    class PathSuffix
-    {
-    public:
-        using value_type = httpony::Path::value_type;
-        using reference = httpony::Path::const_reference;
-        using iterator = httpony::Path::const_iterator;
-        using reverse_iterator = httpony::Path::const_reverse_iterator;
-        using size_type = httpony::Path::size_type;
-
-        PathSuffix(iterator begin, iterator end)
-            : range_begin(begin), range_end(end)
-        {}
-        PathSuffix(const httpony::Path& path)
-            : range_begin(path.begin()), range_end(path.end())
-        {}
-
-        bool match_prefix(const httpony::Path& prefix) const
-        {
-            return prefix.empty() || (
-                size() >= prefix.size() &&
-                std::equal(prefix.begin(), prefix.end(), range_begin)
-            );
-        }
-
-        bool match_suffix(const httpony::Path& suffix) const
-        {
-            return suffix.empty() || (
-                size() >= suffix.size() &&
-                std::equal(suffix.rbegin(), suffix.rend(), rbegin())
-            );
-        }
-
-        bool match_exactly(const httpony::Path& suffix) const
-        {
-            return std::equal(suffix.begin(), suffix.end(), range_begin, range_end);
-        }
-
-        PathSuffix left_stripped(size_type count) const
-        {
-            return {melanolib::math::min(range_begin + count, range_end), range_end};
-        }
-
-        /**
-         * \brief Strips the longest matching suffix from \p path
-         */
-        PathSuffix strip_path_suffix(const httpony::Path& path) const
-        {
-            auto iter_pair = std::mismatch(path.rbegin(), path.rend(), rbegin(), rend());
-            return PathSuffix(path.begin(), iter_pair.first.base());
-        }
-
-        httpony::Path to_path() const
-        {
-            return httpony::Path(range_begin, range_end);
-        }
-
-        reference operator[](const size_type pos) const
-        {
-            return range_begin[pos];
-        }
-
-        iterator begin() const { return range_begin; }
-        iterator end() const { return range_end; }
-        reverse_iterator rbegin() const { return reverse_iterator(range_end); }
-        reverse_iterator rend() const { return reverse_iterator(range_begin); }
-        size_type size() const { return range_end - range_begin; }
-        bool empty() const { return range_end <= range_begin; }
-
-    private:
-        iterator range_begin;
-        iterator range_end;
-    };
-
     virtual ~WebPage() {}
 
-    virtual bool matches(const Request& request, const PathSuffix& path) const
+    virtual bool matches(const Request& request, const UriPathSlice& path) const
     {
         return true;
     }
 
-    virtual Response respond(Request& request, const PathSuffix& path, const HttpServer& sv) const = 0;
+    virtual Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const = 0;
 
 protected:
     UriPath read_uri(const Settings& settings, const std::string& default_value = "") const
@@ -231,7 +158,7 @@ public:
      */
     Response respond(Request& request,
                      const Status& status,
-                     const WebPage::PathSuffix& suffix,
+                     const UriPathSlice& suffix,
                      const HttpServer& sv) const
     {
         Response response;
@@ -296,7 +223,7 @@ private:
     /**
      * \brief Finds a response for the given request
      */
-    Response get_response(Request& request, const WebPage::PathSuffix& suffix,
+    Response get_response(Request& request, const UriPathSlice& suffix,
                           const HttpServer& sv) const
     {
         try

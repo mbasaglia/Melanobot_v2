@@ -403,12 +403,12 @@ public:
         raw_link = settings.get("raw_link", raw_link);
     }
 
-    bool matches(const web::Request& request, const PathSuffix& path) const override
+    bool matches(const web::Request& request, const web::UriPathSlice& path) const override
     {
         return path.match_exactly(uri);
     }
 
-    web::Response respond(web::Request& request, const PathSuffix& path, const web::HttpServer& sv) const override
+    web::Response respond(web::Request& request, const web::UriPathSlice& path, const web::HttpServer& sv) const override
     {
         web::Response response(request.protocol);
 
@@ -502,12 +502,12 @@ public:
         uri = read_uri(settings);
     }
 
-    bool matches(const web::Request& request, const PathSuffix& path) const override
+    bool matches(const web::Request& request, const web::UriPathSlice& path) const override
     {
         return path.match_prefix(uri);
     }
 
-    web::Response respond(web::Request& request, const PathSuffix& path, const web::HttpServer& sv) const override
+    web::Response respond(web::Request& request, const web::UriPathSlice& path, const web::HttpServer& sv) const override
     {
 
         std::string character;

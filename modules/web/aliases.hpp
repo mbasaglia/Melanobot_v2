@@ -36,6 +36,7 @@ using httpony::Status;
 using httpony::StatusCode;
 using httpony::MimeType;
 using UriPath = httpony::Path;
+using UriPathSlice = httpony::PathSlice;
 
 } // namespace web
 #endif // MELANOBOT_MODULE_WEB_ALIASES_HPP
