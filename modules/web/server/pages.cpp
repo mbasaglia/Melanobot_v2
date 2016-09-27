@@ -265,7 +265,7 @@ Response StatusPage::respond(Request& request, const PathSuffix& path, const Htt
     auto local_path = path.left_stripped(uri.size());
     HtmlDocument html("Bot status");
     BlockElement contents("div", Attribute("class", "contents"));
-    httpony::Path base_path = path.strip_path_suffix(request.uri.path).to_path();
+    httpony::Path base_path = local_path.strip_path_suffix(request.uri.path).to_path();
 
     if ( !css_file.empty() )
     {
@@ -278,7 +278,7 @@ Response StatusPage::respond(Request& request, const PathSuffix& path, const Htt
     bool found = false;
     for ( const auto& page : sub_pages )
     {
-        if ( page->match_path(local_path)  )
+        if ( page->match_path(local_path) )
         {
             found = true;
             page->render(request, local_path, contents, base_path);
