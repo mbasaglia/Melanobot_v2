@@ -137,6 +137,36 @@ private:
 };
 
 /**
+ * \todo Allow regexes and parametrized expansions
+ * \todo Add configurable headers to the response
+ */
+class Redirect : public WebPage
+{
+public:
+    explicit Redirect(const Settings& settings)
+    {
+        destination = settings.get("destination", destination);
+        uri = read_uri(settings);
+        status = settings.get<Status>("status", StatusCode::Found);
+    }
+
+    bool matches(const RequestItem& request) const override
+    {
+        return request.path.match_exactly(uri);
+    }
+
+    Response respond(const RequestItem& request) const override
+    {
+        return Response::redirect(destination, status);
+    }
+
+private:
+    std::string destination;
+    UriPath uri;
+    Status status;
+};
+
+/**
  * \brief Groups pages under a common prefix
  */
 class PageDirectory : public HttpRequestHandler, public WebPage
