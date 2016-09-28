@@ -79,14 +79,40 @@ public:
 class WebPage
 {
 public:
+    struct RequestItem
+    {
+        RequestItem(Request& request, const HttpServer& server)
+            : request(request), path(request.uri.path), server(server)
+        {}
+
+        RequestItem(Request& request, UriPathSlice slice, const HttpServer& server)
+            : request(request), path(slice), server(server)
+        {}
+
+        RequestItem descend(const UriPath& prefix) const
+        {
+            return RequestItem(request, path.left_stripped(prefix.size()), server);
+        }
+
+        UriPath base_path() const
+        {
+            return path.strip_path_suffix(request.uri.path).to_path();
+        }
+
+        Request& request;
+        UriPathSlice path;
+        const HttpServer& server;
+    };
+
+
     virtual ~WebPage() {}
 
-    virtual bool matches(const Request& request, const UriPathSlice& path) const
+    virtual bool matches(const RequestItem& request) const
     {
         return true;
     }
 
-    virtual Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const = 0;
+    virtual Response respond(const RequestItem& request) const = 0;
 
 protected:
     UriPath read_uri(const Settings& settings, const std::string& default_value = "") const
@@ -156,16 +182,14 @@ public:
     /**
      * \brief Finds a response for the given request and suggested status
      */
-    Response respond(Request& request,
-                     const Status& status,
-                     const UriPathSlice& suffix,
-                     const HttpServer& sv) const
+    Response respond(const WebPage::RequestItem& request,
+                     const Status& status) const
     {
         Response response;
         if ( status.is_error() )
-            response = handle_error(request, status, sv, 0);
+            response = handle_error(request, status, 0);
         else
-            response = get_response(request, suffix, sv);
+            response = get_response(request);
         return response;
     }
 
@@ -192,8 +216,9 @@ private:
      * If more than \p max_error_depth errors happen during error handling,
      * a built-in response is generated
      */
-    Response handle_error(Request& request, const Status& status,
-                          const HttpServer& sv, int depth) const
+    Response handle_error(const WebPage::RequestItem& request,
+                          const Status& status,
+                          int depth) const
     {
         if ( depth < max_error_depth )
         {
@@ -201,53 +226,52 @@ private:
             {
                 for ( const auto& ep : error_pages )
                 {
-                    if ( ep->matches(status, request) )
-                        return ep->respond(status, request, sv);
+                    if ( ep->matches(status, request.request) )
+                        return ep->respond(status, request.request, request.server);
                 }
-                return ErrorPage::canned_response(status, request.protocol);
+                return ErrorPage::canned_response(status, request.request.protocol);
             }
             catch ( const HttpError& error )
             {
                 if ( error.status() != status )
-                    return handle_error(request, error.status(), sv, depth + 1);
+                    return handle_error(request, error.status(), depth + 1);
             }
             catch ( const std::exception& error )
             {
                 if ( status != httpony::StatusCode::InternalServerError )
-                    return handle_error(request, httpony::StatusCode::InternalServerError, sv, depth + 1);
+                    return handle_error(request, httpony::StatusCode::InternalServerError, depth + 1);
             }
         }
-        return unhandled_error(request, status, sv);
+        return unhandled_error(request, status);
     }
 
     /**
      * \brief Finds a response for the given request
      */
-    Response get_response(Request& request, const UriPathSlice& suffix,
-                          const HttpServer& sv) const
+    Response get_response(const WebPage::RequestItem& request) const
     {
         try
         {
             for ( const auto& page : web_pages )
             {
-                if ( page->matches(request, suffix) )
-                    return page->respond(request, suffix, sv);
+                if ( page->matches(request) )
+                    return page->respond(request);
             }
-            return handle_error(request, httpony::StatusCode::NotFound, sv, 0);
+            return handle_error(request, httpony::StatusCode::NotFound, 0);
         }
         catch ( const HttpError& error )
         {
-            return handle_error(request, error.status(), sv, 0);
+            return handle_error(request, error.status(), 0);
         }
         catch ( const std::exception& error )
         {
-            return handle_error(request, httpony::StatusCode::InternalServerError, sv, 0);
+            return handle_error(request, httpony::StatusCode::InternalServerError, 0);
         }
     }
 
-    virtual Response unhandled_error(const Request& request,
-                                     const Status& status,
-                                     const HttpServer& sv) const
+    virtual Response unhandled_error(
+        const WebPage::RequestItem& request,
+        const Status& status) const
     {
         throw HttpError(status);
     }

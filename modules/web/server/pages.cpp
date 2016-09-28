@@ -97,26 +97,26 @@ private:
     std::string short_name;
 };
 
-static List connection_list(const Request& request, const UriPath& base_path)
+static List connection_list(const WebPage::RequestItem& request)
 {
     List connections;
     for ( const auto& conn : bot().connection_names() )
     {
-        auto link = page_link(request, base_path/"connection"/conn, conn);
+        auto link = page_link(request.request, request.base_path()/"connection"/conn, conn);
         link->append(ServiceStatus(bot().connection(conn)->status()).short_element());
         connections.add_item(link);
     }
     return connections;
 }
 
-static List service_list(const Request& request, const UriPath& base_path)
+static List service_list(const WebPage::RequestItem& request)
 {
     List services;
     for ( const auto& svc : bot().service_list() )
     {
         auto link = page_link(
-            request,
-            base_path/"service"/std::to_string(uintptr_t(svc.get())),
+            request.request,
+            request.base_path()/"service"/std::to_string(uintptr_t(svc.get())),
             svc->name()
         );
         link->append(ServiceStatus(svc->running()).short_element());
@@ -142,6 +142,7 @@ class StatusPage::SubPage
 public:
     using BlockElement = httpony::quick_xml::BlockElement;
     using PathSuffix = UriPathSlice;
+    using RequestItem = WebPage::RequestItem;
 
     SubPage(std::string name, UriPath path)
         : _name(std::move(name)), _path(std::move(path))
@@ -164,19 +165,14 @@ public:
         return _path;
     }
 
-    virtual void render(
-        Request& request,
-        const PathSuffix& path,
-        BlockElement& parent,
-        const UriPath& link_base_path
-    ) const = 0;
+    virtual void render(const RequestItem& request, BlockElement& parent) const = 0;
 
     virtual bool has_submenu() const
     {
         return false;
     }
 
-    virtual List submenu(const Request& request, const UriPath& link_base_path) const
+    virtual List submenu(const RequestItem& request) const
     {
         return List();
     }
@@ -196,12 +192,7 @@ public:
         return path.empty();
     }
 
-    void render(
-        Request& request,
-        const PathSuffix& path,
-        BlockElement& parent,
-        const UriPath& link_base_path
-    ) const override
+    void render(const RequestItem& request, BlockElement& parent) const override
     {
         parent.append(Element{"h1", Text{PROJECT_NAME}});
         parent.append(Element{"h2", Text{"Build"}});
@@ -214,9 +205,9 @@ public:
         table.add_data_row(Text{"Compiler"}, Text{SYSTEM_COMPILER});
         parent.append(table);
         parent.append(Element{"h2", Text{"Connections"}});
-        parent.append(connection_list(request, link_base_path));
+        parent.append(connection_list(request));
         parent.append(Element{"h2", Text{"Services"}});
-        parent.append(service_list(request, link_base_path));
+        parent.append(service_list(request));
 
     }
 };
@@ -226,28 +217,23 @@ class Connections : public StatusPage::SubPage
 public:
     Connections() : SubPage("Connections", "connection") {}
 
-    void render(
-        Request& request,
-        const PathSuffix& path,
-        BlockElement& parent,
-        const UriPath& link_base_path
-    ) const override
+    void render(const RequestItem& request, BlockElement& parent) const override
     {
-        if ( path.size() == 0 )
+        if ( request.path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Connections"}});
-            parent.append(connection_list(request, link_base_path));
+            parent.append(connection_list(request));
             return;
         }
 
-        if ( path.size() != 1 )
+        if ( request.path.size() != 1 )
             throw HttpError(StatusCode::NotFound);
 
-        network::Connection* conn = bot().connection(path[0]);
+        network::Connection* conn = bot().connection(request.path[0]);
         if ( !conn )
             throw HttpError(StatusCode::NotFound);
 
-        parent.append(Element{"h1", Text{path[0]}});
+        parent.append(Element{"h1", Text{request.path[0]}});
 
         Table table;
         table.add_header_row(Text{"Property"}, Text{"Value"});
@@ -282,9 +268,9 @@ public:
         return true;
     }
 
-    virtual List submenu(const Request& request, const UriPath& link_base_path) const override
+    virtual List submenu(const RequestItem& request) const override
     {
-        return connection_list(request, link_base_path);
+        return connection_list(request);
     }
 };
 
@@ -293,26 +279,21 @@ class Services : public StatusPage::SubPage
 public:
     Services() : SubPage("Services", "service") {}
 
-    void render(
-        Request& request,
-        const PathSuffix& path,
-        BlockElement& parent,
-        const UriPath& link_base_path
-    ) const override
+    void render(const RequestItem& request, BlockElement& parent) const override
     {
-        if ( path.size() == 0 )
+        if ( request.path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Services"}});
-            parent.append(service_list(request, link_base_path));
+            parent.append(service_list(request));
             return;
         }
 
-        if ( path.size() != 1 )
+        if ( request.path.size() != 1 )
             throw HttpError(StatusCode::NotFound);
 
         AsyncService* service = nullptr;
         for ( const auto& svc : bot().service_list() )
-            if ( std::to_string(uintptr_t(svc.get())) == path[0] )
+            if ( std::to_string(uintptr_t(svc.get())) == request.path[0] )
             {
                 service = svc.get();
                 break;
@@ -335,9 +316,9 @@ public:
         return true;
     }
 
-    virtual List submenu(const Request& request, const UriPath& link_base_path) const override
+    virtual List submenu(const RequestItem& request) const override
     {
-        return service_list(request, link_base_path);
+        return service_list(request);
     }
 };
 
@@ -346,14 +327,9 @@ class GlobalSettings : public StatusPage::SubPage
 public:
     GlobalSettings() : SubPage("Global Settings", "settings") {}
 
-    void render(
-        Request& request,
-        const PathSuffix& path,
-        BlockElement& parent,
-        const UriPath& link_base_path
-    ) const override
+    void render(const RequestItem& request, BlockElement& parent) const override
     {
-        if ( !path.empty() )
+        if ( !request.path.empty() )
             throw HttpError(StatusCode::NotFound);
 
         parent.append(Element{"h1", Text{"Global Settings"}});
@@ -377,11 +353,10 @@ StatusPage::StatusPage(const Settings& settings)
 
 StatusPage::~StatusPage() = default;
 
-Response StatusPage::respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const
+Response StatusPage::respond(const RequestItem& request) const
 {
-    auto local_path = path.left_stripped(uri.size());
+    RequestItem local_item = request.descend(uri);
     HtmlDocument html("Bot status");
-    UriPath base_path = local_path.strip_path_suffix(request.uri.path).to_path();
 
     if ( !css_file.empty() )
     {
@@ -395,10 +370,10 @@ Response StatusPage::respond(Request& request, const UriPathSlice& path, const H
     SubPage* current_page = nullptr;
     for ( const auto& page : sub_pages )
     {
-        if ( page->match_path(local_path) )
+        if ( page->match_path(local_item.path) )
             current_page = page.get();
 
-        menu.add_item(page_link(request, base_path + page->path(), page->name()));
+        menu.add_item(page_link(request.request, local_item.base_path() / page->path(), page->name()));
     }
     if ( !current_page )
         throw HttpError(StatusCode::NotFound);
@@ -408,7 +383,7 @@ Response StatusPage::respond(Request& request, const UriPathSlice& path, const H
 
     if ( current_page->has_submenu() )
     {
-        List submenu = current_page->submenu(request, base_path);
+        List submenu = current_page->submenu(local_item);
         submenu.append(Attribute("class", "submenu"));
         nav.append(submenu);
     }
@@ -416,15 +391,10 @@ Response StatusPage::respond(Request& request, const UriPathSlice& path, const H
     html.body().append(nav);
 
     BlockElement contents("div", Attribute("class", "contents"));
-    current_page->render(
-        request,
-        local_path.left_stripped(current_page->path().size()),
-        contents,
-        base_path
-    );
+    current_page->render(local_item.descend(current_page->path()), contents);
     html.body().append(contents);
 
-    Response response("text/html", StatusCode::OK, request.protocol);
+    Response response("text/html", StatusCode::OK, request.request.protocol);
     html.print(response.body, true);
     return response;
 }

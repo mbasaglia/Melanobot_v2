@@ -49,18 +49,18 @@ public:
         /// \todo blacklist patterns
     }
 
-    bool matches(const Request& request, const UriPathSlice& path) const override
+    bool matches(const RequestItem& request) const override
     {
-        return path.match_prefix(uri) && boost::filesystem::is_regular(full_path(path));
+        return request.path.match_prefix(uri) && boost::filesystem::is_regular(full_path(request.path));
     }
 
-    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override
+    Response respond(const RequestItem& request) const override
     {
-        auto file_path = full_path(path);
+        auto file_path = full_path(request.path);
         std::ifstream input(file_path.string());
         if ( !input.is_open() )
             throw HttpError(StatusCode::NotFound);
-        Response response(mime(file_path), StatusCode::OK, request.protocol);
+        Response response(mime(file_path), StatusCode::OK, request.request.protocol);
         std::array<char, 1024> chunk;
         while ( input.good() )
         {
@@ -109,17 +109,17 @@ public:
         mime_type = settings.get("mime_type", mime_type.string());
     }
 
-    bool matches(const Request& request, const UriPathSlice& path) const override
+    bool matches(const RequestItem& request) const override
     {
-        return path.match_exactly(uri);
+        return request.path.match_exactly(uri);
     }
 
-    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override
+    Response respond(const RequestItem& request) const override
     {
         std::ifstream input(file_path);
         if ( !input.is_open() )
             throw HttpError(StatusCode::InternalServerError);
-        Response response(mime_type, StatusCode::OK, request.protocol);
+        Response response(mime_type, StatusCode::OK, request.request.protocol);
         std::array<char, 1024> chunk;
         while ( input.good() )
         {
@@ -151,16 +151,14 @@ public:
             verified_clients.push_back(range.first->second.data());
     }
 
-    bool matches(const Request& request, const UriPathSlice& path) const override
+    bool matches(const RequestItem& request) const override
     {
-        return path.match_prefix(uri) && verified(request);
+        return request.path.match_prefix(uri) && verified(request.request);
     }
 
-    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override
+    Response respond(const RequestItem& request) const override
     {
-        return HttpRequestHandler::respond(
-            request, StatusCode::OK, path.left_stripped(uri.size()), sv
-        );
+        return HttpRequestHandler::respond(request.descend(uri), StatusCode::OK);
     }
 
 private:
@@ -242,12 +240,12 @@ public:
     explicit StatusPage(const Settings& settings);
     ~StatusPage();
 
-    bool matches(const Request& request, const UriPathSlice& path) const override
+    bool matches(const RequestItem& request) const override
     {
-        return path.match_prefix(uri);
+        return request.path.match_prefix(uri);
     }
 
-    Response respond(Request& request, const UriPathSlice& path, const HttpServer& sv) const override;
+    Response respond(const RequestItem& request) const override;
 
 private:
     UriPath uri;

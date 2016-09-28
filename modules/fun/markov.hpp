@@ -403,19 +403,19 @@ public:
         raw_link = settings.get("raw_link", raw_link);
     }
 
-    bool matches(const web::Request& request, const web::UriPathSlice& path) const override
+    bool matches(const RequestItem& request) const override
     {
-        return path.match_exactly(uri);
+        return request.path.match_exactly(uri);
     }
 
-    web::Response respond(web::Request& request, const web::UriPathSlice& path, const web::HttpServer& sv) const override
+    web::Response respond(const RequestItem& request) const override
     {
-        web::Response response(request.protocol);
+        web::Response response(request.request.protocol);
 
         using namespace httpony::quick_xml::html;
         using namespace httpony::quick_xml;
 
-        std::string selected = request.uri.query["character"];
+        std::string selected = request.request.uri.query["character"];
         Select select_pony("character");
         select_pony.append(Option("", selected == "", false, Text{"Random"}));
         for ( const auto& item : generators )
@@ -442,18 +442,18 @@ public:
                 },
                 Element{"p",
                     Label("prompt", "Prompt"),
-                    Input("prompt", "text", request.uri.query["prompt"])},
+                    Input("prompt", "text", request.request.uri.query["prompt"])},
                 Element{"p",
                     Label("min-words", "Min words"),
                     Input("min-words", "number",
-                          request.uri.query.get("min-words", "5"),
+                          request.request.uri.query.get("min-words", "5"),
                           Attribute{"min", "0"},
                           Attribute{"max", std::to_string(max_words)}
                     )},
                 Element{"p",
                     Label("enough-words", "Enough words"),
                     Input("enough-words", "number",
-                          request.uri.query.get("enough-words", "10"),
+                          request.request.uri.query.get("enough-words", "10"),
                           Attribute{"min", "0"},
                           Attribute{"max", std::to_string(max_words)}
                     )},
@@ -461,14 +461,14 @@ public:
             }
         );
 
-        if ( request.uri.query.contains("submit") )
+        if ( request.request.uri.query.contains("submit") )
         {
             std::string result;
             generate(
-                request.uri.query["character"],
-                request.uri.query["prompt"],
-                melanolib::string::to_uint(request.uri.query["min-words"]),
-                melanolib::string::to_uint(request.uri.query["enough-words"]),
+                request.request.uri.query["character"],
+                request.request.uri.query["prompt"],
+                melanolib::string::to_uint(request.request.uri.query["min-words"]),
+                melanolib::string::to_uint(request.request.uri.query["enough-words"]),
                 result
             );
             html.body().append(
@@ -502,32 +502,31 @@ public:
         uri = read_uri(settings);
     }
 
-    bool matches(const web::Request& request, const web::UriPathSlice& path) const override
+    bool matches(const RequestItem& request) const override
     {
-        return path.match_prefix(uri);
+        return request.path.match_prefix(uri);
     }
 
-    web::Response respond(web::Request& request, const web::UriPathSlice& path, const web::HttpServer& sv) const override
+    web::Response respond(const RequestItem& request) const override
     {
-
         std::string character;
-        if ( path.size() > uri.size() )
-            character = path[uri.size()];
+        if ( request.path.size() > uri.size() )
+            character = request.path[uri.size()];
         else
-            character = request.uri.query["character"];
+            character = request.request.uri.query["character"];
         std::string result;
         auto generated_ok = generate(
             character,
-            request.uri.query["prompt"],
-            melanolib::string::to_uint(request.uri.query["min-words"]),
-            melanolib::string::to_uint(request.uri.query["enough-words"]),
+            request.request.uri.query["prompt"],
+            melanolib::string::to_uint(request.request.uri.query["min-words"]),
+            melanolib::string::to_uint(request.request.uri.query["enough-words"]),
             result
         );
 
         if ( !generated_ok )
             throw web::HttpError(web::StatusCode::NotFound);
 
-        web::Response response("text/plain; charset=utf-8", {}, request.protocol);
+        web::Response response("text/plain; charset=utf-8", {}, request.request.protocol);
         response.body << result << "\r\n";
         return response;
     }

@@ -81,9 +81,9 @@ private:
         Log("wsv", '<') << format_info(log_format, request, response);
     }
 
-    Response unhandled_error(const Request& request, const Status& status, const HttpServer& sv) const override
+    Response unhandled_error(const WebPage::RequestItem& request, const Status& status) const override
     {
-        return ErrorPage::canned_response(status, request.protocol);
+        return ErrorPage::canned_response(status, request.request.protocol);
     }
 
     std::string log_format = "%h %l %u %t \"%r\" %s %b \"%{Referer}i\" \"%{User-Agent}i\"";

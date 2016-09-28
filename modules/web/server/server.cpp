@@ -91,8 +91,10 @@ std::string HttpServer::name() const
 
 void HttpServer::respond(httpony::Request& request, const httpony::Status& status)
 {
-    auto response = HttpRequestHandler::respond(request, status,
-                                                request.uri.path, *this);
+    auto response = HttpRequestHandler::respond(
+        WebPage::RequestItem(request, *this),
+        status
+    );
 
     for ( const auto& header : headers )
         if ( !response.headers.contains(header.first) )
