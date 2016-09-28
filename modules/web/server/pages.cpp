@@ -235,7 +235,7 @@ public:
         if ( request.path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Connections"}});
-            parent.append(connection_list(request));
+            parent.append(connection_list(request.ascend(path())));
             return {};
         }
 
@@ -331,7 +331,7 @@ public:
         if ( request.path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Services"}});
-            parent.append(service_list(request));
+            parent.append(service_list(request.ascend(path())));
             return {};
         }
 

@@ -94,6 +94,18 @@ public:
             return RequestItem(request, path.left_stripped(prefix.size()), server);
         }
 
+        RequestItem ascend(const UriPath& suffix) const
+        {
+            UriPathSlice upper_path(
+                melanolib::math::max(
+                    request.uri.path.cbegin(),
+                    path.begin() - suffix.size()
+                ),
+                path.end()
+            );
+            return RequestItem(request, upper_path, server);
+        }
+
         UriPath base_path() const
         {
             return path.strip_path_suffix(request.uri.path).to_path();
