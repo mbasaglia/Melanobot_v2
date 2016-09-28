@@ -99,9 +99,17 @@ public:
             return path.strip_path_suffix(request.uri.path).to_path();
         }
 
+        UriPath full_path() const
+        {
+            return request.uri.path;
+        }
+
         Request& request;
         UriPathSlice path;
         const HttpServer& server;
+        const httpony::DataMap& get = request.uri.query;
+        const httpony::DataMap& post = request.post;
+        const httpony::DataMap& cookies = request.cookies;
     };
 
 

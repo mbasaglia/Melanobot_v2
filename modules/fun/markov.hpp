@@ -415,7 +415,7 @@ public:
         using namespace httpony::quick_xml::html;
         using namespace httpony::quick_xml;
 
-        std::string selected = request.request.uri.query["character"];
+        std::string selected = request.get["character"];
         Select select_pony("character");
         select_pony.append(Option("", selected == "", false, Text{"Random"}));
         for ( const auto& item : generators )
@@ -442,18 +442,18 @@ public:
                 },
                 Element{"p",
                     Label("prompt", "Prompt"),
-                    Input("prompt", "text", request.request.uri.query["prompt"])},
+                    Input("prompt", "text", request.get["prompt"])},
                 Element{"p",
                     Label("min-words", "Min words"),
                     Input("min-words", "number",
-                          request.request.uri.query.get("min-words", "5"),
+                          request.get.get("min-words", "5"),
                           Attribute{"min", "0"},
                           Attribute{"max", std::to_string(max_words)}
                     )},
                 Element{"p",
                     Label("enough-words", "Enough words"),
                     Input("enough-words", "number",
-                          request.request.uri.query.get("enough-words", "10"),
+                          request.get.get("enough-words", "10"),
                           Attribute{"min", "0"},
                           Attribute{"max", std::to_string(max_words)}
                     )},
@@ -461,14 +461,14 @@ public:
             }
         );
 
-        if ( request.request.uri.query.contains("submit") )
+        if ( request.get.contains("submit") )
         {
             std::string result;
             generate(
-                request.request.uri.query["character"],
-                request.request.uri.query["prompt"],
-                melanolib::string::to_uint(request.request.uri.query["min-words"]),
-                melanolib::string::to_uint(request.request.uri.query["enough-words"]),
+                request.get["character"],
+                request.get["prompt"],
+                melanolib::string::to_uint(request.get["min-words"]),
+                melanolib::string::to_uint(request.get["enough-words"]),
                 result
             );
             html.body().append(
@@ -513,13 +513,13 @@ public:
         if ( request.path.size() > uri.size() )
             character = request.path[uri.size()];
         else
-            character = request.request.uri.query["character"];
+            character = request.get["character"];
         std::string result;
         auto generated_ok = generate(
             character,
-            request.request.uri.query["prompt"],
-            melanolib::string::to_uint(request.request.uri.query["min-words"]),
-            melanolib::string::to_uint(request.request.uri.query["enough-words"]),
+            request.get["prompt"],
+            melanolib::string::to_uint(request.get["min-words"]),
+            melanolib::string::to_uint(request.get["enough-words"]),
             result
         );
 

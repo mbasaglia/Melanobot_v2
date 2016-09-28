@@ -277,10 +277,16 @@ public:
 
     Response respond(const RequestItem& request) const override;
 
+    bool is_editable() const
+    {
+        return editable;
+    }
+
 private:
     UriPath uri;
     std::string css_file;
     std::vector<std::unique_ptr<SubPage>> sub_pages;
+    bool editable = false;
 };
 
 } // namespace web

@@ -91,6 +91,9 @@ std::string HttpServer::name() const
 
 void HttpServer::respond(httpony::Request& request, const httpony::Status& status)
 {
+    if ( !status.is_error() && request.method == "POST" && request.can_parse_post() )
+        request.parse_post();
+
     auto response = HttpRequestHandler::respond(
         WebPage::RequestItem(request, *this),
         status

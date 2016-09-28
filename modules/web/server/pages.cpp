@@ -143,6 +143,7 @@ public:
     using BlockElement = httpony::quick_xml::BlockElement;
     using PathSuffix = UriPathSlice;
     using RequestItem = WebPage::RequestItem;
+    using ParentPage = StatusPage;
 
     SubPage(std::string name, UriPath path)
         : _name(std::move(name)), _path(std::move(path))
@@ -165,7 +166,11 @@ public:
         return _path;
     }
 
-    virtual void render(const RequestItem& request, BlockElement& parent) const = 0;
+    virtual melanolib::Optional<Response> render(
+        const RequestItem& request,
+        BlockElement& parent,
+        const ParentPage& parent_page
+    ) const = 0;
 
     virtual bool has_submenu() const
     {
@@ -192,7 +197,11 @@ public:
         return path.empty();
     }
 
-    void render(const RequestItem& request, BlockElement& parent) const override
+    melanolib::Optional<Response> render(
+        const RequestItem& request,
+        BlockElement& parent,
+        const ParentPage& parent_page
+    ) const override
     {
         parent.append(Element{"h1", Text{PROJECT_NAME}});
         parent.append(Element{"h2", Text{"Build"}});
@@ -208,7 +217,7 @@ public:
         parent.append(connection_list(request));
         parent.append(Element{"h2", Text{"Services"}});
         parent.append(service_list(request));
-
+        return {};
     }
 };
 
@@ -217,21 +226,45 @@ class Connections : public StatusPage::SubPage
 public:
     Connections() : SubPage("Connections", "connection") {}
 
-    void render(const RequestItem& request, BlockElement& parent) const override
+    melanolib::Optional<Response> render(
+        const RequestItem& request,
+        BlockElement& parent,
+        const ParentPage& parent_page
+    ) const override
     {
         if ( request.path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Connections"}});
             parent.append(connection_list(request));
-            return;
+            return {};
         }
-
-        if ( request.path.size() != 1 )
-            throw HttpError(StatusCode::NotFound);
 
         network::Connection* conn = bot().connection(request.path[0]);
         if ( !conn )
             throw HttpError(StatusCode::NotFound);
+
+        if ( request.path.size() == 2 && parent_page.is_editable() )
+        {
+            if ( request.path[1] == "stop" )
+            {
+                conn->stop();
+            }
+            else if ( request.path[1] == "start" )
+            {
+                conn->stop();
+                conn->start();
+            }
+            else
+            {
+                throw HttpError(StatusCode::NotFound);
+            }
+
+            return Response::redirect(request.full_path().parent().url_encoded(true));
+        }
+        else if ( request.path.size() != 1 )
+        {
+            throw HttpError(StatusCode::NotFound);
+        }
 
         parent.append(Element{"h1", Text{request.path[0]}});
 
@@ -261,6 +294,16 @@ public:
         }
 
         parent.append(table);
+
+        if ( parent_page.is_editable() )
+        {
+            parent.append(Element("div",
+                Attribute("class", "control_buttons"),
+                Link((request.full_path()/"stop").url_encoded(), "Stop"),
+                Link((request.full_path()/"start").url_encoded(), "Start")
+            ));
+        }
+        return {};
     }
 
     virtual bool has_submenu() const override
@@ -279,17 +322,18 @@ class Services : public StatusPage::SubPage
 public:
     Services() : SubPage("Services", "service") {}
 
-    void render(const RequestItem& request, BlockElement& parent) const override
+    melanolib::Optional<Response> render(
+        const RequestItem& request,
+        BlockElement& parent,
+        const ParentPage& parent_page
+    ) const override
     {
         if ( request.path.size() == 0 )
         {
             parent.append(Element{"h1", Text{"Services"}});
             parent.append(service_list(request));
-            return;
+            return {};
         }
-
-        if ( request.path.size() != 1 )
-            throw HttpError(StatusCode::NotFound);
 
         AsyncService* service = nullptr;
         for ( const auto& svc : bot().service_list() )
@@ -301,6 +345,30 @@ public:
         if ( !service )
             throw HttpError(StatusCode::NotFound);
 
+
+        if ( request.path.size() == 2 && parent_page.is_editable() )
+        {
+            if ( request.path[1] == "stop" )
+            {
+                service->stop();
+            }
+            else if ( request.path[1] == "start" )
+            {
+                service->stop();
+                service->start();
+            }
+            else
+            {
+                throw HttpError(StatusCode::NotFound);
+            }
+
+            return Response::redirect(request.full_path().parent().url_encoded(true));
+        }
+        else if ( request.path.size() != 1 )
+        {
+            throw HttpError(StatusCode::NotFound);
+        }
+
         parent.append(Element{"h1", Text{service->name()}});
 
         Table table;
@@ -309,6 +377,7 @@ public:
         table.add_data_row(Text("Name"), Text(service->name()));
 
         parent.append(table);
+        return {};
     }
 
     virtual bool has_submenu() const override
@@ -327,7 +396,11 @@ class GlobalSettings : public StatusPage::SubPage
 public:
     GlobalSettings() : SubPage("Global Settings", "settings") {}
 
-    void render(const RequestItem& request, BlockElement& parent) const override
+    melanolib::Optional<Response> render(
+        const RequestItem& request,
+        BlockElement& parent,
+        const ParentPage& parent_page
+    ) const override
     {
         if ( !request.path.empty() )
             throw HttpError(StatusCode::NotFound);
@@ -338,6 +411,7 @@ public:
         table.add_header_row(Text{"Property"}, Text{"Value"});
         flatten_tree(settings::global_settings, "", table);
         parent.append(table);
+        return {};
     }
 };
 
@@ -345,6 +419,8 @@ StatusPage::StatusPage(const Settings& settings)
 {
     uri = read_uri(settings, "");
     css_file = settings.get("css", css_file);
+    editable = settings.get("editable", editable);
+
     sub_pages.push_back(melanolib::New<Home>());
     sub_pages.push_back(melanolib::New<GlobalSettings>());
     sub_pages.push_back(melanolib::New<Connections>());
@@ -394,7 +470,9 @@ Response StatusPage::respond(const RequestItem& request) const
     html.body().append(nav);
 
     BlockElement contents("div", Attribute("class", "contents"));
-    current_page->render(local_item.descend(current_page->path()), contents);
+    auto resp = current_page->render(local_item.descend(current_page->path()), contents, *this);
+    if ( resp )
+        return std::move(*resp);
     html.body().append(contents);
 
     Response response("text/html", StatusCode::OK, request.request.protocol);

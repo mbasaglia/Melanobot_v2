@@ -104,7 +104,12 @@ public:
     }
 
     // dummy overrides:
-    Status status() const override { return CONNECTED; }
+    Status status() const override
+    {
+        if ( io_service.stopped() || !thread.joinable() )
+            return DISCONNECTED;
+        return CONNECTED;
+    }
     void connect() override {}
     void disconnect(const string::FormattedString&) override {}
     void reconnect(const string::FormattedString&) override {}
