@@ -377,6 +377,15 @@ public:
         table.add_data_row(Text("Name"), Text(service->name()));
 
         parent.append(table);
+
+        if ( parent_page.is_editable() )
+        {
+            parent.append(Element("div",
+                Attribute("class", "control_buttons"),
+                Link((request.full_path()/"stop").url_encoded(), "Stop"),
+                Link((request.full_path()/"start").url_encoded(), "Start")
+            ));
+        }
         return {};
     }
 
