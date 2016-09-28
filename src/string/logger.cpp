@@ -27,18 +27,11 @@ void Logger::log(const std::string& type, char direction,
     const string::FormattedString& message, int verbosity)
 {
 
-    std::unique_lock<std::mutex> lock(mutex);
+    auto lock = make_lock(mutex);
 
     auto type_it = log_types.find(type);
     if ( type_it != log_types.end() && type_it->second.verbosity < verbosity )
         return;
-
-    auto log_type_length = this->log_type_length;
-    auto type_color = type_it != log_types.end() ? type_it->second.color : color::Color12();
-    auto direction_color = log_directions[direction];
-    auto timestamp = this->timestamp;
-
-    lock.unlock();
 
     string::FormattedString line;
     if ( !timestamp.empty() )
@@ -46,21 +39,18 @@ void Logger::log(const std::string& type, char direction,
         line << color::yellow << melanolib::time::format(timestamp) << string::ClearFormatting();
     }
 
+    auto type_color = type_it != log_types.end() ? type_it->second.color : color::Color12();
     line << type_color << string::Padding(type, log_type_length, 0)
-         << direction_color << direction << string::ClearFormatting()
+         << log_directions[direction] << direction << string::ClearFormatting()
          << message << string::ClearFormatting();
 
-    std::string buffer = line.encode(*formatter) + '\n';
-
-    lock.lock();
-    log_destination.write(buffer.data(), buffer.size());
-    log_destination.flush();
+    log_destination << line.encode(*formatter) << std::endl;
 }
 
 
 void Logger::register_log_type(const std::string& name, color::Color12 color)
 {
-    std::lock_guard<std::mutex> lock(mutex);
+    auto lock = make_lock(mutex);
     if ( log_type_length < name.size() )
         log_type_length = name.size();
     log_types[name].color = color;
@@ -68,19 +58,19 @@ void Logger::register_log_type(const std::string& name, color::Color12 color)
 
 void Logger::register_direction(char name, color::Color12 color)
 {
-    std::lock_guard<std::mutex> lock(mutex);
+    auto lock = make_lock(mutex);
     log_directions[name] = color;
 }
 
 void Logger::set_log_verbosity(const std::string& name, int level)
 {
-    std::lock_guard<std::mutex> lock(mutex);
+    auto lock = make_lock(mutex);
     log_types[name].verbosity = level;
 }
 
 void Logger::load_settings(const Settings& settings)
 {
-    std::unique_lock<std::mutex> lock(mutex);
+    auto lock = make_lock(mutex);
 
     std::string format = settings.get("string_format", "ansi-utf8");
     formatter = string::Formatter::formatter(format);

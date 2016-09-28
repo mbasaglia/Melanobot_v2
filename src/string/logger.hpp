@@ -99,7 +99,7 @@ private:
     unsigned log_type_length = 0;
     string::Formatter* formatter = &default_formatter;
     std::string timestamp = "[Y-m-d H:i:s]";
-    std::mutex mutex;
+    std::recursive_mutex mutex;
 };
 
 /**
