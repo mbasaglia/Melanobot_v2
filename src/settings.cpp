@@ -356,3 +356,25 @@ void settings::merge ( Settings& target, const Settings& source, bool overwrite 
             merge(*child, prop.second, overwrite);
     }
 }
+
+
+#if __has_include(<sys/utsname.h>)
+#include <sys/utsname.h>
+settings::SystemInfo settings::SystemInfo::runtime_system()
+{
+    utsname buf;
+    if ( uname(&buf) == 0 )
+        return {buf.sysname, buf.release, buf.machine};
+    return {"Unknown", "Unknown", "Unknown"};
+}
+#else
+settings::SystemInfo settings::SystemInfo::runtime_system()
+{
+    return {"Unknown", "Unknown", "Unknown"};
+}
+#endif
+
+settings::SystemInfo settings::SystemInfo::compile_system()
+{
+    return {SYSTEM_NAME, SYSTEM_VERSION, SYSTEM_PROCESSOR};
+}

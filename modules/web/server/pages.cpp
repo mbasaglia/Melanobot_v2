@@ -204,14 +204,18 @@ public:
     ) const override
     {
         parent.append(Element{"h1", Text{PROJECT_NAME}});
-        parent.append(Element{"h2", Text{"Build"}});
+        parent.append(Element{"h2", Text{"System"}});
         Table table;
         table.add_header_row(Text{"Property"}, Text{"Value"});
         table.add_data_row(Text{"Name"}, Text{PROJECT_NAME});
         table.add_data_row(Text{"Version"}, Text{PROJECT_DEV_VERSION});
-        table.add_data_row(Text{"OS"}, Text{SYSTEM_NAME " " SYSTEM_VERSION});
-        table.add_data_row(Text{"Processor"}, Text{SYSTEM_PROCESSOR});
+        settings::SystemInfo compile = settings::SystemInfo::compile_system();
+        table.add_data_row(Text{"OS"}, Text{compile.os + " " + compile.os_version});
+        table.add_data_row(Text{"Processor"}, Text{compile.machine});
         table.add_data_row(Text{"Compiler"}, Text{SYSTEM_COMPILER});
+        settings::SystemInfo runtime = settings::SystemInfo::runtime_system();
+        table.add_data_row(Text{"Runtime OS"}, Text{runtime.os + " " + runtime.os_version});
+        table.add_data_row(Text{"Runtime Processor"}, Text{runtime.machine});
         parent.append(table);
         parent.append(Element{"h2", Text{"Connections"}});
         parent.append(connection_list(request));

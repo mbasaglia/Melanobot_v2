@@ -153,6 +153,19 @@ namespace settings
      *         if \c check is \b EXISTING and the file doesn't exist
      */
     std::string data_file(const std::string& path, FileCheck check = FileCheck::EXISTING);
+
+    /**
+     * \brief Operating system information
+     */
+    struct SystemInfo
+    {
+        std::string os;
+        std::string os_version;
+        std::string machine;
+
+        static SystemInfo compile_system();
+        static SystemInfo runtime_system();
+    };
 }
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );
