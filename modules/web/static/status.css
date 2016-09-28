@@ -94,5 +94,8 @@ nav a:hover
 nav span.current_page
 {
     font-weight: bold;
+}
+nav .current_page
+{
     background-color: #888;
 }

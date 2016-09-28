@@ -370,10 +370,13 @@ Response StatusPage::respond(const RequestItem& request) const
     SubPage* current_page = nullptr;
     for ( const auto& page : sub_pages )
     {
-        if ( page->match_path(local_item.path) )
+        if ( !current_page && page->match_path(local_item.path) )
             current_page = page.get();
 
-        menu.add_item(page_link(request.request, local_item.base_path() / page->path(), page->name()));
+        auto link = page_link(request.request, local_item.base_path() / page->path(), page->name());
+        if ( current_page == page.get() && link->tag_name() == "a" )
+            link->append(Attribute("class", "current_page"));
+        menu.add_item(link);
     }
     if ( !current_page )
         throw HttpError(StatusCode::NotFound);
