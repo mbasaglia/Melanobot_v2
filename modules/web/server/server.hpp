@@ -66,7 +66,8 @@ public:
     {
         std::ostringstream stream;
         ParentServer::log_response(template_string, request, response, stream);
-        return stream.str();
+        /// \todo better wat to remove extra newlines (the endl from log_response())
+        return melanolib::string::trimmed(stream.str());
     }
 
 protected:
@@ -86,7 +87,7 @@ private:
         return ErrorPage::canned_response(status, request.request.protocol);
     }
 
-    std::string log_format = "%h %l %u %t \"%r\" %s %b \"%{Referer}i\" \"%{User-Agent}i\"";
+    std::string log_format = "%h \"%r\" %s %b \"%{Referer}i\" \"%{User-Agent}i\"";
     httpony::Headers headers;
 };
 
