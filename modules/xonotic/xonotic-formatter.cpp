@@ -102,7 +102,7 @@ std::string XonoticFormatter::to_string(string::ClearFormatting, Context* contex
 string::FormattedString XonoticFormatter::decode(const std::string& source) const
 {
     string::FormattedString str;
-    melanolib::string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser(source);
     string::AsciiString ascii;
 
     auto push_ascii = [&ascii, &str]()
@@ -114,44 +114,52 @@ string::FormattedString XonoticFormatter::decode(const std::string& source) cons
         }
     };
 
-    parser.callback_ascii = [&str, &parser, &ascii, push_ascii](uint8_t byte)
+
+    while ( !parser.finished() )
     {
-        if ( byte != '^' )
+        melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
+        if ( melanolib::string::ascii::is_ascii(byte) )
         {
-            ascii += byte;
-            return;
-        }
+            if ( byte != '^' )
+            {
+                ascii += byte;
+                continue;
+            }
 
-        if ( parser.input.peek() == '^' )
-        {
-            parser.input.ignore();
-            ascii += '^';
-            return;
-        }
+            if ( parser.input.peek() == '^' )
+            {
+                parser.input.ignore();
+                ascii += '^';
+                continue;
+            }
 
-        std::smatch match;
+            std::smatch match;
 
-        if ( parser.input.get_regex(regex_xoncolor, match) )
-        {
-            push_ascii();
-            str.append(color_from_match(match));
+            if ( parser.input.get_regex(regex_xoncolor, match) )
+            {
+                push_ascii();
+                str.append(color_from_match(match));
+            }
+            else
+            {
+                ascii += '^';
+            }
         }
         else
         {
-            ascii += '^';
+            melanolib::string::Unicode unicode = parser.next();
+            if ( unicode.valid() )
+            {
+                push_ascii();
+                if ( (unicode.point() & 0xff00) == 0xe000 )
+                    str.append(QFont(unicode.point() & 0xff));
+                else
+                    str.append(std::move(unicode));
+            }
         }
-    };
-    parser.callback_utf8 = [&str, push_ascii](uint32_t unicode, const std::string& utf8)
-    {
-        push_ascii();
-        if ( (unicode & 0xff00) == 0xe000 )
-            str.append(QFont(unicode&0xff));
-        else
-            str.append(string::Unicode(utf8, unicode));
-    };
-    parser.callback_end = push_ascii;
+    }
 
-    parser.parse(source);
+    push_ascii();
 
     return str;
 

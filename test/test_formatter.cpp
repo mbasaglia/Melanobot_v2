@@ -28,7 +28,7 @@
 #include "irc/irc_formatter.hpp"
 #include "fun/rainbow.hpp"
 #include "string/replacements.hpp"
-#include "web/formatter_html.hpp"
+#include "web/server/formatter_html.hpp"
 
 using namespace string;
 
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE( test_config )
     BOOST_CHECK( cast<Unicode>(decoded[11])->point() == 0x00A7 );
     // "$(1)"
     BOOST_CHECK( cast<string::AsciiString>(decoded[12]) );
-    BOOST_CHECK( *cast<string::AsciiString>(decoded[12]) == "$(1)" );
+    BOOST_CHECK_EQUAL( *cast<string::AsciiString>(decoded[12]), "$(1)" );
 
 
     BOOST_CHECK( decoded.encode(fmt) == "Hello $(1)World $(-bu)test$(-)#1$(2)green$(4)blue§$$(1)" );

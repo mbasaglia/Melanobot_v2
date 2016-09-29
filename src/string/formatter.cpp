@@ -118,31 +118,34 @@ FormattedString FormatterUtf8::decode(const std::string& source) const
 {
     FormattedString str;
 
-    melanolib::string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser(source);
 
     string::AsciiString ascii;
 
-    auto push_ascii = [&ascii, &str]()
+    while ( !parser.finished() )
     {
-        if ( !ascii.empty() )
+        melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
+        if ( melanolib::string::ascii::is_ascii(byte) )
         {
-            str.append(ascii);
-            ascii.clear();
+            ascii += byte;
         }
-    };
+        else
+        {
+            melanolib::string::Unicode unicode = parser.next();
+            if ( unicode.valid() )
+            {
+                if ( !ascii.empty() )
+                {
+                    str.append(ascii);
+                    ascii.clear();
+                }
+                str.append(std::move(unicode));
+            }
+        }
+    }
 
-    parser.callback_ascii = [&str, &ascii](uint8_t byte)
-    {
-        ascii += byte;
-    };
-    parser.callback_utf8 = [&str, push_ascii](uint32_t unicode, const std::string& utf8)
-    {
-        push_ascii();
-        str.append(Unicode(utf8, unicode));
-    };
-    parser.callback_end = push_ascii;
-
-    parser.parse(source);
+    if ( !ascii.empty() )
+        str.append(ascii);
 
     return str;
 }
@@ -209,9 +212,9 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
 {
     FormattedString str;
 
-    melanolib::string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser(source);
 
-    AsciiString ascii;
+    string::AsciiString ascii;
 
     auto push_ascii = [&ascii, &str]()
     {
@@ -222,105 +225,111 @@ FormattedString FormatterAnsi::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&parser, &str, &ascii, push_ascii](uint8_t byte)
+    while ( !parser.finished() )
     {
-        if ( byte == '\x1b' && parser.input.peek() == '[' )
+        melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
+        if ( melanolib::string::ascii::is_ascii(byte) )
         {
-            push_ascii();
-            parser.input.ignore();
-            std::vector<int> codes;
-            while (parser.input)
+            if ( byte == '\x1b' && parser.input.peek() == '[' )
             {
-                int i = 0;
-                if ( parser.input.get_int(i) )
+                push_ascii();
+                parser.input.ignore();
+                std::vector<int> codes;
+                while (parser.input)
                 {
-                    codes.push_back(i);
-                    char next = parser.input.next();
-                    if ( next != ';' )
+                    int i = 0;
+                    if ( parser.input.get_int(i) )
                     {
-                        if ( next != 'm' )
-                            parser.input.unget();
-                        break;
+                        codes.push_back(i);
+                        char next = parser.input.next();
+                        if ( next != ';' )
+                        {
+                            if ( next != 'm' )
+                                parser.input.unget();
+                            break;
+                        }
                     }
                 }
-            }
-            FormatFlags flags;
-            bool use_flags = false;
-            for ( int i : codes )
-            {
-                if ( i == 0 )
+                FormatFlags flags;
+                bool use_flags = false;
+                for ( int i : codes )
                 {
-                    str.append(ClearFormatting());
-                }
-                else if ( i == 1 )
-                {
-                    flags |= FormatFlags::BOLD;
-                    use_flags = true;
-                }
-                else if ( i == 22 )
-                {
-                    flags &= ~FormatFlags::BOLD;
-                    use_flags = true;
-                }
-                else if ( i == 3 )
-                {
-                    flags |= FormatFlags::ITALIC;
-                    use_flags = true;
-                }
-                else if ( i == 23 )
-                {
-                    flags &= ~FormatFlags::ITALIC;
-                    use_flags = true;
-                }
-                else if ( i == 4 )
-                {
-                    flags |= FormatFlags::UNDERLINE;
-                    use_flags = true;
-                }
-                else if ( i == 24 )
-                {
-                    flags &= ~FormatFlags::UNDERLINE;
-                    use_flags = true;
-                }
-                else if ( i == 39 )
-                {
-                    str.append(color::nocolor);
-                }
-                else if ( i >= 30 && i <= 37 )
-                {
-                    i -= 30;
-                    if ( flags == FormatFlags::BOLD )
+                    if ( i == 0 )
                     {
+                        str.append(ClearFormatting());
+                    }
+                    else if ( i == 1 )
+                    {
+                        flags |= FormatFlags::BOLD;
+                        use_flags = true;
+                    }
+                    else if ( i == 22 )
+                    {
+                        flags &= ~FormatFlags::BOLD;
+                        use_flags = true;
+                    }
+                    else if ( i == 3 )
+                    {
+                        flags |= FormatFlags::ITALIC;
+                        use_flags = true;
+                    }
+                    else if ( i == 23 )
+                    {
+                        flags &= ~FormatFlags::ITALIC;
+                        use_flags = true;
+                    }
+                    else if ( i == 4 )
+                    {
+                        flags |= FormatFlags::UNDERLINE;
+                        use_flags = true;
+                    }
+                    else if ( i == 24 )
+                    {
+                        flags &= ~FormatFlags::UNDERLINE;
+                        use_flags = true;
+                    }
+                    else if ( i == 39 )
+                    {
+                        str.append(color::nocolor);
+                    }
+                    else if ( i >= 30 && i <= 37 )
+                    {
+                        i -= 30;
+                        if ( flags == FormatFlags::BOLD )
+                        {
+                            i |= 0b1000;
+                            flags = FormatFlags::NO_FORMAT;
+                            use_flags = false;
+                        }
+                        str.append(color::Color12::from_4bit(i));
+                    }
+                    else if ( i >= 90 && i <= 97 )
+                    {
+                        i -= 90;
                         i |= 0b1000;
-                        flags = FormatFlags::NO_FORMAT;
-                        use_flags = false;
+                        str.append(color::Color12::from_4bit(i));
                     }
-                    str.append(color::Color12::from_4bit(i));
                 }
-                else if ( i >= 90 && i <= 97 )
-                {
-                    i -= 90;
-                    i |= 0b1000;
-                    str.append(color::Color12::from_4bit(i));
-                }
+                if ( use_flags )
+                    str.append(flags);
             }
-            if ( use_flags )
-                str.append(flags);
+            else
+            {
+                ascii += byte;
+            }
         }
         else
         {
-            ascii += byte;
+            melanolib::string::Unicode unicode = parser.next();
+            if ( unicode.valid() && utf8 )
+            {
+                push_ascii();
+                str.append(std::move(unicode));
+            }
         }
-    };
-    parser.callback_utf8 = [this, &str, push_ascii](uint32_t unicode, const std::string& utf8)
-    {
-        push_ascii();
-        if ( this->utf8 )
-            str.append(Unicode(utf8, unicode));
-    };
-    parser.callback_end = push_ascii;
+    }
 
-    parser.parse(source);
+    push_ascii();
 
     return str;
 }
@@ -459,9 +468,9 @@ FormattedString FormatterConfig::decode(const std::string& source) const
 {
     FormattedString str;
 
-    melanolib::string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser(source);
 
-    AsciiString ascii;
+    string::AsciiString ascii;
 
     auto push_ascii = [&ascii, &str]()
     {
@@ -472,88 +481,93 @@ FormattedString FormatterConfig::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii =
-        [&parser, &str, &ascii, push_ascii, this](uint8_t byte)
+    while ( !parser.finished() )
     {
-        if ( byte != '$' )
+        melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
+        if ( melanolib::string::ascii::is_ascii(byte) )
         {
-            ascii += byte;
-            return;
-        }
-
-        char next = parser.input.next();
-
-        if ( next == '(' )
-        {
-            std::string format = parser.input.get_until(cfg_next_arg);
-
-            if ( format.empty() )
-                return;
-
-            push_ascii();
-            if ( format[0] == '-' )
+            if ( byte != '$' )
             {
-                if ( auto flag = cfg_format_flags(format) )
-                    str << flag;
-                else
-                    str << ClearFormatting();
-
-                return;
+                ascii += byte;
+                continue;
             }
 
-            if ( format == "nocolor" )
-            {
-                str << color::Color12();
-                return;
-            }
+            char next = parser.input.next();
 
-            auto color = cfg_format_color(format);
-            if ( color.is_valid() )
+            if ( next == '(' )
             {
-                str << color;
-                return;
-            }
+                std::string format = parser.input.get_until(cfg_next_arg);
 
-            str.append(FilterCall(format, cfg_args(parser.input, *this)));
-        }
-        else if ( next == '{' )
-        {
-            std::string id = parser.input.get_line('}');
-            if ( !id.empty() )
+                if ( format.empty() )
+                    continue;
+
+                push_ascii();
+                if ( format[0] == '-' )
+                {
+                    if ( auto flag = cfg_format_flags(format) )
+                        str << flag;
+                    else
+                        str << ClearFormatting();
+
+                    continue;
+                }
+
+                if ( format == "nocolor" )
+                {
+                    str << color::Color12();
+                    continue;
+                }
+
+                auto color = cfg_format_color(format);
+                if ( color.is_valid() )
+                {
+                    str << color;
+                    continue;
+                }
+
+                str.append(FilterCall(format, cfg_args(parser.input, *this)));
+            }
+            else if ( next == '{' )
             {
+                std::string id = parser.input.get_line('}');
+                if ( !id.empty() )
+                {
+                    push_ascii();
+                    str.append(Placeholder(id));
+                }
+
+            }
+            else if ( next == '$' )
+            {
+                ascii += '$';
+            }
+            else if ( std::isalnum(next) || next == '_' )
+            {
+                std::string id = next+parser.input.get_until(
+                    [](char c) { return !std::isalnum(c) && c != '_' && c != '.'; },
+                    false
+                );
                 push_ascii();
                 str.append(Placeholder(id));
             }
-
-        }
-        else if ( next == '$' )
-        {
-            ascii += '$';
-        }
-        else if ( std::isalnum(next) || next == '_' )
-        {
-            std::string id = next+parser.input.get_until(
-                [](char c) { return !std::isalnum(c) && c != '_' && c != '.'; },
-                false
-            );
-            push_ascii();
-            str.append(Placeholder(id));
+            else
+            {
+                ascii += byte;
+                parser.input.unget();
+            }
         }
         else
         {
-            ascii += byte;
-            parser.input.unget();
+            melanolib::string::Unicode unicode = parser.next();
+            if ( unicode.valid() )
+            {
+                push_ascii();
+                str.append(std::move(unicode));
+            }
         }
-    };
+    }
 
-    parser.callback_utf8 = [this, &str, push_ascii](uint32_t unicode, const std::string& utf8)
-    {
-        push_ascii();
-        str.append(Unicode(utf8, unicode));
-    };
-    parser.callback_end = push_ascii;
-
-    parser.parse(source);
+    push_ascii();
 
     return str;
 

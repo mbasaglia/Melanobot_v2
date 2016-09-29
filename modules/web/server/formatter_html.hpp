@@ -111,7 +111,7 @@ public:
     string::FormattedString decode(const std::string& source) const override
     {
 
-        melanolib::string::Utf8Parser parser;
+        melanolib::string::Utf8Parser parser(source);
 
         string::FormattedString str;
         string::AsciiString ascii;
@@ -126,33 +126,39 @@ public:
             }
         };
 
-        parser.callback_ascii = [&str, &ascii, &in_tag](uint8_t byte)
+        while ( !parser.finished() )
         {
-            // NOTE: not 100% accurate, but good enough to skip <span>s
-            /// \todo Proper parsing of < <? <! <[ <--
-            /// \todo Parse `&entities;`
-            /// \todo Parse `<span style=''>`
-            if ( !in_tag )
+            melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
+            if ( melanolib::string::ascii::is_ascii(byte) )
             {
-                if ( byte == '<' )
-                    in_tag = true;
-                else
-                    ascii += byte;
+                // NOTE: not 100% accurate, but good enough to skip <span>s
+                /// \todo Proper parsing of < <? <! <[ <--
+                /// \todo Parse `&entities;`
+                /// \todo Parse `<span style=''>`
+                if ( !in_tag )
+                {
+                    if ( byte == '<' )
+                        in_tag = true;
+                    else
+                        ascii += byte;
+                }
+                else if ( byte == '>' )
+                {
+                    in_tag = false;
+                }
             }
-            else if ( byte == '>' )
+            else
             {
-                in_tag = false;
+                melanolib::string::Unicode unicode = parser.next();
+                if ( unicode.valid() )
+                {
+                    push_ascii();
+                    str.append(std::move(unicode));
+                }
             }
-        };
-        parser.callback_utf8 = [&str, push_ascii](uint32_t unicode, const std::string& utf8)
-        {
-            push_ascii();
-            str.append(string::Unicode(utf8, unicode));
-        };
-        parser.callback_end = push_ascii;
+        }
 
-        parser.parse(source);
-
+        push_ascii();
         return str;
     }
 

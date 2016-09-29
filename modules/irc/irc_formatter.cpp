@@ -74,10 +74,9 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
 {
     string::FormattedString str;
 
-    melanolib::string::Utf8Parser parser;
+    melanolib::string::Utf8Parser parser(source);
 
     string::FormatFlags flags;
-
     string::AsciiString ascii;
 
     auto push_flags = [&flags, &str, &ascii](bool force_ascii)
@@ -94,56 +93,63 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
         }
     };
 
-    parser.callback_ascii = [&str, &flags, &parser, &ascii, &push_flags](uint8_t byte)
+    while ( !parser.finished() )
     {
-        // see https://github.com/myano/jenni/wiki/IRC-String-Formatting
-        switch ( byte )
+        melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
+        if ( melanolib::string::ascii::is_ascii(byte) )
         {
-            case '\2':
-                flags |= string::FormatFlags::BOLD;
-                break;
-            case '\x1f':
-                flags |= string::FormatFlags::UNDERLINE;
-                break;
-            case '\x1d':
-                flags |= string::FormatFlags::ITALIC;
-                break;
-            case '\xf':
-                flags = string::FormatFlags::NO_FORMAT;
-                push_flags(true);
-                str.append(string::ClearFormatting());
-                break;
-            case '\3':
+            // see https://github.com/myano/jenni/wiki/IRC-String-Formatting
+            switch ( byte )
             {
-                static std::regex regex_irc_color (
-                    "([0-9]{1,2})(?:,[0-9]{1,2})?",
-                    std::regex::optimize|std::regex::ECMAScript);
-                std::smatch match;
-                parser.input.get_regex(regex_irc_color, match);
-                push_flags(true);
-                color::Color12 color;
-                if ( match.ready() )
-                    color = FormatterIrc::color_from_string(match[1]);
-                str.append(color);
-                break;
+                case '\2':
+                    flags |= string::FormatFlags::BOLD;
+                    break;
+                case '\x1f':
+                    flags |= string::FormatFlags::UNDERLINE;
+                    break;
+                case '\x1d':
+                    flags |= string::FormatFlags::ITALIC;
+                    break;
+                case '\xf':
+                    flags = string::FormatFlags::NO_FORMAT;
+                    push_flags(true);
+                    str.append(string::ClearFormatting());
+                    break;
+                case '\3':
+                {
+                    static std::regex regex_irc_color (
+                        "([0-9]{1,2})(?:,[0-9]{1,2})?",
+                        std::regex::optimize|std::regex::ECMAScript);
+                    std::smatch match;
+                    parser.input.get_regex(regex_irc_color, match);
+                    push_flags(true);
+                    color::Color12 color;
+                    if ( match.ready() )
+                        color = FormatterIrc::color_from_string(match[1]);
+                    str.append(color);
+                    break;
+                }
+                case '\x16':
+                    // Skip unsupported format flags
+                    break;
+                default:
+                    push_flags(false);
+                    ascii += byte;
+                    break;
             }
-            case '\x16':
-                // Skip unsupported format flags
-                break;
-            default:
-                push_flags(false);
-                ascii += byte;
-                break;
         }
-    };
-    parser.callback_utf8 = [&str, &push_flags](uint32_t unicode, const std::string& utf8)
-    {
-        push_flags(true);
-        str.append(string::Unicode(utf8, unicode));
-    };
+        else
+        {
+            melanolib::string::Unicode unicode = parser.next();
+            if ( unicode.valid() )
+            {
+                push_flags(true);
+                str.append(std::move(unicode));
+            }
+        }
+    }
 
-    parser.parse(source);
-    push_flags(true);
+
 
     return str;
 }
