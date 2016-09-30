@@ -148,6 +148,26 @@ namespace detail {
             return element::to_string(formatter, t, context);
         }
 
+    /**
+     * \brief Calls a member expand
+     */
+    template<class T>
+        auto expand_dispatch(T&& t, FormattedString& output, OveloadTag)
+        -> melanolib::DummyType<bool, decltype(t.expand(std::declval<FormattedString&>()))>
+    {
+        t.expand(output);
+        return true;
+    }
+
+    /**
+     * \brief Dummy fallback
+     */
+    template<class T>
+        bool expand_dispatch(T&& t, FormattedString& output, ...)
+    {
+        return false;
+    }
+
 } // namespace detail
 
 /**
@@ -163,6 +183,7 @@ private:
         virtual std::unique_ptr<HolderBase> clone() const = 0;
         virtual const std::type_info& type() const noexcept = 0;
         virtual void replace(const ReplacementFunctor& repl) = 0;
+        virtual bool expand(FormattedString& out) const = 0;
     };
 
     template<class T>
@@ -178,6 +199,11 @@ private:
             void replace(const ReplacementFunctor& repl) override
             {
                 detail::replace_dispatch(object, repl, detail::OveloadTag{});
+            }
+
+            bool expand(FormattedString& repl) const override
+            {
+                return detail::expand_dispatch(object, repl, detail::OveloadTag{});
             }
 
             std::unique_ptr<HolderBase> clone() const override
@@ -266,6 +292,8 @@ public:
     {
         return holder->type() == typeid(HeldType<T>);
     }
+
+    void expand(FormattedString& output) const;
 
 private:
     explicit Element(std::unique_ptr<HolderBase>&& holder)
@@ -552,6 +580,14 @@ public:
         return str;
     }
 
+    FormattedString expanded() const
+    {
+        FormattedString output;
+        for ( const Element& element : elements )
+            element.expand(output);
+        return output;
+    }
+
 // Stream-like operations
     template <class T>
         FormattedString& operator<<(T&& obj) &
@@ -599,6 +635,13 @@ FormattedString implode (const FormattedString& separator, const Container& elem
             break;
     }
     return ret;
+}
+
+
+inline void Element::expand(FormattedString& output) const
+{
+    if ( !holder->expand(output) )
+        output.append(clone());
 }
 
 

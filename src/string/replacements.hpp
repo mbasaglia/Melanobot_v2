@@ -46,6 +46,11 @@ public:
             replacement = std::move(*rep);
     }
 
+    void expand(FormattedString& output) const
+    {
+        output.append(replacement);
+    }
+
 private:
     std::string identifier;
     FormattedString replacement;
@@ -110,6 +115,11 @@ public:
     std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
         return filtered().encode(formatter, context);
+    }
+
+    void expand(FormattedString& output) const
+    {
+        output.append_packed(filtered());
     }
 
 private:
@@ -212,7 +222,7 @@ public:
     std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
         std::string output;
-        for ( const auto& item : source )
+        for ( const auto& item : source.expanded() )
         {
             FormattedString replace;
             replace.push_back(item);

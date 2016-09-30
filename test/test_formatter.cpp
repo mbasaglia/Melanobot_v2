@@ -854,4 +854,12 @@ BOOST_AUTO_TEST_CASE( test_Config_for )
     BOOST_CHECK_EQUAL( decoded.size(), 1 );
     BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
     BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)$(2)$(3)foo" );
+
+    decoded = fmt.decode("$(for color $colors)${color}foo$(endfor)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    FormattedString colors;
+    colors << color::red << color::green << color::yellow;
+    decoded.replace("colors", colors);
+    BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
+    BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)foo$(2)foo$(3)foo" );
 }
