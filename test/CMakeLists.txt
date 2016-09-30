@@ -19,6 +19,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address --coverage -O0 -fno-inline")
 
 # Boost
+set(Boost_FOUND ON)
 find_package (Boost COMPONENTS unit_test_framework QUIET)
 if(Boost_FOUND)
     include_directories (${Boost_INCLUDE_DIRS})

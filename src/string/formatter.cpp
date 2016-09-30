@@ -396,182 +396,289 @@ std::string FormatterConfig::to_string(const AsciiString& input, Context* contex
     return melanolib::string::replace(input, "$", "$$");
 }
 
-/**
- * \pre format[0] == '-'
- */
-static FormatFlags cfg_format_flags(const std::string& format)
+
+class ConfigParser
 {
-    FormatFlags flag;
-    for ( std::string::size_type i = 1; i < format.size(); i++ )
+public:
+    ConfigParser(const std::string& source)
+        : parser(source) {}
+
+    FormattedString parse()
     {
-        if ( format[i] == 'b' )
-            flag |= FormatFlags::BOLD;
-        else if ( format[i] == 'u' )
-            flag |= FormatFlags::UNDERLINE;
-        else if ( format[i] == 'i' )
-            flag |= FormatFlags::ITALIC;
+        FormattedString output;
+        lex();
+        parse_string(output);
+        return output;
     }
 
-    return flag;
-}
-
-static color::Color12 cfg_format_color(const std::string& format)
-{
-    if ( format.size() == 4 && format[0] == 'x' &&
-        std::all_of(format.begin()+1, format.end(),
-            melanolib::FunctionPointer<int(int)>(std::isxdigit))
-       )
+private:
+    struct Token
     {
-        return color::Color12(format.substr(1));
-    }
-
-    if ( format.size() == 1 && std::isdigit(format[0]) )
-        return color::Color12::from_4bit(0b1000|(format[0]-'0'));
-
-    return color::Color12::from_name(format);
-}
-
-static bool cfg_next_arg(char c)
-{
-    return c == ')' || std::isspace(c);
-}
-
-static std::vector<FormattedString> cfg_args(
-    melanolib::string::QuickStream& stream,
-    const FormatterConfig& cfg
-)
-{
-    std::vector<FormattedString> args;
-    while ( true )
-    {
-        stream.get_until(
-            [](char c) { return !std::isspace(c); },
-            false
-        );
-        char next = stream.next();
-        if ( stream.eof() || next == ')' )
-            break;
-
-        std::string arg;
-        if ( next == '\'' || next == '"' )
-            arg =stream.get_line(next);
-        else
-            arg = next+stream.get_until(cfg_next_arg, false);
-
-        args.push_back(cfg.decode(arg));
-    }
-
-    return args;
-}
-
-FormattedString FormatterConfig::decode(const std::string& source) const
-{
-    FormattedString str;
-
-    melanolib::string::Utf8Parser parser(source);
-
-    string::AsciiString ascii;
-
-    auto push_ascii = [&ascii, &str]()
-    {
-        if ( !ascii.empty() )
+        enum Type
         {
-            str.append(ascii);
-            ascii.clear();
-        }
+            Invalid,
+            Unicode,
+            Argument,
+            Variable,
+            FunctionBegin,
+            FunctionEnd,
+            SimpleChar,
+        };
+
+        using Variant = melanolib::Variant<
+            std::string,
+            char,
+            melanolib::string::Unicode
+        >;
+
+        Token(Type type = Invalid) : type(type) {}
+
+        template<class T>
+            Token(Type type, T&& value)
+        : type(type),
+          value(std::forward<T>(value))
+        {}
+
+        Type type;
+
+        Variant value;
     };
 
-    while ( !parser.finished() )
+    void parse_string(FormattedString& output)
     {
-        melanolib::string::Utf8Parser::Byte byte = parser.next_ascii();
-        if ( melanolib::string::ascii::is_ascii(byte) )
+        AsciiString ascii;
+
+        auto push_ascii = [&ascii, &output]()
         {
-            if ( byte != '$' )
+            if ( !ascii.empty() )
             {
-                ascii += byte;
-                continue;
+                output.append(ascii);
+                ascii.clear();
             }
+        };
 
-            char next = parser.input.next();
-
-            if ( next == '(' )
+        while ( lookahead.type != Token::Invalid )
+        {
+            if ( lookahead.type == Token::Unicode )
             {
-                std::string format = parser.input.get_until(cfg_next_arg);
-
-                if ( format.empty() )
-                    continue;
-
                 push_ascii();
-                if ( format[0] == '-' )
-                {
-                    if ( auto flag = cfg_format_flags(format) )
-                        str << flag;
-                    else
-                        str << ClearFormatting();
-
-                    continue;
-                }
-
-                if ( format == "nocolor" )
-                {
-                    str << color::Color12();
-                    continue;
-                }
-
-                auto color = cfg_format_color(format);
-                if ( color.is_valid() )
-                {
-                    str << color;
-                    continue;
-                }
-
-                str.append(FilterCall(format, cfg_args(parser.input, *this)));
+                output.append(value<melanolib::string::Unicode>());
+                lex();
             }
-            else if ( next == '{' )
+            else if ( lookahead.type == Token::Variable )
             {
-                std::string id = parser.input.get_line('}');
-                if ( !id.empty() )
-                {
-                    push_ascii();
-                    str.append(Placeholder(id));
-                }
-
-            }
-            else if ( next == '$' )
-            {
-                ascii += '$';
-            }
-            else if ( std::isalnum(next) || next == '_' )
-            {
-                std::string id = next+parser.input.get_until(
-                    [](char c) { return !std::isalnum(c) && c != '_' && c != '.'; },
-                    false
-                );
                 push_ascii();
-                str.append(Placeholder(id));
+                output.append(Placeholder(value<std::string>()));
+                lex();
+            }
+            else if ( lookahead.type == Token::FunctionBegin )
+            {
+                push_ascii();
+                parse_function_call(output);
+            }
+            else if ( lookahead.type == Token::SimpleChar || lookahead.type == Token::FunctionEnd )
+            {
+                ascii += value<char>();
+                lex();
             }
             else
             {
-                ascii += byte;
-                parser.input.unget();
+                ascii += value<std::string>();
+                lex();
             }
         }
-        else
-        {
-            melanolib::string::Unicode unicode = parser.next();
-            if ( unicode.valid() )
-            {
-                push_ascii();
-                str.append(std::move(unicode));
-            }
-        }
+        push_ascii();
     }
 
-    push_ascii();
+    void parse_function_call(FormattedString& output)
+    {
+        if ( lex(true).type != Token::Argument )
+            return skip_function();
 
-    return str;
+        std::string function = value<std::string>();
+        if ( function[0] == '-' )
+        {
+            if ( function.size() == 1 )
+                output.append(ClearFormatting());
+            else
+                output.append(format_flags(function));
+            return skip_function();
+        }
 
+        if ( function == "nocolor" )
+        {
+            output.append(color::Color12());
+            return skip_function();
+        }
+
+        auto color = format_color(function);
+        if ( color.is_valid() )
+        {
+            output.append(color);
+            return skip_function();
+        }
+
+        std::vector<FormattedString> args;
+        while ( lex(true).type == Token::Argument )
+        {
+            args.push_back(ConfigParser(value<std::string>()).parse());
+        }
+
+        if ( lookahead.type == Token::FunctionEnd )
+            output.append(FilterCall(function, args));
+
+        return skip_function();
+    }
+
+    void skip_function()
+    {
+        while ( lookahead.type != Token::FunctionEnd && lookahead.type != Token::Invalid )
+            lex();
+        lex();
+    }
+
+    Token lex(bool parameter_mode = false)
+    {
+        return lookahead = lex_token(parameter_mode);
+    }
+
+    Token lex_token(bool parameter_mode)
+    {
+        if ( parser.finished() )
+            return Token::Invalid;
+
+        auto character = parser.next_ascii();
+
+        if ( character == '$' )
+            return lex_dollar();
+
+        if ( character == ')' )
+            return {Token::FunctionEnd, ')'};
+
+        if ( !melanolib::string::ascii::is_ascii(character) )
+            return {Token::Unicode, parser.next()};
+
+        if ( parameter_mode )
+        {
+            parser.input.unget();
+            return lex_param();
+        }
+
+        return {Token::SimpleChar, character};
+    }
+
+    Token lex_dollar()
+    {
+        if ( parser.finished() )
+            return {Token::SimpleChar, '$'};
+
+        auto character = parser.next_ascii();
+
+        if ( character == '$' )
+            return {Token::SimpleChar, '$'};
+        if ( character == '(' )
+            return Token::FunctionBegin;
+        if ( character == '{' )
+            return {Token::Variable, parser.input.get_line('}')};
+        if ( is_identifier(character) )
+            return {
+                Token::Variable,
+                char(character) + parser.input.get_until(is_not_identifier, false)
+            };
+        if ( melanolib::string::ascii::is_ascii(character) )
+            parser.input.unget();
+        return {Token::SimpleChar, '$'};
+    }
+
+    Token lex_param()
+    {
+        parser.input.get_until(
+            [](char c) { return !melanolib::string::ascii::is_space(c); },
+            false
+        );
+
+        char next = parser.input.next();
+        if ( next == ')' )
+            return {Token::FunctionEnd, ')'};
+
+        if ( parser.input.eof() )
+            return Token::Invalid;
+
+        std::string arg;
+        if ( next == '\'' || next == '"' )
+            arg = parser.input.get_line(next);
+        else
+            arg = next + parser.input.get_until(
+                [](char c){ return c == ')' || melanolib::string::ascii::is_space(c); },
+                false
+            );
+
+        if ( arg.empty() )
+            return Token::Invalid;
+        return {Token::Argument, arg};
+    }
+
+    /**
+     * \pre format[0] == '-'
+     */
+    FormatFlags format_flags(const std::string& format)
+    {
+        FormatFlags flag;
+        for ( std::string::size_type i = 1; i < format.size(); i++ )
+        {
+            if ( format[i] == 'b' )
+                flag |= FormatFlags::BOLD;
+            else if ( format[i] == 'u' )
+                flag |= FormatFlags::UNDERLINE;
+            else if ( format[i] == 'i' )
+                flag |= FormatFlags::ITALIC;
+        }
+
+        return flag;
+    }
+
+    color::Color12 format_color(const std::string& format)
+    {
+        if ( format.size() == 4 && format[0] == 'x' &&
+            std::all_of(format.begin()+1, format.end(),
+                melanolib::FunctionPointer<int(int)>(std::isxdigit))
+        )
+        {
+            return color::Color12(format.substr(1));
+        }
+
+        if ( format.size() == 1 && std::isdigit(format[0]) )
+            return color::Color12::from_4bit(0b1000|(format[0]-'0'));
+
+        return color::Color12::from_name(format);
+    }
+
+    static constexpr bool is_identifier(uint8_t byte)
+    {
+        return melanolib::string::ascii::is_alnum(byte) || byte == '_' || byte == '-';
+    }
+
+    static constexpr bool is_not_identifier(uint8_t byte)
+    {
+        return !is_identifier(byte);
+    }
+
+    template<class T>
+        T& value()
+    {
+        return melanolib::get<T>(lookahead.value);
+    }
+
+
+    melanolib::string::Utf8Parser parser;
+    Token lookahead;
+};
+
+FormattedString FormatterConfig::decode(const std::string& source) const
+{
+    return ConfigParser(source).parse();
 }
+
 std::string FormatterConfig::name() const
 {
     return "config";

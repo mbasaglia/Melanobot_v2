@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( test_ascii )
     if ( melanolib::string::Utf8Parser::has_iconv() )
         BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "c" );
     else
-        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr).empty() );
+        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "?" );
 
     BOOST_CHECK( fmt.to_string(color::red, nullptr).empty() );
     BOOST_CHECK( fmt.to_string(FormatFlags::BOLD, nullptr).empty() );
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE( test_ansi_ascii )
     if ( melanolib::string::Utf8Parser::has_iconv() )
         BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "c" );
     else
-        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr).empty() );
+        BOOST_CHECK( fmt.to_string(Unicode("ç", 0x00E7), nullptr) == "?" );
 
     BOOST_CHECK( fmt.to_string(color::dark_red, nullptr) == "\x1b[31m" );
     BOOST_CHECK( fmt.to_string(color::nocolor, nullptr) == "\x1b[39m" );
@@ -737,4 +737,48 @@ BOOST_AUTO_TEST_CASE( test_html )
         "<span style='font-weight:bold;text-decoration:underline;font-style:normal;'>test</span></span>"
         "#1<span style='color:#0f0'>green<span style='color:#00f'>blue§"
         "&lt;foo bar=&apos;&quot;&apos;/&gt;&amp;</span></span>" );
+}
+
+BOOST_AUTO_TEST_CASE( test_Config_parser_edge_cases )
+{
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("");
+    BOOST_CHECK( decoded.size() == 0 );
+
+    decoded = fmt.decode(")$");
+    BOOST_CHECK( decoded.size() == 1 );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == ")$" );
+
+
+    FilterRegistry::instance().register_filter("print",
+        [](const std::vector<FormattedString>& args) -> FormattedString
+        {
+            FormattedString out;
+            for ( const auto& arg : args )
+                out << arg;
+            return out;
+        }
+    );
+
+    decoded = fmt.decode("$(print))");
+    BOOST_CHECK( decoded.size() == 2 );
+    BOOST_CHECK( cast<string::FilterCall>(decoded[0]) );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[1]) );
+    BOOST_CHECK( *cast<string::AsciiString>(decoded[1]) == ")" );
+    auto filtered = cast<FilterCall>(decoded[0])->filtered();
+    BOOST_CHECK( filtered.size() == 0 );
+
+    decoded = fmt.decode("$(print foo '$(1)bar' )");
+    BOOST_CHECK( decoded.size() == 1 );
+    BOOST_CHECK( cast<string::FilterCall>(decoded[0]) );
+    filtered = cast<FilterCall>(decoded[0])->filtered();
+    BOOST_CHECK( filtered.size() == 3 );
+    BOOST_CHECK( cast<string::AsciiString>(filtered[0]) );
+    BOOST_CHECK( *cast<string::AsciiString>(filtered[0]) == "foo" );
+    BOOST_CHECK( cast<color::Color12>(filtered[1]) );
+    BOOST_CHECK( *cast<color::Color12>(filtered[1]) == color::red );
+    BOOST_CHECK( cast<string::AsciiString>(filtered[2]) );
+    BOOST_CHECK( *cast<string::AsciiString>(filtered[2]) == "bar" );
+
 }
