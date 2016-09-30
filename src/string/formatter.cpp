@@ -58,12 +58,12 @@ Formatter::Registry::Registry()
         }
     );
 
-    // if:
+    // ifeq:
     //  lhs     anything convertible to ascii
     //  rhs     anything convertible to ascii
     //  if-true string used if lhs == rhs
     //  [else]  string used if lhs != rhs
-    FilterRegistry::instance().register_filter("if",
+    FilterRegistry::instance().register_filter("ifeq",
         [](const std::vector<string::FormattedString>& args) -> string::FormattedString
         {
             if ( args.size() < 3 )
@@ -406,8 +406,8 @@ public:
     FormattedString parse()
     {
         FormattedString output;
-        lex();
-        parse_string(output);
+        lex(LexMode::String);
+        parse_string(output, LexMode::String);
         return output;
     }
 
@@ -423,6 +423,15 @@ private:
             FunctionBegin,
             FunctionEnd,
             SimpleChar,
+
+            Keyword,
+            If,
+            For,
+
+            EndKeyword,
+            Else,
+            EndIf,
+            EndFor,
         };
 
         using Variant = melanolib::Variant<
@@ -444,7 +453,13 @@ private:
         Variant value;
     };
 
-    void parse_string(FormattedString& output)
+    enum class LexMode
+    {
+        String,
+        Argument
+    };
+
+    void parse_string(FormattedString& output, LexMode mode)
     {
         AsciiString ascii;
 
@@ -463,89 +478,204 @@ private:
             {
                 push_ascii();
                 output.append(value<melanolib::string::Unicode>());
-                lex();
+                lex(mode);
             }
             else if ( lookahead.type == Token::Variable )
             {
                 push_ascii();
                 output.append(Placeholder(value<std::string>()));
-                lex();
+                lex(mode);
             }
             else if ( lookahead.type == Token::FunctionBegin )
             {
                 push_ascii();
-                parse_function_call(output);
+                parse_function_call(output, mode);
             }
             else if ( lookahead.type == Token::SimpleChar || lookahead.type == Token::FunctionEnd )
             {
                 ascii += value<char>();
-                lex();
+                lex(mode);
+            }
+            else if ( lookahead.type > Token::EndKeyword )
+            {
+                break;
+            }
+            else if ( lookahead.type > Token::Keyword )
+            {
+                push_ascii();
+                parse_statement(output, mode);
             }
             else
             {
                 ascii += value<std::string>();
-                lex();
+                lex(mode);
             }
         }
         push_ascii();
     }
 
-    void parse_function_call(FormattedString& output)
+    void parse_function_call(FormattedString& output, LexMode mode)
     {
-        if ( lex(true).type != Token::Argument )
-            return skip_function();
-
         std::string function = value<std::string>();
+        if ( function.empty() )
+            return skip_function(mode);
+
         if ( function[0] == '-' )
         {
             if ( function.size() == 1 )
                 output.append(ClearFormatting());
             else
                 output.append(format_flags(function));
-            return skip_function();
+            return skip_function(mode);
         }
 
         if ( function == "nocolor" )
         {
             output.append(color::Color12());
-            return skip_function();
+            return skip_function(mode);
         }
 
         auto color = format_color(function);
         if ( color.is_valid() )
         {
             output.append(color);
-            return skip_function();
+            return skip_function(mode);
         }
 
         std::vector<FormattedString> args;
-        while ( lex(true).type == Token::Argument )
+        FormattedString arg;
+        lex(LexMode::Argument);
+        while ( parse_argument(arg) )
         {
-            args.push_back(ConfigParser(value<std::string>()).parse());
+            args.push_back(arg);
         }
 
         if ( lookahead.type == Token::FunctionEnd )
             output.append(FilterCall(function, args));
 
-        return skip_function();
+        return skip_function(mode);
     }
 
-    void skip_function()
+    bool parse_argument(FormattedString& arg_output)
+    {
+        arg_output.clear();
+
+        if ( lookahead.type == Token::Argument )
+        {
+            /// \todo Parse inplace instead of lex + parse (and allow nested "strings")
+            arg_output = ConfigParser(value<std::string>()).parse();
+            lex(LexMode::Argument);
+            return true;
+        }
+        else if ( lookahead.type == Token::Variable )
+        {
+            arg_output.append(Placeholder(value<std::string>()));
+            lex(LexMode::Argument);
+            return true;
+        }
+        else if ( lookahead.type == Token::FunctionBegin )
+        {
+            parse_function_call(arg_output, LexMode::Argument);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    void parse_statement(FormattedString& output, LexMode mode)
+    {
+        Token::Type type = lookahead.type;
+        lex(LexMode::Argument);
+        if ( type == Token::If )
+            parse_if(output, mode);
+        else if ( type == Token::For )
+            parse_for(output, mode);
+    }
+
+    void parse_if(FormattedString& output, LexMode mode)
+    {
+        FormattedString condition;
+        parse_argument(condition);
+        skip_function(mode);
+
+        FormattedString if_true;
+        while ( lookahead.type != Token::EndIf &&
+                lookahead.type != Token::Invalid &&
+                lookahead.type != Token::Else )
+            parse_string(if_true, mode);
+
+        FormattedString if_false;
+        if ( lookahead.type == Token::Else )
+        {
+            if ( lex(LexMode::Argument).type == Token::Argument  && value<std::string>() == "if" )
+            {
+                lex(LexMode::Argument);
+                parse_if(if_false, mode);
+            }
+            else
+            {
+                skip_function(mode);
+                while ( lookahead.type != Token::EndIf && lookahead.type != Token::Invalid )
+                    parse_string(if_false, mode);
+            }
+        }
+
+
+        output.append(IfStatement(condition, if_true, if_false));
+
+    }
+
+    void parse_for(FormattedString& output, LexMode mode)
+    {
+        if ( lookahead.type != Token::Argument )
+        {
+            while ( lex(mode).type != Token::EndFor ){}
+            skip_function(mode);
+            return;
+        }
+
+        std::string variable = value<std::string>();
+
+        FormattedString container;
+        FormattedString arg;
+        lex(LexMode::Argument);
+        while ( parse_argument(arg) )
+        {
+            container.append_packed(arg);
+        }
+        skip_function(mode);
+
+        FormattedString body;
+        while ( lookahead.type != Token::EndFor && lookahead.type != Token::Invalid )
+            parse_string(body, mode);
+
+        output.append(ForStatement(variable, container, body));
+    }
+
+    void skip_function(LexMode mode)
     {
         while ( lookahead.type != Token::FunctionEnd && lookahead.type != Token::Invalid )
-            lex();
-        lex();
+            lex(mode);
+        if ( mode == LexMode::Argument )
+            parser.input.ignore_if(melanolib::string::ascii::is_space);
+        lex(mode);
     }
 
-    Token lex(bool parameter_mode = false)
+    Token lex(LexMode mode)
     {
-        return lookahead = lex_token(parameter_mode);
+        return lookahead = lex_token(mode);
     }
 
-    Token lex_token(bool parameter_mode)
+    Token lex_token(LexMode mode)
     {
         if ( parser.finished() )
             return Token::Invalid;
+
+        if ( mode == LexMode::Argument )
+            parser.input.ignore_if(melanolib::string::ascii::is_space);
 
         auto character = parser.next_ascii();
 
@@ -558,7 +688,7 @@ private:
         if ( !melanolib::string::ascii::is_ascii(character) )
             return {Token::Unicode, parser.next()};
 
-        if ( parameter_mode )
+        if ( mode == LexMode::Argument )
         {
             parser.input.unget();
             return lex_param();
@@ -576,15 +706,26 @@ private:
 
         if ( character == '$' )
             return {Token::SimpleChar, '$'};
+
         if ( character == '(' )
-            return Token::FunctionBegin;
+        {
+            parser.input.ignore_if(melanolib::string::ascii::is_space);
+            std::string name = parser.input.get_while(is_identifier, false);
+            auto it = keywords.find(name);
+            if ( it != keywords.end() )
+                return it->second;
+            return {Token::FunctionBegin, name};
+        }
+
         if ( character == '{' )
             return {Token::Variable, parser.input.get_line('}')};
+
         if ( is_identifier(character) )
             return {
                 Token::Variable,
-                char(character) + parser.input.get_until(is_not_identifier, false)
+                char(character) + parser.input.get_while(is_identifier, false)
             };
+
         if ( melanolib::string::ascii::is_ascii(character) )
             parser.input.unget();
         return {Token::SimpleChar, '$'};
@@ -592,11 +733,6 @@ private:
 
     Token lex_param()
     {
-        parser.input.get_until(
-            [](char c) { return !melanolib::string::ascii::is_space(c); },
-            false
-        );
-
         char next = parser.input.next();
         if ( next == ')' )
             return {Token::FunctionEnd, ')'};
@@ -658,20 +794,23 @@ private:
         return melanolib::string::ascii::is_alnum(byte) || byte == '_' || byte == '-';
     }
 
-    static constexpr bool is_not_identifier(uint8_t byte)
-    {
-        return !is_identifier(byte);
-    }
-
     template<class T>
         T& value()
     {
         return melanolib::get<T>(lookahead.value);
     }
 
-
     melanolib::string::Utf8Parser parser;
     Token lookahead;
+    static const std::map<std::string, Token::Type> keywords;
+};
+
+const std::map<std::string, ConfigParser::Token::Type> ConfigParser::keywords{
+    {"if", ConfigParser::Token::If},
+    {"else", ConfigParser::Token::Else},
+    {"endif", ConfigParser::Token::EndIf},
+    {"for", ConfigParser::Token::For},
+    {"endfor", ConfigParser::Token::EndFor},
 };
 
 FormattedString FormatterConfig::decode(const std::string& source) const

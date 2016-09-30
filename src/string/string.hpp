@@ -438,12 +438,19 @@ public:
         elements.push_back(std::move(element));
     }
 
-
     void append(const FormattedString& string)
     {
         elements.reserve(size() + string.size());
         for ( const auto& element : string )
             elements.emplace_back(element.clone());
+    }
+
+    /**
+     * \brief Appends the string as a single element
+     */
+    void append_packed(const FormattedString& string)
+    {
+        elements.emplace_back(string);
     }
 
     /**
@@ -461,6 +468,11 @@ public:
         for ( const auto& e : elements )
             s += e.to_string(formatter, context);
         return s + formatter.string_end(context);
+    }
+
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
+    {
+        return encode(formatter, context);
     }
 
     /**

@@ -644,6 +644,7 @@ BOOST_AUTO_TEST_CASE( test_Filters )
     );
 
     FormattedString string = cfg.decode("$(colorize red hello)");
+    BOOST_CHECK( string.size() == 1 );
     BOOST_CHECK( cast<FilterCall>(string[0]) );
 
     auto filtered = cast<FilterCall>(string[0])->filtered();
@@ -673,14 +674,14 @@ BOOST_AUTO_TEST_CASE( test_Filters )
     BOOST_CHECK( cfg.decode("$(ucfirst 'pony princess')").encode(ascii) == "Pony princess" );
     BOOST_CHECK( cfg.decode("$(ucfirst)").encode(ascii) == "" );
 
-    auto conditional = cfg.decode("$(if $test cmp 'hello $world' 'nope')");
+    auto conditional = cfg.decode("$(ifeq $test cmp 'hello $world' 'nope')");
     conditional.replace("test", "cmp");
     conditional.replace("world", "pony");
     BOOST_CHECK( conditional.encode(ascii) == "hello pony" );
     conditional.replace("test", "fail");
     BOOST_CHECK( conditional.encode(ascii) == "nope" );
 
-    conditional = cfg.decode("$(if $test cmp 'hello')");
+    conditional = cfg.decode("$(ifeq $test cmp 'hello')");
     conditional.replace("test", "cmp");
     BOOST_CHECK( conditional.encode(ascii) == "hello" );
     conditional.replace("test", "fail");
@@ -781,4 +782,76 @@ BOOST_AUTO_TEST_CASE( test_Config_parser_edge_cases )
     BOOST_CHECK( cast<string::AsciiString>(filtered[2]) );
     BOOST_CHECK( *cast<string::AsciiString>(filtered[2]) == "bar" );
 
+}
+
+BOOST_AUTO_TEST_CASE( test_Config_if )
+{
+    FormatterConfig fmt;
+    FormatterAscii ascii;
+    auto decoded = fmt.decode("$(if $foo)true$(endif)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    BOOST_CHECK( cast<string::IfStatement>(decoded[0]) );
+    decoded.replace("foo", "1");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "true" );
+    decoded.replace("foo", "0");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "" );
+    decoded.replace("foo", "bar");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "true" );
+    decoded.replace("foo", "");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "" );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_Config_if_else )
+{
+    FormatterConfig fmt;
+    FormatterAscii ascii;
+    auto decoded = fmt.decode("$(if $foo)true$(else)false$(endif)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    BOOST_CHECK( cast<string::IfStatement>(decoded[0]) );
+    decoded.replace("foo", "1");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "true" );
+    decoded.replace("foo", "0");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "false" );
+    decoded.replace("foo", "bar");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "true" );
+    decoded.replace("foo", "");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "false" );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_Config_if_chain )
+{
+    FormatterConfig fmt;
+    FormatterAscii ascii;
+    auto decoded = fmt.decode("$(if $a)A$(else if $b)B$(else if $c)C$(else)D$(endif)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    BOOST_CHECK( cast<string::IfStatement>(decoded[0]) );
+    decoded.replace(Properties{
+        {"a", "1"},
+        {"b", "1"},
+        {"c", "1"},
+    });
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "A" );
+    decoded.replace("a", "0");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "B" );
+    decoded.replace("b", "0");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "C" );
+    decoded.replace("c", "0");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "D" );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_Config_for )
+{
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("$(for color $(1) $(2) $(3))${color}foo$(endfor)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
+    BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)foo$(2)foo$(3)foo" );
+
+    decoded = fmt.decode("$(for color '$(1)$(2)$(3)')${color}foo$(endfor)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
+    BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)$(2)$(3)foo" );
 }

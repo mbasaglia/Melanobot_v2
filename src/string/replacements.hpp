@@ -19,6 +19,7 @@
 #ifndef MELANOBOT_STRING_REPLACEMENTS_HPP
 #define MELANOBOT_STRING_REPLACEMENTS_HPP
 #include "string.hpp"
+#include "melanolib/string/stringutils.hpp"
 
 namespace string {
 
@@ -116,7 +117,6 @@ private:
     std::vector<FormattedString> arguments;
 };
 
-
 class Padding
 {
 public:
@@ -157,6 +157,89 @@ private:
     int target_size;
     double align;
     char fill;
+};
+
+class IfStatement
+{
+public:
+    IfStatement(FormattedString condition,
+                FormattedString if_true,
+                FormattedString if_false
+    ) : condition(std::move(condition)),
+        if_true(std::move(if_true)),
+        if_false(std::move(if_false))
+    {}
+
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
+    {
+        if ( is_true(condition.encode(formatter, context)) )
+            return if_true.encode(formatter, context);
+        return if_false.encode(formatter, context);
+    }
+
+    void replace(const ReplacementFunctor& func)
+    {
+        condition.replace(func);
+        if_true.replace(func);
+        if_false.replace(func);
+    }
+
+    bool is_true(std::string value) const
+    {
+        value = melanolib::string::trimmed(value);
+        if ( std::all_of(value.begin(), value.end(), melanolib::string::ascii::is_digit) )
+            return melanolib::string::to_uint(value);
+        return !value.empty();
+    }
+
+private:
+    FormattedString condition; /// \todo AST for boolean operations and comparisons?
+    FormattedString if_true;
+    FormattedString if_false;
+};
+
+class ForStatement
+{
+public:
+    ForStatement(std::string variable,
+                 FormattedString source,
+                 FormattedString subject
+    ) : variable(std::move(variable)),
+        source(std::move(source)),
+        subject(std::move(subject))
+    {}
+
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
+    {
+        std::string output;
+        for ( const auto& item : source )
+        {
+            FormattedString replace;
+            replace.push_back(item);
+            const_cast<FormattedString&>(subject).replace(variable, replace);
+            output += subject.encode(formatter, context);
+        }
+        return output;
+    }
+
+    void replace(const ReplacementFunctor& func)
+    {
+        source.replace(func);
+        subject.replace(func);
+    }
+
+    bool is_true(std::string value) const
+    {
+        value = melanolib::string::trimmed(value);
+        if ( std::all_of(value.begin(), value.end(), melanolib::string::ascii::is_digit) )
+            return melanolib::string::to_uint(value);
+        return !value.empty();
+    }
+
+private:
+    std::string variable;
+    FormattedString source;
+    FormattedString subject;
 };
 
 } // namespace string
