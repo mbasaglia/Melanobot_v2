@@ -46,9 +46,9 @@ public:
             replacement = std::move(*rep);
     }
 
-    void expand(FormattedString& output) const
+    void expand_into(FormattedString& output) const
     {
-        output.append(replacement);
+        replacement.expand_into(output);
     }
 
 private:
@@ -117,9 +117,9 @@ public:
         return filtered().encode(formatter, context);
     }
 
-    void expand(FormattedString& output) const
+    void expand_into(FormattedString& output) const
     {
-        output.append_packed(filtered());
+        filtered().expand_into(output);
     }
 
 private:
@@ -238,18 +238,37 @@ public:
         subject.replace(func);
     }
 
-    bool is_true(std::string value) const
-    {
-        value = melanolib::string::trimmed(value);
-        if ( std::all_of(value.begin(), value.end(), melanolib::string::ascii::is_digit) )
-            return melanolib::string::to_uint(value);
-        return !value.empty();
-    }
-
 private:
     std::string variable;
     FormattedString source;
     FormattedString subject;
+};
+
+class ListItem
+{
+public:
+    ListItem(FormattedString item)
+    : item(std::move(item))
+    {}
+
+    template<class T>
+        explicit ListItem(T&& element)
+    {
+        item.append(element);
+    }
+
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
+    {
+        return item.to_string(formatter, context);
+    }
+
+    void replace(const ReplacementFunctor& func)
+    {
+        item.replace(func);
+    }
+
+private:
+    FormattedString item;
 };
 
 } // namespace string

@@ -419,6 +419,7 @@ private:
             Invalid,
             Unicode,
             Argument,
+            QuotedArgument,
             Variable,
             FunctionBegin,
             FunctionEnd,
@@ -562,8 +563,15 @@ private:
 
         if ( lookahead.type == Token::Argument )
         {
+            arg_output.append(value<std::string>());
+            lex(LexMode::Argument);
+            return true;
+        }
+        else if ( lookahead.type == Token::QuotedArgument )
+        {
             /// \todo Parse inplace instead of lex + parse (and allow nested "strings")
-            arg_output = ConfigParser(value<std::string>()).parse();
+            auto argument = ConfigParser(value<std::string>()).parse();
+            arg_output.append(ListItem(argument));
             lex(LexMode::Argument);
             return true;
         }
@@ -644,7 +652,7 @@ private:
         lex(LexMode::Argument);
         while ( parse_argument(arg) )
         {
-            container.append_packed(arg);
+            container.append(arg);
         }
         skip_function(mode);
 
@@ -742,16 +750,18 @@ private:
 
         std::string arg;
         if ( next == '\'' || next == '"' )
+        {
             arg = parser.input.get_line(next);
+            return {Token::QuotedArgument, arg};
+        }
         else
+        {
             arg = next + parser.input.get_until(
                 [](char c){ return c == ')' || melanolib::string::ascii::is_space(c); },
                 false
             );
-
-        if ( arg.empty() )
-            return Token::Invalid;
-        return {Token::Argument, arg};
+            return {Token::Argument, arg};
+        }
     }
 
     /**

@@ -751,7 +751,6 @@ BOOST_AUTO_TEST_CASE( test_Config_parser_edge_cases )
     BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
     BOOST_CHECK( *cast<string::AsciiString>(decoded[0]) == ")$" );
 
-
     FilterRegistry::instance().register_filter("print",
         [](const std::vector<FormattedString>& args) -> FormattedString
         {
@@ -770,17 +769,15 @@ BOOST_AUTO_TEST_CASE( test_Config_parser_edge_cases )
     auto filtered = cast<FilterCall>(decoded[0])->filtered();
     BOOST_CHECK( filtered.size() == 0 );
 
-    decoded = fmt.decode("$(print foo '$(1)bar' )");
+    decoded = fmt.decode("$(print foo '$(red)bar' )");
     BOOST_CHECK( decoded.size() == 1 );
     BOOST_CHECK( cast<string::FilterCall>(decoded[0]) );
     filtered = cast<FilterCall>(decoded[0])->filtered();
-    BOOST_CHECK( filtered.size() == 3 );
+    BOOST_CHECK( filtered.size() == 2 );
     BOOST_CHECK( cast<string::AsciiString>(filtered[0]) );
     BOOST_CHECK( *cast<string::AsciiString>(filtered[0]) == "foo" );
-    BOOST_CHECK( cast<color::Color12>(filtered[1]) );
-    BOOST_CHECK( *cast<color::Color12>(filtered[1]) == color::red );
-    BOOST_CHECK( cast<string::AsciiString>(filtered[2]) );
-    BOOST_CHECK( *cast<string::AsciiString>(filtered[2]) == "bar" );
+    BOOST_CHECK( cast<ListItem>(filtered[1]) );
+    BOOST_CHECK_EQUAL( decoded.encode(fmt), "foo$(1)bar" );
 
 }
 
@@ -842,7 +839,7 @@ BOOST_AUTO_TEST_CASE( test_Config_if_chain )
 
 }
 
-BOOST_AUTO_TEST_CASE( test_Config_for )
+BOOST_AUTO_TEST_CASE( test_Config_for_hardcoded )
 {
     FormatterConfig fmt;
     auto decoded = fmt.decode("$(for color $(1) $(2) $(3))${color}foo$(endfor)");
@@ -854,11 +851,17 @@ BOOST_AUTO_TEST_CASE( test_Config_for )
     BOOST_CHECK_EQUAL( decoded.size(), 1 );
     BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
     BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)$(2)$(3)foo" );
+}
 
-    decoded = fmt.decode("$(for color $colors)${color}foo$(endfor)");
+BOOST_AUTO_TEST_CASE( test_Config_for_expansion )
+{
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("$(for color $colors)${color}foo$(endfor)");
     BOOST_CHECK_EQUAL( decoded.size(), 1 );
     FormattedString colors;
-    colors << color::red << color::green << color::yellow;
+    colors << ListItem(color::red)
+           << ListItem(color::green)
+           << ListItem(color::yellow);
     decoded.replace("colors", colors);
     BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
     BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)foo$(2)foo$(3)foo" );

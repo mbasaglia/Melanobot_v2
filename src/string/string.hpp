@@ -152,10 +152,10 @@ namespace detail {
      * \brief Calls a member expand
      */
     template<class T>
-        auto expand_dispatch(T&& t, FormattedString& output, OveloadTag)
-        -> melanolib::DummyType<bool, decltype(t.expand(std::declval<FormattedString&>()))>
+        auto expand_into_dispatch(T&& t, FormattedString& output, OveloadTag)
+        -> melanolib::DummyType<bool, decltype(t.expand_into(std::declval<FormattedString&>()))>
     {
-        t.expand(output);
+        t.expand_into(output);
         return true;
     }
 
@@ -163,7 +163,7 @@ namespace detail {
      * \brief Dummy fallback
      */
     template<class T>
-        bool expand_dispatch(T&& t, FormattedString& output, ...)
+        bool expand_into_dispatch(T&& t, FormattedString& output, ...)
     {
         return false;
     }
@@ -183,7 +183,7 @@ private:
         virtual std::unique_ptr<HolderBase> clone() const = 0;
         virtual const std::type_info& type() const noexcept = 0;
         virtual void replace(const ReplacementFunctor& repl) = 0;
-        virtual bool expand(FormattedString& out) const = 0;
+        virtual bool expand_into(FormattedString& out) const = 0;
     };
 
     template<class T>
@@ -201,9 +201,9 @@ private:
                 detail::replace_dispatch(object, repl, detail::OveloadTag{});
             }
 
-            bool expand(FormattedString& repl) const override
+            bool expand_into(FormattedString& repl) const override
             {
-                return detail::expand_dispatch(object, repl, detail::OveloadTag{});
+                return detail::expand_into_dispatch(object, repl, detail::OveloadTag{});
             }
 
             std::unique_ptr<HolderBase> clone() const override
@@ -293,7 +293,7 @@ public:
         return holder->type() == typeid(HeldType<T>);
     }
 
-    void expand(FormattedString& output) const;
+    void expand_into(FormattedString& output) const;
 
 private:
     explicit Element(std::unique_ptr<HolderBase>&& holder)
@@ -474,14 +474,6 @@ public:
     }
 
     /**
-     * \brief Appends the string as a single element
-     */
-    void append_packed(const FormattedString& string)
-    {
-        elements.emplace_back(string);
-    }
-
-    /**
      * \brief Encode the string using the given formatter
      */
     std::string encode(const Formatter& formatter) const
@@ -580,11 +572,16 @@ public:
         return str;
     }
 
+    void expand_into(FormattedString& output) const
+    {
+        for ( const Element& element : elements )
+            element.expand_into(output);
+    }
+
     FormattedString expanded() const
     {
         FormattedString output;
-        for ( const Element& element : elements )
-            element.expand(output);
+        expand_into(output);
         return output;
     }
 
@@ -638,9 +635,9 @@ FormattedString implode (const FormattedString& separator, const Container& elem
 }
 
 
-inline void Element::expand(FormattedString& output) const
+inline void Element::expand_into(FormattedString& output) const
 {
-    if ( !holder->expand(output) )
+    if ( !holder->expand_into(output) )
         output.append(clone());
 }
 
