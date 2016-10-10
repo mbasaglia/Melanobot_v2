@@ -29,6 +29,8 @@
 
 #include "formatter.hpp"
 #include "melanobot/error.hpp"
+#include "melanolib/scripting/object.hpp"
+#include "melanolib/string/stringutils.hpp"
 
 /**
  * \brief Namespace for string formatting
@@ -193,17 +195,17 @@ private:
 
             std::string to_string(const Formatter& visitor, Formatter::Context* context) const override
             {
-                return detail::to_string_dispatch(visitor, object, context, detail::OveloadTag{});
+                return detail::to_string_dispatch(visitor, object, context, detail::OveloadTag {});
             }
 
             void replace(const ReplacementFunctor& repl) override
             {
-                detail::replace_dispatch(object, repl, detail::OveloadTag{});
+                detail::replace_dispatch(object, repl, detail::OveloadTag {});
             }
 
             bool expand_into(FormattedString& repl) const override
             {
-                return detail::expand_into_dispatch(object, repl, detail::OveloadTag{});
+                return detail::expand_into_dispatch(object, repl, detail::OveloadTag {});
             }
 
             std::unique_ptr<HolderBase> clone() const override
@@ -547,6 +549,26 @@ public:
         );
     }
 
+    void replace(const melanolib::scripting::Object& object)
+    {
+        replace(
+            [&object](const std::string& id)
+                -> melanolib::Optional<FormattedString>
+            {
+                try
+                {
+                    return FormattedString(object.get(
+                        melanolib::string::char_split(id, '.')
+                    ).to_string());
+                }
+                catch ( const std::exception& )
+                {
+                    return {};
+                }
+            }
+        );
+    }
+
     /**
      * \brief Replace placeholders based on a map
      */
@@ -569,6 +591,13 @@ public:
     {
         FormattedString str = copy();
         str.replace(placeholder, string);
+        return str;
+    }
+
+    FormattedString replaced(const melanolib::scripting::Object& object)
+    {
+        FormattedString str = copy();
+        str.replace(object);
         return str;
     }
 
