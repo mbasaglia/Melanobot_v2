@@ -883,3 +883,30 @@ BOOST_AUTO_TEST_CASE( test_string_with_object )
     auto encoded = string.encode(fmt);
     BOOST_CHECK_EQUAL( encoded, "SimpleTypebar" );
 }
+
+BOOST_AUTO_TEST_CASE( test_Config_for_expansion_object )
+{
+    using namespace melanolib::scripting;
+    TypeSystem ts;
+    ts.register_type<SimpleType>("SimpleType");
+    ts.register_type<std::string>();
+
+    Object objfoo = ts.object<SimpleType>();
+    objfoo.set("foo", ts.object<std::string>("foo"));
+    Object objbar = ts.object<SimpleType>();
+    objbar.set("foo", ts.object<std::string>("bar"));
+    Object obj123 = ts.object<SimpleType>();
+    obj123.set("foo", ts.object<std::string>("123"));
+
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("$(for obj $objects)${obj.foo}$(endfor)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    FormattedString objects;
+    objects << ListItem(objfoo)
+            << ListItem(objbar)
+            << ListItem(obj123);
+    decoded.replace("objects", objects);
+    BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
+    auto encoded = decoded.encode(fmt);
+    BOOST_CHECK_EQUAL( encoded, "foobar123" );
+}

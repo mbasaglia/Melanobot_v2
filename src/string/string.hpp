@@ -568,9 +568,9 @@ public:
             {
                 try
                 {
-                    return FormattedString(object.get(
+                    return FormattedString() << object.get(
                         melanolib::string::char_split(id, '.')
-                    ).to_string());
+                    );
                 }
                 catch ( const std::exception& )
                 {
@@ -598,14 +598,14 @@ public:
         return str;
     }
 
-    FormattedString replaced(const std::string& placeholder, const FormattedString& string)
+    FormattedString replaced(const std::string& placeholder, const FormattedString& string) const
     {
         FormattedString str = copy();
         str.replace(placeholder, string);
         return str;
     }
 
-    FormattedString replaced(const melanolib::scripting::Object& object)
+    FormattedString replaced(const melanolib::scripting::Object& object) const
     {
         FormattedString str = copy();
         str.replace(object);

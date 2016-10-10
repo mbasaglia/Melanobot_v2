@@ -208,42 +208,6 @@ private:
     FormattedString if_false;
 };
 
-class ForStatement
-{
-public:
-    ForStatement(std::string variable,
-                 FormattedString source,
-                 FormattedString subject
-    ) : variable(std::move(variable)),
-        source(std::move(source)),
-        subject(std::move(subject))
-    {}
-
-    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
-    {
-        std::string output;
-        for ( const auto& item : source.expanded() )
-        {
-            FormattedString replace;
-            replace.push_back(item);
-            const_cast<FormattedString&>(subject).replace(variable, replace);
-            output += subject.encode(formatter, context);
-        }
-        return output;
-    }
-
-    void replace(const ReplacementFunctor& func)
-    {
-        source.replace(func);
-        subject.replace(func);
-    }
-
-private:
-    std::string variable;
-    FormattedString source;
-    FormattedString subject;
-};
-
 class ListItem
 {
 public:
@@ -267,8 +231,71 @@ public:
         item.replace(func);
     }
 
+    const FormattedString& contents() const
+    {
+        return item;
+    }
+
 private:
     FormattedString item;
+};
+
+class ForStatement
+{
+public:
+    ForStatement(std::string variable,
+                 FormattedString source,
+                 FormattedString subject
+    ) : variable(std::move(variable)),
+        source(std::move(source)),
+        subject(std::move(subject))
+    {}
+
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
+    {
+        std::string output;
+        for ( const Element& item : source.expanded() )
+        {
+            output += replace_item(item).encode(formatter, context);
+        }
+        return output;
+    }
+
+    void replace(const ReplacementFunctor& func)
+    {
+        source.replace(func);
+        subject.replace(func);
+    }
+
+private:
+    FormattedString replace_item(const Element& element) const
+    {
+        using namespace melanolib::scripting;
+        if ( element.has_type<Object>() )
+        {
+            const Object& obj = element.reference<Object>();
+            Object context = obj.type().type_system().object<SimpleType>();
+            context.set(variable, obj);
+            return subject.replaced(context);
+        }
+        else if ( element.has_type<ListItem>() )
+        {
+            const ListItem& item = element.reference<ListItem>();
+            if ( item.contents().size() == 1 )
+                return replace_item(item.contents()[0]);
+            return subject.replaced(variable, item.contents());
+        }
+        else
+        {
+            FormattedString replace;
+            replace.push_back(element);
+            return subject.replaced(variable, replace);
+        }
+    }
+
+    std::string variable;
+    FormattedString source;
+    FormattedString subject;
 };
 
 } // namespace string
