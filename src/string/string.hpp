@@ -124,6 +124,17 @@ namespace detail {
     template<class T>
         auto to_string_dispatch(const Formatter& formatter, T&& t,
                                 Formatter::Context* context, OveloadTag)
+        -> decltype(t.to_string())
+    {
+        return t.to_string();
+    }
+
+    /**
+     * \brief Calls a member to_string
+     */
+    template<class T>
+        auto to_string_dispatch(const Formatter& formatter, T&& t,
+                                Formatter::Context* context, OveloadTag)
         -> decltype(t.to_string(formatter))
     {
         return t.to_string(formatter);

@@ -866,3 +866,20 @@ BOOST_AUTO_TEST_CASE( test_Config_for_expansion )
     BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
     BOOST_CHECK_EQUAL( decoded.encode(fmt), "$(1)foo$(2)foo$(3)foo" );
 }
+
+BOOST_AUTO_TEST_CASE( test_string_with_object )
+{
+    using namespace melanolib::scripting;
+    TypeSystem ts;
+    ts.register_type<SimpleType>("SimpleType");
+    ts.register_type<std::string>();
+
+    Object obj = ts.object<SimpleType>();
+    obj.set("foo", ts.object<std::string>("bar"));
+
+    FormattedString string;
+    string << obj << obj.get("foo");
+    FormatterUtf8 fmt;
+    auto encoded = string.encode(fmt);
+    BOOST_CHECK_EQUAL( encoded, "SimpleTypebar" );
+}
