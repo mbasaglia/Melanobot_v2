@@ -796,7 +796,6 @@ BOOST_AUTO_TEST_CASE( test_Config_if )
     BOOST_CHECK_EQUAL( decoded.encode(ascii), "true" );
     decoded.replace("foo", "");
     BOOST_CHECK_EQUAL( decoded.encode(ascii), "" );
-
 }
 
 BOOST_AUTO_TEST_CASE( test_Config_if_else )
@@ -836,7 +835,24 @@ BOOST_AUTO_TEST_CASE( test_Config_if_chain )
     BOOST_CHECK_EQUAL( decoded.encode(ascii), "C" );
     decoded.replace("c", "0");
     BOOST_CHECK_EQUAL( decoded.encode(ascii), "D" );
+}
 
+BOOST_AUTO_TEST_CASE( test_Config_if_seq )
+{
+    FormatterConfig fmt;
+    FormatterAscii ascii;
+    auto decoded = fmt.decode("$(if $foo)true$(endif)$(if $foo)true$(else)false$(endif)");
+    BOOST_CHECK_EQUAL( decoded.size(), 2 );
+    BOOST_CHECK( cast<string::IfStatement>(decoded[0]) );
+    BOOST_CHECK( cast<string::IfStatement>(decoded[1]) );
+    decoded.replace("foo", "1");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "truetrue" );
+    decoded.replace("foo", "0");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "false" );
+    decoded.replace("foo", "bar");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "truetrue" );
+    decoded.replace("foo", "");
+    BOOST_CHECK_EQUAL( decoded.encode(ascii), "false" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Config_for_hardcoded )
@@ -911,7 +927,6 @@ BOOST_AUTO_TEST_CASE( test_Config_for_expansion_object )
     BOOST_CHECK_EQUAL( encoded, "foobar123" );
 }
 
-
 BOOST_AUTO_TEST_CASE( test_Config_for_expansion_iterable )
 {
     using namespace melanolib::scripting;
@@ -936,4 +951,29 @@ BOOST_AUTO_TEST_CASE( test_Config_for_expansion_iterable )
     BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
     auto encoded = decoded.encode(fmt);
     BOOST_CHECK_EQUAL( encoded, "foobar123" );
+}
+
+BOOST_AUTO_TEST_CASE( test_Config_double_for )
+{
+    FormatterConfig fmt;
+    auto decoded = fmt.decode(
+        "For 1: $(for color $colors)${color}foo$(endfor)"
+        "For 2: $(for color $colors)${color}bar$(endfor)"
+    );
+    BOOST_CHECK_EQUAL( decoded.size(), 4 );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[0]) );
+    BOOST_CHECK( cast<string::ForStatement>(decoded[1]) );
+    BOOST_CHECK( cast<string::AsciiString>(decoded[2]) );
+    BOOST_CHECK( cast<string::ForStatement>(decoded[3]) );
+
+    FormattedString colors;
+    colors << ListItem(color::red)
+           << ListItem(color::green)
+           << ListItem(color::yellow);
+    decoded.replace("colors", colors);
+
+    BOOST_CHECK_EQUAL( decoded.encode(fmt),
+        "For 1: $(1)foo$(2)foo$(3)foo"
+        "For 2: $(1)bar$(2)bar$(3)bar"
+    );
 }

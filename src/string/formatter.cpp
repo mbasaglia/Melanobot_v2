@@ -630,7 +630,10 @@ private:
                     parse_string(if_false, mode);
             }
         }
-
+        else
+        {
+            skip_function(mode);
+        }
 
         output.append(IfStatement(condition, if_true, if_false));
 
@@ -661,6 +664,8 @@ private:
             parse_string(body, mode);
 
         output.append(ForStatement(variable, container, body));
+
+        skip_function(mode);
     }
 
     void skip_function(LexMode mode)
