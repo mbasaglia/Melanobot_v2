@@ -910,3 +910,30 @@ BOOST_AUTO_TEST_CASE( test_Config_for_expansion_object )
     auto encoded = decoded.encode(fmt);
     BOOST_CHECK_EQUAL( encoded, "foobar123" );
 }
+
+
+BOOST_AUTO_TEST_CASE( test_Config_for_expansion_iterable )
+{
+    using namespace melanolib::scripting;
+    TypeSystem ts;
+    ts.register_type<SimpleType>("SimpleType");
+    ts.register_type<std::vector<std::string>>()
+        .make_iterable();
+    ts.register_type<std::string>();
+
+    Object context = ts.object<SimpleType>();
+    context.set(
+        "objects",
+        ts.object(std::vector<std::string>{
+            "foo", "bar", "123",
+        })
+    );
+
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("$(for obj $objects)${obj}$(endfor)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    decoded.replace(context);
+    BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
+    auto encoded = decoded.encode(fmt);
+    BOOST_CHECK_EQUAL( encoded, "foobar123" );
+}

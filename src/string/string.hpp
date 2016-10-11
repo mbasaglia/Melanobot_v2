@@ -181,6 +181,11 @@ namespace detail {
         return false;
     }
 
+    inline bool expand_into_dispatch(
+        const melanolib::scripting::Object& obj,
+        FormattedString& output,
+        OveloadTag);
+
 } // namespace detail
 
 /**
@@ -683,6 +688,21 @@ inline void Element::expand_into(FormattedString& output) const
 
 
 using FormattedProperties = std::unordered_map<std::string, FormattedString>;
+
+namespace detail {
+    
+    inline bool expand_into_dispatch(
+        const melanolib::scripting::Object& obj,
+        FormattedString& output,
+        OveloadTag)
+    {
+        obj.iterate([&output](const melanolib::scripting::Object& element){
+            output.append(element);
+        });
+        return true;
+    }
+
+} // namespace detail
 
 } // namespace string
 
