@@ -23,21 +23,6 @@
 #include "melanobot/melanobot.hpp"
 #include "formatter_html.hpp"
 
-
-inline void flatten_tree(
-    const PropertyTree& tree,
-    const std::string& prefix,
-    std::string& table)
-{
-    for ( const auto& prop : tree)
-    {
-        table += "<tr><td>" + prefix + prop.first
-              + "</td><td>" + prop.second.data()
-              + "</tr>";
-        flatten_tree(prop.second, prefix + prop.first + '.', table);
-    }
-}
-
 class ServiceStatus
 {
 public:

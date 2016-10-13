@@ -76,9 +76,10 @@ public:
     using PathSuffix = UriPathSlice;
     using RequestItem = WebPage::RequestItem;
     using ParentPage = StatusPage;
+    using RenderResult = melanolib::Variant<std::string, Response>;
 
-    SubPage(std::string name, UriPath path)
-        : _name(std::move(name)), _path(std::move(path))
+    SubPage(ParentPage& parent, std::string name, UriPath path)
+        : _parent(parent), _name(std::move(name)), _path(std::move(path))
     {}
 
     virtual ~SubPage(){}
@@ -98,10 +99,8 @@ public:
         return _path;
     }
 
-    virtual melanolib::Optional<Response> render(
+    virtual RenderResult render(
         const RequestItem& request,
-        BlockElement& parent,
-        const ParentPage& parent_page,
         melanolib::scripting::Object& context
     ) const = 0;
 
@@ -115,7 +114,21 @@ public:
         return List();
     }
 
+    ParentPage& parent() const
+    {
+        return _parent;
+    }
+
+protected:
+    std::string process_template(
+        const std::string& name,
+        const melanolib::scripting::Object& context) const
+    {
+        return _parent.process_template(name, context);
+    }
+
 private:
+    ParentPage& _parent;
     std::string _name;
     UriPath _path;
 };
@@ -123,17 +136,15 @@ private:
 class Home : public StatusPage::SubPage
 {
 public:
-    Home() : SubPage("Home", "") {}
+    Home(ParentPage& parent) : SubPage(parent, "Home", "") {}
 
     bool match_path(const PathSuffix& path) const
     {
         return path.empty();
     }
 
-    melanolib::Optional<Response> render(
+    RenderResult render(
         const RequestItem& request,
-        BlockElement& parent,
-        const ParentPage& parent_page,
         melanolib::scripting::Object& context
     ) const override
     {
@@ -146,39 +157,30 @@ public:
         context.set("runtime", ts.object(settings::SystemInfo::runtime_system()));
         context.set("compiler", ts.object<std::string>(SYSTEM_COMPILER));
 
-        parent.append(httpony::quick_xml::Raw(
-            parent_page.process_template("status/home.html", context)
-        ));
-
-        return {};
+        return process_template("status/home.html", context);
     }
 };
 
 class Connections : public StatusPage::SubPage
 {
 public:
-    Connections() : SubPage("Connections", "connection") {}
+    Connections(ParentPage& parent)
+        : SubPage(parent, "Connections", "connection")
+    {}
 
-    melanolib::Optional<Response> render(
+    RenderResult render(
         const RequestItem& request,
-        BlockElement& parent,
-        const ParentPage& parent_page,
         melanolib::scripting::Object& context
     ) const override
     {
         if ( request.path.size() == 0 )
-        {
-            parent.append(httpony::quick_xml::Raw(
-                parent_page.process_template("status/connections.html", context)
-            ));
-            return {};
-        }
+            return process_template("status/connections.html", context);
 
         network::Connection* conn = bot().connection(request.path[0]);
         if ( !conn )
             throw HttpError(StatusCode::NotFound);
 
-        if ( request.path.size() == 2 && parent_page.is_editable() )
+        if ( request.path.size() == 2 && parent().is_editable() )
         {
             if ( request.path[1] == "stop" )
             {
@@ -202,11 +204,7 @@ public:
         }
 
         context.set("connection", context.type().type_system().reference(*conn));
-        parent.append(httpony::quick_xml::Raw(
-            parent_page.process_template("status/connection.html", context)
-        ));
-
-        return {};
+        return process_template("status/connection.html", context);
     }
 
     virtual bool has_submenu() const override
@@ -223,22 +221,17 @@ public:
 class Services : public StatusPage::SubPage
 {
 public:
-    Services() : SubPage("Services", "service") {}
+    Services(ParentPage& parent)
+        : SubPage(parent, "Services", "service")
+    {}
 
-    melanolib::Optional<Response> render(
+    RenderResult render(
         const RequestItem& request,
-        BlockElement& parent,
-        const ParentPage& parent_page,
         melanolib::scripting::Object& context
     ) const override
     {
         if ( request.path.size() == 0 )
-        {
-            parent.append(httpony::quick_xml::Raw(
-                parent_page.process_template("status/services.html", context)
-            ));
-            return {};
-        }
+            return process_template("status/services.html", context);
 
         AsyncService* service = nullptr;
         for ( const auto& svc : bot().service_list() )
@@ -251,7 +244,7 @@ public:
             throw HttpError(StatusCode::NotFound);
 
 
-        if ( request.path.size() == 2 && parent_page.is_editable() )
+        if ( request.path.size() == 2 && parent().is_editable() )
         {
             if ( request.path[1] == "stop" )
             {
@@ -273,12 +266,9 @@ public:
         {
             throw HttpError(StatusCode::NotFound);
         }
+        return process_template("status/service.html", context);
 
         context.set("service", context.type().type_system().reference(*service));
-        parent.append(httpony::quick_xml::Raw(
-            parent_page.process_template("status/service.html", context)
-        ));
-        return {};
     }
 
     virtual bool has_submenu() const override
@@ -295,12 +285,12 @@ public:
 class GlobalSettings : public StatusPage::SubPage
 {
 public:
-    GlobalSettings() : SubPage("Global Settings", "settings") {}
+    GlobalSettings(ParentPage& parent)
+        : SubPage(parent, "Global Settings", "settings")
+    {}
 
-    melanolib::Optional<Response> render(
+    RenderResult render(
         const RequestItem& request,
-        BlockElement& parent,
-        const ParentPage& parent_page,
         melanolib::scripting::Object& context
     ) const override
     {
@@ -311,10 +301,7 @@ public:
             "global_settings",
             context.type().type_system().reference(settings::global_settings)
         );
-        parent.append(httpony::quick_xml::Raw(
-            parent_page.process_template("status/global_settings.html", context)
-        ));
-        return {};
+        return process_template("status/global_settings.html", context);
     }
 };
 
@@ -325,10 +312,10 @@ StatusPage::StatusPage(const Settings& settings)
     editable = settings.get("editable", editable);
     template_path = settings.get("template_path", template_path);
 
-    sub_pages.push_back(melanolib::New<Home>());
-    sub_pages.push_back(melanolib::New<GlobalSettings>());
-    sub_pages.push_back(melanolib::New<Connections>());
-    sub_pages.push_back(melanolib::New<Services>());
+    sub_pages.push_back(melanolib::New<Home>(*this));
+    sub_pages.push_back(melanolib::New<GlobalSettings>(*this));
+    sub_pages.push_back(melanolib::New<Connections>(*this));
+    sub_pages.push_back(melanolib::New<Services>(*this));
 }
 
 StatusPage::~StatusPage() = default;
@@ -381,9 +368,11 @@ Response StatusPage::respond(const RequestItem& request) const
     context.set("sub_request", ts.object(local_item.descend(current_page->path())));
     context.set("bot", ts.reference(melanobot::Melanobot::instance()));
 
-    auto resp = current_page->render(local_item.descend(current_page->path()), contents, *this, context);
-    if ( resp )
-        return std::move(*resp);
+    auto result = current_page->render(local_item.descend(current_page->path()), context);
+    if ( result.which() == 1 )
+        return std::move(melanolib::get<Response>(result));
+
+    contents.append(Raw(melanolib::get<std::string>(result)));
     html.body().append(contents);
 
     Response response("text/html", StatusCode::OK, request.request.protocol);
