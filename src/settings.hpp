@@ -166,6 +166,96 @@ namespace settings
         static SystemInfo compile_system();
         static SystemInfo runtime_system();
     };
+
+    /**
+     * \brief Iterator that moves through a Settings tree pre-order depth-first
+     */
+    class SettingsDepthIterator
+    {
+    public:
+        using value_type = std::pair<std::string, Settings&>;
+
+        explicit SettingsDepthIterator(Settings& tree, bool keep_root = false)
+        {
+            stack.emplace_back(std::string(), &tree, tree.begin());
+            if ( !keep_root )
+                ++*this;
+        }
+
+        SettingsDepthIterator()
+        {}
+
+        bool operator==(const SettingsDepthIterator& other) const
+        {
+            return std::equal(
+                stack.begin(), stack.end(),
+                other.stack.begin(), other.stack.end()
+            );
+        }
+
+        bool operator!=(const SettingsDepthIterator& other) const
+        {
+            return !(*this == other);
+        }
+
+        SettingsDepthIterator& operator++()
+        {
+            if ( current_subiter() == current_tree().end() )
+            {
+                stack.pop_back();
+                if ( !stack.empty() )
+                    ++*this;
+            }
+            else
+            {
+                auto subiter = current_subiter();
+                ++current_subiter();
+
+                std::string sub_prefix = current_prefix();
+                if ( !sub_prefix.empty() )
+                    sub_prefix += '.';
+
+                stack.emplace_back(
+                    sub_prefix + subiter->first,
+                    &subiter->second,
+                    subiter->second.begin()
+                );
+            }
+
+            return *this;
+        }
+
+        SettingsDepthIterator operator++(int)
+        {
+            SettingsDepthIterator copy = *this;
+            ++*this;
+            return copy;
+        }
+
+        value_type operator*()
+        {
+            return {current_prefix(), current_tree()};
+        }
+
+    private:
+        using StackItem = std::tuple<std::string, Settings*, Settings::iterator>;
+        std::vector<StackItem> stack;
+
+        std::string& current_prefix()
+        {
+            return std::get<0>(stack.back());
+        }
+
+        Settings& current_tree()
+        {
+            return *std::get<1>(stack.back());
+        }
+
+        Settings::iterator& current_subiter()
+        {
+            return std::get<2>(stack.back());
+        }
+    };
 }
 
 std::ostream& operator<< ( std::ostream& stream, const Settings& settings );

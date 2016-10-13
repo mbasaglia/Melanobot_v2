@@ -1,0 +1,12 @@
+<h1>${service.name}</h1>
+<table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Status</td><td>${service.status.element}</td></tr>
+    <tr><td>Name</td><td>${service.name}</td></tr>
+</table>
+$(if editable)
+<div class="control_buttons">
+    <a href="${request.full_path}/stop">Stop</a>
+    <a href="${request.full_path}/start">Start</a>
+</div>
+$(endif)

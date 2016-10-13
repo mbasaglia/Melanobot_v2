@@ -282,9 +282,14 @@ public:
         return editable;
     }
 
+    std::string process_template(
+        const std::string& template_name,
+        const melanolib::scripting::Object& context) const;
+
 private:
     UriPath uri;
     std::string css_file;
+    std::string template_path;
     std::vector<std::unique_ptr<SubPage>> sub_pages;
     bool editable = false;
 };

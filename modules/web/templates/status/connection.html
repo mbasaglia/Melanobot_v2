@@ -1,0 +1,26 @@
+<h1>${connection.name}</h1>
+<table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Protocol</td><td>${connection.protocol}</td></tr>
+    <tr><td>Status</td><td>${connection.status.element}</td></tr>
+    <tr><td>Name</td><td>${connection.name}</td></tr>
+    <tr><td>Config Name</td><td>${connection.config_name}</td></tr>
+    $(if ${connection.pretty_properties.size})
+        <tr><th colspan='2'>Formatting</th></tr>
+        $(for prop ${connection.pretty_properties})
+            <tr><td>${prop.key}</td><td>${prop.value}</td></tr>
+        $(endfor)
+    $(endif)
+    $(if ${connection.properties.has_children})
+        <tr><th colspan='2'>Internal</th></tr>
+        $(for setting ${connection.properties})
+            <tr><td>${setting.key}</td><td>${setting.value}</td></tr>
+        $(endfor)
+    $(endif)
+</table>
+$(if editable)
+<div class="control_buttons">
+    <a href="${request.full_path}/stop">Stop</a>
+    <a href="${request.full_path}/start">Start</a>
+</div>
+$(endif)

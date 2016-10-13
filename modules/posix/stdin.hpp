@@ -116,7 +116,9 @@ public:
 
     void command (network::Command) override {}
     // maybe could be given some actual functionality:
-    string::FormattedProperties pretty_properties() const override { return string::FormattedProperties{}; }
+    string::FormattedProperties pretty_properties() const override {
+        return string::FormattedProperties{};
+    }
 
 private:
     string::Formatter*                    formatter_;

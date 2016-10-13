@@ -1,0 +1,11 @@
+<h1>Connections</h1>
+$(if ${bot.connections.size})
+<ul>
+$(for conn ${bot.connections})
+    <li><a href="${request.base_path}/connection/${conn.name}">${conn.name}
+        ${conn.status.short_element}</a></li>
+$(endfor)
+</ul>
+$(else)
+<p>No connections available</p>
+$(endif)

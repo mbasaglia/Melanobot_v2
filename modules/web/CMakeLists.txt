@@ -20,6 +20,7 @@ web.cpp
 handler/web-api-concrete.cpp
 server/server.cpp
 server/pages.cpp
+server/type_system.cpp
 )
 
 if(${MODULE_ENABLED})

@@ -1,0 +1,11 @@
+<h1>Services</h1>
+$(if ${bot.services.size})
+<ul>
+$(for service ${bot.services})
+    <li><a href="${request.base_path}/service/${service.id}">${service.name}
+        ${service.status.short_element}</a></li>
+$(endfor)
+</ul>
+$(else)
+<p>No services available</p>
+$(endif)

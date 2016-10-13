@@ -258,6 +258,7 @@ private:
             }
             catch ( const std::exception& error )
             {
+                ErrorLog("wsv") << "Exception: " << error.what();
                 if ( status != httpony::StatusCode::InternalServerError )
                     return handle_error(request, httpony::StatusCode::InternalServerError, depth + 1);
             }
@@ -285,6 +286,7 @@ private:
         }
         catch ( const std::exception& error )
         {
+            ErrorLog("wsv") << "Exception: " << error.what();
             return handle_error(request, httpony::StatusCode::InternalServerError, 0);
         }
     }

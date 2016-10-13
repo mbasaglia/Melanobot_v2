@@ -1,0 +1,32 @@
+<h1>${project.name}</h1>
+<h2>System</h2>
+<table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Name</td><td>${project.name}</td></tr>
+    <tr><td>Version</td><td>${project.version}</td></tr>
+    <tr><td>OS</td><td>${compile.os} ${compile.os_version}</td></tr>
+    <tr><td>Processor</td><td>${compile.machine}</td></tr>
+    <tr><td>Compiler</td><td>${compiler}</td></tr>
+    <tr><td>Runtime OS</td><td>${runtime.os} ${runtime.os_version}</td></tr>
+    <tr><td>Runtime Processor</td><td>${runtime.machine}</td></tr>
+</table>
+
+$(if ${bot.connections.size})
+<h2>Connections</h2>
+<ul>
+$(for conn ${bot.connections})
+    <li><a href="${request.base_path}/connection/${conn.name}">${conn.name}
+        ${conn.status.short_element}</a></li>
+$(endfor)
+</ul>
+$(endif)
+
+$(if ${bot.services.size})
+    <h2>Services</h2>
+    <ul>
+    $(for service ${bot.services})
+        <li><a href="${request.base_path}/service/${service.id}">${service.name}
+            ${service.status.short_element}</a></li>
+    $(endfor)
+    </ul>
+$(endif)

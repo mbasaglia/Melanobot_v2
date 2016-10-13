@@ -18,23 +18,19 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "pages.hpp"
-#include "config.hpp"
-#include "melanobot/melanobot.hpp"
-#include "formatter_html.hpp"
+#include "status_page_impl.hpp"
 
 using namespace httpony::quick_xml;
 using namespace httpony::quick_xml::html;
 
 namespace web {
 
-static melanobot::Melanobot& bot()
+static  melanobot::Melanobot& bot()
 {
     return melanobot::Melanobot::instance();
 }
 
-std::shared_ptr<BlockElement> page_link(
+static std::shared_ptr<BlockElement> page_link(
     const Request& request,
     const UriPath& path,
     const Text& text)
@@ -44,58 +40,6 @@ std::shared_ptr<BlockElement> page_link(
     else
         return std::make_shared<Link>(path.url_encoded(true), text);
 }
-
-class ServiceStatus
-{
-public:
-    ServiceStatus(network::Connection::Status status)
-    {
-        if ( status > network::Connection::CHECKING )
-        {
-            status_name = "Connected";
-            short_name = "OK";
-        }
-        else if ( status >= network::Connection::CONNECTING )
-        {
-            status_name = "Connecting";
-            short_name = "...";
-        }
-        else
-        {
-            status_name = "Disconnected";
-            short_name = "(!)";
-        }
-    }
-
-    ServiceStatus(bool status)
-        : ServiceStatus(status ? network::Connection::CONNECTED : network::Connection::DISCONNECTED)
-        {}
-
-    const std::string& name() const
-    {
-        return status_name;
-    }
-
-    Attribute css_class() const
-    {
-        return Attribute("class", "status_" + melanolib::string::strtolower(status_name));
-    }
-
-    httpony::quick_xml::BlockElement element(const std::string& tag = "span") const
-    {
-        return BlockElement{tag, css_class(), Text(status_name)};
-    }
-
-    httpony::quick_xml::BlockElement short_element(const std::string& tag = "span") const
-    {
-        return BlockElement{tag, css_class(), Text(short_name)};
-    }
-
-
-private:
-    std::string status_name;
-    std::string short_name;
-};
 
 static List connection_list(const WebPage::RequestItem& request)
 {
@@ -123,18 +67,6 @@ static List service_list(const WebPage::RequestItem& request)
         services.add_item(link);
     }
     return services;
-}
-
-static void flatten_tree(
-    const PropertyTree& tree,
-    const std::string& prefix,
-    httpony::quick_xml::html::Table& table)
-{
-    for ( const auto& prop : tree)
-    {
-        table.add_data_row(Text(prop.first), Text(prop.second.data()));
-        flatten_tree(prop.second, prefix + prop.first + '.', table);
-    }
 }
 
 class StatusPage::SubPage
@@ -169,7 +101,8 @@ public:
     virtual melanolib::Optional<Response> render(
         const RequestItem& request,
         BlockElement& parent,
-        const ParentPage& parent_page
+        const ParentPage& parent_page,
+        melanolib::scripting::Object& context
     ) const = 0;
 
     virtual bool has_submenu() const
@@ -200,27 +133,23 @@ public:
     melanolib::Optional<Response> render(
         const RequestItem& request,
         BlockElement& parent,
-        const ParentPage& parent_page
+        const ParentPage& parent_page,
+        melanolib::scripting::Object& context
     ) const override
     {
-        parent.append(Element{"h1", Text{PROJECT_NAME}});
-        parent.append(Element{"h2", Text{"System"}});
-        Table table;
-        table.add_header_row(Text{"Property"}, Text{"Value"});
-        table.add_data_row(Text{"Name"}, Text{PROJECT_NAME});
-        table.add_data_row(Text{"Version"}, Text{PROJECT_DEV_VERSION});
-        settings::SystemInfo compile = settings::SystemInfo::compile_system();
-        table.add_data_row(Text{"OS"}, Text{compile.os + " " + compile.os_version});
-        table.add_data_row(Text{"Processor"}, Text{compile.machine});
-        table.add_data_row(Text{"Compiler"}, Text{SYSTEM_COMPILER});
-        settings::SystemInfo runtime = settings::SystemInfo::runtime_system();
-        table.add_data_row(Text{"Runtime OS"}, Text{runtime.os + " " + runtime.os_version});
-        table.add_data_row(Text{"Runtime Processor"}, Text{runtime.machine});
-        parent.append(table);
-        parent.append(Element{"h2", Text{"Connections"}});
-        parent.append(connection_list(request));
-        parent.append(Element{"h2", Text{"Services"}});
-        parent.append(service_list(request));
+        auto& ts = context.type().type_system();
+        auto project = ts.object<melanolib::scripting::SimpleType>();
+        project.set("name", ts.object<std::string>(PROJECT_NAME));
+        project.set("version", ts.object<std::string>(PROJECT_DEV_VERSION));
+        context.set("project", project);
+        context.set("compile", ts.object(settings::SystemInfo::compile_system()));
+        context.set("runtime", ts.object(settings::SystemInfo::runtime_system()));
+        context.set("compiler", ts.object<std::string>(SYSTEM_COMPILER));
+
+        parent.append(httpony::quick_xml::Raw(
+            parent_page.process_template("status/home.html", context)
+        ));
+
         return {};
     }
 };
@@ -233,13 +162,15 @@ public:
     melanolib::Optional<Response> render(
         const RequestItem& request,
         BlockElement& parent,
-        const ParentPage& parent_page
+        const ParentPage& parent_page,
+        melanolib::scripting::Object& context
     ) const override
     {
         if ( request.path.size() == 0 )
         {
-            parent.append(Element{"h1", Text{"Connections"}});
-            parent.append(connection_list(request.ascend(path())));
+            parent.append(httpony::quick_xml::Raw(
+                parent_page.process_template("status/connections.html", context)
+            ));
             return {};
         }
 
@@ -270,43 +201,11 @@ public:
             throw HttpError(StatusCode::NotFound);
         }
 
-        parent.append(Element{"h1", Text{request.path[0]}});
+        context.set("connection", context.type().type_system().reference(*conn));
+        parent.append(httpony::quick_xml::Raw(
+            parent_page.process_template("status/connection.html", context)
+        ));
 
-        Table table;
-        table.add_header_row(Text{"Property"}, Text{"Value"});
-        table.add_data_row(Text("Protocol"), Text(conn->protocol()));
-        table.add_data_row(Text("Status"), ServiceStatus(conn->status()).element());
-        table.add_data_row(Text("Name"), Text(conn->name()));
-        table.add_data_row(Text("Config Name"), Text(conn->config_name()));
-        table.add_data_row(Text("Formatter"), Text(conn->formatter()->name()));
-        table.add_data_row(Text("Server"), Text(conn->server().name()));
-
-        auto pretty = conn->pretty_properties();
-        if ( !pretty.empty() )
-        {
-            table.add_row(Element("th", Attribute("colspan", "2"), Text("Formatting")));
-            FormatterHtml formatter;
-            for ( const auto& prop : pretty )
-                table.add_data_row(Text(prop.first), Text(prop.second.encode(formatter)));
-        }
-
-        auto internal = conn->properties().copy();
-        if ( !internal.empty() )
-        {
-            table.add_row(Element("th", Attribute("colspan", "2"), Text("Internal")));
-            flatten_tree(internal, "", table);
-        }
-
-        parent.append(table);
-
-        if ( parent_page.is_editable() )
-        {
-            parent.append(Element("div",
-                Attribute("class", "control_buttons"),
-                Link((request.full_path()/"stop").url_encoded(), "Stop"),
-                Link((request.full_path()/"start").url_encoded(), "Start")
-            ));
-        }
         return {};
     }
 
@@ -329,13 +228,15 @@ public:
     melanolib::Optional<Response> render(
         const RequestItem& request,
         BlockElement& parent,
-        const ParentPage& parent_page
+        const ParentPage& parent_page,
+        melanolib::scripting::Object& context
     ) const override
     {
         if ( request.path.size() == 0 )
         {
-            parent.append(Element{"h1", Text{"Services"}});
-            parent.append(service_list(request.ascend(path())));
+            parent.append(httpony::quick_xml::Raw(
+                parent_page.process_template("status/services.html", context)
+            ));
             return {};
         }
 
@@ -373,23 +274,10 @@ public:
             throw HttpError(StatusCode::NotFound);
         }
 
-        parent.append(Element{"h1", Text{service->name()}});
-
-        Table table;
-        table.add_header_row(Text{"Property"}, Text{"Value"});
-        table.add_data_row(Text("Status"), ServiceStatus(service->running()).element());
-        table.add_data_row(Text("Name"), Text(service->name()));
-
-        parent.append(table);
-
-        if ( parent_page.is_editable() )
-        {
-            parent.append(Element("div",
-                Attribute("class", "control_buttons"),
-                Link((request.full_path()/"stop").url_encoded(), "Stop"),
-                Link((request.full_path()/"start").url_encoded(), "Start")
-            ));
-        }
+        context.set("service", context.type().type_system().reference(*service));
+        parent.append(httpony::quick_xml::Raw(
+            parent_page.process_template("status/service.html", context)
+        ));
         return {};
     }
 
@@ -412,18 +300,20 @@ public:
     melanolib::Optional<Response> render(
         const RequestItem& request,
         BlockElement& parent,
-        const ParentPage& parent_page
+        const ParentPage& parent_page,
+        melanolib::scripting::Object& context
     ) const override
     {
         if ( !request.path.empty() )
             throw HttpError(StatusCode::NotFound);
 
-        parent.append(Element{"h1", Text{"Global Settings"}});
-
-        Table table;
-        table.add_header_row(Text{"Property"}, Text{"Value"});
-        flatten_tree(settings::global_settings, "", table);
-        parent.append(table);
+        context.set(
+            "global_settings",
+            context.type().type_system().reference(settings::global_settings)
+        );
+        parent.append(httpony::quick_xml::Raw(
+            parent_page.process_template("status/global_settings.html", context)
+        ));
         return {};
     }
 };
@@ -433,6 +323,7 @@ StatusPage::StatusPage(const Settings& settings)
     uri = read_uri(settings, "");
     css_file = settings.get("css", css_file);
     editable = settings.get("editable", editable);
+    template_path = settings.get("template_path", template_path);
 
     sub_pages.push_back(melanolib::New<Home>());
     sub_pages.push_back(melanolib::New<GlobalSettings>());
@@ -483,7 +374,14 @@ Response StatusPage::respond(const RequestItem& request) const
     html.body().append(nav);
 
     BlockElement contents("div", Attribute("class", "contents"));
-    auto resp = current_page->render(local_item.descend(current_page->path()), contents, *this);
+    auto& ts = scripting_typesystem();
+    auto context = ts.object<melanolib::scripting::SimpleType>();
+    context.set("editable", ts.object(editable));
+    context.set("request", ts.object(local_item));
+    context.set("sub_request", ts.object(local_item.descend(current_page->path())));
+    context.set("bot", ts.reference(melanobot::Melanobot::instance()));
+
+    auto resp = current_page->render(local_item.descend(current_page->path()), contents, *this, context);
     if ( resp )
         return std::move(*resp);
     html.body().append(contents);
@@ -492,4 +390,18 @@ Response StatusPage::respond(const RequestItem& request) const
     html.print(response.body, true);
     return response;
 }
+
+std::string StatusPage::process_template(
+    const std::string& template_name,
+    const melanolib::scripting::Object& context) const
+{
+    std::ifstream template_file(template_path + '/' + template_name);
+    template_file.unsetf(std::ios::skipws);
+    auto template_str = string::FormatterConfig{}.decode(
+        std::string(std::istream_iterator<char>(template_file), {})
+    );
+    template_str.replace(context);
+    return template_str.encode(string::FormatterUtf8{});
+}
+
 } // namespace web
