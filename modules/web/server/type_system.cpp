@@ -124,6 +124,10 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
     ts.register_type<WebPage::RequestItem>("Request")
         .add_readonly("base_path", &WebPage::RequestItem::base_path)
         .add_readonly("full_path", &WebPage::RequestItem::full_path)
+        .add_method("page_link", [](const WebPage::RequestItem& request,
+                                    const Object& url, const Object& text) {
+            return page_link(request.request, url.to_string(), text.to_string());
+        })
     ;
 
     ts.register_type<settings::SystemInfo>("SystemInfo")

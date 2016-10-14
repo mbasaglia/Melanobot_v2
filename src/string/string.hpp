@@ -711,7 +711,7 @@ public:
     {
         if ( size() == 1 )
             return elements[0].to_object(ts);
-        return ts.object(this);
+        return ts.object(*this);
 
     }
 

@@ -1,0 +1,8 @@
+<ul>
+$(for service ${bot.services})
+    <li>$($request.page_link
+        "${request.base_path}/service/${service.id}"
+        "${service.name} ${service.status.short_element}"
+    )</li>
+$(endfor)
+</ul>

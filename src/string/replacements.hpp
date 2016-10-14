@@ -391,7 +391,7 @@ private:
         melanolib::scripting::Object::Arguments args;
         args.reserve(arguments.size());
         for ( const auto& string_arg : arguments )
-            args.push_back(string_arg.to_object());
+            args.push_back(string_arg.to_object(object.type().type_system()));
         return object.call(method, args);
     }
 

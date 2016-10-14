@@ -1,0 +1,8 @@
+<ul>
+$(for conn ${bot.connections})
+    <li>$($request.page_link
+        "${request.base_path}/connection/${conn.name}"
+        "${conn.name} ${conn.status.short_element}"
+    )</li>
+$(endfor)
+</ul>

@@ -25,48 +25,20 @@ using namespace httpony::quick_xml::html;
 
 namespace web {
 
-static  melanobot::Melanobot& bot()
+std::string page_link(
+    const web::Request& request,
+    const web::UriPath& path,
+    const std::string& text,
+    bool is_current_parent)
 {
-    return melanobot::Melanobot::instance();
-}
+    if ( web::UriPathSlice(request.uri.path).match_exactly(path) )
+        return "<span class='current_page'>" + text + "</span>";
 
-static std::shared_ptr<BlockElement> page_link(
-    const Request& request,
-    const UriPath& path,
-    const Text& text)
-{
-    if ( UriPathSlice(request.uri.path).match_exactly(path) )
-        return std::make_shared<Element>("span", text, Attribute("class", "current_page"));
-    else
-        return std::make_shared<Link>(path.url_encoded(true), text);
-}
+    std::string extra;
+    if ( is_current_parent )
+        extra = " class='current_page'";
 
-static List connection_list(const WebPage::RequestItem& request)
-{
-    List connections;
-    for ( const auto& conn : bot().connection_names() )
-    {
-        auto link = page_link(request.request, request.base_path()/"connection"/conn, conn);
-        link->append(ServiceStatus(bot().connection(conn)->status()).short_element());
-        connections.add_item(link);
-    }
-    return connections;
-}
-
-static List service_list(const WebPage::RequestItem& request)
-{
-    List services;
-    for ( const auto& svc : bot().service_list() )
-    {
-        auto link = page_link(
-            request.request,
-            request.base_path()/"service"/std::to_string(uintptr_t(svc.get())),
-            svc->name()
-        );
-        link->append(ServiceStatus(svc->running()).short_element());
-        services.add_item(link);
-    }
-    return services;
+    return "<a href='" + path.url_encoded(true) + "'" + extra + ">" + text + "</a>";
 }
 
 class StatusPage::SubPage
@@ -104,14 +76,9 @@ public:
         melanolib::scripting::Object& context
     ) const = 0;
 
-    virtual bool has_submenu() const
+    virtual std::string submenu(melanolib::scripting::Object& context) const
     {
-        return false;
-    }
-
-    virtual List submenu(const RequestItem& request) const
-    {
-        return List();
+        return {};
     }
 
     ParentPage& parent() const
@@ -176,7 +143,7 @@ public:
         if ( request.path.size() == 0 )
             return process_template("status/connections.html", context);
 
-        network::Connection* conn = bot().connection(request.path[0]);
+        network::Connection* conn = melanobot::Melanobot::instance().connection(request.path[0]);
         if ( !conn )
             throw HttpError(StatusCode::NotFound);
 
@@ -207,14 +174,9 @@ public:
         return process_template("status/connection.html", context);
     }
 
-    virtual bool has_submenu() const override
+    virtual std::string submenu(melanolib::scripting::Object& context) const override
     {
-        return true;
-    }
-
-    virtual List submenu(const RequestItem& request) const override
-    {
-        return connection_list(request);
+        return process_template("status/connections_menu.html", context);
     }
 };
 
@@ -234,7 +196,7 @@ public:
             return process_template("status/services.html", context);
 
         AsyncService* service = nullptr;
-        for ( const auto& svc : bot().service_list() )
+        for ( const auto& svc : melanobot::Melanobot::instance().service_list() )
             if ( std::to_string(uintptr_t(svc.get())) == request.path[0] )
             {
                 service = svc.get();
@@ -271,14 +233,9 @@ public:
         context.set("service", context.type().type_system().reference(*service));
     }
 
-    virtual bool has_submenu() const override
+    virtual std::string submenu(melanolib::scripting::Object& context) const override
     {
-        return true;
-    }
-
-    virtual List submenu(const RequestItem& request) const override
-    {
-        return service_list(request);
+        return process_template("status/services_menu.html", context);
     }
 };
 
@@ -340,27 +297,17 @@ Response StatusPage::respond(const RequestItem& request) const
         if ( !current_page && page->match_path(local_item.path) )
             current_page = page.get();
 
-        auto link = page_link(request.request, local_item.base_path() / page->path(), page->name());
-        if ( current_page == page.get() && link->tag_name() == "a" )
-            link->append(Attribute("class", "current_page"));
-        menu.add_item(link);
+        menu.add_item(Raw(page_link(
+            request.request,
+            local_item.base_path() / page->path(),
+            page->name(),
+            current_page == page.get()
+        )));
     }
     if ( !current_page )
         throw HttpError(StatusCode::NotFound);
 
-    Element nav("nav");
-    nav.append(menu);
 
-    if ( current_page->has_submenu() )
-    {
-        List submenu = current_page->submenu(local_item);
-        submenu.append(Attribute("class", "submenu"));
-        nav.append(submenu);
-    }
-
-    html.body().append(nav);
-
-    BlockElement contents("div", Attribute("class", "contents"));
     auto& ts = scripting_typesystem();
     auto context = ts.object<melanolib::scripting::SimpleType>();
     context.set("editable", ts.object(editable));
@@ -372,6 +319,20 @@ Response StatusPage::respond(const RequestItem& request) const
     if ( result.which() == 1 )
         return std::move(melanolib::get<Response>(result));
 
+    Element nav("nav");
+    nav.append(menu);
+    std::string submenu = current_page->submenu(context);
+    if ( !submenu.empty() )
+    {
+        nav.append(Element(
+            "nav",
+            Attribute("class", "submenu"),
+            Raw(std::move(submenu))
+        ));
+    }
+    html.body().append(nav);
+
+    BlockElement contents("div", Attribute("class", "contents"));
     contents.append(Raw(melanolib::get<std::string>(result)));
     html.body().append(contents);
 

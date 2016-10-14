@@ -78,6 +78,13 @@ private:
 
 namespace web {
 
+    std::string page_link(
+        const Request& request,
+        const UriPath& path,
+        const std::string& text,
+        bool is_current_parent = false
+    );
+
     melanolib::scripting::TypeSystem& scripting_typesystem();
 
 } // namespace web
