@@ -84,6 +84,7 @@ namespace element {
  * \brief Private namespace with overloads that send the right types to the right functions
  */
 namespace detail {
+    using namespace melanolib::scripting;
 
     class OveloadTag{};
 
@@ -182,9 +183,58 @@ namespace detail {
     }
 
     inline bool expand_into_dispatch(
-        const melanolib::scripting::Object& obj,
+        const Object& obj,
         FormattedString& output,
         OveloadTag);
+
+    /**
+     * \brief Calls a member to_object
+     */
+    template<class T>
+        auto to_object_dispatch(T&& t, const TypeSystem& ts, OveloadTag)
+        -> decltype(t.to_object(ts))
+    {
+        return t.to_object(ts);
+    }
+    template<class T>
+        auto to_object_direct_dispatch(T&& t, OveloadTag)
+        -> decltype(t.to_object())
+    {
+        return t.to_object();
+    }
+
+    /**
+     * Fallback
+     */
+    template<class T>
+        Object to_object_dispatch(T&& t, const TypeSystem& ts, ...)
+        {
+            return ts.object(t);
+        }
+
+    template<class T>
+        Object to_object_direct_dispatch(T&& t,...)
+        {
+            return Object({});
+        }
+
+    /**
+     * Object-specific overload
+     */
+    inline Object to_object_dispatch(
+        const Object& obj,
+        const TypeSystem&,
+        OveloadTag)
+    {
+        return obj;
+    }
+
+    inline Object to_object_direct_dispatch(
+        const Object& obj,
+        OveloadTag)
+    {
+        return obj;
+    }
 
 } // namespace detail
 
@@ -202,6 +252,8 @@ private:
         virtual const std::type_info& type() const noexcept = 0;
         virtual void replace(const ReplacementFunctor& repl) = 0;
         virtual bool expand_into(FormattedString& out) const = 0;
+        virtual detail::Object to_object() const = 0;
+        virtual detail::Object to_object(const detail::TypeSystem& ts) const = 0;
     };
 
     template<class T>
@@ -232,6 +284,16 @@ private:
             const std::type_info& type() const noexcept override
             {
                 return typeid(T);
+            }
+
+            detail::Object to_object(const detail::TypeSystem& ts) const override
+            {
+                return detail::to_object_dispatch(object, ts, detail::OveloadTag{});
+            }
+
+            detail::Object to_object() const override
+            {
+                return detail::to_object_direct_dispatch(object, detail::OveloadTag{});
             }
 
             T object;
@@ -312,6 +374,18 @@ public:
     }
 
     void expand_into(FormattedString& output) const;
+
+    melanolib::scripting::Object to_object(
+        const melanolib::scripting::TypeSystem& ts
+    ) const
+    {
+        return holder->to_object(ts);
+    }
+
+    melanolib::scripting::Object to_object() const
+    {
+        return holder->to_object();
+    }
 
 private:
     explicit Element(std::unique_ptr<HolderBase>&& holder)
@@ -628,6 +702,24 @@ public:
         FormattedString output;
         expand_into(output);
         return output;
+    }
+
+
+    melanolib::scripting::Object to_object(
+        const melanolib::scripting::TypeSystem& ts
+    ) const
+    {
+        if ( size() == 1 )
+            return elements[0].to_object(ts);
+        return ts.object(this);
+
+    }
+
+    melanolib::scripting::Object to_object() const
+    {
+        if ( size() == 1 )
+            return elements[0].to_object();
+        return melanolib::scripting::Object({});
     }
 
 // Stream-like operations

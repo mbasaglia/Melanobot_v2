@@ -422,6 +422,7 @@ private:
             QuotedArgument,
             Variable,
             FunctionBegin,
+            MethodBegin,
             FunctionEnd,
             SimpleChar,
 
@@ -497,6 +498,11 @@ private:
                 ascii += value<char>();
                 lex(mode);
             }
+            else if ( lookahead.type == Token::MethodBegin )
+            {
+                push_ascii();
+                parse_method_call(output, mode);
+            }
             else if ( lookahead.type > Token::EndKeyword )
             {
                 break;
@@ -553,6 +559,30 @@ private:
 
         if ( lookahead.type == Token::FunctionEnd )
             output.append(FilterCall(function, args));
+
+        return skip_function(mode);
+    }
+
+    void parse_method_call(FormattedString& output, LexMode mode)
+    {
+        std::string id = value<std::string>();
+        auto dot_pos = id.rfind('.');
+        if ( dot_pos == std::string::npos || dot_pos < 1 || dot_pos > id.size() - 2 )
+            return skip_function(mode);
+
+        std::string method = id.substr(dot_pos + 1);
+        id = id.substr(0, dot_pos);
+
+        std::vector<FormattedString> args;
+        FormattedString arg;
+        lex(LexMode::Argument);
+        while ( parse_argument(arg) )
+        {
+            args.push_back(arg);
+        }
+
+        if ( lookahead.type == Token::FunctionEnd )
+            output.append(MethodCall(id, method, args));
 
         return skip_function(mode);
     }
@@ -723,11 +753,19 @@ private:
         if ( character == '(' )
         {
             parser.input.ignore_if(melanolib::string::ascii::is_space);
+
+            Token::Type functype = Token::FunctionBegin;
+            if ( parser.input.peek() == '$' )
+            {
+                parser.input.ignore();
+                functype = Token::MethodBegin;
+            }
+
             std::string name = parser.input.get_while(is_identifier, false);
             auto it = keywords.find(name);
             if ( it != keywords.end() )
                 return it->second;
-            return {Token::FunctionBegin, name};
+            return {functype, name};
         }
 
         if ( character == '{' )
@@ -806,7 +844,8 @@ private:
 
     static constexpr bool is_identifier(uint8_t byte)
     {
-        return melanolib::string::ascii::is_alnum(byte) || byte == '_' || byte == '-';
+        return melanolib::string::ascii::is_alnum(byte) ||
+               byte == '_' || byte == '-' || byte == '.';
     }
 
     template<class T>

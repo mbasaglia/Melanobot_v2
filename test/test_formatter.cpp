@@ -977,3 +977,26 @@ BOOST_AUTO_TEST_CASE( test_Config_double_for )
         "For 2: $(1)bar$(2)bar$(3)bar"
     );
 }
+
+BOOST_AUTO_TEST_CASE( test_Config_object_method )
+{
+    using namespace melanolib::scripting;
+    TypeSystem ts;
+    ts.register_type<SimpleType>("SimpleType");
+    ts.register_type<std::string>()
+        .add_method("bar", &std::string::substr)
+    ;
+    ts.register_type<std::string::size_type>();
+
+    Object context = ts.object<SimpleType>();
+    context.set("foo", ts.object<std::string>("hello world"));
+    context.set("arg1", ts.object<std::string::size_type>(3));
+    context.set("arg2", ts.object<std::string::size_type>(5));
+
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("$($foo.bar $arg1 $arg2)");
+    decoded.replace(context);
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    BOOST_CHECK( cast<string::MethodCall>(decoded[0]) );
+    BOOST_CHECK_EQUAL( decoded.encode(FormatterAscii{}), "lo wo");
+}

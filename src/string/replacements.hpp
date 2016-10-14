@@ -51,6 +51,23 @@ public:
         replacement.expand_into(output);
     }
 
+    const FormattedString& value() const
+    {
+        return replacement;
+    }
+
+    melanolib::scripting::Object to_object(
+        const melanolib::scripting::TypeSystem& ts
+    ) const
+    {
+        return replacement.to_object(ts);
+    }
+
+    melanolib::scripting::Object to_object() const
+    {
+        return replacement.to_object();
+    }
+
 private:
     std::string identifier;
     FormattedString replacement;
@@ -120,6 +137,18 @@ public:
     void expand_into(FormattedString& output) const
     {
         filtered().expand_into(output);
+    }
+
+    melanolib::scripting::Object to_object(
+        const melanolib::scripting::TypeSystem& ts
+    ) const
+    {
+        return filtered().to_object(ts);
+    }
+
+    melanolib::scripting::Object to_object() const
+    {
+        return filtered().to_object();
     }
 
 private:
@@ -236,6 +265,18 @@ public:
         return item;
     }
 
+    melanolib::scripting::Object to_object(
+        const melanolib::scripting::TypeSystem& ts
+    ) const
+    {
+        return item.to_object(ts);
+    }
+
+    melanolib::scripting::Object to_object() const
+    {
+        return item.to_object();
+    }
+
 private:
     FormattedString item;
 };
@@ -296,6 +337,69 @@ private:
     std::string variable;
     FormattedString source;
     FormattedString subject;
+};
+
+class MethodCall
+{
+public:
+    MethodCall(std::string name, std::string method,
+               std::vector<FormattedString> arguments)
+        : object_identifier(std::move(name)),
+          method(std::move(method)),
+          arguments(std::move(arguments))
+    {}
+
+    void replace(const ReplacementFunctor& func)
+    {
+        auto rep = func(object_identifier);
+        if ( rep )
+            object = rep->to_object();
+
+        for ( auto& arg : arguments )
+            arg.replace(func);
+    }
+
+    std::string to_string(const Formatter& formatter, Formatter::Context* context) const
+    {
+        if ( object.has_value() )
+            return call().to_string();
+        return "";
+    }
+
+    void expand_into(FormattedString& output) const
+    {
+        if ( object.has_value() )
+            detail::expand_into_dispatch(call(), output);
+    }
+
+
+    melanolib::scripting::Object to_object(
+        const melanolib::scripting::TypeSystem& ts
+    ) const
+    {
+        return call();
+    }
+
+    melanolib::scripting::Object to_object() const
+    {
+        return call();
+    }
+
+private:
+    melanolib::scripting::Object call() const
+    {
+        melanolib::scripting::Object::Arguments args;
+        args.reserve(arguments.size());
+        for ( const auto& string_arg : arguments )
+            args.push_back(string_arg.to_object());
+        return object.call(method, args);
+    }
+
+private:
+    std::string object_identifier;
+    std::string method;
+    melanolib::scripting::Object object{{}};
+    std::vector<FormattedString> arguments;
 };
 
 } // namespace string
