@@ -21,6 +21,22 @@
 
 #include "status_page_impl.hpp"
 
+static std::string page_link(
+    const web::Request& request,
+    const web::UriPath& path,
+    const std::string& text,
+    bool is_current_parent = false)
+{
+    if ( web::UriPathSlice(request.uri.path).match_exactly(path) )
+        return "<span class='current_page'>" + text + "</span>";
+
+    std::string extra;
+    if ( is_current_parent )
+        extra = " class='current_page'";
+
+    return "<a href='" + path.url_encoded(true) + "'" + extra + ">" + text + "</a>";
+}
+
 static void init_type_system(melanolib::scripting::TypeSystem& ts)
 {
     using namespace network;
@@ -177,6 +193,33 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
     ts.register_type<PrettyProps::value_type>()
         .add_readonly("key", &PrettyProps::value_type::first)
         .add_readonly("value", &PrettyProps::value_type::second)
+    ;
+
+    ts.register_type<SubPage>("SubPage")
+        .add_readonly("name", &SubPage::name)
+        .add_readonly("path", &SubPage::path)
+        .add_readonly("show_on_menu", &SubPage::show_on_menu)
+        .add_method("submenu", &SubPage::submenu)
+        .add_method("render", &SubPage::render)
+        .add_method("page_link",
+            [](const SubPage& page, const WebPage::RequestItem& request, const SubPage& curr){
+                return page_link(
+                    request.request,
+                    request.base_path()/page.path(),
+                    page.name(),
+                    &page == &curr
+                );
+        })
+    ;
+
+    using SubPageList = std::vector<std::unique_ptr<SubPage>>;
+    ts.register_type<SubPageList>("SubPages")
+        .add_readonly("size", &SubPageList::size)
+        .make_iterable(melanolib::Begin{}, melanolib::End{},
+            [&ts](std::unique_ptr<SubPage>& subpage){
+                return ts.reference(*subpage);
+            }
+        )
     ;
 }
 

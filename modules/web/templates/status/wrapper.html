@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    $(if ${page.css_file})
+        <link rel="stylesheet" type="text/css" href="${page.css_file}" />
+    $(endif)
+    <title>Bot status | ${page.current.name}</title>
+</head>
+<body>
+<nav>
+    <ul class="menu">
+        $(for child ${page.children})
+            $(if ${child.show_on_menu})
+                <li>$($child.page_link $request $page.current)</li>
+            $(endif)
+        $(endfor)
+    </ul>
+    $($page.current.submenu $context)
+</nav>
+<div class="contents">
+$($page.current.render $context)
+</div>
+</body>
+</html>
