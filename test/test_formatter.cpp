@@ -1000,3 +1000,15 @@ BOOST_AUTO_TEST_CASE( test_Config_object_method )
     BOOST_CHECK( cast<string::MethodCall>(decoded[0]) );
     BOOST_CHECK_EQUAL( decoded.encode(FormatterAscii{}), "lo wo");
 }
+
+BOOST_AUTO_TEST_CASE( test_Config_for_if )
+{
+    FormatterConfig fmt;
+    auto decoded = fmt.decode("$(for i $items)$(if $i)foo$(else)bar$(endif)$(endfor)");
+    BOOST_CHECK_EQUAL( decoded.size(), 1 );
+    FormattedString items;
+    items << 1 << 0 << 1 << 1 << 0;;
+    decoded.replace("items", items);
+    BOOST_CHECK( cast<string::ForStatement>(decoded[0]) );
+    BOOST_CHECK_EQUAL( decoded.encode(fmt), "foobarfoofoobar" );
+}

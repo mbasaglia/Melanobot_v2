@@ -461,7 +461,8 @@ private:
         Argument
     };
 
-    void parse_string(FormattedString& output, LexMode mode)
+    void parse_string(FormattedString& output, LexMode mode,
+                      std::initializer_list<Token::Type> end_on = {})
     {
         AsciiString ascii;
 
@@ -503,8 +504,14 @@ private:
                 push_ascii();
                 parse_method_call(output, mode);
             }
+            else if ( std::find(end_on.begin(), end_on.end(), lookahead.type) != end_on.end() )
+            {
+                break;
+            }
             else if ( lookahead.type > Token::EndKeyword )
             {
+                // Mismatched end statement
+                lex(mode);
                 break;
             }
             else if ( lookahead.type > Token::Keyword )
@@ -640,10 +647,7 @@ private:
         skip_function(mode);
 
         FormattedString if_true;
-        while ( lookahead.type != Token::EndIf &&
-                lookahead.type != Token::Invalid &&
-                lookahead.type != Token::Else )
-            parse_string(if_true, mode);
+        parse_string(if_true, mode, {Token::EndIf, Token::Else});
 
         FormattedString if_false;
         if ( lookahead.type == Token::Else )
@@ -657,7 +661,8 @@ private:
             {
                 skip_function(mode);
                 while ( lookahead.type != Token::EndIf && lookahead.type != Token::Invalid )
-                    parse_string(if_false, mode);
+                    parse_string(if_false, mode, {Token::EndIf, Token::Else});
+                skip_function(mode);
             }
         }
         else
@@ -690,8 +695,7 @@ private:
         skip_function(mode);
 
         FormattedString body;
-        while ( lookahead.type != Token::EndFor && lookahead.type != Token::Invalid )
-            parse_string(body, mode);
+        parse_string(body, mode, {Token::EndFor});
 
         output.append(ForStatement(variable, container, body));
 
