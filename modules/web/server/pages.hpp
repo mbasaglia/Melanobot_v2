@@ -26,6 +26,10 @@
 
 namespace web {
 
+/**
+ * \brief Returns a typesystem with useful types ready to expose bot data
+ */
+melanolib::scripting::TypeSystem& scripting_typesystem();
 
 /**
  * \brief Web page handler rendering files in a directory on disk
@@ -257,87 +261,6 @@ public:
 private:
     std::string css_file;
     std::string extra_info;
-};
-
-class SubPage
-{
-public:
-    using PathSuffix = UriPathSlice;
-    using RequestItem = WebPage::RequestItem;
-    using Context = melanolib::scripting::Object;
-
-    SubPage(
-        std::string name,
-        UriPath path,
-        std::string page_template,
-        std::string menu_template = "",
-        bool show_on_menu = true
-    ) : _name(std::move(name)),
-        _path(std::move(path)),
-        _page_template(std::move(page_template)),
-        _menu_template(std::move(menu_template)),
-        _menu(show_on_menu)
-    {}
-
-    virtual ~SubPage(){}
-
-    virtual bool matches(const RequestItem& request) const
-    {
-        return request.path.match_exactly(_path);
-    }
-
-    const std::string& name() const
-    {
-        return _name;
-    }
-
-    const UriPath& path() const
-    {
-        return _path;
-    }
-
-    bool show_on_menu() const
-    {
-        return _menu;
-    }
-
-    /**
-     * \pre matches(request)
-     */
-    virtual melanolib::Optional<Response> prepare(
-        const RequestItem& request,
-        Context& context
-    ) const
-    {
-        return {};
-    }
-
-    std::string submenu(const Context& context) const
-    {
-        if ( _menu_template.empty() )
-            return "";
-        std::string template_path = context.get({"page", "template_path"}).to_string();
-        return process_template(template_path, _menu_template, context);
-    }
-
-    std::string render(const Context& context) const
-    {
-        std::string template_path = context.get({"page", "template_path"}).to_string();
-        return process_template(template_path, _page_template, context);
-    }
-
-    static std::string process_template(
-        const std::string& remplate_path,
-        const std::string& template_name,
-        const melanolib::scripting::Object& context
-    );
-
-private:
-    std::string _name;
-    UriPath _path;
-    std::string _page_template;
-    std::string _menu_template;
-    bool _menu;
 };
 
 /**

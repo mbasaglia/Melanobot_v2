@@ -18,25 +18,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "status_page_impl.hpp"
+#include "pages.hpp"
+#include "config.hpp"
+#include "melanobot/melanobot.hpp"
 
 
 namespace web {
-
-std::string SubPage::process_template(
-        const std::string& remplate_path,
-        const std::string& template_name,
-        const Context& context
-    )
-{
-    std::ifstream template_file(remplate_path + '/' + template_name);
-    template_file.unsetf(std::ios::skipws);
-    auto template_str = string::FormatterConfig{}.decode(
-        std::string(std::istream_iterator<char>(template_file), {})
-    );
-    template_str.replace(context);
-    return template_str.encode(string::FormatterUtf8{});
-}
 
 class Home : public SubPage
 {

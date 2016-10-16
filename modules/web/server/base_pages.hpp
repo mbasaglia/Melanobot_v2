@@ -303,5 +303,127 @@ private:
     int max_error_depth = 2;
 };
 
+/**
+ * \brief A sub-page within a page handler
+ */
+class SubPage
+{
+public:
+    using PathSuffix = UriPathSlice;
+    using RequestItem = WebPage::RequestItem;
+    using Context = melanolib::scripting::Object;
+
+    SubPage(
+        std::string name,               ///< Name to show in menus and titles
+        UriPath path,                   ///< Sub-path
+        std::string page_template,      ///< Template used to render the page
+        std::string menu_template = "", ///< Template used to render a sub-menu
+        bool show_on_menu = true        ///< Whether it should be visible on a menu
+    ) : _name(std::move(name)),
+        _path(std::move(path)),
+        _page_template(std::move(page_template)),
+        _menu_template(std::move(menu_template)),
+        _menu(show_on_menu)
+    {}
+
+    virtual ~SubPage(){}
+
+    /**
+     * \brief Whether the page shall be selected for the request
+     */
+    virtual bool matches(const RequestItem& request) const
+    {
+        return request.path.match_exactly(_path);
+    }
+
+    /**
+     * \brief Name to show in menus and titles
+     */
+    const std::string& name() const
+    {
+        return _name;
+    }
+
+    /**
+     * \brief Sub-path
+     */
+    const UriPath& path() const
+    {
+        return _path;
+    }
+
+    /**
+     * \brief Whether it should be visible on a menu
+     */
+    bool show_on_menu() const
+    {
+        return _menu;
+    }
+
+    /**
+     * \brief Prepares the context for rendering
+     * \pre matches(request)
+     * \return Nothing if it should be rendered normally, a response if
+     *         it has to return a different response
+     */
+    virtual melanolib::Optional<Response> prepare(
+        const RequestItem& request,
+        Context& context
+    ) const
+    {
+        return {};
+    }
+
+    /**
+     * \brief Renders the submenu
+     * \pre \p context contains page.template_path
+     */
+    std::string submenu(const Context& context) const
+    {
+        if ( _menu_template.empty() )
+            return "";
+        std::string template_path = context.get({"page", "template_path"}).to_string();
+        return process_template(template_path, _menu_template, context);
+    }
+
+    /**
+     * \brief Renders the page contents
+     * \pre \p context contains page.template_path
+     */
+    std::string render(const Context& context) const
+    {
+        std::string template_path = context.get({"page", "template_path"}).to_string();
+        return process_template(template_path, _page_template, context);
+    }
+
+    /**
+     * \brief Renders a template file based on the context
+     * \param template_path Path used to search templates
+     * \param template_name Relative name of the template file
+     * \param context       Context used for variable expansion
+     */
+    static std::string process_template(
+        const std::string& template_path,
+        const std::string& template_name,
+        const Context& context
+    )
+    {
+        std::ifstream template_file(template_path + '/' + template_name);
+        template_file.unsetf(std::ios::skipws);
+        auto template_str = string::FormatterConfig{}.decode(
+            std::string(std::istream_iterator<char>(template_file), {})
+        );
+        template_str.replace(context);
+        return template_str.encode(string::FormatterUtf8{});
+    }
+
+private:
+    std::string _name;
+    UriPath _path;
+    std::string _page_template;
+    std::string _menu_template;
+    bool _menu;
+};
+
 } // namespace web
 #endif // MELANOBOT_MODULE_WEB_BASE_PAGES_HPP

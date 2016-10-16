@@ -18,8 +18,66 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "base_pages.hpp"
+#include "melanobot/melanobot.hpp"
+#include "formatter_html.hpp"
 
-#include "status_page_impl.hpp"
+class ServiceStatus
+{
+public:
+    ServiceStatus(network::Connection::Status status)
+    {
+        if ( status > network::Connection::CHECKING )
+        {
+            status_name = "Connected";
+            short_name = "OK";
+        }
+        else if ( status >= network::Connection::CONNECTING )
+        {
+            status_name = "Connecting";
+            short_name = "...";
+        }
+        else
+        {
+            status_name = "Disconnected";
+            short_name = "(!)";
+        }
+    }
+
+    ServiceStatus(bool status)
+        : ServiceStatus(status ? network::Connection::CONNECTED : network::Connection::DISCONNECTED)
+        {}
+
+    const std::string& name() const
+    {
+        return status_name;
+    }
+
+    std::string css_class() const
+    {
+        return "status_" + melanolib::string::strtolower(status_name);
+    }
+
+    std::string element() const
+    {
+        return generic_element(status_name, "span");
+    }
+
+    std::string short_element() const
+    {
+        return generic_element(short_name, "span");
+    }
+
+
+private:
+    std::string generic_element(const std::string& text, const std::string& tag) const
+    {
+        return "<" + tag + " class='" + css_class() + "'>" + text + "</" + tag + ">";
+    }
+
+    std::string status_name;
+    std::string short_name;
+};
 
 static std::string page_link(
     const web::Request& request,
@@ -73,16 +131,8 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
     ;
 
     ts.register_type<ServiceStatus>("ServiceStatus")
-        .add_readonly("element", [](const ServiceStatus* status){
-            std::ostringstream ss;
-            status->element().print(ss, false);
-            return ss.str();
-        })
-        .add_readonly("short_element", [](const ServiceStatus* status){
-            std::ostringstream ss;
-            status->short_element().print(ss, false);
-            return ss.str();
-        })
+        .add_readonly("element", &ServiceStatus::element)
+        .add_readonly("short_element", &ServiceStatus::short_element)
     ;
 
     ts.register_type<Connection>("Connection")
