@@ -1,0 +1,57 @@
+<h1>Storage View$(if ${key}) ($key)$(endif)</h1>
+
+$(if ${key})
+    <p><a href="${request.base_path}/storage/${parent_key}">Up</a></p>
+$(endif)
+
+$(if {$page.editable})
+    <div class="form_table">
+        <div class="form_row form_header">
+            <div class="form_cell">Key</div>
+            <div class="form_cell">Value</div>
+            <div class="form_cell">Actions</div>
+        </div>
+        $(for setting ${storage})
+            <form method="post" class="form_row">
+                <div class="form_cell"><label for="${setting.key}">
+                    $(if ${setting.value.has_children})
+                        <a href="${request.base_path}/storage/$prefix$($html.url_encode ${setting.key})">${setting.key}</a>
+                    $(else)
+                        ${setting.key}
+                    $(endif)
+                </label></div>
+                <div class="form_cell">
+                    <input type="hidden" name="key" value="${setting.key}" />
+                    <input type="text" id="${setting.key}" name="value" value="${setting.value}" />
+                </div>
+                <div  class="form_cell">
+                    <input type="submit" name="save" value="Save" />
+                    <input type="submit" name="delete" value="Delete" />
+                </div>
+            </form>
+        $(endfor)
+        <form method="post" class="form_row">
+            <div class="form_cell"><input type="text" name="key" placeholder="New Item Key" /></div>
+            <div class="form_cell"><input type="text" name="value" placeholder="New Item Value" /></div>
+            <div class="form_cell"><input type="submit" name="save" value="Add Item"/></div>
+        </form>
+    </div>
+$(else)
+    $(if ${storage.has_children})
+        <table>
+            <tr><th>Key</th><th>Value</th>></tr>
+            $(for setting ${storage})
+                <tr>
+                    <td>$(if setting.has_children)
+                        <a href="${request.base_path}/storage/$prefix$($html.url_encode ${setting.key})">${setting.key}</a>
+                    $(else)
+                        ${setting.key}
+                    $(endif)</td>
+                    <td>${setting.value}</td>
+                </tr>
+            $(endfor)
+        </table>
+    $(else)
+        <p>Empty</p>
+    $(endif)
+$(endif)

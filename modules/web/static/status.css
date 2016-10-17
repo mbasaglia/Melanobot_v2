@@ -8,13 +8,21 @@ a:hover
     text-decoration: underline;
 }
 
-td
+td, .form_cell
 {
     border: 1px solid gray;
     padding: 0.5ex;
 }
 
-table
+.form_header.form_cell, .form_header .form_cell
+{
+/*     border-bottom: 1px solid red; */
+    border-top: 1px solid white;
+    border-left: none;
+    border-right: none;
+}
+
+table, .form_table
 {
     border-collapse: collapse;
 }
@@ -98,4 +106,24 @@ nav span.current_page
 nav .current_page
 {
     background-color: #888;
+}
+
+.form_table
+{
+    display: table;
+}
+
+.form_row
+{
+    display: table-row;
+}
+
+.form_cell
+{
+    display: table-cell;
+}
+
+.form_header
+{
+    font-weight: bold;
 }

@@ -27,11 +27,6 @@
 namespace web {
 
 /**
- * \brief Returns a typesystem with useful types ready to expose bot data
- */
-melanolib::scripting::TypeSystem& scripting_typesystem();
-
-/**
  * \brief Web page handler rendering files in a directory on disk
  */
 class RenderStatic : public WebPage

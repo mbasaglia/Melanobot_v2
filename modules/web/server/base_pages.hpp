@@ -27,6 +27,13 @@
 
 namespace web {
 
+struct Html {};
+
+/**
+ * \brief Returns a typesystem with useful types ready to expose bot data
+ */
+melanolib::scripting::TypeSystem& scripting_typesystem();
+
 class HttpServer;
 
 /**

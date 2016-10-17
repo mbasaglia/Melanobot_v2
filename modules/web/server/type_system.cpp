@@ -103,9 +103,21 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
 
     ts.register_type<bool>("bool");
     ts.register_type<uint16_t>("uint16_t");
-    ts.register_type<std::string>("string");
-    ts.register_type<SimpleType>("SimpleType");
     ts.register_type<std::size_t>("size");
+
+    ts.register_type<SimpleType>("SimpleType")
+        .add_method("set", [](SimpleType& obj, const std::string& key, const Object& value){
+            obj.set(key, value);
+            return std::string{};
+        })
+    ;
+
+    ts.register_type<std::string>("string")
+        .add_readwrite("size", &std::string::size,
+            [](std::string& str, std::size_t sz){ str.resize(sz, ' '); }
+        )
+        .add_readonly("empty", &std::string::empty)
+    ;
 
     ts.register_type<string::FormattedString>("FormattedString")
         .string_conversion([](const string::FormattedString& value){
@@ -190,10 +202,6 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
     ts.register_type<WebPage::RequestItem>("Request")
         .add_readonly("base_path", &WebPage::RequestItem::base_path)
         .add_readonly("full_path", &WebPage::RequestItem::full_path)
-        .add_method("page_link", [](const WebPage::RequestItem& request,
-                                    const Object& url, const Object& text) {
-            return page_link(request.request, url.to_string(), text.to_string());
-        })
     ;
 
     ts.register_type<settings::SystemInfo>("SystemInfo")
@@ -271,6 +279,20 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
             }
         )
     ;
+
+    ts.register_type<Html>("Html")
+        .add_readonly("escape", &httpony::quick_xml::amp_escape)
+        .add_method("page_link", [](const WebPage::RequestItem& request,
+                                    const Object& url, const Object& text) {
+            return page_link(request.request, url.to_string(), text.to_string());
+        })
+        .add_method("url_encode", &httpony::urlencode) // string, bool
+        .add_method("url_encode", [](const std::string& text) { // string
+            return httpony::urlencode(text);
+        })
+    ;
+
+
 }
 
 namespace web {

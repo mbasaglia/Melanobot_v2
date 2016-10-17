@@ -21,6 +21,7 @@
 #include "pages.hpp"
 #include "config.hpp"
 #include "melanobot/melanobot.hpp"
+#include "melanobot/storage.hpp"
 
 
 namespace web {
@@ -60,7 +61,6 @@ public:
         )
     {}
 };
-
 
 class ConnectionDetails : public SubPage
 {
@@ -131,7 +131,6 @@ public:
         )
     {}
 };
-
 
 class ServiceDetails : public SubPage
 {
@@ -218,6 +217,68 @@ public:
     }
 };
 
+class StorageView : public SubPage
+{
+public:
+    StorageView()
+        : SubPage(
+            "Storage",
+            "storage",
+            "status/storage.html"
+        )
+    {}
+
+    bool matches(const RequestItem& request) const override
+    {
+        return request.path.match_prefix(path());
+    }
+
+    melanolib::Optional<Response> prepare(
+        const RequestItem& request,
+        Context& context
+    ) const override
+    {
+        auto& ts = context.type().type_system();
+        if ( ! melanobot::has_storage() )
+        {
+            context.set("storage", ts.object<PropertyTree>());
+            return {};
+        }
+
+        std::string key;
+        std::string prefix;
+
+        if ( request.path.size() > 1 )
+        {
+            key = httpony::urldecode(request.path[1]);
+            prefix = key + '.';
+        }
+
+        if ( request.request.method == "POST" )
+        {
+            std::string edit_key = prefix + request.request.post["key"];
+            if ( edit_key.empty() )
+                throw HttpError(StatusCode::BadRequest);
+
+            if ( request.request.post.contains("delete") )
+                melanobot::storage().erase(edit_key);
+            else
+                melanobot::storage().put(edit_key, request.request.post["value"]);
+        }
+
+        std::string parent_key;
+        auto last_dot = key.rfind('.');
+        if ( last_dot != std::string::npos )
+            parent_key = key.substr(0, last_dot);
+
+        context.set("key", ts.object(key));
+        context.set("prefix", ts.object(prefix));
+        context.set("parent_key", ts.object(parent_key));
+        context.set("storage", ts.object(melanobot::storage().maybe_get_tree(key)));
+        return {};
+    }
+};
+
 StatusPage::StatusPage(const Settings& settings)
 {
     uri = read_uri(settings, "");
@@ -231,6 +292,7 @@ StatusPage::StatusPage(const Settings& settings)
     sub_pages.push_back(melanolib::New<ConnectionDetails>());
     sub_pages.push_back(melanolib::New<ServiceList>());
     sub_pages.push_back(melanolib::New<ServiceDetails>());
+    sub_pages.push_back(melanolib::New<StorageView>());
 }
 
 StatusPage::~StatusPage() = default;
@@ -256,6 +318,7 @@ Response StatusPage::respond(const RequestItem& request) const
     context.set("sub_request", ts.object(local_item.descend(current_page->path())));
     context.set("bot", ts.reference(melanobot::Melanobot::instance()));
     context.set("context", ts.reference(context));
+    context.set("html", ts.object<Html>());
 
     auto context_page = ts.object<melanolib::scripting::SimpleType>();
     context_page.set("css_file", ts.object(css_file));

@@ -362,14 +362,24 @@ public:
     std::string to_string(const Formatter& formatter, Formatter::Context* context) const
     {
         if ( object.has_value() )
-            return call().to_string();
+        {
+            try {
+                return call().to_string();
+            } catch (const std::exception&) {
+            }
+        }
         return "";
     }
 
     void expand_into(FormattedString& output) const
     {
         if ( object.has_value() )
-            detail::expand_into_dispatch(call(), output);
+        {
+            try {
+                detail::expand_into_dispatch(call(), output);
+            } catch (const std::exception&) {
+            }
+        }
     }
 
 

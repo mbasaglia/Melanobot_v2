@@ -1,6 +1,6 @@
 <ul class="submenu">
 $(for conn ${bot.connections})
-    <li>$($request.page_link
+    <li>$($html.page_link
         "${request.base_path}/connection/${conn.name}"
         "${conn.name} ${conn.status.short_element}"
     )</li>
