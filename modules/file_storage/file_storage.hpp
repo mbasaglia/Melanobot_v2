@@ -76,6 +76,11 @@ public:
      * \throws Error if the path doesn't exist
      */
     table get_map(const key_type& path) override;
+    /**
+     * \brief Get a tree at the given path
+     * \throws Error if the path doesn't exist
+     */
+    tree get_tree(const key_type& path) override;
 
 
     /**
@@ -94,6 +99,11 @@ public:
      * \returns The found value or an empty table if the path isn't defined
      */
     table maybe_get_map(const key_type& path) override;
+    /**
+     * \brief Get a tree at the given path
+     * \returns The found value or an empty tree if the path isn't defined
+     */
+    tree maybe_get_tree(const key_type& path) override;
 
     /**
      * \brief Sets the value at \c path

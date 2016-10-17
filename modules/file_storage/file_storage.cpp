@@ -165,6 +165,14 @@ Storage::table Storage::get_map(const key_type& path)
         return node_to_map(*child);
     throw melanobot::StorageError("Storage key not found: " + path);
 }
+Storage::tree Storage::get_tree(const key_type& path)
+{
+    maybe_load();
+    if ( auto child = data.get_child_optional(path) )
+        return *child;
+    throw melanobot::StorageError("Storage key not found: " + path);
+}
+
 
 Storage::value_type Storage::maybe_get_value(const key_type& path,
                                              const value_type& default_value )
@@ -187,6 +195,15 @@ Storage::table Storage::maybe_get_map(const key_type& path)
     if ( auto child = data.get_child_optional(path) )
         return node_to_map(*child);
     return table{};
+}
+Storage::tree Storage::maybe_get_tree(const key_type& path)
+{
+    maybe_load();
+    if ( path.empty() )
+        return data;
+    if ( auto child = data.get_child_optional(path) )
+        return *child;
+    return tree{};
 }
 
 void Storage::put(const key_type& path, const value_type& value)

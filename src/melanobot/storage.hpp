@@ -47,6 +47,7 @@ public:
     using sequence      = std::vector<value_type>; ///< Sequence of value
     /// Associative container for key/value
     using table         = std::unordered_map<key_type, value_type>;
+    using tree          = PropertyTree; ///< Associative hierarchical container
 
     virtual ~StorageBase() {}
 
@@ -65,6 +66,11 @@ public:
      * \throws Error if the path doesn't exist
      */
     virtual table get_map(const key_type& path) = 0;
+    /**
+     * \brief Get a tree at the given path
+     * \throws Error if the path doesn't exist
+     */
+    virtual tree get_tree(const key_type& path) = 0;
 
 
     /**
@@ -83,6 +89,11 @@ public:
      * \returns The found value or an empty table if the path isn't defined
      */
     virtual table maybe_get_map(const key_type& path) = 0;
+    /**
+     * \brief Get a tree at the given path
+     * \returns The found value or an empty tree if the path isn't defined
+     */
+    virtual tree maybe_get_tree(const key_type& path) = 0;
 
     /**
      * \brief Sets the value at \c path
