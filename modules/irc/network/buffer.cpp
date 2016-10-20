@@ -52,7 +52,7 @@ void Buffer::run_input()
 {
     schedule_read();
     boost::system::error_code err;
-    io_service.run(err);
+    asio->io_service.run(err);
     if ( err )
     {
         ErrorLog("irc", "Network Error") << err.message();
@@ -63,8 +63,8 @@ void Buffer::run_input()
 void Buffer::start()
 {
     buffer.start();
-    if ( io_service.stopped() )
-        io_service.reset();
+    if ( asio && asio->io_service.stopped() )
+        asio->io_service.reset();
     if ( !thread_output.joinable() )
         thread_output = std::move(std::thread([this]{run_output();}));
     if ( !thread_input.joinable() )
@@ -74,7 +74,8 @@ void Buffer::start()
 void Buffer::stop()
 {
     disconnect();
-    io_service.stop();
+    if ( asio )
+        asio->io_service.stop();
     buffer.stop();
     if ( thread_input.joinable() )
         thread_input.join();
@@ -138,7 +139,7 @@ void Buffer::write_line ( std::string line )
     Log("irc", '<', 1) << irc.decode(line);
 
     boost::system::error_code error;
-    boost::asio::write(socket, buffer_write, error);
+    boost::asio::write(asio->socket, buffer_write, error);
     if (error && error != boost::asio::error::eof )
     {
         ErrorLog("irc", "Network Error") << error.message();
@@ -155,11 +156,11 @@ bool Buffer::connect(const network::Server& server)
     if ( connected() )
         disconnect();
     try {
+        asio = melanolib::New<Asio>();
         buffer.start();
         boost::asio::ip::tcp::resolver::query query(server.host, std::to_string(server.port));
-        boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-        socket = boost::asio::ip::tcp::socket(io_service);
-        boost::asio::connect(socket, endpoint_iterator);
+        boost::asio::ip::tcp::resolver::iterator endpoint_iterator = asio->resolver.resolve(query);
+        boost::asio::connect(asio->socket, endpoint_iterator);
         flood_timer = network::Clock::now();
     } catch ( const boost::system::system_error& err ) {
         ErrorLog("irc", "Network Error") << err.what();
@@ -174,8 +175,8 @@ void Buffer::disconnect()
     if ( connected() )
     {
         try {
-            socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-            socket.close();
+            asio->socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+            asio->socket.close();
         } catch ( const boost::system::system_error& err ) {
             ErrorLog("irc", "Network Error") << err.what();
         }
@@ -184,12 +185,12 @@ void Buffer::disconnect()
 
 bool Buffer::connected() const
 {
-    return socket.is_open();
+    return asio && asio->socket.is_open();
 }
 
 void Buffer::schedule_read()
 {
-    boost::asio::async_read_until(socket, buffer_read, "\r\n",
+    boost::asio::async_read_until(asio->socket, buffer_read, "\r\n",
         [this](const boost::system::error_code& error, std::size_t)
         { return on_read_line(error); });
 }

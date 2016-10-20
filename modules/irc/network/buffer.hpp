@@ -157,11 +157,15 @@ private:
     int         flood_bytes_penalty = 0;
 
 // Network:
-    boost::asio::streambuf              buffer_read;
-    boost::asio::streambuf              buffer_write;
-    boost::asio::io_service             io_service;
-    boost::asio::ip::tcp::resolver      resolver{io_service};
-    boost::asio::ip::tcp::socket        socket{io_service};
+    struct Asio
+    {
+        boost::asio::io_service             io_service;
+        boost::asio::ip::tcp::resolver      resolver{io_service};
+        boost::asio::ip::tcp::socket        socket{io_service};
+    };
+    boost::asio::streambuf  buffer_read;
+    boost::asio::streambuf  buffer_write;
+    std::unique_ptr<Asio>   asio;
 
     /**
      * \brief While active, keep processing reads

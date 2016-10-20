@@ -149,7 +149,7 @@ string::FormattedString FormatterIrc::decode(const std::string& source) const
         }
     }
 
-
+    push_flags(true);
 
     return str;
 }

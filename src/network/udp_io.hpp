@@ -76,13 +76,11 @@ public:
     bool connect(const Server& server)
     {
         try {
+            asio = melanolib::New<Asio>();
             boost::asio::ip::udp::resolver::query query(
                 server.host, std::to_string(server.port));
-            boost::asio::ip::udp::endpoint endpoint = *resolver.resolve(query);
-            socket = boost::asio::ip::udp::socket(io_service);
-            socket.connect(endpoint);
-            if ( io_service.stopped() )
-                io_service.reset();
+            boost::asio::ip::udp::endpoint endpoint = *asio->resolver.resolve(query);
+            asio->socket.connect(endpoint);
             return true;
         } catch ( const boost::system::system_error& err ) {
             melanolib::callback(on_error, err.what());
@@ -99,10 +97,14 @@ public:
         if ( connected() )
         {
             boost::system::error_code ec;
-            socket.close(ec);
+            asio->io_service.poll(ec);
+            if ( !ec )
+                asio->socket.cancel(ec);
+            if ( !ec )
+                asio->socket.close(ec);
             if ( ec )
                 melanolib::callback(on_error, ec.message());
-            io_service.stop();
+            asio->io_service.stop();
         }
     }
 
@@ -111,7 +113,7 @@ public:
      */
     bool connected() const
     {
-        return socket.is_open();
+        return asio && asio->socket.is_open();
     }
 
     /**
@@ -123,13 +125,14 @@ public:
      */
     bool write(std::string datagram)
     {
-        try {
-            socket.send(boost::asio::buffer(datagram));
-            return true;
-        } catch ( const boost::system::system_error& err ) {
-            melanolib::callback(on_error, err.what());
+        boost::system::error_code err;
+        asio->socket.send(boost::asio::buffer(datagram), 0, err);
+        if ( err )
+        {
+            melanolib::callback(on_error, err.message());
             return false;
         }
+        return true;
     }
 
     /**
@@ -142,7 +145,7 @@ public:
         try {
             std::string datagram;
             datagram.resize(max_bytes);
-            auto len = socket.receive(boost::asio::mutable_buffers_1(&datagram[0], max_bytes));
+            auto len = asio->socket.receive(boost::asio::mutable_buffers_1(&datagram[0], max_bytes));
             datagram.resize(len);
             return datagram;
         } catch ( const boost::system::system_error& err ) {
@@ -158,7 +161,7 @@ public:
     {
         schedule_read();
         boost::system::error_code err;
-        io_service.run(err);
+        asio->io_service.run(err);
         if ( err )
         {
             melanolib::callback(on_error, err.message());
@@ -173,7 +176,7 @@ public:
     {
         if ( !connected() ) return {};
         boost::system::error_code err;
-        auto ep = socket.remote_endpoint(err);
+        auto ep = asio->socket.remote_endpoint(err);
         return err ? network::Server() : network::Server{ep.address().to_string(), ep.port()};
     }
 
@@ -184,16 +187,20 @@ public:
     {
         if ( !connected() ) return {};
         boost::system::error_code err;
-        auto ep = socket.local_endpoint(err);
+        auto ep = asio->socket.local_endpoint(err);
         return err ? network::Server() : network::Server{ep.address().to_string(), ep.port()};
     }
 
 private:
-    boost::asio::io_service             io_service;             ///< IO service
-    boost::asio::ip::udp::resolver      resolver{io_service};   ///< Query resolver
-    boost::asio::ip::udp::socket        socket{io_service};     ///< Socket
-    std::string::size_type              max_bytes = 1024;       ///< Max size of a datagram
-    std::string                         receive_buffer;         ///< Buffer for async reads
+    struct Asio
+    {
+        boost::asio::io_service        io_service;           ///< IO service
+        boost::asio::ip::udp::resolver resolver{io_service}; ///< Query resolver
+        boost::asio::ip::udp::socket   socket{io_service};   ///< Socket
+    };
+    std::unique_ptr<Asio>   asio;
+    std::string::size_type  max_bytes = 1024;       ///< Max size of a datagram
+    std::string             receive_buffer;         ///< Buffer for async reads
 
     /**
      * \brief Schedules an asyncrhonous read
@@ -201,7 +208,7 @@ private:
     void schedule_read()
     {
         receive_buffer.resize(max_bytes);
-        socket.async_receive(
+        asio->socket.async_receive(
             boost::asio::mutable_buffers_1(&receive_buffer[0], max_bytes),
                 [this](const boost::system::error_code& error, std::size_t nbytes)
                 { return on_receive(error, nbytes); });
