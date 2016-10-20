@@ -235,7 +235,7 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
 
     ts.ensure_type<ServiceList::size_type>();
     ts.register_type<ServiceList>("ServiceList")
-        .make_iterable(WrapReferencePolicy{})
+//         .make_iterable(WrapReferencePolicy{})
         .add_readonly("size", &ServiceList::size)
     ;
 
@@ -273,9 +273,9 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
     using SubPageList = std::vector<std::unique_ptr<SubPage>>;
     ts.register_type<SubPageList>("SubPages")
         .add_readonly("size", &SubPageList::size)
-        .make_iterable(melanolib::Begin{}, melanolib::End{},
-            [&ts](std::unique_ptr<SubPage>& subpage){
-                return ts.reference(*subpage);
+        .make_iterable(melanolib::Begin<SubPageList>{}, melanolib::End<SubPageList>{},
+            [](std::unique_ptr<SubPage>& subpage){
+                return wrap_reference(*subpage);
             }
         )
     ;
@@ -291,8 +291,6 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
             return httpony::urlencode(text);
         })
     ;
-
-
 }
 
 namespace web {
