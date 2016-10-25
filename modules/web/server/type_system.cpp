@@ -235,7 +235,7 @@ static void init_type_system(melanolib::scripting::TypeSystem& ts)
 
     ts.ensure_type<ServiceList::size_type>();
     ts.register_type<ServiceList>("ServiceList")
-//         .make_iterable(WrapReferencePolicy{})
+        .make_iterable(WrapReferencePolicy{})
         .add_readonly("size", &ServiceList::size)
     ;
 
