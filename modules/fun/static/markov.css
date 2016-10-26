@@ -1,0 +1,45 @@
+@media only screen and (max-width: 400px) {
+
+label
+{
+    display: block;
+}
+
+body
+{
+    margin: 0.5ex;
+    padding: 0;
+}
+
+} /* @media */
+
+
+@media only screen and (min-width: 401px) {
+
+form
+{
+    display: table;
+}
+
+form > p
+{
+    display: table-row;
+}
+
+form > p > :first-child
+{
+    width: 50%;
+}
+
+input, form span, label
+{
+    display: table-cell;
+}
+
+} /* @media */
+
+input, select
+{
+    width: 100%;
+    box-sizing: border-box;
+}

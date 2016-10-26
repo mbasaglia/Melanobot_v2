@@ -401,6 +401,7 @@ public:
         uri = read_uri(settings);
         title = settings.get("title", title);
         raw_link = settings.get("raw_link", raw_link);
+        css_file = settings.get("css_file", css_file);
     }
 
     bool matches(const RequestItem& request) const override
@@ -422,41 +423,69 @@ public:
             select_pony.append(Option(item.first, selected == item.first));
 
         HtmlDocument html(title);
+        if ( !css_file.empty() )
+            html.head().append(Element{"link",
+                Attribute{"rel", "stylesheet"},
+                Attribute{"type", "text/css"},
+                Attribute{"href", css_file}
+            });
 
-        Element submit_p{"p", Input("submit", "submit", "Chat!")};
+        Element submit_p("p");
 
         if ( !raw_link.empty() )
         {
-            submit_p.append(
+            submit_p.append(Element{"span",
                 Input("raw", "submit", "Raw result",
                     Attribute{"onclick", "this.form.action='" + raw_link + "';"})
-            );
+            });
         }
+        else
+        {
+
+            submit_p.append(Element{"span"});
+        }
+
+        submit_p.append(
+            Element{"span", Input("submit", "submit", "Chat!")}
+        );
 
         html.body().append(
             Element{"h1", Text{title}},
             Element{"form",
                 Element{"p",
                     Label("character", "Character"),
-                    std::move(select_pony),
+                    Element{"span", std::move(select_pony)},
                 },
                 Element{"p",
                     Label("prompt", "Prompt"),
-                    Input("prompt", "text", request.get["prompt"])},
+                    Element{"span", Input("prompt", "text", request.get["prompt"])},
+                    Attribute("title",
+                        "Text that must appear in the reply, "
+                        "leave empty to get a completely random result."),
+                },
                 Element{"p",
                     Label("min-words", "Min words"),
-                    Input("min-words", "number",
+                    Element{"span", Input("min-words", "number",
                           request.get.get("min-words", "5"),
                           Attribute{"min", "0"},
                           Attribute{"max", std::to_string(max_words)}
                     )},
+                    Attribute("title",
+                        "Minimum number of words to generate, "
+                        "the generator will try its best to satisfy this "
+                        "based on the available data."),
+                },
                 Element{"p",
                     Label("enough-words", "Enough words"),
-                    Input("enough-words", "number",
+                    Element{"span", Input("enough-words", "number",
                           request.get.get("enough-words", "10"),
                           Attribute{"min", "0"},
                           Attribute{"max", std::to_string(max_words)}
                     )},
+                    Attribute("title",
+                        "Number if words after which the generator will try to "
+                        "find a good point to end a sentence"),
+                },
                 submit_p
             }
         );
@@ -488,6 +517,7 @@ private:
     web::UriPath uri;
     std::string title = "Chat generator";
     std::string raw_link;
+    std::string css_file;
 };
 
 /**
