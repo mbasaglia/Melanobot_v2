@@ -51,7 +51,7 @@ protected:
             quit_msg = message.copy();
 
         msg.destination->disconnect(std::move(quit_msg));
-        melanobot::Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop("AdminQuit", "quit command");
         return true;
     }
 

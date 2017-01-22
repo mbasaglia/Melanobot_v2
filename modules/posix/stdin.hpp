@@ -135,7 +135,10 @@ private:
         if ( err )
         {
             ErrorLog("std", "Network Error") << err.message();
-            melanobot::Melanobot::instance().stop(); /// \todo move this in error handler
+            network::Message msg;
+            msg.type = network::Message::ERROR;
+            msg.message = err.message();
+            msg.send(this);
         }
     }
 

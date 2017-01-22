@@ -114,7 +114,7 @@ protected:
     {
         if ( get_action() != "loop" )
             set_action("restart");
-        melanobot::Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop("MelanobotShRestart", "restart command");
         return true;
     }
 
@@ -136,7 +136,7 @@ protected:
     bool on_handle(network::Message& msg)
     {
         set_action("quit");
-        melanobot::Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop("MelanobotShQuit", "quit command");
         return true;
     }
 

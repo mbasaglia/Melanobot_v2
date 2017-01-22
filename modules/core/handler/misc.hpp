@@ -558,7 +558,7 @@ protected:
     bool on_handle(network::Message& msg) override
     {
         settings::global_settings.put("exit_code", 1);
-        melanobot::Melanobot::instance().stop();
+        melanobot::Melanobot::instance().stop("ErrorAbort", "abort from error message");
         return true;
     }
 };

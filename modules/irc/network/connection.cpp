@@ -408,7 +408,7 @@ void IrcConnection::handle_message(network::Message msg)
     }
     else if ( msg.command == "ERROR" )
     {
-        ErrorLog errl("irc", "Server Error:");
+        ErrorLog errl("irc", "Server Error");
         if ( msg.params.empty() )
             errl << "Unknown error";
         else

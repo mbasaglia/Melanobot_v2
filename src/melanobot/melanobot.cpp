@@ -29,13 +29,19 @@ Melanobot::Melanobot() : MessageConsumer(nullptr)
 
 Melanobot::~Melanobot()
 {
-    stop();
+    stop("Melanobot", "premature destruction");
 }
 
-void Melanobot::stop()
+void Melanobot::stop(const std::string& source, const std::string& reason)
 {
     if ( !messages.active() )
         return;
+
+    Log("sys", '!')
+        << color::red << "Quit: "
+        << color::cyan << source << ' '
+        << color::nocolor << reason
+    ;
 
     messages.stop();
     for ( auto &conn : connections )

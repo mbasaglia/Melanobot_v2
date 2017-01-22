@@ -81,7 +81,7 @@ try
 
     melanobot::Melanobot::instance().start();
     melanobot::Melanobot::instance().run();
-    melanobot::Melanobot::instance().stop();
+    melanobot::Melanobot::instance().stop("main", "end of execution");
     /// \todo some way to reload the config and restart the bot
 }
 catch ( const melanobot::MelanobotError& exc )

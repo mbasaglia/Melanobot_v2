@@ -58,7 +58,7 @@ public:
      * \brief Stops the bot
      * \thread external \lock none
      */
-    void stop();
+    void stop(const std::string& source, const std::string& reason);
 
     /**
      * \brief Inform the bot there's an incoming message
