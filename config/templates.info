@@ -92,7 +92,7 @@ Xonotic
                 reply       "$hostname"
             }
         }
-        XonoticMaps                     ; "maps" shpws a list of maps
+        XonoticMaps                     ; "maps" shows a list of maps
     }
 
     ; IRC to Xonotic
