@@ -58,6 +58,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_xonotic_initialize(const Settings&)
     module::register_handler<xonotic::XonoticMatchScore>("XonoticMatchScore");
     module::register_handler<xonotic::XonoticHostError>("XonoticHostError");
     module::register_handler<xonotic::XonoticUpdateBans>("XonoticUpdateBans");
+    module::register_handler<xonotic::ShowRecordSet>("ShowRecordSet");
 
     module::register_handler<xonotic::ListPlayers>("ListPlayers");
     module::register_handler<xonotic::XonoticStatus>("XonoticStatus");

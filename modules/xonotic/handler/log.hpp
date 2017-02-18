@@ -706,5 +706,34 @@ protected:
     }
 };
 
+/**
+ * \brief Shows :recordset
+ */
+class ShowRecordSet : public ParseEventlog
+{
+public:
+    ShowRecordSet(const Settings& settings, MessageConsumer* parent)
+    : ParseEventlog(R"(^:recordset:(\d+):(.*))", settings, parent)
+    {
+        message = settings.get("message",
+            "$(4)*$(-) $name$(-) set a new record: $(-b)$time$(-) seconds");
+    }
+
+protected:
+    bool on_handle(network::Message& msg, const std::smatch& match) override
+    {
+        user::User user = msg.source->get_user(match[1]);
+        auto props = msg.source->pretty_properties(user);
+        props["vote"] = std::string(match[2]);
+        reply_to(msg, message.replaced(props));
+        return true;
+    }
+
+private:
+    string::FormattedString message;
+};
+
+
+
 } // namespace xonotic
 #endif // XONOTIC_HANDLER_LOG_HPP

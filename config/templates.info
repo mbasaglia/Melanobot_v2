@@ -195,6 +195,7 @@ Xonotic
         }
         XonoticMatchScore               ; Shows the score at match end
         ShowVotes                       ; Show vote calls and results
+        ShowRecordSet                   ; Shows new player time records
         XonoticHostError                ; Notifies admins that the server crashed
         {
             notify      @admin
