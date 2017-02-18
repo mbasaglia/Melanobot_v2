@@ -178,7 +178,7 @@ std::pair<melanolib::cstring_view, melanolib::cstring_view>
 
 bool Engine::is_challenge_response(melanolib::cstring_view command) const
 {
-    return command == "challenge";
+    return command.strequal("challenge");
 }
 
 melanolib::cstring_view Engine::filter_challenge(melanolib::cstring_view message) const
