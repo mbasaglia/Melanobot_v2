@@ -164,7 +164,7 @@ public:
         help = "Lists current scores";
         status_line = read_string(settings, "status_line",
             "Playing $(dark_cyan)$gametype$(-) on $(1)$map$(-), "
-            "$(b)$active$(-) players, $(b)$bots$(-) bots, $(b)$spectators$(-) spectators."
+            "$(-b)$active$(-) players, $(-b)$bots$(-) bots, $(-b)$spectators$(-) spectators."
         );
         player_line =  read_string(settings, "player_line", "$name $frags");
         include_spectators = settings.get("include_spectators", include_spectators);
