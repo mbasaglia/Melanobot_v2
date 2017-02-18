@@ -48,6 +48,7 @@ Xonotic
         direct          1
 
         ListPlayers                     ; "who" shows the connected players
+        XonoticScores                   ; "score" shows current scores
 
         Group
         {

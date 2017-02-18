@@ -64,6 +64,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_xonotic_initialize(const Settings&)
     module::register_handler<xonotic::XonoticMaps>("XonoticMaps");
     module::register_handler<xonotic::XonoticBan>("XonoticBan");
     module::register_handler<xonotic::XonoticKick>("XonoticKick");
+    module::register_handler<xonotic::XonoticScores>("XonoticScores");
 
 
     module::register_connection<unvanquished::UnvanquishedConnection>("unvanquished");

@@ -152,6 +152,68 @@ protected:
 };
 
 /**
+ * \brief Lists current scores
+ */
+class XonoticScores : public core::ConnectionMonitor
+{
+public:
+    XonoticScores(const Settings& settings, MessageConsumer* parent)
+        : ConnectionMonitor("", settings, parent)
+    {
+        synopsis += " [filter]";
+        help = "Lists current scores";
+        status_line = read_string(settings, "status_line",
+            "Playing $(dark_cyan)$gametype$(-) on $(1)$map$(-), "
+            "$(b)$active$(-) players, $(b)$bots$(-) bots, $(b)$spectators$(-) spectators."
+        );
+        player_line =  read_string(settings, "player_line", "$name $frags");
+        include_spectators = settings.get("include_spectators", include_spectators);
+        include_bots = settings.get("include_bots", include_bots);
+    }
+
+protected:
+    bool on_handle(network::Message& msg)
+    {
+        std::vector<user::User> users = monitored->get_users();
+
+        std::vector<string::FormattedString> player_lines;
+        int active = 0;
+        int spectators = 0;
+        for ( const user::User& user : users )
+        {
+            if ( !include_bots && user.host.empty() )
+                continue;
+
+            if ( user.property("frags") == "-666" )
+            {
+                spectators++;
+                if ( !include_spectators )
+                    continue;
+            }
+            else
+            {
+                active++;
+            }
+
+            player_lines.push_back(player_line.replaced(monitored->pretty_properties(user)));
+        }
+        auto props = monitored->pretty_properties();
+        props["active"] = std::to_string(active);
+        props["spectators"] = std::to_string(spectators);
+        reply_to(msg, status_line.replaced(props));
+        for ( const auto& line : player_lines )
+            reply_to(msg, line);
+
+        return true;
+    }
+
+    string::FormattedString status_line;
+    string::FormattedString player_line;
+    bool include_spectators = false;
+    bool include_bots = false;
+};
+
+/**
  * \brief Lists xonotic maps matching a query
  */
 class XonoticMaps : public core::ConnectionMonitor
