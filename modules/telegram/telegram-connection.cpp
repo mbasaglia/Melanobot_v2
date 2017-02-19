@@ -206,6 +206,8 @@ void TelegramConnection::say(const network::OutputMessage& message)
     /// \todo somehow encode reply_to on target
     payload.put("chat_id", message.target);
     payload.put("text", str.encode(*formatter_));
+    Log("telegram", '>') << color::magenta << message.target
+        << color::nocolor << ' ' << str;
     post("sendMessage", payload, log_errors_callback);
 }
 
@@ -221,7 +223,7 @@ void TelegramConnection::post(const std::string& method,
                               const ApiCallback& callback,
                               const ErrorCallback& on_error)
 {
-    web::Request web_request("GET", api_uri(method));
+    web::Request web_request("POST", api_uri(method));
     web_request.body.start_output("application/json");
     boost::property_tree::write_json(web_request.body, payload, false);
     request(std::move(web_request), callback, on_error);
@@ -426,6 +428,7 @@ void TelegramConnection::process_events(httpony::io::InputContentStream& body)
         ErrorLog("telegram") << "Malformed event data";
         return;
     }
+
     try
     {
         for ( auto pt : content.get_child("result") )
@@ -444,14 +447,13 @@ void TelegramConnection::process_events(httpony::io::InputContentStream& body)
                     << color::nocolor << ' ' << msg.message;
                 msg.send(this);
             }
+            ++event_id;
         }
     }
     catch(const std::exception& e)
     {
         ErrorLog("telegram") << "Error processing event " << event_id.load();
     }
-
-    ++event_id;
 
     melanobot::storage().put(storage_key() + ".event_id", std::to_string(event_id));
 }
