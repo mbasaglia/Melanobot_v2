@@ -46,6 +46,13 @@ public:
     const User* user(const std::string& local_id) const;
 
     /**
+     * \brief Get a user by global id
+     * \return A pointer to the user or null if not found
+     */
+    User* global_user(const std::string& global_id);
+    const User* global_user(const std::string& global_id) const;
+
+    /**
      * \brief Get the first user with the matching property
      * \return A pointer to the user or null if not found
      */

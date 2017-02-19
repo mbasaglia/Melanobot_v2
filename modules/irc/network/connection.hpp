@@ -153,11 +153,6 @@ public:
      */
     string::FormattedProperties pretty_properties() const override;
 
-    /**
-     * \thead external \lock data
-     */
-    user::UserCounter count_users(const std::string& channel = {}) const override;
-
 private:
     friend class Buffer;
 

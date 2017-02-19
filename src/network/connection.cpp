@@ -127,6 +127,27 @@ void AuthConnection::update_user(const std::string& local_id,
     }
 }
 
+user::User* AuthConnection::add_or_update_user(const user::User& user)
+{
+    auto lock = make_lock(mutex);
+
+    if ( user::User* existing = user_manager.user(user.local_id) )
+    {
+        if ( !user.global_id.empty() && user.global_id != existing->global_id )
+            Log(protocol(), '!', 3)
+                << "User " << color::dark_cyan << user.local_id
+                << color::nocolor << " is authed as "
+                << color::cyan << user.global_id;
+
+        *existing = user;
+        return existing;
+    }
+    else
+    {
+        return user_manager.add_user(user);
+    }
+}
+
 user::User AuthConnection::get_user(const std::string& local_id) const
 {
     auto lock = make_lock(mutex);
@@ -203,6 +224,7 @@ std::vector<user::User> AuthConnection::users_in_group(const std::string& group)
     auto lock = make_lock(mutex);
     return auth_system.users_with_auth(group);
 }
+
 std::vector<user::User> AuthConnection::real_users_in_group(const std::string& group) const
 {
     auto lock = make_lock(mutex);
@@ -229,6 +251,24 @@ bool AuthConnection::channel_mask(const std::vector<std::string>& channels,
                 return true;
     }
     return false;
+}
+
+user::UserCounter AuthConnection::count_users(const std::string& channel) const
+{
+    auto lock = make_lock(mutex);
+
+    // network
+    if ( channel.empty() )
+        return { std::max(0, int(user_manager.users_reference().size())-1), 1, 0 };
+
+    auto norm_channel = normalize_channel(channel);
+
+    // private
+    if ( is_private_channel(norm_channel) )
+        return { 1, 1, 2 };
+
+    // channel
+    return { int(user_manager.channel_users(channel).size())-1, 1, 0 };
 }
 
 

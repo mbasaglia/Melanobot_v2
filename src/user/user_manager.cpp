@@ -23,13 +23,6 @@ namespace user {
 
 User* UserManager::add_user(const User& user)
 {
-    /*for ( User& u : users_ )
-        if ( u.local_id == user.local_id )
-        {
-            u = user;
-            return &u;
-        }*/
-
     users_.push_back(user);
     return &users_.back();
 }
@@ -46,6 +39,22 @@ const User* UserManager::user(const std::string& local_id) const
 {
     for ( const User& u : users_ )
         if ( u.local_id == local_id )
+            return &u;
+    return nullptr;
+}
+
+User* UserManager::global_user(const std::string& global_id)
+{
+    for ( User& u : users_ )
+        if ( u.global_id == global_id )
+            return &u;
+    return nullptr;
+}
+
+const User* UserManager::global_user(const std::string& global_id) const
+{
+    for ( const User& u : users_ )
+        if ( u.global_id == global_id )
             return &u;
     return nullptr;
 }

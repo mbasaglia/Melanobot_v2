@@ -54,7 +54,8 @@ struct User
            network::Connection* origin = nullptr
          )
         : name(std::move(name)), host(std::move(host)),
-          local_id(std::move(local_id)), global_id(std::move(global_id))
+          local_id(std::move(local_id)), global_id(std::move(global_id)),
+          origin(origin)
     {}
 
     /**

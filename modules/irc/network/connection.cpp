@@ -1043,24 +1043,4 @@ string::FormattedProperties IrcConnection::pretty_properties() const
     };
 }
 
-user::UserCounter IrcConnection::count_users(const std::string& channel) const
-{
-    auto lock = make_lock(mutex);
-
-    // network
-    if ( channel.empty() )
-        return { std::max(0, int(user_manager.users_reference().size())-1), 1, 0 };
-
-    // channel
-    if ( channel[0] == '#' )
-        return { int(user_manager.channel_users(channel).size())-1, 1, 0 };
-
-    // self
-    if ( irc::strtolower(channel) == current_nick_lowecase )
-        return { 0, 1, 1 };
-
-    // user
-    return { 1, 0, 1 };
-}
-
 } // namespace irc

@@ -386,6 +386,17 @@ public:
         return channel;
     }
 
+    /**
+     * \thead external \lock data
+     */
+    user::UserCounter count_users(const std::string& channel = {}) const override;
+
+    /**
+     * \thead external \lock data
+     * \returns A pointer to the user stored internally
+     */
+    user::User* add_or_update_user(const user::User& user);
+
 protected:
     /**
      * \brief Loads the given settings an initializes auth mappings
