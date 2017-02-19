@@ -49,7 +49,7 @@ std::unique_ptr<IrcConnection> IrcConnection::create(
 IrcConnection::IrcConnection ( const network::Server&   server,
                                const Settings&          settings,
                                const std::string&       name )
-    : Connection(name),
+    : AuthConnection(name),
      main_server(server),
      current_server(server),
      buffer(*this, settings.get_child("buffer", {}))
@@ -82,20 +82,7 @@ void IrcConnection::read_settings(const Settings& settings)
     for ( const auto& chan : channels )
         command({"JOIN", {chan}, 1024});
 
-    for ( const auto pt: settings.get_child("users", {}) )
-    {
-        add_to_group(pt.first, pt.second.data());
-    }
-
-    auto groups = settings.get_child_optional("groups");
-    if ( groups )
-        for ( const auto pt: *groups )
-        {
-            auth_system.add_group(pt.first);
-            auto inherits = melanolib::string::comma_split(pt.second.data());
-            for ( const auto& inh : inherits )
-                auth_system.grant_access(inh, pt.first);
-        }
+    setup_auth(settings);
 }
 
 void IrcConnection::connect()
@@ -943,6 +930,7 @@ string::Formatter* IrcConnection::formatter() const
 {
     return formatter_;
 }
+
 bool IrcConnection::channel_mask(const std::vector<std::string>& channels,
                                  const std::string& mask) const
 {
@@ -1002,80 +990,22 @@ user::User IrcConnection::parse_prefix(const std::string& prefix)
     return user;
 }
 
-/// \todo change this to accept a reference to user::User instead of local_id?
-bool IrcConnection::user_auth(const std::string& local_id,
-                              const std::string& auth_group) const
-{
-    if ( auth_group.empty() )
-        return true;
-    
-    auto lock = make_lock(mutex);
-    const user::User* user = user_manager.user(local_id);
-    if ( user )
-        return auth_system.in_group(*user, auth_group);
-
-    return auth_system.in_group(build_user(local_id), auth_group);
-}
-
-void IrcConnection::update_user(const std::string& local_id,
-                                const Properties& properties)
-{
-    auto lock = make_lock(mutex);
-    user::User* user = user_manager.user(local_id);
-    if ( user )
-    {
-        user->update(properties);
-
-        auto it = properties.find("global_id");
-        if ( it != properties.end() )
-            Log("irc", '!', 3) << "User " << color::dark_cyan << user->local_id
-                << color::nocolor << " is authed as " << color::cyan << it->second;
-    }
-}
-
-void IrcConnection::update_user(const std::string& local_id,
-                                const user::User& updated)
-{
-    auto lock = make_lock(mutex);
-    user::User* user = user_manager.user(local_id);
-    if ( user )
-    {
-        if ( !updated.global_id.empty() && updated.global_id != user->global_id )
-            Log("irc", '!', 3) << "User " << color::dark_cyan << updated.local_id
-                << color::nocolor << " is authed as " << color::cyan << updated.global_id;
-
-        *user = updated;
-    }
-}
-
 std::string IrcConnection::name() const
 {
     auto lock = make_lock(mutex);
     return current_nick;
 }
 
-user::User IrcConnection::get_user(const std::string& local_id) const
+
+bool IrcConnection::is_private_channel(const std::string& channel) const
 {
-    auto lock = make_lock(mutex);
-    const user::User* user = user_manager.user(local_id);
-    if ( user )
-        return *user;
-    return {};
+    return channel.empty() || channel[0] != '#';
 }
 
-std::vector<user::User> IrcConnection::get_users(const std::string& channel) const
+
+std::string IrcConnection::normalize_channel(const std::string& channel) const
 {
-    auto lock = make_lock(mutex);
-
-    std::list<user::User> list;
-    if ( channel.empty() )
-        list = user_manager.users();
-    else if ( channel[0] == '#' )
-        list = user_manager.channel_users(strtolower(channel));
-    else
-        list = { *user_manager.user(strtolower(channel)) };
-
-    return std::vector<user::User>(list.begin(), list.end());
+    return strtolower(channel);
 }
 
 user::User IrcConnection::build_user(const std::string& exname) const
@@ -1094,71 +1024,6 @@ user::User IrcConnection::build_user(const std::string& exname) const
         user.name = exname;
 
     return user;
-}
-
-bool IrcConnection::add_to_group( const std::string& username, const std::string& group )
-{
-    std::vector<std::string> groups = melanolib::string::comma_split(group);
-
-    if ( groups.empty() || username.empty() )
-        return false;
-
-    user::User user = build_user(username);
-
-    if ( !groups.empty() )
-    {
-        auto lock = make_lock(mutex);
-        groups.erase(std::remove_if(groups.begin(), groups.end(),
-                        [this, user](const std::string& str)
-                        { return auth_system.in_group(user, str); }),
-                    groups.end()
-        );
-        if ( !groups.empty() && auth_system.add_user(user, groups) )
-        {
-            Log("irc", '!', 3) << "Registered user " << color::cyan
-                << username << color::nocolor << " in "
-                << melanolib::string::implode(", ", groups);
-            return true;
-        }
-    }
-    return false;
-}
-
-bool IrcConnection::remove_from_group(const std::string& username, const std::string& group)
-{
-    if ( group.empty() || username.empty() )
-        return false;
-
-    user::User user = build_user(username);
-
-    auto lock = make_lock(mutex);
-    if ( auth_system.in_group(user, group, false) )
-    {
-        auth_system.remove_user(user, group);
-        return true;
-    }
-
-    return false;
-}
-
-std::vector<user::User> IrcConnection::users_in_group(const std::string& group) const
-{
-    auto lock = make_lock(mutex);
-    return auth_system.users_with_auth(group);
-}
-std::vector<user::User> IrcConnection::real_users_in_group(const std::string& group) const
-{
-    auto lock = make_lock(mutex);
-
-    auto user_group = auth_system.group(group);
-    if ( !user_group )
-        return {};
-
-    std::vector<user::User> users;
-    for ( const user::User& user : user_manager )
-        if ( user_group->contains(user, true) )
-            users.push_back(user);
-    return users;
 }
 
 LockedProperties IrcConnection::properties()

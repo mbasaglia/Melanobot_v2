@@ -37,7 +37,7 @@ namespace irc {
 /**
  * \brief IRC connection
  */
-class IrcConnection : public network::Connection
+class IrcConnection : public network::AuthConnection
 {
 public:
     /**
@@ -125,63 +125,21 @@ public:
     std::string name() const override;
 
     /**
-     * \brief Get whether a user has the given authorization level
-     * \thead external \lock data
+     * \thead external \lock none
      */
-    bool user_auth(const std::string& local_id,
-                   const std::string& auth_group) const override;
-    /**
-     * \brief Update the properties of a user by local_id
-     * \thead external \lock data
-     */
-    void update_user(const std::string& local_id,
-                     const Properties& properties) override;
-    /**
-     * \thead external \lock data
-     */
-    void update_user(const std::string& local_id,
-                     const user::User& updated) override;
-    /**
-     * \thead external \lock data
-     */
-    user::User get_user(const std::string& local_id) const override;
+    bool is_private_channel(const std::string& channel) const override;
 
     /**
-     * \thead external \lock data
+     * \thead external \lock none
      */
-    std::vector<user::User> get_users( const std::string& channel ) const override;
-
-    /**
-     * \param user  A user local_id, if it begins with a \@, it's considered a
-     *              host name, if it begins with a !, it's considered a global_id
-     * \param group A list of groups separated by commas or spaces
-     * \thead external \lock data
-     */
-    bool add_to_group(const std::string& user, const std::string& group) override;
-
-    /**
-     * \param user  A user local_id, if it begins with a \@, it's considered a
-     *              host name, if it begins with a !, it's considered a global_id
-     * \param group A list of groups separated by commas or spaces
-     * \thead external \lock data
-     */
-    bool remove_from_group(const std::string& user, const std::string& group) override;
-
-    /**
-     * \thead external \lock data
-     */
-    std::vector<user::User> users_in_group(const std::string& group) const override;
-    /**
-     * \thead external \lock data
-     */
-    std::vector<user::User> real_users_in_group(const std::string& group) const override;
+    std::string normalize_channel(const std::string& channel) const override;
 
     /**
      * \brief Build a user::User from an extended name
      * \param exname A user local_id, if it begins with a \@, it's considered a
      *               host name, if it begins with a !, it's considered a global_id
      */
-    user::User build_user(const std::string& exname) const;
+    user::User build_user(const std::string& exname) const override;
 
     /**
      * \brief Returns properties reported by RPL_ISUPPORT, for features
@@ -245,8 +203,6 @@ private:
      */
     user::User parse_prefix(const std::string& prefix);
 
-    mutable std::mutex mutex;
-
     /**
      * \brief IRC server to connect to
      */
@@ -306,15 +262,6 @@ private:
      * \brief Connection status
      */
     AtomicStatus connection_status;
-
-    /**
-     * \brief User manager
-     */
-    user::UserManager user_manager;
-    /**
-     * \brief User authorization system
-     */
-    user::AuthSystem  auth_system;
 };
 
 } // namespace irc

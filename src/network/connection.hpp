@@ -292,6 +292,121 @@ public:
 };
 
 /**
+ * \brief A connection supporting an auth system
+ */
+class AuthConnection : public Connection
+{
+public:
+    using Connection::Connection;
+
+    /**
+     * \brief Get whether a user has the given authorization level
+     * \thead external \lock data
+     */
+    bool user_auth(const std::string& local_id,
+                   const std::string& auth_group) const override;
+    /**
+     * \brief Update the properties of a user by local_id
+     * \thead external \lock data
+     */
+    void update_user(const std::string& local_id,
+                     const Properties& properties) override;
+    /**
+     * \thead external \lock data
+     */
+    void update_user(const std::string& local_id,
+                     const user::User& updated) override;
+
+    /**
+     * \thead external \lock data
+     */
+    user::User get_user(const std::string& local_id) const override;
+
+    /**
+     * \thead external \lock data
+     */
+    std::vector<user::User> get_users(
+        const std::string& channel_mask = ""
+    ) const override;
+
+    /**
+     * \brief Build a user::User from a local_id
+     * \thead external \lock data
+     */
+    virtual user::User build_user(const std::string& local_id) const
+    {
+        return get_user(local_id);
+    }
+
+    /**
+     * \param user  A user local_id
+     * \param group A list of groups separated by commas or spaces
+     * \thead external \lock data
+     */
+    bool add_to_group(const std::string& user, const std::string& group) override;
+
+    /**
+     * \param user  A user local_id
+     * \param group A list of groups separated by commas or spaces
+     * \thead external \lock data
+     */
+    bool remove_from_group(const std::string& user, const std::string& group) override;
+
+    /**
+     * \thead external \lock data
+     */
+    std::vector<user::User> users_in_group(const std::string& group) const override;
+
+    /**
+     * \thead external \lock data
+     */
+    std::vector<user::User> real_users_in_group(const std::string& group) const override;
+
+    /**
+     * \brief Default implementations compares as a CSV list of channels
+     */
+    bool channel_mask(
+        const std::vector<std::string>& channels,
+        const std::string& mask
+    ) const override;
+
+    /**
+     * \brief Whether a channel name is a private chat
+     */
+    virtual bool is_private_channel(const std::string& channel) const
+    {
+        return false;
+    }
+
+    /**
+     * \brief Normalizes a channel name
+     */
+    virtual std::string normalize_channel(const std::string& channel) const
+    {
+        return channel;
+    }
+
+protected:
+    /**
+     * \brief Loads the given settings an initializes auth mappings
+     * \thread main \lock none
+     */
+    void setup_auth(const Settings& settings);
+
+    mutable std::recursive_mutex mutex;
+
+    /**
+     * \brief User manager
+     */
+    user::UserManager user_manager;
+    /**
+     * \brief User authorization system
+     */
+    user::AuthSystem  auth_system;
+
+};
+
+/**
  * \brief Creates connections from settings
  */
 class ConnectionFactory : public melanolib::Singleton<ConnectionFactory>
