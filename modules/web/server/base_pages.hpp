@@ -141,13 +141,12 @@ public:
 
     virtual Response respond(const RequestItem& request) const = 0;
 
-protected:
-    UriPath read_uri(const Settings& settings, const std::string& default_value = "") const
+    static UriPath read_uri(const Settings& settings, const std::string& default_value = "")
     {
         return read_uri("uri", settings, default_value);
     }
 
-    UriPath read_uri(const std::string& name, const Settings& settings, const std::string& default_value = "") const
+    static UriPath read_uri(const std::string& name, const Settings& settings, const std::string& default_value = "")
     {
         return melanolib::string::char_split(settings.get(name, default_value), '/');
     }
@@ -220,6 +219,11 @@ public:
         return response;
     }
 
+    void add_web_page(std::unique_ptr<WebPage> page)
+    {
+        web_pages.push_back(std::move(page));
+    }
+
 protected:
     void load_pages(const Settings& settings)
     {
@@ -228,7 +232,7 @@ protected:
             if ( page.first.empty() || !melanolib::string::ascii::is_upper(page.first[0]) )
                 continue;
             else if ( auto page_ptr = PageRegistry::instance().build_web_page(page.first, page.second) )
-                web_pages.push_back(std::move(page_ptr));
+                add_web_page(std::move(page_ptr));
             else if ( auto err_ptr = PageRegistry::instance().build_error_page(page.first, page.second) )
                 error_pages.push_back(std::move(err_ptr));
             else

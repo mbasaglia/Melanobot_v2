@@ -19,6 +19,7 @@
 #include "handler/web-api-concrete.hpp"
 #include "client/http.hpp"
 #include "server/pages.hpp"
+#include "server/push_pages.hpp"
 #include "module/melanomodule.hpp"
 
 /**
@@ -51,4 +52,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
     web::PageRegistry::instance().register_page<web::HtmlErrorPage>("HtmlErrorPage");
     web::PageRegistry::instance().register_page<web::StatusPage>("StatusPage");
     web::PageRegistry::instance().register_page<web::Redirect>("Redirect");
+    web::PageRegistry::instance().register_page<web::PushPage>("PushPage");
 }

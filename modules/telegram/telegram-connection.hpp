@@ -23,12 +23,13 @@
 
 #include <functional>
 
-#include "web/aliases.hpp"
+#include "web/server/push_pages.hpp"
 #include "network/connection.hpp"
 
 namespace telegram{
 
-class TelegramConnection : public network::AuthConnection
+
+class TelegramConnection : public network::AuthConnection, web::PushReceiver
 {
 public:
     using ApiCallback = std::function<void(PropertyTree)>;
@@ -145,6 +146,12 @@ public:
 
     user::User build_user(const std::string& local_id) const override;
 
+protected:
+    /**
+     * \thead external \lock none
+     */
+    web::Response receive_push(const RequestItem& request) override;
+
 private:
     /**
      * \brief Callback used to just log error requests
@@ -206,9 +213,26 @@ private:
 
     ApiCallback log_errors_callback;
 
-// Polling
-    /// \todo Read push notifications instead of polling
+// Webhook/Push
+    /**
+     * \brief Whether to use weeb hooks (otherwise polling)
+     */
+    bool webhook = true;
 
+    /**
+     * \brief URL given to telegram to send push requests to
+     *
+     * This should be end up sending requests to the PushPage associated
+     * with this connection
+     */
+    std::string webhook_url;
+
+    /**
+     * \brief Maximum number of connections telegram can make to webhook_url
+     */
+    int webhook_max_connections = 1;
+
+// Polling
     /**
      * \brief Polls the API for event updates
      */

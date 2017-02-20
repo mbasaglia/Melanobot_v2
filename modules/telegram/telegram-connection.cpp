@@ -51,7 +51,7 @@ TelegramConnection::TelegramConnection(const std::string& api_endpoint,
                                        const std::string& token,
                                        const Settings& settings,
                                        const std::string& name)
-    : AuthConnection(name)
+    : AuthConnection(name), PushReceiver(name, settings, name + token)
 {
     log_errors_callback = [this](const PropertyTree& tree){ log_errors(tree); };
 
@@ -64,10 +64,17 @@ TelegramConnection::TelegramConnection(const std::string& api_endpoint,
     );
     connection_status = DISCONNECTED;
 
-    polling_timer = melanolib::time::Timer(
-        [this]{poll();},
-        melanolib::time::seconds(settings.get("polling_time", 15))
-    );
+    webhook = settings.get("webhook", webhook);
+    webhook_url = settings.get("webhook_url", webhook_url);
+    webhook_max_connections = settings.get("webhook_max_connections", webhook_max_connections);
+
+    if ( !webhook )
+    {
+        polling_timer = melanolib::time::Timer(
+            [this]{poll();},
+            melanolib::time::seconds(settings.get("polling_time", 15))
+        );
+    }
 
     setup_auth(settings);
 }
@@ -295,36 +302,68 @@ void TelegramConnection::connect()
 
     connection_status = CONNECTING;
 
-    get(
-        "getMe",
-        [this](const PropertyTree& response){
-            if ( response.get("ok", false) )
-            {
-                connection_status = CONNECTED;
-                polling_timer.start();
-                auto lock = make_lock(mutex);
-                properties_.put_child("user", response.get_child("result"));
-            }
-            else
-            {
-                polling_timer.stop();
-                connection_status = DISCONNECTED;
-                ErrorLog("telegram") << "Could not connect:"
-                    << response.get("description", "Unknown error");
-            }
-        },
-        [this](){
+    std::function<void (const PropertyTree&)> on_success;
+
+
+    if ( webhook )
+    {
+        on_success = [this](const PropertyTree&){
+            command(network::Command("getMe"));
+        };
+    }
+    else
+    {
+        on_success = [this](const PropertyTree& response)
+        {
+            polling_timer.start();
+            auto lock = make_lock(mutex);
+            properties_.put_child("user", response.get_child("result"));
+        };
+    }
+
+    auto on_error = [this]()
+    {
+        polling_timer.stop();
+        connection_status = DISCONNECTED;
+        ErrorLog("telegram") << "Could not connect: Network error";
+    };
+
+    auto on_connect = [this, on_success](const PropertyTree& response)
+    {
+        if ( response.get("ok", false) )
+        {
+            connection_status = CONNECTED;
+            if ( on_success )
+                on_success(response);
+        }
+        else
+        {
             polling_timer.stop();
             connection_status = DISCONNECTED;
-            ErrorLog("telegram") << "Could not connect: Network error";
+            ErrorLog("telegram") << "Could not connect:"
+                << response.get("description", "Unknown error");
         }
-    );
+    };
+
+    if ( webhook )
+    {
+        PropertyTree props;
+        props.put("url", webhook_url);
+        props.put("max_connections", webhook_max_connections);
+        post("setWebhook", props, on_connect, on_error);
+    }
+    else
+    {
+        get("getMe", on_connect, on_error);
+    }
+
 }
 
 void TelegramConnection::disconnect(const string::FormattedString&)
 {
     connection_status = DISCONNECTED;
     polling_timer.stop();
+    post("deleteWebhook", {}, log_errors_callback);
 }
 
 void TelegramConnection::reconnect(const string::FormattedString&)
@@ -409,6 +448,12 @@ user::User TelegramConnection::user_attributes(const PropertyTree& user) const
 
     return user::User(full_name, "", username, userid, const_cast<TelegramConnection*>(this));
 
+}
+
+web::Response TelegramConnection::receive_push(const RequestItem& request)
+{
+    process_events(request.request.body.input());
+    return web::Response();
 }
 
 void TelegramConnection::process_events(httpony::io::InputContentStream& body)
