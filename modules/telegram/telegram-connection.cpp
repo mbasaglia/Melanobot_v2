@@ -470,6 +470,7 @@ void TelegramConnection::process_event(PropertyTree& event)
         msg.channels = {message->get("chat.id", "")};
         Log("telegram", '<', 1) << color::magenta << msg.from.name
             << color::nocolor << ' ' << msg.message;
+        msg.direct = message->get("chat.type", "") == "private";
         msg.send(this);
     }
     ++event_id;
