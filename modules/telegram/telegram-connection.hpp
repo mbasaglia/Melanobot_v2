@@ -180,6 +180,12 @@ private:
     void process_events(httpony::io::InputContentStream& body);
 
     /**
+     * \brief Processes a single event
+     * \thead input \lock none
+     */
+    void process_event(PropertyTree& event);
+
+    /**
      * \brief Returns the URI for the given API method
      * \thead external \lock none
      */

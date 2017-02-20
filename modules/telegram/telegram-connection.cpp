@@ -456,17 +456,31 @@ web::Response TelegramConnection::receive_push(const RequestItem& request)
     return web::Response();
 }
 
+void TelegramConnection::process_event(PropertyTree& event)
+{
+    event_id = event.get("update_id", event_id.load());
+    if ( auto message = event.get_child_optional("message") )
+    {
+        network::Message msg;
+        std::istringstream socket_stream(msg.raw);
+
+        msg.chat(message->get<std::string>("text"));
+        msg.from = user_attributes(message->get_child("from"));
+        msg.direct = false;
+        msg.channels = {message->get("chat.id", "")};
+        Log("telegram", '<', 1) << color::magenta << msg.from.name
+            << color::nocolor << ' ' << msg.message;
+        msg.send(this);
+    }
+    ++event_id;
+}
+
 void TelegramConnection::process_events(httpony::io::InputContentStream& body)
 {
     PropertyTree content;
     try
     {
         content = httpony::json::JsonParser().parse(body);
-        if ( !content.get("ok", false) )
-        {
-            log_errors(content);
-            return;
-        }
     }
     catch(httpony::json::JsonError&)
     {
@@ -476,23 +490,22 @@ void TelegramConnection::process_events(httpony::io::InputContentStream& body)
 
     try
     {
-        for ( auto pt : content.get_child("result") )
+        if ( content.count("update_id") )
         {
-            event_id = pt.second.get("update_id", event_id.load());
-            if ( auto message = pt.second.get_child_optional("message") )
+            process_event(content);
+        }
+        else
+        {
+            if ( !content.get("ok", false) )
             {
-                network::Message msg;
-                std::istringstream socket_stream(msg.raw);
-
-                msg.chat(message->get<std::string>("text"));
-                msg.from = user_attributes(message->get_child("from"));
-                msg.direct = false;
-                msg.channels = {message->get("chat.id", "")};
-                Log("telegram", '<', 1) << color::magenta << msg.from.name
-                    << color::nocolor << ' ' << msg.message;
-                msg.send(this);
+                log_errors(content);
+                return;
             }
-            ++event_id;
+
+            for ( auto pt : content.get_child("result") )
+            {
+                process_event(pt.second);
+            }
         }
     }
     catch(const std::exception& e)
