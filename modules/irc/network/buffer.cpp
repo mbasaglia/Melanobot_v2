@@ -181,6 +181,7 @@ void Buffer::disconnect()
             ErrorLog("irc", "Network Error") << err.what();
         }
     }
+    asio.release();
 }
 
 bool Buffer::connected() const
