@@ -563,5 +563,74 @@ protected:
     }
 };
 
+/**
+ * \brief Forwards a message to a group
+ */
+class GroupNotify : public melanobot::SimpleAction
+{
+public:
+    GroupNotify(const Settings& settings, MessageConsumer* parent)
+        : SimpleAction(settings.get("notify", "admin"), settings, parent)
+    {
+        notify = settings.get("notify", notify);
+
+        help = "Message the " + notify + " group";
+        synopsis += " Text...";
+
+        admin_message = read_string(settings, "admin_message", "$(-b)$connection$(-): $message");
+        echo_message = read_string(settings, "echo_message", "$(1)!" + trigger + "$(-) $message");
+
+        int timeout_seconds = settings.get("timeout", 0);
+        if ( timeout_seconds > 0 )
+            timeout = std::chrono::duration_cast<network::Duration>(
+                std::chrono::seconds(timeout_seconds) );
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        auto props = msg.source->pretty_properties(msg.from);
+        props["connection"] = msg.source->config_name();
+        props["message"] = msg.source->decode(msg.message);
+
+        network::OutputMessage out_echo(
+            echo_message.replaced(props),
+            false,
+            {},
+            priority,
+            msg.source->decode(msg.from.name),
+            {},
+            timeout == network::Duration::zero() ?
+                network::Time::max() :
+                network::Clock::now() + timeout
+        );
+        reply_to(msg, out_echo);
+
+        auto rendered_admin_message = admin_message.replaced(props);
+        for ( const auto& admin : msg.destination->real_users_in_group(notify) )
+        {
+            network::OutputMessage out(
+                rendered_admin_message,
+                false,
+                admin.local_id,
+                priority,
+                msg.source->decode(msg.from.name),
+                {},
+                timeout == network::Duration::zero() ?
+                    network::Time::max() :
+                    network::Clock::now() + timeout
+            );
+            deliver(msg.destination, out);
+        }
+        return true;
+    }
+
+private:
+    string::FormattedString admin_message; ///< Message sent to the admins
+    string::FormattedString echo_message; ///< Message sent to the channel
+    std::string notify = "admin"; ///< Group to be notified
+    network::Duration timeout{network::Duration::zero()};///< Output message timeout
+};
+
 } // namespace core
 #endif // HANDLER_MISC

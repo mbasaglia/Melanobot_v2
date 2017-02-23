@@ -177,6 +177,16 @@ Xonotic
         prefix          @prefix
         priority        0
 
+        Group
+        {
+            trigger         "!"
+            help_group      @name
+            GroupNotify                 ; !admin sends a message to the admins
+            {
+                priority    1
+                timeout     10
+            }
+        }
         BridgeChat                      ; Sends chat
         {
             timeout     10
