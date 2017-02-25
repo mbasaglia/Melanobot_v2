@@ -40,12 +40,12 @@ public:
     ) : name(name)
     {
         uri = WebPage::read_uri(settings, default_uri);
-        registry()[name] = this;
+        registry[name] = this;
     }
 
     ~PushReceiver()
     {
-        registry().erase(name);
+        registry.erase(name);
     }
 
     bool matches(const RequestItem& request) const
@@ -60,16 +60,12 @@ public:
      */
     static PushReceiver* get_from_name(const std::string& name)
     {
-        auto iter = registry().find(name);
-        return iter == registry().end() ? nullptr : iter->second;
+        auto iter = registry.find(name);
+        return iter == registry.end() ? nullptr : iter->second;
     }
 
 private:
-    static std::map<std::string, PushReceiver*>& registry()
-    {
-        static std::map<std::string, PushReceiver*> instance;
-        return instance;
-    }
+    static std::map<std::string, PushReceiver*> registry;
 
     std::string name;
     web::UriPath uri;

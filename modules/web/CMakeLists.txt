@@ -21,6 +21,7 @@ handler/web-api-concrete.cpp
 server/server.cpp
 server/pages.cpp
 server/type_system.cpp
+server/push_pages.cpp
 )
 
 if(${MODULE_ENABLED})
