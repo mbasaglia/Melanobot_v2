@@ -207,6 +207,7 @@ bot
                 Insult
                 InventoryManager
                 Remind              ; "remind" Schedules a message
+                RandomCat           ; "meow" shows a cat
                 WhereIsGoogle
                 AnswerQuestions
             }

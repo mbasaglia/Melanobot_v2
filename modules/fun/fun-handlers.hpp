@@ -419,6 +419,33 @@ protected:
     static constexpr stardate_t unix_epoch_stardate = -353260.7;
 };
 
+/**
+ * \brief Shows an image from random.cat
+ */
+class RandomCat : public web::SimpleJson
+{
+public:
+    RandomCat(const Settings& settings, MessageConsumer* parent)
+        : SimpleJson("meow", settings, parent)
+    {
+        help = "Shows an image from random.cat";
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg, web::Request("GET", web::Uri(api_url)));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        reply_to(msg, parsed.get("file", ""));
+    }
+
+private:
+    std::string api_url = "http://random.cat/meow";
+};
 
 } // namespace fun
 #endif // FUN_HANDLERS_HPP
