@@ -20,6 +20,7 @@
 #define MELANOBOT_MODULE_GITHUB_CONTROLLER_HPP
 
 #include "network/async_service.hpp"
+#include "web/server/push_pages.hpp"
 #include "github-listeners.hpp"
 #include "event_source.hpp"
 
@@ -29,7 +30,7 @@ namespace github {
 /**
  * \brief Single instance of a github connection
  */
-class GitHubController : public AsyncService
+class GitHubController : public AsyncService, public web::PushReceiver
 {
 public:
     explicit GitHubController(httpony::Auth auth = {}, std::string api_url = "https://api.github.com")

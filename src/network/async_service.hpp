@@ -39,7 +39,6 @@
 class AsyncService
 {
 public:
-
     virtual ~AsyncService()
     {
     }

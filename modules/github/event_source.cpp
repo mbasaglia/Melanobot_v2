@@ -27,7 +27,7 @@ namespace github {
 
 
 EventSource::EventSource(std::string name)
-    : name_(std::move(name))
+    : name_(std::move(name)), PushReceiver(name, {}, name)
 {
     if ( melanobot::has_storage() )
     {
