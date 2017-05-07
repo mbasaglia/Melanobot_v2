@@ -724,7 +724,7 @@ protected:
     {
         user::User user = msg.source->get_user(match[1]);
         auto props = msg.source->pretty_properties(user);
-        props["vote"] = std::string(match[2]);
+        props["time"] = std::string(match[2]);
         reply_to(msg, message.replaced(props));
         return true;
     }
