@@ -715,7 +715,7 @@ public:
     ShowRecordSet(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:recordset:(\d+):(.*))", settings, parent)
     {
-        message = settings.get("message",
+        message = read_string(settings, "message",
             "$(4)*$(-) $name$(-) set a new record: $(-b)$time$(-) seconds");
     }
 
