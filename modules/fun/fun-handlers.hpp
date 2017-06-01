@@ -447,5 +447,82 @@ private:
     std::string api_url = "http://random.cat/meow";
 };
 
+class E926 : public web::SimpleJson
+{
+public:
+    E926(const Settings& settings, MessageConsumer* parent)
+        : SimpleJson("furry", settings, parent)
+    {
+        image_type = settings.get("image_type", image_type);
+        endpoint = settings.get("endpoint", endpoint);
+
+        help = "Shows a " + image_type + " from " + endpoint;
+
+        fixed_tags = settings.get("fixed_tags", fixed_tags);
+        if ( !fixed_tags.empty() )
+            fixed_tags += ' ';
+
+        reply = read_string(settings, "reply",
+            "Image by $(-b)$author$(-): $file_url");
+        not_found = read_string(settings, "not_found",
+            "Didn't find any $image_type for $query");
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        request_json(msg, web::Request("GET",
+            web::Uri(endpoint + "/post/index.json", {
+                {"tags",  fixed_tags+msg.message},
+                {"limit", "1"},
+            })
+        ));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        if ( !parsed.get("0.id", 0) )
+            return json_failure(msg);
+
+        Properties map;
+        map["author"] = parsed.get("0.author", "");
+        map["source"] = parsed.get("0.source", "");
+        map["fav_count"] = parsed.get("0.fav_count", "");
+        map["rating"] = parsed.get("0.rating", "");
+        map["file_url"] = parsed.get("0.file_url", "");
+        map["width"] = parsed.get("0.width", "");
+        map["height"] = parsed.get("0.height", "");
+        map["preview_url"] = parsed.get("0.preview_url", "");
+        map["md5"] = parsed.get("0.md5", "");
+
+        map["image_type"] = image_type;
+        map["query"] = msg.message;
+
+        reply_to(msg, reply.replaced(map));
+    }
+
+    void json_failure(const network::Message& msg) override
+    {
+        Properties map;
+        map["image_type"] = image_type;
+        map["query"] = msg.message;
+
+        reply_to(msg, not_found.replaced(map));
+    }
+
+private:
+    std::string endpoint = "https://e926.net";
+    std::string image_type = "furry pic";
+    std::string fixed_tags;
+    string::FormattedString reply;
+    string::FormattedString not_found;
+    std::map<std::string, std::string> ratings = {
+        {"e", "explicit"},
+        {"q", "questionable"},
+        {"s", "safe"},
+    };
+};
+
 } // namespace fun
 #endif // FUN_HANDLERS_HPP

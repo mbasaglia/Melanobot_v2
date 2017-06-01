@@ -46,6 +46,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_fun_initialize(const Settings&)
     module::register_handler<fun::RenderPony>("RenderPony");
     module::register_handler<fun::PonyCountDown>("PonyCountDown");
     module::register_handler<fun::PonyFace>("PonyFace");
+    module::register_handler<fun::E926>("E926");
 
     module::register_handler<fun::MarkovTextGenerator>("MarkovTextGenerator");
     module::register_handler<fun::MarkovListener>("MarkovListener");
