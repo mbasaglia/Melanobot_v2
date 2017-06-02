@@ -501,6 +501,7 @@ protected:
         map["preview_url"] = it->second.get("preview_url", "");
         map["md5"] = it->second.get("md5", "");
 
+        map["url_base"] = endpoint;
         map["image_type"] = image_type;
         map["query"] = msg.message;
 
