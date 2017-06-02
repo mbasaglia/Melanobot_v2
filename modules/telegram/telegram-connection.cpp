@@ -213,6 +213,7 @@ void TelegramConnection::say(const network::OutputMessage& message)
     /// \todo somehow encode reply_to on target
     payload.put("chat_id", message.target);
     payload.put("text", str.encode(*formatter_));
+    payload.put("parse_mode", "Markdown");
     Log("telegram", '>') << color::magenta << message.target
         << color::nocolor << ' ' << str;
     post("sendMessage", payload, log_errors_callback);

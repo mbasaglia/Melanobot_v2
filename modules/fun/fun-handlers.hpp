@@ -471,30 +471,35 @@ public:
 protected:
     bool on_handle(network::Message& msg) override
     {
-        request_json(msg, web::Request("GET",
-            web::Uri(endpoint + "/post/index.json", {
-                {"tags",  fixed_tags+msg.message},
-                {"limit", "1"},
-            })
-        ));
+        web::Uri uri(endpoint + "/post/index.json", {
+            {"tags",  fixed_tags+msg.message},
+        });
+        if ( limit )
+            uri.query["limit"] = std::to_string(limit);
+
+        request_json(msg, web::Request("GET", uri));
         return true;
     }
 
     void json_success(const network::Message& msg, const Settings& parsed) override
     {
-        if ( !parsed.get("0.id", 0) )
+        if ( !parsed.size() )
             return json_failure(msg);
 
+        auto it = parsed.begin();
+        std::advance(it, melanolib::math::random(parsed.size() - 1));
+
         Properties map;
-        map["author"] = parsed.get("0.author", "");
-        map["source"] = parsed.get("0.source", "");
-        map["fav_count"] = parsed.get("0.fav_count", "");
-        map["rating"] = parsed.get("0.rating", "");
-        map["file_url"] = parsed.get("0.file_url", "");
-        map["width"] = parsed.get("0.width", "");
-        map["height"] = parsed.get("0.height", "");
-        map["preview_url"] = parsed.get("0.preview_url", "");
-        map["md5"] = parsed.get("0.md5", "");
+        map["id"] = it->second.get("id", "");
+        map["author"] = it->second.get("author", "");
+        map["source"] = it->second.get("source", "");
+        map["fav_count"] = it->second.get("fav_count", "");
+        map["rating"] = ratings[it->second.get("rating", "s")];
+        map["file_url"] = it->second.get("file_url", "");
+        map["width"] = it->second.get("width", "");
+        map["height"] = it->second.get("height", "");
+        map["preview_url"] = it->second.get("preview_url", "");
+        map["md5"] = it->second.get("md5", "");
 
         map["image_type"] = image_type;
         map["query"] = msg.message;
@@ -515,6 +520,7 @@ private:
     std::string endpoint = "https://e926.net";
     std::string image_type = "furry pic";
     std::string fixed_tags;
+    int limit = 0;
     string::FormattedString reply;
     string::FormattedString not_found;
     std::map<std::string, std::string> ratings = {
