@@ -60,7 +60,7 @@ TelegramConnection::TelegramConnection(const std::string& api_endpoint,
     properties_.put("api.token", token);
 
     formatter_ = string::Formatter::formatter(
-        settings.get("string_format", std::string("utf8"))
+        settings.get("string_format", std::string("telegram-md"))
     );
     connection_status = DISCONNECTED;
 
