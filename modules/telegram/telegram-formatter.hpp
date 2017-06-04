@@ -97,6 +97,14 @@ public:
         return std::string(1, c);
     }
 
+    std::string to_string(const string::AsciiString& s, Context* context) const override
+    {
+        return melanolib::string::replace(
+            melanolib::string::replace(s, "*", "\\*"),
+            "_", "\\_"
+        );
+    }
+
     std::string to_string(string::FormatFlags flags, Context* context) const override
     {
         std::string flagstring;
