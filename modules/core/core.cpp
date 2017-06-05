@@ -73,6 +73,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_core_initialize(const Settings&)
     module::register_handler<core::Group>("Group");
     module::register_handler<core::Multi>("Multi");
     module::register_handler<core::IfSet>("IfSet");
+    module::register_handler<core::RandomDispatch>("RandomDispatch");
 
     string::FilterRegistry::instance().register_filter("date",
         [](const std::vector<string::FormattedString>& args) -> string::FormattedString

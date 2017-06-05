@@ -21,6 +21,7 @@
 #include "group.hpp"
 #include "melanobot/melanobot.hpp"
 #include "melanobot/config_factory.hpp"
+#include "melanolib/math/random.hpp"
 
 namespace core {
 
@@ -34,11 +35,13 @@ void AbstractGroup::add_children(Settings child_settings,
         if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
             settings::merge(p.second, default_settings, false);
-            melanobot::ConfigFactory::instance().build(
+            bool built = melanobot::ConfigFactory::instance().build(
                 p.first,
                 p.second,
                 this
             );
+            if ( built )
+                on_add_child(*children.back(), p.second);
         }
     }
 }
@@ -344,7 +347,6 @@ Multi::Multi(const Settings& settings, MessageConsumer* parent)
         [this, i](const PropertyTree& node){
             if ( auto opt = node.get_optional<std::string>("trigger") )
             {
-                std::string debug = *opt;
                 prefixes[i] = *opt;
                 return true;
             }
@@ -417,6 +419,51 @@ IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
     }
     if ( message )
         Log("sys", '!') << string::FormatterConfig().decode(*message);
+}
+
+RandomDispatch::RandomDispatch(const Settings& settings, MessageConsumer* parent)
+    : AbstractGroup(settings, parent)
+{
+    // Copy relevant defaults to show the children
+    Settings default_settings;
+    for ( const auto& p : settings )
+        if ( !p.second.data().empty() &&
+            !melanolib::string::is_one_of(p.first, {"trigger", "type"}) )
+        {
+            default_settings.put(p.first, p.second.data());
+        }
+
+    // Initialize children
+    add_children(settings, default_settings);
+}
+
+bool RandomDispatch::can_handle(const network::Message& msg) const
+{
+    return true;
+}
+
+void RandomDispatch::on_add_child(Handler& child, const Settings& settings)
+{
+    // weight[i] actually contains the sum of the weights <= i to simplify things
+    weights.push_back(total_wight() + settings.get("random_weight", 1.0f));
+}
+
+float RandomDispatch::total_wight() const
+{
+    return weights.empty() ? 0 : weights.back();
+}
+
+bool RandomDispatch::on_handle(network::Message& msg)
+{
+    float random = melanolib::math::random_real() * total_wight();
+    for ( std::size_t i = 0; i < weights.size(); i++ )
+    {
+        if ( weights[i] <= random )
+        {
+            return children[i]->handle(msg);
+        }
+    }
+    throw melanobot::MelanobotError("RandomDispatch did not select anything");
 }
 
 } // namespace core

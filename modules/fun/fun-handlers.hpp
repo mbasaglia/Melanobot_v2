@@ -520,7 +520,7 @@ protected:
 private:
     std::string endpoint = "https://e926.net";
     std::string image_type = "furry pic";
-    std::string fixed_tags;
+    std::string fixed_tags = "order:score -flash";
     int limit = 0;
     string::FormattedString reply;
     string::FormattedString not_found;

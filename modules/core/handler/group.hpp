@@ -69,6 +69,10 @@ protected:
     void add_children(Settings child_settings,
                       const Settings& default_settings={});
 
+    /**
+     * \brief Called whenever a child is added to the group
+     */
+    virtual void on_add_child(Handler& child, const Settings& settings){}
 
     std::vector<std::unique_ptr<Handler>> children;  ///< Contained handlers
 
@@ -183,7 +187,6 @@ public:
      * \param default_trigger   Default trigger/group name
      * \param clear             Whether to allow clearing the list
      * \param settings          Handler settings
-     * \param bot               Main bot
      */
     AbstractList(const std::string& default_trigger, bool clear,
                  const Settings& settings, MessageConsumer* parent);
@@ -250,7 +253,6 @@ public:
 
     bool can_handle(const network::Message& msg) const override;
 
-
     bool handle(network::Message& msg) override
     {
         return Handler::handle(msg);
@@ -271,10 +273,33 @@ class IfSet : public AbstractGroup
 public:
     IfSet (const Settings& settings, MessageConsumer* parent);
 
-    bool can_handle(const network::Message& msg) const override
+    bool can_handle(const network::Message&) const override
     {
         return !children.empty();
     }
+};
+
+/**
+ * \brief Group that forwards messages randomly to one of its children.
+ * Children have a weight of 1 by default but they can define random_weight
+ * to change this
+ */
+class RandomDispatch : public AbstractGroup
+{
+public:
+    RandomDispatch(const Settings& settings, MessageConsumer* parent);
+
+    bool can_handle(const network::Message& msg) const override;
+
+protected:
+    bool on_handle(network::Message& msg) override;
+    void on_add_child(Handler& child, const Settings& settings) override;
+
+
+private:
+    float total_wight() const;
+
+    std::vector<float> weights;
 };
 
 } // namespace core
