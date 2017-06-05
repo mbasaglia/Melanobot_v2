@@ -32,7 +32,7 @@ public:
     SendSticker(const Settings& settings, MessageConsumer* parent)
         : Reply(settings, parent)
     {
-        sticker_id = settings.get("sticker_id", "");
+        sticker_id = settings.get("reply", "");
         if ( sticker_id.empty() )
             throw melanobot::ConfigurationError("Missing sticker_id for SendSticker");
     }
@@ -41,7 +41,7 @@ public:
     {
         msg.destination->command({
             "sendSticker",
-            {sticker_id}
+            {reply_channel(msg), sticker_id}
         });
     }
 
