@@ -297,6 +297,7 @@ protected:
 
 
 private:
+    RandomDispatch(const Settings& settings, MessageConsumer* parent, bool);
     float total_wight() const;
 
     std::vector<float> weights;

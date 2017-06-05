@@ -35,12 +35,15 @@ void AbstractGroup::add_children(Settings child_settings,
         if ( !p.first.empty() && std::isupper(p.first[0]) )
         {
             settings::merge(p.second, default_settings, false);
-            bool built = melanobot::ConfigFactory::instance().build(
+            auto n_children = children.size();
+            melanobot::ConfigFactory::instance().build(
                 p.first,
                 p.second,
                 this
             );
-            if ( built )
+            /// \note Using children.size() check because the factory might
+            ///       be building things that are not handlers
+            if ( n_children < children.size() )
                 on_add_child(*children.back(), p.second);
         }
     }
@@ -421,8 +424,15 @@ IfSet::IfSet (const Settings& settings, MessageConsumer* parent)
         Log("sys", '!') << string::FormatterConfig().decode(*message);
 }
 
-RandomDispatch::RandomDispatch(const Settings& settings, MessageConsumer* parent)
+// Hack to have RandomDispatch fully constructed in the main constructor body
+// so we can call add_children, which in turns makes virtual calls to on_add_child
+RandomDispatch::RandomDispatch(const Settings& settings, MessageConsumer* parent, bool)
     : AbstractGroup(settings, parent)
+{
+}
+
+RandomDispatch::RandomDispatch(const Settings& settings, MessageConsumer* parent)
+    : RandomDispatch(settings, parent, true)
 {
     // Copy relevant defaults to show the children
     Settings default_settings;
@@ -458,7 +468,7 @@ bool RandomDispatch::on_handle(network::Message& msg)
     float random = melanolib::math::random_real() * total_wight();
     for ( std::size_t i = 0; i < weights.size(); i++ )
     {
-        if ( weights[i] <= random )
+        if ( weights[i] > random )
         {
             return children[i]->handle(msg);
         }
