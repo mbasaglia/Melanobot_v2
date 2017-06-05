@@ -20,6 +20,7 @@
 
 #include "telegram-connection.hpp"
 #include "telegram-formatter.hpp"
+#include "telegram-handlers.hpp"
 
 MELANOMODULE_ENTRY_POINT module::Melanomodule melanomodule_telegram_metadata()
 {
@@ -32,4 +33,5 @@ MELANOMODULE_ENTRY_POINT void melanomodule_telegram_initialize(const Settings&)
     module::register_log_type("telegram", color::dark_blue);
     module::register_connection<telegram::TelegramConnection>("telegram");
     module::register_formatter<telegram::FormatterMarkDown>();
+    module::register_handler<telegram::SendSticker>("SendSticker");
 }
