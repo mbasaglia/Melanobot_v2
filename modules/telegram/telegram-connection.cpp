@@ -459,6 +459,10 @@ web::Response TelegramConnection::receive_push(const RequestItem& request)
 
 void TelegramConnection::process_event(PropertyTree& event)
 {
+    static const std::regex regex_command(
+        R"((/.+)@(\w+)(.*))",
+        std::regex::ECMAScript|std::regex::optimize
+    );
     event_id = event.get("update_id", event_id.load());
     if ( auto message = event.get_child_optional("message") )
     {
@@ -466,8 +470,20 @@ void TelegramConnection::process_event(PropertyTree& event)
         std::istringstream socket_stream(msg.raw);
 
         msg.chat(message->get<std::string>("text"));
-        msg.from = user_attributes(message->get_child("from"));
         msg.direct = false;
+
+        std::smatch match;
+        if ( std::regex_match(msg.message, match, regex_command) )
+        {
+            if ( match[2] == properties_.get("user.username", "") )
+            {
+                msg.message = match[1];
+                msg.message += match[3];
+                msg.direct = true;
+            }
+        }
+
+        msg.from = user_attributes(message->get_child("from"));
         msg.channels = {message->get("chat.id", "")};
         Log("telegram", '<', 1) << color::magenta << msg.from.name
             << color::nocolor << ' ' << msg.message;
