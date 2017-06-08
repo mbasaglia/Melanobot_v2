@@ -718,6 +718,54 @@ private:
     }
 };
 
+
+class RandomReddit : public SimpleJson
+{
+public:
+    RandomReddit(const Settings& settings, MessageConsumer* parent)
+        : SimpleJson("random_reddit", settings, parent)
+    {
+        subreddit = settings.get("subreddit", "");
+        if ( subreddit.empty() )
+            throw melanobot::ConfigurationError("Missing subreddit for RandomReddit");
+
+        help = "Returns a random result from the subreddit /r/" + subreddit;
+
+        base = settings.get("base", base);
+
+        reply = read_string(settings, "reply", "$title\n$selftext");
+        not_found_reply = read_string(settings, "not_found_reply", "I didn't find anything");
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string url = base + "/r/" + subreddit + "/random.json";
+        request_json(msg, web::Request("GET", {url}));
+        return true;
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        auto child = parsed.get_child_optional("0.data.children.0.data");
+        if ( !child )
+            return json_failure(msg);
+
+        reply_to(msg, reply.replaced(*child));
+    }
+
+    void json_failure(const network::Message& msg)
+    {
+        reply_to(msg, not_found_reply);
+    }
+
+private:
+    std::string base = "https://www.reddit.com";
+    std::string subreddit;
+    string::FormattedString reply;
+    string::FormattedString not_found_reply;
+};
+
 } // namespace web
 
 #endif // WEB_API_CONCRETE

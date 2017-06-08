@@ -45,6 +45,7 @@ MELANOMODULE_ENTRY_POINT void melanomodule_web_initialize(const Settings&)
     module::register_handler<web::MediaWikiTitles>("MediaWikiTitles");
     module::register_handler<web::MediaWikiCategoryTitle>("MediaWikiCategoryTitle");
     module::register_handler<web::WhereIsGoogle>("WhereIsGoogle");
+    module::register_handler<web::RandomReddit>("RandomReddit");
 
     web::PageRegistry::instance().register_page<web::RenderStatic>("RenderStatic");
     web::PageRegistry::instance().register_page<web::PageDirectory>("Directory");
