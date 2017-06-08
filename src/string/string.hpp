@@ -27,6 +27,8 @@
 #include <sstream>
 #include <vector>
 
+#include <boost/property_tree/ptree.hpp>
+
 #include "formatter.hpp"
 #include "melanobot/error.hpp"
 #include "melanolib/scripting/object.hpp"
@@ -544,10 +546,10 @@ public:
      * \brief Append an element
      */
     template<class T>
-        std::enable_if_t<
+        typename std::enable_if<
             !std::is_same<Element::HeldType<T>, FormattedString>::value &&
             !std::is_same<Element::HeldType<T>, Element>::value
-        >
+        >::type
         append(T&& element)
         {
             elements.emplace_back(std::forward<T>(element));
@@ -659,6 +661,20 @@ public:
         );
     }
 
+    void replace(const boost::property_tree::ptree& tree)
+    {
+        replace(
+            [&tree](const std::string& id)
+                -> melanolib::Optional<FormattedString>
+            {
+                auto value = tree.get_optional<std::string>(id);
+                if ( value )
+                    return FormattedString(*value);
+                return {};
+            }
+        );
+    }
+
     /**
      * \brief Replace placeholders based on a map
      */
@@ -688,6 +704,13 @@ public:
     {
         FormattedString str = copy();
         str.replace(object);
+        return str;
+    }
+
+    FormattedString replaced(const boost::property_tree::ptree& tree) const
+    {
+        FormattedString str = copy();
+        str.replace(tree);
         return str;
     }
 
