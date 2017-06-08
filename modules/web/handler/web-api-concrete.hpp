@@ -283,6 +283,7 @@ public:
         synopsis += " Term...";
         help = "Search a definition on Urban Dictionary";
         not_found_reply = read_string(settings, "not_found", "I don't know what $search means");
+        ignore_errors = true;
     }
 
 protected:
@@ -298,16 +299,22 @@ protected:
         std::string result = parsed.get("list.0.definition", "");
 
         if ( result.empty() )
-            reply_to(msg, not_found_reply.replaced( Properties{
-                {"search", msg.message},
-                {"user", msg.from.name}
-            }));
+            json_failure(msg);
         else
             reply_to(msg, melanolib::string::elide(
                 melanolib::string::collapse_spaces(result),
                 400
             ));
     }
+
+    void json_failure(const network::Message& msg) override
+    {
+            reply_to(msg, not_found_reply.replaced( Properties{
+                {"search", msg.message},
+                {"user", msg.from.name}
+            }));
+    }
+
 private:
     string::FormattedString not_found_reply;
 };

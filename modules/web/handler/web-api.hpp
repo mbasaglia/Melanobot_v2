@@ -94,6 +94,8 @@ protected:
         Settings ptree;
         httpony::json::JsonParser parser;
         try {
+            if ( ignore_errors )
+                parser.throws(false);
             ptree = parser.parse_string(response.body.read_all(), request.uri.full());
             json_success(msg, ptree);
         } catch ( const httpony::json::JsonError& err ) {
@@ -124,6 +126,8 @@ protected:
      * \brief Called when the json request fails
      */
     virtual void json_failure(const network::Message&) {}
+
+    bool ignore_errors = false;
 
 };
 
