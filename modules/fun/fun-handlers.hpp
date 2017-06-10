@@ -463,7 +463,7 @@ public:
             fixed_tags += ' ';
 
         reply = read_string(settings, "reply",
-            "Image by $(-b)$author$(-): $file_url");
+            "Image by$(-b)$(for person $artist) $person$(endfor)$(-): $file_url");
         not_found = read_string(settings, "not_found",
             "Didn't find any $image_type for $query");
     }
@@ -490,22 +490,12 @@ protected:
         std::advance(it, melanolib::math::random(parsed.size() - 1));
 
         Properties map;
-        map["id"] = it->second.get("id", "");
-        map["author"] = it->second.get("author", "");
-        map["source"] = it->second.get("source", "");
-        map["fav_count"] = it->second.get("fav_count", "");
-        map["rating"] = ratings[it->second.get("rating", "s")];
-        map["file_url"] = it->second.get("file_url", "");
-        map["width"] = it->second.get("width", "");
-        map["height"] = it->second.get("height", "");
-        map["preview_url"] = it->second.get("preview_url", "");
-        map["md5"] = it->second.get("md5", "");
-
+        map["url_base"] = endpoint;
         map["url_base"] = endpoint;
         map["image_type"] = image_type;
         map["query"] = msg.message;
 
-        reply_to(msg, reply.replaced(map));
+        reply_to(msg, reply.replaced(map).replaced(it->second));
     }
 
     void json_failure(const network::Message& msg) override
