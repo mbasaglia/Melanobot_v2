@@ -18,8 +18,42 @@
  */
 
 #include "string.hpp"
+#include "replacements.hpp"
 
 
 namespace string {
+
+static FormattedString expand_tree_node(const boost::property_tree::ptree& node)
+{
+    if ( !node.data().empty() )
+        return FormattedString(node.data());
+
+    FormattedString result;
+    if ( !node.empty() )
+    {
+        for ( const auto& item: node )
+        {
+            result << ListItem(expand_tree_node(item.second));
+        }
+    }
+    return result;
+}
+
+void FormattedString::replace(const boost::property_tree::ptree& tree)
+{
+    replace(
+        [&tree](const std::string& id)
+            -> melanolib::Optional<FormattedString>
+        {
+            auto value = tree.get_child_optional(id);
+            if ( value )
+            {
+                return expand_tree_node(*value);
+            }
+            return {};
+        }
+    );
+}
+
 
 } // namespace string

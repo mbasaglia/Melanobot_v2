@@ -661,19 +661,7 @@ public:
         );
     }
 
-    void replace(const boost::property_tree::ptree& tree)
-    {
-        replace(
-            [&tree](const std::string& id)
-                -> melanolib::Optional<FormattedString>
-            {
-                auto value = tree.get_optional<std::string>(id);
-                if ( value )
-                    return FormattedString(*value);
-                return {};
-            }
-        );
-    }
+    void replace(const boost::property_tree::ptree& tree);
 
     /**
      * \brief Replace placeholders based on a map
