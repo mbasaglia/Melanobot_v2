@@ -470,7 +470,7 @@ void TelegramConnection::process_event(PropertyTree& event)
         std::istringstream socket_stream(msg.raw);
 
         msg.chat(message->get<std::string>("text"));
-        msg.direct = false;
+        msg.direct = message->get("chat.type", "") == "private";
 
         std::smatch match;
         if ( std::regex_match(msg.message, match, regex_command) )
@@ -487,7 +487,6 @@ void TelegramConnection::process_event(PropertyTree& event)
         msg.channels = {message->get("chat.id", "")};
         Log("telegram", '<', 1) << color::magenta << msg.from.name
             << color::nocolor << ' ' << msg.message;
-        msg.direct = message->get("chat.type", "") == "private";
         msg.send(this);
     }
     ++event_id;
