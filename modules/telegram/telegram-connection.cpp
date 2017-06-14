@@ -460,7 +460,7 @@ web::Response TelegramConnection::receive_push(const RequestItem& request)
 void TelegramConnection::process_event(PropertyTree& event)
 {
     static const std::regex regex_command(
-        R"((/.+)?@(\w+)(.*))",
+        R"((/.+)?@(\w+)\s*(.*))",
         std::regex::ECMAScript|std::regex::optimize
     );
     event_id = event.get("update_id", event_id.load());
