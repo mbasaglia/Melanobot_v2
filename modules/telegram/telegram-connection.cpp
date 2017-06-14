@@ -460,7 +460,7 @@ web::Response TelegramConnection::receive_push(const RequestItem& request)
 void TelegramConnection::process_event(PropertyTree& event)
 {
     static const std::regex regex_command(
-        R"((/.+)?@(\w+)\s*(.*))",
+        R"((/.+)?@(\w+)(\s*)(.*))",
         std::regex::ECMAScript|std::regex::optimize
     );
     event_id = event.get("update_id", event_id.load());
@@ -478,7 +478,9 @@ void TelegramConnection::process_event(PropertyTree& event)
             if ( match[2] == properties_.get("user.username", "") )
             {
                 msg.message = match[1];
-                msg.message += match[3];
+                if ( !msg.message.empty() )
+                    msg.message += match[3];
+                msg.message += match[4];
                 msg.direct = true;
             }
         }
