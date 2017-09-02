@@ -21,12 +21,19 @@
 
 #include <openssl/hmac.h>
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#define HMAC_CTX_init(ctx) ctx = HMAC_CTX_new()
+#define HMAC_CTX_cleanup HMAC_CTX_free
+#endif
+
+
 namespace xonotic {
 namespace crypto {
 
 std::string hmac_md4(const std::string& input, const std::string& key)
 {
-    HMAC_CTX *ctx = HMAC_CTX_new();
+    HMAC_CTX *ctx;
+    HMAC_CTX_init(ctx);
 
     HMAC_Init_ex(ctx, key.data(), key.size(), EVP_md4(), nullptr);
 
@@ -36,7 +43,7 @@ std::string hmac_md4(const std::string& input, const std::string& key)
     unsigned int out_size = 0;
     HMAC_Final(ctx, out, &out_size);
 
-    HMAC_CTX_free(ctx);
+    HMAC_CTX_cleanup(ctx);
 
     return std::string(out, out+out_size);
 }
