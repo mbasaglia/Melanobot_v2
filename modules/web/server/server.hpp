@@ -30,11 +30,11 @@ namespace web {
  * \brief HTTP server service
  */
 class HttpServer : public AsyncService, public HttpRequestHandler,
-                   public httpony::BasicPooledServer<httpony::ssl::SslServer>
+                   public httpony::ssl::SslServer
 {
-    using ParentServer = httpony::BasicPooledServer<httpony::ssl::SslServer>;
+    using ParentServer = httpony::ssl::SslServer;
 public:
-    HttpServer() : ParentServer(1, httpony::IPAddress{}, false) {}
+    HttpServer() : ParentServer(httpony::IPAddress{}, false) {}
 
     void initialize(const Settings& settings) override;
 

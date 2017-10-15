@@ -41,11 +41,6 @@ void HttpServer::initialize(const Settings& settings)
     for ( const auto& header : settings.get_child("Headers", {}) )
         headers.append(header.first, header.second.data());
 
-    std::size_t threads = settings.get("threads", pool_size());
-    if ( threads == 0 )
-        throw melanobot::ConfigurationError("You need at least 1 thread");
-    resize_pool(threads);
-
     if ( auto ssl = settings.get_child_optional("SSL") )
     {
         set_ssl_enabled(true);
