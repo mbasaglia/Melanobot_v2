@@ -309,7 +309,7 @@ void UnvanquishedConnection::command ( network::Command cmd )
 
 void UnvanquishedConnection::on_network_error(const std::string& message)
 {
-    ErrorLog("unv", "Network Error") << message;
+    ErrorLog("unv", "Network Error") << message << " (" << config_name() << " " << description() << ")";
     close_connection();
     return;
 }

@@ -328,7 +328,7 @@ void XonoticConnection::command ( network::Command cmd )
 
 void XonoticConnection::on_network_error(const std::string& message)
 {
-    ErrorLog("xon", "Network Error") << message;
+    ErrorLog("xon", "Network Error") << message << " (" << config_name() << " " << description() << ")";
     close_connection();
     return;
 }
