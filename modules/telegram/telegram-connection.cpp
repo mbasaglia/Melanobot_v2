@@ -467,7 +467,6 @@ void TelegramConnection::process_event(PropertyTree& event)
     if ( auto message = event.get_child_optional("message") )
     {
         network::Message msg;
-        std::istringstream socket_stream(msg.raw);
 
         msg.chat(message->get<std::string>("text"));
         msg.direct = message->get("chat.type", "") == "private";
@@ -490,6 +489,15 @@ void TelegramConnection::process_event(PropertyTree& event)
         Log("telegram", '<', 1) << color::magenta << msg.from.name
             << color::nocolor << ' ' << msg.message;
         msg.send(this);
+    }
+    else if ( auto inline_query = event.get_child_optional("inline_query") )
+    {
+        network::Message msg;
+        msg.type = network::Message::UNKNOWN;
+        msg.command = "inline_query";
+        msg.message = message->get<std::string>("query");
+        msg.params = {message->get<std::string>("id"), message->get<std::string>("offset")};
+        msg.from = user_attributes(message->get_child("from"));
     }
     ++event_id;
 }

@@ -20,6 +20,7 @@
 #define MELANOBOT_MODULES_TELEGRAM_HANDLERS_HPP
 
 #include "core/handler/misc.hpp"
+#include "inline.hpp"
 
 namespace telegram {
 
