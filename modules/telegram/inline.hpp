@@ -57,22 +57,19 @@ public:
     using pointer = std::unique_ptr<InlineQueryResult>;
 
     explicit InlineQueryResponse(
-            const network::Message& msg,
+            std::string inline_query_id,
             int cache_time = -1,
             bool is_personal = false,
             std::string next_offset = {},
             std::string switch_pm_text = {},
             std::string switch_pm_parameter = {}
-    ) : cache_time(cache_time),
+    ) : inline_query_id(std::move(inline_query_id)),
+        cache_time(cache_time),
         is_personal(is_personal),
         next_offset(std::move(next_offset)),
         switch_pm_text(std::move(switch_pm_text)),
         switch_pm_parameter(std::move(switch_pm_parameter))
     {
-        if ( msg.command != "inline_query" || msg.params.empty() )
-            throw melanobot::MelanobotError("InlineQueryResponse created with the wrong kind of message");
-
-        inline_query_id = msg.params[0];
     }
 
 
@@ -87,7 +84,7 @@ public:
     template<class ResultT, class... Args>
         InlineQueryResponse& result(Args&&... args)
     {
-        return result(std::make_unique<ResultT>(std::forward(args)...));
+        return result(std::make_unique<ResultT>(std::forward<Args>(args)...));
     }
 
     PropertyBuilder to_properties() const
@@ -117,11 +114,40 @@ private:
     std::string switch_pm_parameter;
 };
 
-
-class InlineQueryResultPhoto : public InlineQueryResult
+/**
+ * \brief Just to allow simpler initialization and attribute access
+ *        while maintaining a virtual destructor
+ */
+template<class DataT>
+    class SimpleDataInlineQueryResult : public InlineQueryResult
 {
 public:
+    template<class... Args>
+    SimpleDataInlineQueryResult(Args&&... args)
+        : data({std::forward<Args>(args)...})
+    {}
+
     PropertyBuilder to_properties() const override
+    {
+        return data.to_properties();
+    }
+
+    DataT data;
+};
+
+struct PhotoData
+{
+    std::string photo_url;
+    std::string thumb_url;
+    int photo_width = 0;
+    int photo_height = 0;
+    std::string title;
+    std::string description;
+    std::string parse_mode;
+    // reply_markup
+    // input_message_content
+
+    PropertyBuilder to_properties() const
     {
         PropertyBuilder ptree;
         ptree.put("photo_url", photo_url);
@@ -134,17 +160,9 @@ public:
         ptree.maybe_put("parse_mode", parse_mode);
         return ptree;
     }
-
-    std::string photo_url;
-    std::string thumb_url;
-    int photo_width = 0;
-    int photo_height = 0;
-    std::string title;
-    std::string description;
-    std::string parse_mode;
-    // reply_markup
-    // input_message_content
 };
+
+using InlineQueryResultPhoto = SimpleDataInlineQueryResult<PhotoData>;
 
 
 class InlineHandler : public melanobot::Handler
@@ -184,6 +202,61 @@ protected:
     ) const = 0;
 };
 
+/**
+ * \brief Generates picture urls based on the queries
+ */
+class InlinePhotoUrl : public InlineHandler
+{
+private:
+    class PhotoUriDescription
+    {
+    public:
+        PhotoUriDescription(std::string base, std::string param)
+            : base(std::move(base)),
+              param(std::move(param)),
+              has_query(this->base.find('?') != std::string::npos)
+        {}
+
+        std::string full_uri(const std::string& query) const
+        {
+            return base + (has_query ? '&' : '?') + param + "=" + httpony::urlencode(query);
+        }
+
+    private:
+        std::string base;
+        std::string param;
+        bool has_query = false;
+    };
+
+public:
+    InlinePhotoUrl(const Settings& settings, MessageConsumer* parent)
+        : InlineHandler(settings, parent)
+    {
+        for ( const auto& photo : settings.get_child("photos", {}) )
+        {
+            photos.push_back({photo.first, photo.second.data()});
+        }
+    }
+
+private:
+    InlineQueryResponse on_handle_query(
+        const network::Message& msg,
+        TelegramConnection* connection,
+        const std::string& query,
+        const std::string& query_id,
+        const std::string& offset
+    ) const override
+    {
+        InlineQueryResponse resp(query_id);
+        for ( const auto& photo : photos )
+        {
+            resp.result<InlineQueryResultPhoto>(photo.full_uri(query));
+        }
+        return resp;
+    }
+
+    std::vector<PhotoUriDescription> photos;
+};
 
 } // namespace telegram
 
