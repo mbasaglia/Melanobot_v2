@@ -498,6 +498,11 @@ void TelegramConnection::process_event(PropertyTree& event)
         msg.message = message->get<std::string>("query");
         msg.params = {message->get<std::string>("id"), message->get<std::string>("offset")};
         msg.from = user_attributes(message->get_child("from"));
+        msg.direct = true;
+        Log("telegram", '<', 1) << color::magenta << msg.from.name
+            << color::cyan << " inline_query "
+            << color::nocolor << ' ' << msg.message;
+        msg.send(this);
     }
     ++event_id;
 }

@@ -19,16 +19,36 @@
 #ifndef MELANOBOT_MODULES_TELEGRAM_INLINE_HPP
 #define MELANOBOT_MODULES_TELEGRAM_INLINE_HPP
 
-#include "message/input_message.hpp"
+
+#include "melanobot/handler.hpp"
+#include "telegram-connection.hpp"
 
 namespace telegram {
 
+class PropertyBuilder : public PropertyTree
+{
+public:
+    using PropertyTree::PropertyTree;
+
+    void maybe_put(const std::string& name, const std::string& value)
+    {
+        if ( !value.empty() )
+            put(name, value);
+    }
+
+    void maybe_put(const std::string& name, int value, int min = 0)
+    {
+        if ( value >= min )
+            put(name, value);
+    }
+
+};
 
 class InlineQueryResult
 {
 public:
     virtual ~InlineQueryResult(){}
-    virtual PropertyTree to_properties() const = 0;
+    virtual PropertyBuilder to_properties() const = 0;
 };
 
 class InlineQueryResponse
@@ -70,20 +90,19 @@ public:
         return result(std::make_unique<ResultT>(std::forward(args)...));
     }
 
-    PropertyTree to_properties() const
+    PropertyBuilder to_properties() const
     {
-        PropertyTree ptree;
+        PropertyBuilder ptree;
         PropertyTree treeresults;
         for ( const auto& result : results )
             treeresults.push_back({"", result->to_properties()});
         ptree.put_child("results", treeresults);
         ptree.put("inline_query_id", inline_query_id);
-        if ( cache_time >= 0 )
-            ptree.put("cache_time", cache_time);
+        ptree.maybe_put("cache_time", cache_time);
         ptree.put("is_personal", is_personal);
-        ptree.put("next_offset", next_offset);
-        ptree.put("switch_pm_text", switch_pm_text);
-        ptree.put("switch_pm_parameter", switch_pm_parameter);
+        ptree.maybe_put("next_offset", next_offset);
+        ptree.maybe_put("switch_pm_text", switch_pm_text);
+        ptree.maybe_put("switch_pm_parameter", switch_pm_parameter);
 
         return ptree;
     }
@@ -102,23 +121,69 @@ private:
 class InlineQueryResultPhoto : public InlineQueryResult
 {
 public:
-    explicit InlineQueryResultPhoto(
-        std::string url
-    ) : url(url)
+    PropertyBuilder to_properties() const override
     {
-    }
-
-    PropertyTree to_properties() const override
-    {
-        PropertyTree ptree;
-        ptree.put("photo_url", url);
+        PropertyBuilder ptree;
+        ptree.put("photo_url", photo_url);
         ptree.put("type", "photo");
+        ptree.maybe_put("thumb_url", thumb_url);
+        ptree.maybe_put("photo_width", photo_width, 1);
+        ptree.maybe_put("photo_height", photo_height, 1);
+        ptree.maybe_put("title", title);
+        ptree.maybe_put("description", description);
+        ptree.maybe_put("parse_mode", parse_mode);
         return ptree;
     }
 
-private:
-    std::string url;
+    std::string photo_url;
+    std::string thumb_url;
+    int photo_width = 0;
+    int photo_height = 0;
+    std::string title;
+    std::string description;
+    std::string parse_mode;
+    // reply_markup
+    // input_message_content
 };
+
+
+class InlineHandler : public melanobot::Handler
+{
+public:
+    InlineHandler(const Settings& settings, MessageConsumer* parent)
+        : Handler(settings, parent)
+    {}
+
+    bool on_handle(network::Message& msg) override
+    {
+        TelegramConnection* connection = dynamic_cast<TelegramConnection*>(msg.source);
+        if ( !connection )
+            throw melanobot::MelanobotError("Invalid telegram connection");
+        auto response = on_handle_query(msg, connection, msg.message, msg.params[0], msg.params[1]);
+        connection->post("answerInlineQuery", response.to_properties(), {});
+        return true;
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return msg.type == network::Message::UNKNOWN &&
+            msg.command == "inline_query" &&
+            msg.source == msg.destination &&
+            msg.source->protocol() == "telegram" &&
+            msg.params.size() >= 2
+        ;
+    }
+
+protected:
+    virtual InlineQueryResponse on_handle_query(
+        const network::Message& msg,
+        TelegramConnection* connection,
+        const std::string& query,
+        const std::string& query_id,
+        const std::string& offset
+    ) const = 0;
+};
+
 
 } // namespace telegram
 
