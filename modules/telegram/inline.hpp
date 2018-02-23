@@ -91,8 +91,13 @@ public:
     {
         PropertyBuilder ptree;
         PropertyTree treeresults;
+        int i = 0;
         for ( const auto& result : results )
+        {
             treeresults.push_back({"", result->to_properties()});
+            treeresults.back().second.put("id", inline_query_id + "-" + std::to_string(i));
+            i++;
+        }
         ptree.put_child("results", treeresults);
         ptree.put("inline_query_id", inline_query_id);
         ptree.maybe_put("cache_time", cache_time);
@@ -152,7 +157,7 @@ struct PhotoData
         PropertyBuilder ptree;
         ptree.put("photo_url", photo_url);
         ptree.put("type", "photo");
-        ptree.maybe_put("thumb_url", thumb_url);
+        ptree.put("thumb_url", thumb_url.empty() ? photo_url : thumb_url);
         ptree.maybe_put("photo_width", photo_width, 1);
         ptree.maybe_put("photo_height", photo_height, 1);
         ptree.maybe_put("title", title);
