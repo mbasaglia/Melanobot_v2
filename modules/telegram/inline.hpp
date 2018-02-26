@@ -237,10 +237,23 @@ public:
     InlinePhotoUrl(const Settings& settings, MessageConsumer* parent)
         : InlineHandler(settings, parent)
     {
+        auto photo_url = settings.get("photo_url", "");
+        if ( !photo_url.empty() )
+        {
+            auto photo_param = settings.get("photo_param", "");
+            if ( photo_param.empty() )
+                throw melanobot::ConfigurationError(
+                    "If you specify photo_url you must specify photo_param"
+                );
+            photos.push_back({photo_url, photo_param});
+        }
+
         for ( const auto& photo : settings.get_child("photos", {}) )
         {
             photos.push_back({photo.first, photo.second.data()});
         }
+
+        cache_time = settings.get("cache_time", cache_time);
     }
 
 private:
@@ -252,7 +265,7 @@ private:
         const std::string& offset
     ) const override
     {
-        InlineQueryResponse resp(query_id);
+        InlineQueryResponse resp(query_id, cache_time);
         for ( const auto& photo : photos )
         {
             resp.result<InlineQueryResultPhoto>(photo.full_uri(query));
@@ -261,6 +274,7 @@ private:
     }
 
     std::vector<PhotoUriDescription> photos;
+    int cache_time = -1;
 };
 
 } // namespace telegram
