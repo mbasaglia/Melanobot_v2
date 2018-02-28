@@ -215,26 +215,18 @@ public:
 };
 
 
-class InlineHandler : public melanobot::Handler
+template<class Base=melanobot::Handler>
+    class InlineHandler : public Base
 {
 public:
-    InlineHandler(const Settings& settings, MessageConsumer* parent)
-        : Handler(settings, parent)
+    template<class...Args>
+        InlineHandler(const Settings& settings, Args&&... args)
+        : Base(std::forward<Args>(args)...)
     {
         cache_time = settings.get("cache_time", cache_time);
     }
 
-    bool on_handle(network::Message& msg) override
-    {
-        TelegramConnection* connection = dynamic_cast<TelegramConnection*>(msg.source);
-        if ( !connection )
-            throw melanobot::MelanobotError("Invalid telegram connection");
-        auto response = on_handle_query(msg, connection, msg.message, msg.params[0], msg.params[1]);
-        connection->post("answerInlineQuery", response.to_properties(), {});
-        return true;
-    }
-
-    static bool is_inline_message(const network::Message& msg)
+    bool can_handle(const network::Message& msg) const override
     {
         return msg.type == network::Message::UNKNOWN &&
             msg.command == "inline_query" &&
@@ -244,27 +236,44 @@ public:
         ;
     }
 
-    bool can_handle(const network::Message& msg) const override
+    bool on_handle(network::Message& msg) override
     {
-        return is_inline_message(msg);
+        auto response = on_handle_query(msg, msg.message, msg.params[1]);
+        send_response(msg, response);
+        return true;
     }
 
 protected:
+    void send_response(const network::Message& msg, const InlineQueryResponse& response) const
+    {
+        TelegramConnection* connection = dynamic_cast<TelegramConnection*>(msg.source);
+        if ( !connection )
+            throw melanobot::MelanobotError("Invalid telegram connection");
+        connection->post("answerInlineQuery", response.to_properties(), {});
+    }
+
+    InlineQueryResponse create_response(const network::Message& msg) const
+    {
+        return InlineQueryResponse(msg.params[0], cache_time);
+    }
+
     virtual InlineQueryResponse on_handle_query(
         const network::Message& msg,
-        TelegramConnection* connection,
         const std::string& query,
-        const std::string& query_id,
         const std::string& offset
-    ) const = 0;
+    ) const
+    {
+        return create_response(msg);
+    }
 
     int cache_time = -1;
 };
 
+
 /**
  * \brief Generates picture urls based on the queries
  */
-class InlinePhotoUrl : public InlineHandler
+class InlinePhotoUrl : public InlineHandler<>
 {
 private:
     class PhotoUriDescription
@@ -289,7 +298,7 @@ private:
 
 public:
     InlinePhotoUrl(const Settings& settings, MessageConsumer* parent)
-        : InlineHandler(settings, parent)
+        : InlineHandler(settings, settings, parent)
     {
         auto photo_url = settings.get("photo_url", "");
         if ( !photo_url.empty() )
@@ -312,13 +321,11 @@ public:
 private:
     InlineQueryResponse on_handle_query(
         const network::Message& msg,
-        TelegramConnection* connection,
         const std::string& query,
-        const std::string& query_id,
         const std::string& offset
     ) const override
     {
-        InlineQueryResponse resp(query_id, cache_time);
+        auto resp = create_response(msg);
         for ( const auto& photo : photos )
         {
             resp.result<InlineQueryResultPhoto>(photo.full_uri(query));
@@ -330,11 +337,11 @@ private:
 };
 
 
-class InlineExternalJson : public web::SimpleJson
+class InlineExternalJson : public InlineHandler<web::SimpleJson>
 {
 public:
     InlineExternalJson(const Settings& settings, MessageConsumer* parent)
-        : web::SimpleJson("", settings, parent)
+        : InlineHandler(settings, "", settings, parent)
     {
         for ( const auto& data : settings.get_child("data_template", {}) )
         {
@@ -347,12 +354,6 @@ public:
         uri_base = settings.get("uri_base", uri_base);
     }
 
-    bool can_handle(const network::Message& msg) const override
-    {
-        Log("sys", '!', 1) << "can_handle " << InlineHandler::is_inline_message(msg);
-        return InlineHandler::is_inline_message(msg);
-    }
-
 protected:
     bool on_handle(network::Message& msg) override
     {
@@ -363,7 +364,7 @@ protected:
 
     void json_failure(const network::Message& msg) override
     {
-        send_response(msg, InlineQueryResponse(msg.params[0]));
+        send_response(msg, InlineQueryResponse(msg.params[0], 0));
     }
 
     void json_success(const network::Message& msg, const Settings& parsed) override
@@ -379,7 +380,7 @@ protected:
                 result_parent = &*result;
         }
 
-        InlineQueryResponse resp(msg.params[0]);
+        auto resp = create_response(msg);
         if ( result_parent )
         {
             for ( const auto& result : *result_parent )
@@ -389,14 +390,6 @@ protected:
     }
 
 private:
-    void send_response(const network::Message& msg, const InlineQueryResponse& response)
-    {
-        TelegramConnection* connection = dynamic_cast<TelegramConnection*>(msg.source);
-        if ( !connection )
-            throw melanobot::MelanobotError("Invalid telegram connection");
-        connection->post("answerInlineQuery", response.to_properties(), {});
-    }
-
     PropertyBuilder format_result(const Settings& result)
     {
         PropertyBuilder out;
