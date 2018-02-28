@@ -22,6 +22,7 @@
 
 #include "melanobot/handler.hpp"
 #include "telegram-connection.hpp"
+#include "web/handler/web-api.hpp"
 
 namespace telegram {
 
@@ -167,7 +168,51 @@ struct PhotoData
     }
 };
 
+struct ArticleData
+{
+    std::string title;
+    // input_message_content
+    // reply_markup
+    std::string url;
+    bool hide_url = false;
+    std::string description;
+    std::string thumb_url;
+    int thumb_width = 0;
+    int thumb_height = 0;
+
+    PropertyBuilder to_properties() const
+    {
+        PropertyBuilder ptree;
+        ptree.put("type", "article");
+        ptree.put("title", title);
+        ptree.maybe_put("url", url);
+        ptree.put("hide_url", hide_url);
+        ptree.maybe_put("description", description);
+        ptree.maybe_put("thumb_url", thumb_url);
+        ptree.maybe_put("thumb_width", thumb_width);
+        ptree.maybe_put("thumb_height", thumb_height);
+        return ptree;
+    }
+};
+
 using InlineQueryResultPhoto = SimpleDataInlineQueryResult<PhotoData>;
+using InlineQueryResultArticle = SimpleDataInlineQueryResult<ArticleData>;
+
+
+class DynamicInlineQueryResult : public InlineQueryResult
+{
+public:
+    DynamicInlineQueryResult(PropertyBuilder properties)
+        : properties(std::move(properties))
+    {}
+
+    PropertyBuilder to_properties() const override
+    {
+        return properties;
+    }
+
+    PropertyBuilder properties;
+};
 
 
 class InlineHandler : public melanobot::Handler
@@ -175,7 +220,9 @@ class InlineHandler : public melanobot::Handler
 public:
     InlineHandler(const Settings& settings, MessageConsumer* parent)
         : Handler(settings, parent)
-    {}
+    {
+        cache_time = settings.get("cache_time", cache_time);
+    }
 
     bool on_handle(network::Message& msg) override
     {
@@ -187,7 +234,7 @@ public:
         return true;
     }
 
-    bool can_handle(const network::Message& msg) const override
+    static bool is_inline_message(const network::Message& msg)
     {
         return msg.type == network::Message::UNKNOWN &&
             msg.command == "inline_query" &&
@@ -195,6 +242,11 @@ public:
             msg.source->protocol() == "telegram" &&
             msg.params.size() >= 2
         ;
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        return is_inline_message(msg);
     }
 
 protected:
@@ -205,6 +257,8 @@ protected:
         const std::string& query_id,
         const std::string& offset
     ) const = 0;
+
+    int cache_time = -1;
 };
 
 /**
@@ -253,7 +307,6 @@ public:
             photos.push_back({photo.first, photo.second.data()});
         }
 
-        cache_time = settings.get("cache_time", cache_time);
     }
 
 private:
@@ -274,8 +327,95 @@ private:
     }
 
     std::vector<PhotoUriDescription> photos;
-    int cache_time = -1;
 };
+
+
+class InlineExternalJson : public web::SimpleJson
+{
+public:
+    InlineExternalJson(const Settings& settings, MessageConsumer* parent)
+        : web::SimpleJson("", settings, parent)
+    {
+        for ( const auto& data : settings.get_child("data_template", {}) )
+        {
+            data_template.insert({
+                data.first,
+                string::FormatterConfig().decode(data.second.data())
+            });
+        }
+
+        uri_base = settings.get("uri_base", uri_base);
+    }
+
+    bool can_handle(const network::Message& msg) const override
+    {
+        Log("sys", '!', 1) << "can_handle " << InlineHandler::is_inline_message(msg);
+        return InlineHandler::is_inline_message(msg);
+    }
+
+protected:
+    bool on_handle(network::Message& msg) override
+    {
+        std::string url = uri_base + msg.message;
+        request_json(msg, web::Request("GET", {url}));
+        return true;
+    }
+
+    void json_failure(const network::Message& msg) override
+    {
+        send_response(msg, InlineQueryResponse(msg.params[0]));
+    }
+
+    void json_success(const network::Message& msg, const Settings& parsed) override
+    {
+        const Settings* result_parent = nullptr;
+        if ( result_path.empty() )
+        {
+            result_parent = &parsed;
+        }
+        else
+        {
+            if ( auto result = parsed.get_child_optional(result_path) )
+                result_parent = &*result;
+        }
+
+        InlineQueryResponse resp(msg.params[0]);
+        if ( result_parent )
+        {
+            for ( const auto& result : *result_parent )
+                resp.result<DynamicInlineQueryResult>(format_result(result.second));
+        }
+        send_response(msg, resp);
+    }
+
+private:
+    void send_response(const network::Message& msg, const InlineQueryResponse& response)
+    {
+        TelegramConnection* connection = dynamic_cast<TelegramConnection*>(msg.source);
+        if ( !connection )
+            throw melanobot::MelanobotError("Invalid telegram connection");
+        connection->post("answerInlineQuery", response.to_properties(), {});
+    }
+
+    PropertyBuilder format_result(const Settings& result)
+    {
+        PropertyBuilder out;
+        for ( const auto& data : data_template )
+        {
+            out.put(
+                data.first,
+                data.second.replaced(result).encode(string::FormatterUtf8())
+            );
+        }
+        return out;
+    }
+
+private:
+    std::string uri_base;
+    string::FormattedProperties data_template;
+    std::string result_path;
+};
+
 
 } // namespace telegram
 
