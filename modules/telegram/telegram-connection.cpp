@@ -66,6 +66,8 @@ TelegramConnection::TelegramConnection(const std::string& api_endpoint,
 
     webhook = settings.get("webhook", webhook);
     webhook_url = settings.get("webhook_url", webhook_url);
+    if ( webhook_url.empty() )
+        webhook = false;
     webhook_max_connections = settings.get("webhook_max_connections", webhook_max_connections);
 
     if ( !webhook )
@@ -262,7 +264,8 @@ void TelegramConnection::request(web::Request&& request,
             try
             {
                 auto content = httpony::json::JsonParser().parse(response.body);
-                callback(content);
+                if ( callback )
+                    callback(content);
             }
             catch(httpony::json::JsonError&)
             {
@@ -270,7 +273,8 @@ void TelegramConnection::request(web::Request&& request,
             }
         },
         [on_error](const web::Request&, const web::OperationStatus&){
-            on_error();
+            if ( on_error )
+                on_error();
         }
     );
 }
@@ -355,7 +359,8 @@ void TelegramConnection::connect()
     }
     else
     {
-        get("getMe", on_connect, on_error);
+        post("deleteWebhook", {}, on_connect, on_error);
+        get("getMe", {}, on_error);
     }
 
 }
@@ -467,7 +472,6 @@ void TelegramConnection::process_event(PropertyTree& event)
     if ( auto message = event.get_child_optional("message") )
     {
         network::Message msg;
-        std::istringstream socket_stream(msg.raw);
 
         msg.chat(message->get<std::string>("text"));
         msg.direct = message->get("chat.type", "") == "private";
@@ -488,6 +492,20 @@ void TelegramConnection::process_event(PropertyTree& event)
         msg.from = user_attributes(message->get_child("from"));
         msg.channels = {message->get("chat.id", "")};
         Log("telegram", '<', 1) << color::magenta << msg.from.name
+            << color::nocolor << ' ' << msg.message;
+        msg.send(this);
+    }
+    else if ( auto inline_query = event.get_child_optional("inline_query") )
+    {
+        network::Message msg;
+        msg.type = network::Message::UNKNOWN;
+        msg.command = "inline_query";
+        msg.message = inline_query->get<std::string>("query");
+        msg.params = {inline_query->get<std::string>("id"), inline_query->get<std::string>("offset")};
+        msg.from = user_attributes(inline_query->get_child("from"));
+        msg.direct = true;
+        Log("telegram", '<', 1) << color::magenta << msg.from.name
+            << color::cyan << " inline_query "
             << color::nocolor << ' ' << msg.message;
         msg.send(this);
     }
