@@ -313,7 +313,7 @@ public:
     ShowVoteLogin(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vlogin:(\d+))", settings, parent)
     {
-        message = settings.get("message",
+        message = read_string(settings, "message",
             "$(4)*$(-) $name$(-) logged in as $(dark_yellow)master");
     }
 
@@ -339,7 +339,7 @@ public:
     ShowVoteDo(const Settings& settings, MessageConsumer* parent)
     : ParseEventlog(R"(^:vote:vdo:(\d+):(.*))", settings, parent)
     {
-        message = settings.get("message",
+        message = read_string(settings, "message",
             "$(4)*$(-) $name$(-) used their master status to do $vote");
     }
 
