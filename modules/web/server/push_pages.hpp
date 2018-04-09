@@ -37,7 +37,7 @@ public:
         const std::string& name,
         const Settings& settings,
         const std::string& default_uri
-    ) : name(name)
+    ) : name_(name)
     {
         uri = WebPage::read_uri(settings, default_uri);
         registry[name] = this;
@@ -45,7 +45,7 @@ public:
 
     ~PushReceiver()
     {
-        registry.erase(name);
+        registry.erase(name_);
     }
 
     bool matches(const RequestItem& request) const
@@ -64,10 +64,15 @@ public:
         return iter == registry.end() ? nullptr : iter->second;
     }
 
+    std::string name() const
+    {
+        return name_;
+    }
+
 private:
     static std::map<std::string, PushReceiver*> registry;
 
-    std::string name;
+    std::string name_;
     web::UriPath uri;
 };
 

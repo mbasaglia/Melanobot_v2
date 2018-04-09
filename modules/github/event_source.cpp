@@ -26,9 +26,10 @@
 namespace github {
 
 
-EventSource::EventSource(std::string name)
-    : name_(std::move(name))
+EventSource::EventSource(const std::string& name, const PropertyTree& settings)
+    : PushReceiver(name, settings, name)
 {
+    polling_ = settings.get("polling", false);
     if ( melanobot::has_storage() )
     {
         etag_ = melanobot::storage().maybe_get_value(storage_path("etag"), "");
@@ -40,15 +41,9 @@ EventSource::EventSource(std::string name)
     }
 }
 
-const std::string& EventSource::name() const
-{
-    return name_;
-}
-
-
 std::string EventSource::storage_path(const std::string& suffix) const
 {
-    return "github." + name_ + "." + suffix;
+    return "github." + name() + "." + suffix;
 }
 
 void EventSource::add_listener(const std::string& event_type, const ListenerFunctor& listener)
@@ -62,11 +57,14 @@ void EventSource::add_listener(const std::string& event_type, const ListenerFunc
 
 std::string EventSource::api_path() const
 {
-    return "/" + name_ + "/events";
+    return "/" + name() + "/events";
 }
 
 void EventSource::poll_events(const GitHubController& source)
 {
+    if ( !polling_ )
+        return;
+
     auto request = source.request(api_path());
     {
         auto lock = make_lock(mutex);
@@ -87,26 +85,29 @@ void EventSource::poll_events(const GitHubController& source)
                 if ( melanobot::has_storage() )
                     melanobot::storage().put(storage_path("etag"), etag_);
             }
-            dispatch_events(response, request.uri.full());
+            if ( !response.status.is_error() )
+                dispatch_events(response.body.input());
         }
     );
 }
 
-void EventSource::dispatch_events(web::Response& response, const std::string& uri)
+void EventSource::dispatch_events(httpony::io::InputContentStream& body)
 {
-    if ( response.status.is_error() )
+    PropertyTree content;
+    try
+    {
+        /// \todo Figure why without the extra reference, it fails to read all of the data
+        auto& stream = body;
+        content = httpony::json::JsonParser().parse(stream);
+    }
+    catch(httpony::json::JsonError&)
+    {
+        ErrorLog("github") << "Malformed event data";
         return;
-
-    httpony::json::JsonParser parser;
-    parser.throws(false);
-
-    /// \todo Figure why without the extra reference, it fails to read all of the data
-    auto& stream = response.body;
-    auto json = parser.parse(stream, uri);
-    if ( parser.error() )
-        return;
+    }
 
     melanolib::time::DateTime::Time poll_time;
+    if ( polling_ )
     {
         auto lock = make_lock(mutex);
         poll_time = last_poll_;
@@ -119,12 +120,19 @@ void EventSource::dispatch_events(web::Response& response, const std::string& ur
     }
 
     std::map<std::string, PropertyTree> events;
-    for ( const auto& event : json )
+    for ( const auto& event : content )
     {
         auto type = event.second.get("type", "");
-        auto time = melanolib::time::parse_time(event.second.get("created_at", "")).time_point();
-        if ( !type.empty() && time > poll_time )
+        if ( !type.empty() )
+        {
+            if ( polling_ )
+            {
+                auto time = melanolib::time::parse_time(event.second.get("created_at", "")).time_point();
+                if ( time <= poll_time )
+                    continue;
+            }
             events[type].add_child("event", std::move(event.second));
+        }
     }
 
     for ( const auto& listener : listeners_ )
@@ -133,6 +141,12 @@ void EventSource::dispatch_events(web::Response& response, const std::string& ur
         if ( it != events.end() )
             listener.callback(it->second);
     }
+}
+
+web::Response EventSource::receive_push(const RequestItem& request)
+{
+    process_events(request.request.body.input());
+    return web::Response();
 }
 
 } // namespace github

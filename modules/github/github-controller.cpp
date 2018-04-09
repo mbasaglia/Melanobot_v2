@@ -45,7 +45,7 @@ void GitHubController::initialize(const Settings& settings)
 
         if ( src_iter == sources.end() )
         {
-            sources.emplace_back(source.first);
+            sources.emplace_back(source.first, source.second);
             src_iter = sources.end() - 1;
         }
 

@@ -22,10 +22,11 @@
 
 #include "web/client/http.hpp"
 #include "melanolib/time/date_time.hpp"
+#include "web/server/push_pages.hpp"
 
 namespace github {
 
-class EventSource
+class EventSource : public web::PushReceiver
 {
 public:
 
@@ -40,10 +41,10 @@ private:
     };
 
 public:
-    EventSource(std::string name);
+    EventSource(const std::string& name, const PropertyTree& settings);
 
     EventSource(EventSource&& src)
-        : name_(std::move(src.name_)),
+        : PushReceiver(std::move(src)),
           etag_(std::move(src.etag_)),
           listeners_(std::move(src.listeners_)),
           last_poll_(std::move(src.last_poll_)),
@@ -60,9 +61,6 @@ public:
         return *this;
     }
 
-
-    const std::string& name() const;
-
     void add_listener(const std::string& event_type, const ListenerFunctor& listener);
 
     void poll_events(const class GitHubController& source);
@@ -72,16 +70,19 @@ public:
      */
     std::string api_path() const;
 
+protected:
+    web::Response receive_push(const RequestItem& request) override;
+
 private:
-    void dispatch_events(web::Response& response, const std::string& uri);
+    void dispatch_events(httpony::io::InputContentStream& body);
 
     std::string storage_path(const std::string& suffix) const;
 
-    std::string name_;
     std::string etag_;
     std::vector<SourceListener> listeners_;
     PollTime last_poll_;
     PollTime current_poll_;
+    bool polling_ = false;
     std::mutex mutex;
 };
 
